@@ -19,7 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use OTPHP\Factory;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
@@ -141,7 +141,7 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
             ->where([
                 'type' => AuthenticationToken::TYPE_MFA,
                 'user_id' => $user->id,
-            ])->orderDesc('created')->firstOrFail();
+            ])->orderByDesc('created')->firstOrFail();
 
         $this->assertTrue($mfaToken->checkSessionId($accessToken));
         $this->assertCookieIsSecure($mfaToken->get('token'), MfaVerifiedCookie::MFA_COOKIE_ALIAS);
@@ -162,7 +162,7 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
             ->userId($user->id)
             ->loginAction()
             ->persist();
-        ActionLogFactory::make(['created' => FrozenTime::now()], 4)
+        ActionLogFactory::make(['created' => DateTime::now()], 4)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();
@@ -188,7 +188,7 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
             ->userId($user->id)
             ->loginAction()
             ->persist();
-        ActionLogFactory::make(['created' => FrozenTime::now()], 4)
+        ActionLogFactory::make(['created' => DateTime::now()], 4)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();
@@ -215,7 +215,7 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
             ->userId($user->id)
             ->setActionId('JwtLogin.loginPost')
             ->persist();
-        ActionLogFactory::make(['created' => FrozenTime::now(), 'status' => 0], 4)
+        ActionLogFactory::make(['created' => DateTime::now(), 'status' => 0], 4)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();

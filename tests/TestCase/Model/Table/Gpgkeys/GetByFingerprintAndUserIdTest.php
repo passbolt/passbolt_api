@@ -21,12 +21,13 @@ use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use InvalidArgumentException;
 
 class GetByFingerprintAndUserIdTest extends AppTestCase
 {
     use GpgkeysModelTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
+    public array $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
     public $fingerprint;
     public $Gpgkeys;
 
@@ -39,13 +40,13 @@ class GetByFingerprintAndUserIdTest extends AppTestCase
 
     public function testGetByFingerPrintAndUserIdInvalidUserId()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->Gpgkeys->getByFingerPrintAndUserId($this->fingerprint, 'nope');
     }
 
     public function testGetByFingerPrintAndUserIdInvalidFingerprint()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->Gpgkeys->getByFingerPrintAndUserId('nope', UuidFactory::uuid('user.id.ada'));
     }
 

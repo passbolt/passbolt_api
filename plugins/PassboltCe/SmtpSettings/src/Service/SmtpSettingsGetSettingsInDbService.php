@@ -19,10 +19,11 @@ namespace Passbolt\SmtpSettings\Service;
 use App\Error\Exception\FormValidationException;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
+use Throwable;
 
 class SmtpSettingsGetSettingsInDbService
 {
@@ -68,7 +69,7 @@ class SmtpSettingsGetSettingsInDbService
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         try {
             $settings = $OrganizationSettings->getByProperty(self::SMTP_SETTINGS_PROPERTY_NAME);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // During installation, the connection might not be set yet
             return null;
         }
@@ -107,11 +108,11 @@ class SmtpSettingsGetSettingsInDbService
         // set the key to be used for decrypting
         try {
             $gpg->setDecryptKeyFromFingerprint($keyFingerprint, $passphrase);
-        } catch (Exception $exception) {
+        } catch (CakeException $exception) {
             try {
                 $gpg->importServerKeyInKeyring();
                 $gpg->setDecryptKeyFromFingerprint($keyFingerprint, $passphrase);
-            } catch (Exception $exception) {
+            } catch (CakeException $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
                 $msg .= $exception->getMessage();
                 throw new InternalErrorException($msg);
@@ -120,7 +121,7 @@ class SmtpSettingsGetSettingsInDbService
 
         try {
             return $gpg->decrypt($encryptedValue);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $msg = __('The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database.');
             $msg .= ' ' . __('To fix this problem, you need to configure the SMTP server again.') . ' ';
             $msg .= $e->getMessage();

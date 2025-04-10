@@ -22,7 +22,7 @@ use App\Model\Table\PermissionsTable;
 use App\Model\Traits\Query\CaseInsensitiveSearchQueryTrait;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\Validation\Validation;
 use InvalidArgumentException;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
@@ -45,10 +45,10 @@ trait FoldersFindersTrait
      * @psalm-suppress UndefinedMethod
      * @param string $userId The user to get the folders for
      * @param array|null $options options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      */
-    public function findIndex(string $userId, ?array $options = [])
+    public function findIndex(string $userId, ?array $options = []): SelectQuery
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
@@ -57,7 +57,7 @@ trait FoldersFindersTrait
         /** @phpstan-ignore-next-line */
         $query = $this->find();
 
-        $query->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $userId]);
+        $query->find(FolderizableBehavior::FINDER_NAME, user_id: $userId);
 
         if (isset($options['filter']['has-id'])) {
             $this->filterByIds($query, $options['filter']['has-id']);
@@ -75,7 +75,7 @@ trait FoldersFindersTrait
         // In the meantime filter only the folder the user has access, the permissions table will be joined
         // to the folders table with an INNER join, see the hasOne definition.
         if (isset($options['contain']['permission'])) {
-            $query->contain('Permission', function (Query $q) use ($userId) {
+            $query->contain('Permission', function (SelectQuery $q) use ($userId) {
                 $acoForeignKey = new IdentifierExpression('Folders.id');
                 $permissionIdSubQuery = $this->Permissions
                     ->findHighestByAcoAndAro(PermissionsTable::FOLDER_ACO, $acoForeignKey, $userId)
@@ -90,17 +90,17 @@ trait FoldersFindersTrait
 
         // If contains children_folders.
         if (isset($options['contain']['children_folders'])) {
-            $query->contain('ChildrenFolders', function (Query $q) use ($userId) {
+            $query->contain('ChildrenFolders', function (SelectQuery $q) use ($userId) {
                 return $q->where(['FoldersRelations.user_id' => $userId])
-                    ->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $userId]);
+                    ->find(FolderizableBehavior::FINDER_NAME, user_id: $userId);
             });
         }
 
         // If contains children_resources.
         if (isset($options['contain']['children_resources'])) {
-            $query->contain('ChildrenResources', function (Query $q) use ($userId) {
+            $query->contain('ChildrenResources', function (SelectQuery $q) use ($userId) {
                 return $q->where(['FoldersRelations.user_id' => $userId])
-                    ->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $userId]);
+                    ->find(FolderizableBehavior::FINDER_NAME, user_id: $userId);
             });
         }
 
@@ -159,9 +159,9 @@ trait FoldersFindersTrait
     /**
      * Returns all folders with expired metadata key.
      *
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findMetadataRotateKeyIndex(): Query
+    public function findMetadataRotateKeyIndex(): SelectQuery
     {
         $query = $this->find();
 
@@ -184,9 +184,9 @@ trait FoldersFindersTrait
      * @param string $userId The user to get the folders for
      * @param string $folderId The folder to retrieve
      * @param array|null $options options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findView(string $userId, string $folderId, ?array $options = []): Query
+    public function findView(string $userId, string $folderId, ?array $options = []): SelectQuery
     {
         return $this->findIndex($userId, $options)
             ->where(['Folders.id' => $folderId]);
@@ -195,11 +195,11 @@ trait FoldersFindersTrait
     /**
      * Filter a folders query to return only folders the user has access to.
      *
-     * @param \Cake\ORM\Query $query The query to filter.
+     * @param \Cake\ORM\Query\SelectQuery $query The query to filter.
      * @param string $userId The user to check the permissions for.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function _filterQueryByPermissions(Query $query, string $userId)
+    private function _filterQueryByPermissions(SelectQuery $query, string $userId): SelectQuery
     {
         $subQueryOptions = [
             'checkGroupsUsers' => true,
@@ -218,11 +218,11 @@ trait FoldersFindersTrait
     /**
      * Filter a query to retrieve folders on their ids with the given list of ids
      *
-     * @param \Cake\ORM\Query $query Query to filter on
+     * @param \Cake\ORM\Query\SelectQuery $query Query to filter on
      * @param array $folderIds array of folders ids
-     * @return \Cake\ORM\Query|\Passbolt\Folders\Model\Entity\Folder[]
+     * @return \Cake\ORM\Query|array<\Passbolt\Folders\Model\Entity\Folder>
      */
-    public function filterByIds(Query $query, array $folderIds)
+    public function filterByIds(SelectQuery $query, array $folderIds): SelectQuery|array
     {
         return $query->where(['Folders.id IN' => $folderIds]);
     }
@@ -238,11 +238,11 @@ trait FoldersFindersTrait
      * Should filter all the folders with a name containing creative.
      * Search should be case-insensitive
      *
-     * @param \Cake\ORM\Query $query Query to filter
+     * @param \Cake\ORM\Query\SelectQuery $query Query to filter
      * @param string $name Name to filter
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function filterQueryBySearch(Query $query, string $name): Query
+    public function filterQueryBySearch(SelectQuery $query, string $name): SelectQuery
     {
         return $this->searchCaseInsensitiveOnField($query, 'Folders.name', $name);
     }
@@ -250,11 +250,11 @@ trait FoldersFindersTrait
     /**
      * Filter a query by parents ids.
      *
-     * @param \Cake\ORM\Query $query Query to filter on
+     * @param \Cake\ORM\Query\SelectQuery $query Query to filter on
      * @param array $parentIds Array of parent ids
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function filterQueryByParentIds(Query $query, array $parentIds): Query
+    public function filterQueryByParentIds(SelectQuery $query, array $parentIds): SelectQuery
     {
         if (empty($parentIds)) {
             return $query;
@@ -271,7 +271,7 @@ trait FoldersFindersTrait
             return true;
         });
 
-        return $query->innerJoinWith('ChildrenFolders', function (Query $q) use ($parentIds, $includeRoot) {
+        return $query->innerJoinWith('ChildrenFolders', function (SelectQuery $q) use ($parentIds, $includeRoot) {
             $conditions = [];
             if (!empty($parentIds)) {
                 $conditions[] = $q->expr()->in('FoldersRelations.folder_parent_id', $parentIds);
@@ -288,9 +288,9 @@ trait FoldersFindersTrait
      * Returns all resources in v4 format that need to be upgraded.
      *
      * @param array $options query options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findMetadataUpgradeIndex(array $options): Query
+    public function findMetadataUpgradeIndex(array $options): SelectQuery
     {
         $query = $this->find('v4')->disableHydration();
 
@@ -338,10 +338,10 @@ trait FoldersFindersTrait
     }
 
     /**
-     * @param \Cake\ORM\Query $query Query
-     * @return \Cake\ORM\Query
+     * @param \Cake\ORM\Query\SelectQuery $query Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findV4(Query $query): Query
+    public function findV4(SelectQuery $query): SelectQuery
     {
         return $query->where([
             $query->newExpr()->isNull('Folders.metadata'),

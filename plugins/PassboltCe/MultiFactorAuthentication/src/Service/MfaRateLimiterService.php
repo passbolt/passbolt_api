@@ -59,7 +59,7 @@ class MfaRateLimiterService
                 'status' => 1,
                 'action_id' => $actionId,
             ])
-            ->orderDesc('created')
+            ->orderByDesc('created')
             ->limit(1);
 
         /**
@@ -82,6 +82,7 @@ class MfaRateLimiterService
                 'action_id' => UuidFactory::uuid('TotpVerifyPost.post'),
                 'created >' => $latestLoginDate,
             ])
+            ->all()
             ->count();
 
         if ($incrementFailedAttempts) {

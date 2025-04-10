@@ -85,7 +85,7 @@ class RobotsIndexDisabledApplicationHealthcheck implements HealthcheckServiceInt
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return __('Set passbolt.meta.robots to false in {0}.', CONFIG . 'passbolt.php');
     }

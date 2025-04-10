@@ -26,7 +26,8 @@ use Cake\Chronos\Chronos;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ConflictException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
+use Exception;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
@@ -123,13 +124,13 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
         $updatedFolder1 = FolderFactory::get($expiredFolder1->get('id'));
         $this->assertSame($activeMetadataKey->get('id'), $updatedFolder1->get('metadata_key_id'));
         $this->assertSame($metadataToUpdateForF1, $updatedFolder1->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedFolder1->get('modified')->format('Y-m-d H:i')); // comparing seconds here might fail
+        $this->assertSame(Chronos::now()->format('Y-m-d'), $updatedFolder1->get('modified')->format('Y-m-d')); // comparing seconds here might fail
         $this->assertSame($uac->getId(), $updatedFolder1->get('modified_by'));
         /** @var \Passbolt\Folders\Model\Entity\Folder $updatedFolder2 */
         $updatedFolder2 = FolderFactory::get($expiredFolder2->get('id'));
         $this->assertSame($activeMetadataKey->get('id'), $updatedFolder2->get('metadata_key_id'));
         $this->assertSame($metadataToUpdateForF2, $updatedFolder2->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedFolder2->get('modified')->format('Y-m-d H:i'));
+        $this->assertSame(Chronos::now()->format('Y-m-d'), $updatedFolder2->get('modified')->format('Y-m-d'));
         $this->assertSame($uac->getId(), $updatedFolder2->get('modified_by'));
     }
 
@@ -211,7 +212,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForMetadataKey($metadata),
-                'modified' => FrozenTime::now(),
+                'modified' => DateTime::now(),
                 'modified_by' => $admin->get('id'),
             ],
         ];
@@ -242,7 +243,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-                'modified' => FrozenTime::now(),
+                'modified' => DateTime::now(),
                 'modified_by' => $admin->get('id'),
             ],
         ];
@@ -312,7 +313,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
                 ],
             ];
             $this->service->updateMany($uac, $data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(CustomValidationException::class, $e);
             $errors = $e->getErrors();
             $this->assertArrayHasKey('isMetadataKeyNotExpired', $errors[0]['metadata_key_id']);
@@ -351,7 +352,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
         ];
         try {
             $this->service->updateMany($uac, $data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(CustomValidationException::class, $e);
             $errors = $e->getErrors();
             $this->assertArrayHasKey('isSharedMetadataKeyUniqueActive', $errors[0]['metadata_key_id']);

@@ -46,6 +46,7 @@ class IsNotSoleOwnerOfSharedResourcesRule
             ->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $entity->get('id'), [
                 'checkGroupsUsers' => $checkGroupsUsers,
             ])
+            ->all()
             ->count();
 
         if (Configure::read('passbolt.plugins.folders.enabled')) {
@@ -54,7 +55,7 @@ class IsNotSoleOwnerOfSharedResourcesRule
                     PermissionsTable::FOLDER_ACO,
                     $entity->get('id'),
                     ['checkGroupsUsers' => $checkGroupsUsers]
-                )->count();
+                )->all()->count();
         }
 
         return $check === 0;

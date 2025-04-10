@@ -24,9 +24,12 @@ use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Exception;
 use Laminas\Diactoros\Stream;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemAdapter;
+use RuntimeException;
+use Throwable;
 
 class AvatarsCacheService
 {
@@ -101,7 +104,7 @@ class AvatarsCacheService
                 Configure::readOrFail('FileStorage.imageSizes.Avatar.small.thumbnail.width'),
                 Configure::readOrFail('FileStorage.imageSizes.Avatar.small.thumbnail.height'),
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Log::error('Error while processing small image for avatar with ID ' . $avatar->id . '.');
             Log::error($e->getMessage());
 
@@ -124,7 +127,7 @@ class AvatarsCacheService
     {
         try {
             $this->filesystem->write($filename, $data);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Log::error('Error while saving cache avatar with ID ' . $avatar->id . '.');
             Log::error($e->getMessage());
         }
@@ -147,7 +150,7 @@ class AvatarsCacheService
         $fileName = $this->getAvatarFileName($avatar, $format);
         try {
             $stream = $this->filesystem->readStream($fileName);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $stream = null;
         }
 
@@ -155,7 +158,7 @@ class AvatarsCacheService
             try {
                 $this->storeInCache($avatar);
                 $stream = $this->filesystem->readStream($fileName);
-            } catch (\Throwable $exception) {
+            } catch (Throwable $exception) {
                 Log::warning(__('Could not save the avatar in the {0} file.', $fileName));
                 $stream = $this->getFallBackFileName($format);
             }
@@ -178,7 +181,7 @@ class AvatarsCacheService
         }
         try {
             $fileName = Configure::readOrFail('FileStorage.imageDefaults.Avatar.' . $format);
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $fileName = Configure::readOrFail('FileStorage.imageDefaults.Avatar.' . $this->getDefaultFormat());
         }
 
@@ -219,7 +222,7 @@ class AvatarsCacheService
     {
         $avatarId = $avatar->id;
         if (!Validation::uuid($avatarId)) {
-            throw new \Exception(__('The avatar id is not valid.'));
+            throw new Exception(__('The avatar id is not valid.'));
         }
         $avatarCacheSubDirectory = $avatarId . DS;
         $this->filesystem->createDirectory($avatarCacheSubDirectory);

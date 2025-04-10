@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource;
 
+use App\Model\Table\OrganizationSettingsTable;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
@@ -30,7 +31,7 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
     /**
      * @var \App\Model\Table\OrganizationSettingsTable
      */
-    private $organizationSettingsTable;
+    private OrganizationSettingsTable $organizationSettingsTable;
 
     /**
      * DbEmailNotificationSettingsSource constructor.

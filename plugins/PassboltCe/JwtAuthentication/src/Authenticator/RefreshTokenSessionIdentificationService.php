@@ -25,7 +25,7 @@ class RefreshTokenSessionIdentificationService extends AbstractSessionIdentifica
     /**
      * @var \App\Model\Entity\AuthenticationToken
      */
-    private $refreshToken;
+    private AuthenticationToken $refreshToken;
 
     /**
      * On the refresh token endpoint, the session ID is read as

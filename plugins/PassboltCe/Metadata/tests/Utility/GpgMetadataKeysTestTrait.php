@@ -21,6 +21,7 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Routing\Router;
+use Exception;
 
 /**
  * A helper to get test GPG keys, encrypted messages, etc.
@@ -388,7 +389,7 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
             $gpg->importKeyIntoKeyring($armoredKey);
             $gpg->setEncryptKeyFromFingerprint($fingerprint);
             $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             try {
                 // Try to import the key in keyring again
                 $gpg->importServerKeyInKeyring();
@@ -396,7 +397,7 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
 
                 $gpg->setEncryptKeyFromFingerprint($fingerprint);
                 $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $msg = __('Could not import the user OpenPGP key.');
                 throw new InternalErrorException($msg, 500, $exception);
             }
@@ -443,7 +444,7 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
         try {
             $gpg->setVerifyKeyFromFingerprint($fingerprint);
             $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $gpg->importKeyIntoKeyring($keyInfo['armored_key']);
             $gpg->setVerifyKeyFromFingerprint($fingerprint);
             $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);

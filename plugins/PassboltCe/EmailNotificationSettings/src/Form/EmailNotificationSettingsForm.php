@@ -27,9 +27,9 @@ use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefiniti
 class EmailNotificationSettingsForm extends Form
 {
     /**
-     * @var \Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionInterface[]
+     * @var array<\Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionInterface>
      */
-    private $notificationSettingsDefinitions = [];
+    private array $notificationSettingsDefinitions = [];
 
     /**
      * @param \Cake\Event\EventManager|null $eventManager An instance of event manager
@@ -45,7 +45,7 @@ class EmailNotificationSettingsForm extends Form
      * @param \Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionInterface $definition def
      * @return void
      */
-    public function addEmailNotificationSettingsDefinition(EmailNotificationSettingsDefinitionInterface $definition)
+    public function addEmailNotificationSettingsDefinition(EmailNotificationSettingsDefinitionInterface $definition): void // phpcs:ignore
     {
         $this->notificationSettingsDefinitions[] = $definition;
     }

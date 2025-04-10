@@ -76,7 +76,7 @@ class TotpSetupGetControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupGetTotpSuccess()
     {
-        $user = $this->logInAsUser();
+        $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
         $this->get('/mfa/setup/totp');
         $this->assertResponseOk();

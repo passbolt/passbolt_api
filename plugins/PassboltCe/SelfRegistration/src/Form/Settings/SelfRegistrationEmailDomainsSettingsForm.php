@@ -55,9 +55,9 @@ class SelfRegistrationEmailDomainsSettingsForm extends SelfRegistrationBaseSetti
      * Check that all the domains are valid.
      *
      * @param mixed $domains Value to check
-     * @return bool|string True if the validation succeed. Return the error message otherwise.
+     * @return string|bool True if the validation succeed. Return the error message otherwise.
      */
-    public function areEmailDomainsValidRule($domains)
+    public function areEmailDomainsValidRule(mixed $domains): bool|string
     {
         if (!is_array($domains)) {
             return __('The list of allowed domains should be an array of strings.');

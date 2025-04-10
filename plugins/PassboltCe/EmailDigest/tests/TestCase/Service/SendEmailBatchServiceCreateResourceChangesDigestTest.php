@@ -42,8 +42,6 @@ class SendEmailBatchServiceCreateResourceChangesDigestTest extends AppIntegratio
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->useCommandRunner();
         $this->service = new SendEmailBatchService();
         $this->setEmailNotificationsSetting('password.create', true);
         $this->enableFeaturePlugin(EmailDigestPlugin::class);

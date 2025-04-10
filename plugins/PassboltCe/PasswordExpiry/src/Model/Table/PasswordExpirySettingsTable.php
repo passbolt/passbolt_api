@@ -20,7 +20,7 @@ use App\Model\Table\OrganizationSettingsTable;
 use App\Utility\UuidFactory;
 use ArrayObject;
 use Cake\Event\Event;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\Validation\Validator;
 
 /**
@@ -29,7 +29,7 @@ use Cake\Validation\Validator;
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting newEmptyEntity()
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting newEntity(array $data, array $options = [])
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[] newEntities(array $data, array $options = [])
- * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting get($primaryKey, $options = [])
+ * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[] patchEntities(iterable $entities, array $data, array $options = [])
@@ -80,10 +80,10 @@ class PasswordExpirySettingsTable extends OrganizationSettingsTable
      * Filter organization settings by property.
      *
      * @param \Cake\Event\Event $event Model.beforeFind event.
-     * @param  \Cake\ORM\Query $query Any query performed on the present table.
-     * @return \Cake\ORM\Query
+     * @param \Cake\ORM\Query\SelectQuery $query Any query performed on the present table.
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function beforeFind(Event $event, Query $query): Query
+    public function beforeFind(Event $event, SelectQuery $query): SelectQuery
     {
         return $query->where([
             $this->aliasField('property_id') => $this->getPropertyId(),
@@ -98,7 +98,7 @@ class PasswordExpirySettingsTable extends OrganizationSettingsTable
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options): void
     {
         $data['property'] = $this->getProperty();
         $data['property_id'] = $this->getPropertyId();

@@ -28,7 +28,7 @@ class ShareNotificationTest extends ShareControllerTest
     use EmailQueueTrait;
     use EmailNotificationSettingsTestTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles',
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
         'app.Base/Secrets', 'app.Base/Favorites',

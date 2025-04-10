@@ -69,7 +69,7 @@ class IsValidEncryptedMetadataPrivateKey
      * @return string|false|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When user is not found.
      */
-    private function getArmoredKey(?string $userId)
+    private function getArmoredKey(?string $userId): string|false|null
     {
         if (is_null($userId)) {
             $armoredKey = file_get_contents(Configure::read('passbolt.gpg.serverKey.public'));

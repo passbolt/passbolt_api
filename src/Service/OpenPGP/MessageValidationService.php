@@ -20,6 +20,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
+use Exception;
 
 /**
  * Message Validation Service
@@ -91,7 +92,7 @@ class MessageValidationService
         // We don't even try the other rules if this one fails
         try {
             $messageInfo = self::getMessageInfo($armoredMessage);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new CustomValidationException(__('The public key could not be parsed.'), [
                 'data' => [
                     self::IS_PARSABLE_ARMORED_MESSAGE_RULE => $exception->getMessage(),
@@ -102,7 +103,7 @@ class MessageValidationService
         // Other rules are recommended but not mandatory
         // As one may want to see what's inside the message info for debugging purpose
         $validationErrors = [];
-        foreach ($rules as $i => $ruleName) {
+        foreach ($rules as $ruleName) {
             switch ($ruleName) {
                 case self::HAS_NO_EXTRA_BREAK_LINE_RULE:
                     if (self::hasExtraBreakline($armoredMessage)) {

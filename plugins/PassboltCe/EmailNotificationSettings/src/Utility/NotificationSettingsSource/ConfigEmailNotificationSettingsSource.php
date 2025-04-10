@@ -29,7 +29,7 @@ class ConfigEmailNotificationSettingsSource implements ReadableEmailNotification
      *
      * @return array
      */
-    public function read()
+    public function read(): array
     {
         $fileConfigs = Configure::read('passbolt.email') ?? [];
 

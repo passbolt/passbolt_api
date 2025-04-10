@@ -48,7 +48,7 @@ class ResourcesAfterCreateServiceTest extends FoldersTestCase
     use FoldersRelationsModelTrait;
     use ResourcesModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         GroupsUsersFixture::class,
         GroupsFixture::class,
         PermissionsFixture::class,
@@ -122,7 +122,7 @@ class ResourcesAfterCreateServiceTest extends FoldersTestCase
 
     public function testResourcesAfterCreateServiceError_FolderParentNotAllowed()
     {
-        [$folder, $resource, $userAId, $userBId] = $this->insertFixture_FolderParentNotAllowed();
+        [$folder, $resource, $userAId, $userBId] = $this->insertFixture_FolderParentNotAllowed(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data['folder_parent_id'] = $folder->id;
 

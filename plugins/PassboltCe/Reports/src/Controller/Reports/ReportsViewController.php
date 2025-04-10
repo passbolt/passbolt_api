@@ -19,6 +19,7 @@ namespace Passbolt\Reports\Controller\Reports;
 use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Model\Table\Dto\FindIndexOptions;
+use App\Model\Table\UsersTable;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use InvalidArgumentException;
@@ -35,12 +36,12 @@ class ReportsViewController extends AppController
     /**
      * @var \Passbolt\Reports\Service\ReportViewService
      */
-    private $reportViewService;
+    private ReportViewService $reportViewService;
 
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @return void
@@ -77,7 +78,7 @@ class ReportsViewController extends AppController
 
         $options = $this->formatRequestData($report->getSupportedOptions());
 
-        $creator = $this->Users->get($this->User->id(), ['contain' => 'Profiles']);
+        $creator = $this->Users->get($this->User->id(), ['contain' => ['Profiles']]);
 
         $report
             ->setOptions($options)

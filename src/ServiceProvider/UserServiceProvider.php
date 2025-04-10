@@ -30,7 +30,7 @@ use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterf
 
 class UserServiceProvider extends ServiceProvider
 {
-    protected $provides = [
+    protected array $provides = [
         UserRegisterServiceInterface::class,
         UserRecoverServiceInterface::class,
         FilesystemAdapter::class,

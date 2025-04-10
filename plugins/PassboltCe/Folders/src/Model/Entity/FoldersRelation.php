@@ -25,8 +25,8 @@ use Cake\ORM\Entity;
  * @property string $foreign_id
  * @property string $foreign_model
  * @property string|null $folder_parent_id
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  * @property string $user_id
  * @property \App\Model\Entity\Resource $resource
  * @property \Passbolt\Folders\Model\Entity\Folder $folder
@@ -49,7 +49,7 @@ class FoldersRelation extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'foreign_id' => false,
         'foreign_model' => false,
         'user_id' => false,

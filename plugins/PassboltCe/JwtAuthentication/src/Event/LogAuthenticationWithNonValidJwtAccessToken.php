@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Event;
 
+use App\Controller\AppController;
 use Cake\Event\Event;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
@@ -53,7 +54,7 @@ class LogAuthenticationWithNonValidJwtAccessToken implements EventListenerInterf
         /** @var \Cake\Controller\Controller $controller */
         $controller = $event->getSubject();
         $auth = $controller->getRequest()->getAttribute('authentication');
-        if (!($auth instanceof JwtAuthenticationService)) {
+        if (!($auth instanceof JwtAuthenticationService) || !($controller instanceof AppController)) {
             return;
         }
 

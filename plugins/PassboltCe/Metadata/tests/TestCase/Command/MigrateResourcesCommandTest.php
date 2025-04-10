@@ -44,8 +44,6 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->useCommandRunner();
         $this->enableFeaturePlugin(MetadataPlugin::class);
     }
 
@@ -63,7 +61,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
         MetadataTypesSettingsFactory::make()->v5()->persist();
         $totpStandalone = ResourceTypeFactory::make()->standaloneTotp()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5TotpStandalone */
-        $v5TotpStandalone = ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
+        ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
         // Shared resource.
         /** @var \App\Model\Entity\Resource $resource */
         $sharedResource = ResourceFactory::make()
@@ -112,7 +110,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
         MetadataTypesSettingsFactory::make()->v5()->persist();
         $totpStandalone = ResourceTypeFactory::make()->standaloneTotp()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5TotpStandalone */
-        $v5TotpStandalone = ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
+        ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
         // Shared resource.
         /** @var \App\Model\Entity\Resource $sharedResource */
         $sharedResource = ResourceFactory::make()
@@ -143,7 +141,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
         $this->assertOutputContains('<success>1 resources were migrated.</success>');
         $this->assertOutputContains('All resources could not migrated.');
         $this->assertOutputContains('See errors:');
-        $this->assertOutputContains('Record not found in table "metadata_keys"');
+        $this->assertOutputContains('Record not found in table `metadata_keys`');
         // Make sure v5 fields are updated
         $updatedResource = ResourceFactory::get($personalResource->id);
         $this->assertionsForPersonalResource($updatedResource, $personalResource, $user->gpgkey, [

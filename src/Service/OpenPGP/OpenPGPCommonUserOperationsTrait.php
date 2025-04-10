@@ -21,6 +21,7 @@ use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
+use Exception;
 
 trait OpenPGPCommonUserOperationsTrait
 {
@@ -37,18 +38,18 @@ trait OpenPGPCommonUserOperationsTrait
         // Set encryption key as the one from the user
         try {
             $this->assertUserKey($userKey);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = __('Could not validate user data.');
             throw new InternalErrorException($msg, 500, $exception);
         }
         try {
             $gpg->setEncryptKeyFromFingerprint($userKey->fingerprint);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // Try to import the key in keyring again
             try {
                 $gpg->importKeyIntoKeyring($userKey->armored_key);
                 $gpg->setEncryptKeyFromFingerprint($userKey->fingerprint);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 if (Configure::read('debug')) {
                     Log::error(json_encode($userKey));
                 }
@@ -73,18 +74,18 @@ trait OpenPGPCommonUserOperationsTrait
         // Set encryption key as the one from the user
         try {
             $this->assertUserKey($userKey);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = __('Could not validate user data.');
             throw new InternalErrorException($msg, 500, $exception);
         }
         try {
             $gpg->setVerifyKeyFromFingerprint($userKey->fingerprint);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // Try to import the key in keyring again
             try {
                 $gpg->importKeyIntoKeyring($userKey->armored_key);
                 $gpg->setVerifyKeyFromFingerprint($userKey->fingerprint);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 if (Configure::read('debug')) {
                     Log::error(json_encode($userKey));
                 }

@@ -105,7 +105,7 @@ class RecoverAbortControllerTest extends AppIntegrationTestCase
     public function testRecoverAbortController_Error_AuthenticationTokenInactive(): void
     {
         $user = UserFactory::make()->user()->active()->persist();
-        $admin = UserFactory::make()->admin()->active()->persist();
+        UserFactory::make()->admin()->active()->persist();
         $token = AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($user->id)
@@ -125,7 +125,7 @@ class RecoverAbortControllerTest extends AppIntegrationTestCase
     public function testRecoverAbortController_Error_AuthenticationTokenExpired(): void
     {
         $user = UserFactory::make()->user()->active()->persist();
-        $admin = UserFactory::make()->admin()->active()->persist();
+        UserFactory::make()->admin()->active()->persist();
         $token = AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($user->id)
@@ -145,7 +145,7 @@ class RecoverAbortControllerTest extends AppIntegrationTestCase
     public function testRecoverAbortController_Error_AuthenticationTokenType(): void
     {
         $user = UserFactory::make()->user()->active()->persist();
-        $admin = UserFactory::make()->admin()->active()->persist();
+        UserFactory::make()->admin()->active()->persist();
         $token = AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_REGISTER)
             ->userId($user->id)

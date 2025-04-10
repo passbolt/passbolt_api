@@ -23,9 +23,6 @@ use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
 
-/**
- * @property \Passbolt\Folders\Model\Table\FoldersTable $Folders
- */
 class FoldersIndexController extends AppController
 {
     /**
@@ -37,10 +34,9 @@ class FoldersIndexController extends AppController
         $this->loadComponent('ApiPagination', [
             'model' => 'Folders',
         ]);
-        $this->Folders = $this->fetchTable('Passbolt/Folders.Folders');
     }
 
-    public $paginate = [
+    public array $paginate = [
         'sortableFields' => [
             'Folders.name',
             'Folders.created',
@@ -82,7 +78,9 @@ class FoldersIndexController extends AppController
 
         // Performance improvement: map query result datetime properties to string.
         ISOFormatDateTimeType::mapDatetimeTypesToMe();
-        $folders = $this->Folders->findIndex($this->User->id(), $options);
+        /** @var \Passbolt\Folders\Model\Table\FoldersTable $foldersTable */
+        $foldersTable = $this->fetchTable('Passbolt/Folders.Folders');
+        $folders = $foldersTable->findIndex($this->User->id(), $options);
         $folders->disableHydration();
         $this->paginate($folders);
         $folders = $folders->all();

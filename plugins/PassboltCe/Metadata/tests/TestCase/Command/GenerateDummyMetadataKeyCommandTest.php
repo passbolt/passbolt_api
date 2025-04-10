@@ -34,8 +34,6 @@ class GenerateDummyMetadataKeyCommandTest extends AppIntegrationTestCaseV5
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->useCommandRunner();
     }
 
     public function testGenerateDummyMetadataKeyCommand_Help()
@@ -55,7 +53,7 @@ class GenerateDummyMetadataKeyCommandTest extends AppIntegrationTestCaseV5
 
     public function testGenerateDummyMetadataKeyCommand_Success(): void
     {
-        $admin = UserFactory::make()->admin()->persist();
+        $admin = UserFactory::make()->admin()->withValidGpgKey()->persist();
         $this->exec('passbolt metadata generate_dummy_metadata_key');
         $this->assertExitSuccess();
         $metadataKey = MetadataKeyFactory::firstOrFail();

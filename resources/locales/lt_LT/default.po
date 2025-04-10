@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-02-14 10:59\n"
+"PO-Revision-Date: 2025-03-22 01:55\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgid "Could not import the user OpenPGP key."
 msgstr "Nepavyko importuoti vartotojo „OpenPGP“ rakto."
 
 msgid "Invalid verify token type."
-msgstr ""
+msgstr "Neteisingas patvirtinimo prieigos rakto tipas."
 
 msgid "Invalid verify token format, "
 msgstr "Neteisingas patvirtinimo prieigos rakto formatas,"
@@ -68,19 +68,19 @@ msgid "Page not found."
 msgstr "Puslapis nerastas."
 
 msgid "Please use .json extension in URL or accept application/json."
-msgstr ""
+msgstr "Naudokite .json plėtinį URL adrese arba priimkite application/json."
 
 msgid "The request data can not be empty."
-msgstr ""
+msgstr "Užklausos duomenys negali būti tušti."
 
 msgid "You are successfully logged in."
 msgstr "Jūs sėkmingai prisijungėte."
 
 msgid "You are successfully logged out."
-msgstr ""
+msgstr "Jūs sėkmingai atsijungėte."
 
 msgid "The logout route should only be accessed with POST method."
-msgstr ""
+msgstr "Atsijungimo maršrutas turėtų būti pasiekiamas tik per POST metodą."
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "„OpenPGP“ viešojo rakto informacija konfigūracijoje nerasta."
@@ -248,7 +248,7 @@ msgid "All checks ran successfully!"
 msgstr "Visi patikrinimai vyko sėkmingai!"
 
 msgid "Healthcheck security index endpoint disabled."
-msgstr ""
+msgstr "Healthcheck saugumo indeksavimo įėjimo taškas išjungtas."
 
 msgid "OK"
 msgstr "Gerai"
@@ -305,7 +305,7 @@ msgid "You are not authorized to share this resource."
 msgstr "Jūs neturite teisės dalintis šiuo šaltiniu."
 
 msgid "Resource metadata key type is invalid."
-msgstr ""
+msgstr "Ištekliaus metaduomenų rakto tipas neteisingas."
 
 msgid "Only administrators can add new users."
 msgstr "Tik administratoriai gali pridėti naujų vartotojų."
@@ -359,7 +359,7 @@ msgid "You are not authorized to edit the role."
 msgstr "Jūs neturite teisės redaguoti vaidmens."
 
 msgid "Multiple has-access filters are not supported."
-msgstr ""
+msgstr "Keli „has-access“ filtrai nepalaikomi."
 
 msgid "This operation is not allowed for this user."
 msgstr "Ši operacija neleidžiama šiam vartotojui."
@@ -374,13 +374,13 @@ msgid "Only guests are allowed to register."
 msgstr "Registruotis gali tik svečiai."
 
 msgid "Registration is not opened to public."
-msgstr ""
+msgstr "Registracija nėra atvira visuomenei."
 
 msgid "Please contact your administrator."
 msgstr "Susisiekite su administratoriumi."
 
 msgid "This is due to a security setting."
-msgstr ""
+msgstr "Taip yra dėl saugumo nustatymo."
 
 msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr "Vartotojo identifikatorius turėtų būti galiojantis UUID arba „aš“."
@@ -392,7 +392,7 @@ msgid "No admin were found in the database."
 msgstr "Duomenų bazėje administratoriaus nerasta."
 
 msgid "The `{0}` configuration must be a valid non-empty string."
-msgstr ""
+msgstr "Konfigūracija \"{0}\" turi būti galiojanti ir netuščia eilutė."
 
 msgid "Invalid expiry time {0}."
 msgstr "Neteisingas galiojimo laikas {0}.\n"
@@ -842,7 +842,7 @@ msgid "A resource type identifier is required."
 msgstr "Būtinas ištekliaus tipo identifikatorius."
 
 msgid "The resource type should be one of the following: {0}."
-msgstr ""
+msgstr "Ištekliaus tipas turi būti vienas iš šių: {0}."
 
 msgid "The permissions are required."
 msgstr "Reikalingi leidimai."
@@ -863,19 +863,19 @@ msgid "The secrets should contain only the secret of the owner."
 msgstr "Paslaptyse turi būti tik savininko paslaptis."
 
 msgid "The metadata key ID should be a valid UUID."
-msgstr ""
+msgstr "Metaduomenų rakto ID turi būti galiojantis UUID."
 
 msgid "The metadata should be a valid ASCII string."
-msgstr ""
+msgstr "Metaduomenys turi būti tinkama ASCII eilutė."
 
 msgid "The metadata should not be empty."
-msgstr ""
+msgstr "Metaduomenys neturi būti tušti."
 
 msgid "The metadata key type should be a valid UTF8 string."
-msgstr ""
+msgstr "Metaduomenų rakto tipas turi būti tinkama UTF8 eilutė."
 
 msgid "The metadata key type should be one of the following: {0}."
-msgstr ""
+msgstr "Metaduomenų rakto tipas turi būti vienas iš šių: {0}."
 
 msgid "The resource type does not exist."
 msgstr "Ištekliaus tipas neegzistuoja."
@@ -893,31 +893,31 @@ msgid "The permissions should contain at least the owner permission."
 msgstr "Leidimuose turi būti bent savininko leidimas."
 
 msgid "The settings selected by your administrator prevent from downgrading resource type."
-msgstr ""
+msgstr "Administratorius pasirinko nustatymus, kurie neleidžia nuleisti ištekliaus tipo versijos."
 
 msgid "The settings selected by your administrator prevent from using that key type."
-msgstr ""
+msgstr "Administratorius pasirinko nustatymus, kurie neleidžia naudoti šio rakto tipo."
 
 msgid "The metadata key does not exist or was deleted."
-msgstr ""
+msgstr "Metaduomenų raktas neegzistuoja arba buvo ištrintas."
 
 msgid "The metadata key is marked as expired."
-msgstr ""
+msgstr "Metaduomenų raktas pažymėtas kaip pasibaigęs."
 
 msgid "It is not allowed to create v5-password-string resource types."
-msgstr ""
+msgstr "Draudžiama kurti v5-password-string išteklių tipus."
 
 msgid "The resource type should not be deleted."
-msgstr ""
+msgstr "Ištekliaus tipas neturėtų būti ištrintas."
 
 msgid "The resource metadata provided can not be decrypted."
-msgstr ""
+msgstr "Pateiktų ištekliaus metaduomenų iššifruoti nepavyko."
 
 msgid "A resource of type personal cannot be shared with other users or a group."
-msgstr ""
+msgstr "Asmeninio tipo ištekliaus negalima bendrinti su kitais naudotojais ar grupe."
 
 msgid "The settings selected by your administrator prevent from upgrading v4 to v5."
-msgstr ""
+msgstr "Jūsų administratoriaus pasirinkti nustatymai neleidžia atnaujinti iš v4 į v5."
 
 msgid "The resource should not be already soft deleted."
 msgstr "Išteklius neturėtų būti jau ištrintas."
@@ -971,7 +971,7 @@ msgid "A role identifier is required."
 msgstr "Būtinas vaidmens identifikatorius."
 
 msgid "The disabled date should be a valid date."
-msgstr ""
+msgstr "Išjungimo data turi būti galiojanti data."
 
 msgid "The profile should not be empty."
 msgstr "Profilis neturėtų būti tuščias."
@@ -1001,7 +1001,7 @@ msgid "The armored key should be a valid ASCII-armored OpenPGP key."
 msgstr "Šarvuotas raktas turėtų būti galiojantis ASCII šarvuotas „OpenPGP“ raktas."
 
 msgid "The armored key is not valid."
-msgstr ""
+msgstr "Šarvuotas raktas yra netinkamas."
 
 msgid "The message should be a valid ASCII-armored OpenPGP message."
 msgstr "Pranešimas turi būti galiojantis ASCII šarvuotas OpenPGP pranešimas."
@@ -1013,16 +1013,16 @@ msgid "The key should not already be expired."
 msgstr "Rakto galiojimo laikas neturi būti pasibaigęs."
 
 msgid "The date should not be set in the future."
-msgstr ""
+msgstr "Data neturėtų būti nustatyta ateityje."
 
 msgid "The date could not be parsed."
-msgstr ""
+msgstr "Datos nepavyko išanalizuoti."
 
 msgid "The email should be a valid email address."
 msgstr "El. paštas turi būti galiojantis el. pašto adresas."
 
 msgid "The regular expression should be a valid string."
-msgstr ""
+msgstr "Reguliarioji išraiška turi būti tinkama eilutė."
 
 msgid "The fingerprint does not match the one of the armored key."
 msgstr "Pirštų atspaudas nesutampa su šarvuoto rakto atspaudu."
@@ -1037,7 +1037,7 @@ msgid "The delete status should be a valid boolean."
 msgstr "Ištrynimo būsena turi būti tinkama loginė vertė."
 
 msgid "The field must be null when creating a new record."
-msgstr ""
+msgstr "Kuriant naują įrašą šis laukas turi būti null."
 
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "Pagrindinį identifikatorių turėtų sudaryti 8 šešioliktainiai simboliai."
@@ -1046,10 +1046,10 @@ msgid "{0} updated your memberships in several groups"
 msgstr "{0} atnaujino jūsų narystes keliose grupėse"
 
 msgid "{0} deleted several group memberships"
-msgstr ""
+msgstr "{0} ištrynė kelias grupės narystes"
 
 msgid "You made changes on several resources"
-msgstr ""
+msgstr "Atlikote pakeitimus keliuose ištekliuose"
 
 msgid "{0} has made changes on several resources"
 msgstr "{0} atliko kelių išteklių pakeitimus"
@@ -1076,7 +1076,7 @@ msgid "{0} requested you to add members to {1}"
 msgstr "{0} pridėjo jus prie grupės {1}"
 
 msgid "You have been requested to add members to {0}"
-msgstr ""
+msgstr "Paprašyta pridėti narių prie {0}"
 
 msgid "{0} removed you from the group {1}"
 msgstr "{0} pašalino jus iš grupės {1}"
@@ -1097,55 +1097,55 @@ msgid "You added the password {0}"
 msgstr "Pridėjote slaptažodį {0}"
 
 msgid "You added a new password"
-msgstr ""
+msgstr "Pridėjote naują slaptažodį"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} ištrynė slaptažodį {1}"
 
 msgid "You edited a resource"
-msgstr ""
+msgstr "Redagavote išteklį"
 
 msgid "{0} edited a resource"
-msgstr ""
+msgstr "{0} redagavo šaltinį"
 
 msgid "You edited the resource {0}"
-msgstr ""
+msgstr "Redagavote išteklį {0}"
 
 msgid "{0} edited the resource {1}"
-msgstr ""
+msgstr "{0} redagavo išteklių {1}"
 
 msgid "{0} can not complete the account recovery process!"
 msgstr "{0} negali užbaigti paskyros atkūrimo proceso!"
 
 msgid "{0} shared the resource {1}"
-msgstr ""
+msgstr "{0} pasidalijo ištekliumi {1}"
 
 msgid "{0} shared a resource"
-msgstr ""
+msgstr "{0} pasidalijo ištekliumi"
 
 msgid "You deleted administrator {0}"
-msgstr ""
+msgstr "Ištrynėte administratorių {0}"
 
 msgid "{0} deleted your account"
-msgstr ""
+msgstr "{0} ištrynė jūsų paskyrą"
 
 msgid "{0} deleted administrator {1}"
-msgstr ""
+msgstr "{0} ištrynė administratorių {1}"
 
 msgid "Your account has been suspended"
-msgstr ""
+msgstr "Jūsų paskyra buvo sustabdyta"
 
 msgid "Your admin role has been revoked"
-msgstr ""
+msgstr "Jūsų administratoriaus vaidmuo buvo atšauktas"
 
 msgid "{0}'s admin role has been revoked"
-msgstr ""
+msgstr "{0} administratoriaus vaidmuo buvo atšauktas"
 
 msgid "{0} deleted user {1}"
 msgstr "{0} ištrynė naudotoją {1}"
 
 msgid "{0} has been suspended"
-msgstr ""
+msgstr "{0} buvo sustabdyta"
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "Sveiki atvykę į „passbolt“, {0}!"
@@ -1172,13 +1172,13 @@ msgid "The send on user setup completed setting should be a boolean."
 msgstr "Nustatymas „Siųsti, kai naudotojo sąranka baigta“ turėtų būti loginis."
 
 msgid "The send on user recover abort setting should be a boolean."
-msgstr ""
+msgstr "Nustatymas \"Siųsti atšaukus vartotojo atkūrimą\" turėtų būti loginis."
 
 msgid "The send on user disabled setting should be a boolean."
-msgstr ""
+msgstr "Nustatymas „Siųsti, kai naudotojas išjungtas“ turėtų būti loginis."
 
 msgid "The send on admin disabled setting should be a boolean."
-msgstr ""
+msgstr "Nustatymas „Siųsti, kai administratorius išjungė“ turėtų būti loginis."
 
 msgid "The send on comment added setting should be a boolean."
 msgstr "„Siųsti toliau“ komentaro parametras turi būti loginis."
@@ -1199,7 +1199,7 @@ msgid "The send on group manager updated setting should be a boolean."
 msgstr "Nustatymas „Siųsti atnaujintą grupės valdytoją“ turėtų būti loginis."
 
 msgid "The send on group manager request add user should be a boolean."
-msgstr ""
+msgstr "Nustatymas „Siųsti grupės tvarkytuvui prašymą pridėti vartotoją“ turėtų būti loginis."
 
 msgid "The send on password created setting should be a boolean."
 msgstr "Nustatymas „Siųsti sukurtą slaptažodį“ turėtų būti loginis."
@@ -1316,34 +1316,34 @@ msgid "Could not validate group user data."
 msgstr "Nepavyko patvirtinti grupės naudotojo duomenų."
 
 msgid "All email notifications will be sent."
-msgstr ""
+msgstr "Visi el. pašto pranešimai bus išsiųsti."
 
 msgid "Some email notifications are disabled by the administrator."
-msgstr ""
+msgstr "Kai kurie el. pašto pranešimai yra išjungti administratoriaus."
 
 msgid "Host availability will be checked."
-msgstr ""
+msgstr "Bus tikrinamas pagrindinio kompiuterio pasiekiamumas."
 
 msgid "Host availability checking is disabled."
-msgstr ""
+msgstr "Pagrindinio kompiuterio pasiekiamumo tikrinimas išjungtas."
 
 msgid "Make sure this instance is not publicly available on the internet."
-msgstr ""
+msgstr "Įsitikinkite, kad ši instancija nėra viešai prieinama internete."
 
 msgid "Or set the PASSBOLT_EMAIL_VALIDATE_MX environment variable to true."
-msgstr ""
+msgstr "Arba nustatykite PASSBOLT_EMAIL_VALIDATE_MX aplinkos kintamąjį į true."
 
 msgid "Or set passbolt.email.validate.mx to true in {0}."
-msgstr ""
+msgstr "Arba nustatykite passbolt.email.validate.mx į true faile {0}."
 
 msgid "Serving the compiled version of the javascript app."
-msgstr ""
+msgstr "Tiekiama sukompiliuota „JavaScript“ programos versija."
 
 msgid "Using non-compiled Javascript. Passbolt will be slower."
-msgstr ""
+msgstr "Naudojama nesukompiliuota JavaScript. „Passbolt“ veiks lėčiau."
 
 msgid "Set passbolt.js.build to production in {0}"
-msgstr ""
+msgstr "Nustatykite passbolt.js.build į production faile {0}"
 
 msgid "undefined"
 msgstr "neapibrėžtas"
@@ -1352,496 +1352,496 @@ msgid "Could not read tag information on github repository"
 msgstr "Nepavyko nuskaityti žymos informacijos github.com saugykloje"
 
 msgid "Using latest passbolt version ({0})."
-msgstr ""
+msgstr "Naudojama naujausia „Passbolt“ versija ({0})."
 
 msgid "Could connect to passbolt repository to check versions."
-msgstr ""
+msgstr "Pavyko prisijungti prie „Passbolt“ saugyklos, kad patikrinti versijas."
 
 msgid "This installation is not up to date. Currently using {0} and it should be {1}."
-msgstr ""
+msgstr "Ši diegimo versija neatnaujinta. Šiuo metu naudojama {0}, o turėtų būti {1}."
 
 msgid "Could not connect to passbolt repository to check versions."
-msgstr ""
+msgstr "Nepavyko prisijungti prie „Passbolt“ saugyklos, kad būtų patikrintos versijos."
 
 msgid "It is not possible to check if your version is up-to-date."
-msgstr ""
+msgstr "Neįmanoma patikrinti, ar jūsų versija yra naujausia."
 
 msgid "See https://www.passbolt.com/help/tech/update"
-msgstr ""
+msgstr "Žiūrėkite https://www.passbolt.com/help/tech/update"
 
 msgid "Check the network configuration to allow this script to check for updates."
-msgstr ""
+msgstr "Patikrinkite tinklo konfigūraciją, kad šis scenarijus galėtų tikrinti atnaujinimus."
 
 msgid "Search engine robots are told not to index content."
-msgstr ""
+msgstr "Paieškos sistemos robotams nurodyta neindeksuoti turinio."
 
 msgid "Search engine robots are not told not to index content."
-msgstr ""
+msgstr "Paieškos sistemos robotams nenurodyta neindeksuoti turinio."
 
 msgid "Set passbolt.meta.robots to false in {0}."
-msgstr ""
+msgstr "Nustatykite passbolt.meta.robots į false faile {0}."
 
 msgid "Selenium API endpoints are disabled."
-msgstr ""
+msgstr "Selenium API įėjimo taškai yra išjungti."
 
 msgid "Selenium API endpoints are active. This setting should be used for testing only."
-msgstr ""
+msgstr "Selenium API įėjimo taškai yra aktyvūs. Šis nustatymas turėtų būti naudojamas tik testavimui."
 
 msgid "Set passbolt.selenium.active to false in {0}."
-msgstr ""
+msgstr "Nustatykite passbolt.selenium.active į false faile {0}."
 
 msgid "The Self Registration plugin is enabled."
-msgstr ""
+msgstr "Įjungtas savarankiškos registracijos papildinys."
 
 msgid "The Self Registration plugin is disabled."
-msgstr ""
+msgstr "Išjungtas savarankiškos registracijos papildinys."
 
 msgid "Enable the plugin in order to define self registration settings."
-msgstr ""
+msgstr "Įjunkite šį papildinį, kad nustatytumėte savarankiškos registracijos nustatymus."
 
 msgid "Registration is closed, only administrators can add users."
-msgstr ""
+msgstr "Registracija uždaryta, tik administratoriai gali pridėti vartotojus."
 
 msgid "The self registration provider is: {0}."
-msgstr ""
+msgstr "Savarankiškos registracijos teikėjas: {0}."
 
 msgid "The deprecated self registration public setting was not found in {0}."
-msgstr ""
+msgstr "Atgyvenusio savarankiškos registracijos viešo nustatymo nėra faile {0}."
 
 msgid "The deprecated self registration public setting was found in {0}."
-msgstr ""
+msgstr "Atgyvenęs savarankiškos registracijos viešas nustatymas rastas faile {0}."
 
 msgid "You may remove the \"passbolt.registration.public\" setting."
-msgstr ""
+msgstr "Galite pašalinti nustatymą \"passbolt.registration.public\"."
 
 msgid "Passbolt is configured to force SSL use."
-msgstr ""
+msgstr "„Passbolt“ sukonfigūruotas priverstiniam SSL naudojimui."
 
 msgid "Passbolt is not configured to force SSL use."
-msgstr ""
+msgstr "„Passbolt“ nesukonfigūruotas priverstiniam SSL naudojimui."
 
 msgid "Set passbolt.ssl.force to true in {0}."
-msgstr ""
+msgstr "Nustatykite passbolt.ssl.force į true faile {0}."
 
 msgid "App.fullBaseUrl is set to HTTPS."
-msgstr ""
+msgstr "App.fullBaseUrl nustatytas į HTTPS."
 
 msgid "App.fullBaseUrl is not set to HTTPS."
-msgstr ""
+msgstr "App.fullBaseUrl nenustatytas į HTTPS."
 
 msgid "Check App.fullBaseUrl url scheme in {0}."
-msgstr ""
+msgstr "Patikrinkite App.fullBaseUrl url schemą faile {0}."
 
 msgid "The application config file is present"
-msgstr ""
+msgstr "Programos konfigūracijos failas yra"
 
 msgid "The application config file is missing in {0}"
-msgstr ""
+msgstr "Trūksta programos konfigūracijos failo {0}"
 
 msgid "Copy {0} to {1}"
-msgstr ""
+msgstr "Nukopijuokite {0} į {1}"
 
 msgid "The passbolt config file is present"
-msgstr ""
+msgstr "„Passbolt“ konfigūracijos failas yra"
 
 msgid "The passbolt config file is missing in {0}"
-msgstr ""
+msgstr "Trūksta „Passbolt“ konfigūracijos failo {0}"
 
 msgid "The passbolt config file is not required if passbolt is configured with environment variables"
-msgstr ""
+msgstr "„Passbolt“ konfigūracijos failo nereikia, jei „Passbolt“ sukonfigūruotas naudojant aplinkos kintamuosius"
 
 msgid "Cache is working."
-msgstr ""
+msgstr "Podėlis veikia."
 
 msgid "Cache is NOT working."
-msgstr ""
+msgstr "Podėlis NEveikia."
 
 msgid "Check the settings in {0}"
-msgstr ""
+msgstr "Patikrinkite nustatymus faile {0}"
 
 msgid "Debug mode is off."
-msgstr ""
+msgstr "Derinimo režimas išjungtas."
 
 msgid "Debug mode is on."
-msgstr ""
+msgstr "Derinimo režimas įjungtas."
 
 msgid "Set debug to false in {0}"
-msgstr ""
+msgstr "Nustatykite debug į false faile {0}"
 
 msgid "Full base url is set to {0}"
-msgstr ""
+msgstr "Pilnas bazinis url nustatytas į {0}"
 
 msgid "Full base url is not set. The application is using: {0}."
-msgstr ""
+msgstr "Pilnas bazinis url nenustatytas. Programa naudoja: {0}."
 
 msgid "Edit App.fullBaseUrl in {0}"
-msgstr ""
+msgstr "Redaguokite App.fullBaseUrl faile {0}"
 
 msgid "/healthcheck/status is reachable."
-msgstr ""
+msgstr "/healthcheck/status pasiekiamas."
 
 msgid "Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl"
-msgstr ""
+msgstr "Nepavyko pasiekti /healthcheck/status su App.fullBaseUrl nurodytu url"
 
 msgid "Check that the domain name is correct in {0}"
-msgstr ""
+msgstr "Patikrinkite, ar domeno pavadinimas teisingas faile {0}"
 
 msgid "Check the network settings"
-msgstr ""
+msgstr "Patikrinkite tinklo nustatymus"
 
 msgid "Unique value set for security.salt"
-msgstr ""
+msgstr "Nustatyta unikali reikšmė security.salt"
 
 msgid "Default value found for security.salt"
-msgstr ""
+msgstr "Rasta numatytoji reikšmė security.salt"
 
 msgid "Edit the security.salt in {0}"
-msgstr ""
+msgstr "Redaguokite security.salt faile {0}"
 
 msgid "App.fullBaseUrl validation OK."
-msgstr ""
+msgstr "App.fullBaseUrl patikra sėkminga."
 
 msgid "App.fullBaseUrl does not validate. A valid URL/IP is accepted, but found \"{0}\"."
-msgstr ""
+msgstr "„App.fullBaseUrl“ nėra tinkamas. Priimamas galiojantis URL/IP, tačiau rastas \"{0}\"."
 
 msgid "Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt"
-msgstr ""
+msgstr "Pasirinkite tinkamą domeno pavadinimą, kaip apibrėžta 2.3.1 skyriuje adresu http://www.ietf.org/rfc/rfc1035.txt"
 
 msgid "IMPORTANT: Using an empty App.fullBaseUrl can lead to host header injection attack: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
-msgstr ""
+msgstr "SVARBU: Naudojant tuščią \"App.fullBaseUrl\" gali įvykti host antraštės injekcijos ataka: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
 
 msgid "The application is able to connect to the database"
-msgstr ""
+msgstr "Programa gali prisijungti prie duomenų bazės"
 
 msgid "The driver defined in the database configuration is not supported."
-msgstr ""
+msgstr "Tvarkyklė, nurodyta duomenų bazės konfigūracijoje, nepalaikoma."
 
 msgid "The application is not able to connect to the database."
-msgstr ""
+msgstr "Programa negali prisijungti prie duomenų bazės."
 
 msgid "Ensure that the driver defined in {0} is one of the following: {1}."
-msgstr ""
+msgstr "Įsitikinkite, kad tvarkyklė, nurodyta {0}, yra viena iš šių: {1}."
 
 msgid "Double check the host, database name, username and password in {0}."
-msgstr ""
+msgstr "Dar kartą patikrinkite pagrindinio kompiuterio adresą, duomenų bazės pavadinimą, naudotojo vardą ir slaptažodį faile {0}."
 
 msgid "Make sure the database exists and is accessible for the given database user."
-msgstr ""
+msgstr "Įsitikinkite, kad duomenų bazė egzistuoja ir yra pasiekiama nurodytam duomenų bazės naudotojui."
 
 msgid "Some default content is present."
-msgstr ""
+msgstr "Yra tam tikras numatytasis turinys."
 
 msgid "No default content found."
-msgstr ""
+msgstr "Nerasta jokio numatytojo turinio."
 
 msgid "Run the install script to install the database tables"
-msgstr ""
+msgstr "Paleiskite diegimo skriptą, kad įdiegtumėte duomenų bazės lenteles"
 
 msgid "The database schema is up to date."
-msgstr ""
+msgstr "Duomenų bazės schema atnaujinta."
 
 msgid "The database schema is not up to date."
-msgstr ""
+msgstr "Duomenų bazės schema nėra atnaujinta."
 
 msgid "Run the migration scripts:"
-msgstr ""
+msgstr "Paleiskite migracijos skriptus:"
 
 msgid "{0} tables found."
-msgstr ""
+msgstr "Rasta {0} lentelių."
 
 msgid "No table found."
-msgstr ""
+msgstr "Nerasta nė vienos lentelės."
 
 msgid "Cannot detect your system distribution details."
-msgstr ""
+msgstr "Nepavyksta nustatyti sistemos distribucijos detalių."
 
 msgid "See `{0}`."
-msgstr ""
+msgstr "Žr. `{0}`."
 
 msgid "Cannot detect your `gpg` or `libgcrypt` version."
-msgstr ""
+msgstr "Nepavyksta nustatyti jūsų `gpg` ar `libgcrypt` versijos."
 
 msgid "See `{0}` and `{1}`."
-msgstr ""
+msgstr "Žr. `{0}` ir `{1}`."
 
 msgid "GD or Imagick extension is installed."
-msgstr ""
+msgstr "GD arba Imagick plėtinys įdiegtas."
 
 msgid "You must enable the gd or imagick extensions to use Passbolt."
-msgstr ""
+msgstr "Norėdami naudoti Passbolt, turite įjungti gd arba imagick plėtinius."
 
 msgid "See: https://secure.php.net/manual/en/book.image.php"
-msgstr ""
+msgstr "Žr.: https://secure.php.net/manual/en/book.image.php"
 
 msgid "See: https://secure.php.net/manual/en/book.imagick.php"
-msgstr ""
+msgstr "Žr.: https://secure.php.net/manual/en/book.imagick.php"
 
 msgid "Intl extension is installed."
-msgstr ""
+msgstr "Intl plėtinys įdiegtas."
 
 msgid "You must enable the intl extension to use Passbolt."
-msgstr ""
+msgstr "Norėdami naudoti Passbolt, turite įjungti intl plėtinį."
 
 msgid "See: https://secure.php.net/manual/en/book.intl.php"
-msgstr ""
+msgstr "Žr.: https://secure.php.net/manual/en/book.intl.php"
 
 msgid "The logs directory and its content are writable."
-msgstr ""
+msgstr "Žurnalų katalogas ir jo turinys yra rašomi."
 
 msgid "The logs directory and its content are not writable."
-msgstr ""
+msgstr "Žurnalų katalogas ir jo turinys nėra rašomi."
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
-msgstr ""
+msgstr "Įsitikinkite, kad žurnalų katalogą ir jo turinį gali įrašyti žiniatinklio serverio naudotojas."
 
 msgid "You can try:"
 msgstr "Galite pabandyti:"
 
 msgid "Mbstring extension is installed."
-msgstr ""
+msgstr "Mbstring plėtinys įdiegtas."
 
 msgid "You must enable the mbstring extension to use Passbolt."
-msgstr ""
+msgstr "Norėdami naudoti Passbolt, turite įjungti mbstring plėtinį."
 
 msgid "See: https://secure.php.net/manual/en/book.mbstring.php"
-msgstr ""
+msgstr "Žr.: https://secure.php.net/manual/en/book.mbstring.php"
 
 msgid "PHP version is {0} or above."
-msgstr ""
+msgstr "PHP versija yra {0} arba naujesnė."
 
 msgid "PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment."
-msgstr ""
+msgstr "Greitai \"Passbolt\" nebesuteiks palaikymo PHP versijai, senesnei nei {0}, todėl apsvarstykite galimybę atnaujinti savo operacinę sistemą ar PHP aplinką."
 
 msgid "64-bit architecture system detected."
-msgstr ""
+msgstr "Aptikta 64 bitų architektūros sistema."
 
 msgid "32-bit architecture system detected, this environment will not be supported as of Passbolt v5+."
-msgstr ""
+msgstr "Aptikta 32 bitų architektūros sistema, ši aplinka nebebus palaikoma nuo „Passbolt“ v5+ versijos."
 
 msgid "See PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
-msgstr ""
+msgstr "Žr. PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
 
 msgid "PCRE compiled with unicode support."
-msgstr ""
+msgstr "PCRE sukompiliuota su Unicode palaikymu."
 
 msgid "PCRE has not been compiled with Unicode support."
-msgstr ""
+msgstr "PCRE nėra sukompiliuota su Unicode palaikymu."
 
 msgid "Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring."
-msgstr ""
+msgstr "Perkompiliuokite PCRE su Unicode palaikymu, konfigūruodami pridėdami --enable-unicode-properties."
 
 msgid "PHP version {0}."
-msgstr ""
+msgstr "PHP versija {0}."
 
 msgid "PHP version is too low, passbolt need PHP {0} or higher."
-msgstr ""
+msgstr "PHP versija yra per sena, \"Passbolt\" reikia PHP {0} ar naujesnės."
 
 msgid "System clock is synchronized and NTP service is active."
-msgstr ""
+msgstr "Sistemos laikrodis sinchronizuotas, NTP paslauga įjungta."
 
 msgid "System clock and NTP service information cannot be found."
-msgstr ""
+msgstr "Nepavyksta rasti sistemos laikrodžio ir NTP paslaugos informacijos."
 
 msgid "NTP service is active but the system clock is not synchronized."
-msgstr ""
+msgstr "NTP paslauga įjungta, tačiau sistemos laikrodis nesinchronizuotas."
 
 msgid "System clock is synchronized but NTP service is inactive."
-msgstr ""
+msgstr "Sistemos laikrodis sinchronizuotas, tačiau NTP paslauga išjungta."
 
 msgid "System clock is not synchronized and NTP service is inactive."
-msgstr ""
+msgstr "Sistemos laikrodis nesinchronizuotas, NTP paslauga išjungta."
 
 msgid "That generally means the NTP service is failing to contact any NTP servers."
-msgstr ""
+msgstr "Tai paprastai reiškia, kad NTP paslauga nesugeba prisijungti prie jokių NTP serverių."
 
 msgid "See `{0}`. More information: {1}"
-msgstr ""
+msgstr "Žr. `{0}`. Daugiau informacijos: {1}"
 
 msgid "The temporary directory and its content are writable and not executable."
-msgstr ""
+msgstr "Laikinasis katalogas ir jo turinys yra rašomi ir neturi vykdymo teisių."
 
 msgid "The temporary directory and its content are not writable, or are executable."
-msgstr ""
+msgstr "Laikinasis katalogas ir jo turinys nėra rašomi arba turi vykdymo teises."
 
 msgid "Ensure the temporary directory and its content are writable by the webserver user."
-msgstr ""
+msgstr "Įsitikinkite, kad laikinasis katalogas ir jo turinys yra rašomi žiniatinklio serverio naudotojo."
 
 msgid "you can try:"
 msgstr "galite pabandyti:"
 
 msgid "The private key can be used to decrypt a message."
-msgstr ""
+msgstr "Privatus raktas gali būti naudojamas pranešimui iššifruoti."
 
 msgid "The private key cannot be used to decrypt a message"
-msgstr ""
+msgstr "Privatus raktas negali būti naudojamas pranešimui iššifruoti"
 
 msgid "The private key can be used to decrypt and verify a message."
-msgstr ""
+msgstr "Privatus raktas gali būti naudojamas pranešimui iššifruoti ir patikrinti."
 
 msgid "The private key cannot be used to decrypt and verify a message"
-msgstr ""
+msgstr "Privatus raktas negali būti naudojamas pranešimui iššifruoti ir patikrinti"
 
 msgid "The public key can be used to encrypt a message."
-msgstr ""
+msgstr "Viešasis raktas gali būti naudojamas pranešimui užšifruoti."
 
 msgid "The public key cannot be used to encrypt a message"
-msgstr ""
+msgstr "Viešasis raktas negali būti naudojamas pranešimui užšifruoti"
 
 msgid "Make sure that the server private key is valid and that there is no passphrase."
-msgstr ""
+msgstr "Įsitikinkite, kad serverio privatus raktas yra galiojantis ir neturi slaptažodžio."
 
 msgid "Make sure you imported the private server key in the keyring of the webserver user."
-msgstr ""
+msgstr "Įsitikinkite, kad importavote serverio privatų raktą į žiniatinklio serverio naudotojo raktų rinkinį."
 
 msgid "The public and private keys can be used to encrypt and sign a message."
-msgstr ""
+msgstr "Viešasis ir privatus raktai gali būti naudojami pranešimui užšifruoti ir pasirašyti."
 
 msgid "The public and private keys cannot be used to encrypt and sign a message"
-msgstr ""
+msgstr "Viešasis ir privatus raktai negali būti naudojami pranešimui užšifruoti ir pasirašyti"
 
 msgid "The private key can be used to sign a message."
-msgstr ""
+msgstr "Privatus raktas gali būti naudojamas pranešimui pasirašyti."
 
 msgid "The private key cannot be used to sign a message"
-msgstr ""
+msgstr "Privatus raktas negali būti naudojamas pranešimui pasirašyti"
 
 msgid "The public key can be used to verify a signature."
-msgstr ""
+msgstr "Viešasis raktas gali būti naudojamas parašui patikrinti."
 
 msgid "The public key cannot be used to verify a signature."
-msgstr ""
+msgstr "Viešasis raktas negali būti naudojamas parašui patikrinti."
 
 msgid "The server key fingerprint matches the one defined in {0}."
-msgstr ""
+msgstr "Serverio rakto pirštų atspaudas atitinka tą, kuris nurodytas faile {0}."
 
 msgid "The server key fingerprint doesn't match the one defined in {0}."
-msgstr ""
+msgstr "Serverio rakto pirštų atspaudas neatitinka to, kuris nurodytas faile {0}."
 
 msgid "Double check the key fingerprint, example: "
-msgstr ""
+msgstr "Dar kartą patikrinkite rakto pirštų atspaudą, pavyzdys: "
 
 msgid "SERVER_KEY_EMAIL: The email you used when you generated the server key."
-msgstr ""
+msgstr "SERVER_KEY_EMAIL: El. paštas, kurį naudojote kurdami serverio raktą."
 
 msgid "See. https://www.passbolt.com/help/tech/install#toc_gpg"
-msgstr ""
+msgstr "Žr. https://www.passbolt.com/help/tech/install#toc_gpg"
 
 msgid "The server private key format is Gopengpg compatible."
-msgstr ""
+msgstr "Serverio privataus rakto formatas suderinamas su Gopengpg."
 
 msgid "The server private key format is not Gopengpg compatible."
-msgstr ""
+msgstr "Serverio privataus rakto formatas nesuderinamas su Gopengpg."
 
 msgid "The server public key format is Gopengpg compatible."
-msgstr ""
+msgstr "Serverio viešojo rakto formatas suderinamas su Gopengpg."
 
 msgid "The server public key format is not Gopengpg compatible."
-msgstr ""
+msgstr "Serverio viešojo rakto formatas nesuderinamas su Gopengpg."
 
 msgid "The environment variable GNUPGHOME is set to {0}."
-msgstr ""
+msgstr "Aplinkos kintamasis GNUPGHOME nustatytas į {0}."
 
 msgid "The environment variable GNUPGHOME is set to {0}, but the directory does not exist."
-msgstr ""
+msgstr "Aplinkos kintamasis GNUPGHOME nustatytas į {0}, tačiau katalogas neegzistuoja."
 
 msgid "Ensure the keyring location exists and is accessible by the webserver user."
-msgstr ""
+msgstr "Įsitikinkite, kad raktų rinkinio vieta egzistuoja ir yra prieinama žiniatinklio serverio naudotojui."
 
 msgid "You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}."
-msgstr ""
+msgstr "Raktų rinkinio vietą galite pakeisti redaguodami kintamuosius GPG.env.setenv ir GPG.env.home faile {0}."
 
 msgid "The directory {0} containing the keyring is writable by the webserver user."
-msgstr ""
+msgstr "Katalogas {0}, kuriame yra raktų rinkinys, yra rašomas žiniatinklio serverio naudotojo."
 
 msgid "The directory {0} containing the keyring is not writable by the webserver user."
-msgstr ""
+msgstr "Katalogas {0}, kuriame yra raktų rinkinys, nėra rašomas žiniatinklio serverio naudotojo."
 
 msgid "Ensure the keyring location is accessible by the webserver user."
-msgstr ""
+msgstr "Įsitikinkite, kad raktų rinkinio vieta yra prieinama žiniatinklio serverio naudotojui."
 
 msgid "The server OpenPGP key is not the default one."
-msgstr ""
+msgstr "Serverio OpenPGP raktas nėra numatytasis."
 
 msgid "Do not use the default OpenPGP key for the server."
-msgstr ""
+msgstr "Nenaudokite numatytojo OpenPGP rakto serveriui."
 
 msgid "The server OpenPGP key is not set."
-msgstr ""
+msgstr "Nėra nustatytas serverio OpenPGP raktas."
 
 msgid "Create a key, export it and add the fingerprint to {0}"
-msgstr ""
+msgstr "Sukurkite raktą, eksportuokite jį ir pridėkite pirštų atspaudą faile {0}"
 
 msgid "PHP GPG Module is installed and loaded."
-msgstr ""
+msgstr "PHP GPG modulis įdiegtas ir įkeltas."
 
 msgid "PHP GPG Module is not installed or loaded."
-msgstr ""
+msgstr "PHP GPG modulis nėra įdiegtas arba neįkeltas."
 
 msgid "Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php"
-msgstr ""
+msgstr "Įdiekite php-gnupg, žr. http://php.net/manual/en/gnupg.installation.php"
 
 msgid "Make sure to add extension=gnupg.so in php ini files for both php-cli and php."
-msgstr ""
+msgstr "Įsitikinkite, kad php-gnupg plėtinys extension=gnupg.so pridedamas php.ini failuose tiek php-cli, tiek php."
 
 msgid "The private key file is defined in {0} and readable."
-msgstr ""
+msgstr "Privataus rakto failas apibrėžtas faile {0} ir yra skaitomas."
 
 msgid "The private key file is not defined in {0} or not readable."
-msgstr ""
+msgstr "Privataus rakto failas faile {0} nėra apibrėžtas arba nėra skaitomas."
 
 msgid "Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in {0}."
-msgstr ""
+msgstr "Įsitikinkite, kad privataus rakto failą faile {0} apibrėžia kintamasis passbolt.gpg.serverKey.private."
 
 msgid "Ensure there is a private key armored block in the key file."
-msgstr ""
+msgstr "Įsitikinkite, kad rakto faile yra šarvuotas privataus rakto blokas."
 
 msgid "Ensure the private key defined in {0} exists and is accessible by the webserver user."
-msgstr ""
+msgstr "Įsitikinkite, kad faile {0} nurodytas privatus raktas egzistuoja ir yra prieinamas žiniatinklio serverio naudotojui."
 
 msgid "There is a valid email id defined for the server key."
-msgstr ""
+msgstr "Serverio raktui yra apibrėžtas galiojantis el. pašto adresas."
 
 msgid "The server key does not have a valid email id."
-msgstr ""
+msgstr "Serverio raktas neturi galiojančio el. pašto adreso."
 
 msgid "The server public key defined in the {0} (or environment variables) is in the keyring."
-msgstr ""
+msgstr "Serverio viešasis raktas, apibrėžtas faile {0} (arba aplinkos kintamuosiuose), yra raktų rinkinyje."
 
 msgid "The server public key defined in the {0} (or environment variables) is not in the keyring"
-msgstr ""
+msgstr "Serverio viešasis raktas, apibrėžtas faile {0} (arba aplinkos kintamuosiuose), nėra raktų rinkinyje"
 
 msgid "Import the private server key in the keyring of the webserver user."
-msgstr ""
+msgstr "Importuokite serverio privatų raktą į žiniatinklio serverio naudotojo raktų rinkinį."
 
 msgid "The public key file is defined in {0} and readable."
-msgstr ""
+msgstr "Viešojo rakto failas apibrėžtas faile {0} ir yra skaitomas."
 
 msgid "The public key file is not defined in {0} or not readable."
-msgstr ""
+msgstr "Viešojo rakto failas faile {0} nėra apibrėžtas arba nėra skaitomas."
 
 msgid "Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in {0}."
-msgstr ""
+msgstr "Įsitikinkite, kad viešojo rakto failą faile {0} apibrėžia kintamasis passbolt.gpg.serverKey.public."
 
 msgid "Ensure there is a public key armored block in the key file."
-msgstr ""
+msgstr "Įsitikinkite, kad rakto faile yra šarvuotas viešojo rakto blokas."
 
 msgid "Ensure the public key defined in {0} exists and is accessible by the webserver user."
-msgstr ""
+msgstr "Įsitikinkite, kad faile {0} nurodytas viešasis raktas egzistuoja ir yra prieinamas žiniatinklio serverio naudotojui."
 
 msgid "Environment"
-msgstr ""
+msgstr "Aplinka"
 
 msgid "Config files"
-msgstr ""
+msgstr "Konfigūracijos failai"
 
 msgid "Core config"
-msgstr ""
+msgstr "Pagrindinė konfigūracija"
 
 msgid "SMTP settings"
-msgstr ""
+msgstr "SMTP nustatymai"
 
 msgid "Application configuration"
-msgstr ""
+msgstr "Programos konfigūracija"
 
 msgid "Database"
 msgstr "Duomenų bazė"
@@ -1850,28 +1850,28 @@ msgid "GPG Configuration"
 msgstr "GPG konfigūracija"
 
 msgid "JWT Authentication"
-msgstr ""
+msgstr "JWT autentifikavimas"
 
 msgid "SSL Certificate"
-msgstr ""
+msgstr "SSL sertifikatas"
 
 msgid "The {0} plugin is enabled."
-msgstr ""
+msgstr "Įjungtas įskiepis {0}."
 
 msgid "The {0} plugin is disabled."
-msgstr ""
+msgstr "Išjungtas įskiepis {0}."
 
 msgid "Set the environment variable {0} to true"
-msgstr ""
+msgstr "Nustatykite aplinkos kintamąjį {0} reikšmei true"
 
 msgid "Enable the plugin in order to define SMTP settings in the database."
-msgstr ""
+msgstr "Įjunkite įskiepį, kad duomenų bazėje galėtumėte apibrėžti SMTP nustatymus."
 
 msgid "Hostname is matching in SSL certificate."
-msgstr ""
+msgstr "SSL sertifikate esantis kompiuterio vardas sutampa."
 
 msgid "Hostname does not match when validating certificates."
-msgstr ""
+msgstr "Validuojant sertifikatus, kompiuterio vardas nesutampa."
 
 msgid "SSL access is enabled."
 msgstr "SSL prieiga įjungta."
@@ -1880,22 +1880,22 @@ msgid "SSL access is not enabled. You can still proceed, but it is highly recomm
 msgstr "SSL prieiga neįjungta. Vis tiek galite tęsti, bet labai rekomenduojama prieš tęsiant sukonfigūruoti žiniatinklio serverį naudoti HTTPS."
 
 msgid "Not using a self-signed certificate."
-msgstr ""
+msgstr "Nenaudojamas savarankiškai pasirašytas sertifikatas."
 
 msgid "Using a self-signed certificate."
-msgstr ""
+msgstr "Naudojamas savarankiškai pasirašytas sertifikatas."
 
 msgid "SSL peer certificate validates."
-msgstr ""
+msgstr "SSL tarpinis sertifikatas patvirtintas."
 
 msgid "SSL peer certificate does not validate."
-msgstr ""
+msgstr "SSL tarpinis sertifikatas nepatvirtintas."
 
 msgid "The keyring is not defined."
-msgstr ""
+msgstr "Raktų pakabukas nėra apibrėžtas."
 
 msgid "The keyring directory is not accessible by the current user: {0}"
-msgstr ""
+msgstr "Esamas naudotojas neturi prieigos prie raktų pakabuko katalogo: {0}"
 
 msgid "Could not validate sub key data."
 msgstr "Nepavyko patvirtinti papildomo rakto duomenų."
@@ -1931,13 +1931,13 @@ msgid "The armored message could not be validated."
 msgstr "Nepavyko patvirtinti šarvuoto pranešimo."
 
 msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
-msgstr ""
+msgstr "Konfigūracijoje nurodyto „OpenPGP“ serverio rakto negalima naudoti šifruoti."
 
 msgid "The OpenPGP server key defined in the config cannot be used to verify signature."
-msgstr ""
+msgstr "Konfigūracijoje nurodytas „OpenPGP“ serverio raktas negali būti naudojamas parašui patikrinti."
 
 msgid "The OpenPGP server key defined in the config cannot be used to sign."
-msgstr ""
+msgstr "Konfigūracijoje nurodytas „OpenPGP“ serverio raktas negali būti naudojamas pasirašyti."
 
 msgid "The config for the server private key fingerprint is not available or incomplete."
 msgstr "Serverio privataus rakto kontrolinio kodo konfigūracija nepasiekiama arba nebaigta."
@@ -1946,13 +1946,13 @@ msgid "The config for the server private key passphrase is invalid."
 msgstr "Serverio privataus rakto slaptafrazės konfigūracija neteisinga."
 
 msgid "The user public key is not available or incomplete."
-msgstr ""
+msgstr "Naudotojo viešasis raktas nepasiekiamas arba nepilnas."
 
 msgid "The user public key fingerprint is not available or incomplete."
-msgstr ""
+msgstr "Naudotojo viešojo rakto antspaudas nepasiekiamas arba nepilnas."
 
 msgid "The user armored key is not available or incomplete."
-msgstr ""
+msgstr "Naudotojo šarvuotas raktas nepasiekiamas arba nepilnas."
 
 msgid "The algorithm is invalid."
 msgstr "Algortimas neteisingas."
@@ -2045,10 +2045,10 @@ msgid "Could not validate secret data."
 msgstr "Nepavyko patvirtinti slaptų duomenų."
 
 msgid "The group id should be a valid UUID."
-msgstr ""
+msgstr "Grupės ID turėtų būti galiojantis UUID."
 
 msgid "The users ids array should contain only valid UUIDs."
-msgstr ""
+msgstr "Vartotojų ID masyve turi būti tik galiojantys UUID."
 
 msgid "Validation failed for secret {0}. {1}"
 msgstr "Nepavyko patvirtinti slapto {0}. {1}"
@@ -2084,7 +2084,7 @@ msgid "The key provided does not belong to given user."
 msgstr "Pateiktas raktas nepriklauso nurodytam vartotojui."
 
 msgid "The user does not exist or is not active or is disabled."
-msgstr ""
+msgstr "Vartotojo nėra, jis neaktyvus arba sustabdytas."
 
 msgid "The OpenPGP key data is not valid."
 msgstr "OpenPGP rakto duomenys neteisingi."
@@ -2096,7 +2096,7 @@ msgid "The user does not exist, is already active or has been deleted."
 msgstr "Vartotojo nėra, jis jau yra aktyvus arba buvo ištrintas."
 
 msgid "The user does not exist or is already active or is disabled."
-msgstr ""
+msgstr "Vartotojo nėra, jis jau yra aktyvus arba sustabdytas."
 
 msgid "The user should not be a guest."
 msgstr "Vartotojas neturėtų būti svečias."
@@ -2117,10 +2117,10 @@ msgid "Please register and complete the setup first."
 msgstr "Pirmiausia užsiregistruokite ir užbaikite sąranką."
 
 msgid "This user has been disabled."
-msgstr ""
+msgstr "Šis vartotojas buvo išjungtas."
 
 msgid "The username {0} is a duplicate."
-msgstr ""
+msgstr "Vartotojo vardas {0} jau naudojamas."
 
 msgid "Validation failed for user {0}. {1}"
 msgstr "Nepavyko patvirtinti naudotojo {0}. {1}"
@@ -2342,22 +2342,22 @@ msgid "The identifier of the user who modified the folder should not be empty."
 msgstr "Aplanką pakeitusio vartotojo identifikatorius neturi būti tuščias."
 
 msgid "The settings selected by your administrator prevent from downgrading folder."
-msgstr ""
+msgstr "Administratorius pasirinko nustatymus, kurie neleidžia nuleisti aplanko versijos."
 
 msgid "The metadata key does not exist."
-msgstr ""
+msgstr "Metaduomenų raktas neegzistuoja."
 
 msgid "A folder of type personal cannot be shared with other users or a group."
-msgstr ""
+msgstr "Asmeninio tipo aplanko negalima bendrinti su kitais naudotojais ar grupe."
 
 msgid "You added the folder {0}"
 msgstr "Pridėjote aplanką {0}"
 
 msgid "You added a new folder"
-msgstr ""
+msgstr "Pridėjote naują aplanką"
 
 msgid "You deleted the folder {0}"
-msgstr ""
+msgstr "Ištrynėte aplanką {0}"
 
 msgid "{0} deleted the folder {1}"
 msgstr "{0} ištrynė aplanką {1}"
@@ -2366,13 +2366,13 @@ msgid "{0} shared the folder {1}"
 msgstr "{0} pasidalino aplanku {1}"
 
 msgid "{0} shared a folder"
-msgstr ""
+msgstr "{0} pasidalijo aplanku"
 
 msgid "{0} edited the folder"
 msgstr "{0} redagavo aplanką"
 
 msgid "You edited the folder"
-msgstr ""
+msgstr "Redagavote aplanką"
 
 msgid "An email notification setting should be a boolean."
 msgstr "El. pašto pranešimų nustatymas turi būti loginis."
@@ -2381,7 +2381,7 @@ msgid "Could not validate folder data."
 msgstr "Nepavyko patvirtinti aplanko duomenų."
 
 msgid "The folder parent id should be a valid UUID."
-msgstr ""
+msgstr "Aplanko pirminis ID turi būti galiojantis UUID."
 
 msgid "The folder parent must exist."
 msgstr "Pirminis aplankas turi egzistuoti."
@@ -2432,22 +2432,22 @@ msgid "View it in passbolt"
 msgstr "Peržiūrėkite „passbolt'e“"
 
 msgid "You deleted a folder"
-msgstr ""
+msgstr "Ištrynėte aplanką"
 
 msgid "{0} deleted a folder"
-msgstr ""
+msgstr "{0} ištrynė aplanką"
 
 msgid "log in passbolt"
 msgstr "prisijungti \"passbolt\""
 
 msgid "{0} shared a folder with you"
-msgstr ""
+msgstr "{0} pasidalino aplanku su jumis"
 
 msgid "You edited a folder"
-msgstr ""
+msgstr "Redagavote aplanką"
 
 msgid "{0} edited a folder"
-msgstr ""
+msgstr "{0} redagavo aplanką"
 
 msgid "The user signature could not be verified."
 msgstr "Nepavyko patikrinti vartotojo parašo."
@@ -2507,7 +2507,7 @@ msgid "No active refresh token matching the request could be found."
 msgstr "Nerasta aktyvaus atnaujinimo prieigos rakto, atitinkančio užklausą."
 
 msgid "The user is not activated or disabled."
-msgstr ""
+msgstr "Vartotojas neaktyvus arba sustabdytas."
 
 msgid "The user is deleted."
 msgstr "Vartotojas ištrintas."
@@ -2519,10 +2519,10 @@ msgid "The route {0} is not permitted with JWT authentication."
 msgstr "Kelias {0} neleidžiamas naudojant JWT autentifikavimą."
 
 msgid "The JWT public key could not be extracted."
-msgstr ""
+msgstr "JWT viešojo rakto išgauti nepavyko."
 
 msgid "The JWT public key details could not be read."
-msgstr ""
+msgstr "JWT viešojo rakto detalių perskaityti nepavyko."
 
 msgid "The key pair for JWT Authentication is not complete."
 msgstr "JWT autentifikavimo raktų pora nėra baigta."
@@ -2537,19 +2537,19 @@ msgid "The configuration {0} is not correctly set."
 msgstr "Konfigūracija {0} neteisingai nustatyta."
 
 msgid "The {0} directory is not writable."
-msgstr ""
+msgstr "Katalogas {0} nėra rašomas."
 
 msgid "The {0} directory should not be writable."
-msgstr ""
+msgstr "Katalogas {0} neturėtų būti rašomas."
 
 msgid "A valid JWT key pair was found."
-msgstr ""
+msgstr "Rasta galiojanti JWT raktų pora."
 
 msgid "A valid JWT key pair is missing."
-msgstr ""
+msgstr "Trūksta galiojančios JWT raktų poros."
 
 msgid "Run the create JWT keys script to create a valid JWT secret and public key pair:"
-msgstr ""
+msgstr "Paleiskite skriptą, kuris sukuria galiojančią JWT slapto rakto ir viešo rakto porą:"
 
 msgid "The refresh token should be a valid UUID."
 msgstr "Atnaujinimo prieigos raktas turi būti galiojantis UUID."
@@ -2603,10 +2603,10 @@ msgid "This is not a valid {0}."
 msgstr "Tai negalioja {0}."
 
 msgid "The locale should be a string."
-msgstr ""
+msgstr "Lokalė turi būti eilutė."
 
 msgid "The strategy should extend the class: {0}"
-msgstr ""
+msgstr "Strategija turėtų paveldėti klasę: {0}"
 
 msgid "The action log identifier should be a valid UUID."
 msgstr "Veiksmų žurnalo identifikatorius turi būti galiojantis UUID."
@@ -2639,7 +2639,7 @@ msgid "Could not validate action log data."
 msgstr "Nepavyko patvirtinti veiksmų žurnalo duomenų."
 
 msgid "The date {0} should be after the date {1}."
-msgstr ""
+msgstr "Data {0} turėtų būti vėlesnė už datą {1}."
 
 msgid "The identifier should be not be empty."
 msgstr "Identifikatoriaus laukas neturi būti tuščias."
@@ -2711,73 +2711,73 @@ msgid "Could not validate secret history data."
 msgstr "Nepavyko patvirtinti slaptos istorinių duomenų."
 
 msgid "Invalid pagination limit set for metadata endpoint."
-msgstr ""
+msgstr "Neteisingai nustatytas puslapiavimo limitas metaduomenų sąsajai."
 
 msgid "Could not validate the metadata key data."
-msgstr ""
+msgstr "Nepavyko patvirtinti metaduomenų rakto duomenų."
 
 msgid "The metadata key identifier should be a UUID."
-msgstr ""
+msgstr "Metaduomenų rakto identifikatorius turi būti galiojantis UUID."
 
 msgid "The private key identifier should be a UUID."
-msgstr ""
+msgstr "Privataus rakto identifikatorius turi būti galiojantis UUID."
 
 msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr ""
+msgstr "Neteisingai nustatytas puslapiavimo limitas metaduomenų atnaujinimo sąsajai."
 
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
-msgstr ""
+msgstr "Parametras \"missing_metadata_key_ids\" leidžiamas tik administratoriams."
 
 msgid "An object type is required."
 msgstr "Reikalingas objekot tipas."
 
 msgid "The object type is invalid."
-msgstr ""
+msgstr "Objekto tipas neteisingas."
 
 msgid "A passphrase is required."
-msgstr ""
+msgstr "Būtina pateikti slaptafrazę."
 
 msgid "The passphrase should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Slaptafrazė turėtų būti galiojanti BMP-UTF8 eilutė."
 
 msgid "A fingerprint is required."
 msgstr "Būtinas piršto atspaudas."
 
 msgid "A fingerprint should not be greater than 51 characters."
-msgstr ""
+msgstr "Piršto atspaudo ilgis neturėtų viršyti 51 simbolio."
 
 msgid "A fingerprint should not be empty."
-msgstr ""
+msgstr "Piršto atspaudas neturi būti tuščias."
 
 msgid "The fingerprint should be a valid alphanumeric string."
 msgstr "Pirštų atspaudas turi būti tinkama raidinė ir skaitmeninė eilutė."
 
 msgid "The armored key should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Šarvuotas raktas turi būti galiojanti BMP-UTF8 eilutė."
 
 msgid "The value is not a valid OpenPGP private key."
 msgstr "Reikšmė nėra galiojantis OpenPGP privatus raktas."
 
 msgid "The fingerprint does not match the OpenPGP private keys fingerprint."
-msgstr ""
+msgstr "Piršto atspaudas nesutampa su OpenPGP privačių raktų piršto atspaudu."
 
 msgid "A domain is required."
 msgstr "Reikalingas domenas. "
 
 msgid "The domain should not be empty."
-msgstr ""
+msgstr "Domenas neturi būti tuščias."
 
 msgid "The domain should match current instance URL."
-msgstr ""
+msgstr "Domenas turi atitikti dabartinį instancijos URL."
 
 msgid "Private keys are required."
-msgstr ""
+msgstr "Būtini privatūs raktai."
 
 msgid "Need at least one metadata private key."
-msgstr ""
+msgstr "Reikia bent vieno \"metadata\" privataus rakto."
 
 msgid "A data is required."
-msgstr ""
+msgstr "Reikalingi duomenys."
 
 msgid "The data should not be empty."
 msgstr "Duomenys neturi būti tušti."
@@ -2786,514 +2786,514 @@ msgid "The data should be a valid ASCII string."
 msgstr "Duomenys turi būti tinkama ASCII eilutė.\n"
 
 msgid "The modified date should be a valid ISO 80601 date."
-msgstr ""
+msgstr "Modifikavimo data turi būti galiojanti ISO 80601 data."
 
 msgid "The setting should be a valid boolean."
-msgstr ""
+msgstr "Nustatymas turi būti tinkamas loginis dydis."
 
 msgid "The setting is required."
-msgstr ""
+msgstr "Nustatymas yra privalomas."
 
 msgid "The data is required."
 msgstr "Reikalingi duomenys."
 
 msgid "A modified date is required."
-msgstr ""
+msgstr "Būtina nurodyti modifikavimo datą."
 
 msgid "The modified date should not be empty."
-msgstr ""
+msgstr "Modifikavimo datos laukas neturi būti tuščias."
 
 msgid "The setting should not be empty."
-msgstr ""
+msgstr "Nustatymas neturi būti tuščias."
 
 msgid "The setting should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Nustatymas turi būti galiojanti BMP-UTF8 eilutė."
 
 msgid "The setting should be one of the following: {0}."
-msgstr ""
+msgstr "Nustatymas turi būti vienas iš šių: {0}."
 
 msgid "The content type needs to be enabled in order to be set as default."
-msgstr ""
+msgstr "Kad būtų galima nustatyti kaip numatytąjį, turite įjungti turinio tipą."
 
 msgid "Both v4 and v5 settings cannot be disabled."
-msgstr ""
+msgstr "Negalima išjungti tiek v4, tiek v5 nustatymų."
 
 msgid "The metadata key should not be deleted."
-msgstr ""
+msgstr "Metaduomenų rakto negalima ištrinti."
 
 msgid "A metadata key identifier is required."
-msgstr ""
+msgstr "Reikalingas metaduomenų rakto identifikatorius."
 
 msgid "The metadata key identifier should not be empty."
-msgstr ""
+msgstr "Metaduomenų rakto identifikatoriaus laukas neturi būti tuščias."
 
 msgid "The metadata key identifier should be a valid UUID."
-msgstr ""
+msgstr "Metaduomenų rakto identifikatorius turi būti galiojantis UUID."
 
 msgid "A metadata key type is required."
-msgstr ""
+msgstr "Reikalingas metaduomenų rakto tipas."
 
 msgid "The metadata key type should not be empty."
-msgstr ""
+msgstr "Metaduomenų rakto tipas neturi būti tuščias."
 
 msgid "The metadata key type should be shared key."
-msgstr ""
+msgstr "Metaduomenų rakto tipas turi būti bendrinamas raktas."
 
 msgid "A metadata is required."
-msgstr ""
+msgstr "Reikalingi metaduomenys."
 
 msgid "A modified by is required."
-msgstr ""
+msgstr "Reikalingas laukas \"modified by\"."
 
 msgid "The modified by should not be empty."
-msgstr ""
+msgstr "Modified by laukas neturi būti tuščias."
 
 msgid "The modified by should be a valid UUID."
-msgstr ""
+msgstr "Modified by laukas turi būti galiojantis UUID."
 
 msgid "Metadata settings endpoints are disabled."
-msgstr ""
+msgstr "Metadata nustatymų galiniai taškai išjungti."
 
 msgid "Folder can not be shared"
-msgstr ""
+msgstr "Aplanko bendrinti negalima"
 
 msgid "Few fields are missing for the V5."
-msgstr ""
+msgstr "Trūksta kelių laukų V5 versijai."
 
 msgid "Missing fields: {0}"
-msgstr ""
+msgstr "Trūksta laukų: {0}"
 
 msgid "V4 related fields are not supported for V5."
-msgstr ""
+msgstr "V4 susiję laukai nėra palaikomi V5 versijoje."
 
 msgid "Superfluous fields: {0}"
-msgstr ""
+msgstr "Pertekliniai laukai: {0}"
 
 msgid "Allow usage of personal keys"
-msgstr ""
+msgstr "Leisti naudoti asmeninius raktus"
 
 msgid "True"
-msgstr ""
+msgstr "Tiesa"
 
 msgid "False"
-msgstr ""
+msgstr "Netiesa"
 
 msgid "Zero-knowledge key share"
-msgstr ""
+msgstr "Bežinių raktų bendrinimas"
 
 msgid "The metadata private key data must be an array."
-msgstr ""
+msgstr "Metaduomenų privataus rakto duomenys turi būti masyvas."
 
 msgid "No resource type mapping for ID '{0}'"
-msgstr ""
+msgstr "Nerasta ištekliaus tipo atitikties ID \"{0}\""
 
 msgid "Default resource types"
-msgstr ""
+msgstr "Numatytieji išteklių tipai"
 
 msgid "Default folder type"
-msgstr ""
+msgstr "Numatytasis aplanko tipas"
 
 msgid "Default comment type"
-msgstr ""
+msgstr "Numatytasis komentaro tipas"
 
 msgid "Allow creation of V5 resources"
-msgstr ""
+msgstr "Leisti kurti V5 išteklius"
 
 msgid "Allow creation of V5 folders"
-msgstr ""
+msgstr "Leisti kurti V5 aplankus"
 
 msgid "Allow creation of V5 tags"
-msgstr ""
+msgstr "Leisti kurti V5 žymas"
 
 msgid "Allow creation of V5 comments"
-msgstr ""
+msgstr "Leisti kurti V5 komentarus"
 
 msgid "Allow creation of V4 resources"
-msgstr ""
+msgstr "Leisti kurti V4 išteklius"
 
 msgid "Allow creation of V4 folders"
-msgstr ""
+msgstr "Leisti kurti V4 aplankus"
 
 msgid "Allow creation of V4 tags"
-msgstr ""
+msgstr "Leisti kurti V4 žymas"
 
 msgid "No permission found for the entity: {0}"
-msgstr ""
+msgstr "Nerasta leidimo objektui: {0}"
 
 msgid "The identifier of the user who created the metadata key should be a valid UUID."
-msgstr ""
+msgstr "Metaduomenų raktą sukūrusio vartotojo identifikatorius turi būti galiojantis UUID."
 
 msgid "The creator is required."
-msgstr ""
+msgstr "Reikalingas kūrėjas."
 
 msgid "The identifier of the user who modified the metadata key should be a valid UUID."
-msgstr ""
+msgstr "Metaduomenų raktą pakeitusio vartotojo identifikatorius turi būti galiojantis UUID."
 
 msgid "A expired date is required."
-msgstr ""
+msgstr "Reikalingas galiojimo laikas."
 
 msgid "The expired date should not be empty."
-msgstr ""
+msgstr "Galiojimo laikas neturi būti tuščias."
 
 msgid "The modifier is required."
-msgstr ""
+msgstr "Reikalingas keitėjas."
 
 msgid "The fingerprint is already in use."
-msgstr ""
+msgstr "Piršto atspaudas jau naudojamas."
 
 msgid "Already two metadata keys are active."
-msgstr ""
+msgstr "Jau yra du aktyvūs metaduomenų raktai."
 
 msgid "You cannot reuse the user key."
-msgstr ""
+msgstr "Negalite pakartotinai naudoti vartotojo rakto."
 
 msgid "The user does not exist or is not active or is deleted."
-msgstr ""
+msgstr "Vartotojo nėra, jis neaktyvus arba ištrintas."
 
 msgid "The metadata key id & user id combination is already in use."
-msgstr ""
+msgstr "Metaduomenų rakto id ir vartotojo id derinys jau naudojamas."
 
 msgid "The data is not valid. Please make sure it is encrypted for the correct key."
-msgstr ""
+msgstr "Duomenys neteisingi. Įsitikinkite, kad jie užšifruoti tinkamam raktui."
 
 msgid "The entity must be an array."
-msgstr ""
+msgstr "Objektas turi būti masyvas."
 
 msgid "Entity {0} not found."
-msgstr ""
+msgstr "Objektas {0} nerastas."
 
 msgid "Could not validate the metadata key data for the entity with ID: {0}."
-msgstr ""
+msgstr "Nepavyko patvirtinti metaduomenų rakto duomenų objektui su ID: {0}."
 
 msgid "{0} created a new metadata key"
-msgstr ""
+msgstr "{0} sukūrė naują metaduomenų raktą"
 
 msgid "You created a new metadata key"
-msgstr ""
+msgstr "Sukūrėte naują metaduomenų raktą"
 
 msgid "{0} deleted a metadata key"
-msgstr ""
+msgstr "{0} ištrynė metaduomenų raktą"
 
 msgid "You deleted a metadata key"
-msgstr ""
+msgstr "Ištrynėte metaduomenų raktą"
 
 msgid "{0} has expired a metadata key"
-msgstr ""
+msgstr "{0} panaikino metaduomenų rakto galiojimą"
 
 msgid "You have expired a metadata key"
-msgstr ""
+msgstr "Jūs panaikinote metaduomenų rakto galiojimą"
 
 msgid "{0} edited the metadata settings"
-msgstr ""
+msgstr "{0} redagavo metaduomenų nustatymus"
 
 msgid "You edited the metadata settings"
-msgstr ""
+msgstr "Redagavote metaduomenų nustatymus"
 
 msgid "No server metadata private key found."
-msgstr ""
+msgstr "Nerastas serverio metaduomenų privatus raktas."
 
 msgid "Unable to decrypt the metadata private key data."
-msgstr ""
+msgstr "Nepavyko iššifruoti metaduomenų privataus rakto duomenų."
 
 msgid "The server is able to decrypt the metadata private key."
-msgstr ""
+msgstr "Serveris gali iššifruoti metaduomenų privatų raktą."
 
 msgid "Unable to decrypt the metadata private key."
-msgstr ""
+msgstr "Nepavyko iššifruoti metaduomenų privataus rakto."
 
 msgid "The metadata key does not exist or has been deleted."
-msgstr ""
+msgstr "Metaduomenų raktas neegzistuoja arba buvo ištrintas."
 
 msgid "The metadata key has already been deleted."
-msgstr ""
+msgstr "Metaduomenų raktas jau ištrintas."
 
 msgid "The metadata key should be marked as expired first."
-msgstr ""
+msgstr "Pirmiausia metaduomenų raktas turi būti pažymėtas kaip nebegaliojantis."
 
 msgid "The metadata key is still in use, migrate the remaining items to the new key first."
-msgstr ""
+msgstr "Metaduomenų raktas dar naudojamas, pirmiausia perkelkite likusius elementus į naują raktą."
 
 msgid "The metadata key could not be deleted."
-msgstr ""
+msgstr "Nepavyko ištrinti metaduomenų rakto."
 
 msgid "The metadata key fingerprint is invalid."
-msgstr ""
+msgstr "Neteisingas metaduomenų rakto piršto atspaudas."
 
 msgid "The metadata key is already marked as expired."
-msgstr ""
+msgstr "Metaduomenų raktas jau pažymėtas kaip nebegaliojantis."
 
 msgid "The metadata key could not be updated."
-msgstr ""
+msgstr "Nepavyko atnaujinti metaduomenų rakto."
 
 msgid "The metadata key could not be saved."
-msgstr ""
+msgstr "Nepavyko išsaugoti metaduomenų rakto."
 
 msgid "Could not save the metadata key, please try again later."
-msgstr ""
+msgstr "Nepavyko išsaugoti metaduomenų rakto. Bandykite dar kartą vėliau."
 
 msgid "Server metadata private key was not found."
-msgstr ""
+msgstr "Nerastas serverio metaduomenų privatus raktas."
 
 msgid "Metadata key could not be shared with user id: {0}."
-msgstr ""
+msgstr "Nepavyko bendrinti metaduomenų rakto su vartotojo id: {0}."
 
 msgid "The data could not be validated."
-msgstr ""
+msgstr "Nepavyko patvirtinti duomenų."
 
 msgid "The data could not be saved."
-msgstr ""
+msgstr "Nepavyko išsaugoti duomenų."
 
 msgid "The metadata private key should not be empty."
-msgstr ""
+msgstr "Metaduomenų privatus raktas neturi būti tuščias."
 
 msgid "The metadata private key cleartext data should be in JSON format."
-msgstr ""
+msgstr "Metaduomenų privataus rakto atviro teksto duomenys turi būti JSON formatu."
 
 msgid "The metadata private key cleartext data should not be empty."
-msgstr ""
+msgstr "Metaduomenų privataus rakto atviro teksto duomenys neturi būti tušti."
 
 msgid "The metadata private key cleartext data is not valid."
-msgstr ""
+msgstr "Neteisingi metaduomenų privataus rakto atviro teksto duomenys."
 
 msgid "The OpenPGP user key cannot be found."
-msgstr ""
+msgstr "Nepavyko rasti \"OpenPGP\" vartotojo rakto."
 
 msgid "Could not validate the settings."
-msgstr ""
+msgstr "Nepavyko patvirtinti nustatymų."
 
 msgid "The server metadata private key is required to enable these settings."
-msgstr ""
+msgstr "Norint įjungti šiuos nustatymus, reikalingas serverio metaduomenų privatus raktas."
 
 msgid "The server metadata key id is required."
-msgstr ""
+msgstr "Reikalingas serverio metaduomenų rakto id."
 
 msgid "The server metadata private key is invalid."
-msgstr ""
+msgstr "Serverio metaduomenų privatus raktas neteisingas."
 
 msgid "The metadata private key could not be created."
-msgstr ""
+msgstr "Nepavyko sukurti metaduomenų privataus rakto."
 
 msgid "Please try again later."
-msgstr ""
+msgstr "Bandykite dar kartą vėliau."
 
 msgid "The metadata private key could not be validated."
-msgstr ""
+msgstr "Nepavyko patvirtinti metaduomenų privataus rakto."
 
 msgid "The request data is invalid."
-msgstr ""
+msgstr "Neteisingi užklausos duomenys."
 
 msgid "The metadata key is already shared with the user."
-msgstr ""
+msgstr "Metaduomenų raktas jau bendrinamas su šiuo vartotoju."
 
 msgid "The metadata private keys could not be created."
-msgstr ""
+msgstr "Nepavyko sukurti metaduomenų privačių raktų."
 
 msgid "The metadata private key data is not valid."
-msgstr ""
+msgstr "Metaduomenų privataus rakto duomenys yra neteisingi."
 
 msgid "The metadata private key does not exist or has been deleted."
-msgstr ""
+msgstr "Metaduomenų privatus raktas neegzistuoja arba buvo ištrintas."
 
 msgid "The metadata private key was already edited by the user."
-msgstr ""
+msgstr "Metaduomenų privatus raktas jau buvo redaguotas šio vartotojo."
 
 msgid "The metadata private key could not be updated."
-msgstr ""
+msgstr "Nepavyko atnaujinti metaduomenų privataus rakto."
 
 msgid "The metadata session key could not be saved."
-msgstr ""
+msgstr "Nepavyko išsaugoti metaduomenų sesijos rakto."
 
 msgid "Could not save the metadata session key, please try again later."
-msgstr ""
+msgstr "Nepavyko išsaugoti metaduomenų sesijos rakto. Bandykite dar kartą vėliau."
 
 msgid "The data must be a string."
-msgstr ""
+msgstr "Duomenys turi būti eilutė."
 
 msgid "The metadata session key identifier should be a UUID."
-msgstr ""
+msgstr "Metaduomenų sesijos rakto identifikatorius turi būti UUID."
 
 msgid "The metadata session key does not exist or does not belong to this user."
-msgstr ""
+msgstr "Metaduomenų sesijos raktas neegzistuoja arba nepriklauso šiam vartotojui."
 
 msgid "The metadata session key could not be deleted."
-msgstr ""
+msgstr "Nepavyko ištrinti metaduomenų sesijos rakto."
 
 msgid "Could not validate the data."
-msgstr ""
+msgstr "Nepavyko patvirtinti duomenų."
 
 msgid "The metadata session key data is identical."
-msgstr ""
+msgstr "Metaduomenų sesijos rakto duomenys yra identiški."
 
 msgid "The metadata session key data has changed."
-msgstr ""
+msgstr "Metaduomenų sesijos rakto duomenys pasikeitė."
 
 msgid "Could not save the metadata session keys, please try again later."
-msgstr ""
+msgstr "Nepavyko išsaugoti metaduomenų sesijos raktų. Bandykite dar kartą vėliau."
 
 msgid "Could not prepare private key for server key."
-msgstr ""
+msgstr "Nepavyko paruošti privataus rakto serverio raktui."
 
 msgid "User key not found."
-msgstr ""
+msgstr "Vartotojo raktas nerastas."
 
 msgid "Could not prepare private key for user id {0}."
-msgstr ""
+msgstr "Nepavyko paruošti privataus rakto vartotojo id {0}."
 
 msgid "No folders to migrate."
-msgstr ""
+msgstr "Nėra aplankų perkėlimui."
 
 msgid "Folder ID \"{0}\" is already V5"
-msgstr ""
+msgstr "Aplanko ID \"{0}\" jau yra V5"
 
 msgid "No permission found for folder ID {0}"
-msgstr ""
+msgstr "Nerastas leidimas aplanko ID {0}"
 
 msgid "No user provided."
-msgstr ""
+msgstr "Nenurodytas vartotojas."
 
 msgid "The metadata could not be encrypted for permission id: {0}."
-msgstr ""
+msgstr "Nepavyko užšifruoti metaduomenų leisimui su id: {0}."
 
 msgid "No OpenPGP key found for the user."
-msgstr ""
+msgstr "Vartotojui nerastas \"OpenPGP\" raktas."
 
 msgid "The metadata could not be encrypted with the user id: {0}."
-msgstr ""
+msgstr "Nepavyko užšifruoti metaduomenų su vartotojo id: {0}."
 
 msgid "The metadata could not be encrypted with the metadata key id: {0}."
-msgstr ""
+msgstr "Nepavyko užšifruoti metaduomenų su metaduomenų rakto id: {0}."
 
 msgid "Unable to migrate folder ID: {0} to V5."
-msgstr ""
+msgstr "Nepavyko perkelti aplanko ID: {0} į V5."
 
 msgid "Migrating {0}..."
-msgstr ""
+msgstr "Perkeliama {0}..."
 
 msgid "Errors (encoded): {0}"
-msgstr ""
+msgstr "Klaidos (užkoduotos): {0}"
 
 msgid "Migration process for {0} finished."
-msgstr ""
+msgstr "Perkėlimo procesas {0} baigtas."
 
 msgid "No resources to migrate."
-msgstr ""
+msgstr "Nėra išteklių perkėlimui."
 
 msgid "Resource ID \"{0}\" is already V5"
-msgstr ""
+msgstr "Ištekliaus ID \"{0}\" jau yra V5"
 
 msgid "No permission found for resource ID {0}"
-msgstr ""
+msgstr "Nerastas leidimas ištekliaus ID {0}"
 
 msgid "Unable to migrate resource ID: {0} to V5."
-msgstr ""
+msgstr "Nepavyko perkelti ištekliaus ID: {0} į V5."
 
 msgid "Could not validate metadata key data."
-msgstr ""
+msgstr "Nepavyko patvirtinti metaduomenų rakto duomenų."
 
 msgid "Could not import the metadata OpenPGP key."
-msgstr ""
+msgstr "Nepavyko importuoti metaduomenų \"OpenPGP\" rakto."
 
 msgid "The metadata key is not available or incomplete."
-msgstr ""
+msgstr "Metaduomenų raktas nepasiekiamas arba neužbaigtas."
 
 msgid "The metadata key fingerprint is not available or incomplete."
-msgstr ""
+msgstr "Metaduomenų rakto piršto atspaudas nepasiekiamas arba neužbaigtas."
 
 msgid "The metadata armored key is not available or incomplete."
-msgstr ""
+msgstr "Metaduomenų šarvuotas raktas nepasiekiamas arba neužbaigtas."
 
 msgid "The resource metadata key data could not be updated."
-msgstr ""
+msgstr "Nepavyko atnaujinti išteklių metaduomenų rakto duomenų."
 
 msgid "The request data should not be empty."
 msgstr "Užklausos duomenys neturi būti tušti."
 
 msgid "The request data is too large."
-msgstr ""
+msgstr "Užklausos duomenys yra per dideli."
 
 msgid "The provided modified date does not match."
-msgstr ""
+msgstr "Nurodyta modifikavimo data nesutampa."
 
 msgid "The provided modified by does not match."
-msgstr ""
+msgstr "Nurodyta 'modified by' reikšmė nesutampa."
 
 msgid "The user identifier should be a UUID."
-msgstr ""
+msgstr "Vartotojo identifikatorius turi būti UUID."
 
 msgid "The user metadata private keys could not be deleted."
-msgstr ""
+msgstr "Nepavyko ištrinti vartotojo metaduomenų privačių raktų."
 
 msgid "The user metadata session keys could not be deleted."
-msgstr ""
+msgstr "Nepavyko ištrinti vartotojo metaduomenų sesijos raktų."
 
 msgid "V5 metadata format is not enabled."
-msgstr ""
+msgstr "V5 metaduomenų formatas neįjungtas."
 
 msgid "Resource creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "Draudžiama kurti / redaguoti išteklius su užšifruotais metaduomenimis."
 
 msgid "Folder creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "Draudžiama kurti / redaguoti aplankus su užšifruotais metaduomenimis."
 
 msgid "Tag creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "Draudžiama kurti / redaguoti žymas su užšifruotais metaduomenimis."
 
 msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "Draudžiama kurti / redaguoti išteklius su atvirais metaduomenimis."
 
 msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "Draudžiama kurti / redaguoti aplankus su atvirais metaduomenimis."
 
 msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "Draudžiama kurti / redaguoti žymas su atvirais metaduomenimis."
 
 msgid "You created a new metadata key."
-msgstr ""
+msgstr "Sukūrėte naują metaduomenų raktą."
 
 msgid "{0} created a new metadata key."
-msgstr ""
+msgstr "{0} sukūrė naują metaduomenų raktą."
 
 msgid "You deleted a metadata key."
-msgstr ""
+msgstr "Ištrynėte metaduomenų raktą."
 
 msgid "{0} deleted a metadata key."
-msgstr ""
+msgstr "{0} ištrynė metaduomenų raktą."
 
 msgid "You have expired a metadata key."
-msgstr ""
+msgstr "Jūs panaikinote metaduomenų rakto galiojimą."
 
 msgid "{0} has expired a metadata key."
-msgstr ""
+msgstr "{0} panaikino metaduomenų rakto galiojimą."
 
 msgid "You edited the metadata settings."
-msgstr ""
+msgstr "Redagavote metaduomenų nustatymus."
 
 msgid "{0} edited the metadata settings."
-msgstr ""
+msgstr "{0} redagavo metaduomenų nustatymus."
 
 msgid "You have created a new folder."
 msgstr "Sukūrėte naują aplanką."
 
 msgid "{0} has shared a folder with you."
-msgstr ""
+msgstr "{0} pasidalino aplanku su jumis."
 
 msgid "You have edited a folder."
-msgstr ""
+msgstr "Redagavote aplanką."
 
 msgid "You have saved a new password"
 msgstr "Išsaugojote naują slaptažodį"
 
 msgid "You have created a new password."
-msgstr ""
+msgstr "Sukūrėte naują slaptažodį."
 
 msgid "{0} shared a resource with you"
-msgstr ""
+msgstr "{0} pasidalino ištekliumi su jumis"
 
 msgid "{0} shared a resource with you."
-msgstr ""
+msgstr "{0} pasidalino ištekliumi su jumis."
 
 msgid "You have edited a resource."
-msgstr ""
+msgstr "Redagavote šaltinį."
 
 msgid "Information about the transfer is required."
 msgstr "Reikalinga informacija apie perkėlimą."
@@ -3404,22 +3404,22 @@ msgid "The authentication token is expired."
 msgstr "Baigėsi autentifikavimo prieigos raktas."
 
 msgid "Unable to authenticate to Duo."
-msgstr ""
+msgstr "Nepavyko autentifikuoti su „Duo“."
 
 msgid "Unable to validate the Duo callback data."
-msgstr ""
+msgstr "Nepavyko patvirtinti „Duo“ atgalinio iškvietimo duomenų."
 
 msgid "A Duo state cookie is required."
-msgstr ""
+msgstr "Reikalingas „Duo“ būsenos slapukas."
 
 msgid "The Duo state cookie value should be a string."
-msgstr ""
+msgstr "„Duo“ būsenos slapuko reikšmė turėtų būti eilutė."
 
 msgid "The Duo state cookie should be a valid UUID."
-msgstr ""
+msgstr "„Duo“ būsenos slapukas turėtų būti galiojantis UUID."
 
 msgid "This entrypoint is not available anymore."
-msgstr ""
+msgstr "Šis įėjimo taškas nebegalimas."
 
 msgid "This authentication provider is not enabled for your organization."
 msgstr "Šis autentifikavimo teikėjas jūsų organizacijoje neįgalintas."
@@ -3440,7 +3440,7 @@ msgid "The multi-factor authentication is not required."
 msgstr "Kelių veiksnių autentifikavimas nereikalingas."
 
 msgid "No valid multi-factor authentication settings found."
-msgstr ""
+msgstr "Nerasta jokių galiojančių kelių veiksnių autentifikavimo nustatymų."
 
 msgid "No valid multi-factor authentication settings found for this provider."
 msgstr "Šiam teikėjui nerasta jokių galiojančių kelių veiksnių autentifikavimo nustatymų."
@@ -3458,7 +3458,7 @@ msgid "Please provide the one-time password."
 msgstr "Pateikite vienkartinį slaptažodį."
 
 msgid "You have been logged out due to too many failed attempts."
-msgstr ""
+msgstr "Buvote atjungti dėl pernelyg daugelio nesėkmingų bandymų."
 
 msgid "The user id is not valid."
 msgstr "Vartotojo ID negalioja."
@@ -3473,28 +3473,28 @@ msgid "Please setup the Yubikey settings."
 msgstr "Nustatykite „Yubikey“ nustatymus."
 
 msgid "A state is required."
-msgstr ""
+msgstr "Reikalinga būsena."
 
 msgid "The state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Būsena turi būti tinkama BMP-UTF8 eilutė."
 
 msgid "The state should not be empty."
-msgstr ""
+msgstr "Būsena neturi būti tuščia."
 
 msgid "A duo code is required."
-msgstr ""
+msgstr "Būtinas „Duo“ kodas."
 
 msgid "The duo code state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "„Duo“ kodo būsena turi būti tinkama BMP-UTF8 eilutė."
 
 msgid "The duo code should not be empty."
-msgstr ""
+msgstr "„Duo“ kodas neturi būti tuščias."
 
 msgid "The error description should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Klaidos aprašymas turi būti tinkama BMP-UTF8 eilutė."
 
 msgid "The error description state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Klaidos aprašymo būsena turi būti tinkama BMP-UTF8 eilutė."
 
 msgid "Something went wrong when validating the one-time password."
 msgstr "Kažkas nepavyko tikrinant vienkartinį slaptažodį."
@@ -3521,10 +3521,10 @@ msgid "This yubikey is not associated with this user."
 msgstr "Šis yubikey nesusietas su šiuo vartotoju."
 
 msgid "No Duo error provided"
-msgstr ""
+msgstr "Nepateikta \"Duo\" klaida"
 
 msgid "No Duo error description provided"
-msgstr ""
+msgstr "Nepateiktas \"Duo\" klaidos aprašymas"
 
 msgid "Your multi-factor authentication settings were reset by you."
 msgstr "Jūs iš naujo nustatėte kelių veiksnių autentifikavimo nustatymus."
@@ -3536,64 +3536,64 @@ msgid "Your multi-factor authentication settings were reset by an administrator.
 msgstr "Administratorius iš naujo nustatė kelių veiksnių autentifikavimo nustatymus."
 
 msgid "The token should reference an active Duo callback authentication token."
-msgstr ""
+msgstr "Tokenas turėtų nurodyti aktyvų „Duo“ atgalinio iškvietimo autentifikavimo tokeną."
 
 msgid "An authentication token state is required."
-msgstr ""
+msgstr "Reikalinga autentifikavimo tokeno būsena."
 
 msgid "The Duo state should match the authentication token state."
-msgstr ""
+msgstr "„Duo“ būsena turėtų sutapti su autentifikavimo tokeno būsena."
 
 msgid "Could not enable Duo MFA provider."
-msgstr ""
+msgstr "Nepavyko įjungti „Duo“ kelių veiksnių autentifikavimo tiekėjo."
 
 msgid "Unable to verify Duo authentication."
-msgstr ""
+msgstr "Nepavyko patvirtinti „Duo“ autentifikacijos."
 
 msgid "Could not validate the Duo settings."
-msgstr ""
+msgstr "Nepavyko patvirtinti „Duo“ nustatymų."
 
 msgid "Could not login using Duo MFA provider."
-msgstr ""
+msgstr "Nepavyko prisijungti naudojant „Duo“ MFA tiekėją."
 
 msgid "Unable to connect to Duo services."
-msgstr ""
+msgstr "Nepavyko prisijungti prie „Duo“ paslaugų."
 
 msgid "Unable to verify Duo code against Duo service."
-msgstr ""
+msgstr "Nepavyko patvirtinti „Duo“ kodo su „Duo“ paslauga."
 
 msgid "The duo authentication origin endpoint does not match the organization setting duo hostname."
-msgstr ""
+msgstr "„Duo“ autentifikacijos kilmės įėjimo taškas nesutampa su organizacijos nustatytu „Duo“ pagrindinio kompiuterio pavadinimu."
 
 msgid "The duo authentication subscriber does not match the operator username."
-msgstr ""
+msgstr "„Duo“ autentifikacijos prenumeratorius nesutampa su operatoriaus vartotojo vardu."
 
 msgid "No configuration set for Duo client ID."
-msgstr ""
+msgstr "Nenustatyta konfigūracija „Duo“ kliento identifikatoriui."
 
 msgid "No configuration set for Duo API hostname."
-msgstr ""
+msgstr "Nenustatyta konfigūracija „Duo“ API pagrindinio kompiuterio pavadinimui."
 
 msgid "No configuration set for Duo client secret."
-msgstr ""
+msgstr "Nenustatyta konfigūracija „Duo“ kliento paslapčiai."
 
 msgid "This is not a valid Duo client secret."
-msgstr ""
+msgstr "Tai nėra galiojanti „Duo“ kliento paslaptis."
 
 msgid "This is not a valid Duo API hostname."
-msgstr ""
+msgstr "Tai nėra galiojantis „Duo“ API pagrindinio kompiuterio pavadinimas."
 
 msgid "This is not a valid Duo client ID."
-msgstr ""
+msgstr "Tai nėra galiojantis „Duo“ kliento identifikatorius."
 
 msgid "Cannot verify Duo settings."
-msgstr ""
+msgstr "Nepavyksta patikrinti „Duo“ nustatymų."
 
 msgid "Could not validate Duo configuration"
 msgstr "Nepavyko patvirtinti „Duo“ konfigūracijos"
 
 msgid "The property {0} is visible by administrators only."
-msgstr ""
+msgstr "Nuosavybė {0} matoma tik administratoriams."
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "Pateiktas MFA prieigos raktas neegzistuoja arba yra neaktyvus."
@@ -3638,22 +3638,22 @@ msgid "Could not validate Yubikey configuration."
 msgstr "Nepavyko patvirtinti Yubikey konfigūracijos."
 
 msgid "Duo Multi Factor Authentication"
-msgstr ""
+msgstr "„Duo“ kelių veiksnių autentifikavimas"
 
 msgid "Something went wrong."
 msgstr "Kažkas nepavyko."
 
 msgid "Please try again later or contact your administrator."
-msgstr ""
+msgstr "Vėliau bandykite dar kartą arba susisiekite su administratoriumi."
 
 msgid "Logs"
-msgstr ""
+msgstr "Žurnalai"
 
 msgid "Retry"
-msgstr ""
+msgstr "Bandykite dar kartą"
 
 msgid "Getting started with Duo"
-msgstr ""
+msgstr "Darbo su „Duo“ pradžia"
 
 msgid "How does it work?"
 msgstr "Kaip tai veikia?"
@@ -3662,10 +3662,10 @@ msgid "You sign in to passbolt just like you normally do."
 msgstr "Prisijungiate prie „Passbolt“ kaip įprastai."
 
 msgid "Use you 2FA device to authenticate."
-msgstr ""
+msgstr "Naudokite savo 2FA įrenginį autentifikacijai."
 
 msgid "Follow the procedure to login."
-msgstr ""
+msgstr "Vykdykite nurodymus, kad prisijungtumėte."
 
 msgid "Cancel"
 msgstr "Atšaukti"
@@ -3677,16 +3677,16 @@ msgid "Requirements"
 msgstr "Reikalavimai"
 
 msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
-msgstr ""
+msgstr "Norėdami tęsti, turite įdiegti „Duo“ mobiliąją programą arba turėti su „Duo“ suderinamą autentifikavimo įrenginį."
 
 msgid "For the list of supported devices, see:"
-msgstr ""
+msgstr "Palaikomų įrenginių sąrašą žr:"
 
 msgid "Duo authentication methods"
-msgstr ""
+msgstr "„Duo“ autentifikavimo metodai"
 
 msgid "Learn more"
-msgstr ""
+msgstr "Sužinokite daugiau"
 
 msgid "Duo multi-factor authentication is enabled!"
 msgstr "„Duo“ kelių veiksnių autentifikavimas įjungtas!"
@@ -3701,10 +3701,10 @@ msgid "Multi factor authentication verification"
 msgstr "Kelių veiksnių autentifikavimo patvirtinimas"
 
 msgid "Multi Factor Authentication Required"
-msgstr ""
+msgstr "Reikalingas kelių veiksnių autentifikavimas"
 
 msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
-msgstr ""
+msgstr "Norint autentifikuotis, būtina papildoma „Duo“ autentifikacija. Būsite nukreipti į „Duo“ patvirtinimui."
 
 msgid "Multi factor authentication"
 msgstr "Kelių faktorių autentifikavimas"
@@ -3782,7 +3782,7 @@ msgid "verify"
 msgstr "patikrinti"
 
 msgid "Sign-in with Duo"
-msgstr ""
+msgstr "Prisijungti su „Duo“"
 
 msgid "Or try with another provider"
 msgstr "Arba pabandykite su kitu teikėju"
@@ -3806,46 +3806,46 @@ msgid "Log in passbolt"
 msgstr "Prisijungti \"Passbolt\""
 
 msgid "The automatic_expiry field must be true."
-msgstr ""
+msgstr "Laukas automatic_expiry turi būti true."
 
 msgid "The automatic_update field must be true."
-msgstr ""
+msgstr "Laukas automatic_update turi būti true."
 
 msgid "The value should be an array."
-msgstr ""
+msgstr "Reikšmė turėtų būti masyvas."
 
 msgid "{0} marked several passwords as expired"
-msgstr ""
+msgstr "{0} pažymėjo kelis slaptažodžius kaip nebegaliojančius"
 
 msgid "Some of your passwords expired"
-msgstr ""
+msgstr "Kai kurie jūsų slaptažodžiai nebegalioja"
 
 msgid "{0} marked the password {1} as expired"
-msgstr ""
+msgstr "{0} pažymėjo slaptažodį {1} kaip nebegaliojantį"
 
 msgid "{0} marked a password as expired"
-msgstr ""
+msgstr "{0} pažymėjo slaptažodį kaip nebegaliojantį"
 
 msgid "You edited the password expiry settings"
-msgstr ""
+msgstr "Redagavote slaptažodžio galiojimo nustatymus"
 
 msgid "{0} edited the password expiry settings"
-msgstr ""
+msgstr "{0} redagavo slaptažodžio galiojimo nustatymus"
 
 msgid "The send password expire setting should be a boolean."
-msgstr ""
+msgstr "Nustatymas „Siųsti slaptažodžio galiojimo pabaigą“ turėtų būti loginis."
 
 msgid "The password expiry setting does not exist."
-msgstr ""
+msgstr "Slaptažodžio galiojimo nustatymas neegzistuoja."
 
 msgid "Could not validate the password expiry settings."
-msgstr ""
+msgstr "Nepavyko patvirtinti slaptažodžio galiojimo nustatymų."
 
 msgid "The password expiry settings have been updated."
-msgstr ""
+msgstr "Slaptažodžio galiojimo nustatymai buvo atnaujinti."
 
 msgid "View them in passbolt"
-msgstr ""
+msgstr "Peržiūrėkite juos „Passbolt“"
 
 msgid "{0} resources were affected."
 msgstr "Buvo paveikti {0} ištekliai(-ių)."
@@ -3854,244 +3854,244 @@ msgid "It would be too much to list them here, but you can go check them on pass
 msgstr "Būtų per daug juos čia išvardyti, bet galite juos patikrinti \"passbolt'e\"."
 
 msgid "Change them in passbolt"
-msgstr ""
+msgstr "Pakeiskite juos „Passbolt“"
 
 msgid "You have been requested to change them"
-msgstr ""
+msgstr "Paprašyta, kad juos pakeistumėte"
 
 msgid "Access for users to your shared passwords have been revoked."
-msgstr ""
+msgstr "Naudotojų prieiga prie jūsų bendrintų slaptažodžių buvo atšaukta."
 
 msgid "These passwords are now marked as expired."
-msgstr ""
+msgstr "Šie slaptažodžiai dabar pažymėti kaip nebegaliojantys."
 
 msgid "Please rotate them to ensure continued security."
-msgstr ""
+msgstr "Prašome juos pakeisti, kad užtikrintumėte tolesnį saugumą."
 
 msgid "Please rotate it to ensure continued security."
-msgstr ""
+msgstr "Prašome jį pakeisti, kad išliktų saugu."
 
 msgid "Change it in passbolt "
-msgstr ""
+msgstr "Pakeiskite jį \"passbolt'e\" "
 
 msgid "Could not retrieve the password policies."
-msgstr ""
+msgstr "Nepavyko gauti slaptažodžių politikų."
 
 msgid "The default generator is required."
-msgstr ""
+msgstr "Reikalingas numatytasis generatorius."
 
 msgid "The default generator should be one of the following: {0}."
-msgstr ""
+msgstr "Numatytasis generatorius turi būti vienas iš šių: {0}."
 
 msgid "The external dictionary check is required."
-msgstr ""
+msgstr "Reikalingas išorinio žodyno tikrinimas."
 
 msgid "The external dictionary check should be a boolean."
-msgstr ""
+msgstr "Išorinio žodyno tikrinimo nustatymas turi būti loginis."
 
 msgid "The password generator settings is required."
-msgstr ""
+msgstr "Reikalingi slaptažodžio generatoriaus nustatymai."
 
 msgid "The password generator settings should not be empty."
-msgstr ""
+msgstr "Slaptažodžio generatoriaus nustatymai neturi būti tušti."
 
 msgid "The password generator settings should have at least one mask selected."
-msgstr ""
+msgstr "Slaptažodžio generatoriaus nustatymuose turi būti pasirinkta bent viena kaukė."
 
 msgid "The passphrase generator settings is required."
-msgstr ""
+msgstr "Reikalingi slaptafrazės generatoriaus nustatymai."
 
 msgid "The passphrase generator settings should not be empty."
-msgstr ""
+msgstr "Slaptafrazės generatoriaus nustatymai neturi būti tušti."
 
 msgid "Could not validate the password policies settings."
-msgstr ""
+msgstr "Nepavyko patvirtinti slaptažodžių politikos nustatymų."
 
 msgid "The passphrase generator words is required."
-msgstr ""
+msgstr "Reikalingas slaptafrazės generatoriaus žodžių kiekis."
 
 msgid "The passphrase generator words should be between {0} and {1}."
-msgstr ""
+msgstr "Slaptafrazės generatoriaus žodžių kiekis turėtų būti nuo {0} iki {1}."
 
 msgid "The passphrase generator word separator is required."
-msgstr ""
+msgstr "Reikalingas slaptafrazės generatoriaus žodžių skyriklis."
 
 msgid "The passphrase generator word separator should be a valid UTF8 string."
-msgstr ""
+msgstr "Slaptafrazės generatoriaus žodžių skyriklis turėtų būti tinkama UTF8 eilutė."
 
 msgid "The passphrase generator word separator should be maximum {0} characters."
-msgstr ""
+msgstr "Slaptafrazės generatoriaus žodžių skyriklis turėtų būti daugiausia {0} simbolių."
 
 msgid "The passphrase generator word case is required."
-msgstr ""
+msgstr "Reikalingas slaptafrazės generatoriaus žodžių raidžių keitimo nustatymas."
 
 msgid "The passphrase generator word case should be one of the following: {0}."
-msgstr ""
+msgstr "Slaptafrazės generatoriaus raidžių keitimo nustatymas turi būti vienas iš šių: {0}."
 
 msgid "The password generator length should be between {0} and {1}."
-msgstr ""
+msgstr "Slaptažodžio generatoriaus ilgis turėtų būti nuo {0} iki {1}."
 
 msgid "The password generator length is required."
-msgstr ""
+msgstr "Reikalingas slaptažodžio generatoriaus ilgis."
 
 msgid "The password generator mask upper is required."
-msgstr ""
+msgstr "Reikalingas slaptažodžio generatoriaus viršutinių raidžių parametras."
 
 msgid "The password generator mask upper should be a boolean type."
-msgstr ""
+msgstr "Slaptažodžio generatoriaus viršutinių raidžių parametras turi būti loginis tipas."
 
 msgid "The password generator mask lower is required."
-msgstr ""
+msgstr "Reikalingas slaptažodžio generatoriaus mažųjų raidžių parametras."
 
 msgid "The password generator mask lower should be a boolean type."
-msgstr ""
+msgstr "Slaptažodžio generatoriaus mažųjų raidžių parametras turi būti loginis."
 
 msgid "The password generator mask digit is required."
-msgstr ""
+msgstr "Reikalingas slaptažodžio generatoriaus skaičių parametras."
 
 msgid "The password generator mask digit should be a boolean type."
-msgstr ""
+msgstr "Slaptažodžio generatoriaus skaičių parametras turi būti loginis tipas."
 
 msgid "The password generator mask parenthesis is required."
-msgstr ""
+msgstr "Reikalingas slaptažodžio generatoriaus skliaustų parametras."
 
 msgid "The password generator mask parenthesis should be a boolean type."
-msgstr ""
+msgstr "Slaptažodžio generatoriaus skliaustų parametras turi būti loginis tipas."
 
 msgid "The password generator mask emoji is required."
-msgstr ""
+msgstr "Reikalingas slaptažodžio generatoriaus emoji parametras."
 
 msgid "The password generator mask emoji should be a boolean type."
-msgstr ""
+msgstr "Slaptažodžio generatoriaus emoji parametras turi būti loginis tipas."
 
 msgid "The password generator mask char1 is required."
-msgstr ""
+msgstr "Reikalingas slaptažodžio generatoriaus specialusis simbolis1."
 
 msgid "The password generator mask char1 should be a boolean type."
-msgstr ""
+msgstr "Slaptažodžio generatoriaus specialusis simbolis1 turi būti loginis tipas."
 
 msgid "The password generator mask char2 is required."
-msgstr ""
+msgstr "Reikalingas slaptažodžio generatoriaus specialusis simbolis2."
 
 msgid "The password generator mask char2 should be a boolean type."
-msgstr ""
+msgstr "Slaptažodžio generatoriaus specialusis simbolis2 turi būti loginis tipas."
 
 msgid "The password generator mask char3 is required."
-msgstr ""
+msgstr "Reikalingas slaptažodžio generatoriaus specialusis simbolis3."
 
 msgid "The password generator mask char3 should be a boolean type."
-msgstr ""
+msgstr "Slaptažodžio generatoriaus specialusis simbolis3 turi būti loginis tipas."
 
 msgid "The password generator mask char4 is required."
-msgstr ""
+msgstr "Reikalingas slaptažodžio generatoriaus specialusis simbolis4."
 
 msgid "The password generator mask char4 should be a boolean type."
-msgstr ""
+msgstr "Slaptažodžio generatoriaus specialusis simbolis4 turi būti loginis tipas."
 
 msgid "The password generator mask char5 is required."
-msgstr ""
+msgstr "Reikalingas slaptažodžio generatoriaus specialusis simbolis5."
 
 msgid "The password generator mask char5 should be a boolean type."
-msgstr ""
+msgstr "Slaptažodžio generatoriaus specialusis simbolis5 turi būti loginis tipas."
 
 msgid "The password generator exclude look alike chars is required."
-msgstr ""
+msgstr "Reikalingas slaptažodžio generatoriaus panašių simbolių išskyrimas."
 
 msgid "The password generator exclude look alike chars should be a boolean type."
-msgstr ""
+msgstr "Slaptažodžio generatoriaus panašių simbolių išskyrimas turi būti loginis tipas."
 
 msgid "Record not found"
-msgstr ""
+msgstr "Įrašas nerastas"
 
 msgid "The request data is empty."
-msgstr ""
+msgstr "Užklausos duomenys yra tušti."
 
 msgid "The request data is invalid: expected a collection."
-msgstr ""
+msgstr "Netinkami užklausos duomenys: tikėtasi kolekcijos."
 
 msgid "The request data is invalid: invalid fields."
-msgstr ""
+msgstr "Netinkami užklausos duomenys: neteisingi laukai."
 
 msgid "The request data is invalid: id missing."
-msgstr ""
+msgstr "Netinkami užklausos duomenys: trūksta id."
 
 msgid "The request data is invalid: id invalid."
-msgstr ""
+msgstr "Netinkami užklausos duomenys: neteisingas id."
 
 msgid "The request data is invalid: control_function missing."
-msgstr ""
+msgstr "Netinkami užklausos duomenys: trūksta control_function."
 
 msgid "The request data is invalid: control_function invalid."
-msgstr ""
+msgstr "Netinkami užklausos duomenys: neteisingas control_function."
 
 msgid "The request data is invalid: ids must be unique."
-msgstr ""
+msgstr "Netinkami užklausos duomenys: id turi būti unikalūs."
 
 msgid "An action identifier should be a valid UUID."
-msgstr ""
+msgstr "Veiksmo identifikatorius turėtų būti galiojantis UUID."
 
 msgid "The foreign model should be a valid ASCII string."
-msgstr ""
+msgstr "Užsienio modelis turėtų būti tinkama ASCII eilutė."
 
 msgid "The foreign model should be one of the following: {0}."
-msgstr ""
+msgstr "Užsienio modelis turėtų būti vienas iš šių: {0}."
 
 msgid "The foreign model name used length should be maximum {0} characters."
-msgstr ""
+msgstr "Užsienio modelio vardo ilgis turėtų būti iki {0} simbolių."
 
 msgid "A foreign model is required."
-msgstr ""
+msgstr "Reikalingas užsienio modelis."
 
 msgid "The foreign model should not be empty."
-msgstr ""
+msgstr "Užsienio modelis neturi būti tuščias."
 
 msgid "The control function should be a valid UTF8 string."
-msgstr ""
+msgstr "Valdymo funkcija turėtų būti tinkama UTF8 eilutė."
 
 msgid "The control function name used length should be maximum {0} characters."
-msgstr ""
+msgstr "Valdymo funkcijos pavadinimo ilgis turėtų būti daugiausia {0} simbolių."
 
 msgid "The control function is not supported."
-msgstr ""
+msgstr "Valdymo funkcija nepalaikoma."
 
 msgid "A control function is required."
-msgstr ""
+msgstr "Reikalinga valdymo funkcija."
 
 msgid "The control function should not be empty."
-msgstr ""
+msgstr "Valdymo funkcija neturi būti tuščia."
 
 msgid "The identifier of the user who created the Rbac should be a valid UUID."
-msgstr ""
+msgstr "Vartotojo, sukūrusio Rbac, identifikatorius turi būti galiojantis UUID."
 
 msgid "The identifier of the user who modified the Rbac should be a valid UUID."
-msgstr ""
+msgstr "Vartotojo, modifikavusio Rbac, identifikatorius turi būti galiojantis UUID."
 
 msgid "The identifier of the user who modified the Rbac should not be empty."
-msgstr ""
+msgstr "Vartotojo, modifikavusio Rbac, identifikatorius neturi būti tuščias."
 
 msgid "An RBAC entry already exists for the given id."
-msgstr ""
+msgstr "RBAC įrašas su pateiktu ID jau egzistuoja."
 
 msgid "An entry already exists for the given role and action ids."
-msgstr ""
+msgstr "Įrašas su pateiktais vaidmens ir veiksmo id jau egzistuoja."
 
 msgid "The control function is not allowed for this UI Action."
-msgstr ""
+msgstr "Ši valdymo funkcija neleidžiama šiam UI veiksmui."
 
 msgid "An action already exists for the given name."
-msgstr ""
+msgstr "Veiksmas su pateiktu pavadinimu jau egzistuoja."
 
 msgid "The RBAC settings could not be updated."
-msgstr ""
+msgstr "Nepavyko atnaujinti RBAC nustatymų."
 
 msgid "No data found."
-msgstr ""
+msgstr "Duomenų nerasta."
 
 msgid "Some data not found."
-msgstr ""
+msgstr "Kai kurių duomenų nerasta."
 
 msgid "The UI actions data could not be validated."
-msgstr ""
+msgstr "Nepavyko patvirtinti UI veiksmų duomenų."
 
 msgid "5 minutes"
 msgstr "5 minutės"
@@ -4151,10 +4151,10 @@ msgid "No"
 msgstr "Ne"
 
 msgid "The deleted field must be set to null."
-msgstr ""
+msgstr "Laukas \"deleted\" turi turėti reikšmę null."
 
 msgid "It is not allowed to update these resource type properties."
-msgstr ""
+msgstr "Neleidžiama atnaujinti šių ištekliaus tipo savybių."
 
 msgid "The name should be a valid BMP-UTF8 string."
 msgstr "Pavadinimas turi būti tinkama BMP-UTF8 eilutė."
@@ -4190,25 +4190,25 @@ msgid "A resource type already exists with this definition."
 msgstr "Ištekliaus tipas su šiuo apibrėžimu jau yra."
 
 msgid "The resource type identifier should be a UUID."
-msgstr ""
+msgstr "Ištekliaus tipo identifikatorius turi būti UUID."
 
 msgid "The resource type is already deleted."
-msgstr ""
+msgstr "Ištekliaus tipas jau ištrintas."
 
 msgid "You cannot delete the last resource type of the default version."
-msgstr ""
+msgstr "Negalite ištrinti paskutinio ištekliaus tipo numatytojoje versijoje."
 
 msgid "You cannot delete the last resource type available."
-msgstr ""
+msgstr "Negalite ištrinti paskutinio galimo ištekliaus tipo."
 
 msgid "The resource type can not be deleted as resources of this type still exist."
-msgstr ""
+msgstr "Negalima ištrinti šio ištekliaus tipo, nes tokio tipo ištekliai vis dar egzistuoja."
 
 msgid "The resource type could not be deleted."
-msgstr ""
+msgstr "Nepavyko ištrinti ištekliaus tipo."
 
 msgid "The resource type is not deleted."
-msgstr ""
+msgstr "Ištekliaus tipas nėra ištrintas."
 
 msgid "The self registration setting id should be a valid UUID."
 msgstr "Savarankiškos registracijos nustatymo identifikacija (ID) turi būti galiojantis UUID. "
@@ -4277,16 +4277,16 @@ msgid "Status: {0}"
 msgstr "Būsena: {0}"
 
 msgid "The sslVerifyPeer configuration should be a boolean."
-msgstr ""
+msgstr "SslVerifyPeer konfigūracija turi būti loginė reikšmė."
 
 msgid "The sslVerifyPeerName configuration should be a boolean."
-msgstr ""
+msgstr "SslVerifyPeerName konfigūracija turi būti loginė reikšmė."
 
 msgid "The sslAllowSelfSigned configuration should be a boolean."
-msgstr ""
+msgstr "SslAllowSelfSigned konfigūracija turi būti loginė reikšmė."
 
 msgid "The sslCafile configuration should be NULL or string."
-msgstr ""
+msgstr "SslCafile konfigūracija turi būti NULL arba eilutė."
 
 msgid "A sender name is required."
 msgstr "Būtina nurodyti siuntėjo vardą."
@@ -4343,10 +4343,10 @@ msgid "The test email should be a valid email address."
 msgstr "Bandomasis el. pašto adresas turi būti galiojantis el. paštas."
 
 msgid "The authentication method is required."
-msgstr ""
+msgstr "Būtinas autentifikavimo metodas."
 
 msgid "The authentication method should be one of the following: {0}."
-msgstr ""
+msgstr "Autentifikavimo metodas turi būti vienas iš šių: {0}."
 
 msgid "The sender email should be a valid email address."
 msgstr "Siuntėjo el. paštas turi būti galiojantis el.pašto adresas."
@@ -4361,46 +4361,46 @@ msgid "The client should be a valid IP or a valid domain."
 msgstr "Klientas turi būti galiojantis IP arba galiojantis domenas."
 
 msgid "No custom SSL configuration for SMTP server."
-msgstr ""
+msgstr "Nėra pasirinktinių SSL nustatymų SMTP serveriui."
 
 msgid "Custom SSL certificate options for SMTP server is in use."
-msgstr ""
+msgstr "SMTP serveriui naudojamos pritaikytos SSL sertifikato parinktys."
 
 msgid "Custom SSL configuration options set are invalid."
-msgstr ""
+msgstr "Netaisingas pasirinktinių SSL konfigūracijos parinkčių rinkinys."
 
 msgid "SSL certification validation for SMTP server is disabled."
-msgstr ""
+msgstr "SMTP serveriui SSL sertifikato patikra išjungta."
 
 msgid "SMTP Settings coherent. You may send a test email to validate them."
-msgstr ""
+msgstr "SMTP nustatymai suderinti. Galite išsiųsti bandomąjį el. laišką, kad juos patvirtintumėte."
 
 msgid "SMTP Setting errors: {0}"
-msgstr ""
+msgstr "SMTP nustatymų klaidos: {0}"
 
 msgid "The {0} plugin endpoints are disabled."
-msgstr ""
+msgstr "„{0}“ įskiepio galiniai taškai išjungti."
 
 msgid "The {0} plugin endpoints are enabled."
-msgstr ""
+msgstr "„{0}“ įskiepio galiniai taškai įjungti."
 
 msgid "It is recommended to disable the plugin endpoints."
-msgstr ""
+msgstr "Rekomenduojama išjungti įskiepio galinius taškus."
 
 msgid "Set the PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED environment variable to true."
-msgstr ""
+msgstr "Nustatykite aplinkos kintamąjį PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED reikšmei true."
 
 msgid "Or set passbolt.security.smtpSettings.endpointsDisabled to true in {0}."
-msgstr ""
+msgstr "Arba nustatykite passbolt.security.smtpSettings.endpointsDisabled reikšmei true faile {0}."
 
 msgid "not found"
 msgstr "nerasta"
 
 msgid "The SMTP Settings source is: {0}."
-msgstr ""
+msgstr "SMTP nustatymų šaltinis: {0}."
 
 msgid "It is recommended to set the SMTP Settings in the database through the administration section."
-msgstr ""
+msgstr "Rekomenduojama nustatyti SMTP nustatymus duomenų bazėje per administravimo skyrių."
 
 msgid "database"
 msgstr "duomenų bazė"
@@ -4430,7 +4430,7 @@ msgid "If you receive this email, it means that your passbolt smtp configuration
 msgstr "Jei gavote šį el. laišką, tai reiškia, kad jūsų \"passbolt\" smtp konfigūracija veikia gerai."
 
 msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
-msgstr ""
+msgstr "Neteisingos `passbolt.plugins.smtpSettings.security` konfigūracijos reikšmės."
 
 msgid "Errors: "
 msgstr "Klaidos: "
@@ -4475,13 +4475,13 @@ msgid "That's it!"
 msgstr "Viskas!"
 
 msgid "A driver name is required."
-msgstr ""
+msgstr "Reikalingas tvarkyklės pavadinimas."
 
 msgid "The driver name should not be empty."
-msgstr ""
+msgstr "Tvarkyklės pavadinimas neturi būti tuščias."
 
 msgid "The database driver should be one of the following: {0}."
-msgstr ""
+msgstr "Duomenų bazės tvarkyklė turi būti viena iš šių: {0}."
 
 msgid "The password should not contain quotes."
 msgstr "Slaptažodyje neturi būti kabučių."
@@ -4499,10 +4499,10 @@ msgid "The database name should not contain dashes."
 msgstr "Duomenų bazės pavadinime neturėtų būti brūkšnelių."
 
 msgid "The schema is required on PostgreSQL"
-msgstr ""
+msgstr "„PostgreSQL“ duomenų bazėje būtina nurodyti schemą"
 
 msgid "The schema should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Schema turi būti galiojanti BMP-UTF8 eilutė."
 
 msgid "An OpenPGP public key is required."
 msgstr "Reikalingas OpenPGP viešasis raktas."
@@ -4649,10 +4649,10 @@ msgid "Database name"
 msgstr "Duomenų bazės pavadinimas"
 
 msgid "schema"
-msgstr ""
+msgstr "Schema"
 
 msgid "Schema"
-msgstr ""
+msgstr "Struktūra"
 
 msgid "Enter your SMTP server settings."
 msgstr "Įveskite SMTP serverio nustatymus."
@@ -4691,10 +4691,10 @@ msgid "Authentication method"
 msgstr "Autentifikavimo metodas"
 
 msgid "client"
-msgstr ""
+msgstr "klientas"
 
 msgid "Client"
-msgstr ""
+msgstr "Klientas"
 
 msgid "Passbolt is not configured."
 msgstr "\"Passbolt\" nesukonfigūruotas."
@@ -4904,10 +4904,10 @@ msgid "is not anymore group manager"
 msgstr "nebėra grupės vadovas"
 
 msgid "User Agent: "
-msgstr ""
+msgstr "Naudotojo agentas: "
 
 msgid "User IP: "
-msgstr ""
+msgstr "Naudotojo IP: "
 
 msgid "Terms"
 msgstr "Sąlygos"
@@ -4928,73 +4928,73 @@ msgid "login"
 msgstr "Prisijungti"
 
 msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "Administratorius {0} ({1}) dabar ištrintas iš „Passbolt“ organizacijos."
 
 msgid "{0} deleted you from the passbolt organisation."
-msgstr ""
+msgstr "{0} ištrynė jus iš „Passbolt“ organizacijos."
 
 msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
-msgstr ""
+msgstr "Nedvejodami susisiekite su operaciją inicijavusiu administratoriumi, jei jums atrodo, kad šis veiksmas įtartinas."
 
 msgid "Account suspended"
-msgstr ""
+msgstr "Paskyra sustabdyta"
 
 msgid "Your account has been suspended."
-msgstr ""
+msgstr "Jūsų paskyra buvo sustabdyta."
 
 msgid "You are not able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "Jūs nebegalite prisijungti prie Passbolt ir gauti el. laiškų pranešimų."
 
 msgid "Other users can still share resources with you and add you to a group."
-msgstr ""
+msgstr "Kiti vartotojai vis dar gali su jumis bendrinti išteklius ir pridėti jus į grupę."
 
 msgid "Contact your admin"
-msgstr ""
+msgstr "Kreipkitės į administratorių"
 
 msgid "{0} changed your role to user."
-msgstr ""
+msgstr "{0} pakeitė jūsų vaidmenį į vartotoją."
 
 msgid "{0} changed the role of {1} to user."
-msgstr ""
+msgstr "{0} pakeitė {1} vaidmenį į vartotoją."
 
 msgid "{0} can no longer perform administration tasks."
-msgstr ""
+msgstr "{0} nebegali atlikti administravimo užduočių."
 
 msgid "You"
 msgstr "Jūs "
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
-msgstr ""
+msgstr "{0} ({1}) ką tik užbaigė paskyros atkūrimą. Jei šis veiksmas atrodo įtartinas, nedvejodami susisiekite su šiuo vartotoju."
 
 msgid "View user in passbolt"
-msgstr ""
+msgstr "Peržiūrėkite vartotoją Passbolt"
 
 msgid "{0} cannot complete the account recovery process!"
-msgstr ""
+msgstr "{0} negali užbaigti paskyros atkūrimo proceso!"
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
-msgstr ""
+msgstr "Šis vartotojas prarado savo privatų raktą ir/arba slaptafrazę ir negali užbaigti paskyros atkūrimo proceso."
 
 msgid "Unfortunately, they will need your help to delete their account and restart from scratch."
-msgstr ""
+msgstr "Deja, jiems reikės jūsų pagalbos ištrinti jų paskyrą ir pradėti iš naujo."
 
 msgid "Please check with them first to confirm."
-msgstr ""
+msgstr "Pirmiausia pasitarkite su jais, kad tai patvirtintumėte."
 
 msgid "User suspended"
-msgstr ""
+msgstr "Vartotojas sustabdytas"
 
 msgid "The user {0} has been suspended."
-msgstr ""
+msgstr "Vartotojo {0} paskyra buvo sustabdyta."
 
 msgid "This user will not be able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "Šis vartotojas nebegalės prisijungti prie Passbolt ir gauti el. laiškų pranešimų."
 
 msgid "Other users can share resources and add this user to a group."
-msgstr ""
+msgstr "Kiti vartotojai gali bendrinti išteklius ir pridėti šį vartotoją į grupę."
 
 msgid "Check user suspension"
-msgstr ""
+msgstr "Patikrinkite, ar vartotojas sustabdytas"
 
 msgid "Welcome to {0}!"
 msgstr "Sveiki atvykę į {0}!"
@@ -5021,7 +5021,7 @@ msgid "start recovery"
 msgstr "pradėti atsigavimą"
 
 msgid "You just completed an account recovery. Feel free to get in touch with an admin if you feel this action looks suspicious."
-msgstr ""
+msgstr "Ką tik užbaigėte paskyros atkūrimą. Jei šis veiksmas atrodo įtartinas, nedvejodami susisiekite su administratoriumi."
 
 msgid "{0} just created an account for you on passbolt!"
 msgstr "{0} ką tik sukūrė jums paskyrą \"Passbolt'e\"!"
@@ -5051,10 +5051,10 @@ msgid "You just opened an account on passbolt at {0}."
 msgstr "Ką tik atidarėte paskyrą naudodamiesi \"Passbolt\" adresu {0}."
 
 msgid "There was a change in the user directory."
-msgstr ""
+msgstr "Vartotojų kataloge įvyko pokyčių."
 
 msgid "You have been requested to add members to a group."
-msgstr ""
+msgstr "Paprašyta, kad pridėtumėte narių prie grupės."
 
 msgid "{0} requested you to add members to a group"
 msgstr "{0} paprašė jūsų pridėti narių prie grupės"
@@ -5162,16 +5162,16 @@ msgid "This user was invited by {0} {1}."
 msgstr "Šį naudotoją pakvietė {0} {1}."
 
 msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr ""
+msgstr "Šiam naudotojui trūksta šifravimo rakto bendrinamų išteklių metaduomenims. Prisijunkite ir eikite į naudotojo erdvę, kad rankiniu būdu pasidalintumėte raktu."
 
 msgid "view users"
 msgstr "peržiūrėti vartotojus"
 
 msgid "This email is an automatic notification sent by"
-msgstr ""
+msgstr "Šis el. laiškas yra automatinis pranešimas, siunčiamas"
 
 msgid "You can disable these notifications by requesting an administrator to delete your account."
-msgstr ""
+msgstr "Galite išjungti šiuos pranešimus paprašę administratoriaus ištrinti jūsų paskyrą."
 
 msgid "The locale {0} is not valid or not supported."
 msgstr "Lokalė {0} netinkama arba nepalaikoma."

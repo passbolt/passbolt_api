@@ -27,8 +27,6 @@ class MfaVerifyAjaxErrorControllerTest extends MfaIntegrationTestCase
 {
     public function dataProviderForScenarios()
     {
-        $fullBase = Configure::read('App.fullBaseUrl');
-
         return [
             [MfaDuoScenario::class, 'duo'],
             [MfaYubikeyScenario::class, 'yubikey'],

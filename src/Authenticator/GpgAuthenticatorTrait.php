@@ -28,7 +28,7 @@ trait GpgAuthenticatorTrait
      * @throws \Cake\Http\Exception\BadRequestException If GPG message is not valid
      * @return void
      */
-    public function assertGpgMessageIsValid(?OpenPGPBackendInterface $gpg, $gpgMessage, string $errorMessage)
+    public function assertGpgMessageIsValid(?OpenPGPBackendInterface $gpg, mixed $gpgMessage, string $errorMessage): void // phpcs:ignore
     {
         if (
             !isset($gpgMessage) ||

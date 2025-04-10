@@ -15,7 +15,7 @@
 
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Migrations\AbstractMigration;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
@@ -25,12 +25,11 @@ class V2130AddResourcesFoldersRelations extends AbstractMigration
     public function up()
     {
         $getUsersIdsHavingAccessToServices = new PermissionsGetUsersIdsHavingAccessToService();
-        $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
-        $resources = $resourcesTable->find()->where(['deleted' => false])->toArray();
-
-        foreach($resources as $resource) {
-            $usersIdsHavingAccessTo = $getUsersIdsHavingAccessToServices->getUsersIdsHavingAccessTo($resource->id);
-            $this->addResourceFoldersRelations($resource->id, $usersIdsHavingAccessTo);
+        $stmt = $this->query("SELECT id FROM resources WHERE deleted=false");
+        $rows = $stmt->fetchAll(\PDO::FETCH_BOTH);
+        foreach($rows as $row) {
+            $usersIdsHavingAccessTo = $getUsersIdsHavingAccessToServices->getUsersIdsHavingAccessTo($row['id']);
+            $this->addResourceFoldersRelations($row['id'], $usersIdsHavingAccessTo);
         }
     }
 
@@ -46,8 +45,8 @@ class V2130AddResourcesFoldersRelations extends AbstractMigration
                 'foreign_id' => $resourceId,
                 'user_id' => $userId,
                 'folder_parent_id' => null,
-                'created' => (new FrozenTime())->toDateTimeString(),
-                'modified' => (new FrozenTime())->toDateTimeString(),
+                'created' => (new DateTime())->toDateTimeString(),
+                'modified' => (new DateTime())->toDateTimeString(),
             ];
         }
 

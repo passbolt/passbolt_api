@@ -39,7 +39,7 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private UsersTable $usersTable;
 
     /**
      * @param \App\Model\Table\UsersTable|null $usersTable Users Table

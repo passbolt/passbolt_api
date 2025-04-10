@@ -20,6 +20,15 @@ namespace App\Utility\OpenPGP\Traits;
 use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
 use Cake\Log\Log;
+use OpenPGP;
+use OpenPGP_PublicKeyPacket;
+use OpenPGP_PublicSubkeyPacket;
+use OpenPGP_SecretKeyPacket;
+use OpenPGP_SecretSubkeyPacket;
+use OpenPGP_SignaturePacket;
+use OpenPGP_SignaturePacket_IssuerPacket;
+use OpenPGP_SignaturePacket_ReasonforRevocationPacket;
+use OpenPGP_UserIDPacket;
 
 trait OpenPGPBackendGetKeyInfoTrait
 {
@@ -70,7 +79,7 @@ trait OpenPGPBackendGetKeyInfoTrait
 
         // Get first packet for public key information.
         $publicKeyPacket = $msg->packets[0];
-        if (!$publicKeyPacket instanceof \OpenPGP_PublicKeyPacket) {
+        if (!$publicKeyPacket instanceof OpenPGP_PublicKeyPacket) {
             throw new CakeException(__('Invalid key. No OpenPGP public key package found.'));
         }
         $results['fingerprint'] = @$publicKeyPacket->fingerprint(); // phpcs:ignore
@@ -84,7 +93,7 @@ trait OpenPGPBackendGetKeyInfoTrait
         foreach ($msg->packets as $packet) {
             // Get uid from first user id packet data we find (legacy way)
             // Save the details for future use (this is the way)
-            if ($packet instanceof \OpenPGP_UserIDPacket) {
+            if ($packet instanceof OpenPGP_UserIDPacket) {
                 if (!isset($results['uid'])) {
                     $results['uid'] = $packet->data;
                 }
@@ -96,7 +105,7 @@ trait OpenPGPBackendGetKeyInfoTrait
             }
 
             // Look for key revocation signature packet
-            if (!$results['revoked'] && $packet instanceof \OpenPGP_SignaturePacket) {
+            if (!$results['revoked'] && $packet instanceof OpenPGP_SignaturePacket) {
                 if (self::containsRevocationSignature($packet, $results['key_id'])) {
                     $results['revoked'] = true;
                 }
@@ -104,7 +113,7 @@ trait OpenPGPBackendGetKeyInfoTrait
 
             // Look into public key sub packet to find subkey id / fingerprint
             // Will be useful to validate recipients of asymetric encrypted messages
-            if (($packet instanceof \OpenPGP_PublicSubkeyPacket) || ($packet instanceof \OpenPGP_SecretSubkeyPacket)) {
+            if (($packet instanceof OpenPGP_PublicSubkeyPacket) || ($packet instanceof OpenPGP_SecretSubkeyPacket)) {
                 if ($packet->fingerprint !== null) {
                     $results['sub_keys'][] = [
                         'key_id' => self::fingerprintToKeyId($packet->fingerprint),
@@ -116,9 +125,9 @@ trait OpenPGPBackendGetKeyInfoTrait
             // Some OpenPGP message can contain multiple keys, causing some known issues
             // see. https://community.passbolt.com/t/ios-mobile-app-sign-in-fails/4793/7
             $className = get_class($packet);
-            if ($className === \OpenPGP_PublicKeyPacket::class) {
+            if ($className === OpenPGP_PublicKeyPacket::class) {
                 $results['public_key_packet_counts']++;
-            } elseif ($className === \OpenPGP_SecretKeyPacket::class) {
+            } elseif ($className === OpenPGP_SecretKeyPacket::class) {
                 $results['secret_key_packet_counts']++;
             }
         }
@@ -158,13 +167,13 @@ trait OpenPGPBackendGetKeyInfoTrait
      * @param \OpenPGP_PublicKeyPacket $firstKeyPacket first packet
      * @return string
      */
-    private function getKeyAlgorithm(\OpenPGP_PublicKeyPacket $firstKeyPacket): string
+    private function getKeyAlgorithm(OpenPGP_PublicKeyPacket $firstKeyPacket): string
     {
-        if (!isset(\OpenPGP_PublicKeyPacket::$key_fields[$firstKeyPacket->algorithm])) {
+        if (!isset(OpenPGP_PublicKeyPacket::$key_fields[$firstKeyPacket->algorithm])) {
             throw new CakeException(__('Unsupported algorithm.'));
         }
 
-        return \OpenPGP_PublicKeyPacket::$algorithms[$firstKeyPacket->algorithm];
+        return OpenPGP_PublicKeyPacket::$algorithms[$firstKeyPacket->algorithm];
     }
 
     /**
@@ -173,17 +182,17 @@ trait OpenPGPBackendGetKeyInfoTrait
      * @param \OpenPGP_PublicKeyPacket $keyPacket key packet
      * @return int key size/length ex. 2048, 0 if undefined
      */
-    private function getKeySize(\OpenPGP_PublicKeyPacket $keyPacket): int
+    private function getKeySize(OpenPGP_PublicKeyPacket $keyPacket): int
     {
-        $algorithm = \OpenPGP_PublicKeyPacket::$algorithms[$keyPacket->algorithm];
-        $keyFirstElt = \OpenPGP_PublicKeyPacket::$key_fields[$keyPacket->algorithm][0];
+        $algorithm = OpenPGP_PublicKeyPacket::$algorithms[$keyPacket->algorithm];
+        $keyFirstElt = OpenPGP_PublicKeyPacket::$key_fields[$keyPacket->algorithm][0];
 
         if (isset($keyPacket->key[$keyFirstElt])) {
             $size = $keyPacket->key[$keyFirstElt];
             switch ($algorithm) {
                 case 'DSA':
                 case 'RSA':
-                    return \OpenPGP::bitlength($size);
+                    return OpenPGP::bitlength($size);
                 case 'ECDSA':
                 case 'EdDSA':
                     $oid = strtoupper(bin2hex($size));
@@ -217,7 +226,7 @@ trait OpenPGPBackendGetKeyInfoTrait
      * @param string $longKeyId 16 chars
      * @return bool
      */
-    public static function containsRevocationSignature(\OpenPGP_SignaturePacket $packet, string $longKeyId): bool
+    public static function containsRevocationSignature(OpenPGP_SignaturePacket $packet, string $longKeyId): bool
     {
         // https://datatracker.ietf.org/doc/html/draft-ietf-openpgp-rfc4880bis-10#section-5.2.1
         // 32 = 0x20 Key revocation signature.
@@ -227,15 +236,15 @@ trait OpenPGPBackendGetKeyInfoTrait
             $revocationPacket = false;
             $revocationKeyId = false;
             foreach ($packet->hashed_subpackets as $s) {
-                if (!$revocationPacket && $s instanceof \OpenPGP_SignaturePacket_ReasonforRevocationPacket) {
+                if (!$revocationPacket && $s instanceof OpenPGP_SignaturePacket_ReasonforRevocationPacket) {
                     $revocationPacket = true;
                 }
-                if (!$revocationKeyId && $s instanceof \OpenPGP_SignaturePacket_IssuerPacket) {
+                if (!$revocationKeyId && $s instanceof OpenPGP_SignaturePacket_IssuerPacket) {
                     $revocationKeyId = ($s->data === $longKeyId);
                 }
             }
             foreach ($packet->unhashed_subpackets as $s) {
-                if ($s instanceof \OpenPGP_SignaturePacket_IssuerPacket) {
+                if ($s instanceof OpenPGP_SignaturePacket_IssuerPacket) {
                     $revocationKeyIdFound = ($s->data === $longKeyId);
                     if ($revocationKeyIdFound && $acceptUnhashedRevocationIssuerSubPacket) {
                         $revocationKeyId = true;

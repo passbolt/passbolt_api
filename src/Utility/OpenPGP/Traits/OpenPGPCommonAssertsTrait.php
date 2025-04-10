@@ -28,7 +28,7 @@ trait OpenPGPCommonAssertsTrait
      * @throws \Cake\Core\Exception\CakeException if the armored message marker does not match the one provided
      * @return bool true if successful
      */
-    public function assertGpgMarker(string $armoredText, string $marker)
+    public function assertGpgMarker(string $armoredText, string $marker): bool
     {
         $msg = __('This is not a valid OpenPGP armored marker.');
         try {
@@ -49,7 +49,7 @@ trait OpenPGPCommonAssertsTrait
      * @param string $fingerprint fingerprint
      * @return void
      */
-    public function assertKeyInKeyring(string $fingerprint)
+    public function assertKeyInKeyring(string $fingerprint): void
     {
         if (!$this->isKeyInKeyring($fingerprint)) {
             throw new CakeException(__('The key {0} was not found in the keyring', $fingerprint));
@@ -62,7 +62,7 @@ trait OpenPGPCommonAssertsTrait
      * @throws \Cake\Core\Exception\CakeException if not signature key is set
      * @return void
      */
-    public function assertSignKey()
+    public function assertSignKey(): void
     {
         if (empty($this->_signKeyFingerprint)) {
             throw new CakeException('Can not sign without a key. Set a sign key first.');
@@ -75,7 +75,7 @@ trait OpenPGPCommonAssertsTrait
      * @throws \Cake\Core\Exception\CakeException if not signature key is set
      * @return void
      */
-    public function assertVerifyKey()
+    public function assertVerifyKey(): void
     {
         if (empty($this->_verifyKeyFingerprint)) {
             throw new CakeException('Can not verify without a key. Set a verification key first.');
@@ -88,7 +88,7 @@ trait OpenPGPCommonAssertsTrait
      * @throws \Cake\Core\Exception\CakeException if no encryption key is set
      * @return void
      */
-    public function assertEncryptKey()
+    public function assertEncryptKey(): void
     {
         if (empty($this->_encryptKeyFingerprint)) {
             throw new CakeException('Can not encrypt without a key. Set a public key first.');
@@ -101,7 +101,7 @@ trait OpenPGPCommonAssertsTrait
      * @throws \Cake\Core\Exception\CakeException if no decryption key is set
      * @return void
      */
-    public function assertDecryptKey()
+    public function assertDecryptKey(): void
     {
         if (empty($this->_decryptKeyFingerprint)) {
             throw new CakeException('Can not decrypt without a key. Set a secret key first.');

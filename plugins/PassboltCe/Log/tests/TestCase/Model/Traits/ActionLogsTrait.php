@@ -33,6 +33,7 @@ trait ActionLogsTrait
     {
         $actionLogCount = $this->ActionLogs
             ->find()
+            ->all()
             ->count();
 
         $this->assertEquals($actionLogCount, $count);

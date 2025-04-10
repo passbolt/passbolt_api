@@ -17,21 +17,21 @@ declare(strict_types=1);
 namespace App\Service\ResourceTypes;
 
 use Cake\ORM\TableRegistry;
+use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 class ResourceTypesTrimSpacesService
 {
     /**
      * @var \Passbolt\ResourceTypes\Model\Table\ResourceTypesTable
      */
-    private $resourceTypesTable;
+    private ResourceTypesTable $resourceTypesTable;
 
     /**
      * Instantiate the service.
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
-        $this->resourceTypesTable = TableRegistry::getTableLocator()->get('ResourceTypes');
+        $this->resourceTypesTable = TableRegistry::getTableLocator()->get('Passbolt/ResourceTypes.ResourceTypes');
     }
 
     /**

@@ -68,7 +68,7 @@ class HomeVariableWritableGpgHealthcheck extends HomeVariableDefinedGpgHealthche
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Ensure the keyring location is accessible by the webserver user.'),

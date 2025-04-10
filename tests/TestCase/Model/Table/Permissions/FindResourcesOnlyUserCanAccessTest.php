@@ -24,7 +24,7 @@ use Cake\ORM\TableRegistry;
 
 class FindResourcesOnlyUserCanAccessTest extends AppTestCase
 {
-    public $fixtures = ['app.Alt0/Permissions', 'app.Alt0/GroupsUsers', 'app.Base/Resources', 'app.Base/Users', 'app.Base/Groups'];
+    public array $fixtures = ['app.Alt0/Permissions', 'app.Alt0/GroupsUsers', 'app.Base/Resources', 'app.Base/Users', 'app.Base/Groups'];
 
     /**
      * Test subject

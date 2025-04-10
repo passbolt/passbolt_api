@@ -29,6 +29,7 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Exception;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService;
 
 class ResourcesAfterCreateService
@@ -36,17 +37,17 @@ class ResourcesAfterCreateService
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
-    private $foldersTable;
+    private FoldersTable $foldersTable;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService
      */
-    private $foldersRelationsCreateService;
+    private FoldersRelationsCreateService $foldersRelationsCreateService;
 
     /**
      * @var \App\Service\Permissions\UserHasPermissionService
      */
-    private $userHasPermissionService;
+    private UserHasPermissionService $userHasPermissionService;
 
     /**
      * Instantiate the service.
@@ -65,7 +66,7 @@ class ResourcesAfterCreateService
      * @return void
      * @throws \Cake\Http\Exception\InternalErrorException If an unexpected error occurred while creating the folder relation.
      */
-    public function afterCreate(UserAccessControl $uac, Resource $resource, ?array $data = [])
+    public function afterCreate(UserAccessControl $uac, Resource $resource, ?array $data = []): void
     {
         $folderParentId = Hash::get($data, 'folder_parent_id', null);
 
@@ -105,8 +106,11 @@ class ResourcesAfterCreateService
      * @throws \App\Error\Exception\CustomValidationException If the parent folder does not exist.
      * @throws \Cake\Http\Exception\ForbiddenException If the user is not allowed to insert content in the parent folder.
      */
-    private function validateParentFolder(UserAccessControl $uac, Resource $resource, ?string $folderParentId = null)
-    {
+    private function validateParentFolder(
+        UserAccessControl $uac,
+        Resource $resource,
+        ?string $folderParentId = null
+    ): void {
         if (!Validation::uuid($folderParentId)) {
             $errors = ['uuid' => __('The folder parent identifier should be a valid UUID.')];
 

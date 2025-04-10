@@ -24,6 +24,9 @@ class JwtDestroySessionMiddlewareTest extends JwtAuthenticationIntegrationTestCa
 {
     public function testJwtDestroySessionMiddleware()
     {
+        // @link https://github.com/cakephp/cakephp/commit/fda94cfb77731fdcb7eca74b8f3e19a3694ce82d
+        $this->markTestSkipped('CSRF tokens are not present in GET request');
+
         $this->enableCsrfToken();
 
         $fooSessionKey = 'foo';

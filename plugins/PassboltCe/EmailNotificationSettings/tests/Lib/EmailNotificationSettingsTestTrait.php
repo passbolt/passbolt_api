@@ -21,6 +21,7 @@ use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Event\EventManager;
+use Exception;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 trait EmailNotificationSettingsTestTrait
@@ -73,7 +74,7 @@ trait EmailNotificationSettingsTestTrait
     {
         $configPath = CONFIG . 'default.php';
         if (!is_file($configPath) || !is_readable($configPath)) {
-            throw new \Exception(
+            throw new Exception(
                 __('The {0} data file can not be found/read: {1}', 'default.php', CONFIG)
             );
         }

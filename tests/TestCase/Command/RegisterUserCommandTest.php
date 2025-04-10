@@ -43,7 +43,6 @@ class RegisterUserCommandTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->useCommandRunner();
         $this->loadNotificationSettings();
         $this->mockProcessUserService('www-data');
     }

@@ -28,7 +28,7 @@ class LocaleEmailQueueListener implements EventListenerInterface
     /**
      * @var string|null
      */
-    public static $localeBeforeRender;
+    public static ?string $localeBeforeRender = null;
 
     /**
      * @inheritDoc

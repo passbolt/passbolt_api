@@ -19,9 +19,10 @@ namespace Passbolt\Metadata\Service\RotateKey;
 use App\Error\Exception\CustomValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Model\Rule\IsSharedMetadataKeyUniqueActiveRule;
 use Passbolt\Metadata\Model\Rule\IsV4ToV5UpgradeAllowedRule;
@@ -52,7 +53,7 @@ class MetadataRotateKeyResourcesUpdateService extends AbstractMetadataRotateKeyU
             $this->assertConflict($values, $resource);
 
             $values = array_merge($values, [
-                'modified' => FrozenTime::now(),
+                'modified' => DateTime::now(),
                 'modified_by' => $uac->getId(),
             ]);
             $entity = $resourcesTable->patchEntity($resource, $values, [
@@ -96,7 +97,7 @@ class MetadataRotateKeyResourcesUpdateService extends AbstractMetadataRotateKeyU
                 $entities,
                 __('The resource metadata key data could not be updated.')
             );
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new InternalErrorException(
                 __('The resource metadata key data could not be updated.'),
                 null,

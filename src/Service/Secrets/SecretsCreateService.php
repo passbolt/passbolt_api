@@ -19,6 +19,7 @@ namespace App\Service\Secrets;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Secret;
+use App\Model\Table\SecretsTable;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -27,7 +28,7 @@ class SecretsCreateService
     /**
      * @var \App\Model\Table\SecretsTable
      */
-    private $secretsTable;
+    private SecretsTable $secretsTable;
 
     /**
      * Instantiate the service.
@@ -50,7 +51,7 @@ class SecretsCreateService
         $secret = $this->buildEntity($data);
         $this->handleValidationErrors($secret);
 
-        $this->secretsTable->getConnection()->transactional(function () use ($secret, $checkRules) {
+        $this->secretsTable->getConnection()->transactional(function () use ($secret, $checkRules): void {
             $this->secretsTable->save($secret, ['checkRules' => $checkRules]);
             $this->handleValidationErrors($secret);
         });
@@ -64,7 +65,7 @@ class SecretsCreateService
      * @param array $data The secret data
      * @return \App\Model\Entity\Secret
      */
-    private function buildEntity(array $data)
+    private function buildEntity(array $data): Secret
     {
         $data = [
             'resource_id' => Hash::get($data, 'resource_id'),
@@ -86,7 +87,7 @@ class SecretsCreateService
      * @param \App\Model\Entity\Secret $secret The secret
      * @return void
      */
-    private function handleValidationErrors(Secret $secret)
+    private function handleValidationErrors(Secret $secret): void
     {
         $errors = $secret->getErrors();
         if (!empty($errors)) {

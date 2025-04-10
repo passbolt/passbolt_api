@@ -22,9 +22,9 @@ use App\Notification\Email\AbstractSubscribedEmailRedactorPool;
 class MetadataEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
 {
     /**
-     * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]
+     * @return array<\App\Notification\Email\SubscribedEmailRedactorInterface>
      */
-    public function getSubscribedRedactors()
+    public function getSubscribedRedactors(): array
     {
         $redactors = [];
 

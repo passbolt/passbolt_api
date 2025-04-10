@@ -27,14 +27,16 @@ use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Model\Validation\DateTime\IsParsableDateTimeValidationRule;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\UuidFactory;
+use ArrayObject;
 use Cake\Event\Event;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use InvalidArgumentException;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedItemRule;
@@ -46,6 +48,7 @@ use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdNotExpiredRule;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
+use Throwable;
 
 /**
  * Resources Model
@@ -54,7 +57,8 @@ use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
  * @property \App\Model\Table\SecretsTable&\Cake\ORM\Association\HasMany $Secrets
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
- * @method \App\Model\Entity\Resource get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Resource get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
+ * @method \App\Model\Entity\Resource get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\Resource[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\Resource|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Resource patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
@@ -72,7 +76,7 @@ use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
  * @method iterable<\App\Model\Entity\Resource>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Resource>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Resource>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findByIdAndDeleted(string $id, bool $delete)
+ * @method \Cake\ORM\Query\SelectQuery findByIdAndDeleted(string $id, bool $delete)
  */
 class ResourcesTable extends Table
 {
@@ -410,7 +414,7 @@ class ResourcesTable extends Table
      * @return void
      * @deprecated can be removed once isDescriptionEmptyOnPasswordAndDescriptionResourceType is a rule
      */
-    public function beforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options): void
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options): void
     {
         if (!$this->isDescriptionEmptyOnPasswordAndDescriptionResourceType($data)) {
             $data['description'] = null;
@@ -418,8 +422,8 @@ class ResourcesTable extends Table
         if (isset($data['expired']) && !empty($data['expired'])) {
             // Parse the expired date into a time object
             try {
-                $data['expired'] = FrozenTime::parse($data['expired']);
-            } catch (\Throwable $e) {
+                $data['expired'] = DateTime::parse($data['expired']);
+            } catch (Throwable $e) {
                 // If the expired date cannot be parsed, let the validation
                 // handle the fail
             }
@@ -433,7 +437,7 @@ class ResourcesTable extends Table
      * @param array|null $options options
      * @return bool
      */
-    public function isOwnerPermissionProvidedRule(Resource $entity, ?array $options = [])
+    public function isOwnerPermissionProvidedRule(Resource $entity, ?array $options = []): bool
     {
         if (isset($entity->permissions)) {
             $found = Hash::extract($entity->permissions, '{n}[type=' . Permission::OWNER . ']');
@@ -453,7 +457,7 @@ class ResourcesTable extends Table
      * @return bool
      * @todo refactor this as a rule after 4.0.0
      */
-    public function isDescriptionEmptyOnPasswordAndDescriptionResourceType(\ArrayObject $data): bool
+    public function isDescriptionEmptyOnPasswordAndDescriptionResourceType(ArrayObject $data): bool
     {
         $resourceTypeId = $data['resource_type_id'] ?? null;
         $description = $data['description'] ?? null;
@@ -474,7 +478,7 @@ class ResourcesTable extends Table
      * @param array|null $options options
      * @return bool
      */
-    public function isOwnerSecretProvidedRule(Resource $entity, ?array $options = [])
+    public function isOwnerSecretProvidedRule(Resource $entity, ?array $options = []): bool
     {
         return $entity->secrets[0]->user_id === $entity->created_by;
     }
@@ -486,7 +490,7 @@ class ResourcesTable extends Table
      * @param array|null $options options
      * @return bool
      */
-    public function isSecretsProvidedRule(Resource $entity, ?array $options = [])
+    public function isSecretsProvidedRule(Resource $entity, ?array $options = []): bool
     {
         // Secrets are not required to update a resource, but if provided check that the list of secrets correspond
         // only to the users who have access to the resource.
@@ -530,7 +534,7 @@ class ResourcesTable extends Table
     {
         // The softDelete will perform an update to the entity to soft delete it.
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
         if ($resource->deleted) {
             $resource->setError('deleted', [
@@ -662,6 +666,7 @@ class ResourcesTable extends Table
         if ($dryRun) {
             return $this->find()
                 ->where($condition)
+                ->all()
                 ->count();
         }
 
