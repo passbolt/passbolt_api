@@ -19,6 +19,7 @@ namespace App\Model\Rule;
 
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
+use Exception;
 
 class HasValidParentRule
 {
@@ -29,7 +30,7 @@ class HasValidParentRule
      * @param array $options Options passed to the check
      * @return bool
      */
-    public function __invoke(EntityInterface $entity, array $options)
+    public function __invoke(EntityInterface $entity, array $options): bool
     {
         if (!isset($options['errorField']) || !isset($options['table'])) {
             return false;
@@ -44,7 +45,7 @@ class HasValidParentRule
             if ($lookupEntity->{$options['resourceField']} == $entity->{$options['resourceField']}) {
                 return true;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         return false;

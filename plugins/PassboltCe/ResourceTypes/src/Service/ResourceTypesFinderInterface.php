@@ -16,28 +16,28 @@ declare(strict_types=1);
  */
 namespace Passbolt\ResourceTypes\Service;
 
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 
 interface ResourceTypesFinderInterface
 {
     /**
      * Get resource types query.
      *
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function find(): Query;
+    public function find(): SelectQuery;
 
     /**
-     * @param \Cake\ORM\Query $query query to filter
+     * @param \Cake\ORM\Query\SelectQuery $query query to filter
      * @param array $options options with the filter option
      * @return void
      */
-    public function filter(Query $query, array $options): void;
+    public function filter(SelectQuery $query, array $options): void;
 
     /**
-     * @param \Cake\ORM\Query $query query to filter
+     * @param \Cake\ORM\Query\SelectQuery $query query to filter
      * @param array $options options with the contain option
      * @return void
      */
-    public function contain(Query $query, array $options): void;
+    public function contain(SelectQuery $query, array $options): void;
 }

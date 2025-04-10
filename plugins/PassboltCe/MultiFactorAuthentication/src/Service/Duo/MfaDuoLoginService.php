@@ -23,9 +23,11 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
+use InvalidArgumentException;
 use Passbolt\MultiFactorAuthentication\Model\Dto\MfaDuoCallbackDto;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsDuoService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
+use Throwable;
 
 /**
  * Class MfaDuoLoginService
@@ -35,7 +37,7 @@ class MfaDuoLoginService
     /**
      * @var \Duo\DuoUniversal\Client
      */
-    protected $duoClient;
+    protected Client $duoClient;
 
     /**
      * MfaDuoLoginService constructor.
@@ -51,7 +53,7 @@ class MfaDuoLoginService
                 new MfaOrgSettingsDuoService(MfaOrgSettings::get()->getSettings()),
                 AuthenticationToken::TYPE_MFA_VERIFY
             );
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $msg = __('Could not login using Duo MFA provider.');
             throw new InternalErrorException($msg, null, $th);
         }
@@ -75,7 +77,7 @@ class MfaDuoLoginService
         string $token
     ): AuthenticationToken {
         if (!Validation::uuid($token)) {
-            throw new \InvalidArgumentException('The authentication token should be a valid UUID.');
+            throw new InvalidArgumentException('The authentication token should be a valid UUID.');
         }
         $authenticationTokenType = AuthenticationToken::TYPE_MFA_VERIFY;
         $authenticationToken = (new MfaDuoCallbackAuthenticationTokenService())
@@ -88,7 +90,7 @@ class MfaDuoLoginService
         try {
             (new MfaDuoVerifyDuoCodeService($authenticationTokenType, $this->duoClient))
                 ->verify($uac, $duoCallbackDto->duoCode);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             throw new BadRequestException(__('Unable to verify Duo authentication.'), null, $th);
         }
 

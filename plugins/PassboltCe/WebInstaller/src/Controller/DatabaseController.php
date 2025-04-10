@@ -161,6 +161,7 @@ class DatabaseController extends WebInstallerController
         $nbAdmins = $usersTable
             ->find()
             ->where(['role_id' => $usersTable->Roles->getIdByName(Role::ADMIN)])
+            ->all()
             ->count();
 
         return $nbAdmins > 0;

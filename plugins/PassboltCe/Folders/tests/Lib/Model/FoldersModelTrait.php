@@ -20,6 +20,7 @@ namespace Passbolt\Folders\Test\Lib\Model;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use DateTime;
 
 trait FoldersModelTrait
 {
@@ -61,8 +62,8 @@ trait FoldersModelTrait
     {
         $entityContent = [
             'name' => UuidFactory::uuid('folder.id.name'),
-            'created' => (new \DateTime())->format('Y-m-d H:i:s'),
-            'modified' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'created' => (new DateTime())->format('Y-m-d H:i:s'),
+            'modified' => (new DateTime())->format('Y-m-d H:i:s'),
             'created_by' => UuidFactory::uuid('user.id.username'),
             'modified_by' => UuidFactory::uuid('user.id.username'),
         ];
@@ -171,15 +172,15 @@ trait FoldersModelTrait
         $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
 
-        $folder = $foldersTable->find()->where(['id' => $id])->count();
+        $folder = $foldersTable->find()->where(['id' => $id])->all()->count();
         $this->assertEmpty($folder);
 
-        $foldersRelations = $foldersRelationsTable->find()->where(['foreign_id' => $id])->count();
+        $foldersRelations = $foldersRelationsTable->find()->where(['foreign_id' => $id])->all()->count();
         $this->assertEmpty($foldersRelations);
-        $foldersRelationsParents = $foldersRelationsTable->find()->where(['folder_parent_id' => $id])->count();
+        $foldersRelationsParents = $foldersRelationsTable->find()->where(['folder_parent_id' => $id])->all()->count();
         $this->assertEmpty($foldersRelationsParents);
 
-        $permissions = $permissionsTable->find()->where(['aco_foreign_key' => $id])->count();
+        $permissions = $permissionsTable->find()->where(['aco_foreign_key' => $id])->all()->count();
         $this->assertEmpty($permissions);
     }
 }

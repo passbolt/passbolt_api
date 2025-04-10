@@ -64,9 +64,9 @@ interface HealthcheckServiceInterface
     /**
      * Returns the message to display additional info to users.
      *
-     * @return string|array|null
+     * @return array|string|null
      */
-    public function getHelpMessage();
+    public function getHelpMessage(): string|array|null;
 
     /**
      * Returns the array key used when returning check result.

@@ -29,7 +29,7 @@ class SaveTest extends AppTestCase
     use FormatValidationTrait;
     use PermissionsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Permissions',
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers',
     ];

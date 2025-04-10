@@ -102,7 +102,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
             ->user()
             ->active()
             ->persist();
-        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
+        MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
         $v4ResourceTypeId = ResourceTypeFactory::make()->passwordString()->persist()->get('id');
         $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
         $metadataKeyId = $user->gpgkey->id;
@@ -375,10 +375,9 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
     {
         MetadataTypesSettingsFactory::make()->v5()->persist();
         $user = UserFactory::make()->user()->persist();
-        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
+        MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
         $v4ResourceTypeId = ResourceTypeFactory::make()->passwordString()->persist()->get('id');
         $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
-        $metadataKeyId = $metadataKey->get('id');
         $dummyResourceData = $this->getDummyResourcesPostData([
             'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
         ]);

@@ -29,8 +29,8 @@ use Cake\ORM\Entity;
  * @property string $aro
  * @property string|null $aro_foreign_key
  * @property int $type
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  * @property \App\Model\Entity\Group|null $group
  * @property \App\Model\Entity\Resource $resource
  * @property \App\Model\Entity\User|null $user
@@ -54,7 +54,7 @@ class Permission extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'aco' => false,
         'aco_foreign_key' => false,
         'aro' => false,

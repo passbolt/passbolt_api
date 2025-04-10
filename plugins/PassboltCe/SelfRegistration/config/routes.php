@@ -19,7 +19,7 @@ use Cake\Routing\RouteBuilder;
 $routes->plugin(
     'Passbolt/SelfRegistration',
     ['path' => '/self-registration'],
-    function (RouteBuilder $routes) {
+    function (RouteBuilder $routes): void {
         $routes->setExtensions(['json']);
 
         $routes->connect('/settings', ['controller' => 'SelfRegistrationGetSettings', 'action' => 'getSettings'])

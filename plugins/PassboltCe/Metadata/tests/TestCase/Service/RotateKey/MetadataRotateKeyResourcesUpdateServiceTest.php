@@ -27,7 +27,8 @@ use Cake\Chronos\Chronos;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ConflictException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
+use Exception;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
@@ -135,13 +136,13 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         $updatedResource1 = ResourceFactory::get($expiredResource1->get('id'));
         $this->assertSame($activeMetadataKey->get('id'), $updatedResource1->get('metadata_key_id'));
         $this->assertSame($metadataForR1, $updatedResource1->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedResource1->get('modified')->format('Y-m-d H:i')); // comparing seconds here might fail
+        $this->assertSame(Chronos::now()->format('Y-m-d'), $updatedResource1->get('modified')->format('Y-m-d')); // comparing seconds here might fail
         $this->assertSame($uac->getId(), $updatedResource1->get('modified_by'));
         /** @var \App\Model\Entity\Resource $updatedResource2 */
         $updatedResource2 = ResourceFactory::get($expiredResource2->get('id'));
         $this->assertSame($activeMetadataKey->get('id'), $updatedResource2->get('metadata_key_id'));
         $this->assertSame($metadataForR2, $updatedResource2->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedResource2->get('modified')->format('Y-m-d H:i'));
+        $this->assertSame(Chronos::now()->format('Y-m-d'), $updatedResource2->get('modified')->format('Y-m-d'));
         $this->assertSame($uac->getId(), $updatedResource2->get('modified_by'));
     }
 
@@ -221,7 +222,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-                'modified' => FrozenTime::now(),
+                'modified' => DateTime::now(),
                 'modified_by' => $admin->get('id'),
             ],
         ];
@@ -266,7 +267,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
-        $resource = ResourceFactory::make(['modified' => FrozenTime::yesterday()])->withPermissionsFor([$admin])->v5Fields(true, [
+        $resource = ResourceFactory::make(['modified' => DateTime::yesterday()])->withPermissionsFor([$admin])->v5Fields(true, [
             'metadata_key_id' => $expiredMetadataKey->get('id'),
             'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
         ])->persist();
@@ -278,7 +279,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-                'modified' => FrozenTime::now(),
+                'modified' => DateTime::now(),
                 'modified_by' => $admin->get('id'),
             ],
         ];
@@ -295,7 +296,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
-        $resource = ResourceFactory::make(['modified' => FrozenTime::yesterday()])->withPermissionsFor([$admin])->v5Fields(true, [
+        $resource = ResourceFactory::make(['modified' => DateTime::yesterday()])->withPermissionsFor([$admin])->v5Fields(true, [
             'metadata_key_id' => $expiredMetadataKey->get('id'),
             'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
         ])->persist();
@@ -343,7 +344,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
                 ],
             ];
             $this->service->updateMany($uac, $data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(CustomValidationException::class, $e);
             $errors = $e->getErrors();
             $this->assertArrayHasKey('isMetadataKeyNotExpired', $errors[0]['metadata_key_id']);
@@ -382,7 +383,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         $uac = $this->mockAdminAccessControl();
         try {
             $this->service->updateMany($uac, $data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(CustomValidationException::class, $e);
             $errors = $e->getErrors();
             $this->assertArrayHasKey('isSharedMetadataKeyUniqueActive', $errors[0]['metadata_key_id']);

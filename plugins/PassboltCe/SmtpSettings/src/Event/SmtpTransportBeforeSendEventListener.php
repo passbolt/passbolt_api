@@ -27,7 +27,7 @@ class SmtpTransportBeforeSendEventListener implements EventListenerInterface
     /**
      * @var array|null
      */
-    private $configInDB;
+    private ?array $configInDB = null;
 
     /**
      * @inheritDoc

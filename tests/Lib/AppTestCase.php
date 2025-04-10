@@ -36,6 +36,8 @@ use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use CakephpFixtureFactories\ORM\FactoryTableRegistry;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use IntlChar;
+use OutOfBoundsException;
 use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\MultiFactorAuthentication\MultiFactorAuthenticationPlugin;
@@ -124,7 +126,7 @@ abstract class AppTestCase extends TestCase
             "\u{1F64E}", "\u{1F64F}",
         ];
         foreach ($values as $value) {
-            self::$stringMasks['alphaEmojis'] .= \IntlChar::chr($value);
+            self::$stringMasks['alphaEmojis'] .= IntlChar::chr($value);
         }
 
         // Init alphaLatin.
@@ -144,7 +146,7 @@ abstract class AppTestCase extends TestCase
             self::initStringMasks();
         }
         if (!isset(self::$stringMasks[$maskName])) {
-            throw new \OutOfBoundsException('The requested mask doesn\'t exist');
+            throw new OutOfBoundsException('The requested mask doesn\'t exist');
         }
         if ($length == null) {
             return self::$stringMasks[$maskName];

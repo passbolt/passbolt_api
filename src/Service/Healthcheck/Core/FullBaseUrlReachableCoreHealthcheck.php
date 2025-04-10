@@ -22,6 +22,7 @@ use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Http\Client;
 use Cake\Routing\Router;
+use Throwable;
 
 class FullBaseUrlReachableCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -82,7 +83,7 @@ class FullBaseUrlReachableCoreHealthcheck implements HealthcheckServiceInterface
             if (isset($response['body'])) {
                 $this->status = ($response['body'] === 'OK');
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // Nothing to do here
         } finally {
             if ($this->status !== true) {
@@ -136,7 +137,7 @@ class FullBaseUrlReachableCoreHealthcheck implements HealthcheckServiceInterface
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Check that the domain name is correct in {0}', CONFIG . 'passbolt.php'),

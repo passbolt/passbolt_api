@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace App\Controller\Permissions;
 
 use App\Controller\AppController;
+use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
@@ -30,12 +32,12 @@ class PermissionsViewController extends AppController
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    protected $Resources;
+    protected ResourcesTable $Resources;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    protected $Permissions;
+    protected PermissionsTable $Permissions;
 
     /**
      * @inheritDoc

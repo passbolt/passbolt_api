@@ -27,7 +27,7 @@ use PassboltTestData\Lib\PermissionMatrix;
 
 class FindIndexTest extends AppTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users',
         'app.Base/Profiles',
         'app.Base/Gpgkeys',

@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Controller\Component;
 
 use App\Controller\Component\SanitizeUrlComponent;
 use Cake\Controller\ComponentRegistry;
+use Cake\Controller\Controller;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 
@@ -29,7 +30,8 @@ class SanitizeUrlComponentTest extends TestCase
      */
     public function testSanitizeUrlComponent_Sanitize(string $url, array $blacklist, bool $allowEmpty, bool $ensureStartsWithSlash, bool $escapeSpecialChars, string $expectedResult): void
     {
-        $registry = new ComponentRegistry();
+        $controller = new Controller(new ServerRequest());
+        $registry = new ComponentRegistry($controller);
         $component = new SanitizeUrlComponent($registry);
 
         $result = $component->sanitize($url, $blacklist, $allowEmpty, $ensureStartsWithSlash, $escapeSpecialChars);

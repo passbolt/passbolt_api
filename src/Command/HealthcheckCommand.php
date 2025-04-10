@@ -27,6 +27,7 @@ use Cake\Collection\Collection;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Exception;
 
 class HealthcheckCommand extends PassboltCommand
 {
@@ -38,14 +39,14 @@ class HealthcheckCommand extends PassboltCommand
      *
      * @var int
      */
-    private $__errorCount = 0;
+    private int $__errorCount = 0;
 
     /**
      * Control what get displayed / what to hide
      *
      * @var array
      */
-    protected $_displayOptions = [
+    protected array $_displayOptions = [
         'hide-pass' => false,
         'hide-warning' => false,
         'hide-help' => false,
@@ -56,12 +57,12 @@ class HealthcheckCommand extends PassboltCommand
     /**
      * @var \Cake\Console\ConsoleIo
      */
-    private $io;
+    private ConsoleIo $io;
 
     /**
      * @var \Cake\Console\Arguments
      */
-    private $args;
+    private Arguments $args;
 
     /**
      * @var \App\Service\Command\ProcessUserService
@@ -176,6 +177,8 @@ class HealthcheckCommand extends PassboltCommand
         }
 
         $io->out(' Healthcheck shell', 0);
+        $io->out();
+        $io->out('If you want to have more information about the different checks, please take a look at the documentation: https://www.passbolt.com/docs/admin/server-maintenance/passbolt-api-status/', 0); // phpcs:ignore
         // Get services from collector and run checks
         $resultCollection = new Collection([]);
         foreach ($healthcheckServices as $healthcheckService) {
@@ -265,12 +268,12 @@ class HealthcheckCommand extends PassboltCommand
      * Display a success or error message depending on given condition
      *
      * @param bool $condition to check
-     * @param string|string[] $success to display when success
-     * @param string|string[] $error to display when error
-     * @param string|string[]|null $help string optional help message
+     * @param array<string>|string $success to display when success
+     * @param array<string>|string $error to display when error
+     * @param array<string>|string|null $help string optional help message
      * @return void
      */
-    protected function assert(bool $condition, $success, $error, $help = null)
+    protected function assert(bool $condition, string|array $success, string|array $error, string|array|null $help = null): void // phpcs:ignore
     {
         if ($condition) {
             $this->display($success, 'pass');
@@ -285,12 +288,12 @@ class HealthcheckCommand extends PassboltCommand
      * Display a success or warning message depending on given condition
      *
      * @param bool $condition to check
-     * @param string|string[] $success message to display when success
-     * @param string|string[] $warning message to display if fails
-     * @param string|string[]|null $help optional help message
+     * @param array<string>|string $success message to display when success
+     * @param array<string>|string $warning message to display if fails
+     * @param array<string>|string|null $help optional help message
      * @return void
      */
-    protected function warning(bool $condition, $success, $warning, $help = null)
+    protected function warning(bool $condition, string|array $success, string|array $warning, string|array|null $help = null): void // phpcs:ignore
     {
         if ($this->_displayOptions['hide-warning']) {
             return;
@@ -316,10 +319,10 @@ class HealthcheckCommand extends PassboltCommand
     /**
      * Display one or more help messages
      *
-     * @param string|string[]|null $help messages
+     * @param array<string>|string|null $help messages
      * @return void
      */
-    protected function help($help = null)
+    protected function help(string|array|null $help = null): void
     {
         if (isset($help)) {
             if (is_array($help)) {
@@ -336,12 +339,12 @@ class HealthcheckCommand extends PassboltCommand
      * Display a notice message, and a help message if condition is false
      *
      * @param bool $condition to check
-     * @param string|string[] $success info message to display when success
-     * @param string|string[] $fail info message to display if fails
-     * @param string|string[]|null $help optional help message
+     * @param array<string>|string $success info message to display when success
+     * @param array<string>|string $fail info message to display if fails
+     * @param array<string>|string|null $help optional help message
      * @return void
      */
-    protected function notice(bool $condition, $success, $fail, $help = null): void
+    protected function notice(bool $condition, string|array $success, string|array $fail, string|array|null $help = null): void // phpcs:ignore
     {
         if ($this->_displayOptions['hide-notice']) {
             return;
@@ -357,11 +360,11 @@ class HealthcheckCommand extends PassboltCommand
     /**
      * Display a message for given case
      *
-     * @param string|string[] $msg message
+     * @param array<string>|string $msg message
      * @param string $case pass or fail
      * @return void
      */
-    protected function display($msg, string $case)
+    protected function display(string|array $msg, string $case): void
     {
         switch ($case) {
             case 'pass':
@@ -386,7 +389,7 @@ class HealthcheckCommand extends PassboltCommand
                 $msg = ' <info>[' . __('INFO') . ']</info> ' . $msg;
                 break;
             default:
-                throw new \Exception('Task output case not defined: ' . $case . ' ' . $msg);
+                throw new Exception('Task output case not defined: ' . $case . ' ' . $msg);
         }
         $this->io->out($msg);
     }
@@ -397,7 +400,7 @@ class HealthcheckCommand extends PassboltCommand
      * @param string $title message
      * @return void
      */
-    protected function title(string $title)
+    protected function title(string $title): void
     {
         if ($this->_displayOptions['hide-title']) {
             return;
@@ -412,7 +415,7 @@ class HealthcheckCommand extends PassboltCommand
      *
      * @return void
      */
-    protected function summary()
+    protected function summary(): void
     {
         if ($this->__errorCount >= 1) {
             $this->display(__('{0} error(s) found. Hang in there!', $this->__errorCount), 'fail');

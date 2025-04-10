@@ -17,17 +17,19 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Core\Exception\CakeException;
+use Cake\Mailer\Mailer;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
+use Throwable;
 
 class EmailController extends WebInstallerController
 {
     /**
      * Contains the email class.
      *
-     * @var \Cake\Mailer\Mailer
+     * @var \Cake\Mailer\Mailer|null
      */
-    protected $email = null;
+    protected ?Mailer $email = null;
 
     /**
      * Initialize.
@@ -47,7 +49,7 @@ class EmailController extends WebInstallerController
      * Index
      *
      * @param \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService $sendTestEmailService Service injected for unit test purposes
-     * @return void|mixed
+     * @return mixed|void
      */
     public function index(SmtpSettingsTestEmailService $sendTestEmailService)
     {
@@ -70,7 +72,7 @@ class EmailController extends WebInstallerController
      * Index post
      *
      * @param \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService $sendTestEmailService Service injected for unit test purposes
-     * @return void|mixed
+     * @return mixed|void
      */
     protected function indexPost(SmtpSettingsTestEmailService $sendTestEmailService)
     {
@@ -103,7 +105,7 @@ class EmailController extends WebInstallerController
      * @throws \Cake\Core\Exception\CakeException The data does not validate
      * @return void
      */
-    protected function validateData($data)
+    protected function validateData(array $data)
     {
         $form = new EmailConfigurationForm();
         $this->set('formExecuteResult', $form);
@@ -124,7 +126,7 @@ class EmailController extends WebInstallerController
         try {
             $sendTestEmailService->sendTestEmail($data);
             $result = ['test_email_status' => true];
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $result = [
                 'test_email_status' => false,
                 'test_email_error' => $e->getMessage(),

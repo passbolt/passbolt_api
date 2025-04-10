@@ -19,21 +19,23 @@ namespace App\Service\Comments;
 
 use App\Model\Table\CommentsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\Query;
+use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
 class CommentsViewService
 {
-    use \Cake\ORM\Locator\LocatorAwareTrait;
-    use \Cake\Event\EventDispatcherTrait;
+    use LocatorAwareTrait;
+    use EventDispatcherTrait;
 
     /**
      * @var \App\Model\Table\CommentsTable
      */
-    private $Comments;
+    private CommentsTable $Comments;
 
     /**
      * CommentsAddService constructor.
@@ -52,9 +54,9 @@ class CommentsViewService
      * @param string $foreignModelName name of the foreign model used for the comment
      * @param string $foreignKey uuid Identifier of the model
      * @param array $options Query options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function view(string $userId, string $foreignModelName, string $foreignKey, array $options = []): Query
+    public function view(string $userId, string $foreignModelName, string $foreignKey, array $options = []): SelectQuery
     {
         $foreignModelName = ucfirst($foreignModelName);
         // Check model sanity.

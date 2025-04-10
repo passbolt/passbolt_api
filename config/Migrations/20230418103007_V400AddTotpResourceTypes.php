@@ -15,7 +15,7 @@ declare(strict_types=1);
  */
 // @codingStandardsIgnoreStart
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Migrations\AbstractMigration;
 use Passbolt\ResourceTypes\Model\Definition\SlugDefinition;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
@@ -40,8 +40,8 @@ class V400AddTotpResourceTypes extends AbstractMigration
                 'name' => 'Standalone TOTP',
                 'description' => 'A resource with standalone TOTP fields.',
                 'definition' => SlugDefinition::totp(),
-                'created' => (new FrozenTime())->toDateTimeString(),
-                'modified' => (new FrozenTime())->toDateTimeString(),
+                'created' => (new DateTime())->toDateTimeString(),
+                'modified' => (new DateTime())->toDateTimeString(),
             ],
             [
                 /**
@@ -52,8 +52,8 @@ class V400AddTotpResourceTypes extends AbstractMigration
                 'name' => 'Password, Description and TOTP',
                 'description' => 'A resource with encrypted password, description and TOTP fields.',
                 'definition' => SlugDefinition::passwordDescriptionTotp(),
-                'created' => (new FrozenTime())->toDateTimeString(),
-                'modified' => (new FrozenTime())->toDateTimeString(),
+                'created' => (new DateTime())->toDateTimeString(),
+                'modified' => (new DateTime())->toDateTimeString(),
             ],
         ];
 

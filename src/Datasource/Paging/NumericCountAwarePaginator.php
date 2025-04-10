@@ -34,7 +34,7 @@ class NumericCountAwarePaginator extends NumericPaginator
         $limit = $data['options']['limit'] ?? null;
         $maxLimit = ($data['options']['maxLimit'] ?? $data['defaults']['maxLimit']) ?? null;
         if (is_null($limit) || $limit == $maxLimit) {
-            return $data['numResults'] ?? null;
+            return $this->pagingParams['count'] ?? null;
         }
         $query->applyOptions([self::IS_COUNTING => true]);
 

@@ -25,11 +25,12 @@ trait DatabaseTrait
      */
     public static function dropAllTables()
     {
+        /** @var \Cake\Database\Connection $connection */
         $connection = ConnectionManager::get('default');
         $tables = ConnectionManager::get('default')->getSchemaCollection()->listTables();
         foreach ($tables as $table) {
             $quotedTableName = $connection->getDriver()->quoteIdentifier($table);
-            $connection->query("DROP TABLE {$quotedTableName}");
+            $connection->execute("DROP TABLE {$quotedTableName}");
         }
     }
 }

@@ -37,12 +37,12 @@ class TransfersUpdateService
     /**
      * @var \App\Model\Table\AuthenticationTokensTable table
      */
-    public $AuthenticationTokens;
+    public AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * @var \Passbolt\Mobile\Model\Table\TransfersTable table
      */
-    public $Transfers;
+    public TransfersTable $Transfers;
 
     /**
      * Instantiate the service.

@@ -84,7 +84,7 @@ class DebugDisabledCoreHealthcheck implements HealthcheckServiceInterface, Healt
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return __('Set debug to false in {0}', CONFIG . 'passbolt.php');
     }

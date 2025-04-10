@@ -9,7 +9,7 @@ declare(strict_types=1);
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -30,21 +30,21 @@ class UserAction
      *
      * @var string (uuid)
      */
-    private $userActionId;
+    private string $userActionId;
 
     /**
      * User access control.
      *
      * @var \App\Utility\UserAccessControl
      */
-    private $userAccessControl;
+    private UserAccessControl $userAccessControl;
 
     /**
      * actionName.
      *
      * @var string
      */
-    private $actionName;
+    private string $actionName;
 
     /**
      * Description of the context
@@ -53,14 +53,14 @@ class UserAction
      *
      * @var string
      */
-    private $context;
+    private string $context;
 
     /**
      * Instance of class used for singleton.
      *
      * @var \App\Utility\UserAction|null
      */
-    private static $instance;
+    private static ?UserAction $instance = null;
 
     /**
      * ActionLog constructor.
@@ -83,13 +83,13 @@ class UserAction
      * @param \App\Utility\UserAccessControl|null $accessControl user access control object
      * @param string|null $action action name. Example: "Resources.create"
      * @param string|null $context context. Example: "POST resources.json"
-     * @return \App\Utility\UserAction
+     * @return self
      */
     public static function getInstance(
         ?UserAccessControl $accessControl = null,
         ?string $action = null,
         ?string $context = null
-    ) {
+    ): UserAction {
         if (isset($accessControl) && isset($action) && isset($context)) {
             self::$instance = new UserAction($accessControl, $action, $context);
         }
@@ -132,7 +132,7 @@ class UserAction
      *
      * @return void
      */
-    public static function destroy()
+    public static function destroy(): void
     {
         self::$instance = null;
     }
@@ -142,7 +142,7 @@ class UserAction
      *
      * @return string uuid
      */
-    public function getUserActionId()
+    public function getUserActionId(): string
     {
         return $this->userActionId;
     }
@@ -152,7 +152,7 @@ class UserAction
      *
      * @return string
      */
-    public function getActionName()
+    public function getActionName(): string
     {
         return $this->actionName;
     }
@@ -163,7 +163,7 @@ class UserAction
      *
      * @return string action name
      */
-    public function getActionId()
+    public function getActionId(): string
     {
         return self::actionId($this->getActionName());
     }
@@ -174,7 +174,7 @@ class UserAction
      * @param string $actionName action name
      * @return string
      */
-    public static function actionId(string $actionName)
+    public static function actionId(string $actionName): string
     {
         return UuidFactory::uuid($actionName);
     }
@@ -184,7 +184,7 @@ class UserAction
      *
      * @return string context
      */
-    public function getContext()
+    public function getContext(): string
     {
         return $this->context;
     }

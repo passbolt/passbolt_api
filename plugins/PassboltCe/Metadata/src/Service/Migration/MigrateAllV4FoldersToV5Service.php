@@ -22,9 +22,11 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Exception;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Service\OpenPGP\OpenPGPCommonMetadataOperationsTrait;
 use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 
@@ -54,7 +56,6 @@ class MigrateAllV4FoldersToV5Service implements V4ToV5MigrationServiceInterface
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Folders = $this->fetchTable('Passbolt/Folders.Folders');
     }
 
@@ -76,7 +77,7 @@ class MigrateAllV4FoldersToV5Service implements V4ToV5MigrationServiceInterface
     {
         $this->assertV5FolderCreationEnabled();
 
-        /** @var \Passbolt\Folders\Model\Entity\Folder[] $folders */
+        /** @var array<\Passbolt\Folders\Model\Entity\Folder> $folders */
         $folders = $this->Folders
             ->find()
             ->contain(['Permissions.Users.Gpgkeys'])
@@ -109,7 +110,7 @@ class MigrateAllV4FoldersToV5Service implements V4ToV5MigrationServiceInterface
                     $this->migrateShared($dto, $folder);
                 }
                 $this->addMigrated($folder);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Continue with next resource if any error
                 $error = ['folder_id' => $folder->id, 'error_message' => $e->getMessage()];
                 if (Configure::read('debug')) {
@@ -164,7 +165,7 @@ class MigrateAllV4FoldersToV5Service implements V4ToV5MigrationServiceInterface
             $gpg = $this->setEncryptKeyWithUserKey($gpg, $user->gpgkey);
             $metadataClearText = json_encode($metadataArray, JSON_THROW_ON_ERROR);
             $metadataEncrypted = $gpg->encrypt($metadataClearText, true);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = $exception->getMessage() . ' ';
             $msg .= __('The metadata could not be encrypted with the user id: {0}.', $user->id);
             throw new InternalErrorException($msg, 500, $exception);
@@ -196,7 +197,7 @@ class MigrateAllV4FoldersToV5Service implements V4ToV5MigrationServiceInterface
             $gpg = $this->setEncryptKeyWithMetadataKey($gpg, $metadataKey);
             $metadataClearText = json_encode($metadataArray, JSON_THROW_ON_ERROR);
             $metadataEncrypted = $gpg->encrypt($metadataClearText, true);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = $exception->getMessage() . ' ';
             $msg .= __('The metadata could not be encrypted with the metadata key id: {0}.', $metadataKey->id);
             throw new InternalErrorException($msg, 500, $exception);
@@ -232,7 +233,7 @@ class MigrateAllV4FoldersToV5Service implements V4ToV5MigrationServiceInterface
                 'validate' => 'v5',
             ]);
             $this->Folders->saveOrFail($folder, ['checkRules' => false]);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = __('Unable to migrate folder ID: {0} to V5.', $folder->id);
             $msg .= ' ' . $exception->getMessage();
             throw new InternalErrorException($msg, 500, $exception);
@@ -243,7 +244,7 @@ class MigrateAllV4FoldersToV5Service implements V4ToV5MigrationServiceInterface
      * @return \Passbolt\Metadata\Model\Entity\MetadataKey
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no metadata key record.
      */
-    private function getMetadataKeyForEncryption()
+    private function getMetadataKeyForEncryption(): MetadataKey
     {
         /** @var \Passbolt\Metadata\Model\Table\MetadataKeysTable $metadataKeysTable */
         $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');

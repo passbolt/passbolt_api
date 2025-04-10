@@ -19,6 +19,8 @@ namespace App\Utility\OpenPGP\Backends;
 use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
+use Exception;
+use gnupg as PhpGnupg;
 
 /**
  * Gpg wrapper utility
@@ -43,7 +45,7 @@ class Gnupg extends OpenPGPBackend
      *
      * @var \gnupg
      */
-    protected $_gpg;
+    protected PhpGnupg $_gpg;
 
     /**
      * Constructor.
@@ -60,7 +62,7 @@ class Gnupg extends OpenPGPBackend
             putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
         }
 
-        $this->_gpg = new \gnupg();
+        $this->_gpg = new PhpGnupg();
         $this->_gpg->seterrormode(GNUPG_ERROR_EXCEPTION);
     }
 
@@ -81,14 +83,14 @@ class Gnupg extends OpenPGPBackend
         try {
             $this->_gpg->addencryptkey($fingerprint);
             $this->_encryptKeyFingerprint = $fingerprint;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // It didn't work, maybe only key is not in the keyring
             // we import the key and retry
             $this->importKeyIntoKeyring($armoredKey);
             try {
                 $this->_gpg->addencryptkey($fingerprint);
                 $this->_encryptKeyFingerprint = $fingerprint;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $msg = __('The key {0} cannot be used to encrypt.', $fingerprint) . ' ' . $e->getMessage();
                 throw new CakeException($msg, null, $e);
             }
@@ -111,7 +113,7 @@ class Gnupg extends OpenPGPBackend
         try {
             $this->_gpg->addencryptkey($fingerprint);
             $this->_encryptKeyFingerprint = $fingerprint;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $msg = __('The key {0} cannot be used to encrypt.', $fingerprint) . ' ' . $e->getMessage();
             throw new CakeException($msg, null, $e);
         }
@@ -140,14 +142,14 @@ class Gnupg extends OpenPGPBackend
         try {
             $this->_gpg->adddecryptkey($fingerprint, $passphrase);
             $this->_decryptKeyFingerprint = $fingerprint;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // It didn't work, maybe only key is not in the keyring
             // we import the key and retry
             $this->importKeyIntoKeyring($armoredKey);
             try {
                 $this->_gpg->adddecryptkey($fingerprint, $passphrase);
                 $this->_decryptKeyFingerprint = $fingerprint;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $msg = __('The key {0} cannot be used to decrypt.', $fingerprint);
                 throw new CakeException($msg . ' ' . $e->getMessage(), null, $e);
             }
@@ -173,7 +175,7 @@ class Gnupg extends OpenPGPBackend
         try {
             $this->_gpg->adddecryptkey($fingerprint, $passphrase);
             $this->_decryptKeyFingerprint = $fingerprint;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $msg = __('The key {0} cannot be used to decrypt.', $fingerprint) . ' ' . $e->getMessage();
             throw new CakeException($msg, null, $e);
         }
@@ -202,14 +204,14 @@ class Gnupg extends OpenPGPBackend
             // The key is in the keyring try to use it as a sign key
             $this->_gpg->addsignkey($fingerprint, $passphrase);
             $this->_signKeyFingerprint = $fingerprint;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // It didn't work, maybe only public key was in the keyring
             // we try to re-import the key
             $this->importKeyIntoKeyring($armoredKey);
             try {
                 $this->_gpg->addsignkey($fingerprint, $passphrase);
                 $this->_signKeyFingerprint = $fingerprint;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $msg = __('Could not use key {0} for signing.', $fingerprint);
                 throw new CakeException($msg . ' ' . $e->getMessage(), null, $e);
             }
@@ -235,7 +237,7 @@ class Gnupg extends OpenPGPBackend
         try {
             $this->_gpg->addsignkey($fingerprint, $passphrase);
             $this->_signKeyFingerprint = $fingerprint;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $msg = __('Could not use key {0} for signing.', $fingerprint);
             throw new CakeException($msg . ' ' . $e->getMessage(), null, $e);
         }
@@ -272,7 +274,7 @@ class Gnupg extends OpenPGPBackend
     {
         try {
             $results = $this->_gpg->keyinfo($fingerprint);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
         if (empty($results)) {
@@ -294,7 +296,7 @@ class Gnupg extends OpenPGPBackend
         $msg = __('Could not import the OpenPGP key.');
         try {
             $import = $this->_gpg->import($armoredKey);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new CakeException($msg . ' ' . $e->getMessage(), null, $e);
         }
         if (!is_array($import)) {
@@ -326,7 +328,7 @@ class Gnupg extends OpenPGPBackend
             try {
                 /** @var string|false $encryptedText */
                 $encryptedText = $this->_gpg->encryptsign($text);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 throw new CakeException($msg . ' ' . $e->getMessage(), null, $e);
             }
             if ($encryptedText === false) {
@@ -339,7 +341,7 @@ class Gnupg extends OpenPGPBackend
             try {
                 /** @var string|false $encryptedText */
                 $encryptedText = $this->_gpg->encrypt($text);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 throw new CakeException($msg . ' ' . $e->getMessage(), null, $e);
             }
             if ($encryptedText === false) {
@@ -391,7 +393,7 @@ class Gnupg extends OpenPGPBackend
                 /** @psalm-suppress InvalidArgument  */
                 $signatureInfo = $this->_gpg->decryptverify($text, $decrypted);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->clearDecryptKeys();
             throw new CakeException(__('Decryption failed.') . ' ' . $e->getMessage(), null, $e);
         }
@@ -431,7 +433,7 @@ class Gnupg extends OpenPGPBackend
             }
 
             return $signature;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new CakeException($msg . ' ' . $e->getMessage(), null, $e);
         }
     }
@@ -452,7 +454,7 @@ class Gnupg extends OpenPGPBackend
             /** @var string|false $signedText */
             $signedText = $this->_gpg->sign($text);
             $this->clearSignKeys();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->clearSignKeys();
             throw new CakeException($msg . ' ' . $e->getMessage(), null, $e);
         }
@@ -507,7 +509,7 @@ class Gnupg extends OpenPGPBackend
         try {
             /** @psalm-suppress TooFewArguments false positive  */
             return $this->_gpg->deletekey($fingerprint); // @phpstan-ignore-line implemented in v0.5
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return false;
         }
     }

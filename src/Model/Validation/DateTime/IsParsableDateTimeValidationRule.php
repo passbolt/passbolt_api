@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace App\Model\Validation\DateTime;
 
 use App\Model\Validation\PassboltValidationRule;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 /**
  * Check that the date is parsable
@@ -38,6 +38,6 @@ class IsParsableDateTimeValidationRule extends PassboltValidationRule
      */
     public function rule($value, $context): bool
     {
-        return is_null($value) || is_a($value, FrozenTime::class);
+        return is_null($value) || is_a($value, DateTime::class);
     }
 }

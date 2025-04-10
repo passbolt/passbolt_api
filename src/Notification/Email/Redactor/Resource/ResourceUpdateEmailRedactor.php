@@ -43,7 +43,7 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private UsersTable $usersTable;
 
     /**
      * @param array|null $config Configuration for the redactor
@@ -85,7 +85,7 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 
         /** @var \App\Model\Entity\Resource $resource */
         $resource = $event->getData('resource');
-        /** @var \App\Model\Entity\Secret[] $secrets */
+        /** @var array<\App\Model\Entity\Secret> $secrets */
         $secrets = $event->getData('secrets');
         $isV5 = $event->getData('isV5');
         if (is_null($isV5)) {
@@ -94,7 +94,7 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 
         // Get the users that can access this resource
         $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
-        /** @var \App\Model\Entity\User[] $users */
+        /** @var array<\App\Model\Entity\User> $users */
         $users = $this->usersTable->findIndex(Role::USER, $options)
             ->find('locale')
             ->find('notDisabled');

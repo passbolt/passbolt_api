@@ -34,6 +34,7 @@ use Passbolt\MultiFactorAuthentication\Test\Lib\MfaOrgSettingsTestTrait;
 use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Throwable;
 
 class MfaDuoEnableServiceTest extends TestCase
 {
@@ -93,7 +94,7 @@ class MfaDuoEnableServiceTest extends TestCase
         $service = new MfaDuoEnableService($duoSdkClientMock);
         try {
             $service->enable($uac, $mfaDuoCallbackDto, UuidFactory::uuid());
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
         }
 
         $this->assertInstanceOf(UnauthorizedException::class, $th);
@@ -128,7 +129,7 @@ class MfaDuoEnableServiceTest extends TestCase
 
         try {
             $service->enable($uac, $mfaDuoCallbackDto, $authToken->token);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
         }
 
         $this->assertInstanceOf(BadRequestException::class, $th);

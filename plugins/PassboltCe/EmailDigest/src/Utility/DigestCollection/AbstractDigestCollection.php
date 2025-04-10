@@ -44,7 +44,7 @@ abstract class AbstractDigestCollection
      * Return a list of emails. Even if the digest return one, the digest must be in an array.
      * This function contains the strategy for the digest to use to compose the final emails
      *
-     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
+     * @return array<\Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface>
      */
     abstract public function marshalEmails(): array;
 }

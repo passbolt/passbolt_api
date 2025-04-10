@@ -27,6 +27,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\JwtAuthentication\Error\Exception\AbstractJwtAttackException;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
@@ -50,7 +51,7 @@ class JwtRefreshTokenAuthenticator extends AbstractAuthenticator
             throw new RefreshTokenNotFoundException();
         } catch (AbstractJwtAttackException $exception) {
             throw $exception;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new BadRequestException($e->getMessage());
         }
 

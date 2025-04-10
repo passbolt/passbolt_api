@@ -19,7 +19,7 @@ namespace Passbolt\Metadata\Test\TestCase\Service;
 
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Metadata\Service\MetadataKeysIndexService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
@@ -95,7 +95,7 @@ class MetadataKeysIndexServiceTest extends AppTestCaseV5
         $this->assertNotEmpty($result->toArray());
         $this->assertCount(2, $result->toArray());
         foreach ($result->toArray() as $metadataKey) {
-            $this->assertInstanceOf(FrozenTime::class, $metadataKey['deleted']);
+            $this->assertInstanceOf(DateTime::class, $metadataKey['deleted']);
         }
     }
 

@@ -22,6 +22,7 @@ use Cake\Mailer\Mailer;
 use Cake\Network\Exception\SocketException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\EmailTrait;
+use EmailQueue\Model\Table\EmailQueueTable;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 
 /**
@@ -37,7 +38,7 @@ class SendEmailBatchService
     /**
      * @var \EmailQueue\Model\Table\EmailQueueTable
      */
-    private $emailQueueTable;
+    private EmailQueueTable $emailQueueTable;
 
     /**
      * SendEmailBatchService construct
@@ -50,7 +51,7 @@ class SendEmailBatchService
     /**
      * Get and send the next emails batch from the email queue. The size of the email batch is determined by $limit.
      *
-     * @param \Cake\ORM\Entity[] $emailQueues array of emails.
+     * @param array<\Cake\ORM\Entity> $emailQueues array of emails.
      * @return void
      * @throws \Exception
      */

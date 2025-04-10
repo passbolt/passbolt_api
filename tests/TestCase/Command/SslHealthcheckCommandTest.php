@@ -41,8 +41,6 @@ class SslHealthcheckCommandTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->useCommandRunner();
         $this->mockService(ProcessUserService::class, function () {
             $stub = $this->getMockBuilder(ProcessUserService::class)
                 ->onlyMethods(['getName'])

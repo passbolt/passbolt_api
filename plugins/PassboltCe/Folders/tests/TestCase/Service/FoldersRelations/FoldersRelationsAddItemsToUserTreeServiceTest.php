@@ -43,7 +43,7 @@ class FoldersRelationsAddItemsToUserTreeServiceTest extends FoldersTestCase
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         UsersFixture::class,
     ];
 

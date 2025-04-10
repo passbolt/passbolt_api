@@ -32,7 +32,7 @@ class ObfuscateFieldsComponent extends Component
     /**
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'fields' => [],
         'placeholder' => self::FIELD_PLACEHOLDER,
     ];

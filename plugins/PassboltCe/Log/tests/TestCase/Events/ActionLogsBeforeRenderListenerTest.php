@@ -26,6 +26,7 @@ use Cake\Database\Exception\MissingConnectionException;
 use Cake\Event\Event;
 use Cake\TestSuite\TestCase;
 use Passbolt\Log\Events\ActionLogsBeforeRenderListener;
+use PDOException;
 
 /**
  * Class ActionLogsBeforeRenderListenerTest
@@ -36,7 +37,7 @@ class ActionLogsBeforeRenderListenerTest extends TestCase
     {
         return [
             [new MissingConnectionException()],
-            [new \PDOException()],
+            [new PDOException()],
         ];
     }
 

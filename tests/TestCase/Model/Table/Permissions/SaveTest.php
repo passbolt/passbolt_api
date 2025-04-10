@@ -31,7 +31,7 @@ class SaveTest extends AppTestCase
 
     public $Permissions;
 
-    public $fixtures = ['app.Base/Groups', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Users'];
+    public array $fixtures = ['app.Base/Groups', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Users'];
 
     public function setUp(): void
     {

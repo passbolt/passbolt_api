@@ -63,7 +63,7 @@ class KeyNotDefaultGpgHealthcheck extends AbstractGpgHealthcheck
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Create a key, export it and add the fingerprint to {0}', CONFIG . 'passbolt.php'),

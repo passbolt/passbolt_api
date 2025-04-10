@@ -89,7 +89,7 @@ class DistributionHealthcheck implements HealthcheckServiceInterface, Healthchec
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [__('See `{0}`.', implode(' ', self::COMMAND))];
     }

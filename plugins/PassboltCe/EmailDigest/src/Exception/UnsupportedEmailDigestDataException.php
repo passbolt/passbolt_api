@@ -28,7 +28,7 @@ class UnsupportedEmailDigestDataException extends Exception
     /**
      * @var \Cake\ORM\Entity
      */
-    public $unsupportedEmail;
+    public Entity $unsupportedEmail;
 
     /**
      * @param \Cake\ORM\Entity $emailData The unsupported email
@@ -36,7 +36,7 @@ class UnsupportedEmailDigestDataException extends Exception
      * @param int $code Code
      * @param \Throwable|null $previous Previous exception
      */
-    public function __construct(Entity $emailData, $message = '', $code = 0, ?Throwable $previous = null)
+    public function __construct(Entity $emailData, string $message = '', int $code = 0, ?Throwable $previous = null)
     {
         $this->unsupportedEmail = $emailData;
         parent::__construct($message, $code, $previous);

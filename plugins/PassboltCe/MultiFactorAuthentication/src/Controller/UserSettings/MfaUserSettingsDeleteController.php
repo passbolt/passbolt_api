@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Controller\UserSettings;
 
 use App\Model\Entity\User;
+use App\Model\Table\UsersTable;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\EventInterface;
@@ -36,7 +37,7 @@ class MfaUserSettingsDeleteController extends MfaController
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @return void

@@ -42,7 +42,7 @@ class SmtpSettingsSetService
     /**
      * @var \App\Utility\UserAccessControl
      */
-    private $uac;
+    private UserAccessControl $uac;
 
     /**
      * @param \App\Utility\UserAccessControl $uac UAC

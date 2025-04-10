@@ -23,6 +23,8 @@ use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Table;
 use Laminas\Diactoros\UploadedFile;
+use Throwable;
+use const UPLOAD_ERR_OK;
 
 /**
  * Class AvatarsTransferService
@@ -38,22 +40,22 @@ class AvatarsTransferService
     /**
      * @var \App\Model\Table\AvatarsTable
      */
-    protected $Avatars;
+    protected AvatarsTable $Avatars;
 
     /**
      * @var \Cake\ORM\Table
      */
-    protected $FileStorage;
+    protected Table $FileStorage;
 
     /**
      * @var bool
      */
-    protected $debugMode;
+    protected bool $debugMode;
 
     /**
      * @var array
      */
-    protected $results = [];
+    protected array $results = [];
 
     /**
      * AvatarsTransferService constructor.
@@ -107,7 +109,7 @@ class AvatarsTransferService
 
                 try {
                     $saveResult = $this->Avatars->save($avatar);
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     $this->logError($e->getMessage());
                     continue;
                 }
@@ -125,7 +127,7 @@ class AvatarsTransferService
                     // In debug mode, the avatars table is left empty.
                     try {
                         $this->Avatars->delete($avatar);
-                    } catch (\Throwable $e) {
+                    } catch (Throwable $e) {
                         $this->logError($e->getMessage());
                     }
                 }
@@ -145,9 +147,9 @@ class AvatarsTransferService
      * Creates an uploaded file object.
      *
      * @param string $path Path to the file storage file.
-     * @return false|\Laminas\Diactoros\UploadedFile
+     * @return \Laminas\Diactoros\UploadedFile|false
      */
-    private function getUploadedFile(string $path)
+    private function getUploadedFile(string $path): false|UploadedFile
     {
         try {
             if (defined('PASSBOLT_ORG')) {
@@ -162,9 +164,9 @@ class AvatarsTransferService
             return new UploadedFile(
                 $stream,
                 $fileSize,
-                \UPLOAD_ERR_OK
+                UPLOAD_ERR_OK
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logError("The file {$path} could not be read.");
 
             return false;
@@ -204,7 +206,7 @@ class AvatarsTransferService
 
         try {
             $this->Avatars->getFilesystem()->delete($filePath);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logError("The file {$filePath} could not be deleted.");
         }
     }
