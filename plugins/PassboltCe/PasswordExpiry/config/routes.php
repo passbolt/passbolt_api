@@ -16,7 +16,7 @@
 use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
-$routes->plugin('Passbolt/PasswordExpiry', ['path' => '/password-expiry'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/PasswordExpiry', ['path' => '/password-expiry'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
 
     $routes

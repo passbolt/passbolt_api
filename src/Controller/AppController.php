@@ -17,13 +17,19 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use App\Utility\UserAction;
+use App\View\AjaxView;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
+use Cake\Datasource\Paging\PaginatedInterface;
+use Cake\Datasource\QueryInterface;
+use Cake\Datasource\RepositoryInterface;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
+use Cake\View\JsonView;
 
 /**
  * Application Controller
@@ -38,6 +44,8 @@ use Cake\Routing\Router;
  */
 class AppController extends Controller
 {
+    use PaginatePropertyAwareTrait;
+
     /**
      * Initialization hook method.
      * Used to add common initialization code like loading components.
@@ -48,9 +56,6 @@ class AppController extends Controller
     public function initialize(): void
     {
         parent::initialize();
-        $this->loadComponent('RequestHandler', [
-            'enableBeforeRedirect' => false,
-        ]);
         $this->loadComponent('User');
         $this->loadComponent('QueryString');
         $this->loadAuthenticationComponent();
@@ -72,6 +77,27 @@ class AppController extends Controller
     }
 
     /**
+     * @inheritDoc
+     */
+    public function viewClasses(): array
+    {
+        return [JsonView::class, AjaxView::class];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function beforeRender(EventInterface $event)
+    {
+        parent::beforeRender($event);
+
+        // Required to support automatic view switching for 'ajax', which was supported by deprecated RequestHandlerComponent
+        if ($this->request->is('ajax')) {
+            $this->viewBuilder()->setClassName('Ajax');
+        }
+    }
+
+    /**
      * Success renders set the variables used to render the json view
      * All passbolt response contains an header (metadata like status) an a body (data)
      *
@@ -79,7 +105,7 @@ class AppController extends Controller
      * @param mixed $body data for the body section
      * @return void
      */
-    protected function success(?string $message = null, $body = null): void
+    protected function success(?string $message = null, mixed $body = null): void
     {
         $header = [
             'id' => UserAction::getInstance()->getUserActionId(),
@@ -103,7 +129,7 @@ class AppController extends Controller
      * @param int|null $errorCode optional http error code
      * @return void
      */
-    protected function error(?string $message = null, $body = null, ?int $errorCode = 400): void
+    protected function error(?string $message = null, mixed $body = null, ?int $errorCode = 400): void
     {
         $this->response = $this->response->withStatus($errorCode);
 
@@ -190,5 +216,21 @@ class AppController extends Controller
         if (!is_array($data) || !count($data)) {
             throw new BadRequestException(__('The request data can not be empty.'));
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function paginate(
+        RepositoryInterface|QueryInterface|string|null $object = null,
+        array $settings = []
+    ): PaginatedInterface {
+        $paginatedResults = parent::paginate($object, $settings);
+
+        // Cake4 way of working with paging parameters
+        $paging = [$paginatedResults->pagingParam('alias') => $paginatedResults->pagingParams()];
+        $this->setRequest($this->request->withAttribute('paging', $paging));
+
+        return $paginatedResults;
     }
 }

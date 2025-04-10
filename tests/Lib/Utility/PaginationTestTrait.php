@@ -60,6 +60,16 @@ trait PaginationTestTrait
         return $data;
     }
 
+    private function getArrayOfDistinctUris(int $n, string $field): array
+    {
+        $data = [];
+        foreach ($this->getRandomArray($n) as $randomValue) {
+            $data[] = [$field => 'http://RandomString_#' . $randomValue . '.com'];
+        }
+
+        return $data;
+    }
+
     private function getRandomArray(int $n): array
     {
         $randomNumberArray = range(1, $n);

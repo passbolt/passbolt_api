@@ -16,7 +16,7 @@ use Passbolt\DirectorySync\Model\Entity\DirectoryReport;
  * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsTable&\Cake\ORM\Association\BelongsTo $ParentDirectoryReports
  * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsTable&\Cake\ORM\Association\HasMany $ChildDirectoryReports
  * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsItemsTable&\Cake\ORM\Association\HasMany $DirectoryReportsItems
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport newEntity(array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[] newEntities(array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -91,7 +91,7 @@ class DirectoryReportsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add(
             function ($entity, $options) {
@@ -120,7 +120,7 @@ class DirectoryReportsTable extends Table
      * @param string $parentId UUID parent report id
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryReport|false
      */
-    public function create(?string $parentId = null)
+    public function create(?string $parentId = null): DirectoryReport|false
     {
         $entity = $this->newEntity([
             'parent_id' => $parentId,

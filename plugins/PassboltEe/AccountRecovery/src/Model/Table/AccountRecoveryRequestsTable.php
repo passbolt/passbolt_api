@@ -27,11 +27,12 @@ use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
 use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Utility\UserAccessControl;
+use ArrayObject;
 use Cake\Chronos\Chronos;
 use Cake\Core\Exception\CakeException;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -48,7 +49,7 @@ use Phinx\Db\Adapter\MysqlAdapter;
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest newEmptyEntity()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest newEntity(array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[] newEntities(array $data, array $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest get($primaryKey, $options = [])
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[] patchEntities(iterable $entities, array $data, array $options = [])
@@ -207,7 +208,7 @@ class AccountRecoveryRequestsTable extends Table
      * @param \ArrayObject $options Options
      * @return void
      */
-    public function afterSave(EventInterface $event, AccountRecoveryRequest $request, \ArrayObject $options)
+    public function afterSave(EventInterface $event, AccountRecoveryRequest $request, ArrayObject $options): void
     {
         if (isset($options['uac'])) {
             /** @var \App\Utility\UserAccessControl $uac */
@@ -220,7 +221,7 @@ class AccountRecoveryRequestsTable extends Table
         // Set all other pending requests to rejected
         $this->updateAll([
             'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED,
-            'modified' => FrozenTime::now(),
+            'modified' => DateTime::now(),
             'modified_by' => $modifiedBy,
         ], [
             'id !=' => $request->id,
@@ -236,7 +237,6 @@ class AccountRecoveryRequestsTable extends Table
     public function rejectAllNonCompleted(UserAccessControl $userAccessControl): void
     {
         $this->updateQuery()
-            ->update()
             ->set([
                 'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED,
                 'modified_by' => $userAccessControl->getId(),

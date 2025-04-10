@@ -21,8 +21,8 @@ use App\Model\Entity\User;
 use App\Test\Factory\Traits\FactoryDeletedTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenDate;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\Date;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
@@ -65,8 +65,8 @@ class UserFactory extends CakephpBaseFactory
                 'role_id' => $faker->uuid(),
                 'active' => true,
                 'deleted' => false,
-                'created' => FrozenDate::now()->subDays($faker->randomNumber(4)),
-                'modified' => FrozenDate::now()->subDays($faker->randomNumber(4)),
+                'created' => Date::now()->subDays($faker->randomNumber(4)),
+                'modified' => Date::now()->subDays($faker->randomNumber(4)),
             ];
         });
 
@@ -136,13 +136,13 @@ class UserFactory extends CakephpBaseFactory
      */
     public function disabled()
     {
-        return $this->patchData(['disabled' => FrozenTime::yesterday()]);
+        return $this->patchData(['disabled' => DateTime::yesterday()]);
     }
 
     /**
      * @return $this
      */
-    public function created(FrozenTime $created)
+    public function created(DateTime $created)
     {
         return $this->setField('created', $created);
     }
@@ -152,7 +152,7 @@ class UserFactory extends CakephpBaseFactory
      */
     public function willDisable()
     {
-        return $this->patchData(['disabled' => FrozenTime::tomorrow()]);
+        return $this->patchData(['disabled' => DateTime::tomorrow()]);
     }
 
     /**

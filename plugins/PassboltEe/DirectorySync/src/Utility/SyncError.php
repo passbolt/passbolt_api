@@ -18,6 +18,7 @@ namespace Passbolt\DirectorySync\Utility;
 
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Entity;
+use Exception;
 
 /**
  * Directory factory class
@@ -29,12 +30,12 @@ class SyncError
     /**
      * @var \Cake\ORM\Entity|null
      */
-    protected $entity;
+    protected ?Entity $entity = null;
 
     /**
      * @var \Exception|null
      */
-    protected $exception;
+    protected ?Exception $exception = null;
 
     /**
      * SyncError constructor.
@@ -42,7 +43,7 @@ class SyncError
      * @param \Cake\ORM\Entity|null $entity entity
      * @param \Exception|null $exception exception
      */
-    public function __construct(?Entity $entity = null, ?\Exception $exception = null)
+    public function __construct(?Entity $entity = null, ?Exception $exception = null)
     {
         if (!isset($entity) && !isset($exception)) {
             throw new InternalErrorException('This is not a valid SyncError, no data provided');
@@ -56,7 +57,7 @@ class SyncError
      *
      * @return \Cake\ORM\Entity|null
      */
-    public function getEntity()
+    public function getEntity(): ?Entity
     {
         return $this->entity;
     }
@@ -66,7 +67,7 @@ class SyncError
      *
      * @return \Exception|null
      */
-    public function getException()
+    public function getException(): ?Exception
     {
         return $this->exception;
     }

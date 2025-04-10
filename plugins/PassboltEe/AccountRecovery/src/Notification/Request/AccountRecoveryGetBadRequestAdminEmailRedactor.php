@@ -19,13 +19,14 @@ namespace Passbolt\AccountRecovery\Notification\Request;
 
 use App\Model\Entity\User;
 use App\Model\Table\AvatarsTable;
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\Purifier;
 use Cake\Event\Event;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestGetService;
 use Passbolt\Locale\Service\GetUserLocaleService;
@@ -44,14 +45,13 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * AccountRecoveryGetBadRequestAdminEmailRedactor Constructor
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 
@@ -95,6 +95,7 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ]);
+        /** @var \App\Model\Entity\User $admin */
         foreach ($admins as $admin) {
             $emailCollection->addEmail($this->makeAdminEmail($admin, $user, $requestId, $clientIp));
         }
@@ -132,7 +133,7 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
             'admin' => $admin,
             'clientIp' => $clientIp,
             'requestId' => $requestId,
-            'created' => FrozenTime::now(),
+            'created' => DateTime::now(),
             'subject' => $subject,
         ], 'title' => $subject,];
 

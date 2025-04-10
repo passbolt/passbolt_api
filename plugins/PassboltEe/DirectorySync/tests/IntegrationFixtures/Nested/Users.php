@@ -16,14 +16,14 @@ declare(strict_types=1);
  */
 
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 return [
     [
         'id' => UuidFactory::uuid('ldap.user.id.user1'),
         'directory_name' => 'CN=User1,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-08-12 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-08-12 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-08-12 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-08-12 03:56:42.000000'),
         'user' => [
             'username' => 'user1@passbolt.com',
             'profile' => [
@@ -35,8 +35,8 @@ return [
     [
         'id' => UuidFactory::uuid('ldap.user.id.user2'),
         'directory_name' => 'CN=User2,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-08-12 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-08-12 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-08-12 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-08-12 03:56:42.000000'),
         'user' => [
             'username' => 'user2@passbolt.com',
             'profile' => [
@@ -48,8 +48,8 @@ return [
     [
         'id' => UuidFactory::uuid('ldap.user.id.user3'),
         'directory_name' => 'CN=User3,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-08-12 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-08-12 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-08-12 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-08-12 03:56:42.000000'),
         'user' => [
             'username' => 'user3@passbolt.com',
             'profile' => [
@@ -61,8 +61,8 @@ return [
     [
         'id' => UuidFactory::uuid('ldap.user.id.user4'),
         'directory_name' => 'CN=User4,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-08-12 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-08-12 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-08-12 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-08-12 03:56:42.000000'),
         'user' => [
             'username' => 'user4@passbolt.com',
             'profile' => [
@@ -75,8 +75,8 @@ return [
     [
         'id' => UuidFactory::uuid('ldap.user.id.user5'),
         'directory_name' => 'CN=User5,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-08-12 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-08-12 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-08-12 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-08-12 03:56:42.000000'),
         'user' => [
             'profile' => [
                 'first_name' => 'user',
@@ -87,8 +87,8 @@ return [
     [
         'id' => UuidFactory::uuid('ldap.user.id.user6'),
         'directory_name' => 'CN=User6,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-08-12 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-08-12 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-08-12 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-08-12 03:56:42.000000'),
         'user' => [
             'profile' => [
                 'first_name' => 'user',

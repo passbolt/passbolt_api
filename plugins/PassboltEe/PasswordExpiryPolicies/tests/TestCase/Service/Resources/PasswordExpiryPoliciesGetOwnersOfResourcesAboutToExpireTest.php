@@ -23,7 +23,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Console\Exception\StopException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\PasswordExpiryPolicies\PasswordExpiryPoliciesPlugin;
@@ -95,10 +95,10 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireTest extends AppTes
         [$user0, $user1, $user2, $user3, $user4] = UserFactory::make(6)->user()->persist();
 
         [$resourceExpiringTodaySharedWithUser0, $resourceExpiringTodaySharedWithUser1, $resourceExpiringTodaySharedWithUser2] = ResourceFactory::make(3)
-            ->expired(FrozenTime::now())
+            ->expired(DateTime::now())
             ->persist();
         [$resourceExpiringTomorrowSharedWithUser3, $resourceExpiringTomorrowSharedWithUser4] = ResourceFactory::make(2)
-            ->expired(FrozenTime::today()->addDays($notifyInDays))
+            ->expired(DateTime::today()->addDays($notifyInDays))
             ->persist();
 
         PermissionFactory::make()
@@ -157,15 +157,15 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireTest extends AppTes
         /** @var \App\Model\Entity\Resource[] $resources */
         $resources = ResourceFactory::make([
             ['expired' => null], // to be ignored
-            ['expired' => FrozenTime::now()->subDays(1)], // to be ignored, it is expired
-            ['expired' => FrozenTime::now()->subMinutes(2)], // expires today
-            ['expired' => FrozenTime::now()], // expires today
-            ['expired' => FrozenTime::now()->addDays(1)], // expires exactly in 1 day
-            ['expired' => FrozenTime::now()->addDays(1)->addSeconds(1)], // expires in 1 day
-            ['expired' => FrozenTime::now()->addDays(1)->addMinutes(2)], // expires in 1 day
-            ['expired' => FrozenTime::now()->addDays(2)], // expired in 2 days
-            ['expired' => FrozenTime::now()->addDays(2)->addMinutes(2)], // expires in 2 days
-            ['expired' => FrozenTime::now()->addDays(3)], // expired in 3 days
+            ['expired' => DateTime::now()->subDays(1)], // to be ignored, it is expired
+            ['expired' => DateTime::now()->subMinutes(2)], // expires today
+            ['expired' => DateTime::now()], // expires today
+            ['expired' => DateTime::now()->addDays(1)], // expires exactly in 1 day
+            ['expired' => DateTime::now()->addDays(1)->addSeconds(1)], // expires in 1 day
+            ['expired' => DateTime::now()->addDays(1)->addMinutes(2)], // expires in 1 day
+            ['expired' => DateTime::now()->addDays(2)], // expired in 2 days
+            ['expired' => DateTime::now()->addDays(2)->addMinutes(2)], // expires in 2 days
+            ['expired' => DateTime::now()->addDays(3)], // expired in 3 days
         ])->persist();
 
         // Find resources expiring today or today

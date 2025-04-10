@@ -25,14 +25,17 @@ class V200DropUnusedTables extends AbstractMigration
     public function up()
     {
         $this->table('controller_logs')
-            ->drop();
+            ->drop()
+            ->save();
 
         $this->table('schema_migrations')
-            ->drop();
+            ->drop()
+            ->save();
 
         if ($this->hasTable('cake_sessions')) {
             $this->table('cake_sessions')
-                ->drop();
+                ->drop()
+                ->save();
         }
     }
 }

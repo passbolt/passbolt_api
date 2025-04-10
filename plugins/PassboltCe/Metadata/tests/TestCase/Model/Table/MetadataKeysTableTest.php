@@ -22,7 +22,7 @@ use App\Test\Lib\AppTestCaseV5;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\MetadataPlugin;
@@ -88,8 +88,8 @@ class MetadataKeysTableTest extends AppTestCaseV5
         $this->assertSame($metadataKey->get('armored_key'), $result->get('armored_key'));
         $this->assertSame($user['id'], $result->get('created_by'));
         $this->assertSame($user['id'], $result->get('modified_by'));
-        $this->assertInstanceOf(FrozenTime::class, $result->get('created'));
-        $this->assertInstanceOf(FrozenTime::class, $result->get('modified'));
+        $this->assertInstanceOf(DateTime::class, $result->get('created'));
+        $this->assertInstanceOf(DateTime::class, $result->get('modified'));
     }
 
     /**
@@ -338,7 +338,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
         $entity = $this->buildEntity([
             'armored_key' => $armoredKey,
             'fingerprint' => $fingerprint,
-            'expired' => FrozenTime::yesterday(),
+            'expired' => DateTime::yesterday(),
             'created_by' => $user['id'],
             'modified_by' => $user['id'],
         ], [
@@ -353,9 +353,9 @@ class MetadataKeysTableTest extends AppTestCaseV5
         $this->assertSame($armoredKey, $result->get('armored_key'));
         $this->assertSame($user['id'], $result->get('created_by'));
         $this->assertSame($user['id'], $result->get('modified_by'));
-        $this->assertInstanceOf(FrozenTime::class, $result->get('created'));
-        $this->assertInstanceOf(FrozenTime::class, $result->get('modified'));
-        $this->assertInstanceOf(FrozenTime::class, $result->get('expired'));
+        $this->assertInstanceOf(DateTime::class, $result->get('created'));
+        $this->assertInstanceOf(DateTime::class, $result->get('modified'));
+        $this->assertInstanceOf(DateTime::class, $result->get('expired'));
     }
 
     /**
@@ -374,7 +374,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
         $entity = $this->buildEntity([
             'armored_key' => $armoredKey,
             'fingerprint' => $fingerprint,
-            'expired' => FrozenTime::tomorrow(),
+            'expired' => DateTime::tomorrow(),
             'created_by' => $user['id'],
             'modified_by' => $user['id'],
         ], [

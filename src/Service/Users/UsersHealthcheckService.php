@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Service\Users;
 
 use App\Model\Entity\User;
+use App\Model\Table\UsersTable;
 use App\Utility\Healthchecks\AbstractHealthcheckService;
 use App\Utility\Healthchecks\Healthcheck;
 use Cake\ORM\TableRegistry;
@@ -30,7 +31,7 @@ class UsersHealthcheckService extends AbstractHealthcheckService
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $Users;
+    private UsersTable $Users;
 
     private array $usernameDuplicates = [];
 

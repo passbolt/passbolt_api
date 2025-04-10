@@ -25,7 +25,7 @@ class PluginMigration extends AbstractMigration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         // Fake some schema change to force the missing migrations to marked as done
         $this->table('fake_schema_migrations')->create();

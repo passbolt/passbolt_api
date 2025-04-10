@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 // @codingStandardsIgnoreStart
 
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Migrations\AbstractMigration;
@@ -39,7 +39,7 @@ class V410RemoveTypeFromTotpResourceTypes extends AbstractMigration
         $colModified = $this->getAdapter()->quoteColumnName('modified');
         $tableResourceTypes = $this->getAdapter()->quoteTableName('resource_types');
 
-        $modified = FrozenTime::now()->format('Y-m-d H:i:s');
+        $modified = DateTime::now()->format('Y-m-d H:i:s');
         $totpResourcesTypes = [
             ResourceType::SLUG_STANDALONE_TOTP => SlugDefinition::totp(),
             ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP => SlugDefinition::passwordDescriptionTotp(),

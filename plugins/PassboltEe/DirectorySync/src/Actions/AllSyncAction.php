@@ -116,7 +116,7 @@ class AllSyncAction
         if ($dryRun) {
             $conn = $Users->getConnection();
             $conn->begin();
-            $conn->transactional(function () use (&$reports, $dryRun) {
+            $conn->transactional(function () use (&$reports, $dryRun): void {
                 $reports = $this->syncAll($dryRun);
             });
             $conn->rollback();

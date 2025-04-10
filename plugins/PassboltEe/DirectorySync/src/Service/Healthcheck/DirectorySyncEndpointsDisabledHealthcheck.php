@@ -86,7 +86,7 @@ class DirectorySyncEndpointsDisabledHealthcheck implements HealthcheckServiceInt
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('It is recommended to disable endpoints for updating the users directory configurations.'),

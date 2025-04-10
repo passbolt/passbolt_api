@@ -41,7 +41,6 @@ abstract class DirectorySyncConsoleIntegrationTestCase extends AppTestCase
         Configure::load('Passbolt/DirectorySync.config', 'default', true);
         Configure::write('passbolt.plugins.directorySync.test', true);
         $this->enableDirectoryIntegration();
-        $this->useCommandRunner();
         $this->mockProcessUserService('www-data');
     }
 }

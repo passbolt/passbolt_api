@@ -28,6 +28,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Log\Log;
+use Exception;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
@@ -45,22 +46,22 @@ abstract class AbstractSsoService
     /**
      * @var \App\Service\Cookie\AbstractSecureCookieService $cookieService used to generate cookies
      */
-    protected $cookieService;
+    protected AbstractSecureCookieService $cookieService;
 
     /**
      * @var \League\OAuth2\Client\Provider\AbstractProvider $provider used to cache provider
      */
-    protected $provider;
+    protected AbstractProvider $provider;
 
     /**
      * @var \Passbolt\Sso\Model\Dto\SsoSettingsDto $settings
      */
-    protected $settings;
+    protected SsoSettingsDto $settings;
 
     /**
      * @var string|null
      */
-    protected $nonce = null;
+    protected ?string $nonce = null;
 
     /**
      * Cookie name used to store the state
@@ -204,7 +205,7 @@ abstract class AbstractSsoService
             $resourceOwner = $this->getResourceOwnerAndAssertAgainstUser($code, $user);
 
             $this->assertResourceOwnerAgainstSsoState($resourceOwner, $ssoState);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $msg = 'There was an error while asserting user against resource owner. ';
             $msg .= "Message: {$e->getMessage()}, State ID: {$ssoState->state}, User ID: {$user->id}";
 

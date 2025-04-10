@@ -17,18 +17,11 @@ declare(strict_types=1);
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
 use App\Utility\UuidFactory;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
 class ResourcesAddControllerTest extends TagPluginIntegrationTestCase
 {
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles',
-        'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Resources', 'app.Base/ResourceTypes', 'app.Base/Favorites',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Alt0/Secrets',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-    ];
-
     protected function _getDummyPostData(?array $data = [])
     {
         $defaultData = [
@@ -66,8 +59,9 @@ W3AI8+rWjK8MGH2T88hCYI/6
 
     public function testTagsResourcesAddSuccess()
     {
+        ResourceTypeFactory::make()->passwordString()->persist();
         $data = $this->_getDummyPostData();
-        $this->authenticateAs('admin');
+        $this->logInAsUser();
         $this->postJson('/resources.json?api-version=v2', $data);
         $this->assertSuccess();
 

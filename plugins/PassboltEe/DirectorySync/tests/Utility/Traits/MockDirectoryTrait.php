@@ -17,8 +17,9 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Test\Utility\Traits;
 
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
+use InvalidArgumentException;
 use Passbolt\DirectorySync\Utility\Alias;
 
 /**
@@ -37,7 +38,7 @@ trait MockDirectoryTrait
         $ignore = $DirectoryIgnoreTable->newEntity($entry, ['validate' => false]);
         $save = $DirectoryIgnoreTable->save($ignore, ['checkRules' => false]);
         if (!$save) {
-            throw new \InvalidArgumentException('Could not save directory sync ignore for mock');
+            throw new InvalidArgumentException('Could not save directory sync ignore for mock');
         }
 
         return $entry;
@@ -53,7 +54,7 @@ trait MockDirectoryTrait
     protected function mockDirectoryEntryUser($data)
     {
         if (!isset($data['fname'])) {
-            throw new \InvalidArgumentException('A mocked directory entry should have at least a first name');
+            throw new InvalidArgumentException('A mocked directory entry should have at least a first name');
         }
         if (!isset($data['lname'])) {
             $data['lname'] = null;
@@ -108,7 +109,7 @@ trait MockDirectoryTrait
         ]);
         $save = $this->action->DirectoryEntries->save($entry, ['checkRules' => false]);
         if (!$save) {
-            throw new \InvalidArgumentException('Could not save directory entry for mock');
+            throw new InvalidArgumentException('Could not save directory entry for mock');
         }
 
         return $entry;
@@ -153,7 +154,7 @@ trait MockDirectoryTrait
         ]);
         $save = $this->action->DirectoryEntries->save($entry, ['checkRules' => false]);
         if (!$save) {
-            throw new \InvalidArgumentException('Could not save directory entry for mock');
+            throw new InvalidArgumentException('Could not save directory entry for mock');
         }
 
         return $entry;
@@ -172,8 +173,8 @@ trait MockDirectoryTrait
         $group = [
             'id' => $id,
             'directory_name' => $dn,
-            'directory_created' => new FrozenTime($created),
-            'directory_modified' => new FrozenTime($modified),
+            'directory_created' => new DateTime($created),
+            'directory_modified' => new DateTime($modified),
             'group' => [
                 'name' => $cn,
                 'groups' => [],
@@ -282,8 +283,8 @@ trait MockDirectoryTrait
         $user = [
             'id' => UuidFactory::uuid($id),
             'directory_name' => $name,
-            'directory_created' => new FrozenTime($modified),
-            'directory_modified' => new FrozenTime($created),
+            'directory_created' => new DateTime($modified),
+            'directory_modified' => new DateTime($created),
             'user' => [
                 'username' => strtolower($username),
                 'profile' => [

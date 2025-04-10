@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\PasswordExpiry\Model\Dto;
 
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\PasswordExpiry\Form\PasswordExpirySettingsForm;
 use Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting;
 
@@ -34,9 +34,9 @@ class PasswordExpirySettingsDto
     protected ?int $default_expiry_period;
     protected ?int $expiry_notification;
     public ?string $id;
-    public ?FrozenTime $created;
+    public ?DateTime $created;
     public ?string $created_by;
-    public ?FrozenTime $modified;
+    public ?DateTime $modified;
     public ?string $modified_by;
 
     /**
@@ -48,9 +48,9 @@ class PasswordExpirySettingsDto
      * @param int|null $defaultPasswordExpiryPeriodInDays Default expiry period.
      * @param int|null $expiryNotificationInDays Number of days prior to expiry notification.
      * @param string|null $id ID.
-     * @param \Cake\I18n\FrozenTime|null $created Created time.
+     * @param \Cake\I18n\DateTime|null $created Created time.
      * @param string|null $createdBy Created by.
-     * @param \Cake\I18n\FrozenTime|null $modified Modified time.
+     * @param \Cake\I18n\DateTime|null $modified Modified time.
      * @param string|null $modifiedBy Modified by.
      */
     final public function __construct(
@@ -60,9 +60,9 @@ class PasswordExpirySettingsDto
         ?int $defaultPasswordExpiryPeriodInDays = null,
         ?int $expiryNotificationInDays = null,
         ?string $id = null,
-        ?FrozenTime $created = null,
+        ?DateTime $created = null,
         ?string $createdBy = null,
-        ?FrozenTime $modified = null,
+        ?DateTime $modified = null,
         ?string $modifiedBy = null
     ) {
         $this->automatic_expiry = $automaticExpiry;

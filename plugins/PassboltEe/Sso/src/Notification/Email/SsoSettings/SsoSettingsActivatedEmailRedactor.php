@@ -92,9 +92,10 @@ class SsoSettingsActivatedEmailRedactor implements SubscribedEmailRedactorInterf
             ->find('notDisabled')
             ->find('locale')
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
+            ->all()
             ->toArray();
 
-        if (!isset($admins)) {
+        if (empty($admins)) {
             return $emailCollection;
         }
 

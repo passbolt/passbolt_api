@@ -25,6 +25,7 @@ class V200DropUnusedPermissionTypesTable extends AbstractMigration
     public function up()
     {
         $this->table('permissions_types')
-            ->drop();
+            ->drop()
+            ->save(); // Required, otherwise "Migration <name> has pending actions after execution!" error will be thrown
     }
 }

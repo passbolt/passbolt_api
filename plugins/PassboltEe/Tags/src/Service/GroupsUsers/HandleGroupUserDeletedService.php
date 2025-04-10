@@ -21,23 +21,25 @@ use App\Model\Entity\GroupsUser;
 use App\Model\Table\PermissionsTable;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
+use Passbolt\Tags\Model\Table\ResourcesTagsTable;
+use Passbolt\Tags\Model\Table\TagsTable;
 
 class HandleGroupUserDeletedService
 {
     /**
      * @var \Passbolt\Tags\Model\Table\TagsTable
      */
-    private $tagsTable;
+    private TagsTable $tagsTable;
 
     /**
      * @var \Passbolt\Tags\Model\Table\ResourcesTagsTable
      */
-    private $resourcesTagsTable;
+    private ResourcesTagsTable $resourcesTagsTable;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * GroupUserDeletedService constructor.
@@ -57,7 +59,7 @@ class HandleGroupUserDeletedService
      * @return void
      * @throws \Exception
      */
-    public function handle(GroupsUser $groupUser)
+    public function handle(GroupsUser $groupUser): void
     {
         $this->resourcesTagsTable->deleteAll([
             'user_id' => $groupUser->user_id,

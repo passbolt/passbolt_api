@@ -23,7 +23,7 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\TestSuite\TestCase;
 use Passbolt\JwtAuthentication\Error\Exception\VerifyToken\ConsumedVerifyTokenAccessException;
 use Passbolt\JwtAuthentication\Error\Exception\VerifyToken\ExpiredVerifyTokenAccessException;
@@ -66,7 +66,7 @@ class VerifyTokenValidationServiceTest extends TestCase
     {
         $this->expectNotToPerformAssertions();
 
-        $expiry = FrozenTime::now()->addMinutes(1)->toUnixString();
+        $expiry = DateTime::now()->addMinutes(1)->toUnixString();
         $this->service->validateToken($expiry, UuidFactory::uuid(), UuidFactory::uuid());
         $this->service->validateToken((int)$expiry, UuidFactory::uuid(), UuidFactory::uuid());
     }
@@ -99,7 +99,7 @@ class VerifyTokenValidationServiceTest extends TestCase
     {
         $this->expectException(InvalidVerifyTokenException::class);
         $this->expectExceptionMessage('Invalid verify token format.');
-        $this->service->validateToken(FrozenTime::now()->addMinutes(1)->toUnixString(), $token, 'Bar');
+        $this->service->validateToken(DateTime::now()->addMinutes(1)->toUnixString(), $token, 'Bar');
     }
 
     public function testVerifyTokenValidationService_IsNotNonce()
@@ -111,25 +111,23 @@ class VerifyTokenValidationServiceTest extends TestCase
         $token = $existingToken->token;
         $this->expectException(ConsumedVerifyTokenAccessException::class);
         $this->expectExceptionMessage('Verify token has been already used in the past.');
-        $this->service->validateToken(FrozenTime::now()->addMinutes(1)->toUnixString(), $token, $userId);
+        $this->service->validateToken(DateTime::now()->addMinutes(1)->toUnixString(), $token, $userId);
         $this->assertEventFired(ConsumedVerifyTokenAccessException::class);
     }
 
     public function invalidExpiryDates(): array
     {
         return [
-            [null],
             [''],
-            [FrozenTime::now()->addHours(5)->toUnixString()], // This is past the max validity of one hour
-            [FrozenTime::now()->addMinutes(1)], // This is not a unix time!
+            [DateTime::now()->addHours(5)->toUnixString()], // This is past the max validity of one hour
         ];
     }
 
     public function expiredExpiryDates(): array
     {
         return [
-            [FrozenTime::yesterday()->toUnixString()],
-            [FrozenTime::now()->subSeconds(1)->toUnixString()],
+            [DateTime::yesterday()->toUnixString()],
+            [DateTime::now()->subSeconds(1)->toUnixString()],
         ];
     }
 

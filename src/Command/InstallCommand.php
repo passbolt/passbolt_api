@@ -213,7 +213,7 @@ class InstallCommand extends PassboltCommand
             $options = [
                 '--role', Role::ADMIN,
                 '--interactive',
-                '--interactive-loop', (string)RegisterUserCommand::DEFAULT_INTERACTIVE_LOOP,
+                '--interactive-loop', RegisterUserCommand::DEFAULT_INTERACTIVE_LOOP,
                 '--username', $args->getOption('admin-username'),
                 '--first-name', $args->getOption('admin-first-name'),
                 '--last-name', $args->getOption('admin-last-name'),
@@ -355,7 +355,7 @@ class InstallCommand extends PassboltCommand
     }
 
     /**
-     * @return \App\Service\Healthcheck\HealthcheckServiceInterface[]
+     * @return array<\App\Service\Healthcheck\HealthcheckServiceInterface>
      */
     protected function getInstallCheckHealthcheckServices(): array
     {

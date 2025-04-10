@@ -31,7 +31,7 @@ class YubikeyVerifyForm extends MfaForm
     /**
      * @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
      */
-    protected $settings;
+    protected MfaSettings $settings;
 
     /**
      * VerifyForm constructor.
@@ -92,7 +92,7 @@ class YubikeyVerifyForm extends MfaForm
      * @param string $value value
      * @return bool
      */
-    public function isValidModHex(string $value)
+    public function isValidModHex(string $value): bool
     {
         return Validation::custom($value, '/^[cbdefghijklnrtuv]{44}$/');
     }
@@ -103,7 +103,7 @@ class YubikeyVerifyForm extends MfaForm
      * @param string $value value
      * @return bool
      */
-    public function isSameYubikeyId(string $value)
+    public function isSameYubikeyId(string $value): bool
     {
         $yubikeyId = substr($value, 0, 12);
         try {

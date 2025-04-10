@@ -53,7 +53,6 @@ class DebugCommandTest extends DirectorySyncConsoleIntegrationTestCase
         $directoryOrgSettings = new DirectoryOrgSettings($settings);
         $directoryOrgSettings->save($uac);
 
-        $this->useCommandRunner();
         $this->exec('directory_sync debug');
         $this->assertExitError();
         $this->assertOutputContains('<error>Can\'t contact LDAP server</error>');

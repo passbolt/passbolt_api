@@ -25,6 +25,7 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Routing\Router;
+use Exception;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationEmailDomainsDryRunService;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
@@ -65,7 +66,7 @@ class SsoRecoverAssertService
             $resourceOwner = $ssoService->getResourceOwner($code);
 
             $ssoService->assertResourceOwnerAgainstSsoState($resourceOwner, $ssoState);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $msg = 'There was an error while retrieving resource owner. ';
             $msg .= "Message: {$e->getMessage()}, State ID: {$ssoState->state}";
 

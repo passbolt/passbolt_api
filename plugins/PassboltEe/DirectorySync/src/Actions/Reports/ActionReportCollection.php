@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
@@ -16,22 +16,27 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Actions\Reports;
 
+use ArrayAccess;
+use Countable;
+use Iterator;
+use ReturnTypeWillChange;
+
 /**
  * Directory factory class
  *
  * @package App\Utility
  */
-class ActionReportCollection implements \Iterator, \ArrayAccess, \Countable
+class ActionReportCollection implements Iterator, ArrayAccess, Countable
 {
     /**
      * @var array
      */
-    protected $reports = [];
+    protected array $reports = [];
 
     /**
      * @var int
      */
-    private $position;
+    private int $position;
 
     /**
      * ActionReportCollection constructor.
@@ -64,7 +69,7 @@ class ActionReportCollection implements \Iterator, \ArrayAccess, \Countable
     public function getByAction(string $actionName): ActionReportCollection
     {
         $result = [];
-        foreach ($this->reports as $i => $report) {
+        foreach ($this->reports as $report) {
             if ($report->getAction() === $actionName) {
                 $result[] = $report;
             }
@@ -82,7 +87,7 @@ class ActionReportCollection implements \Iterator, \ArrayAccess, \Countable
     public function getByStatus(string $status): ActionReportCollection
     {
         $result = [];
-        foreach ($this->reports as $i => $report) {
+        foreach ($this->reports as $report) {
             if ($report->getStatus() === $status) {
                 $result[] = $report;
             }
@@ -142,26 +147,24 @@ class ActionReportCollection implements \Iterator, \ArrayAccess, \Countable
         $this->position = 0;
     }
 
-    #[\ReturnTypeWillChange]
-
     /**
      * Current
      *
      * @return mixed // not strict for 7.3 compatibility
      */
-    public function current()
+    #[ReturnTypeWillChange]
+    public function current(): mixed
     {
         return $this->reports[$this->position];
     }
-
-    #[\ReturnTypeWillChange]
 
     /**
      * Key
      *
      * @return int // should be mixed for PHP 8 interface compliance
      */
-    public function key()
+    #[ReturnTypeWillChange]
+    public function key(): int
     {
         return $this->position;
     }
@@ -193,7 +196,7 @@ class ActionReportCollection implements \Iterator, \ArrayAccess, \Countable
      * @param mixed $value value
      * @return void
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         if (is_null($offset)) {
             $this->reports[] = $value;
@@ -208,7 +211,7 @@ class ActionReportCollection implements \Iterator, \ArrayAccess, \Countable
      * @param mixed $offset offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->reports[$offset]);
     }
@@ -219,12 +222,10 @@ class ActionReportCollection implements \Iterator, \ArrayAccess, \Countable
      * @param mixed $offset offset
      * @return void
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->reports[$offset]);
     }
-
-    #[\ReturnTypeWillChange]
 
     /**
      * Get offset.
@@ -232,7 +233,8 @@ class ActionReportCollection implements \Iterator, \ArrayAccess, \Countable
      * @param mixed $offset offset
      * @return mixed|null // not strict for 7.3 compatibility
      */
-    public function offsetGet($offset)
+    #[ReturnTypeWillChange]
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->reports[$offset] ?? null;
     }

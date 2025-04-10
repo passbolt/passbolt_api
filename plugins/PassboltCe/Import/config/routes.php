@@ -22,7 +22,7 @@ use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->scope('/import', ['plugin' => false], function (RouteBuilder $routes) {
+$routes->scope('/import', ['plugin' => null], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
 
     $routes->connect('/resources', ['prefix' => 'Resources', 'controller' => 'ResourcesAdd', 'action' => 'add'])

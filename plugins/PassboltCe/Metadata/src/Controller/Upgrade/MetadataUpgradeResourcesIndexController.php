@@ -18,6 +18,7 @@ namespace Passbolt\Metadata\Controller\Upgrade;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
+use App\Model\Table\ResourcesTable;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
 
 class MetadataUpgradeResourcesIndexController extends AppController
@@ -25,7 +26,7 @@ class MetadataUpgradeResourcesIndexController extends AppController
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    protected $Resources;
+    protected ResourcesTable $Resources;
 
     /**
      * @inheritDoc
@@ -34,6 +35,7 @@ class MetadataUpgradeResourcesIndexController extends AppController
     {
         parent::initialize();
         $this->Resources = $this->fetchTable('Resources');
+
         $this->loadComponent('Passbolt/Metadata.MetadataPagination', [
             'model' => 'Resources',
             'order' => [

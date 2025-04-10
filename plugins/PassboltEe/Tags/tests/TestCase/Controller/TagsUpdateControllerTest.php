@@ -16,10 +16,12 @@ declare(strict_types=1);
  */
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
+use Cake\Core\Configure;
 use Cake\Utility\Hash;
-use Passbolt\Tags\Model\Table\ResourcesTagsTable;
+use Passbolt\Tags\Middleware\TagsReadOnlyModeMiddleware;
 use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
@@ -29,29 +31,6 @@ use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
  */
 class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
 {
-    public $ResourcesTags;
-    public $fixtures = [
-        'app.Alt0/GroupsUsers',
-        'app.Alt0/Permissions',
-        'app.Base/Groups',
-        'app.Base/Favorites',
-        'app.Base/Profiles',
-        'app.Base/Roles',
-        'app.Base/Resources',
-        'app.Base/ResourceTypes',
-        'app.Base/Secrets',
-        'app.Base/Users',
-        'plugin.Passbolt/Tags.Base/Tags',
-        'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-    ];
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Passbolt/Tags.ResourcesTags') ? [] : ['className' => ResourcesTagsTable::class];
-        $this->ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags', $config);
-    }
-
     /**
      * A user not logged in should not be able to update tags
      *
@@ -95,6 +74,15 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $this->assertError(404, 'The tag does not exist.');
     }
 
+    public function testTagUpdate_Read_Only_Mode()
+    {
+        Configure::write(TagsReadOnlyModeMiddleware::PASSBOLT_PLUGINS_TAGS_READ_ONLY_MODE, true);
+        $this->logInAsUser();
+        $tagId = UuidFactory::uuid();
+        $this->putJson("/tags/$tagId.json?api-version=v2");
+        $this->assertForbiddenError('The tags plugin is in read-only mode.');
+    }
+
     /**
      * A user should not be able to update a shared tag
      *
@@ -104,9 +92,12 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagUpdateUserCanNotUpdateSharedTag()
     {
-        $this->logInAsUser();
-        $tagId = UuidFactory::uuid('tag.id.#bravo');
-        $this->putJson("/tags/$tagId.json?api-version=v2");
+        $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        $tag = TagFactory::make(['slug' => '#bravo'])->isSharedFor($resource)->persist();
+        $this->putJson("/tags/{$tag->id}.json?api-version=v2");
         $this->assertForbiddenError('You do not have the permission to update shared tags.');
     }
 
@@ -205,11 +196,17 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
             ],
         ];
 
+        $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        $tag = TagFactory::make()->isPersonalFor($resource, $user)->persist();
+        $tagId = $tag->id;
         foreach ($success as $test => $case) {
-            $this->authenticateAs($case['user']);
-            $tagId = UuidFactory::uuid($case['tag']);
             $this->putJson("/tags/$tagId.json?api-version=v2", $case['data']);
             $this->assertEquals('success', $this->_responseJsonHeader->status, $test);
+            $this->assertSame($case['data']['slug'], $this->_responseJsonBody->slug, $test);
+            $tagId = $this->_responseJsonBody->id;
         }
     }
 
@@ -222,9 +219,12 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagUserUpdateResponseContainsTag()
     {
-        $this->authenticateAs('ada');
-        $tagId = UuidFactory::uuid('tag.id.alpha');
-        $this->putJson("/tags/$tagId.json?api-version=v2", [
+        $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        $tag = TagFactory::make()->isPersonalFor($resource, $user)->persist();
+        $this->putJson("/tags/{$tag->id}.json?api-version=v2", [
             'slug' => 'test slug',
         ]);
         $this->assertSuccess();
@@ -242,9 +242,12 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagUpdateUserCanUpdatePersonalTag()
     {
-        $this->authenticateAs('ada');
-        $tagId = UuidFactory::uuid('tag.id.firefox');
-        $this->putJson("/tags/$tagId.json?api-version=v2", [
+        $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        $tag = TagFactory::make(['slug' => 'firefox'])->isPersonalFor($resource, $user)->persist();
+        $this->putJson("/tags/{$tag->id}.json?api-version=v2", [
             'slug' => 'brave',
         ]);
         $this->assertSuccess();
@@ -268,32 +271,33 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagUpdateUserWithExistingTagHandleTagsAssociationDuplicate()
     {
-        $this->authenticateAs('ada');
-        /** @psalm-suppress UndefinedClass trait exists */
-        $resourceData = self::getDummyResourceData();
-        /** @psalm-suppress UndefinedClass trait exists */
-        $resourceData['secrets'][0] = self::getDummySecretData();
-        $resource = $this->_addTestResource($resourceData);
-        $tags = $this->_addTestTag($resource->id, ['test-tag-1', 'test-tag-2']);
-        $this->assertCount(2, $tags);
+        $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag[] $tags */
+        [$tag1, $tag2] = TagFactory::make(2)->isPersonalFor($resource, $user)->persist();
 
-        $resourcesTagsCount = $this->ResourcesTags->find()->where([
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+        $resourcesTagsCount = ResourcesTagFactory::find()->where([
+            'user_id' => $user->id,
             'resource_id' => $resource->id,
-        ])->count();
+        ])->all()->count();
         $this->assertEquals(2, $resourcesTagsCount);
 
-        $this->putJson("/tags/{$tags[0]->id}.json?api-version=v2", [
-            'slug' => $tags[1]->slug,
+        // Rename tag 1 with the slug of tag 2
+        // This should merge both tags. Only tag 2 remains, tag 1 gets deleted, pivot tables are transferred to tag 2
+        $this->putJson("/tags/{$tag1->id}.json?api-version=v2", [
+            'slug' => $tag2->slug,
         ]);
         $this->assertSuccess();
 
-        $resourcesTags = $this->ResourcesTags->find()->where([
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+        ResourcesTagFactory::firstOrFail([
+            'tag_id' => $tag2->id,
+            'user_id' => $user->id,
             'resource_id' => $resource->id,
-        ])->all()->toArray();
-        $this->assertCount(1, $resourcesTags);
-        $this->assertEquals($tags[1]->id, $resourcesTags[0]->tag_id);
+        ]);
+        $this->assertSame(1, ResourcesTagFactory::count());
+        $this->assertSame(1, TagFactory::count());
+        $this->assertSame($tag2->slug, TagFactory::get($tag2->id)->slug);
     }
 
     /**
@@ -305,9 +309,12 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagUpdateUserCanNotUpdateToShareTag()
     {
-        $this->authenticateAs('ada');
-        $tagId = UuidFactory::uuid('tag.id.firefox');
-        $this->putJson("/tags/$tagId.json?api-version=v2", [
+        $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        $tag = TagFactory::make()->isPersonalFor($resource, $user)->persist();
+        $this->putJson("/tags/{$tag->id}.json?api-version=v2", [
             'slug' => '#brave',
         ]);
         $this->assertBadRequestError('You do not have the permission to change a personal tag into shared tag.');
@@ -322,19 +329,25 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagUpdatePersonalUpdateDoesNotAffectOthers()
     {
-        $this->authenticateAs('ada');
-        $tagId = UuidFactory::uuid('tag.id.alpha');
-        $this->putJson("/tags/$tagId.json?api-version=v2", [
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $this->logInAs($userA);
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        $tag = TagFactory::make()->setField('slug', 'alpha')->isPersonalFor($resource, $userA)->persist();
+        TagFactory::make()->setField('slug', 'alpha')->isPersonalFor($resource, $userB)->persist();
+        $this->putJson("/tags/{$tag->id}.json?api-version=v2", [
             'slug' => 'updated-slug',
         ]);
 
         // Make sure this doesn't affect other users
-        $this->authenticateAs('betty');
+        $this->logInAs($userB);
         $this->getJson('/tags.json?api-version=v2');
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
         $this->assertContains('alpha', $results);
         $this->assertNotContains('updated-slug', $results);
+        $this->assertSame(2, TagFactory::count());
     }
 
     /**
@@ -347,19 +360,29 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagUpdatePersonalUpdateByAdminDoesNotAffectOthers()
     {
-        $this->authenticateAs('admin');
-        $tagId = UuidFactory::uuid('tag.id.alpha');
-        $this->putJson("/tags/$tagId.json?api-version=v2", [
+        $admin = UserFactory::make()->admin()->persist();
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($admin);
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        $tag = TagFactory::make()->setField('slug', 'alpha')->isPersonalFor($resource, $admin)->persist();
+        TagFactory::make()->setField('slug', 'alpha')->isPersonalFor($resource, $user)->persist();
+
+        $this->putJson("/tags/{$tag->id}.json?api-version=v2", [
             'slug' => 'updated-slug',
         ]);
+        $this->assertResponseSuccess();
 
         // Make sure this doesn't affect other users
-        $this->authenticateAs('betty');
+        $this->logInAs($user);
         $this->getJson('/tags.json?api-version=v2');
+        $this->assertResponseSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
         $this->assertContains('alpha', $results);
         $this->assertNotContains('updated-slug', $results);
+        $this->assertSame(2, TagFactory::count());
     }
 
     /**
@@ -372,14 +395,11 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagAdminPersonalUpdateResponseContainsTag()
     {
-        $this->authenticateAs('admin');
-        /** @psalm-suppress UndefinedClass trait exists */
-        $resourceData = self::getDummyResourceData();
-        /** @psalm-suppress UndefinedClass trait exists */
-        $resourceData['secrets'][0] = self::getDummySecretData();
-        $resource = $this->_addTestResource($resourceData);
-        $tags = $this->_addTestTag($resource->id, ['admin-personal']);
-        $tag = $tags[0];
+        $admin = $this->logInAsAdmin();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$admin])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        $tag = TagFactory::make()->isPersonalFor($resource, $admin)->persist();
 
         // Update Tag
         $this->putJson("/tags/{$tag->id}.json?api-version=v2", [
@@ -484,33 +504,5 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
             1,
             ResourcesTagFactory::find()->where(['tag_id' => $responseArray['id'], 'user_id' => $user->id])->count()
         );
-    }
-
-    /**
-     * Add a test resource
-     *
-     * @param array $data resource data
-     * @return mixed ID of the new resource
-     */
-    protected function _addTestResource(?array $data = [])
-    {
-        $this->postJson('/resources.json?api-version=v2', $data);
-
-        return $this->_responseJsonBody;
-    }
-
-    /**
-     * Add a test tag
-     *
-     * @param string $resourceId ID of the resource where tag is to be added
-     * @param array|null $tags List of tags to be added
-     * @return mixed List of tags
-     */
-    protected function _addTestTag(string $resourceId, ?array $tags = [])
-    {
-        $data = ['tags' => $tags];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=v2', $data);
-
-        return $this->_responseJsonBody;
     }
 }

@@ -22,7 +22,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validation;
 
@@ -71,13 +71,16 @@ class ResourceTypesDeleteService
 
         /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = $this->fetchTable('Resources');
-        $count = $resourcesTable->find()->where(['resource_type_id' => $resourceTypeId])->all()->count();
+        $count = $resourcesTable->find()->where([
+            'resource_type_id' => $resourceTypeId,
+            'deleted' => false,
+        ])->all()->count();
         if ($count !== 0) {
             $msg = __('The resource type can not be deleted as resources of this type still exist.');
             throw new BadRequestException($msg);
         }
 
-        $resourceType->deleted = FrozenTime::now();
+        $resourceType->deleted = DateTime::now();
         if (!$resourcesTypesTable->save($resourceType)) {
             throw new InternalErrorException(__('The resource type could not be deleted.'));
         }

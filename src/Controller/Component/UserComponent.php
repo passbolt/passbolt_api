@@ -32,7 +32,7 @@ use Exception;
  */
 class UserComponent extends Component
 {
-    public $components = ['Authentication.Authentication'];
+    public array $components = ['Authentication.Authentication'];
 
     /**
      * @var string|null cache for role uuid

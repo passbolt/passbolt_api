@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Service;
 
 use App\Model\Entity\User;
+use Exception;
 
 class MetadataKeyShareNothingService implements MetadataKeyShareServiceInterface
 {
@@ -31,7 +32,7 @@ class MetadataKeyShareNothingService implements MetadataKeyShareServiceInterface
     /**
      * @inheritDoc
      */
-    public function onFailure(\Exception $exception): void
+    public function onFailure(Exception $exception): void
     {
         // Do nothing
     }

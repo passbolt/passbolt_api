@@ -22,20 +22,8 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Validation\Validation;
 
-/**
- * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable $AccountRecoveryRequests
- */
 class AccountRecoveryRequestsViewController extends AppController
 {
-    /**
-     * @inheritDoc
-     */
-    public function initialize(): void
-    {
-        parent::initialize();
-        $this->AccountRecoveryRequests = $this->fetchTable('Passbolt/AccountRecovery.AccountRecoveryRequests');
-    }
-
     /**
      * List the details of one account recovery request
      *
@@ -64,7 +52,9 @@ class AccountRecoveryRequestsViewController extends AppController
         ]);
 
         $options['id'] = $id;
-        $request = $this->AccountRecoveryRequests->findView($options)->firstOrFail();
+
+        $accountRecoveryRequestsTable = $this->fetchTable('Passbolt/AccountRecovery.AccountRecoveryRequests');
+        $request = $accountRecoveryRequestsTable->findView($options)->firstOrFail();
 
         $this->success(__('The operation was successful.'), $request);
     }

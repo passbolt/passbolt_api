@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Test\Utility;
 
 use Cake\Core\Configure;
+use Exception;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
@@ -43,7 +44,7 @@ class TestDirectory implements DirectoryInterface
         if (isset($scenario) && is_string($scenario)) {
             $this->path = dirname(__DIR__) . DS . 'IntegrationFixtures' . DS . stripslashes($scenario);
             if (!is_dir($this->path)) {
-                throw new \Exception(__('The test scenario could not be found in fixtures at: {0}', $this->path));
+                throw new Exception(__('The test scenario could not be found in fixtures at: {0}', $this->path));
             }
         } else {
             // the test should populate them with setters
@@ -57,7 +58,7 @@ class TestDirectory implements DirectoryInterface
      * @return mixed
      * @throws \Exception
      */
-    public function getGroups()
+    public function getGroups(): mixed
     {
         if (!isset($this->groups)) {
             $this->groups = $this->getGroupsFixtures();
@@ -72,7 +73,7 @@ class TestDirectory implements DirectoryInterface
      * @return mixed
      * @throws \Exception
      */
-    public function getUsers()
+    public function getUsers(): mixed
     {
         $this->getFilteredDirectoryResults();
         if (!isset($this->users)) {
@@ -90,7 +91,7 @@ class TestDirectory implements DirectoryInterface
      * @return DirectoryResults directory results
      * @throws \Exception
      */
-    public function getFilteredDirectoryResults()
+    public function getFilteredDirectoryResults(): mixed
     {
         if (!isset($this->users)) {
             $this->users = $this->getUsersFixtures();
@@ -159,11 +160,11 @@ class TestDirectory implements DirectoryInterface
     {
         $path = $this->path . DS . $file . '.php';
         if (!is_file($path) || !is_readable($path)) {
-            throw new \Exception(__('The {0} data file can not be found/read: {1}', $file, $path));
+            throw new Exception(__('The {0} data file can not be found/read: {1}', $file, $path));
         }
         $return = include $path;
         if (!is_array($return)) {
-            throw new \Exception(__('The {0} data should be an array: {1}', $file, $path));
+            throw new Exception(__('The {0} data should be an array: {1}', $file, $path));
         }
 
         return $return;

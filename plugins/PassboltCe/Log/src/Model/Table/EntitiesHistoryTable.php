@@ -34,7 +34,7 @@ use Passbolt\Log\Model\Entity\EntityHistory;
  * @method \Passbolt\Log\Model\Entity\EntityHistory newEmptyEntity()
  * @method \Passbolt\Log\Model\Entity\EntityHistory newEntity(array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\EntityHistory[] newEntities(array $data, array $options = [])
- * @method \Passbolt\Log\Model\Entity\EntityHistory get($primaryKey, $options = [])
+ * @method \Passbolt\Log\Model\Entity\EntityHistory get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Log\Model\Entity\EntityHistory findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\Log\Model\Entity\EntityHistory patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\EntityHistory[] patchEntities(iterable $entities, array $data, array $options = [])
@@ -144,7 +144,7 @@ class EntitiesHistoryTable extends Table
      * @param array $data entity data
      * @return \Passbolt\Log\Model\Entity\EntityHistory
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): EntityHistory
     {
         return $this->newEntity($data, [
             'accessibleFields' => [
@@ -182,7 +182,7 @@ class EntitiesHistoryTable extends Table
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\InternalErrorException
      */
-    public function create(array $data, UserAction $userAction)
+    public function create(array $data, UserAction $userAction): EntityHistory
     {
         $defaultData = [
             'action_log_id' => $userAction->getUserActionId(),

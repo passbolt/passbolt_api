@@ -26,8 +26,6 @@ use Passbolt\Subscription\Service\Subscriptions\SubscriptionKeySaveService;
 
 /**
  * Class SubscriptionsCreateController
- *
- * @property  \Passbolt\Subscription\Model\Table\SubscriptionsTable $Subscriptions
  */
 class SubscriptionsUpdateController extends AppController
 {
@@ -44,7 +42,6 @@ class SubscriptionsUpdateController extends AppController
             throw new BadRequestException(__('Subscription key data is required.'));
         }
 
-        $this->Subscriptions = $this->fetchTable('Passbolt/Subscription.Subscriptions');
         try {
             $service = new SubscriptionKeySaveService();
             $subscriptionKey = $service->save($keyString, $this->User->getAccessControl());

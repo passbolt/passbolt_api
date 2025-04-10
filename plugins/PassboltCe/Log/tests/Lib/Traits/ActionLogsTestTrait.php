@@ -17,6 +17,7 @@ namespace Passbolt\Log\Test\Lib\Traits;
 
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use DateTime;
 use Passbolt\Log\Model\Entity\ActionLog;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 
@@ -79,7 +80,7 @@ trait ActionLogsTestTrait
             'action_id' => UuidFactory::uuid('action.id.test-place-holder'),
             'context' => 'TEST PLACE HOlDER',
             'status' => 1,
-            'created' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'created' => (new DateTime())->format('Y-m-d H:i:s'),
         ];
         $entityContent = array_merge($entityContent, $data);
 

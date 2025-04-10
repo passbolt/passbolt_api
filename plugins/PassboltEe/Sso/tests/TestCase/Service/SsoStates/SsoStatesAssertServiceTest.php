@@ -22,6 +22,7 @@ use App\Test\Factory\UserFactory;
 use App\Utility\ExtendedUserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\BadRequestException;
+use Exception;
 use Passbolt\Sso\Service\SsoStates\SsoStatesAssertService;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
 use Passbolt\Sso\Test\Factory\SsoStateFactory;
@@ -75,7 +76,7 @@ class SsoStatesAssertServiceTest extends SsoTestCase
 
         try {
             $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('The SSO state is invalid', $e->getMessage());
         }
@@ -100,7 +101,7 @@ class SsoStatesAssertServiceTest extends SsoTestCase
 
         try {
             $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('The SSO state is expired', $e->getMessage());
         }
@@ -125,7 +126,7 @@ class SsoStatesAssertServiceTest extends SsoTestCase
 
         try {
             $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('User id mismatch', $e->getMessage());
         }
@@ -149,7 +150,7 @@ class SsoStatesAssertServiceTest extends SsoTestCase
 
         try {
             $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('User IP mismatch', $e->getMessage());
         }
@@ -173,7 +174,7 @@ class SsoStatesAssertServiceTest extends SsoTestCase
 
         try {
             $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('User agent mismatch', $e->getMessage());
         }
@@ -198,7 +199,7 @@ class SsoStatesAssertServiceTest extends SsoTestCase
         try {
             // Different SSO settings ID
             $this->service->assertAndConsume($ssoState, UuidFactory::uuid(), $uac);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('Settings mismatch', $e->getMessage());
         }

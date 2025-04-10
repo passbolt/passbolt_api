@@ -22,6 +22,7 @@ use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Log\Log;
 use Passbolt\Log\Service\ActionLogs\ActionLogsCreateService;
+use PDOException;
 
 class ActionLogsBeforeRenderListener implements EventListenerInterface
 {
@@ -41,14 +42,14 @@ class ActionLogsBeforeRenderListener implements EventListenerInterface
      * @param \Cake\Event\Event $event the event
      * @return void
      */
-    public function logControllerAction(Event $event)
+    public function logControllerAction(Event $event): void
     {
         try {
             /** @var \Cake\Controller\Controller $controller */
             $controller = $event->getSubject();
             $userAction = UserAction::getInstance();
             (new ActionLogsCreateService())->create($userAction, $controller);
-        } catch (\PDOException | MissingConnectionException $exception) {
+        } catch (PDOException | MissingConnectionException $exception) {
             // Fail gracefully if database connection is not available.
             // Useful if we are already rendering an error page related to PDOException
             Log::error('Could not connect to Database.');

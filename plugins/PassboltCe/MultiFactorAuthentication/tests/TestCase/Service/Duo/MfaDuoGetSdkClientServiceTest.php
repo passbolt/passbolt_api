@@ -22,6 +22,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use InvalidArgumentException;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoGetSdkClientService;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsDuoService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
@@ -69,7 +70,7 @@ class MfaDuoGetSdkClientServiceTest extends TestCase
     {
         $service = new MfaDuoGetSdkClientService();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The authentication token type should be one of the following: mfa_setup, mfa_verify.');
         $service->getCallbackRedirectUrl('invalid_token_type');
     }

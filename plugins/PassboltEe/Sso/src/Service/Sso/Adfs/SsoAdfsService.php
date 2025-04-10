@@ -19,6 +19,7 @@ namespace Passbolt\Sso\Service\Sso\Adfs;
 
 use Cake\Http\Exception\BadRequestException;
 use Cake\Routing\Router;
+use Exception;
 use GuzzleHttp\Client;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use Passbolt\Sso\Model\Dto\SsoSettingsAdfsDataDto;
@@ -72,7 +73,7 @@ class SsoAdfsService extends SsoOAuth2Service
             if (!($ssoSettings->data instanceof SsoSettingsAdfsDataDto)) {
                 throw new BadRequestException(__('Invalid provider data. Expected AD FS settings.'));
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new BadRequestException(__('No valid SSO settings found.'), 400, $exception);
         }
 

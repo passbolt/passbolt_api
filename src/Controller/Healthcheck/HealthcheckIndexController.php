@@ -140,7 +140,7 @@ class HealthcheckIndexController extends AppController
     {
         $result = [];
 
-        /** @var \App\Service\Healthcheck\HealthcheckServiceInterface[] $checkResults */
+        /** @var array<\App\Service\Healthcheck\HealthcheckServiceInterface> $checkResults */
         foreach ($resultsGroupByDomain as $domainKey => $checkResults) {
             if ($domainKey === HealthcheckServiceCollector::DOMAIN_CONFIG_FILES) {
                 $domainKey = 'configFile';

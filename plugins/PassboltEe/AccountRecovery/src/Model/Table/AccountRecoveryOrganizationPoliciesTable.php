@@ -30,7 +30,7 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 /**
  * AccountRecoveryOrganizationPolicies Model
  *
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy get($primaryKey, $options = [])
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy newEntity(array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy[] newEntities(array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -198,7 +198,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
                 // Must have a non deleted public key
                 return $exp->isNull('AccountRecoveryOrganizationPublicKeys.deleted');
             })
-            ->order(['AccountRecoveryOrganizationPolicies.created' => 'DESC'])
+            ->orderBy(['AccountRecoveryOrganizationPolicies.created' => 'DESC'])
             ->firstOrFail();
 
         return $policy;
@@ -216,7 +216,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
         UserAccessControl $uac,
         AccountRecoveryOrganizationPolicy $newPolicy
     ): AccountRecoveryOrganizationPolicy {
-        $this->getConnection()->transactional(function () use (&$newPolicy, $uac) {
+        $this->getConnection()->transactional(function () use (&$newPolicy, $uac): void {
             $saveOptions = ['atomic' => false];
             $this->softDeleteCurrentPolicy($uac, $saveOptions);
             $newPolicy = $this->createOrFail($uac, $newPolicy, $saveOptions);
@@ -232,8 +232,10 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
      * @param array|null $saveOptions options such as validate, checkRules, etc.
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy|null the soft deleted org policy
      */
-    protected function softDeleteCurrentPolicy(UserAccessControl $uac, ?array $saveOptions = null)
-    {
+    protected function softDeleteCurrentPolicy(
+        UserAccessControl $uac,
+        ?array $saveOptions = null
+    ): ?AccountRecoveryOrganizationPolicy {
         try {
             $oldPolicy = $this->getCurrentPolicyOrFail($this->find());
         } catch (RecordNotFoundException $exception) {
@@ -364,7 +366,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
      *
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
      */
-    public function newEntityForDefaultFallback()
+    public function newEntityForDefaultFallback(): AccountRecoveryOrganizationPolicy
     {
         /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy */
         $policy = $this->newEntity([

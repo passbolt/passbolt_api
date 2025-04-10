@@ -68,7 +68,7 @@ interface EmailInterface
      * @param mixed $value Value of the variable
      * @return self
      */
-    public function addTemplateVar(string $name, $value): self;
+    public function addTemplateVar(string $name, mixed $value): self;
 
     /**
      * Add a variable to the layout variables for the email.
@@ -77,7 +77,7 @@ interface EmailInterface
      * @param mixed $value Value of the variable
      * @return self
      */
-    public function addLayoutVar(string $name, $value): self;
+    public function addLayoutVar(string $name, mixed $value): self;
 
     /**
      * @param string $subject Subject of the digest
@@ -96,7 +96,7 @@ interface EmailInterface
     /**
      * Sets the list of ids of the emails part of the digest
      *
-     * @param string[] $emailIds email ids of the emails under this email digest
+     * @param array<string> $emailIds email ids of the emails under this email digest
      * @return self
      */
     public function setEmailIds(array $emailIds): self;

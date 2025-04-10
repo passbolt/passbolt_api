@@ -64,7 +64,7 @@ class FingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Double check the key fingerprint, example: '),

@@ -23,7 +23,8 @@ use App\Test\Lib\AppTestCase;
 use App\Utility\ExtendedUserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Event\Event;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
+use InvalidArgumentException;
 use Passbolt\Sso\Notification\Email\SsoSettings\SsoSettingsActiveDeletedEmailRedactor;
 use Passbolt\Sso\Service\SsoSettings\SsoSettingsDeleteService;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
@@ -74,7 +75,7 @@ class SsoSettingsActiveDeletedEmailRedactorTest extends AppTestCase
         $event = new Event(SsoSettingsDeleteService::AFTER_DELETE_ACTIVE_SSO_SETTINGS_EVENT);
         $event->setData([]);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('`uac` is missing from event data');
 
         $this->sut->onSubscribedEvent($event);
@@ -92,7 +93,7 @@ class SsoSettingsActiveDeletedEmailRedactorTest extends AppTestCase
         $event = new Event(SsoSettingsDeleteService::AFTER_DELETE_ACTIVE_SSO_SETTINGS_EVENT);
         $event->setData(['uac' => $uac]);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('`ssoSetting` is missing from event data');
 
         $this->sut->onSubscribedEvent($event);
@@ -103,8 +104,8 @@ class SsoSettingsActiveDeletedEmailRedactorTest extends AppTestCase
         $ssoSetting = SsoSettingsFactory::make()->azure()->active()->persist();
         // Create users to test
         $operator = UserFactory::make()->admin()->persist();
-        $admin1 = UserFactory::make(['created' => FrozenTime::now()->subDays(1)])->admin()->persist(); // created set for predictable result
-        $admin2 = UserFactory::make(['created' => FrozenTime::now()])->admin()->persist();
+        $admin1 = UserFactory::make(['created' => DateTime::now()->subDays(1)])->admin()->persist(); // created set for predictable result
+        UserFactory::make(['created' => DateTime::now()])->admin()->persist();
         UserFactory::make()->user()->persist();
         $uac = new ExtendedUserAccessControl(
             Role::ADMIN,

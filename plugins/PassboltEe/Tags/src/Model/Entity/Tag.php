@@ -24,10 +24,10 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string $slug
  * @property bool $is_shared
- * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\DateTime $created
  *
  * @property \App\Model\Entity\Resource[] $resources
- * @property \Cake\ORM\Entity[] $resources_tags
+ * @property \Passbolt\Tags\Model\Entity\ResourcesTag[] $resources_tags
  */
 class Tag extends Entity
 {
@@ -40,7 +40,7 @@ class Tag extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         '*' => false,
     ];
 }

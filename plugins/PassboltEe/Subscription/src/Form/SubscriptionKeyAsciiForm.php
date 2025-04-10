@@ -23,8 +23,10 @@ use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Log\Log;
 use Cake\Validation\Validator;
+use Exception;
 use Passbolt\Subscription\Error\Exception\Subscriptions\SubscriptionSignatureException;
 use Passbolt\Subscription\Model\Dto\SubscriptionKeyDto;
+use function json_decode;
 
 /**
  * Class SubscriptionKeyAsciiForm
@@ -92,7 +94,7 @@ class SubscriptionKeyAsciiForm extends Form
     {
         try {
             $this->getArmoredSignedSubscription($value);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 
@@ -109,7 +111,7 @@ class SubscriptionKeyAsciiForm extends Form
     {
         try {
             $this->parse($value);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
 
             return false;
@@ -134,9 +136,9 @@ class SubscriptionKeyAsciiForm extends Form
         $armoredSignedSubscription = $this->getArmoredSignedSubscription($keyAscii);
 
         $subscriptionInfoStr = $this->_verifySignature($armoredSignedSubscription);
-        $subscriptionInfo = \json_decode($subscriptionInfoStr, true);
+        $subscriptionInfo = json_decode($subscriptionInfoStr, true);
         if (is_null($subscriptionInfo)) {
-            throw new \Exception(__('The subscription cannot be verified. Parse error.'));
+            throw new Exception(__('The subscription cannot be verified. Parse error.'));
         }
 
         $subscriptionInfo['data'] = trim($keyAscii);
@@ -155,12 +157,12 @@ class SubscriptionKeyAsciiForm extends Form
     {
         $armoredSignedSubscription = base64_decode($keyAscii);
         if (!$armoredSignedSubscription) {
-            throw new \Exception(__('The subscription format is not valid.'));
+            throw new Exception(__('The subscription format is not valid.'));
         }
 
         $isSignedMessage = $this->getGpg()->isParsableArmoredSignedMessage($armoredSignedSubscription);
         if (!$isSignedMessage) {
-            throw new \Exception(__('The subscription format is not valid. Invalid format.'));
+            throw new Exception(__('The subscription format is not valid. Invalid format.'));
         }
 
         return $armoredSignedSubscription;
@@ -190,7 +192,7 @@ class SubscriptionKeyAsciiForm extends Form
         $this->getGpg()->setVerifyKeyFromFingerprint($fingerprint);
         try {
             $this->getGpg()->verify($subscriptionSigned, $subscription);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $msg .= ' ' . $e->getMessage();
             throw new SubscriptionSignatureException($subscriptionSigned, $msg);
         }

@@ -38,7 +38,7 @@ use Phinx\Db\Adapter\MysqlAdapter;
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword newEmptyEntity()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword newEntity(array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[] newEntities(array $data, array $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword get($primaryKey, $options = [])
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[] patchEntities(iterable $entities, array $data, array $options = [])
@@ -193,7 +193,7 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(EventInterface $event, ArrayObject $data, ArrayObject $options)
+    public function beforeMarshal(EventInterface $event, ArrayObject $data, ArrayObject $options): void
     {
         if (isset($data['recipient_fingerprint']) && is_string($data['recipient_fingerprint'])) {
             $f = strtoupper(str_replace(' ', '', $data['recipient_fingerprint']));
@@ -206,7 +206,7 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
      * @param array $passwords user provided data
      * @param string $validationRules ruleset
      * @throws \App\Error\Exception\CustomValidationException if data doesn't validate
-     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[] array of entities
+     * @return array<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword> array of entities
      */
     public function buildAndValidateEntities(
         UserAccessControl $uac,

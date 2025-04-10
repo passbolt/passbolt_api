@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Sso\Model\Dto;
 
-use Cake\Chronos\ChronosInterface;
+use Cake\Chronos\Chronos;
 use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 
@@ -29,37 +29,37 @@ class SsoSettingsAzureDataDto implements SsoSettingsDataDtoInterface
     /**
      * @var string $url
      */
-    public $url;
+    public string $url;
 
     /**
      * @var string $client_id uuid
      */
-    public $client_id;
+    public string $client_id;
 
     /**
      * @var string $client_secret
      */
-    public $client_secret;
+    public string $client_secret;
 
     /**
-     * @var string|\Cake\Chronos\ChronosInterface
+     * @var \Cake\Chronos\Chronos|string
      */
-    public $client_secret_expiry;
+    public string|Chronos $client_secret_expiry;
 
     /**
      * @var string $tenant_id
      */
-    public $tenant_id;
+    public string $tenant_id;
 
     /**
      * @var string
      */
-    public $prompt;
+    public string $prompt;
 
     /**
      * @var string
      */
-    public $email_claim;
+    public string $email_claim;
 
     /**
      * @param array $data with
@@ -104,7 +104,7 @@ class SsoSettingsAzureDataDto implements SsoSettingsDataDtoInterface
         ];
 
         // Serialize date if it's not already a string
-        if ($result['client_secret_expiry'] instanceof ChronosInterface) {
+        if ($result['client_secret_expiry'] instanceof Chronos) {
             $result['client_secret_expiry'] = $this->client_secret_expiry->toDateTimeString();
         }
 

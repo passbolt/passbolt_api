@@ -45,7 +45,7 @@ class EmailNotificationSettings
      *
      * @return void
      */
-    public static function flushCache()
+    public static function flushCache(): void
     {
         static::$configSettingsSource = null;
         static::$defaultSettingsSource = null;
@@ -63,7 +63,7 @@ class EmailNotificationSettings
      * @param string|null $key (optional) Key to lookup. If not provided, return all the settings.
      * @return mixed
      */
-    public static function get(?string $key = null)
+    public static function get(?string $key = null): mixed
     {
         // Before making any lookups, check if the key is valid
         if ($key && !static::isConfigKeyValid($key)) {
@@ -120,7 +120,7 @@ class EmailNotificationSettings
      * @param array $settings Settings to sanitize
      * @return array
      */
-    protected static function sanitizeSettings(array $settings)
+    protected static function sanitizeSettings(array $settings): array
     {
         $default = Hash::flatten(static::getSettingsFromDefault());
         $settings = Hash::flatten($settings);

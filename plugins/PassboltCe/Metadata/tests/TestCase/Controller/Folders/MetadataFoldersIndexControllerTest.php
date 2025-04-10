@@ -20,8 +20,10 @@ namespace Passbolt\Metadata\Test\TestCase\Controller\Folders;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
+use Cake\Core\Configure;
 use Passbolt\Folders\FoldersPlugin;
 use Passbolt\Folders\Test\Factory\FolderFactory;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
@@ -285,5 +287,24 @@ class MetadataFoldersIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertSame($metadataKey->id, $result['metadata_key_id']);
         $this->assertSame($metadata, $result['metadata']);
         $this->assertSame($parentFolder->get('id'), $result['folder_parent_id']);
+    }
+
+    public function testMetadataFoldersIndexController_Metadata_Disabled_Success(): void
+    {
+        Configure::write('passbolt.v5.enabled', false);
+
+        $user = $this->logInAsUser();
+        FolderFactory::make(3)->withPermissionsFor([$user])->persist();
+        FolderFactory::make(3)->withPermissionsFor([$user])->v5Fields([
+            'metadata' => 'foo',
+        ])->persist();
+
+        $this->getJson('/folders.json?sort=Folders.modified');
+        $this->assertSuccess();
+        $response = (array)json_decode(json_encode($this->_responseJsonBody), true);
+        $this->assertCount(3, $response);
+        $this->assertSame([0, 1, 2], array_keys($response));
+        $folderV4 = array_pop($response);
+        $this->assertArrayHasAttributes(MetadataFolderDto::V4_META_PROPS, $folderV4);
     }
 }

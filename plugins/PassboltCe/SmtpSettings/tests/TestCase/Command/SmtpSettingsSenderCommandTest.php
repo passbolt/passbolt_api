@@ -49,8 +49,6 @@ class SmtpSettingsSenderCommandTest extends TestCase
     {
         parent::setUp();
         $this->clearPlugins();
-
-        $this->useCommandRunner();
         EventManager::instance()->setEventList(new EventList());
     }
 
@@ -67,7 +65,7 @@ class SmtpSettingsSenderCommandTest extends TestCase
 
         $nMails = 2;
         EmailQueueFactory::make($nMails)->persist();
-        $mails = EmailQueueFactory::find()->orderAsc('created');
+        $mails = EmailQueueFactory::find()->orderByAsc('created');
 
         $this->exec('sender');
         $this->assertExitSuccess();
@@ -94,7 +92,7 @@ class SmtpSettingsSenderCommandTest extends TestCase
 
         $nMails = 3;
         EmailQueueFactory::make($nMails)->persist();
-        $mails = EmailQueueFactory::find()->orderAsc('created');
+        $mails = EmailQueueFactory::find()->orderByAsc('created');
 
         $this->exec('sender');
         $this->assertExitSuccess();
@@ -128,7 +126,7 @@ class SmtpSettingsSenderCommandTest extends TestCase
 
         $nMails = 3;
         EmailQueueFactory::make($nMails)->persist();
-        $mails = EmailQueueFactory::find()->orderAsc('created');
+        $mails = EmailQueueFactory::find()->orderByAsc('created');
 
         $this->exec('sender');
         $this->assertExitSuccess();

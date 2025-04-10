@@ -125,7 +125,7 @@ class MetadataResourceDto extends MetadataDto
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     public function getMetadataProps(): array
     {

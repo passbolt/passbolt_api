@@ -17,72 +17,87 @@ declare(strict_types=1);
 
 namespace Passbolt\Tags\Test\TestCase\Model\Table\Users;
 
-use App\Utility\UuidFactory;
-use Cake\Datasource\Exception\RecordNotFoundException;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use Cake\ORM\TableRegistry;
+use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
+use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagTestCase;
 
 class SoftDeleteTest extends TagTestCase
 {
-    public $Groups;
-    public $GroupsUsers;
-    public $Permissions;
-    public $Resources;
     public $Users;
-    public $Tags;
-
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites',
-        'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Resources',
-        'app.Base/ResourceTypes', 'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-    ];
 
     public function setUp(): void
     {
         parent::setUp();
         $this->Users = TableRegistry::getTableLocator()->get('Users');
-        $this->Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
     }
 
     public function testTagsUsersSoftDeleteAlsoDeletePersonalTagsSuccess()
     {
-        $ada = $this->Users->get(UuidFactory::uuid('user.id.ada'));
-        $this->Users->softDelete($ada, ['checkRules' => false]);
+        [$userToDelete, $otherUser] = UserFactory::make(2)->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tagUsedByOtherUsers */
+        $tagUsedByOtherUsers = TagFactory::make()->isPersonalFor($resource, $otherUser)->persist();
+
+        TagFactory::make()->isPersonalFor($resource, $userToDelete)->persist();
+
+        /** @var \Passbolt\Tags\Model\Entity\Tag $sharedTag */
+        $sharedTag = TagFactory::make()
+            ->isPersonalFor($resource, $userToDelete)
+            ->isPersonalFor($resource, $otherUser)
+            ->isShared()
+            ->persist();
+
+        $this->Users->softDelete($userToDelete, ['checkRules' => false]);
 
         // alpha is still used by other users
-        $t = $this->Tags->get(UuidFactory::uuid('tag.id.alpha'));
-        $this->assertNotEmpty($t->toArray());
-
+        TagFactory::get($tagUsedByOtherUsers->id);
         // #bravo is used in other resources
-        $t = $this->Tags->get(UuidFactory::uuid('tag.id.#bravo'));
-        $this->assertNotEmpty($t->toArray());
+        TagFactory::get($sharedTag->id);
 
         // Fox trot is only used by ada
-        $this->expectException(RecordNotFoundException::class);
-        $this->Tags->get(UuidFactory::uuid('tag.id.fox-trot'));
+        $this->assertSame(2, TagFactory::count());
+        $this->assertSame(2, ResourcesTagFactory::count());
     }
 
     public function testTagsUsersSoftDeleteAlsoDeleteSharedTagsSuccess()
     {
-        $ada = $this->Users->get(UuidFactory::uuid('user.id.ada'));
-        $this->Users->softDelete($ada, ['checkRules' => false]);
+        $userToDelete = UserFactory::make()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->persist();
+        TagFactory::make()
+            ->isPersonalFor($resource, $userToDelete)
+            ->isShared()
+            ->persist();
+
+        $this->Users->softDelete($userToDelete, ['checkRules' => false]);
 
         // #echo was only used on one resource that ada used
-        $this->expectException(RecordNotFoundException::class);
-        $this->Tags->get(UuidFactory::uuid('tag.id.#echo'));
+        $this->assertSame(0, TagFactory::count());
+        $this->assertSame(0, ResourcesTagFactory::count());
     }
 
-    public function testTagsUsersSoftDeleteAlsoDeletePersonalTagsSuccess2()
+    public function testTagsUsersSoftDeleteAlsoDeleteSharedTagsSuccess2()
     {
+        [$ada, $betty] = UserFactory::make(2)->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tagUsedByOtherUsers */
+        TagFactory::make()
+            ->isPersonalFor($resource, $ada)
+            ->isPersonalFor($resource, $betty)
+            ->isShared()
+            ->persist();
+
         //Deleting Betty and Ada should delete alpha
-        $ada = $this->Users->get(UuidFactory::uuid('user.id.ada'));
         $this->Users->softDelete($ada, ['checkRules' => false]);
-        $betty = $this->Users->get(UuidFactory::uuid('user.id.betty'));
         $this->Users->softDelete($betty, ['checkRules' => false]);
 
         // alpha is not used by other users
-        $this->expectException(RecordNotFoundException::class);
-        $this->Tags->get(UuidFactory::uuid('tag.id.alpha'));
+        $this->assertSame(0, TagFactory::count());
+        $this->assertSame(0, ResourcesTagFactory::count());
     }
 }

@@ -30,7 +30,7 @@ use Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting;
  * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting newEmptyEntity()
  * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting newEntity(array $data, array $options = [])
  * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting[] newEntities(array $data, array $options = [])
- * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting get($primaryKey, $options = [])
+ * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting[] patchEntities(iterable $entities, array $data, array $options = [])
@@ -69,7 +69,7 @@ class UserPassphrasePoliciesSettingsTable extends OrganizationSettingsTable
      * Filter organization settings by property.
      *
      * @param \Cake\Event\Event $event Model.beforeFind event.
-     * @param  \Cake\ORM\Query $query Any query performed on the present table.
+     * @param \Cake\ORM\Query $query Any query performed on the present table.
      * @return \Cake\ORM\Query
      */
     public function beforeFind(Event $event, Query $query): Query
@@ -87,7 +87,7 @@ class UserPassphrasePoliciesSettingsTable extends OrganizationSettingsTable
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options): void
     {
         $data['property'] = $this->getProperty();
         $data['property_id'] = $this->getPropertyId();

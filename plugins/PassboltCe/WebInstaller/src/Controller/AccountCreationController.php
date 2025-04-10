@@ -36,7 +36,7 @@ class AccountCreationController extends WebInstallerController
     /**
      * Index
      *
-     * @return void|mixed
+     * @return mixed|void
      */
     public function index()
     {
@@ -51,7 +51,7 @@ class AccountCreationController extends WebInstallerController
     /**
      * Index post
      *
-     * @return void|mixed
+     * @return mixed|void
      */
     protected function indexPost()
     {

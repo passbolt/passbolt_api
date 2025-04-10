@@ -19,19 +19,22 @@ namespace Passbolt\AccountRecovery\Controller\AccountRecoveryRequests;
 
 use App\Controller\AppController;
 use Cake\Http\Exception\ForbiddenException;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable;
 
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable $AccountRecoveryRequests
  */
 class AccountRecoveryRequestsIndexController extends AppController
 {
-    public $paginate = [
+    public array $paginate = [
         'sortableFields' => [
             'AccountRecoveryRequests.status',
             'AccountRecoveryRequests.created',
             'AccountRecoveryRequests.modified',
         ],
     ];
+
+    private ?AccountRecoveryRequestsTable $AccountRecoveryRequests = null;
 
     /**
      * @inheritDoc

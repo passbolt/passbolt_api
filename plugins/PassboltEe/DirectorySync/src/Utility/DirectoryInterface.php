@@ -49,21 +49,21 @@ interface DirectoryInterface
      *
      * @return mixed
      */
-    public function getUsers();
+    public function getUsers(): mixed;
 
     /**
      * Get groups.
      *
      * @return mixed
      */
-    public function getGroups();
+    public function getGroups(): mixed;
 
     /**
      * Get filtered directory results.
      *
      * @return mixed
      */
-    public function getFilteredDirectoryResults();
+    public function getFilteredDirectoryResults(): mixed;
 
     /**
      * Sets users.
@@ -71,7 +71,7 @@ interface DirectoryInterface
      * @param array $users users
      * @return $this
      */
-    public function setUsers($users);
+    public function setUsers(array $users);
 
     /**
      * Sets groups.
@@ -79,5 +79,5 @@ interface DirectoryInterface
      * @param array $groups groups
      * @return $this
      */
-    public function setGroups($groups);
+    public function setGroups(array $groups);
 }

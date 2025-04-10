@@ -17,7 +17,7 @@ use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
 
     // View an account organization policy

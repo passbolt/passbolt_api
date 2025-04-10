@@ -42,7 +42,7 @@ class UpdatePersonalTagService
      * @throws \App\Error\Exception\CustomValidationException If unable to save tag entity due to validation errors.
      * @throws \Exception
      */
-    public function update(UserAccessControl $uac, MetadataTagDto $tagDto, Tag $tag)
+    public function update(UserAccessControl $uac, MetadataTagDto $tagDto, Tag $tag): Tag|bool
     {
         $dtoArray = $tagDto->toArray();
         /** @var \Passbolt\Tags\Model\Table\TagsTable $tagsTable */

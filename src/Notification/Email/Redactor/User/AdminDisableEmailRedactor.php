@@ -25,7 +25,7 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Locale\Service\LocaleService;
 
@@ -74,7 +74,7 @@ class AdminDisableEmailRedactor implements SubscribedEmailRedactorInterface
         $recipient = $UsersTable->findFirstForEmail($user->id);
         // Set the disabled field to the future so the email is well sent
         // as the Email class will not send mails to disabled users
-        $recipient->set('disabled', FrozenTime::tomorrow());
+        $recipient->set('disabled', DateTime::tomorrow());
 
         $email = $this->createEmail($recipient, $operator);
 

@@ -21,6 +21,7 @@ use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
+use Exception;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 
 trait OpenPGPCommonMetadataOperationsTrait
@@ -38,7 +39,7 @@ trait OpenPGPCommonMetadataOperationsTrait
         // Set encryption key as the metadata key
         try {
             $this->assertMetadataKey($metadataKey);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             if (Configure::read('debug')) {
                 Log::error(json_encode($metadataKey));
             }
@@ -47,12 +48,12 @@ trait OpenPGPCommonMetadataOperationsTrait
         }
         try {
             $gpg->setEncryptKeyFromFingerprint($metadataKey->fingerprint);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // Try to import the key in keyring again
             try {
                 $gpg->importKeyIntoKeyring($metadataKey->armored_key);
                 $gpg->setEncryptKeyFromFingerprint($metadataKey->fingerprint);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 if (Configure::read('debug')) {
                     Log::error(json_encode($metadataKey));
                 }

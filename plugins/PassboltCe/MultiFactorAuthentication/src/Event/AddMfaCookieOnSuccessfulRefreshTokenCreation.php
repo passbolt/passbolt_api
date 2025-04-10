@@ -49,7 +49,7 @@ class AddMfaCookieOnSuccessfulRefreshTokenCreation implements EventListenerInter
     /**
      * @var bool
      */
-    private $onSuccessfulRefreshTokenCreated = false;
+    private bool $onSuccessfulRefreshTokenCreated = false;
 
     /**
      * @inheritDoc

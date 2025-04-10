@@ -98,7 +98,7 @@ class SelfRegistrationPublicRemovedApplicationHealthcheck implements Healthcheck
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return __('You may remove the "passbolt.registration.public" setting.');
     }

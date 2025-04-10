@@ -355,7 +355,7 @@ class AccountRecoveryOptInHappyPathEndToEndTest extends AccountRecoveryIntegrati
         $this->assertTrue($response->isApproved());
 
         // Check that all tokens have been consumed
-        $activeTokens = AuthenticationTokenFactory::find()->where(['active' => true])->count();
+        $activeTokens = AuthenticationTokenFactory::find()->where(['active' => true])->all()->count();
         $this->assertSame(0, $activeTokens);
     }
 }

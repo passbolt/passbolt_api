@@ -22,6 +22,7 @@ use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Exception;
 
 class IgnoreCreateCommand extends DirectorySyncCommand
 {
@@ -73,7 +74,7 @@ class IgnoreCreateCommand extends DirectorySyncCommand
             $this->displayValidationError($exception->getEntity()->getErrors(), $io);
 
             return $this->errorCode();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $io->err($exception->getMessage());
 
             return $this->errorCode();

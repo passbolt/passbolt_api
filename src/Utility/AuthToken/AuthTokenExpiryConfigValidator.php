@@ -9,7 +9,7 @@ class AuthTokenExpiryConfigValidator
      * @param string|null $expiry Expiry
      * @return string|null
      */
-    public function __invoke(?string $expiry = null)
+    public function __invoke(?string $expiry = null): ?string
     {
         if (is_null($expiry)) {
             return null;

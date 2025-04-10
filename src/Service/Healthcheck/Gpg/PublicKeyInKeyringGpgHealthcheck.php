@@ -60,7 +60,7 @@ class PublicKeyInKeyringGpgHealthcheck extends AbstractGpgHealthcheck
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Import the private server key in the keyring of the webserver user.'),

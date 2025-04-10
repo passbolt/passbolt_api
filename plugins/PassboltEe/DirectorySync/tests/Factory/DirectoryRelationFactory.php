@@ -19,7 +19,7 @@ namespace Passbolt\DirectorySync\Test\Factory;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -54,7 +54,7 @@ class DirectoryRelationFactory extends CakephpBaseFactory
             return [
                 'parent_key' => UuidFactory::uuid(),
                 'child_key' => UuidFactory::uuid(),
-                'created' => FrozenDate::now()->subDays($faker->randomNumber(1)),
+                'created' => DateTime::now()->subDays($faker->randomNumber(1)),
             ];
         });
     }
@@ -71,7 +71,7 @@ class DirectoryRelationFactory extends CakephpBaseFactory
 
     public function withGroup(?GroupFactory $groupFactory = null)
     {
-        if (!isset($groupFactory)) {
+        if (is_null($groupFactory)) {
             $groupFactory = GroupFactory::make();
         }
 
@@ -80,7 +80,7 @@ class DirectoryRelationFactory extends CakephpBaseFactory
 
     public function withUser(?UserFactory $userFactory = null)
     {
-        if (!isset($userFactory)) {
+        if (is_null($userFactory)) {
             $userFactory = UserFactory::make()->user();
         }
 

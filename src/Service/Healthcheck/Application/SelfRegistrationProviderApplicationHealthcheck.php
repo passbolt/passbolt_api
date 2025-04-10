@@ -39,7 +39,7 @@ class SelfRegistrationProviderApplicationHealthcheck implements HealthcheckServi
     /**
      * @var string|null
      */
-    private $selfRegistrationProvider = null;
+    private ?string $selfRegistrationProvider = null;
 
     /**
      * @param \Passbolt\SelfRegistration\Service\Healthcheck\SelfRegistrationHealthcheckService $selfRegistrationHealthcheckService Self registration health check service.
@@ -104,7 +104,7 @@ class SelfRegistrationProviderApplicationHealthcheck implements HealthcheckServi
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return null;
     }

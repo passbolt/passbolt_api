@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
+use App\Model\Table\ResourcesTable;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
@@ -36,7 +37,7 @@ class ResourcesViewController extends AppController
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    protected $Resources;
+    protected ResourcesTable $Resources;
 
     /**
      * @inheritDoc

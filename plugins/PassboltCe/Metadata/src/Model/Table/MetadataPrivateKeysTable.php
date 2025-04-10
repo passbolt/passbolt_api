@@ -34,7 +34,7 @@ use Passbolt\Metadata\Model\Rule\UserIsActiveAndNotDeletedIfPresent;
  * @method \Passbolt\Metadata\Model\Entity\MetadataPrivateKey newEmptyEntity()
  * @method \Passbolt\Metadata\Model\Entity\MetadataPrivateKey newEntity(array $data, array $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataPrivateKey[] newEntities(array $data, array $options = [])
- * @method \Passbolt\Metadata\Model\Entity\MetadataPrivateKey get($primaryKey, $options = [])
+ * @method \Passbolt\Metadata\Model\Entity\MetadataPrivateKey get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Metadata\Model\Entity\MetadataPrivateKey findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataPrivateKey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataPrivateKey[] patchEntities(iterable $entities, array $data, array $options = [])

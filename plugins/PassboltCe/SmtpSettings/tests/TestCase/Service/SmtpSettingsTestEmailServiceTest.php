@@ -19,6 +19,7 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Service;
 
 use App\Error\Exception\FormValidationException;
 use App\Test\Lib\Utility\EmailTestTrait;
+use BadMethodCallException;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\Mailer\TransportFactory;
@@ -129,7 +130,7 @@ class SmtpSettingsTestEmailServiceTest extends TestCase
         $passed = false;
         try {
             $this->service->sendTestEmail($data);
-        } catch (\BadMethodCallException $e) {
+        } catch (BadMethodCallException $e) {
             $passed = true;
         }
 

@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Model\Entity;
 
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 
 /**
@@ -32,8 +32,8 @@ use Cake\ORM\Entity;
  * @property string|null $user_id
  * @property string $user_agent
  * @property string $ip
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $deleted
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $deleted
  *
  * @property \Passbolt\Sso\Model\Entity\SsoSetting $sso_setting
  * @property \App\Model\Entity\User $user
@@ -69,7 +69,7 @@ class SsoState extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'nonce' => false,
         'type' => false,
         'state' => false,
@@ -115,9 +115,9 @@ class SsoState extends Entity
     }
 
     /**
-     * @return \Cake\I18n\FrozenTime
+     * @return \Cake\I18n\DateTime
      */
-    public function getExpiryTime(): FrozenTime
+    public function getExpiryTime(): DateTime
     {
         return $this->deleted;
     }

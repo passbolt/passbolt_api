@@ -20,7 +20,7 @@ use Passbolt\Sso\Model\Entity\SsoSetting;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
 
     /**

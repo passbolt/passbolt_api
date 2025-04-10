@@ -16,31 +16,37 @@ declare(strict_types=1);
  */
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
+use App\Model\Entity\Permission;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
 class TagsResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 {
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-    ];
-
     // Success with currect personal and shared tags for resource with direct and group permissions
 
     public function testTagsResourcesIndexControllerContainSuccess()
     {
-        $this->authenticateAs('ada');
-        // Sort tags in alphabetical order
+        $user = $this->logInAsUser();
+        $group = GroupFactory::make()->withGroupsUsersFor([$user])->persist();
+        /** @var \App\Model\Entity\Resource $resourceWithGroupPermission */
+        $resourceWithGroupPermission = ResourceFactory::make('apache')
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resourceWithDirectPermission */
+        $resourceWithDirectPermission = ResourceFactory::make('april')
+            ->withPermissionsFor([$user])
+            ->persist();
+        TagFactory::make(['slug' => 'alpha'])->isPersonalFor($resourceWithDirectPermission, $user)->persist();
+        TagFactory::make(['slug' => '#bravo'])->isSharedFor($resourceWithGroupPermission)->persist();
+        TagFactory::make(['slug' => '#charlie'])->isSharedFor($resourceWithDirectPermission)->persist();
         $expected = [
-            'apache' => ['#bravo', '#echo', 'alpha', 'fox-trot'],
-            'april' => ['#bravo', 'alpha'],
-            'bower' => [],
-            'cakephp' => ['#charlie'],
-            'chai' => ['alpha', 'hotel'],
-            'grogle' => ['#golf', 'firefox'],
+            'apache' => ['#bravo'],
+            'april' => ['#charlie', 'alpha',],
         ];
 
         $this->getJson('/resources.json?api-version=2&contain[tag]=1');
@@ -65,13 +71,29 @@ class TagsResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     public function testTagsResourcesIndexControllerFilterSuccess()
     {
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\Resource $resourceWithAlphaTag */
+        $resourceWithAlphaTag = ResourceFactory::make('apache')
+            ->withPermissionsFor([$user], Permission::READ)
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resourceWithAlphaTag2 */
+        $resourceWithAlphaTag2 = ResourceFactory::make('april')
+            ->withPermissionsFor([$user])
+            ->persist();
+        // Resource without alpha tag
+        ResourceFactory::make('chai')->withPermissionsFor([$user])->persist();
+
+        TagFactory::make(['slug' => 'alpha'])
+            ->isPersonalFor($resourceWithAlphaTag, $user)
+            ->isPersonalFor($resourceWithAlphaTag2, $user)
+            ->persist();
+
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=alpha');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $resources = Hash::extract($response->body, '{n}.name');
-        $expected = ['apache', 'april', 'chai'];
-        $this->assertEquals($resources, $expected);
+        $expected = ['apache', 'april'];
+        $this->assertEquals($expected, $resources);
 
         // Tags data should not be set
         $response = json_decode($this->_getBodyAsString(), true);
@@ -82,7 +104,23 @@ class TagsResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     public function testTagsResourcesIndexControllerFilterSuccessPersonalTagUsedBySomeoneElse()
     {
-        $this->authenticateAs('betty');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $this->logInAs($userB);
+
+        /** @var \App\Model\Entity\Resource $resourceWithAlphaTag */
+        $resourceWithAlphaTag = ResourceFactory::make('apache')
+            ->withPermissionsFor([$userA], Permission::READ)
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resourceWithAlphaTag2 */
+        $resourceWithAlphaTag2 = ResourceFactory::make('chai')
+            ->withPermissionsFor([$userB])
+            ->persist();
+        // Resource without alpha tag
+        ResourceFactory::make('chai')->withPermissionsFor([$userB])->persist();
+
+        TagFactory::make(['slug' => 'alpha'])->isPersonalFor($resourceWithAlphaTag, $userA)->persist();
+        TagFactory::make(['slug' => 'alpha'])->isPersonalFor($resourceWithAlphaTag2, $userB)->persist();
+
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=alpha');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
@@ -95,12 +133,28 @@ class TagsResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     public function testTagsResourcesIndexControllerFilterContainSuccess()
     {
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\Resource $resourceWithAlphaTag */
+        $resourceWithAlphaTag = ResourceFactory::make('apache')
+            ->withPermissionsFor([$user], Permission::READ)
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resourceWithAlphaTag2 */
+        $resourceWithAlphaTag2 = ResourceFactory::make('april')
+            ->withPermissionsFor([$user])
+            ->persist();
+        // Resource without alpha tag
+        ResourceFactory::make('chai')->withPermissionsFor([$user])->persist();
+
+        TagFactory::make(['slug' => 'alpha'])
+            ->isPersonalFor($resourceWithAlphaTag, $user)
+            ->isPersonalFor($resourceWithAlphaTag2, $user)
+            ->persist();
+
         $this->getJson('/resources.json?api-version=2&contain[tag]=1&filter[has-tag]=alpha');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $resources = Hash::extract($response->body, '{n}.name');
-        $expected = ['apache', 'april', 'chai'];
+        $expected = ['apache', 'april',];
         $this->assertEquals($resources, $expected);
 
         // Tags data should be set
@@ -112,20 +166,46 @@ class TagsResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     public function testTagsResourcesIndexControllerFilterSharedTagSuccess()
     {
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\Resource $resourceWithBravoTag */
+        $resourceWithBravoTag = ResourceFactory::make('apache')
+            ->withPermissionsFor([$user], Permission::READ)
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resourceWithBravoTag2 */
+        $resourceWithBravoTag2 = ResourceFactory::make('april')
+            ->withPermissionsFor([$user])
+            ->persist();
+        // Resource without alpha tag
+        ResourceFactory::make('chai')->withPermissionsFor([$user])->persist();
+
+        TagFactory::make(['slug' => '#bravo'])
+            ->isPersonalFor($resourceWithBravoTag, $user)
+            ->isPersonalFor($resourceWithBravoTag2, $user)
+            ->persist();
+
         $this->getJson('/resources.json?api-version=2&contain[tag]=1&filter[has-tag]=%23bravo');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $resources = Hash::extract($response->body, '{n}.name');
         $expected = ['apache', 'april'];
         $this->assertEquals($resources, $expected);
+
+        // Tags data should be set
+        $response = json_decode($this->_getBodyAsString(), true);
+        $this->assertTrue(isset($response['body'][0]['tags']));
     }
 
     // Success with empty result set is returned when filtering on a tag that does not exist
 
     public function testTagsResourcesIndexControllerFilterNonExistingTagEmptySuccess()
     {
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\Resource $resourceWithTag */
+        $resourceWithTag = ResourceFactory::make()
+            ->withPermissionsFor([$user], Permission::READ)
+            ->persist();
+        TagFactory::make(['slug' => 'alpha'])->isPersonalFor($resourceWithTag, $user)->persist();
+
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=परदेशीपरदेशी');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
@@ -136,7 +216,13 @@ class TagsResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     public function testTagsResourcesIndexControllerFilterExistingUtf8TagSuccess()
     {
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\Resource $resourceWithTag */
+        $resourceWithTag = ResourceFactory::make()
+            ->withPermissionsFor([$user], Permission::READ)
+            ->persist();
+        TagFactory::make(['slug' => 'परदेशी-परदेशी'])->isPersonalFor($resourceWithTag, $user)->persist();
+
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=परदेशी-परदेशी');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
@@ -147,8 +233,22 @@ class TagsResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     public function testTagsResourcesIndexControllerFilterNotMyTagEmptySuccess()
     {
-        $this->authenticateAs('betty');
-        $this->getJson('/resources.json?api-version=2&filter[has-tag]=fox-trot');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $this->logInAs($userB);
+
+        /** @var \App\Model\Entity\Resource $resourceWithAlphaTag */
+        $resourceWithAlphaTag = ResourceFactory::make('apache')
+            ->withPermissionsFor([$userA], Permission::READ)
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resourceWithBetaTag */
+        $resourceWithBetaTag = ResourceFactory::make('chai')
+            ->withPermissionsFor([$userB])
+            ->persist();
+
+        TagFactory::make(['slug' => 'alpha'])->isPersonalFor($resourceWithAlphaTag, $userA)->persist();
+        TagFactory::make(['slug' => 'beta'])->isPersonalFor($resourceWithBetaTag, $userB)->persist();
+
+        $this->getJson('/resources.json?api-version=2&filter[has-tag]=alpha');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $this->assertEmpty($response->body);
@@ -158,7 +258,7 @@ class TagsResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     public function testTagsResourcesIndexControllerFilterEmptyError()
     {
-        $this->authenticateAs('betty');
+        $this->logInAsUser();
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=&contain[tag]=');
         $this->assertError(400);
         $response = json_decode($this->_getBodyAsString());
@@ -168,7 +268,7 @@ class TagsResourcesIndexControllerTest extends TagPluginIntegrationTestCase
     // An error message should be shown if the tag in the tag filter is too long
     public function testTagsResourcesIndexControllerFilterTooLongError()
     {
-        $this->authenticateAs('betty');
+        $this->logInAsUser();
         $tag = bin2hex(openssl_random_pseudo_bytes(256));
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=&contain[tag]=' . $tag);
         $this->assertError(400);

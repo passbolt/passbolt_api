@@ -23,22 +23,22 @@ class FolderRelationDto
     /**
      * @var string|null
      */
-    public $foreignModel;
+    public ?string $foreignModel = null;
 
     /**
      * @var string|null
      */
-    public $foreignId;
+    public ?string $foreignId = null;
 
     /**
      * @var string|null
      */
-    public $folderParentId;
+    public ?string $folderParentId = null;
 
     /**
      * @var string|null
      */
-    public $userId;
+    public ?string $userId = null;
 
     /**
      * Constructor.

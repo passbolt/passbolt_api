@@ -24,6 +24,7 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\Sso\Form\BaseSsoSettingsForm;
 use Passbolt\Sso\Form\SsoSettingsAdfsDataForm;
 use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
@@ -115,7 +116,7 @@ class SsoSettingsSetService
      * @param string $jsonData the data in json format
      * @return string
      */
-    protected static function encrypt(string $jsonData)
+    protected static function encrypt(string $jsonData): string
     {
         $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
         $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
@@ -124,12 +125,12 @@ class SsoSettingsSetService
         try {
             $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
             $gpg->setEncryptKeyFromFingerprint($fingerprint);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             try {
                 $gpg->importServerKeyInKeyring();
                 $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
                 $gpg->setEncryptKeyFromFingerprint($fingerprint);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to encrypt.') . ' ';
                 $msg .= $exception->getMessage();
                 throw new InternalErrorException($msg, 500, $exception);

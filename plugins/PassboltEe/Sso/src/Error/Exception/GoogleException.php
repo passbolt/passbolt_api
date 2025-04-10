@@ -35,7 +35,7 @@ class GoogleException extends OAuth2Exception
 
     /**
      * @see https://support.google.com/accounts/answer/12917337?hl=en
-     * @return string[]
+     * @return array<string>
      */
     public function allowedErrors(): array
     {

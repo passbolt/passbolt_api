@@ -86,7 +86,7 @@ class SystemCheckController extends WebInstallerController
      * Filter all the healthcheck services to extract only the ones relevant here
      *
      * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector healthcheck service collector
-     * @return \App\Service\Healthcheck\HealthcheckServiceInterface[]
+     * @return array<\App\Service\Healthcheck\HealthcheckServiceInterface>
      */
     private function getSystemCheckHealthcheckServices(HealthcheckServiceCollector $healthcheckServiceCollector): array
     {

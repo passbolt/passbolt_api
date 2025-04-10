@@ -20,7 +20,7 @@ if ($numberOfSuites == 0) {
 $testClasses = [];
 $list = shell_exec('vendor/bin/phpunit --bootstrap ./config/bootstrap.php --list-tests');
 $list = explode(PHP_EOL, $list);
-foreach ($list as $k => $test) {
+foreach ($list as $test) {
     $pos = strpos($test, '::');
     if ($pos > 0) {
         $testClasses[] = trim(substr($test, 0, $pos), ' -');

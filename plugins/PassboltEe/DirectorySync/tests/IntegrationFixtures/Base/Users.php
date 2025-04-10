@@ -16,15 +16,15 @@ declare(strict_types=1);
  */
 
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 return [
     // A user that does not exist in passbolt and is valid
     [
         'id' => UuidFactory::uuid('ldap.user.id.neil'),
         'directory_name' => 'CN=Neil Amstrong,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-08-12 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-08-12 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-08-12 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-08-12 03:56:42.000000'),
         'user' => [
             'username' => 'neil@passbolt.com',
             'profile' => [
@@ -37,8 +37,8 @@ return [
     [
         'id' => UuidFactory::uuid('ldap.user.id.ada'),
         'directory_name' => 'CN=Ada Lovelace,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-07-09 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-07-09 03:56:42.000000'),
         'user' => [
             'username' => 'ada@passbolt.com',
             'profile' => [
@@ -50,8 +50,8 @@ return [
     [
         'id' => UuidFactory::uuid('ldap.user.id.betty'),
         'directory_name' => 'CN=Betty Holberton,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-07-09 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-07-09 03:56:42.000000'),
         'user' => [
             'username' => 'betty@passbolt.com',
             'profile' => [
@@ -64,8 +64,8 @@ return [
 //    [
 //        'id' => UuidFactory::uuid('ldap.user.id.nope'),
 //        'directory_name' => 'CN=No First Name,OU=PassboltUsers,DC=passbolt,DC=local',
-//        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-//        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'directory_created' => new DateTime('2018-07-09 03:56:42.000000'),
+//        'directory_modified' => new DateTime('2018-07-09 03:56:42.000000'),
 //        'user' => [
 //            'username' => 'nope@passbolt.com',
 //            'profile' => [
@@ -78,8 +78,8 @@ return [
 //    [
 //        'id' => UuidFactory::uuid('ldap.user.id.nope2'),
 //        'directory_name' => 'CN=No Email,OU=PassboltUsers,DC=passbolt,DC=local',
-//        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-//        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'directory_created' => new DateTime('2018-07-09 03:56:42.000000'),
+//        'directory_modified' => new DateTime('2018-07-09 03:56:42.000000'),
 //        'user' => [
 //            'username' => null,
 //            'profile' => [
@@ -92,8 +92,8 @@ return [
 //    [
 //        'id' => UuidFactory::uuid('ldap.user.id.steve'),
 //        'directory_name' => 'CN=Steve Shirley,OU=PassboltUsers,DC=passbolt,DC=local',
-//        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-//        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'directory_created' => new DateTime('2018-07-09 03:56:42.000000'),
+//        'directory_modified' => new DateTime('2018-07-09 03:56:42.000000'),
 //        'user' => [
 //            'username' => 'dame@passbolt.com',
 //            'profile' => [
@@ -106,8 +106,8 @@ return [
     [
         'id' => UuidFactory::uuid('ldap.user.id.sofia'),
         'directory_name' => 'CN=Sofia,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-07-09 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-07-09 03:56:42.000000'),
         'user' => [
             'username' => 'sofia@passbolt.com',
             'profile' => [

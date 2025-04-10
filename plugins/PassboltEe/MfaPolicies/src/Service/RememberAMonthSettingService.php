@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\MfaPolicies\Service;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Log\Log;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
 
@@ -30,7 +30,7 @@ class RememberAMonthSettingService implements RememberAMonthSettingInterface
     {
         try {
             $mfaPolicySettings = (new MfaPoliciesGetSettingsService())->get();
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             Log::error($e->getMessage());
 
             return false;

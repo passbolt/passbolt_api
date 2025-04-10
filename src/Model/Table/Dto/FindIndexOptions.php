@@ -24,46 +24,46 @@ class FindIndexOptions
     public const CONTAIN_OPTION = 'contain';
 
     /**
-     * @var string[]
+     * @var array<string>
      */
-    private $filter = [];
+    private array $filter = [];
 
     /**
-     * @var string[]
+     * @var array<string>
      */
-    private $contain = [];
+    private array $contain = [];
 
     /**
-     * @var string[]
+     * @var array<string>
      */
-    private $order = [];
+    private array $order = [];
 
     /**
-     * @var string[]
+     * @var array<string>
      */
-    private $allowedFilter = [];
+    private array $allowedFilter = [];
 
     /**
-     * @var string[]
+     * @var array<string>
      */
-    private $allowedOrder = [];
+    private array $allowedOrder = [];
 
     /**
-     * @var string[]
+     * @var array<string>
      */
-    private $allowedContain = [];
+    private array $allowedContain = [];
 
     /**
-     * @var callable[]
+     * @var array<callable>
      */
-    private $filterValidators = [];
+    private array $filterValidators = [];
 
     /**
      * UUID of a User
      *
      * @var string
      */
-    private $userId;
+    private string $userId;
 
     /**
      * @param array|null $filter filters Filters
@@ -79,9 +79,9 @@ class FindIndexOptions
 
     /**
      * @param array $findIndexOptions Find index options
-     * @return \App\Model\Table\Dto\FindIndexOptions
+     * @return self
      */
-    public static function createFromArray(array $findIndexOptions)
+    public static function createFromArray(array $findIndexOptions): self
     {
         return new static(
             $findIndexOptions[self::FILTER_OPTION] ?? [],
@@ -167,7 +167,7 @@ class FindIndexOptions
      * @param string $value value
      * @return $this
      */
-    public function addFilter(string $filterName, $value)
+    public function addFilter(string $filterName, string $value)
     {
         $this->filter[$filterName] = $value;
 
@@ -179,7 +179,7 @@ class FindIndexOptions
      * @param mixed $value order value
      * @return $this
      */
-    public function addOrder(string $orderName, $value = null)
+    public function addOrder(string $orderName, mixed $value = null)
     {
         $this->order[$orderName] = $value;
 
@@ -207,7 +207,7 @@ class FindIndexOptions
      * @param string $filterName Name of the filter
      * @return callable|null
      */
-    public function getFilterValidator(string $filterName)
+    public function getFilterValidator(string $filterName): ?callable
     {
         return $this->filterValidators[$filterName] ?? null;
     }
@@ -218,7 +218,7 @@ class FindIndexOptions
      * @param string $userId The user id
      * @return void
      */
-    public function setUserId(string $userId)
+    public function setUserId(string $userId): void
     {
         $this->userId = $userId;
     }
@@ -228,7 +228,7 @@ class FindIndexOptions
      *
      * @return string
      */
-    public function getUserId()
+    public function getUserId(): string
     {
         return $this->userId;
     }
@@ -236,7 +236,7 @@ class FindIndexOptions
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             self::FILTER_OPTION => $this->filter,
@@ -248,7 +248,7 @@ class FindIndexOptions
     /**
      * @return array
      */
-    public function getAllowedOptions()
+    public function getAllowedOptions(): array
     {
         return [
             self::FILTER_OPTION => $this->allowedFilter,
@@ -258,25 +258,25 @@ class FindIndexOptions
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
-    public function getContain()
+    public function getContain(): array
     {
         return $this->contain;
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
-    public function getFilter()
+    public function getFilter(): array
     {
         return $this->filter;
     }
 
     /**
-     * @return callable[]
+     * @return array<callable>
      */
-    public function getFilterValidators()
+    public function getFilterValidators(): array
     {
         return $this->filterValidators;
     }
