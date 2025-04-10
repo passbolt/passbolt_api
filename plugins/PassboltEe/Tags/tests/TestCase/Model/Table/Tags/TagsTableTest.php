@@ -186,6 +186,42 @@ class TagsTableTest extends TagTestCase
         $this->assertTrue(in_array($tag4->get('id'), $tagIdsAccessibleToUser1));
     }
 
+    public function testTagsTable_findAllBySlugs_Tag_On_Multiple_Resources_Should_Be_Returned_Once()
+    {
+        $user = UserFactory::make()->persist();
+        [$resource1, $resource2] = ResourceFactory::make(2)->persist();
+        $uac = $this->makeUac($user);
+
+        $tag = TagFactory::make()
+            ->isPersonalFor($resource1, $user)
+            ->isPersonalFor($resource2, $user)
+            ->persist();
+
+        $tagsAccessibleToUser = $this->Tags->findAllBySlugsOrIds($uac, [
+            $tag->get('slug'),
+        ]);
+
+        $this->assertSame(1, $tagsAccessibleToUser->all()->count());
+    }
+
+    public function testTagsTable_findAllBySlugs_FindById_Tag_On_Multiple_Resources_Should_Be_Returned_Once()
+    {
+        $user = UserFactory::make()->persist();
+        [$resource1, $resource2] = ResourceFactory::make(2)->persist();
+        $uac = $this->makeUac($user);
+
+        $tag = TagFactory::make()
+            ->isPersonalFor($resource1, $user)
+            ->isPersonalFor($resource2, $user)
+            ->persist();
+
+        $tagsAccessibleToUser = $this->Tags->findAllBySlugsOrIds($uac, [], [
+            $tag->get('id'),
+        ]);
+
+        $this->assertSame(1, $tagsAccessibleToUser->all()->count());
+    }
+
     public function hydrateQueryProvider(): array
     {
         return [[true], [false]];
