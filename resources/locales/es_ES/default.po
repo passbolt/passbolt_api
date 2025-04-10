@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-02-18 16:49\n"
+"PO-Revision-Date: 2025-04-09 18:16\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -3899,16 +3899,16 @@ msgid "The password generator settings should have at least one mask selected."
 msgstr "La configuración del generador de contraseñas debe tener al menos una máscara seleccionada."
 
 msgid "The passphrase generator settings is required."
-msgstr "Se requiere la configuración del generador de contraseñas."
+msgstr "Se requiere la configuración del generador de frases de contraseña."
 
 msgid "The passphrase generator settings should not be empty."
-msgstr "La configuración del generador de contraseñas no debe estar vacía."
+msgstr "La configuración del generador de frases de contraseña no debe estar vacía."
 
 msgid "Could not validate the password policies settings."
 msgstr "No se ha podido validar la configuración de las políticas de contraseña."
 
 msgid "The passphrase generator words is required."
-msgstr "Se requieren las palabras generadoras de contraseñas."
+msgstr "Se requiere el generador de palabras de la frase de contraseña."
 
 msgid "The passphrase generator words should be between {0} and {1}."
 msgstr "Las palabras generadoras de contraseñas deben estar entre {0} y {1}."
