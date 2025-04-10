@@ -9,36 +9,34 @@ declare(strict_types=1);
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
-use App\Utility\UuidFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\RoleFactory;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
 class ResourcesUpdateControllerTest extends TagPluginIntegrationTestCase
 {
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles',
-        'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Resources', 'app.Base/Favorites',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Alt0/Secrets',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-    ];
-
     public function testTagsResourcesUpdateSuccess()
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        ResourceTypeFactory::make()->passwordString()->persist();
+        RoleFactory::make()->guest()->persist();
+        $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+
         $success = [
             'resource' => [], // Nothing to update for now, we just check the update controller return value.
         ];
 
         foreach ($success as $data) {
-            $this->putJson("/resources/$resourceId.json?api-version=2", $data);
+            $this->putJson("/resources/{$resource->id}.json?api-version=2", $data);
             $this->assertSuccess();
 
             // Check the server response.

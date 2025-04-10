@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c9b1cbc7a02b16e80dacf15e57b3934b",
+    "content-hash": "5c6e4e28784aa0c039c2639919a88ccf",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -62,16 +62,16 @@
         },
         {
             "name": "bcrowe/cakephp-api-pagination",
-            "version": "dev-cake5",
+            "version": "dev-cakephp5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ishanvyas22/cakephp-api-pagination.git",
-                "reference": "bbf48a2e5a7c496f980007334be0eaa144a855b9"
+                "url": "https://github.com/passbolt/cakephp-api-pagination.git",
+                "reference": "b103542e1b02c2a000862d91a804ecde6d4669b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ishanvyas22/cakephp-api-pagination/zipball/bbf48a2e5a7c496f980007334be0eaa144a855b9",
-                "reference": "bbf48a2e5a7c496f980007334be0eaa144a855b9",
+                "url": "https://api.github.com/repos/passbolt/cakephp-api-pagination/zipball/b103542e1b02c2a000862d91a804ecde6d4669b0",
+                "reference": "b103542e1b02c2a000862d91a804ecde6d4669b0",
                 "shasum": ""
             },
             "require": {
@@ -133,7 +133,7 @@
                 "cakephp5",
                 "pagination"
             ],
-            "time": "2025-03-19T10:07:11+00:00"
+            "time": "2025-03-31T13:54:23+00:00"
         },
         {
             "name": "beberlei/assert",
@@ -331,16 +331,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "dev-fix-uri-type-error-patch-v5.0",
+            "version": "v5.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/cakephp.git",
-                "reference": "f23f2ac7b261631d549a2ef2abeb6eb84e257f66"
+                "reference": "231585d2aadcd6bc06d577f270fdf956dfe8175a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/cakephp/zipball/f23f2ac7b261631d549a2ef2abeb6eb84e257f66",
-                "reference": "f23f2ac7b261631d549a2ef2abeb6eb84e257f66",
+                "url": "https://api.github.com/repos/passbolt/cakephp/zipball/231585d2aadcd6bc06d577f270fdf956dfe8175a",
+                "reference": "231585d2aadcd6bc06d577f270fdf956dfe8175a",
                 "shasum": ""
             },
             "require": {
@@ -506,7 +506,7 @@
                 "forum": "https://discourse.cakephp.org/",
                 "source": "https://github.com/cakephp/cakephp"
             },
-            "time": "2025-03-20T14:10:59+00:00"
+            "time": "2025-04-07T12:26:09+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -9889,7 +9889,7 @@
     "aliases": [
         {
             "package": "cakephp/cakephp",
-            "version": "dev-fix-uri-type-error-patch-v5.0",
+            "version": "5.0.9999999.9999999-dev",
             "alias": "5.0.11",
             "alias_normalized": "5.0.11.0"
         }
@@ -9921,5 +9921,5 @@
     "platform-overrides": {
         "php": "8.2"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }

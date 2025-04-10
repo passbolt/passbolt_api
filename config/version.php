@@ -1,11 +1,11 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '4.12.0',
-        'name' => 'Rusty Cage',
+        'version' => '5.0.0',
+        'name' => 'Need To Feel Loved',
     ],
     'php' => [
         'minVersion' => '8.2',
-        'nextMinVersion' => '8.3',
+        'nextMinVersion' => '8.2',
     ],
 ];

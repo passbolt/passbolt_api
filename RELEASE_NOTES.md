@@ -1,31 +1,36 @@
-Release song: https://www.youtube.com/watch?v=pBZs_Py-1_0
+Release song: https://www.youtube.com/watch?v=yf1f8zNvR1I
 
-Passbolt v4.12.0 introduces the final update in the version 4 series. This release completes the groundwork for version 5 and allows integrators to test the migration directly from the UI ahead of the stable release.
+“Even the longest day has its end” goes the old Irish proverb, and here we are at long last announcing the Passbolt 5.x series.
+This first release v5.0 ships with a complete redesign of the application’s interface, which had remained largely unchanged since
+Passbolt’s early days and was limiting the addition of new capabilities.
+The new version offers a more spacious layout that provides room for meaningful information and addresses long-standing ergonomic issues.
+If you want to know more, check out what changed in this [Passbolt 5, UI Redesign](https://community.passbolt.com/t/passbolt-5-ui-redesign/12717) community post.
 
-As always, this version also addresses community-reported issues, including fixes for UI inconsistencies and multi-selection shortcuts that were not working across all environments.
+Passbolt v5.0 lays the groundwork for the v5.x series, which will expand the software’s capabilities to handle more sensitive data types that the community has requested,
+such as key-value pairs, SSH keys, and certificates. The blog article about the passbolt v5.0 release is coming soon.
 
-As a final update of the v4 series, system administrators are invited to upgrade their version of PHP to meet Passbolt v5’s minimum requirements: PHP 8.2. We posted a guide in our Weblog to help you with the process:
-[Preparing for Passbolt v5: PHP 8.2 Requirement](https://www.passbolt.com/blog/preparing-for-passbolt-v5-php-8-2-requirement).
+Of course, with each major version come the inevitable breaking changes, which we strive to minimize as much as possible.
+With this release, the minimum server requirement has changed to PHP 8.2 or greater, so be sure to check out our latest blog article on [how to upgrade to PHP 8.2](https://www.passbolt.com/blog/preparing-for-passbolt-v5-php-8-2-requirement).
+Additionally this is a perfect moment to back up your server data and prepare for the unexpected.
 
-Thank you to the community for your feedback and patience — we’re almost there!
+Thank you to the community for all your feedback, testing, and support in making this milestone possible. We hope you’ll enjoy what Passbolt v5.0 has to offer and look forward to hearing from you.
 
-
-## [4.12.0] - 2025-03-12
+## [5.0.0] - 2025-04-10
 ### Added
-- PB-39395 As an administrator I can contain permissions when upgrading folders to v5 format
-- PB-39394 As an administrator I can contain permissions when upgrading resources to v5 format
-- PB-38850 As an administrator I cannot rotate entities while two metadata keys are active
-- PB-37699 As an administrator I can upgrade folders to v5 format
-- PB-37363 As an administrator I can rotate metadata keys encrypting folders metadata
-- PB-36582 As an administrator I cannot reuse a previously deleted metadata key
+- PB-39434 As an administrator I can log user actions on file in an SIEM compatible format
+- PB-39627 Enforce PHP 8.2 as minimum passbolt API requirement
+- PB-40155 Add Passbolt API support of PHP 8.4
+- PB-40724 As a user I should not share in DB personal tags of other users with identical slug
+- PB-40247 Add API status documentation link to the health check command
 
 ### Fixed
-- PB-39512 Fix during metadata upgrade process, the resource_type_id field is now updated in the database
-- PB-39399 Adds missing fields to metadata private keys in index response
-- PB-39393 Fix limit value is null in pagination header response for rotate & upgrade endpoints
-- PB-38770 Fix email subject for delete resource email when resource is v5
-- PB-38791 Fix 500 error on the duo MFA setup & verify page when duo service is unavailable
-- PB-38771 Fix unable to expire the metadata key due to expired datetime format
+- PB-39706 When creating a user from CLI the metadata_private_keys should have their fields created_by and modified_by set
+- PB-41356 As an administrator I can delete a resource type associated to deleted resources
+- PB-41374 Fix unlimited session lifetime introduced in CakePHP 5
+- PB-41379 Updates the minimum next version to 8.2 to remove false warning from installation
 
 ### Maintenance
-- PB-39629 Set next minimum PHP version to 8.2 as passbolt v5 will not support lower PHP versions
+- PB-28246 Refactor the whole application to upgrade CakePHP to version 5
+- PB-39434 Add code coverage to ActionLogsUsernameQueryStrategy
+- PB-39660 Mock MfaFormInterface to avoid tests failing occasionally
+- PB-39630 Fix ResourcesIndexControllerPaginationTest recurrently failing test

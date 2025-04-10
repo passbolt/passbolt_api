@@ -147,6 +147,7 @@ class LocaleServiceTest extends TestCase
      */
     public function testLocaleServiceLocaleTranslateString_With_French_Org_Setting(string $locale, string $expectedSubject)
     {
+        $default = I18n::getLocale();
         I18n::setLocale('fr_FR');
         $this->setDummyFrenchTranslator();
 
@@ -158,5 +159,8 @@ class LocaleServiceTest extends TestCase
         $this->assertSame($expectedSubject, $translation);
         // Ensure that the locale is set to the original one.
         $this->assertSame('fr_FR', I18n::getLocale());
+
+        // Reset to default
+        I18n::setLocale($default);
     }
 }
