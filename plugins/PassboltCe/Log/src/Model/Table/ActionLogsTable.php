@@ -133,7 +133,7 @@ class ActionLogsTable extends Table
         $data = [
             'id' => $userAction->getUserActionId(),
             'user_id' => $userAction->getUserAccessControl()->getId(),
-            'action_id' => $action->id,
+            'action_id' => $action->get('id'),
             'context' => $userAction->getContext(),
             'status' => $status,
         ];
