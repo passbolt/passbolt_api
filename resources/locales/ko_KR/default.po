@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-04-11 01:44\n"
+"PO-Revision-Date: 2025-04-11 02:43\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -1688,7 +1688,7 @@ msgid "The public key cannot be used to encrypt a message"
 msgstr "공개 키는 메시지를 해독하는 데 사용할 수 없습니다."
 
 msgid "Make sure that the server private key is valid and that there is no passphrase."
-msgstr "서버 개인 키가 유효한지, 패스프레이즈가 없는지 확인하세요."
+msgstr "서버 개인 키가 유효한지, 비밀문구가 없는지 확인하세요."
 
 msgid "Make sure you imported the private server key in the keyring of the webserver user."
 msgstr "웹 서버 사용자의 키링에 있는 개인 서버 키를 가져왔는지 확인하세요."
@@ -1943,7 +1943,7 @@ msgid "The config for the server private key fingerprint is not available or inc
 msgstr "서버 개인 키 지문에 대한 구성을 사용할 수 없거나 완전하지 않습니다."
 
 msgid "The config for the server private key passphrase is invalid."
-msgstr "서버 개인 키 패스프레이즈 대한 구성이 올바르지 않습니다."
+msgstr "서버 개인 키 비밀문구에 대한 구성이 올바르지 않습니다."
 
 msgid "The user public key is not available or incomplete."
 msgstr "사용자 공개 키를 사용할 수 없거나 불완전합니다."
@@ -2735,10 +2735,10 @@ msgid "The object type is invalid."
 msgstr "객체 유형이 잘못되었습니다."
 
 msgid "A passphrase is required."
-msgstr "패스프레이즈가 필요합니다."
+msgstr "비밀문구가 필요합니다."
 
 msgid "The passphrase should be a valid BMP-UTF8 string."
-msgstr "패스프레이즈는 유효한 BMP-UTF8 문자열이어야합니다."
+msgstr "비밀문구는 유효한 BMP-UTF8 문자열이어야합니다."
 
 msgid "A fingerprint is required."
 msgstr "지문이 필요합니다."
@@ -3899,34 +3899,34 @@ msgid "The password generator settings should have at least one mask selected."
 msgstr "비밀번호 생성기 설정에는 마스킹을 하나 이상 선택해야 합니다."
 
 msgid "The passphrase generator settings is required."
-msgstr "패스프레이즈 생성기 설정이 필요합니다."
+msgstr "비밀문구 생성기 설정이 필요합니다."
 
 msgid "The passphrase generator settings should not be empty."
-msgstr "패스프레이즈 생성기 설정은 비워둘 수 없습니다."
+msgstr "비밀문구 생성기 설정은 비워둘 수 없습니다."
 
 msgid "Could not validate the password policies settings."
 msgstr "비밀번호 정책 설정의 유효성을 검사할 수 없습니다."
 
 msgid "The passphrase generator words is required."
-msgstr "패스프레이즈 생성기 단어가 필요합니다."
+msgstr "비밀문구 생성기 단어가 필요합니다."
 
 msgid "The passphrase generator words should be between {0} and {1}."
-msgstr "패스프레이즈 생성기는 {0} 에서 {1} 사이입니다."
+msgstr "비밀문구 생성기는 {0} 에서 {1} 사이입니다."
 
 msgid "The passphrase generator word separator is required."
-msgstr "패스프레이즈 생성기 단어 구분 기호가 필요합니다."
+msgstr "비밀문구 생성기 단어 구분 기호가 필요합니다."
 
 msgid "The passphrase generator word separator should be a valid UTF8 string."
-msgstr "패스프레이즈 생성기 단어 구분 기호는 유효한 UTF8 문자열이어야 합니다."
+msgstr "비밀문구 생성기 단어 구분 기호는 유효한 UTF8 문자열이어야 합니다."
 
 msgid "The passphrase generator word separator should be maximum {0} characters."
-msgstr "패스프레이즈 생성기 구분 기호는 최대 {0} 자여야 합니다."
+msgstr "비밀문구 생성기 구분 기호는 최대 {0} 자여야 합니다."
 
 msgid "The passphrase generator word case is required."
-msgstr "패스프레이즈 생성기 단어 대소문자가 필요합니다."
+msgstr "비밀문구 생성기 단어 대소문자가 필요합니다."
 
 msgid "The passphrase generator word case should be one of the following: {0}."
-msgstr "패스프레이즈 생성기 단어 대소문자는 다음 중 하나여야 합니다: {0}."
+msgstr "비밀문구 생성기 단어 대소문자는 다음 중 하나여야 합니다: {0}."
 
 msgid "The password generator length should be between {0} and {1}."
 msgstr "비밀번호 생성기 길이는 {0} 에서 {1} 사이입니다."
@@ -4973,7 +4973,7 @@ msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다!"
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
-msgstr "이 사용자는 개인 키 및(또는) 패스프레이즈를 분실하여 계정 복구 프로세스를 완료할 수 없습니다."
+msgstr "이 사용자는 개인 키 및(또는) 비밀문구를 분실하여 계정 복구 프로세스를 완료할 수 없습니다."
 
 msgid "Unfortunately, they will need your help to delete their account and restart from scratch."
 msgstr "안타깝게도 계정을 삭제하고 처음부터 다시 시작하려면 귀하의 도움이 필요합니다."
