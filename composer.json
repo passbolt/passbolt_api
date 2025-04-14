@@ -83,7 +83,7 @@
         "cakephp/authentication": "^3.0",
         "bcrowe/cakephp-api-pagination": "dev-cakephp5#b103542e1b02c2a000862d91a804ecde6d4669b0",
         "firebase/php-jwt": "^6.2.0",
-        "spomky-labs/otphp": "^10.0.0",
+        "spomky-labs/otphp": "^11.3.0",
         "bacon/bacon-qr-code": "^2.0.7",
         "enygma/yubikey": "^3.8",
         "duosecurity/duo_universal_php": "^1.0.2"
