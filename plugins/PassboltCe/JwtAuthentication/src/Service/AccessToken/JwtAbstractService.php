@@ -18,7 +18,7 @@ namespace Passbolt\JwtAuthentication\Service\AccessToken;
 
 use Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException;
 
-abstract class JwtAbstractService
+class JwtAbstractService
 {
     public const USER_ACCESS_TOKEN_KEY = 'access_token';
     public const JWT_CONFIG_DIR = CONFIG . 'jwt' . DS;
@@ -45,10 +45,10 @@ abstract class JwtAbstractService
     }
 
     /**
-     * @return string Content of the secret/private key file
+     * @return string|false Content of the secret/private key file
      * @throws \Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException if the file is not found or not readable.
      */
-    public function readKeyFileContent(): string
+    public function readKeyFileContent(): string|false
     {
         if (!is_readable($this->getKeyPath())) {
             $userErrorMessage = __('The key pair for JWT Authentication is not complete.');

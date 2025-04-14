@@ -163,17 +163,17 @@ class JwtKeyPairService
     }
 
     /**
-     * @return string
+     * @return string|false
      */
-    public function readPublicKey(): string
+    public function readPublicKey(): string|false
     {
         return $this->publicService->readKeyFileContent();
     }
 
     /**
-     * @return string
+     * @return string|false
      */
-    public function readSecretKey(): string
+    public function readSecretKey(): false|string
     {
         return $this->secretService->readKeyFileContent();
     }

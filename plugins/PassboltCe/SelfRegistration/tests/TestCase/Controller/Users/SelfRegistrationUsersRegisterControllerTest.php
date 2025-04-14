@@ -107,6 +107,7 @@ class SelfRegistrationUsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertForbiddenError('The email is already registered.');
 
         // 2) Soft delete the existing user.
+        /** @var \App\Model\Table\UsersTable $users */
         $users = TableRegistry::getTableLocator()->get('Users');
         $users->softDelete($existingUser, ['checkRules' => false]);
 
@@ -116,6 +117,7 @@ class SelfRegistrationUsersRegisterControllerTest extends AppIntegrationTestCase
         $createdUserId = $this->_responseJson->body->id;
 
         // 4) Soft delete the non deleted existing user again.
+        /** @var \App\Model\Table\UsersTable $users */
         $users = TableRegistry::getTableLocator()->get('Users');
         $user = $users->get($createdUserId);
         $users->softDelete($user, ['checkRules' => false]);

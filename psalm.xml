@@ -34,5 +34,6 @@
 
     <issueHandlers>
         <MissingTemplateParam errorLevel="suppress"/>
+        <MissingOverrideAttribute errorLevel="suppress"/>
     </issueHandlers>
 </psalm>
