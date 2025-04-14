@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-02-14 06:14+0000\n"
-"PO-Revision-Date: 2025-04-11 05:15\n"
+"PO-Revision-Date: 2025-04-14 02:46\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -3773,7 +3773,7 @@ msgid "Remember this device for a month."
 msgstr "이 기기를 한달 동안 기억하기"
 
 msgid "Yubikey One Time Password"
-msgstr "Yubikey 일회성 암호"
+msgstr "Yubikey 일회성 비밀번호"
 
 msgid "Plug in the yubikey and put your finger on it."
 msgstr "Yubikey를 연결하고 손가락을 대세요."
@@ -3977,16 +3977,16 @@ msgid "The password generator mask char1 should be a boolean type."
 msgstr "비밀번호 생성기 첫 번째 문자 마스킹은 부울 유형이어야 합니다."
 
 msgid "The password generator mask char2 is required."
-msgstr "암호 생성기 두 번째 문자 마스킹이 필요합니다."
+msgstr "비밀번호 생성기 두 번째 문자 마스킹이 필요합니다."
 
 msgid "The password generator mask char2 should be a boolean type."
-msgstr "암호 생성기 두 번째 문자 마스킹은 부울 유형이어야 합니다."
+msgstr "비밀번호 생성기 두 번째 문자 마스킹은 부울 유형이어야 합니다."
 
 msgid "The password generator mask char3 is required."
 msgstr "비밀번호 생성기 세 번째 문자 마스킹이 필요합니다."
 
 msgid "The password generator mask char3 should be a boolean type."
-msgstr "암호 생성기 세 번째 문자 마스킹은 부울 유형이어야 합니다."
+msgstr "비밀번호 생성기 세 번째 문자 마스킹은 부울 유형이어야 합니다."
 
 msgid "The password generator mask char4 is required."
 msgstr "비밀번호 생성기 네 번째 문자 마스킹이 필요합니다."
@@ -4997,7 +4997,7 @@ msgid "The data is too big."
 msgstr "데이터가 너무 큽니다."
 
 msgid "The identifier of the user who created the private key passwords should be a valid UUID."
-msgstr "개인 키 암호를 만든 사용자의 식별자는 유효한 UUID여야 합니다."
+msgstr "개인 키 비밀번호를 만든 사용자의 식별자는 유효한 UUID여야 합니다."
 
 msgid "The identifier of the user who created the private key passwords is required."
 msgstr "개인 키 비밀번호를 만든 사용자의 식별자가 필요합니다."
