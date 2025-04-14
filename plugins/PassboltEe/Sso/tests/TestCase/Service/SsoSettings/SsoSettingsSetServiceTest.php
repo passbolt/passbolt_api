@@ -64,35 +64,86 @@ class SsoSettingsSetServiceTest extends SsoTestCase
     }
 
     /**
+     * @see testSsoSettingsSetService_Success
+     * @return array[]
+     */
+    public function ssoSettingsValidDataProvider()
+    {
+        $expiry = Chronos::now()->addDays(365);
+
+        return [
+            'Azure (default)' => [
+                'input' => [
+                    'provider' => SsoSetting::PROVIDER_AZURE,
+                    'data' => [
+                        'url' => 'https://login.microsoftonline.com',
+                        'client_id' => 'feca242d-0920-4b22-b4c1-592d4eb69953',
+                        'tenant_id' => '49e49094-4fae-4400-85aa-f71e2cdd250b',
+                        'client_secret' => '3994735b-54d2-40ba-a324-6153f90c85e3',
+                        'client_secret_expiry' => $expiry,
+                    ],
+                ],
+                'expected data' => [
+                    'url' => 'https://login.microsoftonline.com',
+                    'client_id' => 'feca242d-0920-4b22-b4c1-592d4eb69953',
+                    'tenant_id' => '49e49094-4fae-4400-85aa-f71e2cdd250b',
+                    'client_secret' => '3994735b-54d2-40ba-a324-6153f90c85e3',
+                    'client_secret_expiry' => $expiry->toDateTimeString(),
+                    // defaults
+                    'prompt' => SsoSettingsAzureDataForm::PROMPT_LOGIN,
+                    'email_claim' => SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL,
+                    'login_hint' => SsoSettingsAzureDataForm::AZURE_LOGIN_HINT_ENABLED,
+                ],
+            ],
+            'Azure (with advanced settings - optional)' => [
+                'input' => [
+                    'provider' => SsoSetting::PROVIDER_AZURE,
+                    'data' => [
+                        'url' => 'https://login.microsoftonline.com',
+                        'client_id' => 'feca242d-0920-4b22-b4c1-592d4eb69953',
+                        'tenant_id' => '49e49094-4fae-4400-85aa-f71e2cdd250b',
+                        'client_secret' => '3994735b-54d2-40ba-a324-6153f90c85e3',
+                        'client_secret_expiry' => $expiry,
+                        'prompt' => SsoSettingsAzureDataForm::PROMPT_NONE,
+                        'email_claim' => SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_PREFERRED_USERNAME,
+                        'login_hint' => SsoSettingsAzureDataForm::AZURE_LOGIN_HINT_DISABLED,
+                    ],
+                ],
+                'expected data' => [
+                    'url' => 'https://login.microsoftonline.com',
+                    'client_id' => 'feca242d-0920-4b22-b4c1-592d4eb69953',
+                    'tenant_id' => '49e49094-4fae-4400-85aa-f71e2cdd250b',
+                    'client_secret' => '3994735b-54d2-40ba-a324-6153f90c85e3',
+                    'client_secret_expiry' => $expiry->toDateTimeString(),
+                    'prompt' => SsoSettingsAzureDataForm::PROMPT_NONE,
+                    'email_claim' => SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_PREFERRED_USERNAME,
+                    'login_hint' => SsoSettingsAzureDataForm::AZURE_LOGIN_HINT_DISABLED,
+                ],
+            ],
+        ];
+    }
+
+    /**
      * New entity success
      *
+     * @param array $input Data to test.
+     * @param array $expectedData Data to assert.
      * @return void
+     * @dataProvider ssoSettingsValidDataProvider
      */
-    public function testSsoSettingsSetServiceSuccess(): void
+    public function testSsoSettingsSetService_Success(array $input, array $expectedData): void
     {
         $user = UserFactory::make()->admin()->persist();
         $uac = new UserAccessControl(Role::ADMIN, $user->id);
-        $data = [
-            'provider' => SsoSetting::PROVIDER_AZURE,
-            'data' => [
-                'url' => 'https://login.microsoftonline.com',
-                'client_id' => UuidFactory::uuid(),
-                'tenant_id' => UuidFactory::uuid(),
-                'client_secret' => UuidFactory::uuid(),
-                'client_secret_expiry' => Chronos::now()->addDays(365),
-                'prompt' => SsoSettingsAzureDataForm::PROMPT_NONE,
-                'email_claim' => SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_UPN,
-            ],
-        ];
 
-        $dto = $this->service->create($uac, $data);
+        $dto = $this->service->create($uac, $input);
 
         // Check returned object is correctly formatted
         $this->assertTrue(Validation::uuid($dto->id));
         $this->assertEquals(SsoSetting::PROVIDER_AZURE, $dto->getProvider());
         $this->assertEquals((new SsoActiveProvidersGetService())->get(), $dto->getProviders());
         $this->assertEquals(SsoSetting::STATUS_DRAFT, $dto->status);
-        $this->assertEquals($data['data'], $dto->getData()->toArray());
+        $this->assertEquals($expectedData, $dto->getData()->toArray());
 
         // Check database record is encrypted
         $this->assertEquals(1, SsoSettingsFactory::count());
@@ -109,8 +160,7 @@ class SsoSettingsSetServiceTest extends SsoTestCase
             Configure::read('passbolt.gpg.serverKey.passphrase')
         );
         $decryptedData = json_decode($gpg->decrypt($ssoSettingEntity->data), true);
-        $data['data']['client_secret_expiry'] = $data['data']['client_secret_expiry']->toDateTimeString();
-        $this->assertEquals(json_decode(json_encode($data['data']), true), $decryptedData);
+        $this->assertEquals(json_decode(json_encode($expectedData), true), $decryptedData);
     }
 
     /**

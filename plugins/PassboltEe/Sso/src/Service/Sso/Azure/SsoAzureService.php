@@ -47,7 +47,9 @@ class SsoAzureService extends AbstractSsoService
      */
     public function getAuthorizationUrl(ExtendedUserAccessControl $uac): string
     {
-        $prompt = $this->getSettings()->getData()->toArray()['prompt'];
+        $data = $this->getSettings()->getData()->toArray();
+        $prompt = $data['prompt'];
+        $loginHint = $data['login_hint'];
 
         // Prefer response_mode=query, unless specified in the config
         // e.g. GET response to avoid the session cookie samesite="None" requirement
@@ -72,7 +74,7 @@ class SsoAzureService extends AbstractSsoService
             $options['prompt'] = $prompt;
         }
 
-        if ($uac->getUsername() !== null) { // For some types(i.e. sso_recover) we don't have user details
+        if ($loginHint && $uac->getUsername() !== null) { // For some types(i.e. sso_recover) we don't have user details
             $options['login_hint'] = $uac->getUsername();
         }
 
