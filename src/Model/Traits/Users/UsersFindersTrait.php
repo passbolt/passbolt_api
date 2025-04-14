@@ -597,7 +597,7 @@ trait UsersFindersTrait
                  'Users.deleted' => false,
                  'Users.active' => true,
              ])
-             ->order(['Users.created' => 'ASC']);
+             ->orderByAsc('Users.created');
     }
 
     /**
