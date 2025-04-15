@@ -28,6 +28,8 @@ class SettingsIndexControllerTest extends AppIntegrationTestCaseV5
         $this->getJson('/settings.json');
         $this->assertTrue($this->_responseJsonBody->passbolt->plugins->metadata->enabled);
         $this->assertSame('1.0.0', $this->_responseJsonBody->passbolt->plugins->metadata->version);
+        $this->assertTrue($this->_responseJsonBody->passbolt->plugins->metadata->isInBeta);
+        $this->assertFalse($this->_responseJsonBody->passbolt->plugins->metadata->autoSetupClientSide);
     }
 
     public function testSettingsIndexController_MetadataPlugin_Enabled_Not_Logged_In(): void
