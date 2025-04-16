@@ -32,6 +32,27 @@ class SettingsIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertFalse($this->_responseJsonBody->passbolt->plugins->metadata->autoSetupClientSide);
     }
 
+    public function testSettingsIndexController_MetadataPlugin_Enabled_Logged_In_AutoSetupClientSide_True(): void
+    {
+        putenv('PASSBOLT_PLUGINS_METADATA_AUTO_SETUP_CLIENT_SIDE=1');
+        $this->logInAsUser();
+        $this->getJson('/settings.json');
+        $this->assertTrue($this->_responseJsonBody->passbolt->plugins->metadata->autoSetupClientSide);
+        putenv('PASSBOLT_PLUGINS_METADATA_AUTO_SETUP_CLIENT_SIDE');
+    }
+
+    public function testSettingsIndexController_MetadataPlugin_Enabled_Logged_In_Configuration_Ignored(): void
+    {
+        // Set isInBeta to false should be ignored. This is not parameterizable by the users
+        Configure::write('passbolt.plugins.metadata.isInBeta', false);
+        // Set autoSetupClientSide to true is possible. This is parameterizable by the users
+        Configure::write('passbolt.plugins.metadata.autoSetupClientSide', true);
+        $this->logInAsUser();
+        $this->getJson('/settings.json');
+        $this->assertTrue($this->_responseJsonBody->passbolt->plugins->metadata->isInBeta);
+        $this->assertTrue($this->_responseJsonBody->passbolt->plugins->metadata->autoSetupClientSide);
+    }
+
     public function testSettingsIndexController_MetadataPlugin_Enabled_Not_Logged_In(): void
     {
         $this->getJson('/settings.json');
