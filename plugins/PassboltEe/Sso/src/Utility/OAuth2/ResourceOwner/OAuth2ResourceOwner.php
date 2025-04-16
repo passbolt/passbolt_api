@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Sso\Utility\OAuth2\ResourceOwner;
 
+use Cake\Core\Configure;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Passbolt\Sso\Utility\OpenId\SsoResourceOwnerInterface;
 
@@ -55,7 +56,9 @@ class OAuth2ResourceOwner implements ResourceOwnerInterface, SsoResourceOwnerInt
      */
     public function getEmail(): ?string
     {
-        return $this->data['email'] ?? null;
+        $emailClaim = Configure::read('passbolt.plugins.sso.security.emailClaimAlias') ?? 'email';
+
+        return $this->data[$emailClaim] ?? null;
     }
 
     /**
