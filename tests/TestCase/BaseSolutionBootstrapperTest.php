@@ -38,31 +38,6 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
 {
     public const EXPECTED_CE_PLUGINS = [
         'Passbolt/JwtAuthentication',
-        'Passbolt/Rbacs',
-        'Passbolt/AccountSettings',
-        'Passbolt/Import',
-        'Passbolt/InFormIntegration',
-        'Passbolt/Locale',
-        'Passbolt/Export',
-        'Passbolt/PasswordExpiry',
-        'Passbolt/ResourceTypes',
-        'Passbolt/TotpResourceTypes',
-        'Passbolt/RememberMe',
-        'Passbolt/EmailNotificationSettings',
-        'Passbolt/EmailDigest',
-        'Passbolt/Reports',
-        'Passbolt/Mobile',
-        'Passbolt/SelfRegistration',
-        'Passbolt/PasswordGenerator',
-        'Passbolt/SmtpSettings',
-        'Passbolt/MultiFactorAuthentication',
-        'Passbolt/Log',
-        'Passbolt/Folders',
-        'Passbolt/PasswordPolicies',
-    ];
-
-    public const EXPECTED_CE_PLUGINS_V5 = [
-        'Passbolt/JwtAuthentication',
         'Passbolt/Metadata',
         'Passbolt/Rbacs',
         'Passbolt/AccountSettings',
@@ -113,13 +88,6 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         $this->assertPluginList($plugins, $expectedPluginList);
     }
 
-    public function testBaseSolutionBootstrapper_v5PluginsEnabled(): void
-    {
-        Configure::write('passbolt.v5.enabled', true);
-        $plugins = $this->arrangeAndGetPlugins();
-        $this->assertPluginList($plugins, $this->getExpectedPluginsV5());
-    }
-
     protected function getExpectedPlugins(bool $withWebInstaller = false): array
     {
         return array_merge(
@@ -132,26 +100,6 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
                 'PassboltTestData',
             ],
             self::EXPECTED_CE_PLUGINS,
-            [
-                'Bake',
-                'CakephpFixtureFactories',
-                'Cake/TwigView',
-            ]
-        );
-    }
-
-    protected function getExpectedPluginsV5(): array
-    {
-        return array_merge(
-            [
-                'Migrations',
-                'Authentication',
-                'EmailQueue',
-                'BryanCrowe/ApiPagination',
-                'PassboltSeleniumApi',
-                'PassboltTestData',
-            ],
-            self::EXPECTED_CE_PLUGINS_V5,
             [
                 'Bake',
                 'CakephpFixtureFactories',
