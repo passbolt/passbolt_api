@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-04-17 01:05\n"
+"PO-Revision-Date: 2025-04-17 02:05\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -1001,10 +1001,10 @@ msgid "The armored key should be a valid ASCII-armored OpenPGP key."
 msgstr "무장된 키는 유효한 ASCII로 무장된 OpenPGP key여야 합니다."
 
 msgid "The armored key is not valid."
-msgstr "암호화된 키가 유효하지 않습니다."
+msgstr "아머드 키가 유효하지 않습니다."
 
 msgid "The message should be a valid ASCII-armored OpenPGP message."
-msgstr "메시지는 유효한 ASCII-암호화된 OpenPGP 메시지여야 합니다."
+msgstr "메시지는 유효한 ASCII-아머드 OpenPGP 메시지여야 합니다."
 
 msgid "The creation date should be set in the past."
 msgstr "생성 날짜는 과거 날짜로 설정해야 합니다."
@@ -1913,7 +1913,7 @@ msgid "The public key could not be parsed."
 msgstr "공개 키 구문 해석을 할 수 없습니다."
 
 msgid "The armored message must not contain an extra line before the end block."
-msgstr "암호화된 메시지에는 끝 블록 앞에 추가 줄이 없어야 합니다."
+msgstr "아머드 메시지에는 끝 블록 앞에 추가 줄이 없어야 합니다."
 
 msgid "The message must contain an asymmetric packet."
 msgstr "메시지에 비대칭 패킷이 포함되어야 합니다."
@@ -1928,7 +1928,7 @@ msgid "Unknown key validation rule: {0}"
 msgstr "알 수 없는 키 유효성 검사 규칙: {0}"
 
 msgid "The armored message could not be validated."
-msgstr "암호화된 메시지를 검증할 수 없습니다."
+msgstr "아머드 메시지를 검증할 수 없습니다."
 
 msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
 msgstr "구성에서 정의한 OpenPGP 서버 키를 사용하여 암호화할 수 없습니다."
@@ -2453,7 +2453,7 @@ msgid "The user signature could not be verified."
 msgstr "사용자 서명을 확인할 수 없습니다."
 
 msgid "The challenge cannot be decrypted."
-msgstr "챌린지의 암호를 해독할 수 없습니다."
+msgstr "챌린지를 복호화할 수 없습니다."
 
 msgid "The challenge is invalid. Deserialization failed."
 msgstr "챌린지가 유효하지 않습니다. 역직렬화에 실패했습니다."
@@ -3152,16 +3152,16 @@ msgid "No user provided."
 msgstr "제공된 사용자가 없음."
 
 msgid "The metadata could not be encrypted for permission id: {0}."
-msgstr "권한 ID {0} 에 대해 메타데이터를 암호화할 수 없습니다."
+msgstr "다음 권한 Id에 대해 메타데이터를 암호화할 수 없습니다: {0}."
 
 msgid "No OpenPGP key found for the user."
 msgstr "사용자에 대한 OpenPGP 키를 찾을 수 없음."
 
 msgid "The metadata could not be encrypted with the user id: {0}."
-msgstr "메타데이터를 사용자 ID {0} 로 암호화할 수 없습니다."
+msgstr "다음 사용자 Id로 메타데이터를 암호화할 수 없습니다: {0}."
 
 msgid "The metadata could not be encrypted with the metadata key id: {0}."
-msgstr "메타데이터를 메타데이터 키 ID {0} 로 암호화할 수 없습니다."
+msgstr "다음 메타데이터 키Id로 메타데이터를 암호화할 수 없습니다: {0}."
 
 msgid "Unable to migrate folder ID: {0} to V5."
 msgstr "폴더 ID {0} 을(를) V5로 마이그레이션할 수 없습니다."
@@ -3275,7 +3275,7 @@ msgid "You have created a new folder."
 msgstr "새 폴더가 생성되었습니다."
 
 msgid "{0} has shared a folder with you."
-msgstr "{0} 이(가) 당신과 암호를 공유함."
+msgstr "{0} 이(가) 당신과 폴더를 공유함."
 
 msgid "You have edited a folder."
 msgstr "폴더를 수정했습니다."
@@ -4538,7 +4538,7 @@ msgid "The OpenPGP private key cannot be used to decrypt."
 msgstr "OpenPGP 개인 키를 사용하여 복호화할 수 없습니다."
 
 msgid "Please note that passbolt does not support OpenPGP key protected with a secret."
-msgstr "패스볼트는 암호로 보호된 OpenPGP 키를 지원하지 않습니다."
+msgstr "패스볼트는 비밀번호로 보호된 OpenPGP 키를 지원하지 않습니다."
 
 msgid "The fingerprint should not be empty."
 msgstr "지문은 비워둘 수 없습니다."
@@ -5000,7 +5000,7 @@ msgid "Welcome to {0}!"
 msgstr "{0} 에 오신 것을 환영합니다!"
 
 msgid "{0} used the self registration feature to create an account on passbolt."
-msgstr "{0} 이(가) 자체 등록 기능을 사용하여 암호 볼트에 계정을 생성했습니다."
+msgstr "{0} 이(가) 자체 등록 기능을 사용하여 패스볼트에 계정을 생성했습니다."
 
 msgid "You have initiated an account recovery!"
 msgstr "계정 복구가 시작되었습니다."
