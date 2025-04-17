@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-04-14 02:45\n"
+"PO-Revision-Date: 2025-04-17 01:05\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -2441,7 +2441,7 @@ msgid "log in passbolt"
 msgstr "패스볼트 로그인"
 
 msgid "{0} shared a folder with you"
-msgstr "{0} 이(가) 당신과 암호를 공유함"
+msgstr "{0} 이(가) 당신과 폴더를 공유함"
 
 msgid "You edited a folder"
 msgstr "폴더를 수정했습니다"
@@ -2696,19 +2696,19 @@ msgid "A resource identifier is required."
 msgstr "리소스 식별자가 필요합니다."
 
 msgid "The secret identifier should be a valid UUID."
-msgstr "암호 식별자는 유효한 UUID여야 합니다."
+msgstr "기밀 식별자는 유효한 UUID여야 합니다."
 
 msgid "A secret identifier is required."
-msgstr "암호 식별자가 필요합니다."
+msgstr "기밀 식별자가 필요합니다."
 
 msgid "The secret identifier should not be empty."
-msgstr "암호 식별자는 비워둘 수 없습니다."
+msgstr "기밀 식별자는 비워둘 수 없습니다."
 
 msgid "Could not validate secret access data."
-msgstr "암호 접근 데이터를 검사할 수 없습니다."
+msgstr "기밀 접근 데이터를 검사할 수 없습니다."
 
 msgid "Could not validate secret history data."
-msgstr "암호 기록 데이터의 유효성을 검사할 수 없습니다."
+msgstr "기밀 기록 데이터의 유효성을 검사할 수 없습니다."
 
 msgid "Invalid pagination limit set for metadata endpoint."
 msgstr "메타데이터 엔드포인트에 잘못된 페이징 제한이 설정되었습니다"
@@ -3575,10 +3575,10 @@ msgid "No configuration set for Duo API hostname."
 msgstr "Duo API 호스트 이름에 대한 구성이 설정되지 않았습니다."
 
 msgid "No configuration set for Duo client secret."
-msgstr "Duo 클라이언트 암호에 대한 구성이 설정되지 않았습니다."
+msgstr "Duo 클라이언트 시크릿이 설정되지 않았습니다."
 
 msgid "This is not a valid Duo client secret."
-msgstr "올바르지 않은 Duo 클라이언트 암호입니다."
+msgstr "올바르지 않은 Duo 클라이언트 시크릿입니다."
 
 msgid "This is not a valid Duo API hostname."
 msgstr "올바르지 않은 Duo API 호스트 이름입니다."
