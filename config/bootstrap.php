@@ -106,7 +106,7 @@ Configure::write('App.paths', [
  */
 if (Configure::read('debug')) {
     Configure::write('Cache._cake_model_.duration', '+1 millisecond');
-    Configure::write('Cache._cake_core_.duration', '+2 minutes');
+    Configure::write('Cache._cake_translations_.duration', '+2 minutes');
 }
 
 /*
