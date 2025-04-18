@@ -36,7 +36,7 @@ class CacheCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCl
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = !empty(Cache::getConfig('_cake_core_'));
+        $this->status = !empty(Cache::getConfig('_cake_translations_'));
 
         return $this;
     }
