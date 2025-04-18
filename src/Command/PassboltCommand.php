@@ -21,6 +21,7 @@ use Cake\Command\Command;
 use Cake\Console\Arguments;
 use Cake\Console\BaseCommand;
 use Cake\Console\CommandCollection;
+use Cake\Console\CommandFactoryInterface;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
@@ -56,11 +57,14 @@ class PassboltCommand extends Command implements PassboltCommandInterface
     private ?CommandCollection $passboltCommandCollection;
 
     /**
+     * @param \Cake\Console\CommandFactoryInterface|null $factory Command factory instance.
      * @param \Cake\Console\CommandCollection|null $passboltCommandCollection Collection of commands used to display the list of passbolt commands
      * @see PassboltBuildCommandsListener
      */
-    public function __construct(?CommandCollection $passboltCommandCollection = null)
+    public function __construct(?CommandFactoryInterface $factory = null, ?CommandCollection $passboltCommandCollection = null)
     {
+        parent::__construct($factory);
+
         $this->passboltCommandCollection = $passboltCommandCollection;
     }
 
