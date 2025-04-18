@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8ac58f900588d49a0baca080ce2b49dd",
+    "content-hash": "de2f7a83b269ea0f814e7905ff2c9dea",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -264,31 +264,31 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "v5.0.x-dev",
+            "version": "5.2.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/passbolt/cakephp.git",
-                "reference": "b6f0c344c07dcb27af1f6c2815e4055ae9ae7489"
+                "url": "https://github.com/cakephp/cakephp.git",
+                "reference": "64789870f0b2b7b92de9ca85871c2da7193345b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/cakephp/zipball/b6f0c344c07dcb27af1f6c2815e4055ae9ae7489",
-                "reference": "b6f0c344c07dcb27af1f6c2815e4055ae9ae7489",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/64789870f0b2b7b92de9ca85871c2da7193345b6",
+                "reference": "64789870f0b2b7b92de9ca85871c2da7193345b6",
                 "shasum": ""
             },
             "require": {
-                "cakephp/chronos": "^3.0.2",
-                "composer/ca-bundle": "^1.2",
+                "cakephp/chronos": "^3.1",
+                "composer/ca-bundle": "^1.5",
                 "ext-intl": "*",
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "laminas/laminas-diactoros": "^3.0",
+                "laminas/laminas-diactoros": "^3.3",
                 "laminas/laminas-httphandlerrunner": "^2.6",
                 "league/container": "^4.2",
                 "php": ">=8.1",
                 "psr/container": "^1.1 || ^2.0",
                 "psr/http-client": "^1.0.2",
-                "psr/http-factory": "^1.0.2",
+                "psr/http-factory": "^1.1",
                 "psr/http-message": "^1.1 || ^2.0",
                 "psr/http-server-handler": "^1.0.2",
                 "psr/http-server-middleware": "^1.0.2",
@@ -321,27 +321,25 @@
                 "cakephp/validation": "self.version"
             },
             "require-dev": {
-                "cakephp/cakephp-codesniffer": "^5.0",
-                "http-interop/http-factory-tests": "^2.0",
+                "cakephp/cakephp-codesniffer": "^5.2",
+                "http-interop/http-factory-tests": "dev-main",
                 "mikey179/vfsstream": "^1.6.10",
                 "mockery/mockery": "^1.6",
                 "paragonie/csp-builder": "^2.3 || ^3.0",
-                "phpstan/extension-installer": "^1.3",
-                "phpstan/phpstan": "1.12.3",
-                "phpunit/phpunit": "^10.1.0 <=10.5.3",
-                "symplify/phpstan-rules": "^12.4"
+                "phpunit/phpunit": "^10.5.5 || ^11.1.3 || ^12.0.9"
             },
             "suggest": {
                 "ext-curl": "To enable more efficient network calls in Http\\Client.",
                 "ext-openssl": "To use Security::encrypt() or have secure CSRF token generation.",
-                "lib-ICU": "To use locale-aware features in the I18n and Database packages",
                 "paragonie/csp-builder": "CSP builder, to use the CSP Middleware"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-5.next": "5.2.x-dev"
+                }
+            },
             "autoload": {
-                "psr-4": {
-                    "Cake\\": "src/"
-                },
                 "files": [
                     "src/Core/functions.php",
                     "src/Error/functions.php",
@@ -350,68 +348,12 @@
                     "src/ORM/bootstrap.php",
                     "src/Routing/functions.php",
                     "src/Utility/bootstrap.php"
-                ]
-            },
-            "autoload-dev": {
+                ],
                 "psr-4": {
-                    "Cake\\PHPStan\\": "tests/PHPStan/",
-                    "Cake\\Test\\": "tests/",
-                    "TestApp\\": "tests/test_app/TestApp/",
-                    "TestApp\\Test\\": "tests/test_app/TestApp/tests/",
-                    "TestPlugin\\": "tests/test_app/Plugin/TestPlugin/src/",
-                    "TestPlugin\\Test\\": "tests/test_app/Plugin/TestPlugin/tests/",
-                    "TestPluginTwo\\": "tests/test_app/Plugin/TestPluginTwo/src/",
-                    "Company\\TestPluginThree\\": "tests/test_app/Plugin/Company/TestPluginThree/src/",
-                    "Company\\TestPluginThree\\Test\\": "tests/test_app/Plugin/Company/TestPluginThree/tests/",
-                    "Named\\": "tests/test_app/Plugin/Named/src/"
+                    "Cake\\": "src/"
                 }
             },
-            "scripts": {
-                "check": [
-                    "@cs-check",
-                    "@test"
-                ],
-                "cs-check": [
-                    "phpcs --colors --parallel=16 -p"
-                ],
-                "cs-fix": [
-                    "phpcbf --colors --parallel=16 -p"
-                ],
-                "phpstan": [
-                    "phpstan analyse"
-                ],
-                "psalm": [
-                    "tools/psalm --show-info=false"
-                ],
-                "stan": [
-                    "@phpstan",
-                    "@psalm"
-                ],
-                "phpstan-tests": [
-                    "phpstan analyze -c tests/phpstan.neon"
-                ],
-                "phpstan-baseline": [
-                    "phpstan --generate-baseline"
-                ],
-                "psalm-baseline": [
-                    "tools/psalm  --set-baseline=psalm-baseline.xml"
-                ],
-                "stan-setup": [
-                    "phive install"
-                ],
-                "lowest": [
-                    "validate-prefer-lowest"
-                ],
-                "lowest-setup": [
-                    "composer update --prefer-lowest --prefer-stable --prefer-dist --no-interaction && cp composer.json composer.backup && composer require --dev dereuromark/composer-prefer-lowest && mv composer.backup composer.json"
-                ],
-                "test": [
-                    "phpunit"
-                ],
-                "test-coverage": [
-                    "phpunit --coverage-clover=clover.xml"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -435,11 +377,11 @@
                 "validation"
             ],
             "support": {
-                "issues": "https://github.com/cakephp/cakephp/issues",
                 "forum": "https://discourse.cakephp.org/",
+                "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/cakephp"
             },
-            "time": "2025-05-06T03:57:39+00:00"
+            "time": "2025-04-18T03:47:27+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -7884,22 +7826,14 @@
             "time": "2023-10-09T18:13:40+00:00"
         }
     ],
-    "aliases": [
-        {
-            "package": "cakephp/cakephp",
-            "version": "5.0.9999999.9999999-dev",
-            "alias": "5.0.11",
-            "alias_normalized": "5.0.11.0"
-        }
-    ],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "cakephp/cakephp": 20,
-        "lorenzo/cakephp-email-queue": 20,
         "bcrowe/cakephp-api-pagination": 20,
-        "psy/psysh": 0,
+        "lorenzo/cakephp-email-queue": 20,
         "passbolt/passbolt-selenium-api": 20,
-        "passbolt/passbolt-test-data": 20
+        "passbolt/passbolt-test-data": 20,
+        "psy/psysh": 0
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -7914,7 +7848,7 @@
         "ext-pdo": "*",
         "ext-curl": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.2"
     },
