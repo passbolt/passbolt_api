@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-04-17 02:05\n"
+"PO-Revision-Date: 2025-04-21 02:03\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -1373,7 +1373,7 @@ msgid "Check the network configuration to allow this script to check for updates
 msgstr "이 스크립트가 업데이트를 확인할 수 있도록 네트워크 구성을 확인하세요."
 
 msgid "Search engine robots are told not to index content."
-msgstr "검색 엔진 로봇들은 콘텐츠를 인덱싱하지 말라고 지시됩니다."
+msgstr "검색 엔진 로봇이 콘텐츠를 인덱싱하지 않도록 설정되어 있습니다."
 
 msgid "Search engine robots are not told not to index content."
 msgstr "검색 엔진 로봇들에게 콘텐츠를 인덱싱하지 말라고 지시되지 않습니다."
