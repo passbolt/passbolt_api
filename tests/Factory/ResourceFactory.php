@@ -26,6 +26,7 @@ use Cake\Chronos\Chronos;
 use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
 /**
  * ResourceFactory
@@ -168,11 +169,12 @@ class ResourceFactory extends CakephpBaseFactory
         $type = $isShared ? 'shared_key' : 'user_key';
         if (isset($v5Fields['metadata_key_id'])) {
             $this->setField('metadata_key_id', $v5Fields['metadata_key_id']);
+            unserialize($v5Fields['metadata_key_id']);
         } else {
             $this->with('MetadataKeys');
         }
 
-        return $this->patchData([
+        return $this->patchData(array_merge([
             // Set V5 fields (not null and valid)
             'metadata' => $v5Fields['metadata'] ?? 'foo-bar', // todo set proper encrypted resource metadata
             'metadata_key_type' => $type,
@@ -181,6 +183,8 @@ class ResourceFactory extends CakephpBaseFactory
             'username' => null,
             'uri' => null,
             'description' => null,
-        ]);
+            // set valid v5 resource type
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT),
+        ], $v5Fields));
     }
 }
