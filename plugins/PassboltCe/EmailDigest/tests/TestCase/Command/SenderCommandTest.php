@@ -98,7 +98,6 @@ class SenderCommandTest extends AppIntegrationTestCase
      */
     public function testSenderCommandLocale()
     {
-        $this->loadPlugins(['Passbolt/Locale' => []]);
         $frenchLocale = 'fr-FR';
 
         /** @var \App\Model\Entity\User $frenchSpeakingUser */

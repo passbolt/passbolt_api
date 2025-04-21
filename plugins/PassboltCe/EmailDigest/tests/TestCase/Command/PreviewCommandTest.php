@@ -130,7 +130,6 @@ class PreviewCommandTest extends AppIntegrationTestCase
      */
     public function testPreviewCommandLocale(): void
     {
-        $this->loadPlugins(['Passbolt/Locale' => []]);
         $frenchLocale = 'fr-FR';
         /** @var \App\Model\Entity\User $frenchSpeakingUser */
         $frenchSpeakingUser = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
