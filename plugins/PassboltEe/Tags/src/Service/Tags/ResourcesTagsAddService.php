@@ -152,6 +152,7 @@ class ResourcesTagsAddService
                 if (!$tagDto->isV5()) {
                     unset($clearTextTags[array_search($existingTag->slug, $clearTextTags)]);
                 } else {
+                    /** @phpstan-ignore-next-line */
                     $encryptedTags = Hash::remove($encryptedTags, "{n}[id={$existingTag->id}]");
                 }
 
