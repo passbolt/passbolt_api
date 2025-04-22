@@ -897,9 +897,6 @@
     <MethodSignatureMismatch>
       <code><![CDATA[PasswordExpirySettingFactory]]></code>
     </MethodSignatureMismatch>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting|\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[] persist()]]></code>
-    </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltCe/Rbacs/src/Service/Rbacs/RbacsInsertDefaultsService.php">
     <NoInterfaceProperties>
@@ -1325,9 +1322,6 @@
     <MethodSignatureMismatch>
       <code><![CDATA[MfaPoliciesSettingFactory]]></code>
     </MethodSignatureMismatch>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting|\Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting[] persist()]]></code>
-    </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/MfaPolicies/tests/TestCase/Controller/MfaPoliciesSettingsSetControllerTest.php">
     <InvalidPropertyFetch>
@@ -1339,17 +1333,11 @@
     <MethodSignatureMismatch>
       <code><![CDATA[PasswordExpiryPoliciesSettingFactory]]></code>
     </MethodSignatureMismatch>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting|\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[] persist()]]></code>
-    </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/PasswordPoliciesUpdate/tests/Factory/PasswordPoliciesSettingFactory.php">
     <MethodSignatureMismatch>
       <code><![CDATA[PasswordPoliciesSettingFactory]]></code>
     </MethodSignatureMismatch>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting|\Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting[] persist()]]></code>
-    </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/Sso/src/Service/Sso/Azure/SsoAzureService.php">
     <RedundantCondition>
@@ -1818,9 +1806,6 @@
     <MethodSignatureMismatch>
       <code><![CDATA[UserPassphrasePoliciesSettingFactory]]></code>
     </MethodSignatureMismatch>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting|\Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting[] persist()]]></code>
-    </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Controller/Settings/SettingsIndexController.php">
     <InvalidConstantAssignmentValue>

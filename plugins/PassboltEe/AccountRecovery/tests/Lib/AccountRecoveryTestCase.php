@@ -32,9 +32,9 @@ class AccountRecoveryTestCase extends AppTestCase
     /**
      * Get a dummy valid public key
      *
-     * @return string
+     * @return string|false
      */
-    protected function getDummyPublicKey(): string
+    protected function getDummyPublicKey(): string|false
     {
         return file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
     }
@@ -42,9 +42,9 @@ class AccountRecoveryTestCase extends AppTestCase
     /**
      * Get a dummy valid private key
      *
-     * @return string
+     * @return string|false
      */
-    protected function getDummyPrivateKey(): string
+    protected function getDummyPrivateKey(): string|false
     {
         return file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password_sig_ada.msg');
     }

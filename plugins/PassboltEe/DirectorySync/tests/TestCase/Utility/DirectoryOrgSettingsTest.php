@@ -117,6 +117,7 @@ class DirectoryOrgSettingsTest extends AppTestCase
         $directoryOrgSettings = new DirectoryOrgSettings($settings);
         $directoryOrgSettings->save($uac);
 
+        /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
         $domains = Hash::get($settings, 'ldap.domains', []);

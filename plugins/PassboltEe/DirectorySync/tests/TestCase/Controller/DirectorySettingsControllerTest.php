@@ -120,6 +120,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
         $this->putJson('/directorysync/settings.json?api-version=2', $formData);
         $this->assertSuccess();
 
+        /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
         $this->assertNotEmpty($settings);
@@ -152,6 +153,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
         $this->putJson('/directorysync/settings.json?api-version=2', $formData);
         $this->assertSuccess();
 
+        /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
         $this->assertNotEmpty($settings);

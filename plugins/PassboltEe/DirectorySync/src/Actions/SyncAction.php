@@ -597,7 +597,7 @@ abstract class SyncAction
                 $this->getSingularLoweredEntityType(),
                 $this->getEntityName($existingEntity)
             );
-            $reportData = $this->DirectoryIgnore->get($existingEntity->id);
+            $reportData = $this->DirectoryIgnore->get($existingEntity->get('id'));
         } else {
             $msg = __(
                 'The {0} {1} was not synced because the directory {0} is marked as to be ignored.',
