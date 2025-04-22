@@ -122,9 +122,9 @@ class MfaAccountSettings
     /**
      * Return MfaSettings as JSON object
      *
-     * @return string
+     * @return string|false
      */
-    public function toJson(): string
+    public function toJson(): string|false
     {
         return json_encode($this->settings);
     }

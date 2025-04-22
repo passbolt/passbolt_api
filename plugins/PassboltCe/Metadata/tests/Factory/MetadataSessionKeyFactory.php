@@ -53,7 +53,7 @@ class MetadataSessionKeyFactory extends CakephpBaseFactory
         ];
     }
 
-    public static function getCleartextDataJson(): string
+    public static function getCleartextDataJson(): string|false
     {
         return json_encode(self::getCleartextData());
     }
