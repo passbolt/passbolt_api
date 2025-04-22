@@ -96,7 +96,7 @@
         "phpunit/phpunit": "^10.1.0",
         "cakephp/cakephp-codesniffer": "^5.0",
         "passbolt/passbolt-selenium-api": "dev-cakephp5",
-        "passbolt/passbolt-test-data": "dev-cakephp5",
+        "passbolt/passbolt-test-data": "dev-cakephp5#75bf182692301efd5f4118f6f29b0b3a8619a41d",
         "vierge-noire/cakephp-fixture-factories": "^v3.0",
         "cakephp/localized": "^5.0",
         "cakedc/cakephp-phpstan": "^3.2",
