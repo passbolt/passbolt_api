@@ -85,8 +85,7 @@ class FixDirectorySyncLegacyFieldsMappingService
             throw new Exception('Invalid phinxlog migration entity, end_time property not defined.');
         }
 
-        /** @phpstan-ignore-next-line */
-        return $directorySyncSetting->created->lessThan($migration->end_time);
+        return $directorySyncSetting->created->lessThan($migration->get('end_time'));
     }
 
     /**

@@ -57,7 +57,9 @@ class TransfersUpdateService
 
         // Cleanup the tokens if needed
         // @later (tm) could be moved in a cron job
+        /** @psalm-suppress UndefinedMagicMethod */
         $this->AuthenticationTokens->setActiveExpiredTokenToInactive(AuthenticationToken::TYPE_MOBILE_TRANSFER);
+        /** @psalm-suppress UndefinedMagicMethod */
         $this->Transfers->cancelAllTransfersWithInactiveAuthenticationToken();
     }
 

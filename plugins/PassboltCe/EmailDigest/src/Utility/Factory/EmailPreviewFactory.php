@@ -89,7 +89,7 @@ class EmailPreviewFactory
         return (new EmailDigest())
             ->addEmailData($emailQueueEntity)
             ->setSubject($emailQueueEntity->get('subject'))
-            ->setEmailIds([$emailQueueEntity->id])
+            ->setEmailIds([$emailQueueEntity->get('id')])
             ->setEmailRecipient($emailQueueEntity->get('email'))
             ->setFullBaseUrl($emailQueueEntity->get('template_vars')['body']['fullBaseUrl'] ?? '/');
     }

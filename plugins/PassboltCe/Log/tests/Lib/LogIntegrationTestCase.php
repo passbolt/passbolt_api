@@ -21,6 +21,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
+use Passbolt\Log\Model\Table\ActionsTable;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTestTrait;
 use Passbolt\Log\Test\Lib\Traits\EntitiesHistoryTestTrait;
 
@@ -66,7 +67,7 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
     /**
      * @var \Passbolt\Log\Model\Table\ActionsTable
      */
-    protected $Actions;
+    protected ActionsTable $Actions;
 
     public function setUp(): void
     {
@@ -100,6 +101,7 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         ]);
         $this->enableFeaturePlugin('JwtAuthentication');
 
+        /** @psalm-suppress UndefinedMagicMethod */
         $this->Actions->clearCache();
     }
 

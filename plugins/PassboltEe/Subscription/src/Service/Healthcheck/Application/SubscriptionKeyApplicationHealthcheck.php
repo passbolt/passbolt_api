@@ -252,6 +252,7 @@ class SubscriptionKeyApplicationHealthcheck implements HealthcheckServiceInterfa
      */
     protected function limitNearlyReached(int $currentUsers, int $allowedUsers): bool
     {
+        /** @psalm-suppress InvalidOperand false positive  */
         return $currentUsers >= $allowedUsers - (int)ceil($allowedUsers * static::THRESHOLD_USER_LIMIT);
     }
 

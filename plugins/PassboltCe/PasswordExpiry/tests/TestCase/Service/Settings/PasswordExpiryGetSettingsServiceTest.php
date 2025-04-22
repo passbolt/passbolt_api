@@ -62,6 +62,7 @@ class PasswordExpiryGetSettingsServiceTest extends TestCase
 
     public function testPasswordExpiryGetSettingsService_Success_SettingsInDB()
     {
+        /** @var \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting $settingInDB */
         $settingInDB = PasswordExpirySettingFactory::make()->persist();
         $result = $this->service->get()->toArray();
         $this->assertPasswordExpirySettingsMatchesEntity($settingInDB, $result);

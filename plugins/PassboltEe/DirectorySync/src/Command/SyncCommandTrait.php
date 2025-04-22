@@ -103,10 +103,10 @@ trait SyncCommandTrait
                     $exception = $data->getException();
                     if ($exception instanceof ValidationException) {
                         $this->displayValidationError($exception->getErrors(), $io);
-                        $id = $exception->getEntity()->id;
+                        $id = $exception->getEntity()->get('id');
                         $model = $this->model;
                     } else {
-                        $id = $data->getEntity()->id;
+                        $id = $data->getEntity()->get('id');
                         $model = 'DirectoryEntries';
                     }
 
