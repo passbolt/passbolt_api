@@ -58,7 +58,6 @@ use Throwable;
  * @property \App\Model\Table\SecretsTable&\Cake\ORM\Association\HasMany $Secrets
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
  * @method \App\Model\Entity\Resource get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
- * @method \App\Model\Entity\Resource get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\Resource[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\Resource|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Resource patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
@@ -290,8 +289,7 @@ class ResourcesTable extends Table
             ));
 
         $validator
-            ->uuid('resource_type_id', __('The resource type identifier should be a valid UUID.'))
-            ->requirePresence('resource_type_id', 'create', __('A resource type identifier is required.'))
+            ->remove('resource_type_id', 'inList') // clear v4 validation rules
             ->inList('resource_type_id', ResourceType::getV5ResourceTypes(), __(
                 'The resource type should be one of the following: {0}.',
                 implode(', ', ResourceType::V5_RESOURCE_TYPE_SLUGS)
