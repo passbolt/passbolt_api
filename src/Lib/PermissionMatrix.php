@@ -163,7 +163,9 @@ class PermissionMatrix
     private static function _loadCsv($file, $orientation = 'resource')
     {
         $matrix = [];
-        $csv = array_map('str_getcsv', file($file));
+        foreach (file($file) as $chunks) {
+            $csv[] = str_getcsv($chunks, separator: ',', enclosure: '"', escape: '');
+        }
 
         // Extract the csv header
         $header = array_shift($csv);
