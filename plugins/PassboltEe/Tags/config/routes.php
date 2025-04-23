@@ -40,3 +40,29 @@ $routes->plugin('Passbolt/Tags', ['path' => '/tags'], function (RouteBuilder $ro
         ->setMethods(['DELETE'])
         ->setMiddleware([TagsReadOnlyModeMiddleware::class]);
 });
+
+/** @var \Cake\Routing\RouteBuilder $routes */
+$routes->plugin('Passbolt/Tags', ['path' => '/metadata'], function (RouteBuilder $routes): void {
+    $routes->setExtensions(['json']);
+
+    /**
+     * Tags upgrade endpoints.
+     */
+    $routes->scope('/upgrade', function (RouteBuilder $routes): void {
+        $routes->setExtensions(['json']);
+
+        $routes
+            ->connect(
+                '/tags',
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeTagsIndex', 'action' => 'index']
+            )
+            ->setMethods(['GET']);
+
+        $routes
+            ->connect(
+                '/tags',
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeTagsPost', 'action' => 'post']
+            )
+            ->setMethods(['POST']);
+    });
+});

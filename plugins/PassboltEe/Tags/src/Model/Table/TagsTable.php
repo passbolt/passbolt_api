@@ -547,4 +547,46 @@ class TagsTable extends Table
 
         return $tagExists;
     }
+
+    /**
+     * Returns all tags in v4 format that need to be upgraded.
+     * The user_id field is added virtually
+     *
+     * @param array $options query options
+     * @return \Cake\ORM\Query
+     */
+    public function findMetadataUpgradeIndex(array $options): Query
+    {
+        $query = $this->find('v4')->disableHydration();
+
+        $query->leftJoinWith('ResourcesTags');
+
+        $query
+            ->select([
+                'Tags.id',
+                'Tags__user_id' => new IdentifierExpression('ResourcesTags.user_id'),
+                'Tags.slug',
+                'Tags.is_shared',
+            ]);
+
+        if (!isset($options['filter']['is-shared'])) {
+            return $query;
+        }
+
+        $isShared = (bool)$options['filter']['is-shared'];
+        $query->where(['Tags.is_shared' => $isShared]);
+
+        return $query;
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query Query
+     * @return \Cake\ORM\Query
+     */
+    public function findV4(Query $query): Query
+    {
+        return $query->where([
+            $query->newExpr()->isNull($this->aliasField('metadata')),
+        ]);
+    }
 }
