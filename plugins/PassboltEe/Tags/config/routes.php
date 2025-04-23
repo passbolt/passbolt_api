@@ -78,5 +78,12 @@ $routes->plugin('Passbolt/Tags', ['path' => '/metadata'], function (RouteBuilder
                 ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyTagsIndex', 'action' => 'index']
             )
             ->setMethods(['GET']);
+
+        $routes
+            ->connect(
+                '/tags',
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyTagsPost', 'action' => 'post']
+            )
+            ->setMethods(['POST']);
     });
 });

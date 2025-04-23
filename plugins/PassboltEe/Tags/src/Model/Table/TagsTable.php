@@ -39,6 +39,7 @@ use Cake\Validation\Validator;
 use Exception;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
+use Passbolt\Metadata\Model\Rule\IsSharedMetadataKeyUniqueActiveRule;
 use Passbolt\Metadata\Model\Rule\IsV4ToV5UpgradeAllowedRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
@@ -94,6 +95,10 @@ class TagsTable extends Table
 
         $this->belongsToMany('Users', [
             'through' => 'ResourcesTags',
+        ]);
+
+        $this->belongsTo('MetadataKeys', [
+            'className' => 'Passbolt/Metadata.MetadataKeys',
         ]);
     }
 
@@ -183,6 +188,11 @@ class TagsTable extends Table
         $rules->add(new MetadataKeyIdNotExpiredRule(), 'isMetadataKeyNotExpired', [
             'errorField' => 'metadata_key_id',
             'message' => __('The metadata key is marked as expired.'),
+        ]);
+
+        $rules->add(new IsSharedMetadataKeyUniqueActiveRule(), 'isSharedMetadataKeyUniqueActive', [
+            'errorField' => 'metadata_key_id',
+            'message' => __('The shared metadata key should be unique.'),
         ]);
 
         $rules->add(new IsValidEncryptedMetadataRule(), 'isValidEncryptedMetadata', [
