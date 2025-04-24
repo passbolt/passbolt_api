@@ -21,7 +21,7 @@ use App\Model\Entity\User;
 use App\Test\Factory\Traits\FactoryDeletedTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\I18n\Date;
+use Cake\Chronos\Chronos;
 use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
@@ -65,8 +65,8 @@ class UserFactory extends CakephpBaseFactory
                 'role_id' => $faker->uuid(),
                 'active' => true,
                 'deleted' => false,
-                'created' => Date::now()->subDays($faker->randomNumber(4)),
-                'modified' => Date::now()->subDays($faker->randomNumber(4)),
+                'created' => Chronos::now()->subDays($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDays($faker->randomNumber(4)),
             ];
         });
 
