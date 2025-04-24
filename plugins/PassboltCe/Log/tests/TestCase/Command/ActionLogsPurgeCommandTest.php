@@ -23,6 +23,9 @@ use Cake\I18n\Date;
 use Passbolt\Log\LogPlugin;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 
+/**
+ * @covers \Passbolt\Log\Command\ActionLogsPurgeCommand
+ */
 class ActionLogsPurgeCommandTest extends AppIntegrationTestCase
 {
     use ConsoleIntegrationTestTrait;
@@ -65,6 +68,21 @@ class ActionLogsPurgeCommandTest extends AppIntegrationTestCase
         $this->assertOutputContains('<success>1 action logs entries were deleted.</success>');
         $this->assertSame(1, ActionLogFactory::count());
         $this->assertSame($actionToRetain->get('id'), ActionLogFactory::firstOrFail()->get('id'));
+    }
+
+    public function testActionLogsPurgeCommand_Purge_LargeData()
+    {
+        $retentionPeriodInDays = 2;
+        $noOfRecords = rand(101, 1001);
+        ActionLogFactory::make(['created' => Date::now()->subDays($retentionPeriodInDays + 1)], $noOfRecords)
+            ->setActionId('AuthLogin.loginGet')
+            ->persist();
+
+        $this->exec('passbolt action_logs_purge -r ' . $retentionPeriodInDays);
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains(sprintf('<success>%d action logs entries were deleted.</success>', $noOfRecords));
+        $this->assertSame(0, ActionLogFactory::count());
     }
 
     public function testActionLogsPurgeCommand_Dry_Run()
