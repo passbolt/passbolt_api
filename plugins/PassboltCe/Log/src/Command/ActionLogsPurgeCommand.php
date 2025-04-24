@@ -31,7 +31,7 @@ class ActionLogsPurgeCommand extends PassboltCommand
     protected ProcessUserService $processUserService;
     protected ActionLogsPurgeService $purgeService;
 
-    public const DEFAULT_LIMIT = '100_000'; // 100k
+    public const DEFAULT_LIMIT = '100000'; // 100k
 
     /**
      * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
