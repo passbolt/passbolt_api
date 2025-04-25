@@ -52,7 +52,7 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertArrayHasAttributes($responseKeys, $response[1]);
     }
 
-    public function testMetadataKeysIndexController_Success_WithMetadataPrivateKeys()
+    public function testMetadataKeysIndexController_Success_WithContains()
     {
         $user = UserFactory::make()->user()->active()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier()->persist();
@@ -61,13 +61,13 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
         MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser()->persist();
         $this->logInAs($user);
 
-        $queryParams = http_build_query(['contain' => ['metadata_private_keys' => '1']]);
+        $queryParams = http_build_query(['contain' => ['metadata_private_keys' => '1', 'creator.profile' => '1']]);
         $this->getJson("/metadata/keys.json?{$queryParams}");
 
         $this->assertSuccess();
         $response = $this->getResponseBodyAsArray();
         $this->assertCount(1, $response);
-        $responseKeys = ['id', 'fingerprint', 'armored_key', 'created', 'modified', 'deleted', 'metadata_private_keys'];
+        $responseKeys = ['id', 'fingerprint', 'armored_key', 'created', 'modified', 'deleted', 'metadata_private_keys', 'creator'];
         $this->assertArrayHasAttributes($responseKeys, $response[0]);
         // make sure only private keys related to user is returned
         $this->assertCount(1, $response[0]['metadata_private_keys']);
@@ -83,6 +83,59 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
                 'modified_by' => $metadataPrivateKey->modified_by,
             ],
         ], $response[0]['metadata_private_keys']);
+        // creator data is returned
+        $expectedCreator = $metadataKey->get('creator');
+        $creator = $response[0]['creator'];
+        $this->assertEqualsCanonicalizing(
+            [
+                'id' => $expectedCreator->get('id'),
+                'role_id' => $expectedCreator->get('role_id'),
+                'username' => $expectedCreator->get('username'),
+                'active' => $expectedCreator->get('active'),
+                'deleted' => $expectedCreator->get('deleted'),
+                'disabled' => $expectedCreator->get('disabled'),
+                'created' => $expectedCreator->get('created')->toIso8601String(),
+                'modified' => $expectedCreator->get('modified')->toIso8601String(),
+                'last_logged_in' => null,
+            ],
+            [
+                'id' => $creator['id'],
+                'role_id' => $creator['role_id'],
+                'username' => $creator['username'],
+                'active' => $creator['active'],
+                'deleted' => $creator['deleted'],
+                'disabled' => $creator['disabled'],
+                'created' => $creator['created'],
+                'modified' => $creator['modified'],
+                'last_logged_in' => $creator['last_logged_in'],
+            ]
+        );
+        // assert profile data
+        $this->assertArrayHasKey('profile', $creator);
+        $expectedProfile = $expectedCreator->get('profile');
+        $profile = $creator['profile'];
+        $this->assertEqualsCanonicalizing(
+            [
+                'id' => $expectedProfile->get('id'),
+                'user_id' => $expectedProfile->get('user_id'),
+                'first_name' => $expectedProfile->get('first_name'),
+                'last_name' => $expectedProfile->get('last_name'),
+                'created' => $expectedProfile->get('created')->toIso8601String(),
+                'modified' => $expectedProfile->get('modified')->toIso8601String(),
+            ],
+            [
+                'id' => $profile['id'],
+                'user_id' => $profile['user_id'],
+                'first_name' => $profile['first_name'],
+                'last_name' => $profile['last_name'],
+                'created' => $profile['created'],
+                'modified' => $profile['modified'],
+            ]
+        );
+        $this->assertArrayHasKey('avatar', $profile);
+        $this->assertArrayHasKey('url', $profile['avatar']);
+        $this->assertNotEmpty($profile['avatar']['url']['small']);
+        $this->assertNotEmpty($profile['avatar']['url']['medium']);
     }
 
     public function testMetadataKeysIndexController_Success_FilterDeleted()
