@@ -19,6 +19,7 @@ namespace Passbolt\PasswordExpiry\Service\Settings;
 
 use App\Model\Entity\OrganizationSetting;
 use App\Utility\UserAccessControl;
+use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\PasswordExpiry\Model\Dto\PasswordExpirySettingsDto;
 use Passbolt\PasswordExpiry\Model\Table\PasswordExpirySettingsTable;
@@ -53,17 +54,20 @@ class PasswordExpiryEnableOnInstanceCreationService
 
         // Return silently if for any unexpected reasons the UAC is not admin
         if (!$uac->isAdmin()) {
+            Log::warning('The user creating a new passbolt instance should be an administrator.');
+
             return null;
         }
 
-        $settingProperty = $this->passwordExpirySettingsTable->getProperty();
         // Return silently if for any unexpected reason the settings are already in DB
-        if ($this->isPasswordExpirySettingAlreadyEnabled($settingProperty)) {
+        if ($this->isPasswordExpirySettingAlreadyEnabled()) {
+            Log::warning('Password expiry settings already present in the database.');
+
             return null;
         }
 
         return $this->passwordExpirySettingsTable->createOrUpdateSetting(
-            $settingProperty,
+            $this->passwordExpirySettingsTable->getProperty(),
             $this->getDTO()->getValue(),
             $uac
         );
@@ -78,12 +82,11 @@ class PasswordExpiryEnableOnInstanceCreationService
     }
 
     /**
-     * @param string $property property
      * @return bool
      */
-    private function isPasswordExpirySettingAlreadyEnabled(string $property): bool
+    private function isPasswordExpirySettingAlreadyEnabled(): bool
     {
-        $setting = $this->fetchTable('Passbolt/PasswordExpiry.PasswordExpirySettings')->find()->first();
+        $setting = $this->passwordExpirySettingsTable->find()->first();
 
         return !is_null($setting);
     }
