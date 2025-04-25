@@ -124,7 +124,7 @@ class BaseIdToken extends AccessToken
      */
     public function assertEmailClaim(array $tokenClaims): void
     {
-        $emailClaim = Configure::read('passbolt.plugins.sso.security.emailClaimAlias') ?? 'email';
+        $emailClaim = Configure::read('passbolt.plugins.sso.security.oauth2.emailClaimAlias') ?? 'email';
 
         if (!isset($tokenClaims[$emailClaim]) || !EmailValidationRule::check($tokenClaims[$emailClaim])) {
             throw new BadRequestException('The email claim is not found or invalid.');

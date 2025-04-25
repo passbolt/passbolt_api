@@ -56,7 +56,7 @@ class OAuth2ResourceOwner implements ResourceOwnerInterface, SsoResourceOwnerInt
      */
     public function getEmail(): ?string
     {
-        $emailClaim = Configure::read('passbolt.plugins.sso.security.emailClaimAlias') ?? 'email';
+        $emailClaim = Configure::read('passbolt.plugins.sso.security.oauth2.emailClaimAlias') ?? 'email';
 
         return $this->data[$emailClaim] ?? null;
     }
