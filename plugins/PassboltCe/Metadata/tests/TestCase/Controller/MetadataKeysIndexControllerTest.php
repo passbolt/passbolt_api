@@ -52,7 +52,7 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertArrayHasAttributes($responseKeys, $response[1]);
     }
 
-    public function testMetadataKeysIndexController_Success_WithContains()
+    public function testMetadataKeysIndexController_Success_WithContains_And_Filter()
     {
         $user = UserFactory::make()->user()->active()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier()->persist();
@@ -61,7 +61,9 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
         MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser()->persist();
         $this->logInAs($user);
 
-        $queryParams = http_build_query(['contain' => ['metadata_private_keys' => '1', 'creator.profile' => '1']]);
+        $queryParams = http_build_query([
+            'contain' => ['metadata_private_keys' => '1', 'creator.profile' => '1'],
+            'filter' => ['deleted' => '0']]);
         $this->getJson("/metadata/keys.json?{$queryParams}");
 
         $this->assertSuccess();
