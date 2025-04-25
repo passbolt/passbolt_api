@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-02-14 06:14+0000\n"
-"PO-Revision-Date: 2025-04-14 02:46\n"
+"PO-Revision-Date: 2025-04-24 06:15\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -1001,10 +1001,10 @@ msgid "The armored key should be a valid ASCII-armored OpenPGP key."
 msgstr "무장된 키는 유효한 ASCII로 무장된 OpenPGP key여야 합니다."
 
 msgid "The armored key is not valid."
-msgstr "암호화된 키가 유효하지 않습니다."
+msgstr "아머드 키가 유효하지 않습니다."
 
 msgid "The message should be a valid ASCII-armored OpenPGP message."
-msgstr "메시지는 유효한 ASCII-암호화된 OpenPGP 메시지여야 합니다."
+msgstr "메시지는 유효한 ASCII-아머드 OpenPGP 메시지여야 합니다."
 
 msgid "The creation date should be set in the past."
 msgstr "생성 날짜는 과거 날짜로 설정해야 합니다."
@@ -1379,7 +1379,7 @@ msgid "Check the network configuration to allow this script to check for updates
 msgstr "이 스크립트가 업데이트를 확인할 수 있도록 네트워크 구성을 확인하세요."
 
 msgid "Search engine robots are told not to index content."
-msgstr "검색 엔진 로봇들은 콘텐츠를 인덱싱하지 말라고 지시됩니다."
+msgstr "검색 엔진 로봇이 콘텐츠를 인덱싱하지 않도록 설정되어 있습니다."
 
 msgid "Search engine robots are not told not to index content."
 msgstr "검색 엔진 로봇들에게 콘텐츠를 인덱싱하지 말라고 지시되지 않습니다."
@@ -1919,7 +1919,7 @@ msgid "The public key could not be parsed."
 msgstr "공개 키 구문 해석을 할 수 없습니다."
 
 msgid "The armored message must not contain an extra line before the end block."
-msgstr "암호화된 메시지에는 끝 블록 앞에 추가 줄이 없어야 합니다."
+msgstr "아머드 메시지에는 끝 블록 앞에 추가 줄이 없어야 합니다."
 
 msgid "The message must contain an asymmetric packet."
 msgstr "메시지에 비대칭 패킷이 포함되어야 합니다."
@@ -1934,7 +1934,7 @@ msgid "Unknown key validation rule: {0}"
 msgstr "알 수 없는 키 유효성 검사 규칙: {0}"
 
 msgid "The armored message could not be validated."
-msgstr "암호화된 메시지를 검증할 수 없습니다."
+msgstr "아머드 메시지를 검증할 수 없습니다."
 
 msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
 msgstr "구성에서 정의한 OpenPGP 서버 키를 사용하여 암호화할 수 없습니다."
@@ -2447,7 +2447,7 @@ msgid "log in passbolt"
 msgstr "패스볼트 로그인"
 
 msgid "{0} shared a folder with you"
-msgstr "{0} 이(가) 당신과 암호를 공유함"
+msgstr "{0} 이(가) 당신과 폴더를 공유함"
 
 msgid "You edited a folder"
 msgstr "폴더를 수정했습니다"
@@ -2459,7 +2459,7 @@ msgid "The user signature could not be verified."
 msgstr "사용자 서명을 확인할 수 없습니다."
 
 msgid "The challenge cannot be decrypted."
-msgstr "챌린지의 암호를 해독할 수 없습니다."
+msgstr "챌린지를 복호화할 수 없습니다."
 
 msgid "The challenge is invalid. Deserialization failed."
 msgstr "챌린지가 유효하지 않습니다. 역직렬화에 실패했습니다."
@@ -2702,19 +2702,19 @@ msgid "A resource identifier is required."
 msgstr "리소스 식별자가 필요합니다."
 
 msgid "The secret identifier should be a valid UUID."
-msgstr "암호 식별자는 유효한 UUID여야 합니다."
+msgstr "기밀 식별자는 유효한 UUID여야 합니다."
 
 msgid "A secret identifier is required."
-msgstr "암호 식별자가 필요합니다."
+msgstr "기밀 식별자가 필요합니다."
 
 msgid "The secret identifier should not be empty."
-msgstr "암호 식별자는 비워둘 수 없습니다."
+msgstr "기밀 식별자는 비워둘 수 없습니다."
 
 msgid "Could not validate secret access data."
-msgstr "암호 접근 데이터를 검사할 수 없습니다."
+msgstr "기밀 접근 데이터를 검사할 수 없습니다."
 
 msgid "Could not validate secret history data."
-msgstr "암호 기록 데이터의 유효성을 검사할 수 없습니다."
+msgstr "기밀 기록 데이터의 유효성을 검사할 수 없습니다."
 
 msgid "Invalid pagination limit set for metadata endpoint."
 msgstr "메타데이터 엔드포인트에 잘못된 페이징 제한이 설정되었습니다"
@@ -3158,16 +3158,16 @@ msgid "No user provided."
 msgstr "제공된 사용자가 없음."
 
 msgid "The metadata could not be encrypted for permission id: {0}."
-msgstr "권한 ID {0} 에 대해 메타데이터를 암호화할 수 없습니다."
+msgstr "다음 권한 Id에 대해 메타데이터를 암호화할 수 없습니다: {0}."
 
 msgid "No OpenPGP key found for the user."
 msgstr "사용자에 대한 OpenPGP 키를 찾을 수 없음."
 
 msgid "The metadata could not be encrypted with the user id: {0}."
-msgstr "메타데이터를 사용자 ID {0} 로 암호화할 수 없습니다."
+msgstr "다음 사용자 Id로 메타데이터를 암호화할 수 없습니다: {0}."
 
 msgid "The metadata could not be encrypted with the metadata key id: {0}."
-msgstr "메타데이터를 메타데이터 키 ID {0} 로 암호화할 수 없습니다."
+msgstr "다음 메타데이터 키Id로 메타데이터를 암호화할 수 없습니다: {0}."
 
 msgid "Unable to migrate folder ID: {0} to V5."
 msgstr "폴더 ID {0} 을(를) V5로 마이그레이션할 수 없습니다."
@@ -3281,7 +3281,7 @@ msgid "You have created a new folder."
 msgstr "새 폴더가 생성되었습니다."
 
 msgid "{0} has shared a folder with you."
-msgstr "{0} 이(가) 당신과 암호를 공유함."
+msgstr "{0} 이(가) 당신과 폴더를 공유함."
 
 msgid "You have edited a folder."
 msgstr "폴더를 수정했습니다."
@@ -3581,10 +3581,10 @@ msgid "No configuration set for Duo API hostname."
 msgstr "Duo API 호스트 이름에 대한 구성이 설정되지 않았습니다."
 
 msgid "No configuration set for Duo client secret."
-msgstr "Duo 클라이언트 암호에 대한 구성이 설정되지 않았습니다."
+msgstr "Duo 클라이언트 시크릿이 설정되지 않았습니다."
 
 msgid "This is not a valid Duo client secret."
-msgstr "올바르지 않은 Duo 클라이언트 암호입니다."
+msgstr "올바르지 않은 Duo 클라이언트 시크릿입니다."
 
 msgid "This is not a valid Duo API hostname."
 msgstr "올바르지 않은 Duo API 호스트 이름입니다."
@@ -4544,7 +4544,7 @@ msgid "The OpenPGP private key cannot be used to decrypt."
 msgstr "OpenPGP 개인 키를 사용하여 복호화할 수 없습니다."
 
 msgid "Please note that passbolt does not support OpenPGP key protected with a secret."
-msgstr "패스볼트는 암호로 보호된 OpenPGP 키를 지원하지 않습니다."
+msgstr "패스볼트는 비밀번호로 보호된 OpenPGP 키를 지원하지 않습니다."
 
 msgid "The fingerprint should not be empty."
 msgstr "지문은 비워둘 수 없습니다."
@@ -6095,7 +6095,7 @@ msgid "The client secret should be a valid string."
 msgstr "클라이언트 비밀번호는 올바른 문자열이여야 합니다."
 
 msgid "The client secret is too large."
-msgstr "클라이언트 비밀번호가 너무 큽니다."
+msgstr "클라이언트 시크릿이 너무 큽니다."
 
 msgid "A client secret expiry is required."
 msgstr "클라이언트 비밀번호 만료가 필요합니다."
@@ -6410,7 +6410,7 @@ msgid "Users are unable to log in via Azure SSO."
 msgstr "사용자가 Azure SSO를 통해 로그인할 수 없습니다."
 
 msgid "This can happen when the client secret of Azure AD is expired, or the SSO configurations (client credentials) are invalid."
-msgstr "이는 Azure AD의 클라이언트 암호가 만료되었거나 SSO 구성(클라이언트 자격 증명)이 유효하지 않은 경우 발생할 수 있습니다."
+msgstr "이는 Azure AD의 클라이언트 시크릿이 만료되었거나 SSO 구성(클라이언트 자격 증명)이 유효하지 않은 경우 발생할 수 있습니다."
 
 msgid "See Azure error response below:"
 msgstr "아래 Azure 오류 응답 참조하세요:"
@@ -6428,13 +6428,13 @@ msgid "Update it in passbolt"
 msgstr "패스볼트에서 업데이트"
 
 msgid "The client secret expiry date of your Azure AD instance is {0}."
-msgstr "Azure AD 인스턴스의 클라이언트 암호 만료 날짜는 {0} 입니다."
+msgstr "Azure AD 인스턴스의 클라이언트 시크릿 만료 날짜는 {0} 입니다."
 
 msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
 msgstr "패스볼트 사용자는 클라이언트 만료 날짜 이후 Azure SSO를 통해 로그인할 수 없습니다."
 
 msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
-msgstr "Azure 측에서 이 문제를 해결하고 암호에서 최신 세부 정보를 업데이트하는 것이 좋습니다."
+msgstr "Azure 측에서 이 문제를 해결하고 패스볼에서 최신 세부 정보를 업데이트하는 것이 좋습니다."
 
 msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
 msgstr "SSO 공급자 {0}이(가) {1}에 의해 테스트되고 활성화되었습니다. "
@@ -6869,7 +6869,7 @@ msgid "Welcome to {0}!"
 msgstr "{0} 에 오신 것을 환영합니다!"
 
 msgid "{0} used the self registration feature to create an account on passbolt."
-msgstr "{0} 이(가) 자체 등록 기능을 사용하여 암호 볼트에 계정을 생성했습니다."
+msgstr "{0} 이(가) 자체 등록 기능을 사용하여 패스볼트에 계정을 생성했습니다."
 
 msgid "Welcome back!"
 msgstr "다시 오신 것을 환영합니다!"
