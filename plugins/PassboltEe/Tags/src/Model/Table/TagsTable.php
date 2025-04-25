@@ -37,7 +37,9 @@ use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use Exception;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
+use Passbolt\Metadata\Model\Rule\IsSharedMetadataKeyUniqueActiveRule;
 use Passbolt\Metadata\Model\Rule\IsV4ToV5UpgradeAllowedRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
@@ -93,6 +95,10 @@ class TagsTable extends Table
 
         $this->belongsToMany('Users', [
             'through' => 'ResourcesTags',
+        ]);
+
+        $this->belongsTo('MetadataKeys', [
+            'className' => 'Passbolt/Metadata.MetadataKeys',
         ]);
     }
 
@@ -182,6 +188,11 @@ class TagsTable extends Table
         $rules->add(new MetadataKeyIdNotExpiredRule(), 'isMetadataKeyNotExpired', [
             'errorField' => 'metadata_key_id',
             'message' => __('The metadata key is marked as expired.'),
+        ]);
+
+        $rules->add(new IsSharedMetadataKeyUniqueActiveRule(), 'isSharedMetadataKeyUniqueActive', [
+            'errorField' => 'metadata_key_id',
+            'message' => __('The shared metadata key should be unique.'),
         ]);
 
         $rules->add(new IsValidEncryptedMetadataRule(), 'isValidEncryptedMetadata', [
@@ -588,5 +599,27 @@ class TagsTable extends Table
         return $query->where([
             $query->newExpr()->isNull($this->aliasField('metadata')),
         ]);
+    }
+
+    /**
+     * Returns all tags with expired metadata key.
+     *
+     * @return \Cake\ORM\Query
+     */
+    public function findMetadataRotateKeyIndex(): Query
+    {
+        $query = $this->find();
+
+        return $query
+            ->where([
+                'Tags.metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
+                $query->newExpr()->isNotNull('Tags.metadata'),
+                $query->newExpr()->isNotNull('Tags.metadata_key_id'),
+            ])
+            ->innerJoin(['MetadataKeys' => 'metadata_keys'], [
+                'MetadataKeys.id' => new IdentifierExpression('Tags.metadata_key_id'),
+                $query->newExpr()->isNotNull('MetadataKeys.expired'),
+            ])
+            ->disableHydration();
     }
 }

@@ -65,4 +65,25 @@ $routes->plugin('Passbolt/Tags', ['path' => '/metadata'], function (RouteBuilder
             )
             ->setMethods(['POST']);
     });
+
+    /**
+     * Key rotation endpoints.
+     */
+    $routes->scope('/rotate-key', function (RouteBuilder $routes): void {
+        $routes->setExtensions(['json']);
+
+        $routes
+            ->connect(
+                '/tags',
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyTagsIndex', 'action' => 'index']
+            )
+            ->setMethods(['GET']);
+
+        $routes
+            ->connect(
+                '/tags',
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyTagsPost', 'action' => 'post']
+            )
+            ->setMethods(['POST']);
+    });
 });
