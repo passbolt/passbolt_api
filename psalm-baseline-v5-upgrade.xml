@@ -212,11 +212,6 @@
       <code><![CDATA[$attackedUser->id]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Authenticator/JwtRefreshTokenAuthenticatorTest.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$user->id]]></code>
-    </InvalidPropertyFetch>
-  </file>
   <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Command/CreateAccessTokenCommandTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
@@ -772,9 +767,6 @@
     <MethodSignatureMismatch>
       <code><![CDATA[PasswordExpirySettingFactory]]></code>
     </MethodSignatureMismatch>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting|\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[] persist()]]></code>
-    </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltCe/Rbacs/src/Service/Rbacs/RbacsInsertDefaultsService.php">
     <NoInterfaceProperties>

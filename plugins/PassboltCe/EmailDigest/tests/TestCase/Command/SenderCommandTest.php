@@ -197,6 +197,7 @@ class SenderCommandTest extends AppIntegrationTestCase
             ->setField('template_vars.body.showSecret', false)
             ->persist();
 
+        /** @var \PHPUnit\Framework\MockObject\MockObject $mockedEmailQueue */
         $mockedEmailQueue = $this->getMockForModel(
             'EmailQueue.EmailQueue',
             ['success',],
