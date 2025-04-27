@@ -52,10 +52,16 @@ class MetadataKeysIndexService
 
         if (is_array($filters) && !empty($filters)) {
             if (isset($filters['deleted'])) {
-                $query->where($filters['deleted'] ? ['deleted IS NOT NULL'] : ['deleted IS NULL']);
+                $deleted = $metadataKeysTable->getConnection()->getDriver()->quoteIdentifier(
+                    $metadataKeysTable->aliasField('deleted')
+                );
+                $query->where($filters['deleted'] ? [$deleted . ' IS NOT NULL'] : [$deleted . ' IS NULL']);
             }
             if (isset($filters['expired'])) {
-                $query->where($filters['expired'] ? ['expired IS NOT NULL'] : ['expired IS NULL']);
+                $expired = $metadataKeysTable->getConnection()->getDriver()->quoteIdentifier(
+                    $metadataKeysTable->aliasField('expired')
+                );
+                $query->where($filters['expired'] ? [$expired . ' IS NOT NULL'] : [$expired . ' IS NULL']);
             }
         }
 
