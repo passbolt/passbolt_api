@@ -27,7 +27,7 @@ use Passbolt\PasswordExpiry\Model\Table\PasswordExpirySettingsTable;
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting|\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[] persist()
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting getEntity()
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[] getEntities()
- * @method static \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting get($primaryKey, array $options = [])
+ * @method static \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting get($primaryKey, array|string $options)
  * @method static \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting firstOrFail($conditions = null)
  * @see \Passbolt\PasswordExpiry\Model\Table\PasswordExpirySettingsTable
  */
