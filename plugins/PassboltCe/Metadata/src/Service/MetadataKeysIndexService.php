@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Service;
 
+use App\Model\Table\AvatarsTable;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 
@@ -33,17 +34,7 @@ class MetadataKeysIndexService
     {
         $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
 
-        $query = $metadataKeysTable->find()->select([
-            'id',
-            'fingerprint',
-            'armored_key',
-            'created',
-            'modified',
-            'created_by',
-            'modified_by',
-            'expired',
-            'deleted',
-        ]);
+        $query = $metadataKeysTable->find();
 
         if (is_array($contain) && !empty($contain)) {
             if (isset($contain['metadata_private_keys'])) {
@@ -51,14 +42,26 @@ class MetadataKeysIndexService
                     return $q->where(['MetadataPrivateKeys.user_id' => $userId]);
                 }]);
             }
+            if (isset($contain['creator'])) {
+                $query->contain(['Creator']);
+            }
+            if (isset($contain['creator.profile'])) {
+                $query->contain(['Creator' => ['Profiles' => AvatarsTable::addContainAvatar()]]);
+            }
         }
 
         if (is_array($filters) && !empty($filters)) {
             if (isset($filters['deleted'])) {
-                $query->where($filters['deleted'] ? ['deleted IS NOT NULL'] : ['deleted IS NULL']);
+                $deleted = $metadataKeysTable->getConnection()->getDriver()->quoteIdentifier(
+                    $metadataKeysTable->aliasField('deleted')
+                );
+                $query->where($filters['deleted'] ? [$deleted . ' IS NOT NULL'] : [$deleted . ' IS NULL']);
             }
             if (isset($filters['expired'])) {
-                $query->where($filters['expired'] ? ['expired IS NOT NULL'] : ['expired IS NULL']);
+                $expired = $metadataKeysTable->getConnection()->getDriver()->quoteIdentifier(
+                    $metadataKeysTable->aliasField('expired')
+                );
+                $query->where($filters['expired'] ? [$expired . ' IS NOT NULL'] : [$expired . ' IS NULL']);
             }
         }
 

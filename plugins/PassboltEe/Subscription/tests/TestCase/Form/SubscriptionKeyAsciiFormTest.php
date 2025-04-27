@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Subscription\Test\TestCase\Form;
 
+use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 use Exception;
@@ -50,8 +51,6 @@ class SubscriptionKeyAsciiFormTest extends TestCase
             $licenseInfo = $this->_licenseKeyForm->parse();
         } catch (Exception $e) {
             $this->fail('The license does not validate: ' . $e->getMessage());
-
-            return null;
         }
         $expected = $this->getValidSubscription();
         $actual = $licenseInfo->toArray();
@@ -63,6 +62,28 @@ class SubscriptionKeyAsciiFormTest extends TestCase
         $this->assertSame($expected['expiry'], $actual['expiry']);
         $this->assertSame($expected['email'], $actual['email']);
         $this->assertSame(trim($licenseStr), $actual['data']);
+    }
+
+    public function testSubscriptionKeyAsciiForm_Parse_SuccessNewFormat()
+    {
+        Configure::write(
+            'passbolt.plugins.subscription.subscriptionKey.public',
+            PLUGINS . 'PassboltEe' . DS . 'Subscription' . DS . 'tests' . DS . 'Fixture' . DS . 'gpg' . DS . 'subscription_staging_public.key'
+        );
+        $licenseStr = $this->getDummySubscriptionKey('subscription_staging_timestamp');
+        $this->_licenseKeyForm->setData(['key_ascii' => $licenseStr]);
+        try {
+            $licenseInfo = $this->_licenseKeyForm->parse();
+        } catch (Exception $e) {
+            $this->fail('The license does not validate: ' . $e->getMessage());
+        }
+        $actual = $licenseInfo->toArray();
+
+        $this->assertSame('123', $actual['customer_id']);
+        $this->assertSame('123', $actual['subscription_id']);
+        $this->assertSame(10, $actual['users']);
+        $this->assertSame('2025-04-22', $actual['created']);
+        $this->assertSame('2027-04-22', $actual['expiry']);
     }
 
     public function testSubscriptionKeyAsciiForm_Validate_ErrorInvalidFormat()

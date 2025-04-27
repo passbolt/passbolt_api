@@ -72,10 +72,10 @@ class JwksGetService extends JwtAbstractService
     }
 
     /**
-     * @return string
+     * @return string|false
      * @throws \Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException if the public key file is not found or not readable.
      */
-    public function getRawPublicKey(): string
+    public function getRawPublicKey(): string|false
     {
         return $this->readKeyFileContent();
     }

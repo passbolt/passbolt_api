@@ -116,7 +116,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
             ->with('Users', $user)
             ->with('Tags', ['slug' => 'firefox'])
             ->persist();
-        $tagId = $resourceTag->tag->id;
+        $tagId = $resourceTag->tag->get('id');
 
         $this->putJson("/tags/$tagId.json?api-version=v2", [
             'slug' => str_repeat('a', 129),
@@ -145,7 +145,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
             ->with('Users', $user)
             ->with('Tags', ['slug' => 'firefox'])
             ->persist();
-        $tagId = $resourceTag->tag->id;
+        $tagId = $resourceTag->tag->get('id');
 
         $this->put("/tags/$tagId.json?api-version=v2", [
             'slug' => 'brave',
@@ -428,7 +428,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
             ->with('Users')
             ->with('Tags', $resourceTag->tag)
             ->persist();
-        $tagId = $resourceTag->tag->id;
+        $tagId = $resourceTag->tag->get('id');
 
         $this->putJson("/tags/$tagId.json?api-version=v2", [
             'slug' => 'TEST',
@@ -460,7 +460,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
             ->with('Users')
             ->with('Tags', $resourceTag->tag)
             ->persist();
-        $tagId = $resourceTag->tag->id;
+        $tagId = $resourceTag->tag->get('id');
 
         $this->putJson("/tags/$tagId.json?api-version=v2", [
             'slug' => 'dm\'d', // send slug that can cause SQL injection
@@ -487,7 +487,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
             ->with('Users', $user)
             ->with('Tags', ['slug' => 'foobar'])
             ->persist();
-        $tagId = $resourceTag->tag->id;
+        $tagId = $resourceTag->tag->get('id');
 
         $this->putJson("/tags/{$tagId}.json?api-version=v2", [
             'slug' => 'foobar',

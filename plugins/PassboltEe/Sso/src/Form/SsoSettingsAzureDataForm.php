@@ -61,6 +61,12 @@ class SsoSettingsAzureDataForm extends BaseSsoSettingsForm
     ];
 
     /**
+     * Allowed login hint setting values.
+     */
+    public const AZURE_LOGIN_HINT_ENABLED = true;
+    public const AZURE_LOGIN_HINT_DISABLED = false;
+
+    /**
      * @inheritDoc
      */
     protected function getDataValidator(): Validator
@@ -114,6 +120,9 @@ class SsoSettingsAzureDataForm extends BaseSsoSettingsForm
                 )
             );
 
+        $dataValidator
+            ->boolean('login_hint', __('The login hint should be a boolean.'));
+
         return $dataValidator;
     }
 
@@ -162,6 +171,10 @@ class SsoSettingsAzureDataForm extends BaseSsoSettingsForm
             } catch (Exception $exception) {
                 $data['data']['client_secret_expiry'] = null;
             }
+        }
+
+        if (isset($data['data']['login_hint'])) {
+            $data['data']['login_hint'] = (bool)$data['data']['login_hint'];
         }
 
         return $data;

@@ -25,9 +25,11 @@ use Exception;
 use Firebase\JWT\JWK;
 use League\OAuth2\Client\Grant\AbstractGrant;
 use League\OAuth2\Client\Provider\AbstractProvider;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
+use Passbolt\Sso\Error\Exception\OAuth2Exception;
 use Passbolt\Sso\Utility\OpenId\BaseIdToken;
 use Throwable;
 
@@ -120,6 +122,9 @@ abstract class AbstractOauth2Provider extends AbstractProvider
 
     /**
      * @return array
+     * @throws \Passbolt\Sso\Error\Exception\OAuth2Exception
+     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
+     * @throws \Cake\Http\Exception\InternalErrorException
      */
     protected function getOpenIdConfiguration(): array
     {
@@ -136,6 +141,8 @@ abstract class AbstractOauth2Provider extends AbstractProvider
 
         try {
             $response = $this->getParsedResponse($request);
+        } catch (OAuth2Exception | IdentityProviderException $exception) {
+            throw $exception;
         } catch (Exception $exception) {
             throw new InternalErrorException($exception->getMessage(), 500, $exception);
         }

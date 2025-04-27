@@ -23,6 +23,7 @@ use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
+use Passbolt\PasswordExpiry\Event\PasswordExpiryFirstUserSetupCompleteEventListener;
 use Passbolt\PasswordExpiry\Event\PasswordExpiryResourceMarkedAsExpiredEventListener;
 use Passbolt\PasswordExpiry\Notification\DigestTemplate\PasswordExpiryPasswordMarkedExpiredDigestTemplate;
 use Passbolt\PasswordExpiry\Notification\Email\PasswordExpiryRedactorPool;
@@ -48,6 +49,7 @@ class PasswordExpiryPlugin extends BasePlugin
         // Register email redactors and listen to user disabling/deleting
         $app->getEventManager()
             ->on(new PasswordExpiryResourceMarkedAsExpiredEventListener())
+            ->on(new PasswordExpiryFirstUserSetupCompleteEventListener())
             ->on(new PasswordExpiryNotificationSettingsDefinition())
             ->on(new PasswordExpiryRedactorPool());
 

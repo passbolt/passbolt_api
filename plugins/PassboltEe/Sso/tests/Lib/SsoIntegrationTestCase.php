@@ -89,6 +89,7 @@ class SsoIntegrationTestCase extends AppIntegrationTestCase
                 'client_secret_expiry' => new DateTime(Configure::read('passbolt.selenium.sso.azure.secretExpiry')),
                 'prompt' => $options['prompt'] ?? SsoSettingsAzureDataForm::PROMPT_LOGIN,
                 'email_claim' => SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL,
+                'login_hint' => $options['login_hint'] ?? true,
             ],
         ];
 

@@ -49,6 +49,7 @@ class SsoSettingsViewControllerTest extends SsoIntegrationTestCase
         // Make sure we get "email" claim as fallback field if it's not present in database
         $this->assertObjectHasAttribute('email_claim', $body->data);
         $this->assertSame('email', $body->data->email_claim);
+        $this->assertSame(SsoSettingsAzureDataForm::AZURE_LOGIN_HINT_ENABLED, $body->data->login_hint);
     }
 
     public function testSsoSettingsViewController_ErrorNotLoggedIn(): void

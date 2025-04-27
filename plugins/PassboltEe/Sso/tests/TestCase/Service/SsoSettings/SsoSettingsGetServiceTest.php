@@ -50,10 +50,11 @@ class SsoSettingsGetServiceTest extends SsoTestCase
         $this->assertEquals($ssoSetting->modified_by, $ssoSettingsDto->modified_by);
         $this->assertNotEmpty($ssoSetting->created);
         $this->assertNotEmpty($ssoSetting->modified);
-        // Assert data
+        // Assert "advanced settings" data fields
         $data = $ssoSettingsDto->data->toArray();
         $this->assertSame(SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL, $data['email_claim']);
         $this->assertSame(SsoSettingsAzureDataForm::PROMPT_LOGIN, $data['prompt']);
+        $this->assertSame(SsoSettingsAzureDataForm::AZURE_LOGIN_HINT_ENABLED, $data['login_hint']);
     }
 
     public function testSsoSettingsGetService_getByIdOrFail_Error(): void

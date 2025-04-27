@@ -112,8 +112,23 @@ class SubscriptionKeyDto
             $key['subscription_id'] ?? '',
             $key['users'] ?? 0,
             $key['email'] ?? '',
-            isset($key['expiry']) ? new Date($key['expiry']) : Date::now(),
-            isset($key['created']) ? new Date($key['created']) : Date::now(),
+            isset($key['expiry']) ? self::parseSubscriptionDate($key['expiry']) : Date::now(),
+            isset($key['created']) ? self::parseSubscriptionDate($key['created']) : Date::now(),
         );
+    }
+
+    /**
+     * Checks if given value is integer the converts it into a valid date format.
+     *
+     * @param string|int $value Value to parse.
+     * @return \Cake\I18n\Date Date time object.
+     */
+    private static function parseSubscriptionDate(string|int $value): Date
+    {
+        if (is_int($value)) {
+            $value = gmdate('Y-m-d', $value);
+        }
+
+        return Date::parse($value);
     }
 }

@@ -37,8 +37,11 @@ trait ActionLogsOperationsTestTrait
      */
     public function simulateShare(UserAccessControl $user, string $aco, string $acoKey, string $aro, string $aroKey, string $crud, int $permissionType)
     {
+        /** @var \Passbolt\Log\Model\Table\ActionLogsTable $ActionLogs */
         $ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+        /** @var \Passbolt\Log\Model\Table\EntitiesHistoryTable $EntitiesHistory */
         $EntitiesHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.EntitiesHistory');
+        /** @var \Passbolt\Log\Model\Table\PermissionsHistoryTable $PermissionsHistory */
         $PermissionsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.PermissionsHistory');
         $userAction = UserAction::getInstance($user, 'share.share', 'PUT share/share');
 
@@ -72,7 +75,9 @@ trait ActionLogsOperationsTestTrait
      */
     public function simulateResourceCrud(UserAccessControl $user, string $resourceId, string $crud)
     {
+        /** @var \Passbolt\Log\Model\Table\ActionLogsTable $ActionLogs */
         $ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+        /** @var \Passbolt\Log\Model\Table\EntitiesHistoryTable $EntitiesHistory */
         $EntitiesHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.EntitiesHistory');
 
         if ($crud == EntityHistory::CRUD_CREATE) {
@@ -100,8 +105,11 @@ trait ActionLogsOperationsTestTrait
      */
     public function simulateResourceSecretUpdate(UserAccessControl $uac, string $resourceId)
     {
+        /** @var \Passbolt\Log\Model\Table\ActionLogsTable $ActionLogs */
         $ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+        /** @var \Passbolt\Log\Model\Table\EntitiesHistoryTable $EntitiesHistory */
         $EntitiesHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.EntitiesHistory');
+        /** @var \Passbolt\Log\Model\Table\SecretsHistoryTable $SecretsHistory */
         $SecretsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.SecretsHistory');
         $userAction = UserAction::getInstance($uac, 'Resources.update', 'PUT /resources/' . $resourceId . '.json');
 
@@ -132,8 +140,11 @@ trait ActionLogsOperationsTestTrait
      */
     public function simulateMultipleResourceGetWithSecrets(UserAccessControl $uac, array $resourceIds)
     {
+        /** @var \Passbolt\Log\Model\Table\ActionLogsTable $ActionLogs */
         $ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+        /** @var \Passbolt\Log\Model\Table\EntitiesHistoryTable $EntitiesHistory */
         $EntitiesHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.EntitiesHistory');
+        /** @var \Passbolt\Log\Model\Table\SecretAccessesTable $SecretAccesses */
         $SecretAccesses = TableRegistry::getTableLocator()->get('Passbolt/Log.SecretAccesses');
         $Secrets = TableRegistry::getTableLocator()->get('Secrets');
 
@@ -155,7 +166,7 @@ trait ActionLogsOperationsTestTrait
 
             $entityHistory = [
                 'foreign_model' => 'SecretAccesses',
-                'foreign_key' => $sa->id,
+                'foreign_key' => $sa->get('id'),
                 'crud' => EntityHistory::CRUD_CREATE,
             ];
             $EntitiesHistory->create($entityHistory, $userAction);

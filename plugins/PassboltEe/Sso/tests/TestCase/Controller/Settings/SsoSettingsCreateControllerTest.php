@@ -46,6 +46,7 @@ class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
                 'client_secret_expiry' => Chronos::now()->addDays(365),
                 'prompt' => SsoSettingsAzureDataForm::PROMPT_LOGIN,
                 'email_claim' => SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL,
+                'login_hint' => SsoSettingsAzureDataForm::AZURE_LOGIN_HINT_DISABLED,
             ],
         ];
 
@@ -106,9 +107,10 @@ class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
         $this->assertObjectHasAttribute('client_id', $body->data);
         $this->assertObjectHasAttribute('client_secret', $body->data);
         $this->assertObjectHasAttribute('client_secret_expiry', $body->data);
-        // Make sure prompt is optional
+        // Make sure "advanced settings" fields are optional
         $this->assertObjectNotHasAttribute('email_claim', $body->data);
         $this->assertObjectNotHasAttribute('prompt', $body->data);
+        $this->assertObjectNotHasAttribute('login_hint', $body->data);
     }
 
     public function testSsoSettingsCreateController_ErrorValidationData_AzureInvalidValues(): void
@@ -124,6 +126,7 @@ class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
                 'client_secret_expiry' => Chronos::now()->addDays(365),
                 'prompt' => 'foo',
                 'email_claim' => 'bar',
+                'login_hint' => 'baz',
             ],
         ];
 

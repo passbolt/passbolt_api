@@ -28,7 +28,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\DateTime $created
  *
  * @property \App\Model\Entity\Resource $resource
- * @property \Cake\ORM\Entity $tag
+ * @property \Passbolt\Tags\Model\Entity\Tag $tag
  * @property \App\Model\Entity\User|null $user
  */
 class ResourcesTag extends Entity
