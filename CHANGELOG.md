@@ -2,6 +2,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.1.0-test.1] - 2025-04-28
+### Added
+- PB-40712 Enable password expiry by default for new instances
+- PB-41629 As a client I should know if the metadata plugin is set as in beta
+- PB-41628 Enforces the activation of the metadata plugin
+
+### Fixed
+- PB-41736 Adjust datacheck command to support v5 resources
+- PB-41769 Fix action_logs_purge command only purging 100 records
+
+### Improved
+- PB-41840 Return creator along metadata keys on GET /metadata/keys.json
+
+### Maintenance
+- PB-40626 Update passbolt-test-data to improve PHP 8.4 compatibility
+- PB-40365 Updates the test pipelines to cover PHP 8.4
+- PB-40630 Bump bacon/bacon-qr-code to v3.0
+- PB-40627 Bump league/flysystem package to v3.29
+- PB-40625 Bump Spomky-Labs/otphp package to v11.3
+- PB-40641 Replace vimeo/psalm to psalm/phar
+
 ## [5.0.0] - 2025-04-10
 ### Added
 - PB-39434 As an administrator I can log user actions on file in an SIEM compatible format
