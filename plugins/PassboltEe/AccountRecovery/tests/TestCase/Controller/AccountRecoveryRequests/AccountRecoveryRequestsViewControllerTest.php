@@ -179,6 +179,10 @@ class AccountRecoveryRequestsViewControllerTest extends AccountRecoveryIntegrati
         $this->assertTrue(isset($this->_responseJsonBody->creator->profile->avatar));
         $this->assertTrue(Validation::uuid($this->_responseJsonBody->creator->id));
 
+        // Required to clear up associations
+        $this->clearPlugins();
+        $this->getTableLocator()->clear();
+
         // Check reciprocal
         $options = '?contain[creator]=0';
         $this->getJson('/account-recovery/requests/' . $request->id . '.json' . $options);
