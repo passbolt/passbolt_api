@@ -53,6 +53,7 @@ class ActionLogsModelListener implements EventListenerInterface
         $table = $event->getSubject();
         $modelName = $table->getAlias();
 
+        debug('entityAssociationsInitialize called for ' . $modelName);
         if ($modelName == 'Permissions') {
             $table->belongsTo('Passbolt/Log.PermissionsHistory', [
                 'foreignKey' => 'foreign_key',

@@ -33,6 +33,7 @@ class LogPlugin extends BasePlugin
     public function bootstrap(PluginApplicationInterface $app): void
     {
         parent::bootstrap($app);
+        debug('ActionLogsModelListener is attaching...');
         $app->getEventManager()
             ->on(new ActionLogsAfterCreateListener())
             ->on(new ActionLogsBeforeRenderListener())

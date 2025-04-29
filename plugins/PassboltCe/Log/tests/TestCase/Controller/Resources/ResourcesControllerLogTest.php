@@ -142,6 +142,8 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
             ->persist();
         $resourceId = $resource->id;
 
+        $this->getTableLocator()->clear(); // comment or remove this line to fail the test
+
         $resource = [
             'id' => $resourceId,
             'name' => 'updated name',
