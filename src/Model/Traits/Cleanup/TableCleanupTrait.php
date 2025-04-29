@@ -175,16 +175,16 @@ trait TableCleanupTrait
                 'type' => 'INNER',
                 'conditions' => $innerJoinConditions,
             ])
-            ->order($combinedKey);
+            ->orderBy($combinedKey);
 
         /*
          * If modified or created field is available on the table, sort the duplicates with it. It will be useful to
          * define a delete strategy: newest or oldest first.
          */
         if (array_search('modified', $tableColumns) !== false) {
-            $duplicatedRowsQuery->order(['modified' => $deleteNewest ? 'ASC' : 'DESC']);
+            $duplicatedRowsQuery->orderBy(['modified' => $deleteNewest ? 'ASC' : 'DESC']);
         } elseif (array_search('created', $tableColumns) !== false) {
-            $duplicatedRowsQuery->order(['created' => $deleteNewest ? 'ASC' : 'DESC']);
+            $duplicatedRowsQuery->orderBy(['created' => $deleteNewest ? 'ASC' : 'DESC']);
         }
 
         $duplicatedRows = $duplicatedRowsQuery->disableHydration()->toArray();
