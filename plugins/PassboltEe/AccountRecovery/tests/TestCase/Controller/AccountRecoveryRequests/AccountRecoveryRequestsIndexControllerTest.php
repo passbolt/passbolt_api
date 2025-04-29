@@ -174,6 +174,10 @@ class AccountRecoveryRequestsIndexControllerTest extends AccountRecoveryIntegrat
         $this->getJson("/account-recovery/requests.json?filter[has-users][]=$ada&filter[has-users][]=$betty");
         $this->assertTrue(count($this->_responseJsonBody) === 2);
 
+        // Required to clear up associations
+        $this->clearPlugins();
+        $this->getTableLocator()->clear();
+
         $this->getJson('/account-recovery/requests.json?filter[has-users][]=' . UuidFactory::uuid());
         $this->assertTrue(count($this->_responseJsonBody) === 0);
     }
