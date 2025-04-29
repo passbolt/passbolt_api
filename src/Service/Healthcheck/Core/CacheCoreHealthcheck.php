@@ -21,7 +21,6 @@ use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Cache\Cache;
-use Cake\Core\Configure;
 
 class CacheCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {

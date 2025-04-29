@@ -50,6 +50,10 @@ class MfaVerifyControllerTest extends MfaIntegrationTestCase
         $this->get('/mfa/verify/totp');
         $this->assertRedirect('/');
 
+        // Required to clear up associations
+        $this->clearPlugins();
+        $this->getTableLocator()->clear();
+
         $this->getJson('/mfa/verify/totp.json');
         $this->assertBadRequestError('No valid multi-factor authentication settings found.');
     }
@@ -61,6 +65,10 @@ class MfaVerifyControllerTest extends MfaIntegrationTestCase
 
         $this->get('/mfa/verify/totp');
         $this->assertRedirect('/');
+
+        // Required to clear up associations
+        $this->clearPlugins();
+        $this->getTableLocator()->clear();
 
         $this->get('/mfa/verify/totp.json');
         $this->assertResponseError('No valid multi-factor authentication settings found for this provider.');
