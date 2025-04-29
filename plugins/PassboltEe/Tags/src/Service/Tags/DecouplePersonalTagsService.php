@@ -123,7 +123,7 @@ class DecouplePersonalTagsService
                         'ResourcesTags.tag_id',
                     ])
                     ->whereNotNull('ResourcesTags.user_id')
-                    ->group([
+                    ->groupBy([
                         'ResourcesTags.user_id',
                         'ResourcesTags.tag_id',
                     ]);
