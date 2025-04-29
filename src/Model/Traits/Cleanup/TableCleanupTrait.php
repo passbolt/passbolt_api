@@ -139,7 +139,7 @@ trait TableCleanupTrait
         // Sub query that finds the duplicated tuples.
         $duplicatedTuplesQuery = $this->selectQuery()
             ->select($combinedKey)
-            ->group($combinedKey)
+            ->groupBy($combinedKey)
             ->having('count(*) > 1');
 
         // The inner join conditions to match the duplicated tuples sub query result fields with the main query fields.
