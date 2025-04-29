@@ -21,6 +21,7 @@ use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Cache\Cache;
+use Cake\Core\Configure;
 
 class CacheCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -32,11 +33,19 @@ class CacheCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCl
     private bool $status = false;
 
     /**
+     * @var bool
+     */
+    private bool $isCacheCoreConfigPresent = false;
+
+    /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = !empty(Cache::getConfig('_cake_translations_'));
+        $this->isCacheCoreConfigPresent = Cache::getConfig('_cake_core_') !== null;
+        $cacheTranslationsConfig = !empty(Cache::getConfig('_cake_translations_'));
+
+        $this->status = !$this->isCacheCoreConfigPresent && $cacheTranslationsConfig;
 
         return $this;
     }
@@ -62,7 +71,7 @@ class CacheCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCl
      */
     public function level(): string
     {
-        return HealthcheckServiceCollector::LEVEL_ERROR;
+        return $this->isCacheCoreConfigPresent ? HealthcheckServiceCollector::LEVEL_WARNING : HealthcheckServiceCollector::LEVEL_ERROR; // phpcs:ignore
     }
 
     /**
@@ -78,7 +87,12 @@ class CacheCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCl
      */
     public function getFailureMessage(): string
     {
-        return __('Cache is NOT working.');
+        $failureMessage = __('Cache is NOT working.');
+        if ($this->isCacheCoreConfigPresent) {
+            $failureMessage = __('Deprecated `_cake_core_` cache configuration found.');
+        }
+
+        return $failureMessage;
     }
 
     /**
@@ -86,7 +100,12 @@ class CacheCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCl
      */
     public function getHelpMessage(): array|string|null
     {
-        return __('Check the settings in {0}', CONFIG . 'app.php');
+        $helpMessage = __('Check the settings in {0}', CONFIG . 'app.php');
+        if ($this->isCacheCoreConfigPresent) {
+            $helpMessage = __('Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file.', CONFIG . 'app.php'); // phpcs:ignore
+        }
+
+        return $helpMessage;
     }
 
     /**
