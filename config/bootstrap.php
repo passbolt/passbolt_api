@@ -100,6 +100,17 @@ Configure::write('App.paths', [
  */
 //Configure::load('app_local', 'default');
 
+/**
+ * Map legacy `_cake_core_` cache config to `_cake_translations_`.
+ * Since CakePHP 5.1.0, the cache config `_cake_core_` is deprecated, `_cake_translations_` has to be used.
+ */
+$isCakeCoreCacheConfigPresent = Configure::read('Cache._cake_core_') !== null;
+if ($isCakeCoreCacheConfigPresent) {
+    $cakeCoreConfigValues = Configure::read('Cache._cake_core_');
+
+    Configure::write('Cache._cake_translations_', $cakeCoreConfigValues);
+}
+
 /*
  * When debug = true the metadata cache should only last
  * for a short time.
