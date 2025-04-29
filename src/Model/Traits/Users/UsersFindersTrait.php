@@ -313,7 +313,7 @@ trait UsersFindersTrait
 
         // Ordering options
         if (isset($options['order'])) {
-            $query->order($options['order']);
+            $query->orderBy($options['order']);
         }
 
         return $query;
@@ -406,7 +406,7 @@ trait UsersFindersTrait
                 'Roles',
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ])
-            ->order(['Users.active' => 'DESC']);
+            ->orderBy(['Users.active' => 'DESC']);
     }
 
     /**
@@ -545,7 +545,7 @@ trait UsersFindersTrait
                 'Users.active' => true,
                 'Roles.name' => Role::ADMIN,
             ])
-            ->order(['Users.created' => 'ASC'])
+            ->orderBy(['Users.created' => 'ASC'])
             ->contain(['Roles'])
             ->first();
 
@@ -581,7 +581,7 @@ trait UsersFindersTrait
                     'Roles.name' => Role::ADMIN,
                 ]
             )
-            ->order(['Users.created' => 'ASC'])
+            ->orderBy(['Users.created' => 'ASC'])
             ->contain(['Roles']);
     }
 
