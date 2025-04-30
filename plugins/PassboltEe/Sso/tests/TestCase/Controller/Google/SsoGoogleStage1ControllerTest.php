@@ -18,11 +18,16 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Test\TestCase\Controller\Google;
 
 use App\Test\Factory\UserFactory;
+use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
+use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
+use Passbolt\Sso\Test\Lib\GoogleProviderTestTrait;
 use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
+use Passbolt\Sso\Utility\Google\Provider\GoogleProvider;
+use Passbolt\Sso\Utility\Provider\SsoProviderFactory;
 
 /**
  * @see \Passbolt\Sso\Controller\Google\SsoGoogleStage1Controller
@@ -30,14 +35,66 @@ use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
  */
 class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
 {
+    use GoogleProviderTestTrait;
+
     /**
      * 200 returns a URL
      */
-    public function testSsoGoogleStage1Controller_Success(): void
+    public function testSsoGoogleStage1Controller_Success_Admin(): void
     {
-        $this->disableErrorHandlerMiddleware();
-        $user = UserFactory::make()->admin()->persist();
-        $ssoSetting = $this->createGoogleSettingsFromConfig($user);
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->persist();
+        SsoSettingsFactory::make()->google()->active()->persist();
+        // Mock provider
+        $mockGoogleProvider = $this->getProviderMockForStage1(GoogleProvider::class);
+        $clientId = UuidFactory::uuid();
+        $state = SsoState::generate();
+        $url = $this->getDummyGoogleAuthorizationUrl($admin, $state, ['client_id' => $clientId]);
+        $mockGoogleProvider->method('getAuthorizationUrl')->willReturn($url);
+        $mockGoogleProvider->method('getState')->willReturn($state);
+        // Swap actual implementation
+        SsoProviderFactory::set($mockGoogleProvider);
+
+        $this->postJson('/sso/google/login.json', ['user_id' => $admin->id]);
+
+        $this->assertSuccess();
+        $url = $this->_responseJsonBody->url;
+        $this->assertStringContainsString('https://', $url);
+        $this->assertStringContainsString('google.com', $url);
+        $this->assertStringContainsString('oauth2/v2/auth', $url);
+        $this->assertStringContainsString('response_type=code', $url);
+        $this->assertStringContainsString('state', $url);
+        $this->assertStringContainsString('nonce', $url);
+        $this->assertStringContainsString('login_hint=' . rawurlencode($admin->username), $url);
+        $this->assertStringContainsString("client_id={$clientId}", $url);
+        $this->assertStringContainsString(
+            'scope=' . rawurlencode(implode(' ', ['openid', 'profile', 'email'])),
+            $url
+        );
+        $this->assertStringContainsString(
+            'redirect_uri=' . rawurlencode(Router::url('/sso/google/redirect', true)),
+            $url
+        );
+        // assert sso state cookie
+        $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
+        $cookie = $this->_response->getCookie(AbstractSsoService::SSO_STATE_COOKIE);
+        $this->assertEquals('/sso', $cookie['path']);
+    }
+
+    public function testSsoGoogleStage1Controller_Success_User(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->persist();
+        SsoSettingsFactory::make()->google()->active()->persist();
+        // Mock provider
+        $mockGoogleProvider = $this->getProviderMockForStage1(GoogleProvider::class);
+        $clientId = UuidFactory::uuid();
+        $state = SsoState::generate();
+        $url = $this->getDummyGoogleAuthorizationUrl($user, $state, ['client_id' => $clientId]);
+        $mockGoogleProvider->method('getAuthorizationUrl')->willReturn($url);
+        $mockGoogleProvider->method('getState')->willReturn($state);
+        // Swap actual implementation
+        SsoProviderFactory::set($mockGoogleProvider);
 
         $this->postJson('/sso/google/login.json', ['user_id' => $user->id]);
 
@@ -50,7 +107,7 @@ class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
         $this->assertStringContainsString('state', $url);
         $this->assertStringContainsString('nonce', $url);
         $this->assertStringContainsString('login_hint=' . rawurlencode($user->username), $url);
-        $this->assertStringContainsString("client_id={$ssoSetting->data->toArray()['client_id']}", $url);
+        $this->assertStringContainsString("client_id={$clientId}", $url);
         $this->assertStringContainsString(
             'scope=' . rawurlencode(implode(' ', ['openid', 'profile', 'email'])),
             $url
@@ -59,7 +116,6 @@ class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
             'redirect_uri=' . rawurlencode(Router::url('/sso/google/redirect', true)),
             $url
         );
-
         // assert sso state cookie
         $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
         $cookie = $this->_response->getCookie(AbstractSsoService::SSO_STATE_COOKIE);
@@ -69,25 +125,33 @@ class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
     public function testSsoGoogleStage1Controller_SuccessWithSubdir(): void
     {
         Configure::write('App.base', '/passbolt');
-        $user = UserFactory::make()->admin()->persist();
-        $ssoSetting = $this->createGoogleSettingsFromConfig($user);
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->persist();
+        SsoSettingsFactory::make()->google()->active()->persist();
+        // Mock provider
+        $mockGoogleProvider = $this->getProviderMockForStage1(GoogleProvider::class);
+        $clientId = UuidFactory::uuid();
+        $state = SsoState::generate();
+        $redirectUrl = Router::url('/sso/google/redirect', true);
+        $url = $this->getDummyGoogleAuthorizationUrl($admin, $state, ['client_id' => $clientId, 'redirect_uri' => $redirectUrl]);
+        $mockGoogleProvider->method('getAuthorizationUrl')->willReturn($url);
+        $mockGoogleProvider->method('getState')->willReturn($state);
+        // Swap actual implementation
+        SsoProviderFactory::set($mockGoogleProvider);
 
-        $this->postJson('/sso/google/login.json', ['user_id' => $user->id]);
+        $this->postJson('/sso/google/login.json', ['user_id' => $admin->id]);
 
         $this->assertSuccess();
         $url = $this->_responseJsonBody->url;
         $this->assertStringContainsString('oauth2/v2/auth', $url);
         $this->assertStringContainsString('nonce', $url);
-        $this->assertStringContainsString('login_hint=' . rawurlencode($user->username), $url);
-        $this->assertStringContainsString("client_id={$ssoSetting->data->toArray()['client_id']}", $url);
+        $this->assertStringContainsString('login_hint=' . rawurlencode($admin->username), $url);
+        $this->assertStringContainsString("client_id={$clientId}", $url);
         $this->assertStringContainsString(
             'scope=' . rawurlencode(implode(' ', ['openid', 'profile', 'email'])),
             $url
         );
-        $this->assertStringContainsString(
-            'redirect_uri=' . rawurlencode(Router::url('/sso/google/redirect', true)),
-            $url
-        );
+        $this->assertStringContainsString('redirect_uri=' . rawurlencode($redirectUrl), $url);
         // assert sso state cookie
         $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
         $cookie = $this->_response->getCookie(AbstractSsoService::SSO_STATE_COOKIE);
@@ -103,7 +167,7 @@ class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
         SsoSettingsFactory::make()->google()->active()->persist();
         $this->logInAs($user);
 
-        $this->postJson('/sso/google/login.json', ['user_id' => $user->id]);
+        $this->postJson('/sso/google/login.json', ['user_id' => $user->get('id')]);
         $this->assertError(403);
     }
 
@@ -115,7 +179,7 @@ class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
         $user = UserFactory::make()->admin()->deleted()->persist();
         SsoSettingsFactory::make()->google()->active()->persist();
 
-        $this->postJson('/sso/google/login.json', ['user_id' => $user->id]);
+        $this->postJson('/sso/google/login.json', ['user_id' => $user->get('id')]);
         $this->assertError(400);
     }
 
@@ -127,7 +191,7 @@ class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
         $user = UserFactory::make()->admin()->inactive()->persist();
         SsoSettingsFactory::make()->google()->active()->persist();
 
-        $this->postJson('/sso/google/login.json', ['user_id' => $user->id]);
+        $this->postJson('/sso/google/login.json', ['user_id' => $user->get('id')]);
         $this->assertError(400);
     }
 
@@ -170,7 +234,7 @@ class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
         $user = UserFactory::make()->admin()->persist();
         SsoSettingsFactory::make()->google()->draft()->persist();
 
-        $this->postJson('/sso/google/login.json', ['user_id' => $user->id]);
+        $this->postJson('/sso/google/login.json', ['user_id' => $user->get('id')]);
         $this->assertError(400);
     }
 }

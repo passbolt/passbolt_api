@@ -32,6 +32,7 @@ use Passbolt\Sso\Service\Sso\AbstractSsoService;
 use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
 use Passbolt\Sso\Utility\Azure\Provider\AzureProvider;
 use Passbolt\Sso\Utility\OpenId\SsoResourceOwnerInterface;
+use Passbolt\Sso\Utility\Provider\SsoProviderFactory;
 
 class SsoAzureService extends AbstractSsoService
 {
@@ -92,7 +93,7 @@ class SsoAzureService extends AbstractSsoService
         /** @var \Passbolt\Sso\Model\Dto\SsoSettingsAzureDataDto $data */
         $data = $settings->data;
 
-        return new AzureProvider([
+        return SsoProviderFactory::create(AzureProvider::class, [
             'clientId' => $data->client_id,
             'clientSecret' => $data->client_secret,
             'redirectUri' => Router::url('/sso/azure/redirect', true),

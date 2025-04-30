@@ -19,9 +19,13 @@ namespace Passbolt\Sso\Test\TestCase\Controller\Azure;
 
 use App\Test\Factory\UserFactory;
 use Cake\Core\Configure;
+use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
+use Passbolt\Sso\Test\Lib\AzureProviderTestTrait;
 use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
+use Passbolt\Sso\Utility\Azure\Provider\AzureProvider;
+use Passbolt\Sso\Utility\Provider\SsoProviderFactory;
 
 /**
  * @property \Cake\Http\Response $_response
@@ -29,14 +33,57 @@ use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
  */
 class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
 {
+    use AzureProviderTestTrait;
+
     /**
      * 200 returns a URL
      */
-    public function testSsoAzureStage1Controller_Success(): void
+    public function testSsoAzureStage1Controller_Success_Admin(): void
+    {
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->persist();
+        SsoSettingsFactory::make()->azure()->active()->persist();
+        // Mock provider
+        $mockAzureProvider = $this->getProviderMockForStage1(AzureProvider::class);
+        $state = SsoState::generate();
+        $url = $this->getDummyAzureAuthorizationUrl($admin, $state);
+        $mockAzureProvider->method('getAuthorizationUrl')->willReturn($url);
+        $mockAzureProvider->method('getState')->willReturn($state);
+        // Swap actual implementation
+        SsoProviderFactory::set($mockAzureProvider);
+
+        $this->postJson('/sso/azure/login.json', ['user_id' => $admin->id]);
+
+        $this->assertSuccess();
+        $url = $this->_responseJsonBody->url;
+        $this->assertStringContainsString('microsoft', $url);
+        $this->assertStringContainsString('login_hint', $url);
+        $this->assertStringContainsString('scope', $url);
+        $this->assertStringContainsString('redirect_uri', $url);
+        $this->assertStringContainsString('response_type', $url);
+        $this->assertStringContainsString('client_id', $url);
+        $this->assertStringContainsString('state', $url);
+        $this->assertStringContainsString('nonce', $url);
+
+        // assert sso state cookie
+        $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
+        $cookie = $this->_response->getCookie(AbstractSsoService::SSO_STATE_COOKIE);
+        $this->assertEquals('/sso', $cookie['path']);
+    }
+
+    public function testSsoAzureStage1Controller_Success_User(): void
     {
         /** @var \App\Model\Entity\User $user */
-        $user = UserFactory::make()->admin()->persist();
-        $this->createAzureSettingsFromConfig($user);
+        $user = UserFactory::make()->user()->persist();
+        SsoSettingsFactory::make()->azure()->active()->persist();
+        // Mock provider
+        $mockAzureProvider = $this->getProviderMockForStage1(AzureProvider::class);
+        $state = SsoState::generate();
+        $url = $this->getDummyAzureAuthorizationUrl($user, $state);
+        $mockAzureProvider->method('getAuthorizationUrl')->willReturn($url);
+        $mockAzureProvider->method('getState')->willReturn($state);
+        // Swap actual implementation
+        SsoProviderFactory::set($mockAzureProvider);
 
         $this->postJson('/sso/azure/login.json', ['user_id' => $user->id]);
 
@@ -60,10 +107,17 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
     public function testSsoAzureStage1Controller_SuccessWithSubdir(): void
     {
         Configure::write('App.base', '/passbolt');
-
         /** @var \App\Model\Entity\User $user */
-        $user = UserFactory::make()->admin()->persist();
-        $this->createAzureSettingsFromConfig($user);
+        $user = UserFactory::make()->user()->persist();
+        SsoSettingsFactory::make()->azure()->active()->persist();
+        // Mock provider
+        $mockAzureProvider = $this->getProviderMockForStage1(AzureProvider::class);
+        $state = SsoState::generate();
+        $url = $this->getDummyAzureAuthorizationUrl($user, $state);
+        $mockAzureProvider->method('getAuthorizationUrl')->willReturn($url);
+        $mockAzureProvider->method('getState')->willReturn($state);
+        // Swap actual implementation
+        SsoProviderFactory::set($mockAzureProvider);
 
         $this->postJson('/sso/azure/login.json', ['user_id' => $user->id]);
 
