@@ -18,11 +18,17 @@ declare(strict_types=1);
 namespace Passbolt\SsoRecover\Test\TestCase\Controller\Azure;
 
 use App\Test\Factory\UserFactory;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use Cake\Core\Configure;
 use Cake\Routing\Exception\MissingRouteException;
 use Cake\Routing\Router;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
+use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
 use Passbolt\Sso\Test\Factory\SsoStateFactory;
+use Passbolt\Sso\Test\Lib\AzureProviderTestTrait;
+use Passbolt\Sso\Utility\Azure\Provider\AzureProvider;
+use Passbolt\Sso\Utility\Provider\SsoProviderFactory;
 use Passbolt\SsoRecover\Test\Lib\SsoRecoverIntegrationTestCase;
 
 /**
@@ -30,6 +36,8 @@ use Passbolt\SsoRecover\Test\Lib\SsoRecoverIntegrationTestCase;
  */
 class AzureRecoverLoginControllerTest extends SsoRecoverIntegrationTestCase
 {
+    use AzureProviderTestTrait;
+
     public function testAzureRecoverLoginController_ErrorFeatureDisabled(): void
     {
         $this->disableFeaturePlugin('SsoRecover');
@@ -49,8 +57,8 @@ class AzureRecoverLoginControllerTest extends SsoRecoverIntegrationTestCase
 
     public function testAzureRecoverLoginController_ErrorUserLoggedIn(): void
     {
-        $user = UserFactory::make()->admin()->persist();
-        $this->createAzureSettingsFromConfig($user);
+        UserFactory::make()->admin()->persist();
+        SsoSettingsFactory::make()->azure()->active()->persist();
         $this->logInAsAdmin();
 
         $this->postJson('/sso/recover/azure.json');
@@ -61,7 +69,25 @@ class AzureRecoverLoginControllerTest extends SsoRecoverIntegrationTestCase
     public function testAzureRecoverLoginController_Success(): void
     {
         $user = UserFactory::make()->admin()->persist();
-        $ssoSettingsDto = $this->createAzureSettingsFromConfig($user);
+        $settings = SsoSettingsFactory::make()->azure()->active()->persist();
+        // Decrypt settings data
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg->setDecryptKeyFromFingerprint(
+            Configure::read('passbolt.gpg.serverKey.fingerprint'),
+            Configure::read('passbolt.gpg.serverKey.passphrase')
+        );
+        $settingsData = json_decode($gpg->decrypt($settings->get('data')), true);
+        // Mock provider
+        $mockAzureProvider = $this->getProviderMockForStage1(AzureProvider::class);
+        $state = SsoState::generate();
+        $url = $this->getDummyAzureAuthorizationUrl($user, $state, [
+            'tenant_id' => $settingsData['tenant_id'],
+            'client_id' => $settingsData['client_id'],
+        ]);
+        $mockAzureProvider->method('getAuthorizationUrl')->willReturn($url);
+        $mockAzureProvider->method('getState')->willReturn($state);
+        // Swap actual implementation
+        SsoProviderFactory::set($mockAzureProvider);
 
         $this->postJson('/sso/recover/azure.json');
 
@@ -71,15 +97,14 @@ class AzureRecoverLoginControllerTest extends SsoRecoverIntegrationTestCase
         $this->assertStringContainsString('scope=openid%20profile%20email', $url);
         $this->assertStringContainsString('redirect_uri=' . rawurlencode(Router::url('/sso/azure/redirect', true)), $url);
         $this->assertStringContainsString('response_type=code', $url);
-        $this->assertStringContainsString('client_id=' . $ssoSettingsDto->data->toArray()['client_id'], $url);
+        $this->assertStringContainsString('client_id=' . $settingsData['client_id'], $url);
         $this->assertStringContainsString('state', $url);
         $this->assertStringContainsString('nonce', $url);
-
         /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
         $ssoState = SsoStateFactory::find()->firstOrFail();
         $this->assertEquals(SsoState::TYPE_SSO_RECOVER, $ssoState->type);
         $this->assertEquals(null, $ssoState->user_id);
-        $this->assertEquals($ssoSettingsDto->id, $ssoState->sso_settings_id);
+        $this->assertEquals($settings->get('id'), $ssoState->sso_settings_id);
         $this->assertNotEmpty($ssoState->nonce);
         $this->assertNotEmpty($ssoState->state);
         // Assert cookie is created

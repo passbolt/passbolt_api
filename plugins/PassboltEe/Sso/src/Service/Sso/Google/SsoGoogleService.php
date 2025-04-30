@@ -28,6 +28,7 @@ use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
 use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
 use Passbolt\Sso\Utility\Google\Provider\GoogleProvider;
+use Passbolt\Sso\Utility\Provider\SsoProviderFactory;
 
 class SsoGoogleService extends AbstractSsoService
 {
@@ -66,7 +67,7 @@ class SsoGoogleService extends AbstractSsoService
         /** @var \Passbolt\Sso\Model\Dto\SsoSettingsGoogleDataDto $data */
         $data = $settings->data;
 
-        return new GoogleProvider([
+        return SsoProviderFactory::create(GoogleProvider::class, [
             'clientId' => $data->client_id,
             'clientSecret' => $data->client_secret,
             'redirectUri' => Router::url('/sso/google/redirect', true),

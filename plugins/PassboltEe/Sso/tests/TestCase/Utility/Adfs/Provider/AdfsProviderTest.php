@@ -37,7 +37,7 @@ class AdfsProviderTest extends TestCase
     /**
      * @inheritDoc
      */
-    public function setup(): void
+    public function setUp(): void
     {
         parent::setUp();
 

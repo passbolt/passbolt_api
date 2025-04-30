@@ -576,12 +576,6 @@
       <code><![CDATA[TransfersTable]]></code>
     </MethodSignatureMismatch>
   </file>
-  <file src="plugins/PassboltCe/Mobile/tests/Factory/TransferFactory.php">
-    <UndefinedClass>
-      <code><![CDATA[ChronosInterface]]></code>
-      <code><![CDATA[ChronosInterface]]></code>
-    </UndefinedClass>
-  </file>
   <file src="plugins/PassboltCe/Mobile/tests/TestCase/Controller/Transfers/TransfersUpdateControllerTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
@@ -1349,12 +1343,6 @@
       <code><![CDATA[null]]></code>
     </TypeDoesNotContainType>
   </file>
-  <file src="plugins/PassboltEe/Sso/tests/Factory/SsoSettingsFactory.php">
-    <UndefinedClass>
-      <code><![CDATA[ChronosInterface]]></code>
-      <code><![CDATA[ChronosInterface]]></code>
-    </UndefinedClass>
-  </file>
   <file src="plugins/PassboltEe/Sso/tests/Factory/SsoStateFactory.php">
     <MethodSignatureMismatch>
       <code><![CDATA[SsoStateFactory]]></code>
@@ -1362,49 +1350,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoState getEntity()]]></code>
     </MoreSpecificImplementedParamType>
-  </file>
-  <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Azure/SsoAzureStage1DryRunControllerTest.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$settings->id]]></code>
-      <code><![CDATA[$settings->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-    </InvalidPropertyFetch>
-  </file>
-  <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Azure/SsoAzureStage2ControllerTest.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$admin->id]]></code>
-      <code><![CDATA[$admin->id]]></code>
-      <code><![CDATA[$admin->id]]></code>
-      <code><![CDATA[$admin->id]]></code>
-      <code><![CDATA[$settings->id]]></code>
-      <code><![CDATA[$settings->id]]></code>
-      <code><![CDATA[$settings->id]]></code>
-      <code><![CDATA[$settings->id]]></code>
-      <code><![CDATA[$ssoState->state]]></code>
-      <code><![CDATA[$ssoState->state]]></code>
-      <code><![CDATA[$ssoState->state]]></code>
-      <code><![CDATA[$ssoState->state]]></code>
-    </InvalidPropertyFetch>
-  </file>
-  <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Google/SsoGoogleStage1ControllerTest.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->username]]></code>
-      <code><![CDATA[$user->username]]></code>
-    </InvalidPropertyFetch>
-  </file>
-  <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Google/SsoGoogleStage1DryRunControllerTest.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$settings->id]]></code>
-      <code><![CDATA[$settings->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->username]]></code>
-    </InvalidPropertyFetch>
   </file>
   <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Google/SsoGoogleStage2ControllerTest.php">
     <InvalidPropertyFetch>
@@ -1530,13 +1475,6 @@
   <file src="plugins/PassboltEe/Sso/tests/TestCase/Service/Sso/AbstractSsoAzureServiceTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$ssoState->nonce]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->role]]></code>
-      <code><![CDATA[$user->username]]></code>
-    </InvalidPropertyFetch>
-  </file>
-  <file src="plugins/PassboltEe/Sso/tests/TestCase/Service/Sso/SsoAzureServiceTest.php">
-    <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
       <code><![CDATA[$user->role]]></code>
       <code><![CDATA[$user->username]]></code>
