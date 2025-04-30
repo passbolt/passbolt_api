@@ -76,12 +76,12 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
     public function testThatEmailUseSelfDeleteTemplateWhenUserIsHimself()
     {
         $userId = UuidFactory::uuid();
-        $user = new User();
-        $user->username = 'ada@passbolt.com';
-        $user->id = $userId;
-        $user->locale = 'Foo';
-        // Unable to set value to NULL. Bug introduced with https://github.com/cakephp/cakephp/commit/2c08c770145d8e408ad85f7320e87f67988e8745
-        $user->disabled = null;
+        $user = new User([
+            'id' => $userId,
+            'username' => 'ada@passbolt.com',
+            'locale' => 'Foo',
+            'disabled' => null,
+        ]);
         $uac = new UserAccessControl('admin', $userId, 'ada@passbolt.com');
         $event = new Event(MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT);
         $event->setData([

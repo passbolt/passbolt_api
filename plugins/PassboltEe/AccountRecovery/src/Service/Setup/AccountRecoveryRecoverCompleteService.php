@@ -75,9 +75,10 @@ class AccountRecoveryRecoverCompleteService extends RecoverCompleteService
             ->contain('AccountRecoveryResponses', function (Query $query) {
                 return $query
                     ->select([
-                    'AccountRecoveryResponses.id',
-                    'AccountRecoveryResponses.account_recovery_request_id',
-                ]);
+                        'AccountRecoveryResponses.id',
+                        'AccountRecoveryResponses.account_recovery_request_id',
+                        'AccountRecoveryResponses.data',
+                    ]);
             })
             ->firstOrFail();
 
@@ -96,7 +97,6 @@ class AccountRecoveryRecoverCompleteService extends RecoverCompleteService
 
         foreach ($request->account_recovery_responses as $response) {
             $response->setAccess(['data', 'modified_by'], true);
-            // Unable to set value to NULL. Bug introduced with https://github.com/cakephp/cakephp/commit/2c08c770145d8e408ad85f7320e87f67988e8745
             $response->data = null;
             $response->modified_by = $token->user_id;
         }
