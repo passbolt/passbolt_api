@@ -72,6 +72,6 @@ class LocaleEmailQueueListener implements EventListenerInterface
             $template_vars = json_encode($template_vars);
         }
 
-        $entity->set(compact('template_vars'));
+        $entity->patch(compact('template_vars'));
     }
 }
