@@ -500,12 +500,6 @@
       <code><![CDATA[TransfersTable]]></code>
     </MethodSignatureMismatch>
   </file>
-  <file src="plugins/PassboltCe/Mobile/tests/Factory/TransferFactory.php">
-    <UndefinedClass>
-      <code><![CDATA[ChronosInterface]]></code>
-      <code><![CDATA[ChronosInterface]]></code>
-    </UndefinedClass>
-  </file>
   <file src="plugins/PassboltCe/Mobile/tests/TestCase/Controller/Transfers/TransfersUpdateControllerTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
