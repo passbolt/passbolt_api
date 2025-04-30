@@ -74,7 +74,7 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         parent::setUp();
         Configure::write('passbolt.plugins.log.enabled', true);
 
-//        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $this->SecretAccesses = TableRegistry::getTableLocator()->get('Passbolt/Log.SecretAccesses');
@@ -85,27 +85,27 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         // Make sure associations are loaded correctly, e.g. without depending on
         // ActionListeners -> model.Initialize, as the callback will not be fired twice
         // and controller actions can be called several times
-//        if (!$this->Permissions->hasAssociation('Passbolt/Log.PermissionsHistory')) {
-//            $this->Permissions->belongsTo('Passbolt/Log.PermissionsHistory', [
-//                'foreignKey' => 'foreign_key',
-//            ]);
-//        }
-//        if (!$this->Resources->hasAssociation('EntitiesHistory')) {
-//            $this->Resources->belongsTo('EntitiesHistory', [
-//                'foreignKey' => 'foreign_key',
-//                'className' => 'Passbolt/Log.EntitiesHistory',
-//            ]);
-//        }
-//        if (!$this->SecretAccesses->hasAssociation('EntitiesHistory')) {
-//            $this->SecretAccesses->belongsTo('EntitiesHistory', [
-//                'foreignKey' => 'foreign_key',
-//                'className' => 'Passbolt/Log.EntitiesHistory',
-//            ]);
-//        }
-//        $this->Secrets->belongsTo('Passbolt/Log.SecretsHistory', [
-//            'foreignKey' => 'foreign_key',
-//        ]);
-//        $this->Secrets->hasMany('Passbolt/Log.SecretAccesses');
+        if (!$this->Permissions->hasAssociation('Passbolt/Log.PermissionsHistory')) {
+            $this->Permissions->belongsTo('Passbolt/Log.PermissionsHistory', [
+                'foreignKey' => 'foreign_key',
+            ]);
+        }
+        if (!$this->Resources->hasAssociation('EntitiesHistory')) {
+            $this->Resources->belongsTo('EntitiesHistory', [
+                'foreignKey' => 'foreign_key',
+                'className' => 'Passbolt/Log.EntitiesHistory',
+            ]);
+        }
+        if (!$this->SecretAccesses->hasAssociation('EntitiesHistory')) {
+            $this->SecretAccesses->belongsTo('EntitiesHistory', [
+                'foreignKey' => 'foreign_key',
+                'className' => 'Passbolt/Log.EntitiesHistory',
+            ]);
+        }
+        $this->Secrets->belongsTo('Passbolt/Log.SecretsHistory', [
+            'foreignKey' => 'foreign_key',
+        ]);
+        $this->Secrets->hasMany('Passbolt/Log.SecretAccesses');
 
         $this->enableFeaturePlugin('JwtAuthentication');
 

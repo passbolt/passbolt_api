@@ -28,7 +28,6 @@ use App\Model\Validation\DateTime\IsParsableDateTimeValidationRule;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\UuidFactory;
 use ArrayObject;
-use Cake\Error\Debugger;
 use Cake\Event\Event;
 use Cake\I18n\DateTime;
 use Cake\ORM\RulesChecker;
@@ -96,9 +95,6 @@ class ResourcesTable extends Table
      */
     public function initialize(array $config): void
     {
-        debug('ResourcesTable::initialize is called');
-        debug('see trace below to understand where its coming from');
-        debug(Debugger::trace());
         parent::initialize($config);
 
         $this->setTable('resources');
