@@ -116,8 +116,8 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
             ->all();
         $this->assertSame(3, $metadataPrivateKeysInserted->count());
         foreach ($metadataPrivateKeysInserted as $key) {
-            $this->assertSame($key->get('created_by'), $activeAdmin->id);
-            $this->assertSame($key->get('modified_by'), $activeAdmin->id);
+            $this->assertNull($key->get('created_by'));
+            $this->assertNull($key->get('modified_by'));
         }
     }
 
