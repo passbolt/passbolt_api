@@ -17,8 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountSettings\Test\TestCase\Controller\Themes;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Utility\UuidFactory;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
 
 /**
  * @uses \Passbolt\AccountSettings\Controller\Themes\ThemesIndexController
@@ -32,20 +35,19 @@ class ThemesIndexControllerTest extends AppIntegrationTestCase
      */
     protected $AccountSettings;
 
-    public $fixtures = [
-        'plugin.Passbolt/AccountSettings.AccountSettings',
-    ];
-
     public function setUp(): void
     {
         parent::setUp();
-        $this->AccountSettings = $this->fetchTable('AccountSettings');
+        $this->AccountSettings = $this->fetchTable('Passbolt/AccountSettings.AccountSettings');
     }
 
     public function testThemesIndexSuccess()
     {
+        $user = UserFactory::make()->user()->persist();
+        AccountSettingFactory::make()->theme('midgar')->withUser($user)->persist();
+
         // Authenticate as ada and list the themes
-        $this->logInAsUser();
+        $this->logInAs($user);
         $this->get('/account/settings/themes.json?api-version=v2');
         $this->assertResponseOk();
     }
