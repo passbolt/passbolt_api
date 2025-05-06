@@ -13,11 +13,10 @@
  * @since         2.7.0
  */
 
+use App\Utility\AvatarProcessing;
 use App\Utility\Filesystem\DirectoryUtility;
 use Cake\Core\Configure;
-use Cake\Datasource\ConnectionManager;
-use Cake\Filesystem\Folder;
-use Cake\ORM\TableRegistry;
+use Cake\Log\Log;
 use Migrations\AbstractMigration;
 
 class V280FileDirectoryPathsMigrations extends AbstractMigration
@@ -29,50 +28,56 @@ class V280FileDirectoryPathsMigrations extends AbstractMigration
      */
     public function up()
     {
-        $connectionName = 'default';
-        $options = $this->input->getOptions();
-        if (isset($options['connection'])) {
-            $connectionName = $options['connection'];
-        }
-        $connection = ConnectionManager::get($connectionName);
-
-        $Avatars = TableRegistry::getTableLocator()->get('Avatars', ['connection' => $connection]);
-        $Avatars->setTable('file_storage');
-        $avatars = $Avatars->find()->all();
+        $avatars = $this->getSelectBuilder()->select('*')->from('file_storage')->all();
         $publicPath = WWW_ROOT . Configure::read('ImageStorage.publicPath');
 
         foreach ($avatars as $oldAvatar) {
-            // get original path
-            $originalFilePath = $publicPath . $oldAvatar->path;
-            $strippedId = str_replace('-', '', $oldAvatar->id);
-            $originalFileName = $strippedId . '.' . $oldAvatar->extension;
-            $originalFile = $originalFilePath . $originalFileName;
+            try {
+                // get original path
+                $originalFilePath = $publicPath . $oldAvatar['path'];
+                $strippedId = str_replace('-', '', $oldAvatar['id']);
+                $originalFileName = $strippedId . '.' . $oldAvatar['extension'];
+                $originalFile = $originalFilePath . $originalFileName;
 
-            $connection->delete('file_storage', ['id' => $oldAvatar->id]);
+                $this->getDeleteBuilder()->from('file_storage')->where(['id' => $oldAvatar['id']])->execute();
 
-            if (!file_exists($originalFile)) {
-                // Avatar file cannot be found
-                echo __("Avatar file not found for user {0}, resetting to default.\n", $oldAvatar->user_id);
-            } else {
+                if (!file_exists($originalFile)) {
+                    // Avatar file cannot be found
+                    echo __("Avatar file not found for user {0}, resetting to default.\n", $oldAvatar['user_id']);
+                    continue;
+                }
+
+                $content = file_get_contents($originalFile);
+                $img = AvatarProcessing::resizeAndCrop(
+                    $content,
+                    Configure::readOrFail('FileStorage.imageSizes.Avatar.medium.thumbnail.width'),
+                    Configure::readOrFail('FileStorage.imageSizes.Avatar.medium.thumbnail.height')
+                );
+
                 // Create new avatar from old file
                 $data = [
-                    'file' => [
-                        'tmp_name' => $originalFile,
-                        'error' => 0,
-                        'name' => $originalFileName,
-                    ],
-                    'user_id' => $oldAvatar->user_id,
-                    'foreign_key' => $oldAvatar->foreign_key,
+                    'data' => $img,
+                    'user_id' => $oldAvatar['user_id'],
+                    'foreign_key' => $oldAvatar['foreign_key'],
                 ];
 
-                $newAvatar = $Avatars->newEntity($data, ['validate' => false]);
-                if (!$Avatars->save($newAvatar)) {
-                    echo __("Could not save avatar for user {0}, resetting to default.\n", $oldAvatar->user_id);
+                $newAvatar = $this
+                    ->getInsertBuilder()
+                    ->insert(['data', 'user_id', 'foreign_key'])
+                    ->into('file_storage')
+                    ->values($data)
+                    ->rowCountAndClose();
+                if ($newAvatar === 0) {
+                    echo __("Could not save avatar for user {0}, resetting to default.\n", $oldAvatar['user_id']);
                 }
+            } catch (\Exception $e) {
+                $msg = '[V280FileDirectoryPathsMigrations] Unable to process avatar. ';
+                $msg .= $e->getMessage();
+                Log::error($msg);
             }
         }
+
         DirectoryUtility::removeRecursively($publicPath . 'images');
-        TableRegistry::getTableLocator()->clear();
     }
 
     /**
@@ -82,6 +87,5 @@ class V280FileDirectoryPathsMigrations extends AbstractMigration
      */
     public function down()
     {
-        return;
     }
 }
