@@ -102,15 +102,14 @@ class SenderCommandTest extends AppIntegrationTestCase
 
         /** @var \App\Model\Entity\User $frenchSpeakingUser */
         $frenchSpeakingUser = UserFactory::make()->withLocale($frenchLocale)->persist();
-
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(4)])->persist();
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(3)])
-            ->setRecipient($frenchSpeakingUser->username)
+            ->setLocale($frenchLocale)
             ->persist();
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])
             ->persist();
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(1)])
-            ->setRecipient($frenchSpeakingUser->username)
+            ->setLocale($frenchLocale)
             ->persist();
 
         $this->exec('passbolt email_digest send');

@@ -475,26 +475,6 @@
       <code><![CDATA[$user->id]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Resources/ResourcesViewControllerLogTest.php">
-    <RedundantCondition>
-      <code><![CDATA[assertNotNull]]></code>
-    </RedundantCondition>
-  </file>
-  <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Secrets/SecretsViewControllerLogTest.php">
-    <RedundantCondition>
-      <code><![CDATA[assertNotNull]]></code>
-    </RedundantCondition>
-  </file>
-  <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Resources/ResourcesViewControllerLogTest.php">
-    <RedundantCondition>
-      <code><![CDATA[assertNotNull]]></code>
-    </RedundantCondition>
-  </file>
-  <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Secrets/SecretsViewControllerLogTest.php">
-    <RedundantCondition>
-      <code><![CDATA[assertNotNull]]></code>
-    </RedundantCondition>
-  </file>
   <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Share/ShareControllerLogTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$betty->id]]></code>
@@ -1298,14 +1278,6 @@
       <code><![CDATA[$user->id]]></code>
       <code><![CDATA[$user->role]]></code>
     </InvalidPropertyFetch>
-  </file>
-  <file src="plugins/PassboltEe/DirectorySync/src/Utility/DirectoryOrgSettings.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$settings]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[array]]></code>
-    </InvalidReturnType>
   </file>
   <file src="plugins/PassboltEe/DirectorySync/tests/Factory/DirectoryOrgSettingFactory.php">
     <MethodSignatureMismatch>
