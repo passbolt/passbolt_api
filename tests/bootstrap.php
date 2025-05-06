@@ -22,6 +22,5 @@ $_SERVER['PHP_SELF'] = '/';
 // has been written to.
 session_id('cli');
 
-(new ConnectionHelper())->addTestAliases();
+ConnectionHelper::addTestAliases();
 (new Migrator())->run();
-Cache::clearAll();
