@@ -331,7 +331,6 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
         ];
         $this->service->updateMany($uac, $data);
         $folderUpdated = FolderFactory::firstOrFail();
-        // Failing due to bug introduced with https://github.com/cakephp/cakephp/commit/2c08c770145d8e408ad85f7320e87f67988e8745
         $this->assertNull($folderUpdated->name);
     }
 }

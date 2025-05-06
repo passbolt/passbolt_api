@@ -404,16 +404,6 @@
       <code><![CDATA[$user->id]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Resources/ResourcesViewControllerLogTest.php">
-    <RedundantCondition>
-      <code><![CDATA[assertNotNull]]></code>
-    </RedundantCondition>
-  </file>
-  <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Secrets/SecretsViewControllerLogTest.php">
-    <RedundantCondition>
-      <code><![CDATA[assertNotNull]]></code>
-    </RedundantCondition>
-  </file>
   <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Share/ShareControllerLogTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$betty->id]]></code>
