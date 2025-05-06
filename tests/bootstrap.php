@@ -22,5 +22,11 @@ $_SERVER['PHP_SELF'] = '/';
 // has been written to.
 session_id('cli');
 
+
 ConnectionHelper::addTestAliases();
+
+/** @var \Cake\Database\Connection $connection */
+$connection = \Cake\Datasource\ConnectionManager::get('default');
+$connection->cacheMetadata(false);
+
 (new Migrator())->run();
