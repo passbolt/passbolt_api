@@ -22,14 +22,22 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
+use League\OAuth2\Client\Token\AccessToken;
 use Passbolt\Sso\Controller\AbstractSso2Stage2Controller;
 use Passbolt\Sso\Model\Entity\SsoState;
+use Passbolt\Sso\Test\Factory\SsoAuthenticationTokenFactory;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
 use Passbolt\Sso\Test\Factory\SsoStateFactory;
 use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
+use Passbolt\Sso\Test\Lib\SsoProviderTestTrait;
+use Passbolt\Sso\Utility\Azure\Provider\AzureProvider;
+use Passbolt\Sso\Utility\Azure\ResourceOwner\AzureResourceOwner;
+use Passbolt\Sso\Utility\Provider\SsoProviderFactory;
 
 class SsoAzureStage2ControllerTest extends SsoIntegrationTestCase
 {
+    use SsoProviderTestTrait;
+
     /**
      * @inheritDoc
      */
@@ -40,10 +48,69 @@ class SsoAzureStage2ControllerTest extends SsoIntegrationTestCase
         EventManager::instance()->setEventList(new EventList());
     }
 
-    public function testSsoAzureStage2Controller_Success(): void
+    public function testSsoAzureStage2Controller_Success_User(): void
     {
-        // Requires mocking AzureService - not implemented
-        $this->markTestIncomplete();
+        $user = UserFactory::make()->user()->active()->persist();
+        $settings = SsoSettingsFactory::make()->azure()->active()->persist();
+        /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
+        $ssoState = SsoStateFactory::make()
+            ->withTypeSsoGetKey()
+            ->userId($user->get('id'))
+            ->ssoSettingsId($settings->get('id'))
+            ->ip(SsoIntegrationTestCase::IP_ADDRESS)
+            ->userAgent(SsoIntegrationTestCase::USER_AGENT)
+            ->persist();
+        $this->cookie('passbolt_sso_state', $ssoState->state);
+        // Mock provider
+        $mockAzureProvider = $this->getProviderMockForStage2(AzureProvider::class);
+        $mockAzureProvider->method('getAccessToken')->willReturn(new AccessToken([
+            'access_token' => 'foo',
+        ]));
+        $mockAzureProvider->method('getResourceOwner')->willReturn(new AzureResourceOwner([
+            'email' => $user->get('username'),
+            'nonce' => $ssoState->get('nonce'),
+        ], 'email'));
+        // Swap actual implementation
+        SsoProviderFactory::set($mockAzureProvider);
+
+        $this->get('/sso/azure/redirect?state=' . $ssoState->state . '&code=' . UuidFactory::uuid());
+
+        /** @var \Cake\ORM\Entity $token */
+        $token = SsoAuthenticationTokenFactory::find()->where(['type' => SsoState::TYPE_SSO_GET_KEY, 'user_id' => $user->get('id')])->firstOrFail();
+        $this->assertRedirectContains('/sso/login/success?token=' . $token->get('token'));
+    }
+
+    public function testSsoAzureStage2Controller_Success_Admin(): void
+    {
+        $admin = UserFactory::make()->admin()->active()->persist();
+        $settings = SsoSettingsFactory::make()->azure()->draft()->persist();
+        /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
+        $ssoState = SsoStateFactory::make()
+            ->withTypeSsoGetKey()
+            ->userId($admin->get('id'))
+            ->ssoSettingsId($settings->get('id'))
+            ->ip(SsoIntegrationTestCase::IP_ADDRESS)
+            ->userAgent(SsoIntegrationTestCase::USER_AGENT)
+            ->persist();
+        $this->cookie('passbolt_sso_state', $ssoState->state);
+        // Mock provider
+        $mockAzureProvider = $this->getProviderMockForStage2(AzureProvider::class);
+        $mockAzureProvider->method('getAccessToken')->willReturn(new AccessToken([
+            'access_token' => 'foo',
+        ]));
+        $mockAzureProvider->method('getResourceOwner')->willReturn(new AzureResourceOwner([
+            'email' => $admin->get('username'),
+            'nonce' => $ssoState->get('nonce'),
+        ], 'email'));
+        // Swap actual implementation
+        SsoProviderFactory::set($mockAzureProvider);
+
+        $this->logInAs($admin);
+        $this->get('/sso/azure/redirect?state=' . $ssoState->state . '&code=' . UuidFactory::uuid());
+
+        /** @var \Cake\ORM\Entity $token */
+        $token = SsoAuthenticationTokenFactory::find()->where(['type' => SsoState::TYPE_SSO_SET_SETTINGS, 'user_id' => $admin->get('id')])->firstOrFail();
+        $this->assertRedirectContains('/sso/login/dry-run/success?token=' . $token->get('token'));
     }
 
     /**
@@ -130,6 +197,7 @@ class SsoAzureStage2ControllerTest extends SsoIntegrationTestCase
         Configure::write('passbolt.security.userAgent', false);
         $user = UserFactory::make()->active()->persist();
         $settings = SsoSettingsFactory::make()->azure()->active()->persist();
+        /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
         $ssoState = SsoStateFactory::make()
             ->withTypeSsoGetKey()
             ->userId($user->get('id'))
@@ -169,10 +237,11 @@ class SsoAzureStage2ControllerTest extends SsoIntegrationTestCase
     {
         $admin = UserFactory::make()->admin()->active()->persist();
         $settings = SsoSettingsFactory::make()->azure()->active()->persist();
+        /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
         $ssoState = SsoStateFactory::make()
             ->withTypeSsoSetSettings()
-            ->userId($admin->id)
-            ->ssoSettingsId($settings->id)
+            ->userId($admin->get('id'))
+            ->ssoSettingsId($settings->get('id'))
             ->persist();
         $this->logInAs($admin);
         $this->cookie('passbolt_sso_state', $ssoState->state);
@@ -192,10 +261,11 @@ class SsoAzureStage2ControllerTest extends SsoIntegrationTestCase
     {
         $admin = UserFactory::make()->admin()->active()->persist();
         $settings = SsoSettingsFactory::make()->azure()->draft()->persist();
+        /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
         $ssoState = SsoStateFactory::make(['ip' => '127.0.0.1'])
             ->withTypeSsoSetSettings()
-            ->userId($admin->id)
-            ->ssoSettingsId($settings->id)
+            ->userId($admin->get('id'))
+            ->ssoSettingsId($settings->get('id'))
             ->userAgent('something else')
             ->persist();
         $this->logInAs($admin);
@@ -219,10 +289,11 @@ class SsoAzureStage2ControllerTest extends SsoIntegrationTestCase
         $user = UserFactory::make()->user()->active()->persist();
         $settings = SsoSettingsFactory::make()->azure()->draft()->persist();
         $admin = UserFactory::make()->admin()->active()->persist();
+        /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
         $ssoState = SsoStateFactory::make()
             ->withTypeSsoSetSettings()
-            ->userId($admin->id)
-            ->ssoSettingsId($settings->id)
+            ->userId($admin->get('id'))
+            ->ssoSettingsId($settings->get('id'))
             ->userAgent('something else')
             ->persist();
         $this->logInAs($user);
@@ -243,8 +314,8 @@ class SsoAzureStage2ControllerTest extends SsoIntegrationTestCase
         /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
         $ssoState = SsoStateFactory::make()
             ->withTypeSsoRecover()
-            ->userId($admin->id)
-            ->ssoSettingsId($settings->id)
+            ->userId($admin->get('id'))
+            ->ssoSettingsId($settings->get('id'))
             ->persist();
         $this->cookie('passbolt_sso_state', $ssoState->state);
 

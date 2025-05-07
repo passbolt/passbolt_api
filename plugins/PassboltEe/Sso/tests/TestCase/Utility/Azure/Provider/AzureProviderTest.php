@@ -17,13 +17,15 @@ declare(strict_types=1);
 
 namespace Passbolt\Sso\Test\TestCase\Utility\Azure\Provider;
 
-use Cake\Core\Configure;
+use App\Utility\UuidFactory;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use Exception;
+use GuzzleHttp\Psr7\Response;
 use Passbolt\Sso\Error\Exception\AzureException;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Test\Lib\AzureProviderTestTrait;
+use Passbolt\Sso\Test\Lib\SsoProviderTestTrait;
 use Passbolt\Sso\Utility\Azure\Provider\AzureProvider;
 use Passbolt\Sso\Utility\Provider\AbstractOauth2Provider;
 
@@ -33,32 +35,74 @@ use Passbolt\Sso\Utility\Provider\AbstractOauth2Provider;
 class AzureProviderTest extends TestCase
 {
     use AzureProviderTestTrait;
+    use SsoProviderTestTrait;
 
-    public function setup(): void
+    private AzureProvider $azureProvider;
+
+    private array $config = [];
+
+    /**
+     * @inheritDoc
+     */
+    protected function setUp(): void
     {
-        $azureConfig = Configure::read('passbolt.selenium.sso.active');
-        if (!isset($azureConfig)) {
-            $this->markTestSkipped('Selenium SSO is set to inactive, skipping tests.');
-        }
+        parent::setup();
+
+        $this->config = [
+            'tenant' => UuidFactory::uuid(),
+            'clientId' => 'client-id',
+            'clientSecret' => 'super-strong-client-secret',
+            'redirectUri' => Router::url('/sso/azure/redirect', true),
+        ];
+        $this->azureProvider = new AzureProvider($this->config);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function tearDown(): void
+    {
+        unset($this->azureProvider);
+
+        parent::tearDown();
     }
 
     public function testSsoAzureProvider_ExtendsAbstractOauth2Provider(): void
     {
-        $this->assertInstanceOf(AbstractOauth2Provider::class, $this->getDummyAzureProvider());
+        $this->assertInstanceOf(AbstractOauth2Provider::class, $this->azureProvider);
     }
 
     public function testSsoAzureProvider_getBaseAuthorizationUrl_Success(): void
     {
-        $provider = $this->getDummyAzureProvider();
-        $url = $provider->getBaseAuthorizationUrl();
+        // Mock HTTP client
+        $responseQueue = [
+            new Response(200, [], json_encode([
+                'jwks_uri' => 'http://azure.passbolt.test/jwks/uri',
+                'authorization_endpoint' => 'http://azure.passbolt.test/authorize',
+                'token_endpoint' => 'http://azure.passbolt.test/token',
+            ])),
+        ];
+        $httpClientMock = $this->mockHttpClientResponse($responseQueue);
+        $this->azureProvider->setHttpClient($httpClientMock);
+
+        $url = $this->azureProvider->getBaseAuthorizationUrl();
+
         $this->assertStringContainsString('authorize', $url);
     }
 
     public function testSsoAzureProvider_getBaseAuthorizationUrl_ErrorTenantNotExistShoudTrigger400(): void
     {
-        $provider = $this->getDummyAzureProvider(['tenant' => 'd8001ced-9d27-48c7-8ce1-8f20fb8c2cc3']); // correct format but doesn't exist
+        $responseQueue = [
+            new Response(400, [], json_encode([
+                'error' => 'Tenant not found ',
+                'error_description' => 'AADSTS90002: Tenant does not exist',
+            ])),
+        ];
+        $httpClientMock = $this->mockHttpClientResponse($responseQueue);
+        $this->azureProvider->setHttpClient($httpClientMock);
+
         try {
-            $provider->getBaseAuthorizationUrl();
+            $this->azureProvider->getBaseAuthorizationUrl();
         } catch (Exception $exception) {
             $this->assertSame(400, $exception->getCode());
             $this->assertInstanceOf(AzureException::class, $exception);
@@ -68,43 +112,49 @@ class AzureProviderTest extends TestCase
 
     public function testSsoAzureProvider_getBaseAccessTokenUrl(): void
     {
-        $provider = $this->getDummyAzureProvider();
-        $url = $provider->getBaseAccessTokenUrl([]);
+        $responseQueue = [
+            new Response(200, [], json_encode([
+                'jwks_uri' => 'http://azure.passbolt.test/jwks/uri',
+                'authorization_endpoint' => 'http://azure.passbolt.test/authorize',
+                'token_endpoint' => 'http://azure.passbolt.test/token',
+            ])),
+        ];
+        $httpClientMock = $this->mockHttpClientResponse($responseQueue);
+        $this->azureProvider->setHttpClient($httpClientMock);
+
+        $url = $this->azureProvider->getBaseAccessTokenUrl([]);
+
         $this->assertStringContainsString('token', $url);
     }
 
     public function testSsoAzureProvider_getOpenIdBaseUri(): void
     {
-        $provider = $this->getDummyAzureProvider();
-        $url = $provider->getOpenIdBaseUri();
+        $url = $this->azureProvider->getOpenIdBaseUri();
         $this->assertStringContainsString('microsoft', $url);
         $this->assertStringContainsString('v2.0', $url);
     }
 
     public function testSsoAzureProvider_getOpenIdConfigurationUri(): void
     {
-        $provider = $this->getDummyAzureProvider();
-        $url = $provider->getOpenIdConfigurationUri();
+        $url = $this->azureProvider->getOpenIdConfigurationUri();
         $this->assertStringContainsString('.well-known', $url);
     }
 
     public function testSsoAzureProvider_getTenant(): void
     {
-        $provider = $this->getDummyAzureProvider();
-        $this->assertEquals(Configure::read('passbolt.selenium.sso.azure.tenantId'), $provider->getTenant());
+        $this->assertEquals($this->config['tenant'], $this->azureProvider->getTenant());
     }
 
     public function testSsoAzureProvider_getClientId(): void
     {
-        $provider = $this->getDummyAzureProvider();
-        $this->assertEquals(Configure::read('passbolt.selenium.sso.azure.clientId'), $provider->getClientId());
+        $this->assertEquals($this->config['clientId'], $this->azureProvider->getClientId());
     }
 
     public function testSsoAzureProvider_defaultOptionsValuesAreSetIfNullIsProvided(): void
     {
         $provider = new AzureProvider([
-            'clientId' => Configure::read('passbolt.selenium.sso.azure.clientId'),
-            'clientSecret' => Configure::read('passbolt.selenium.sso.azure.secretId'),
+            'clientId' => 'default-client-id',
+            'clientSecret' => 'default-client-secret',
             'redirectUri' => Router::url('/sso/azure/redirect', true),
             'tenant' => null,
             'openIdBaseUri' => null,

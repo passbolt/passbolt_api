@@ -20,7 +20,6 @@ use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
-use Cake\Chronos\ChronosInterface;
 use Cake\Utility\Security;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
@@ -103,19 +102,19 @@ class TransferFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param ChronosInterface $modified token type
+     * @param Chronos $modified token type
      * @return $this
      */
-    public function modified(ChronosInterface $modified)
+    public function modified(Chronos $modified)
     {
         return $this->patchData(compact('modified'));
     }
 
     /**
-     * @param ChronosInterface $created token type
+     * @param Chronos $created token type
      * @return $this
      */
-    public function created(ChronosInterface $created)
+    public function created(Chronos $created)
     {
         return $this->patchData(compact('created'));
     }

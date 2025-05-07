@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
 use App\Test\Factory\GroupFactory;
+use App\Test\Factory\GroupsUserFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
@@ -75,7 +76,7 @@ class AllSyncActionDisableUserTest extends DirectorySyncIntegrationTestCase
         $directoryGroupEntry = DirectoryEntryFactory::make()
             ->withGroup(GroupFactory::make()->withGroupsUsersFor([$userToDisable]))
             ->persist();
-        $directoryGroupEntry->get('group');
+        $group = $directoryGroupEntry->get('group');
         $resource = ResourceFactory::make()
             ->withPermissionsFor([$userToDisable])
             ->withSecretsFor([$userToDisable])->persist();
@@ -100,12 +101,17 @@ class AllSyncActionDisableUserTest extends DirectorySyncIntegrationTestCase
         // User secrets should not be deleted
         $this->assertSame(1, SecretFactory::count());
         // The groups_users association should not be deleted
-        // TODO: uncomment this assertion, which is failing because the arrange part is not complete
-//        $this->assertNotNull(GroupsUserFactory::get($group->groups_users[0]->id));
-        $expectedReportMessage = "The user $userToDisable->username was successfully suspended.";
-        /** @var \Passbolt\DirectorySync\Actions\Reports\ActionReport $report */
-        $report = $result['users']->offsetGet(0);
-        $this->assertSame($expectedReportMessage, $report->getMessage());
+        $group = GroupFactory::get($group->id);
+        $this->assertTrue($group->isDeleted());
+        $this->assertSame(0, GroupsUserFactory::count());
+        $expectedUserReportMessage = "The user $userToDisable->username was successfully suspended.";
+        /** @var \Passbolt\DirectorySync\Actions\Reports\ActionReport $userReport */
+        $userReport = $result['users']->offsetGet(0);
+        $this->assertSame($expectedUserReportMessage, $userReport->getMessage());
+        /** @var \Passbolt\DirectorySync\Actions\Reports\ActionReport $userReport */
+        $groupReport = $result['groups']->offsetGet(0);
+        $expectedGroupReportMessage = "The group $group->name was successfully deleted.";
+        $this->assertSame($expectedGroupReportMessage, $groupReport->getMessage());
     }
 
     public function testAllSyncActionDisableUser_User_Disabled_With_Setting_On_Disable_User()

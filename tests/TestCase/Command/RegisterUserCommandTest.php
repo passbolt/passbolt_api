@@ -17,12 +17,14 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Model\Entity\Role;
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Faker\Factory;
@@ -81,25 +83,29 @@ class RegisterUserCommandTest extends AppTestCase
      */
     public function testRegisterUserCommandWithOrWithoutExistingAdmin(bool $withAdmin)
     {
-        RoleFactory::make()->user()->persist();
+        Configure::write('App.base', '/app-base');
+        $role = RoleFactory::make()->user()->persist();
 
         if ($withAdmin) {
             UserFactory::make()->admin()->persist();
         }
 
         $faker = Factory::create();
-        $role = Role::USER;
         $username = $faker->email();
         $firstName = $faker->firstNameFemale();
         $lastName = $faker->lastName();
 
-        $options = " -r $role -u $username -f $firstName -l $lastName";
+        $options = " -r $role->name -u $username -f $firstName -l $lastName";
 
         $this->exec('passbolt register_user' . $options);
         $this->assertExitSuccess();
         $this->assertSame(1 + $withAdmin, UserFactory::count());
-//         TODO: fix this line in the CI
-//        $this->assertEmailQueueCount(1);
+        $this->assertEmailQueueCount(1);
+        $token = AuthenticationTokenFactory::firstOrFail()->token;
+        $user = UserFactory::firstOrFail(['role_id' => $role->id]);
+        $url = '/app-base/setup/start/' . $user->id . '/' . $token;
+        $this->assertEmailInBatchContains($url, $username);
+        $this->assertOutputContains($url);
     }
 
     /**
@@ -125,7 +131,6 @@ class RegisterUserCommandTest extends AppTestCase
         $token = TableRegistry::getTableLocator()->get('AuthenticationTokens')->getByUserId($user->id);
         $setupLink = Router::url('/setup/start/' . $user->id . '/' . $token->token, true);
         $this->assertOutputContains($setupLink);
-//         TODO: fix this line in the CI
-//        $this->assertEmailQueueCount(1);
+        $this->assertEmailQueueCount(1);
     }
 }

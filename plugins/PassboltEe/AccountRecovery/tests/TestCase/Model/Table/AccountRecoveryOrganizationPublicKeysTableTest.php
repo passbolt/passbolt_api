@@ -22,6 +22,7 @@ use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPublicKeysTable;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPublicKeyFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
+use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 
 /**
  * @covers \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPublicKeysTable
@@ -142,6 +143,28 @@ class AccountRecoveryOrganizationPublicKeysTableTest extends AccountRecoveryTest
             $entity->getError('fingerprint')['invalidFingerprint']
         );
         $this->assertTrue($entity->hasErrors());
+        $this->assertSame(0, AccountRecoveryOrganizationPublicKeyFactory::count());
+    }
+
+    public function testAccountRecoveryOrganizationPublicKeysTable_BuildRules_isNotMetadataKey()
+    {
+        $metadataKey = MetadataKeyFactory::make()
+            ->withServerKey()
+            ->withCreatorAndModifier()
+            ->persist();
+        $entity = AccountRecoveryOrganizationPublicKeyFactory::make()
+            ->setField('fingerprint', $metadataKey->get('fingerprint'))
+            ->setField('armored_key', $metadataKey->get('armored_key'))
+            ->getEntity();
+
+        $entity = $this->AccountRecoveryOrganizationPublicKeys->newEntity($entity->toArray());
+        $this->AccountRecoveryOrganizationPublicKeys->save($entity);
+
+        $this->assertCount(1, $entity->getErrors());
+        $this->assertSame(
+            'You cannot reuse the metadata keys.',
+            $entity->getError('fingerprint')['isNotMetadataKey']
+        );
         $this->assertSame(0, AccountRecoveryOrganizationPublicKeyFactory::count());
     }
 }

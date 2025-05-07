@@ -252,7 +252,7 @@ class DirectoryEntriesTable extends Table
     public function updateOrCreate(array $data, string $model): array|bool|DirectoryEntry
     {
         try {
-            $entry = $this->get($data['id'], ['contain' => [$model]]);
+            $entry = $this->get($data['id'], contain: [$model]);
             if (is_string($data['directory_name']) && $entry->directory_name !== $data['directory_name']) {
                 if (strlen($data['directory_name']) > self::DN_MAX_LENGTH) {
                     $data['directory_name'] = substr($data['directory_name'], 0, self::DN_MAX_LENGTH - 1);
