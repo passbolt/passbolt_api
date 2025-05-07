@@ -169,7 +169,7 @@ class ResourceFactory extends CakephpBaseFactory
         $type = $isShared ? 'shared_key' : 'user_key';
         if (isset($v5Fields['metadata_key_id'])) {
             $this->setField('metadata_key_id', $v5Fields['metadata_key_id']);
-            unserialize($v5Fields['metadata_key_id']);
+            unset($v5Fields['metadata_key_id']);
         } else {
             $this->with('MetadataKeys');
         }
