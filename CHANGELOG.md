@@ -2,18 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.1.0-test.1] - 2025-04-28
+## [5.1.0-test.1] - 2025-05-07
 ### Added
 - PB-40712 Enable password expiry by default for new instances
 - PB-41629 As a client I should know if the metadata plugin is set as in beta
-- PB-41628 Enforces the activation of the metadata plugin
+- PB-41628 The metadata plugin is enabled by default
 
 ### Fixed
 - PB-41736 Adjust datacheck command to support v5 resources
 - PB-41769 Fix action_logs_purge command only purging 100 records
+- PB-42108 Fix APP_BASE not included in generated URLs
 
 ### Improved
 - PB-41840 Return creator along metadata keys on GET /metadata/keys.json
+- PB-42117 Populate metadata key ID for personal resources if null in payload
 
 ### Maintenance
 - PB-40626 Update passbolt-test-data to improve PHP 8.4 compatibility
