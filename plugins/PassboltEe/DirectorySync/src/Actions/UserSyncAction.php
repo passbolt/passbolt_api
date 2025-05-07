@@ -103,7 +103,7 @@ class UserSyncAction extends SyncAction
     protected function handleUpdate(array $data, Entity $existingEntity): void
     {
         /** @var \App\Model\Entity\User $existingUser */
-        $existingUser = $this->Users->get($existingEntity->id, ['contain' => ['Profiles']]);
+        $existingUser = $this->Users->get($existingEntity->id, contain: ['Profiles']);
         $firstName = $data['user']['profile']['first_name'] ?? null;
         $lastName = $data['user']['profile']['last_name'] ?? null;
         if (

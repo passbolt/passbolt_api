@@ -28,6 +28,7 @@ use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Service\Sso\OAuth2\SsoOAuth2Service;
 use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
 use Passbolt\Sso\Utility\Adfs\Provider\AdfsProvider;
+use Passbolt\Sso\Utility\Provider\SsoProviderFactory;
 
 class SsoAdfsService extends SsoOAuth2Service
 {
@@ -47,7 +48,8 @@ class SsoAdfsService extends SsoOAuth2Service
             $collaborators['httpClient'] = $httpClient;
         }
 
-        return new AdfsProvider(
+        return SsoProviderFactory::create(
+            AdfsProvider::class,
             [
                 'clientId' => $data->client_id,
                 'clientSecret' => $data->client_secret,

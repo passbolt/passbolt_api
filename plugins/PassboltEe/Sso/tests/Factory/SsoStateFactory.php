@@ -129,6 +129,14 @@ class SsoStateFactory extends CakephpBaseFactory
     /**
      * @return $this
      */
+    public function ip(string $ip)
+    {
+        return $this->setField('ip', $ip);
+    }
+
+    /**
+     * @return $this
+     */
     public function deleted()
     {
         return $this->setField('deleted', DateTime::now());

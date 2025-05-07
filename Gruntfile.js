@@ -115,6 +115,12 @@ module.exports = function(grunt) {
             'controls/warning.svg',
             'controls/attention.svg',
             // Login page 3rd party logo
+            'third_party/FirefoxAMO_black.svg',
+            'third_party/FirefoxAMO_white.svg',
+            'third_party/ChromeWebStore_black.svg',
+            'third_party/ChromeWebStore_white.svg',
+            'third_party/edge-addon-black.svg',
+            'third_party/edge-addon-white.svg',
             'third_party/chosen-sprite.png',
             'third_party/chosen-sprite@2x.png',
             'third_party/firefox.svg',
