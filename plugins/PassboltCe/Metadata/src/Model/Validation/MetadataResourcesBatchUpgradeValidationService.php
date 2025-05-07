@@ -16,8 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Model\Validation;
 
+use App\Model\Table\PermissionsTable;
 use Cake\ORM\Query;
+use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Form\Upgrade\MetadataBatchUpgradeForm;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 
 class MetadataResourcesBatchUpgradeValidationService extends MetadataBatchUpgradeValidationService
 {
@@ -47,5 +50,46 @@ class MetadataResourcesBatchUpgradeValidationService extends MetadataBatchUpgrad
     public function getForm(): MetadataBatchUpgradeForm
     {
         return new MetadataBatchUpgradeForm();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function setMetadataKeyIdIfNotDefinedAndEntityIsPersonal(array $entity): array
+    {
+        if (isset($entity['metadata_key_id'])) {
+            return $entity;
+        }
+        $isPersonal = ($entity['metadata_key_type'] ?? null) === MetadataKey::TYPE_USER_KEY;
+        if (!$isPersonal) {
+            return $entity;
+        }
+        if (!isset($entity['id'])) {
+            return $entity;
+        }
+
+        /** @var \App\Model\Table\PermissionsTable $Permissions */
+        $Permissions = TableRegistry::getTableLocator()->get('Permissions');
+        $permission = $Permissions->find()
+            ->select([
+                'Permissions.aro_foreign_key',
+                'Users.id',
+                'Gpgkeys.id',
+                'Gpgkeys.user_id',
+            ])
+            ->contain('Users.Gpgkeys')
+            ->where([
+                'Permissions.aco_foreign_key' => $entity['id'],
+                'Permissions.aco' => PermissionsTable::RESOURCE_ACO,
+                'Permissions.aro' => PermissionsTable::USER_ARO,
+            ])
+            ->disableHydration()
+            ->first();
+
+        if (!is_null($permission)) {
+            $entity['metadata_key_id'] = $permission['user']['gpgkey']['id'] ?? null;
+        }
+
+        return $entity;
     }
 }
