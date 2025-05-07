@@ -24,11 +24,11 @@
     "jquery": "^3.5.1",
     "lockfile-lint": "^4.14.0",
     "openpgp": "^5.11.1",
-    "passbolt-styleguide": "^5.0.0"
+    "passbolt-styleguide": "^5.1.0"
   },
   "scripts": {
     "lint": "npm run lint:lockfile",
-    "lint:lockfile": "lockfile-lint --path package-lock.json --allowed-hosts npm --allowed-schemes \"https:\" --empty-hostname false"
+    "lint:lockfile": "lockfile-lint --path package-lock.json --allowed-hosts npm github.com --allowed-schemes \"https:\" \"git+ssh:\" --empty-hostname false"
   },
   "dependencies": {
     "micromatch": "^4.0.8",

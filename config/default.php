@@ -43,7 +43,7 @@ return [
         // set in bootstrap.php
         'originalFullBaseUrl' => '',
         'v5' => [
-            'enabled' => filter_var(env('PASSBOLT_V5_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+            'enabled' => true,
         ],
 
         // Authentication & Authorisation.

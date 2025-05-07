@@ -21,6 +21,7 @@ use App\Model\Table\ResourcesTable;
 use App\Utility\Healthchecks\AbstractHealthcheckService;
 use App\Utility\Healthchecks\Healthcheck;
 use Cake\ORM\TableRegistry;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 
 class ResourcesHealthcheckService extends AbstractHealthcheckService
 {
@@ -67,7 +68,10 @@ class ResourcesHealthcheckService extends AbstractHealthcheckService
      */
     private function canValidate(Resource $resource): void
     {
-        $copy = $this->table->newEntity($resource->toArray());
+        $metadataResourceDto = MetadataResourceDto::fromArray($resource->toArray());
+
+        $options = $metadataResourceDto->isV5() ? ['validate' => 'v5'] : [];
+        $copy = $this->table->newEntity($resource->toArray(), $options);
         $error = $copy->getErrors();
 
         // Ignore secrets and permissions

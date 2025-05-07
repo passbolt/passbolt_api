@@ -87,6 +87,7 @@ class MetadataShareControllerTest extends AppIntegrationTestCaseV5
         $this->putJson("/share/resource/{$resourceId}.json", $data);
 
         $this->assertSuccess();
+        /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = TableRegistry::getTableLocator()->get('Users');
         $hasAccessUsers = $usersTable->findIndex(Role::USER, ['filter' => ['has-access' => [$resourceId]]])->all()->toArray();
         $hasAccessUsersIds = Hash::extract($hasAccessUsers, '{n}.id');
