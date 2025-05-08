@@ -27,12 +27,12 @@ class MfaDuoAuthenticationRequestDto
     /**
      * @var \App\Model\Entity\AuthenticationToken|null $authenticationToken
      */
-    public $authenticationToken;
+    public ?AuthenticationToken $authenticationToken = null;
 
     /**
      * @var string|null duoAuthenticationUrl
      */
-    public $duoAuthenticationUrl;
+    public ?string $duoAuthenticationUrl = null;
 
     /**
      * Construct the Dto based on array as source.

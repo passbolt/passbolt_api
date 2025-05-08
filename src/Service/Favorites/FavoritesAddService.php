@@ -18,6 +18,7 @@ namespace App\Service\Favorites;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Favorite;
+use App\Model\Table\FavoritesTable;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
@@ -28,7 +29,7 @@ class FavoritesAddService
     /**
      * @var \App\Model\Table\FavoritesTable
      */
-    private $Favorites;
+    private FavoritesTable $Favorites;
 
     /**
      * Constructor.
@@ -55,7 +56,7 @@ class FavoritesAddService
         $favorite = $this->_buildAndValidateFavorite($uac, $foreignKey);
 
         // Save the favorite
-        $result = $this->Favorites->save($favorite);
+        $this->Favorites->save($favorite);
         $this->_handleValidationError($favorite);
 
         return $favorite;
@@ -104,7 +105,7 @@ class FavoritesAddService
      * @throws \App\Error\Exception\ValidationException if validation failed
      * @return void
      */
-    protected function _handleValidationError(Favorite $favorite)
+    protected function _handleValidationError(Favorite $favorite): void
     {
         $errors = $favorite->getErrors();
 

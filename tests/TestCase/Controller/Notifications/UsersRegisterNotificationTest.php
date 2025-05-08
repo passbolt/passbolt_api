@@ -28,7 +28,7 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
     use EmailQueueTrait;
     use SelfRegistrationTestTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
+    public array $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
 
     public function setUp(): void
     {

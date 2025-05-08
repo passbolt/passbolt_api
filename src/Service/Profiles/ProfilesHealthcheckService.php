@@ -31,7 +31,7 @@ class ProfilesHealthcheckService extends AbstractHealthcheckService
     /**
      * @var \App\Model\Table\ProfilesTable
      */
-    private $table;
+    private ProfilesTable $table;
 
     /**
      * Profiles Healthcheck constructor.
@@ -52,7 +52,7 @@ class ProfilesHealthcheckService extends AbstractHealthcheckService
     {
         $records = $this->table->find()->all();
 
-        foreach ($records as $i => $record) {
+        foreach ($records as $record) {
             $this->canValidate($record);
         }
 

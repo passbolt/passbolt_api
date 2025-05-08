@@ -63,28 +63,28 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param \Passbolt\Log\Test\Factory\ActionLogFactory|null $actionLogFactory ActionLog factory
+     * @param \Passbolt\Log\Test\Factory\ActionLogFactory|array $actionLogFactory ActionLog factory
      * @return $this
      */
-    public function withActionLog(?ActionLogFactory $actionLogFactory = null)
+    public function withActionLog(array|ActionLogFactory $actionLogFactory = [])
     {
         return $this->with('ActionLogs', $actionLogFactory);
     }
 
     /**
-     * @param \Passbolt\Folders\Test\Factory\ResourceFactory|null $resourceFactory Resource factory
+     * @param \Passbolt\Folders\Test\Factory\ResourceFactory|array $resourceFactory Resource factory
      * @return $this
      */
-    public function withResource(?ResourceFactory $resourceFactory = null)
+    public function withResource(array|ResourceFactory $resourceFactory = [])
     {
         return $this->resources()->with('Resources', $resourceFactory);
     }
 
     /**
-     * @param \Passbolt\Folders\Test\Factory\ResourceFactory|null $resourceFactory Resource factory
+     * @param \Passbolt\Folders\Test\Factory\ResourceFactory|array $resourceFactory Resource factory
      * @return $this
      */
-    public function withSecretAccessOnResource(?ResourceFactory $resourceFactory = null)
+    public function withSecretAccessOnResource(array|ResourceFactory $resourceFactory = [])
     {
         return $this->secretAccesses()->with('SecretAccesses.Resources', $resourceFactory);
     }

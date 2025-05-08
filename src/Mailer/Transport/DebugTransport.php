@@ -26,7 +26,7 @@ use Cake\Mailer\Transport\DebugTransport as CakeDebugTransport;
 class DebugTransport extends SmtpTransport
 {
     /**
-     * @var \Cake\Mailer\Message[]
+     * @var array<\Cake\Mailer\Message>
      */
     protected array $messages = [];
 
@@ -43,7 +43,7 @@ class DebugTransport extends SmtpTransport
     }
 
     /**
-     * @return \Cake\Mailer\Message[]
+     * @return array<\Cake\Mailer\Message>
      */
     public function getMessages(): array
     {

@@ -21,6 +21,7 @@ use App\Controller\AppController;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
 use Passbolt\PasswordPolicies\Service\PasswordPoliciesGetSettingsInterface;
+use Throwable;
 
 class PasswordPoliciesSettingsGetController extends AppController
 {
@@ -35,7 +36,7 @@ class PasswordPoliciesSettingsGetController extends AppController
         try {
             $passwordPoliciesSettingsDto = $passwordPoliciesGetSettingsService->get();
             $this->success(__('The operation was successful.'), $passwordPoliciesSettingsDto->toArray());
-        } catch (\Throwable $error) {
+        } catch (Throwable $error) {
             Log::error($error->getMessage());
             throw new InternalErrorException(__('Could not retrieve the password policies.'));
         }

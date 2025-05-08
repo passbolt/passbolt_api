@@ -29,5 +29,5 @@ interface ReadableEmailNotificationSettingsSourceInterface
      *
      * @return array
      */
-    public function read();
+    public function read(): array;
 }

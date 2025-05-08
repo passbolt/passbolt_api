@@ -26,6 +26,7 @@ use Duo\DuoUniversal\Client;
 use Duo\DuoUniversal\DuoException;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsDuoService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
+use Throwable;
 
 /**
  * Class MfaDuoVerifyService
@@ -37,7 +38,7 @@ class MfaDuoVerifyDuoCodeService
     /**
      * @var \Duo\DuoUniversal\Client
      */
-    protected $duoClient;
+    protected Client $duoClient;
 
     /**
      * MfaDuoVerifyService constructor.
@@ -53,7 +54,7 @@ class MfaDuoVerifyDuoCodeService
                 new MfaOrgSettingsDuoService(MfaOrgSettings::get()->getSettings()),
                 $authTokenType
             );
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             throw new InternalErrorException(__('Could not enable Duo MFA provider.'), null, $th);
         }
     }

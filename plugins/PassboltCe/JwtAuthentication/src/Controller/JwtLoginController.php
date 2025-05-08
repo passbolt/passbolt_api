@@ -20,6 +20,7 @@ use App\Controller\AppController;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
 use Authentication\Authenticator\Result;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
@@ -29,7 +30,7 @@ class JwtLoginController extends AppController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         $this->Authentication->allowUnauthenticated([
             'loginPost',

@@ -41,12 +41,17 @@ use Cake\Database\Type\StringType;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorTrap;
 use Cake\Error\ExceptionTrap;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Log\Log;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Routing\Router;
 use Cake\Utility\Security;
+
+/**
+ * Load global functions.
+ */
+require CAKE . 'functions.php';
 
 /*
  * Read configuration file and inject configuration into various
@@ -100,9 +105,8 @@ Configure::write('App.paths', [
  * for a short time.
  */
 if (Configure::read('debug')) {
-    Configure::write('Cache._cake_model_.duration', '+2 minutes');
+    Configure::write('Cache._cake_model_.duration', '+1 millisecond');
     Configure::write('Cache._cake_core_.duration', '+2 minutes');
-    Configure::write('Cache._cake_routes_.duration', '+2 seconds');
 }
 
 /*
@@ -193,7 +197,7 @@ Log::setConfig(Configure::consume('Log'));
 Security::setSalt(Configure::consume('Security.salt'));
 
 // Enforce the json time format
-FrozenTime::setJsonEncodeFormat("yyyy-MM-dd'T'HH':'mm':'ssxxx");
+DateTime::setJsonEncodeFormat("yyyy-MM-dd'T'HH':'mm':'ssxxx");
 
 /*
  * Setup detectors for mobile and tablet.

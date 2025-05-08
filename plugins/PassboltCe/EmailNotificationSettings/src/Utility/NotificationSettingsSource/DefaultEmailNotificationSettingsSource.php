@@ -28,7 +28,7 @@ class DefaultEmailNotificationSettingsSource implements ReadableEmailNotificatio
     /**
      * @var \Cake\Form\Schema
      */
-    private $schema;
+    private Schema $schema;
 
     /**
      * @param \Cake\Form\Schema $schema Schema to use to build notification settings
@@ -42,9 +42,9 @@ class DefaultEmailNotificationSettingsSource implements ReadableEmailNotificatio
      * Return a new instance of DefaultEmailNotificationSettingsSource from a Cake Form instance
      *
      * @param \Cake\Form\Form $form An instance of Cake form
-     * @return \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource
+     * @return self
      */
-    public static function fromCakeForm(CakeForm $form)
+    public static function fromCakeForm(CakeForm $form): DefaultEmailNotificationSettingsSource
     {
         return new static($form->getSchema());
     }
@@ -53,9 +53,9 @@ class DefaultEmailNotificationSettingsSource implements ReadableEmailNotificatio
      * Return a new instance of DefaultEmailNotificationSettingsSource from a EmailNotificationSettingsDefinitionInterface instance
      *
      * @param \Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionInterface $formDefinition Form definition
-     * @return \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource
+     * @return self
      */
-    public static function fromSettingsFormDefinition(EmailNotificationSettingsDefinitionInterface $formDefinition)
+    public static function fromSettingsFormDefinition(EmailNotificationSettingsDefinitionInterface $formDefinition): self // phpcs:ignore
     {
         $schema = new Schema();
         $formDefinition->buildSchema($schema);

@@ -30,7 +30,7 @@ class Tarjan
      *    '1|2|4',
      * ]
      */
-    public static function detect(array $graph)
+    public static function detect(array $graph): array
     {
         $graphSize = count($graph);
         $cycles = [];
@@ -62,8 +62,15 @@ class Tarjan
      * @param array $pointStack The current list of connected nodes explored
      * @return bool
      */
-    private static function detectOnNode($initialNode, $node, &$graph, &$cycles, &$marked, &$markedStack, &$pointStack)
-    {
+    private static function detectOnNode(
+        int $initialNode,
+        int $node,
+        array &$graph,
+        array &$cycles,
+        array &$marked,
+        array &$markedStack,
+        array &$pointStack
+    ): bool {
         $found = false;
         $pointStack[] = $node;
         $marked[$node] = true;

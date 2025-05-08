@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Controller\Gpgkeys;
 
 use App\Controller\AppController;
+use App\Model\Table\GpgkeysTable;
 
 /**
  * GpgkeysIndexController Class
@@ -26,7 +27,7 @@ class GpgkeysIndexController extends AppController
     /**
      * @var \App\Model\Table\GpgkeysTable
      */
-    protected $Gpgkeys;
+    protected GpgkeysTable $Gpgkeys;
 
     /**
      * @inheritDoc
@@ -40,7 +41,7 @@ class GpgkeysIndexController extends AppController
         $this->Gpgkeys = $this->fetchTable('Gpgkeys');
     }
 
-    public $paginate = [
+    public array $paginate = [
         'sortableFields' => [
             'Gpgkeys.key_id',
         ],
@@ -57,7 +58,8 @@ class GpgkeysIndexController extends AppController
 
         $whitelist = ['filter' => ['modified-after', 'is-deleted', 'has-users']];
         $options = $this->QueryString->get($whitelist);
-        $gpgkeys = $this->Gpgkeys->find('index', $options);
+        $query = $this->Gpgkeys->find();
+        $gpgkeys = $this->Gpgkeys->findIndex($query, $options);
         $this->paginate($gpgkeys);
         $this->success(__('The operation was successful.'), $gpgkeys);
     }

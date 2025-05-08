@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\SmtpSettings\Test\Lib;
 
+use Exception;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
 
@@ -40,7 +41,7 @@ trait SmtpSettingsIntegrationTestTrait
                 ->disableOriginalConstructor()
                 ->onlyMethods(['getTrace', 'sendTestEmail'])
                 ->getMock();
-            $service->method('sendTestEmail')->willThrowException(new \Exception($errorMessage));
+            $service->method('sendTestEmail')->willThrowException(new Exception($errorMessage));
             $service->method('getTrace')->willReturn($trace);
 
             return $service;

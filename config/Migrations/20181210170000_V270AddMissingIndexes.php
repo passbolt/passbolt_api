@@ -29,7 +29,6 @@ class V270AddMissingIndexes extends AbstractMigration
             ->save();
         $this->table('secrets')
             ->addIndex(['resource_id'])
-            ->addIndex(['user_id', 'resource_id'])
             ->save();
         $this->table('resources')
             ->addIndex(['deleted'])

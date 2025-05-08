@@ -83,7 +83,7 @@ class IntlHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [__('See: https://secure.php.net/manual/en/book.intl.php')];
     }

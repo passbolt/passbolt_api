@@ -36,7 +36,7 @@ class MetadataTypesSettingsAssertServiceTest extends AppTestCaseV5
     {
         $sut = new MetadataTypesSettingsAssertService();
         $this->expectException(FormValidationException::class);
-        $dto = $sut->assert([]);
+        $sut->assert([]);
     }
 
     /**

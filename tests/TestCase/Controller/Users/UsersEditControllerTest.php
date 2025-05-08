@@ -22,7 +22,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AvatarsIntegrationTestTrait;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 class UsersEditControllerTest extends AppIntegrationTestCase
 {
@@ -60,7 +60,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             'id' => $user->id,
             'active' => false,
             'deleted' => true,
-            'disabled' => FrozenTime::yesterday(),
+            'disabled' => DateTime::yesterday(),
             'profile' => [
                 'first_name' => 'ada edited',
             ],

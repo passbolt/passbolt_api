@@ -30,7 +30,7 @@ use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataSessionKeyRule;
  * @method \Passbolt\Metadata\Model\Entity\MetadataSessionKey newEmptyEntity()
  * @method \Passbolt\Metadata\Model\Entity\MetadataSessionKey newEntity(array $data, array $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataSessionKey[] newEntities(array $data, array $options = [])
- * @method \Passbolt\Metadata\Model\Entity\MetadataSessionKey get($primaryKey, $options = [])
+ * @method \Passbolt\Metadata\Model\Entity\MetadataSessionKey get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Metadata\Model\Entity\MetadataSessionKey findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataSessionKey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataSessionKey[] patchEntities(iterable $entities, array $data, array $options = [])

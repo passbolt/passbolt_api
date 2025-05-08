@@ -28,7 +28,7 @@ class PermissionsCreateService
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * PermissionsCreateService constructor.
@@ -58,7 +58,7 @@ class PermissionsCreateService
     public function create(UserAccessControl $uac, ?array $data = []): ?Permission
     {
         $permission = null;
-        $this->permissionsTable->getConnection()->transactional(function () use (&$permission, $uac, $data) {
+        $this->permissionsTable->getConnection()->transactional(function () use (&$permission, $uac, $data): void {
             $permission = $this->createPermission($uac, $data);
         });
 

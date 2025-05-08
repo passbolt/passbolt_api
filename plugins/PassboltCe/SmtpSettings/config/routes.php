@@ -18,7 +18,7 @@ use Passbolt\SmtpSettings\Middleware\SmtpSettingsSecurityMiddleware;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/SmtpSettings', ['path' => '/smtp'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/SmtpSettings', ['path' => '/smtp'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
     $routes->registerMiddleware(SmtpSettingsSecurityMiddleware::class, new SmtpSettingsSecurityMiddleware());
 

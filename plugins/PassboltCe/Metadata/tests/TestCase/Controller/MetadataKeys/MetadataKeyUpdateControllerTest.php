@@ -21,7 +21,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
@@ -54,7 +54,7 @@ class MetadataKeyUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->putJson('/metadata/keys/' . $key->get('id') . '.json', [
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-            'expired' => FrozenTime::yesterday()->setTimezone('Asia/Kolkata')->toIso8601String(), // e.g. 2025-01-29T13:45:06+00:00
+            'expired' => DateTime::yesterday()->setTimezone('Asia/Kolkata')->toIso8601String(), // e.g. 2025-01-29T13:45:06+00:00
         ]);
 
         $this->assertResponseCode(200);
@@ -84,7 +84,7 @@ class MetadataKeyUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->putJson('/metadata/keys/' . $key->get('id') . '.json', [
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAF',
-            'expired' => FrozenTime::yesterday()->setTimezone('Asia/Kolkata')->toIso8601String(),
+            'expired' => DateTime::yesterday()->setTimezone('Asia/Kolkata')->toIso8601String(),
         ]);
 
         $this->assertResponseCode(400);
@@ -101,7 +101,7 @@ class MetadataKeyUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->putJson('/metadata/keys/' . $key->get('id') . '.json', [
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-            'expired' => FrozenTime::yesterday()->setTimezone('Asia/Kolkata')->toIso8601String(),
+            'expired' => DateTime::yesterday()->setTimezone('Asia/Kolkata')->toIso8601String(),
         ]);
 
         $this->assertResponseCode(400);

@@ -13,16 +13,16 @@ class DebugSmtpTransport extends SmtpTransport
      *
      * @var array
      */
-    protected $trace = [];
+    protected array $trace = [];
 
     /**
      * Extends _smtpSend by storing the communication trace.
      *
-     * @param null|string $data data to be sent
+     * @param string|null $data data to be sent
      * @param string|false $checkCode check code
-     * @return null|string
+     * @return string|null
      */
-    protected function _smtpSend(?string $data, $checkCode = '250'): ?string
+    protected function _smtpSend(?string $data, string|false $checkCode = '250'): ?string
     {
         $code = parent::_smtpSend($data, $checkCode);
         $this->_bufferTrace($data, $this->getLastResponse());

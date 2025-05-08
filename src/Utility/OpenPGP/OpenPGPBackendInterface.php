@@ -117,7 +117,7 @@ interface OpenPGPBackendInterface
     /**
      * Check if an ASCII armored private key is parsable
      *
-     * @param  string $armoredKey ASCII armored key data
+     * @param string $armoredKey ASCII armored key data
      * @return bool true if parsable false otherwise
      */
     public function isParsableArmoredPublicKey(string $armoredKey): bool;
@@ -125,7 +125,7 @@ interface OpenPGPBackendInterface
     /**
      * Check if an ASCII armored private key is parsable
      *
-     * @param  string $armoredKey ASCII armored key data
+     * @param string $armoredKey ASCII armored key data
      * @return bool true if parsable false otherwise
      */
     public function isParsableArmoredPrivateKey(string $armoredKey): bool;

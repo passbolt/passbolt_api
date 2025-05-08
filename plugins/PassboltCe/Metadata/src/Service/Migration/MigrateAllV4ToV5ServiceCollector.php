@@ -26,7 +26,7 @@ class MigrateAllV4ToV5ServiceCollector
      * @param array|string $services Service(s) to add.
      * @return void
      */
-    public static function add($services): void
+    public static function add(array|string $services): void
     {
         if (is_string($services)) {
             $services = [$services];
@@ -38,7 +38,7 @@ class MigrateAllV4ToV5ServiceCollector
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     public static function get(): array
     {

@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Controller\Users;
 
+use AllowDynamicProperties;
 use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Service\Users\UserRegisterServiceInterface;
@@ -28,6 +29,7 @@ use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterf
 /**
  * @property \App\Model\Table\UsersTable $Users
  */
+#[AllowDynamicProperties]
 class UsersRegisterController extends AppController
 {
     public const USERS_REGISTER_EVENT_NAME = 'UsersRegisterController.register.success';

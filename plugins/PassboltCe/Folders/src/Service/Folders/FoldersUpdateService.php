@@ -21,11 +21,13 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UserAccessControl;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Utility\Folders\FolderSaveV5AwareTrait;
@@ -42,12 +44,12 @@ class FoldersUpdateService
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
-    public $foldersTable;
+    public FoldersTable $foldersTable;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * Instantiate the service.
@@ -68,13 +70,13 @@ class FoldersUpdateService
      * @throws \App\Error\Exception\ValidationException When validation is triggered
      * @throws \Exception If an unexpected error occurred
      */
-    public function update(UserAccessControl $uac, string $id, MetadataFolderDto $folderDto)
+    public function update(UserAccessControl $uac, string $id, MetadataFolderDto $folderDto): Folder
     {
         $this->assertCreationAllowedByMetadataSettings($folderDto->isV5(), MetadataTypesSettingsDto::ENTITY_FOLDER);
 
         $folder = $this->getFolder($uac, $id);
 
-        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $folderDto) {
+        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $folderDto): void {
             $this->updateFolderMeta($uac, $folder, $folderDto);
         });
 
@@ -95,7 +97,7 @@ class FoldersUpdateService
      * @return \Passbolt\Folders\Model\Entity\Folder
      * @throws \Cake\Http\Exception\NotFoundException If the folder does not exist.
      */
-    private function getFolder(UserAccessControl $uac, string $folderId)
+    private function getFolder(UserAccessControl $uac, string $folderId): Folder
     {
         /** @var \App\Model\Entity\Permission|null $permission */
         $permission = $this->permissionsTable
@@ -119,8 +121,11 @@ class FoldersUpdateService
      * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $folderDto The folder dto.
      * @return \Cake\Datasource\EntityInterface|\Passbolt\Folders\Model\Entity\Folder
      */
-    private function updateFolderMeta(UserAccessControl $uac, Folder $folder, MetadataFolderDto $folderDto)
-    {
+    private function updateFolderMeta(
+        UserAccessControl $uac,
+        Folder $folder,
+        MetadataFolderDto $folderDto
+    ): EntityInterface|Folder {
         $this->patchEntity($uac, $folder, $folderDto);
         $this->handleValidationErrors($folder);
         $this->foldersTable->save($folder);
@@ -137,8 +142,11 @@ class FoldersUpdateService
      * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $folderDto The folder DTO.
      * @return \Cake\Datasource\EntityInterface|\Passbolt\Folders\Model\Entity\Folder
      */
-    private function patchEntity(UserAccessControl $uac, Folder $folder, MetadataFolderDto $folderDto)
-    {
+    private function patchEntity(
+        UserAccessControl $uac,
+        Folder $folder,
+        MetadataFolderDto $folderDto
+    ): EntityInterface|Folder {
         $data = $folderDto->toArray();
         $data = array_merge($data, ['modified_by' => $uac->getId()]);
         if ($folderDto->isV5()) {
@@ -162,7 +170,7 @@ class FoldersUpdateService
      * @return void
      * @throws \App\Error\Exception\ValidationException If the provided data does not validate.
      */
-    private function handleValidationErrors(Folder $folder)
+    private function handleValidationErrors(Folder $folder): void
     {
         $errors = $folder->getErrors();
         if (!empty($errors)) {

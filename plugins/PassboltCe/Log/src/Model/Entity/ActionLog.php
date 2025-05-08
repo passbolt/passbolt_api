@@ -25,7 +25,7 @@ use Cake\ORM\Entity;
  * @property string $action_id
  * @property string $context
  * @property int $status
- * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\DateTime $created
  * @property \App\Model\Entity\User|null $user
  * @property \Passbolt\Log\Model\Entity\Action $action
  * @property \Passbolt\Log\Model\Entity\EntityHistory[] $entities_history
@@ -41,7 +41,7 @@ class ActionLog extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'id' => false,
         'user_id' => false,
         'action_id' => false,

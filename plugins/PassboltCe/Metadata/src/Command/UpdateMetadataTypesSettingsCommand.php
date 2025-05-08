@@ -24,6 +24,7 @@ use App\Utility\UserAccessControl;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Exception;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Service\MetadataTypesSettingsAssertService;
 use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
@@ -148,7 +149,7 @@ class UpdateMetadataTypesSettingsCommand extends PassboltCommand
             $this->displayValidationErrors($e->getErrors(), $io);
 
             return $this->errorCode();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error($e->getMessage(), $io);
 
             return $this->errorCode();

@@ -84,7 +84,7 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return __('Edit the security.salt in {0}', CONFIG . 'app.php');
     }

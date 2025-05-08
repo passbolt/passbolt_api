@@ -25,6 +25,7 @@ use Passbolt\Metadata\Model\Entity\MetadataSessionKey;
 use Passbolt\Metadata\Service\MetadataSessionKeyCreateService;
 use Passbolt\Metadata\Test\Factory\MetadataSessionKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use stdClass;
 
 /**
  * @covers \Passbolt\Metadata\Service\MetadataSessionKeyCreateService
@@ -99,7 +100,7 @@ class MetadataSessionKeyCreateServiceTest extends AppTestCaseV5
         return [
             [null],
             [[]],
-            [new \stdClass()],
+            [new stdClass()],
         ];
     }
 

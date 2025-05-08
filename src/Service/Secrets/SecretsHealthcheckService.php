@@ -32,7 +32,7 @@ class SecretsHealthcheckService extends AbstractHealthcheckService
     /**
      * @var \App\Model\Table\SecretsTable
      */
-    private $table;
+    private SecretsTable $table;
 
     /**
      * Secret Healthcheck constructor.
@@ -56,7 +56,7 @@ class SecretsHealthcheckService extends AbstractHealthcheckService
             ->toArray();
         $recordIds = Hash::extract($recordIds, '{n}.id');
 
-        foreach ($recordIds as $i => $id) {
+        foreach ($recordIds as $id) {
             $secret = $this->table->get($id);
             $this->canValidate($secret);
         }

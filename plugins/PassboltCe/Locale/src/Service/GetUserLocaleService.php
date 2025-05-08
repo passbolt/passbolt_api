@@ -17,16 +17,17 @@ declare(strict_types=1);
 
 namespace Passbolt\Locale\Service;
 
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountSettings\Model\Entity\AccountSetting;
+use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
 class GetUserLocaleService extends LocaleService
 {
     /**
      * @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable
      */
-    public $AccountSettings;
+    public AccountSettingsTable $AccountSettings;
 
     /**
      * It is important here to have a username, and no user or user id.
@@ -37,7 +38,7 @@ class GetUserLocaleService extends LocaleService
      * - the organization locale
      * - the default locale
      *
-     * @param  string $username Username
+     * @param string $username Username
      * @return string
      */
     public function getLocale(string $username): string
@@ -53,15 +54,15 @@ class GetUserLocaleService extends LocaleService
     /**
      * Read the user's locale.
      *
-     * @param  string $username Username
+     * @param string $username Username
      * @return string|null
      */
     protected function getLocaleFromUsername(string $username): ?string
     {
         $setting = TableRegistry::getTableLocator()
             ->get('Passbolt/AccountSettings.AccountSettings')
-            ->find('byProperty', ['property' => static::SETTING_PROPERTY])
-            ->innerJoinWith('Users', function (Query $q) use ($username) {
+            ->find('byProperty', property: static::SETTING_PROPERTY)
+            ->innerJoinWith('Users', function (SelectQuery $q) use ($username) {
                 return $q->where([
                     'Users.username' => $username,
                     'Users.deleted' => false,

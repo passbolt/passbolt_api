@@ -20,18 +20,19 @@ namespace Passbolt\Folders\Service\FoldersRelations;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class FoldersRelationsRepairStronglyConnectedComponentsService
 {
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsSortService
      */
-    private $foldersRelationsSortService;
+    private FoldersRelationsSortService $foldersRelationsSortService;
 
     /**
      * Instantiate the service.
@@ -51,7 +52,7 @@ class FoldersRelationsRepairStronglyConnectedComponentsService
      * @param array<\Passbolt\Folders\Model\Entity\FoldersRelation> $foldersRelations The relations forming a strongly connected components set
      * @return \Passbolt\Folders\Model\Entity\FoldersRelation|null Return the folder relation that was broken to repair the SCC.
      */
-    public function repair(UserAccessControl $uac, string $userId, array $foldersRelations)
+    public function repair(UserAccessControl $uac, string $userId, array $foldersRelations): ?FoldersRelation
     {
         $folderRelationToBreak = $this->identifyFolderRelationToBreak($uac, $userId, $foldersRelations);
         if (!is_null($folderRelationToBreak)) {
@@ -85,7 +86,7 @@ class FoldersRelationsRepairStronglyConnectedComponentsService
         UserAccessControl $uac,
         string $userId,
         array $foldersRelations
-    ) {
+    ): ?FoldersRelation {
         if (empty($foldersRelations)) {
             return null;
         }
@@ -102,7 +103,7 @@ class FoldersRelationsRepairStronglyConnectedComponentsService
      * @param array<\Passbolt\Folders\Model\Entity\FoldersRelation> $foldersRelations The list of folders relations involved in the conflict.
      * @return \Passbolt\Folders\Model\Entity\FoldersRelation|null Return the folder relation that was broken to repair the SCC.
      */
-    public function repairPersonal(array $foldersRelations)
+    public function repairPersonal(array $foldersRelations): ?FoldersRelation
     {
         $folderRelationToBreak = $this->identifyPersonalFolderRelationToBreak($foldersRelations);
         if ($folderRelationToBreak) {
@@ -123,7 +124,7 @@ class FoldersRelationsRepairStronglyConnectedComponentsService
      * @param array $foldersRelations The list of folders relations involved in a cycle
      * @return \Passbolt\Folders\Model\Entity\FoldersRelation|null
      */
-    private function identifyPersonalFolderRelationToBreak(array $foldersRelations)
+    private function identifyPersonalFolderRelationToBreak(array $foldersRelations): ?FoldersRelation
     {
         foreach ($foldersRelations as $folderRelation) {
             $isPersonal = $this->foldersRelationsTable->isItemPersonal($folderRelation['folder_parent_id']);

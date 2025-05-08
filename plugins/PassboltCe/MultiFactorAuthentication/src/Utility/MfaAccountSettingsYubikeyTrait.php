@@ -26,7 +26,7 @@ trait MfaAccountSettingsYubikeyTrait
      * @throws \Cake\Datasource\Exception\RecordNotFoundException if URI is not set
      * @return mixed
      */
-    public function getYubikeyId()
+    public function getYubikeyId(): mixed
     {
         if (!isset($this->settings[MfaSettings::PROVIDER_YUBIKEY][self::YUBIKEY_ID])) {
             throw new RecordNotFoundException(__('MFA setting Yubikey Id is not set.'));
@@ -40,7 +40,7 @@ trait MfaAccountSettingsYubikeyTrait
      *
      * @return bool
      */
-    public function isYubikeyUserIdSet()
+    public function isYubikeyUserIdSet(): bool
     {
         try {
             $this->getYubikeyId();

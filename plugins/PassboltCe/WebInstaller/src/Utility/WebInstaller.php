@@ -27,6 +27,7 @@ use Cake\Http\Session;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Exception;
 use Migrations\Migrations;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSetService;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
@@ -37,9 +38,9 @@ class WebInstaller
     protected ?Session $session = null;
 
     /**
-     * @var array|mixed
+     * @var mixed|array
      */
-    protected $settings = [];
+    protected mixed $settings = [];
 
     /**
      * WebInstaller constructor.
@@ -73,7 +74,7 @@ class WebInstaller
      * @param string $key The setting value
      * @return mixed The value fetched from the settings, or null.
      */
-    public function getSettings(string $key)
+    public function getSettings(string $key): mixed
     {
         return Hash::get($this->settings, $key);
     }
@@ -85,7 +86,7 @@ class WebInstaller
      * @param mixed $value The setting value.
      * @return void
      */
-    public function setSettings(string $key, $value): void
+    public function setSettings(string $key, mixed $value): void
     {
         $this->settings[$key] = $value;
     }
@@ -142,7 +143,7 @@ class WebInstaller
      * @param mixed $value The setting value.
      * @return void
      */
-    public function setSettingsAndSave(string $key, $value): void
+    public function setSettingsAndSave(string $key, mixed $value): void
     {
         $this->setSettings($key, $value);
         $this->saveSettings();
@@ -225,7 +226,7 @@ class WebInstaller
         $migrations = new Migrations(['connection' => ConnectionManager::get('default')->configName()]);
         $migrated = $migrations->migrate();
         if (!$migrated) {
-            throw new \Exception(__('The database cannot be installed'));
+            throw new Exception(__('The database cannot be installed'));
         }
     }
 

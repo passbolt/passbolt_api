@@ -26,7 +26,7 @@ class JwksGetService extends JwtAbstractService
     protected string $keyPath = self::PUBLIC_KEY_PATH;
 
     /**
-     * @return string[]
+     * @return array<string>
      * @throws \Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException if the public key file is not found or not readable.
      */
     public function getPublicKey(): array

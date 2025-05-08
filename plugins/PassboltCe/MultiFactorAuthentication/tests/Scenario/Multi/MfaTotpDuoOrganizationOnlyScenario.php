@@ -28,7 +28,6 @@ class MfaTotpDuoOrganizationOnlyScenario implements FixtureScenarioInterface
     public function load(...$args): array
     {
         $isSupported = $args[0] ?? true;
-        $hostName = $args[1] ?? null;
         $orgSetting = MfaOrganizationSettingFactory::make()
             ->setProviders(MfaSettings::PROVIDER_DUO, $isSupported)
             ->duoWithTotp()

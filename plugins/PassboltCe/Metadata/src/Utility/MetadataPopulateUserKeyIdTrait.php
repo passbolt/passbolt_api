@@ -33,7 +33,7 @@ trait MetadataPopulateUserKeyIdTrait
      * @param mixed $data request data
      * @return array
      */
-    public function populatedMetadataUserKeyId(string $userId, $data): array
+    public function populatedMetadataUserKeyId(string $userId, mixed $data): array
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException(__('Invalid user ID format.'));
@@ -49,7 +49,7 @@ trait MetadataPopulateUserKeyIdTrait
             && !isset($data[MetadataDto::METADATA_KEY_ID])
         ) {
             $keyTable = TableRegistry::getTableLocator()->get('Gpgkeys');
-            $key = $keyTable->find('current', ['user_id' => $userId])->firstOrFail();
+            $key = $keyTable->find('current', userId: $userId)->firstOrFail();
             $id = $key->get('id');
             if (Validation::uuid($id)) {
                 $data[MetadataDto::METADATA_KEY_ID] = $id;

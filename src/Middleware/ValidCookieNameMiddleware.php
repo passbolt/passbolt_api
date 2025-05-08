@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use Cake\Http\Exception\BadRequestException;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -37,7 +38,7 @@ class ValidCookieNameMiddleware implements MiddlewareInterface
         try {
             /** @var \Cake\Http\ServerRequest $request */
             $request->getCookieCollection();
-        } catch (\InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             // Remap error to 400
             throw new BadRequestException($exception->getMessage(), null, $exception);
         }

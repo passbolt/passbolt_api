@@ -172,7 +172,7 @@ class JwtLogoutControllerTest extends JwtAuthenticationIntegrationTestCase
             'user_id' => $userId,
             'active' => true,
             'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
-        ])->count();
+        ])->all()->count();
     }
 
     private function countInactiveAuthenticationTokens(string $userId): int
@@ -181,6 +181,6 @@ class JwtLogoutControllerTest extends JwtAuthenticationIntegrationTestCase
             'user_id' => $userId,
             'active' => false,
             'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
-        ])->count();
+        ])->all()->count();
     }
 }

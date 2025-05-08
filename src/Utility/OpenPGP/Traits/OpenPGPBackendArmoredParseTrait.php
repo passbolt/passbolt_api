@@ -27,7 +27,7 @@ trait OpenPGPBackendArmoredParseTrait
      * @return mixed
      * @throws \Cake\Core\Exception\CakeException
      */
-    protected function getGpgMarker(string $armored)
+    protected function getGpgMarker(string $armored): mixed
     {
         $isMarker = preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $armored, $values);
         if (!$isMarker || !isset($values[2])) {
@@ -43,9 +43,9 @@ trait OpenPGPBackendArmoredParseTrait
      *
      * @param string $text key
      * @param string $header header
-     * @return false|string
+     * @return string|false
      */
-    private function unarmor(string $text, string $header = 'PGP PUBLIC KEY BLOCK')
+    private function unarmor(string $text, string $header = 'PGP PUBLIC KEY BLOCK'): false|string
     {
         // @codingStandardsIgnoreStart
         $header = \OpenPGP::header($header);
@@ -107,7 +107,7 @@ trait OpenPGPBackendArmoredParseTrait
      * To do this, we try to unarmor the key. If the operation is successful, then we consider that
      * the key is a valid one.
      *
-     * @param  string $armoredKey ASCII armored key data
+     * @param string $armoredKey ASCII armored key data
      * @return bool true if parsable false otherwise
      */
     public function isParsableArmoredPrivateKey(string $armoredKey): bool
