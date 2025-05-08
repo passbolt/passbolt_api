@@ -9,7 +9,7 @@ declare(strict_types=1);
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.0.0
@@ -188,6 +188,19 @@ class LdapDirectoryTest extends AppTestCase
     {
         $this->Mock->Ldap->setDirectoryType(self::TEST_DOMAIN, DirectoryInterface::TYPE_AD);
         $this->assertEquals($this->settings->getFieldsMapping(), $this->Mock->Ldap->getMappingRules());
+    }
+
+    /**
+     * @return void
+     */
+    public function testLdapDirectory_getMappingRules_Success_OptionalFields()
+    {
+        $settings = DirectoryOrgSettingsTest::getDummySettings();
+        unset($settings['fieldFallbacks']); // remove optional fields
+        $settings = new DirectoryOrgSettings($settings);
+        $mockedLdapDirectory = LdapDirectoryMock::createDefault($this, $settings);
+        $mockedLdapDirectory->Ldap->setDirectoryType(self::TEST_DOMAIN, DirectoryInterface::TYPE_AD);
+        $this->assertEquals($settings->getFieldsMapping(), $this->Mock->Ldap->getMappingRules());
     }
 
     /**
