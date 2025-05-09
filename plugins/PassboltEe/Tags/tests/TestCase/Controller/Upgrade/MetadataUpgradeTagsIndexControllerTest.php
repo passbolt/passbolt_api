@@ -38,7 +38,10 @@ class MetadataUpgradeTagsIndexControllerTest extends AppIntegrationTestCaseV5
     {
         // V4 resources
         $nV4Tags = 3;
-        TagFactory::make($nV4Tags)->persist();
+        ResourcesTagFactory::make($nV4Tags)
+            ->with('Users')
+            ->with('Tags')
+            ->persist();
 
         // V5 resource
         TagFactory::make()->v5Fields(['metadata' => 'foo'])->persist();
@@ -80,9 +83,9 @@ class MetadataUpgradeTagsIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertSame($response, [
             [
                 'id' => $sharedTag->id,
-                'user_id' => null,
                 'slug' => $sharedTag->slug,
                 'is_shared' => true,
+                'user_id' => null,
             ],
         ]);
         $headers = $this->getHeadersAsArray();

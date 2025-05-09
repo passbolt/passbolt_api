@@ -570,15 +570,37 @@ class TagsTable extends Table
     {
         $query = $this->find('v4')->disableHydration();
 
-        $query->leftJoinWith('ResourcesTags');
+        $query->contain('ResourcesTags');
 
         $query
             ->select([
                 'Tags.id',
-                'Tags__user_id' => new IdentifierExpression('ResourcesTags.user_id'),
                 'Tags.slug',
                 'Tags.is_shared',
             ]);
+
+        // Add the field user_id
+        $query->formatResults(function (CollectionInterface $tags) {
+            // Filter only tags associated with a resource to cover the case of data inconsistency
+            $tags = $tags->filter(function ($tag) {
+                return is_array($tag) && !empty($tag['resources_tags']);
+            });
+
+            return $tags->map(function ($tag) {
+                $resourceTag = $tag['resources_tags'][0];
+                // If the resource is not shared, populate the user_id field
+                if (!$tag['is_shared'] && is_string($resourceTag['user_id'])) {
+                    $tag['user_id'] = $resourceTag['user_id'];
+                } else {
+                // Otherwise set it to null
+                    $tag['user_id'] = null;
+                }
+                // The association is not rendered
+                unset($tag['resources_tags']);
+
+                return $tag;
+            });
+        });
 
         if (!isset($options['filter']['is-shared'])) {
             return $query;
