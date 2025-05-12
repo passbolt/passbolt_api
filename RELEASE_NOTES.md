@@ -1,22 +1,28 @@
-Release song: TBD
+Release song: https://www.youtube.com/watch?v=d9WHUTKMD8k
 
-TBD
+The Passbolt API v5 is now available as a release candidate.
+Passbolt new installation will see the password expiry enabled by default.
+This version also introduces encrypted resource metadata (beta) for all users, along with numerous enhancements
+and bug fixes. For full details, please see the changelog.
 
-## [5.1.0-test.1] - 2025-05-07
+We would like to thank the community for their invaluable feedback.
+
+
+## [5.1.0-rc.1] - 2025-05-12
 ### Added
 - PB-40712 Enable password expiry by default for new instances
 - PB-37364 As an administrator I can get and rotate tags with an expired metadata key
 - PB-37702 As an administrator I can upgrade tags from v4 format to v5
 - PB-41629 As a client I should know if the metadata plugin is set as in beta
 - PB-40275 Add support for email claim alias for OAUTH2 provider via server config
-- PB-41628 The metadata plugin is enabled by default
+- PB-41628 Enable the metadata plugin by default
 
 ### Fixed
-- PB-41820 INC-262 - New pro subscription keys are failing and triggering 500s
-- PB-41736 Adjust datacheck command to support v5 resources
+- PB-41820 INC-262 - the new pro subscription keys should not fail and trigger 500s
+- PB-41736 Adjust the datacheck command to support v5 resources
 - PB-40274 Fix azure SSO asking for password everytime even after setting prompt to false
 - PB-41769 Fix action_logs_purge command only purging 100 records
-- PB-42108 Fix APP_BASE not included in generated URLs
+- PB-42108 Fix the APP_BASE variable ignored when generated URLs with CakePHP
 
 ### Improved
 - PB-41840 Return creator along metadata keys on GET /metadata/keys.json
