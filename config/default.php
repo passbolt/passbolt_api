@@ -315,6 +315,9 @@ return [
                 // Feature flag to allow client to tune behavior for backward compatibility
                 'enabled' => true
             ],
+            'userGpgKeyPolicies' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_USER_GPG_KEY_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            ],
         ],
 
         // Activate specific entry points for selenium testing.

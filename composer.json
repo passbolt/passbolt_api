@@ -129,7 +129,8 @@
             "Passbolt\\TotpResourceTypes\\": "./plugins/PassboltCe/TotpResourceTypes/src",
             "Passbolt\\Rbacs\\": "./plugins/PassboltCe/Rbacs/src",
             "Passbolt\\PasswordPolicies\\": "./plugins/PassboltCe/PasswordPolicies/src",
-            "Passbolt\\Metadata\\": "./plugins/PassboltCe/Metadata/src"
+            "Passbolt\\Metadata\\": "./plugins/PassboltCe/Metadata/src",
+            "Passbolt\\UserGpgKeyPolicies\\": "./plugins/PassboltCe/UserGpgKeyPolicies/src"
         }
     },
     "autoload-dev": {
@@ -155,7 +156,8 @@
             "Passbolt\\TotpResourceTypes\\Test\\": "./plugins/PassboltCe/TotpResourceTypes/tests",
             "Passbolt\\Rbacs\\Test\\": "./plugins/PassboltCe/Rbacs/tests",
             "Passbolt\\PasswordPolicies\\Test\\": "./plugins/PassboltCe/PasswordPolicies/tests",
-            "Passbolt\\Metadata\\Test\\": "./plugins/PassboltCe/Metadata/tests"
+            "Passbolt\\Metadata\\Test\\": "./plugins/PassboltCe/Metadata/tests",
+            "Passbolt\\UserGpgKeyPolicies\\Test\\": "./plugins/PassboltCe/UserGpgKeyPolicies/tests"
         }
     },
     "scripts": {
