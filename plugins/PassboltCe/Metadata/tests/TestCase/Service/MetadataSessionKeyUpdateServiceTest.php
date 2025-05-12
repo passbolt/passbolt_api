@@ -157,6 +157,54 @@ class MetadataSessionKeyUpdateServiceTest extends AppTestCaseV5
         $this->service->update($uac, $sessionKey->get('id'), $data);
     }
 
+    public function testMetadataSessionKeyUpdateService_Success_Modified_Time_In_The_Same_Second(): void
+    {
+        $key = GpgkeyFactory::make()->withAdaKey();
+        $user = UserFactory::make()->with('Gpgkeys', $key)->active()->persist();
+        $sessionKey = MetadataSessionKeyFactory::make()->withUser($user)->persist();
+        $sessionKey = MetadataSessionKeyFactory::get($sessionKey->get('id')); // needed to get exact modified time
+        $oldModified = new DateTime($sessionKey->get('modified'));
+        $uac = $this->makeUac($user);
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setEncryptKeyWithUserKey($gpg, $user->get('gpgkey'));
+        $msg = $gpg->encrypt(MetadataSessionKeyFactory::getCleartextDataJson());
+        $data = [
+            'modified' => $sessionKey->modified->modify('+1 microsecond'),
+            'data' => $msg,
+        ];
+
+        $this->service->update($uac, $sessionKey->get('id'), $data);
+
+        $this->assertEquals(1, MetadataSessionKeyFactory::count());
+        $updatedSessionKey = MetadataSessionKeyFactory::get($sessionKey->get('id'));
+        $this->assertNotEquals($updatedSessionKey->get('data'), $sessionKey->get('data'));
+
+        // modified time was updated
+        $newModified = new DateTime($updatedSessionKey->get('modified'));
+        $this->assertTrue($newModified->greaterThan($oldModified));
+    }
+
+    public function testMetadataSessionKeyUpdateService_Error_Modified_Time_In_The_Next_Second(): void
+    {
+        $key = GpgkeyFactory::make()->withAdaKey();
+        $user = UserFactory::make()->with('Gpgkeys', $key)->active()->persist();
+        $sessionKey = MetadataSessionKeyFactory::make()->withUser($user)->persist();
+        $sessionKey = MetadataSessionKeyFactory::get($sessionKey->get('id')); // needed to get exact modified time
+        $uac = $this->makeUac($user);
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setEncryptKeyWithUserKey($gpg, $user->get('gpgkey'));
+        $msg = $gpg->encrypt(MetadataSessionKeyFactory::getCleartextDataJson());
+        $data = [
+            'modified' => $sessionKey->modified->modify('+1 second'),
+            'data' => $msg,
+        ];
+
+        $this->expectException(ConflictException::class);
+        $this->expectExceptionMessage('The metadata session key data has changed.');
+
+        $this->service->update($uac, $sessionKey->get('id'), $data);
+    }
+
     public function testMetadataSessionKeyUpdateService_Error_InvalidId(): void
     {
         $user = UserFactory::make()->admin()->active()->persist();

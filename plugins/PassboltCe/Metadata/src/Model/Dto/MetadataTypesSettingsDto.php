@@ -114,8 +114,8 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
      */
     public function isV4FolderCreationAllowed(): bool
     {
-        return isset($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES])
-            && $this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES] === true;
+        return isset($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS])
+            && $this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS] === true;
     }
 
     /**

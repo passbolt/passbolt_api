@@ -80,7 +80,7 @@ class MetadataSessionKeyUpdateService
             throw new BadRequestException(__('The metadata session key data is identical.'));
         }
         // 409 if the modified date is not equal to the persisted session key one
-        $asserTime = (new DateTime($data['modified']))->equals($metadataSessionKey->get('modified'));
+        $asserTime = (new DateTime($data['modified']))->diffInSeconds($metadataSessionKey->get('modified')) === 0;
         if (!$asserTime) {
             throw new ConflictException(__('The metadata session key data has changed.'));
         }
