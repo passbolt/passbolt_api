@@ -1058,7 +1058,7 @@ msgid "{0} shared several items with you"
 msgstr "{0} hat mehrere Elemente mit Ihnen geteilt"
 
 msgid "{0} just activated their account on passbolt"
-msgstr "{0} hat gerade ihr*sein Konto bei Passwort aktiviert"
+msgstr "{0} hat gerade das Konto bei Passbolt aktiviert"
 
 msgid "{0} commented on {1}"
 msgstr "{0} kommentierte {1}"
