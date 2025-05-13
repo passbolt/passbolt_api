@@ -194,7 +194,7 @@ msgid "The user should not be logged in."
 msgstr "Der Benutzer sollte nicht eingeloggt sein."
 
 msgid "This feature is not supported by your version of passbolt."
-msgstr "Diese Funktion wird von Ihrer Passbolt-Version nicht unterstützt."
+msgstr "Diese Funktion wird von Ihrer passbolt-Version nicht unterstützt."
 
 msgid "The resource identifier should be a valid UUID."
 msgstr "Die Ressourcen-Kennung sollte eine gültige UUID sein."
@@ -1058,7 +1058,7 @@ msgid "{0} shared several items with you"
 msgstr "{0} hat mehrere Elemente mit Ihnen geteilt"
 
 msgid "{0} just activated their account on passbolt"
-msgstr "{0} hat gerade das Konto bei Passbolt aktiviert"
+msgstr "{0} hat gerade das Konto bei passbolt aktiviert"
 
 msgid "{0} commented on {1}"
 msgstr "{0} kommentierte {1}"
@@ -1352,16 +1352,16 @@ msgid "Could not read tag information on github repository"
 msgstr "Tag-Informationen im GitHub Repository konnten nicht gelesen werden"
 
 msgid "Using latest passbolt version ({0})."
-msgstr "Benutze die neueste Passbolt-Version ({0})."
+msgstr "Benutze die neueste passbolt-Version ({0})."
 
 msgid "Could connect to passbolt repository to check versions."
-msgstr "Konnte sich mit dem passbolt Repository verbinden, um Versionen zu überprüfen."
+msgstr "Konnte sich mit dem passbolt-Repository verbinden, um Versionen zu überprüfen."
 
 msgid "This installation is not up to date. Currently using {0} and it should be {1}."
 msgstr "Diese Installation ist nicht aktuell. Derzeit wird {0} verwendet, es sollte {1} sein."
 
 msgid "Could not connect to passbolt repository to check versions."
-msgstr "Konnte sich nicht mit dem passbolt Repository verbinden, um Versionen zu überprüfen."
+msgstr "Konnte sich nicht mit dem passbolt-Repository verbinden, um Versionen zu überprüfen."
 
 msgid "It is not possible to check if your version is up-to-date."
 msgstr "Es ist nicht möglich zu überprüfen, ob Ihre Version aktuell ist."
@@ -1442,13 +1442,13 @@ msgid "Copy {0} to {1}"
 msgstr "Kopiere {0} nach {1}"
 
 msgid "The passbolt config file is present"
-msgstr "Die Passbolt Konfigurationsdatei ist vorhanden"
+msgstr "Die passbolt-Konfigurationsdatei ist vorhanden"
 
 msgid "The passbolt config file is missing in {0}"
 msgstr "Die Passbolt-Konfigurationsdatei fehlt in {0}"
 
 msgid "The passbolt config file is not required if passbolt is configured with environment variables"
-msgstr "Die Passbolt Konfigurationsdatei ist nicht erforderlich, wenn passbolt mit Umgebungsvariablen konfiguriert ist"
+msgstr "Die passbolt-Konfigurationsdatei ist nicht erforderlich, wenn passbolt mit Umgebungsvariablen konfiguriert ist"
 
 msgid "Cache is working."
 msgstr "Der Cache funktioniert."
@@ -1568,7 +1568,7 @@ msgid "GD or Imagick extension is installed."
 msgstr "Die Erweiterung GD oder Imagick ist installiert."
 
 msgid "You must enable the gd or imagick extensions to use Passbolt."
-msgstr "Sie müssen die GD oder Imagick Erweiterungen aktivieren, um Passbolt zu verwenden."
+msgstr "Sie müssen die GD oder Imagick Erweiterungen aktivieren, um passbolt zu verwenden."
 
 msgid "See: https://secure.php.net/manual/en/book.image.php"
 msgstr "Siehe: https://secure.php.net/manual/en/book.image.php"
@@ -1580,7 +1580,7 @@ msgid "Intl extension is installed."
 msgstr "Intl Erweiterung ist installiert."
 
 msgid "You must enable the intl extension to use Passbolt."
-msgstr "Sie müssen die intl Erweiterung aktivieren, um Passbolt zu verwenden."
+msgstr "Sie müssen die intl Erweiterung aktivieren, um passbolt zu verwenden."
 
 msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "Siehe: https://secure.php.net/manual/en/book.intl.php"
@@ -1601,7 +1601,7 @@ msgid "Mbstring extension is installed."
 msgstr "Mbstring Erweiterung ist installiert."
 
 msgid "You must enable the mbstring extension to use Passbolt."
-msgstr "Sie müssen die mbstring Erweiterung aktivieren, um Passbolt zu verwenden."
+msgstr "Sie müssen die mbstring Erweiterung aktivieren, um passbolt zu verwenden."
 
 msgid "See: https://secure.php.net/manual/en/book.mbstring.php"
 msgstr "Siehe: https://secure.php.net/manual/en/book.mbstring.php"
@@ -1616,7 +1616,7 @@ msgid "64-bit architecture system detected."
 msgstr "64-Bit-Architektur erkannt."
 
 msgid "32-bit architecture system detected, this environment will not be supported as of Passbolt v5+."
-msgstr "32-Bit-Architektur erkannt, diese Umgebung wird ab Passbolt v5+ nicht mehr unterstützt."
+msgstr "32-Bit-Architektur erkannt, diese Umgebung wird ab passbolt v5+ nicht mehr unterstützt."
 
 msgid "See PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
 msgstr "Siehe PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
@@ -2429,7 +2429,7 @@ msgid "Name: {0}"
 msgstr "Name: {0}"
 
 msgid "View it in passbolt"
-msgstr "In Passbolt anzeigen"
+msgstr "In passbolt anzeigen"
 
 msgid "You deleted a folder"
 msgstr "Sie haben einen Ordner gelöscht"
@@ -2438,7 +2438,7 @@ msgid "{0} deleted a folder"
 msgstr "{0} hat den Ordner gelöscht"
 
 msgid "log in passbolt"
-msgstr "in Passbolt einloggen"
+msgstr "in passbolt einloggen"
 
 msgid "{0} shared a folder with you"
 msgstr "{0} hat einen Ordner mit Ihnen geteilt"
@@ -3803,7 +3803,7 @@ msgid "Please contact your administrator if you didn't request this action."
 msgstr "Bitte kontaktieren Sie Ihren Administrator, wenn Sie diese Aktion nicht angefordert haben."
 
 msgid "Log in passbolt"
-msgstr "Bei Passbolt eInloggen"
+msgstr "Bei passbolt einloggen"
 
 msgid "The automatic_expiry field must be true."
 msgstr "Das Feld „automatic_expiry“ muss wahr sein."
@@ -3851,7 +3851,7 @@ msgid "{0} resources were affected."
 msgstr "{0} Ressourcen sind betroffen."
 
 msgid "It would be too much to list them here, but you can go check them on passbolt."
-msgstr "Es wäre zu viel, sie hier aufzulisten, aber Sie können sie in Passbolt überprüfen."
+msgstr "Es wäre zu viel, sie hier aufzulisten, aber Sie können sie in passbolt überprüfen."
 
 msgid "Change them in passbolt"
 msgstr "In passbolt ändern"
@@ -4241,7 +4241,7 @@ msgid "You edited the self registration settings."
 msgstr "Du hast die Einstellungen für die Selbstregistrierung geändert."
 
 msgid "{0} just created an account on passbolt!"
-msgstr "{0} hat gerade ein Konto in Passbolt erstellt!"
+msgstr "{0} hat gerade ein Konto in passbolt erstellt!"
 
 msgid "The email is already registered."
 msgstr "Diese E-Mail ist bereits registriert."
@@ -4421,13 +4421,13 @@ msgid "To fix this problem, you need to configure the SMTP server again."
 msgstr "Um dieses Problem zu beheben, müssen Sie den SMTP-Server erneut konfigurieren."
 
 msgid "Passbolt test email"
-msgstr "Test-E-Mail von Passbolt"
+msgstr "Test-E-Mail von passbolt"
 
 msgid "Congratulations!"
 msgstr "Glückwunsch!"
 
 msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
-msgstr "Wenn Sie diese E-Mail erhalten, funktionieren Ihre Passbolt SMTP-Konfigurationen fehlerfrei."
+msgstr "Wenn Sie diese E-Mail erhalten, funktionieren Ihre passbolt-SMTP-Konfigurationen fehlerfrei."
 
 msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
 msgstr "Ungültige `passbolt.plugins.smtpSettings.security` Konfigurationswerte."
@@ -4538,7 +4538,7 @@ msgid "The OpenPGP private key cannot be used to decrypt."
 msgstr "Der private OpenPGP-Schlüssel kann nicht zum Entschlüsseln verwendet werden."
 
 msgid "Please note that passbolt does not support OpenPGP key protected with a secret."
-msgstr "Bitte beachten Sie, dass Passbolt keinen OpenPGP-Schlüssel unterstützt, der durch ein Geheimnis geschützt ist."
+msgstr "Bitte beachten Sie, dass passbolt keinen OpenPGP-Schlüssel unterstützt, der durch ein Geheimnis geschützt ist."
 
 msgid "The fingerprint should not be empty."
 msgstr "Der Fingerabdruck darf nicht leer sein."
@@ -4562,10 +4562,10 @@ msgid "The force ssl setting should be a valid boolean."
 msgstr "Die SSL-Erzwingen Einstellung sollte ein gültiger Boolescher Wert sein."
 
 msgid "The passbolt config is writable."
-msgstr "Die Passbolt Konfiguration ist beschreibbar."
+msgstr "Die passbolt Konfiguration ist beschreibbar."
 
 msgid "The passbolt config is not writable."
-msgstr "Die Passbolt Konfiguration ist nicht beschreibbar."
+msgstr "Die passbolt Konfiguration ist nicht beschreibbar."
 
 msgid "Ensure the file "
 msgstr "Datei sicherstellen "
@@ -4757,7 +4757,7 @@ msgid "Passbolt Pro activation."
 msgstr "Passbolt Pro Aktivierung."
 
 msgid "Copy paste your Passbolt Pro subscription key here"
-msgstr "Kopieren Sie Ihren Passbolt Pro Abonnementschlüssel hier hinein"
+msgstr "Kopieren Sie Ihren passbolt Pro Abonnementschlüssel hier hinein"
 
 msgid "Choose your preferences."
 msgstr "Wählen Sie Ihre Einstellungen."
@@ -4811,7 +4811,7 @@ msgid "You have completed successfully the configuration procedure, congrats!"
 msgstr "Sie haben die Konfiguration erfolgreich abgeschlossen, Glückwunsch!"
 
 msgid "You will soon be redirected to passbolt to complete your account setup."
-msgstr "Sie werden in Kürze zu Passbolt weitergeleitet, um die Einrichtung Ihres Kontos abzuschließen."
+msgstr "Sie werden in Kürze zu passbolt weitergeleitet, um die Einrichtung Ihres Kontos abzuschließen."
 
 msgid "You will soon be redirected to the login page."
 msgstr "Sie werden in Kürze zur Login-Seite weitergeleitet."
@@ -4832,7 +4832,7 @@ msgid "Existing installation?"
 msgstr "Bestehende Installation?"
 
 msgid "If you want to use an existing passbolt database, the installer will take care of updating it to the current passbolt version while keeping your data."
-msgstr "Wenn Sie eine vorhandene Passbolt-Datenbank verwenden wollen, der Installer kümmert sich um die Aktualisierung auf die aktuelle Passbolt-Version, während er Ihre Daten behält."
+msgstr "Wenn Sie eine vorhandene passbolt-Datenbank verwenden wollen, der Installer kümmert sich um die Aktualisierung auf die aktuelle passbolt-Version, während er Ihre Daten behält."
 
 msgid "As a precaution, do not forget to backup your database before you continue."
 msgstr "Vergessen Sie nicht, Ihre Datenbank zu sichern, bevor Sie fortfahren."
@@ -4841,13 +4841,13 @@ msgid "Help"
 msgstr "Hilfe"
 
 msgid "Need help? You can find more information on how to install passbolt in the official online help."
-msgstr "Benötigen Sie Hilfe? Weitere Informationen zur Installation von Passbolt finden Sie in der offiziellen Online-Hilfe."
+msgstr "Benötigen Sie Hilfe? Weitere Informationen zur Installation von passbolt finden Sie in der offiziellen Online-Hilfe."
 
 msgid "What subscription key?"
 msgstr "Welcher Abonnement-Schlüssel?"
 
 msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
-msgstr "Der Abonnement-Schlüssel ist eine Datei, die Ihnen beim Kauf von Passbolt Pro geschickt wurde. Wir benötigen den Abonnement-Schlüssel, um die Pro-Funktionen des Passbolts zu aktivieren."
+msgstr "Der Abonnement-Schlüssel ist eine Datei, die Ihnen beim Kauf von passbolt Pro geschickt wurde. Wir benötigen den Abonnement-Schlüssel, um die Pro-Funktionen des passbolts zu aktivieren."
 
 msgid "Send test email"
 msgstr "Test-E-Mail senden"
@@ -4928,10 +4928,10 @@ msgid "login"
 msgstr "Anmelden"
 
 msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
-msgstr "Der Administrator {0} ({1}) ist nun aus der Passbolt-Organisation gelöscht."
+msgstr "Der Administrator {0} ({1}) ist nun aus der passbolt-Organisation gelöscht."
 
 msgid "{0} deleted you from the passbolt organisation."
-msgstr "hat Sie aus der Passbolt-Organisation gelöscht."
+msgstr "hat Sie aus der passbolt-Organisation gelöscht."
 
 msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
 msgstr "Wenn Sie den Eindruck haben, dass diese Aktion verdächtig erscheint, wenden Sie sich bitte an den Administrator am Ursprungsort des Vorgangs."
@@ -4943,7 +4943,7 @@ msgid "Your account has been suspended."
 msgstr "Ihr Konto wurde gesperrt."
 
 msgid "You are not able to sign in to passbolt and receive email notifications."
-msgstr "Sie sind nicht befugt, sich bei Passbolt anzumelden und E-Mail-Benachrichtigungen zu erhalten."
+msgstr "Sie sind nicht befugt, sich bei passbolt anzumelden und E-Mail-Benachrichtigungen zu erhalten."
 
 msgid "Other users can still share resources with you and add you to a group."
 msgstr "Andere Benutzer können weiterhin Ressourcen mit Ihnen teilen und Sie zu einer Gruppe hinzufügen."
@@ -4967,7 +4967,7 @@ msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch w
 msgstr "{0} ({1}) hat gerade eine Kontowiederherstellung abgeschlossen. Nehmen Sie Kontakt mit diesem Benutzer auf, wenn Sie das Gefühl haben, dass diese Aktion verdächtig aussieht."
 
 msgid "View user in passbolt"
-msgstr "Benutzer in Passbolt anzeigen"
+msgstr "Benutzer in passbolt anzeigen"
 
 msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} kann die Kontowiederherstellung nicht abschließen!"
@@ -4988,7 +4988,7 @@ msgid "The user {0} has been suspended."
 msgstr "Der Benutzer {0} wurde gesperrt."
 
 msgid "This user will not be able to sign in to passbolt and receive email notifications."
-msgstr "Sie sind nicht in der Lage, sich bei Passbolt anzumelden und E-Mail-Benachrichtigungen zu erhalten."
+msgstr "Sie sind nicht in der Lage, sich bei passbolt anzumelden und E-Mail-Benachrichtigungen zu erhalten."
 
 msgid "Other users can share resources and add this user to a group."
 msgstr "Andere Benutzer können Ressourcen teilen und diesen Benutzer zu einer Gruppe hinzufügen."
@@ -5000,7 +5000,7 @@ msgid "Welcome to {0}!"
 msgstr "Willkommen bei {0}!"
 
 msgid "{0} used the self registration feature to create an account on passbolt."
-msgstr "{0} hat die Selbstregistrierungsfunktion genutzt, um ein Konto in Passbolt zu erstellen."
+msgstr "{0} hat die Selbstregistrierungsfunktion genutzt, um ein Konto in passbolt zu erstellen."
 
 msgid "You have initiated an account recovery!"
 msgstr "Sie haben eine Kontowiederherstellung gestartet!"
@@ -5009,7 +5009,7 @@ msgid "Welcome back!"
 msgstr "Willkommen zurück!"
 
 msgid "You just requested to recover your passbolt account on this device."
-msgstr "Sie gerade angefordert, Ihren Passbolt-Zugang auf diesem Gerät wiederherzustellen."
+msgstr "Sie gerade angefordert, Ihren passbolt-Zugang auf diesem Gerät wiederherzustellen."
 
 msgid "Make sure you have a backup of your secret key handy."
 msgstr "Stellen Sie unbedingt sicher, dass Sie ein Backup Ihres geheimen Schlüssels zur Hand haben."
@@ -5024,13 +5024,13 @@ msgid "You just completed an account recovery. Feel free to get in touch with an
 msgstr "Sie haben gerade eine Kontowiederherstellung abgeschlossen. Nehmen Sie Kontakt mit einem Administrator auf, wenn Sie das Gefühl haben, dass diese Aktion verdächtig aussieht."
 
 msgid "{0} just created an account for you on passbolt!"
-msgstr "{0} hat gerade ein Konto in Passbolt für Sie erstellt!"
+msgstr "{0} hat gerade ein Konto in passbolt für Sie erstellt!"
 
 msgid "Welcome {0}"
 msgstr "Willkommen {0}"
 
 msgid "{0} just invited you to join passbolt at {1}"
-msgstr "{0} hat Sie gerade zu Passbolt unter {1} eingeladen"
+msgstr "{0} hat Sie gerade zu passbolt unter {1} eingeladen"
 
 msgid "Passbolt is an open source password manager."
 msgstr "Passbolt ist ein Open-Source-Passwort-Manager."
@@ -5039,16 +5039,16 @@ msgid "It is designed to allow sharing credentials securely with your team!"
 msgstr "Es ist für das sichere Teilen von Passwörtern in Teams konzipiert!"
 
 msgid "Let's take the next five minutes to get you started!"
-msgstr "Nehmen Sie sich die nächsten fünf Minuten Zeit, für den Einstieg in Passbolt!"
+msgstr "Nehmen Sie sich die nächsten fünf Minuten Zeit, für den Einstieg in passbolt!"
 
 msgid "get started"
 msgstr "starten"
 
 msgid "You just created your account on passbolt!"
-msgstr "Sie haben soeben Ihren Zugang in Passbolt erstellt!"
+msgstr "Sie haben soeben Ihren Zugang in passbolt erstellt!"
 
 msgid "You just opened an account on passbolt at {0}."
-msgstr "Sie haben soeben einen Zugang in Passbolt unter {0} angelegt."
+msgstr "Sie haben soeben einen Zugang in passbolt unter {0} angelegt."
 
 msgid "There was a change in the user directory."
 msgstr "Das Benutzerverzeichnis wurde verändert."
@@ -5072,7 +5072,7 @@ msgid "{0} deleted the user {1}"
 msgstr "{0} hat Benutzer*in {1} gelöscht"
 
 msgid "The user {0} {1} ({2}) is now deleted from your organisation in passbolt."
-msgstr "Der:die Benutzer:in {0} {1} ({2}) wurde in Passbolt aus Ihrer Organisation gelöscht."
+msgstr "Der:die Benutzer:in {0} {1} ({2}) wurde in passbolt aus Ihrer Organisation gelöscht."
 
 msgid "This user was a member of the following group(s) you manage:"
 msgstr "Diese*r Benutzer* war Mitglied der folgenden Gruppe(n) die Sie verwalten:"
@@ -5120,10 +5120,10 @@ msgid "{0} group memberships were affected."
 msgstr "{0} Gruppenmitgliedschaften waren betroffen."
 
 msgid "It would be too much to list them here, but you can get more information on passbolt."
-msgstr "Es wäre zu viel, sie hier aufzuzählen, aber Sie können mehr Informationen in Passbolt erhalten."
+msgstr "Es wäre zu viel, sie hier aufzuzählen, aber Sie können mehr Informationen in passbolt erhalten."
 
 msgid "go to passbolt"
-msgstr "zu Passbolt"
+msgstr "zu passbolt"
 
 msgid "{0} deleted {1} groups you were a member of."
 msgstr "{0} hat {1} Gruppen gelöscht, in denen Sie Mitglied waren."
@@ -5150,7 +5150,7 @@ msgid "{0} just activated their account on passbolt!"
 msgstr "{0} hat gerade ihr*sein Konto bei Passwort aktiviert!"
 
 msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "Benutzer*in ist jetzt auf Passbolt aktiv und Sie können Passwörter mit ihr*ihm teilen."
+msgstr "Benutzer*in ist jetzt auf passbolt aktiv und Sie können Passwörter mit ihr*ihm teilen."
 
 msgid "This user was invited by you {0}."
 msgstr "Benutzer*in wurde durch Sie {0} eingeladen."
