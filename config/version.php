@@ -1,7 +1,7 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '5.1.0-rc.1',
+        'version' => '5.1.0',
         'name' => 'Four to the Flour',
     ],
     'php' => [
