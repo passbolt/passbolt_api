@@ -32,6 +32,7 @@ use Passbolt\Sso\Service\Sso\AbstractSsoService;
 use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
 use Passbolt\Sso\Utility\Azure\Provider\AzureProvider;
 use Passbolt\Sso\Utility\OpenId\SsoResourceOwnerInterface;
+use Passbolt\Sso\Utility\Provider\SsoProviderFactory;
 
 class SsoAzureService extends AbstractSsoService
 {
@@ -47,7 +48,9 @@ class SsoAzureService extends AbstractSsoService
      */
     public function getAuthorizationUrl(ExtendedUserAccessControl $uac): string
     {
-        $prompt = $this->getSettings()->getData()->toArray()['prompt'];
+        $data = $this->getSettings()->getData()->toArray();
+        $prompt = $data['prompt'];
+        $loginHint = $data['login_hint'];
 
         // Prefer response_mode=query, unless specified in the config
         // e.g. GET response to avoid the session cookie samesite="None" requirement
@@ -72,7 +75,7 @@ class SsoAzureService extends AbstractSsoService
             $options['prompt'] = $prompt;
         }
 
-        if ($uac->getUsername() !== null) { // For some types(i.e. sso_recover) we don't have user details
+        if ($loginHint && $uac->getUsername() !== null) { // For some types(i.e. sso_recover) we don't have user details
             $options['login_hint'] = $uac->getUsername();
         }
 
@@ -90,7 +93,7 @@ class SsoAzureService extends AbstractSsoService
         /** @var \Passbolt\Sso\Model\Dto\SsoSettingsAzureDataDto $data */
         $data = $settings->data;
 
-        return new AzureProvider([
+        return SsoProviderFactory::create(AzureProvider::class, [
             'clientId' => $data->client_id,
             'clientSecret' => $data->client_secret,
             'redirectUri' => Router::url('/sso/azure/redirect', true),

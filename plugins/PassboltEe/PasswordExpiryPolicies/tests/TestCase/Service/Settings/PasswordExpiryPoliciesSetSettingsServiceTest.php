@@ -64,6 +64,7 @@ class PasswordExpiryPoliciesSetSettingsServiceTest extends AppTestCase
     {
         $uac = $this->mockExtendedAdminAccessControl();
 
+        /** @var string[] $payload */
         $payload = PasswordExpiryPoliciesSettingFactory::make()->getEntity()->value;
         $result = $this->service->createOrUpdate($uac, $payload);
 
@@ -88,6 +89,7 @@ class PasswordExpiryPoliciesSetSettingsServiceTest extends AppTestCase
         $existingSetting = PasswordExpiryPoliciesSettingFactory::make()->value($oldValue)->persist();
         $uac = $this->mockExtendedAdminAccessControl();
 
+        /** @var string[] $payload */
         $payload = PasswordExpiryPoliciesSettingFactory::make()->getEntity()->value;
         $result = $this->service->createOrUpdate($uac, $payload);
         $this->assertSame($existingSetting->get('id'), $result->id);

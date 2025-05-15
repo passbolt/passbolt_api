@@ -338,7 +338,7 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
             ->with('Users', $user)
             ->with('Tags', ['slug' => 'firefox'])
             ->persist();
-        $tagId = $resourceTag->tag->id;
+        $tagId = $resourceTag->tag->get('id');
         // login
         $this->logInAs($user);
 

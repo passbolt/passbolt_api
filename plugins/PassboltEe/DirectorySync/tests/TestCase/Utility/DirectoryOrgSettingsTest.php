@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
@@ -117,6 +117,7 @@ class DirectoryOrgSettingsTest extends AppTestCase
         $directoryOrgSettings = new DirectoryOrgSettings($settings);
         $directoryOrgSettings->save($uac);
 
+        /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
         $domains = Hash::get($settings, 'ldap.domains', []);

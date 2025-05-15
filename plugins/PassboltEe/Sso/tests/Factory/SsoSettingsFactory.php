@@ -18,7 +18,6 @@ namespace Passbolt\Sso\Test\Factory;
 
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
-use Cake\Chronos\ChronosInterface;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Factory;
 use Faker\Generator;
@@ -145,19 +144,19 @@ class SsoSettingsFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param ChronosInterface $modified token type
+     * @param Chronos $modified token type
      * @return SsoSettingsFactory this
      */
-    public function modified(ChronosInterface $modified): SsoSettingsFactory
+    public function modified(Chronos $modified): SsoSettingsFactory
     {
         return $this->patchData(compact('modified'));
     }
 
     /**
-     * @param ChronosInterface $created token type
+     * @param Chronos $created token type
      * @return SsoSettingsFactory this
      */
-    public function created(ChronosInterface $created): SsoSettingsFactory
+    public function created(Chronos $created): SsoSettingsFactory
     {
         return $this->patchData(compact('created'));
     }

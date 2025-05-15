@@ -33,6 +33,11 @@ return [
                      * When checking nbf, iat or expiration times, we want to provide some extra leeway time(in seconds) to account for clock skew.
                      */
                     'jwtLeeway' => filter_var(env('PASSBOLT_PLUGINS_SSO_JWT_LEEWAY', '0'), FILTER_VALIDATE_INT),
+                    // Allow overriding for OAuth2 provider the claim used in the id_token for the email
+                    // For example you may use verified_email instead of email
+                    'oauth2' => [
+                        'emailClaimAlias' => env('PASSBOLT_PLUGINS_SSO_SECURITY_OAUTH2_EMAIL_CLAIM_ALIAS', null),
+                    ],
                 ],
                 // 'providers' => [], // see default.php
             ],

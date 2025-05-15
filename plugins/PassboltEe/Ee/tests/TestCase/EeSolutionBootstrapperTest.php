@@ -44,6 +44,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/Ee',
         'Passbolt/Subscription',
         'Passbolt/JwtAuthentication',
+        'Passbolt/Metadata',
         'Passbolt/Rbacs',
         'Passbolt/AccountSettings',
         'Passbolt/Import',

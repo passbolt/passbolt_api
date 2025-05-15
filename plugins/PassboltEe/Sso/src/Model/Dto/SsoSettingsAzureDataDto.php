@@ -62,6 +62,11 @@ class SsoSettingsAzureDataDto implements SsoSettingsDataDtoInterface
     public string $email_claim;
 
     /**
+     * @var bool
+     */
+    public bool $login_hint;
+
+    /**
      * @param array $data with
      *  - url string
      *  - client_id string uuid
@@ -80,6 +85,7 @@ class SsoSettingsAzureDataDto implements SsoSettingsDataDtoInterface
         // BExt BC: Set default value for email claim & prompt, otherwise it can break older installs
         $this->prompt = $data['prompt'] ?? SsoSettingsAzureDataForm::PROMPT_LOGIN;
         $this->email_claim = $data['email_claim'] ?? SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL;
+        $this->login_hint = $data['login_hint'] ?? SsoSettingsAzureDataForm::AZURE_LOGIN_HINT_ENABLED;
     }
 
     /**
@@ -90,6 +96,8 @@ class SsoSettingsAzureDataDto implements SsoSettingsDataDtoInterface
      *  - client_secret string
      *  - client_secret_expiry string
      *  - prompt string
+     *  - email_claim string
+     *  - login_hint bool
      */
     public function toArray(): array
     {
@@ -101,6 +109,7 @@ class SsoSettingsAzureDataDto implements SsoSettingsDataDtoInterface
             'client_secret_expiry' => $this->client_secret_expiry,
             'prompt' => $this->prompt,
             'email_claim' => $this->email_claim,
+            'login_hint' => $this->login_hint,
         ];
 
         // Serialize date if it's not already a string

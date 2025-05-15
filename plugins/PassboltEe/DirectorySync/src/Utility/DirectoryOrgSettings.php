@@ -497,9 +497,9 @@ class DirectoryOrgSettings
      * @param string $username The username to replace
      * @param string $domain The domain to replace
      * @param string $bindFormat The string with placeholders
-     * @return string
+     * @return string|null
      */
-    public static function formatUsername(string $username, string $domain, string $bindFormat): string
+    public static function formatUsername(string $username, string $domain, string $bindFormat): ?string
     {
         if (DirectoryEntry::isValidDn($username)) {
             return $username;

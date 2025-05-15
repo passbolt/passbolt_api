@@ -53,6 +53,7 @@ class AccountRecoveryRequestsViewController extends AppController
 
         $options['id'] = $id;
 
+        /** @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable $accountRecoveryRequestsTable */
         $accountRecoveryRequestsTable = $this->fetchTable('Passbolt/AccountRecovery.AccountRecoveryRequests');
         $request = $accountRecoveryRequestsTable->findView($options)->firstOrFail();
 

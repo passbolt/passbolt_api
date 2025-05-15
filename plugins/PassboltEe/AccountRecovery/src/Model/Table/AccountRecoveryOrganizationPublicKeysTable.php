@@ -32,6 +32,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
 use Passbolt\AccountRecovery\Model\Rule\IsNotAccountRecoveryOrganizationKeyFingerprintRule;
+use Passbolt\AccountRecovery\Model\Rule\Metadata\IsNotMetadataKeyValidationRule;
 use Phinx\Db\Adapter\MysqlAdapter;
 
 /**
@@ -166,6 +167,11 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
             'message' => __('You cannot reuse account recovery organization public keys.'),
             ]
         );
+
+        $rules->add(new IsNotMetadataKeyValidationRule(), 'isNotMetadataKey', [
+            'errorField' => 'fingerprint',
+            'message' => __('You cannot reuse the metadata keys.'),
+        ]);
 
         return $rules;
     }

@@ -20,30 +20,54 @@ namespace Passbolt\Sso\Test\TestCase\Service\Sso;
 use App\Service\Cookie\DefaultSecureCookieService;
 use App\Test\Factory\UserFactory;
 use App\Utility\ExtendedUserAccessControl;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\I18n\DateTime;
-use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
 use Passbolt\Sso\Service\Sso\Azure\SsoAzureService;
+use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
 use Passbolt\Sso\Test\Factory\SsoStateFactory;
+use Passbolt\Sso\Test\Lib\AzureProviderTestTrait;
 use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
+use Passbolt\Sso\Utility\Azure\Provider\AzureProvider;
+use Passbolt\Sso\Utility\Provider\SsoProviderFactory;
 
 /**
  * @covers \Passbolt\Sso\Service\Sso\Azure\SsoAzureService
  */
 class SsoAzureServiceTest extends SsoIntegrationTestCase
 {
+    use AzureProviderTestTrait;
+
     public function testSsoAzureService_Success(): void
     {
         // Load default plugin config
         $this->loadPlugins(['Passbolt/Sso' => []]);
-
-        $user = UserFactory::make()->admin()->active()->persist();
-        $setting = $this->createAzureSettingsFromConfig($user);
-        $uac = new ExtendedUserAccessControl($user->role->name, $user->id, $user->username, '127.0.0.1', 'phpunit');
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->active()->persist();
+        $settings = SsoSettingsFactory::make()->azure()->active()->persist();
+        // Decrypt settings data
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg->setDecryptKeyFromFingerprint(
+            Configure::read('passbolt.gpg.serverKey.fingerprint'),
+            Configure::read('passbolt.gpg.serverKey.passphrase')
+        );
+        $settingsData = json_decode($gpg->decrypt($settings->get('data')), true);
+        // Mock provider
+        $mockAzureProvider = $this->getProviderMockForStage1(AzureProvider::class);
+        $state = SsoState::generate();
+        $url = $this->getDummyAzureAuthorizationUrl($admin, $state, [
+            'tenant_id' => $settingsData['tenant_id'],
+            'client_id' => $settingsData['client_id'],
+        ]);
+        $mockAzureProvider->method('getAuthorizationUrl')->willReturn($url);
+        $mockAzureProvider->method('getState')->willReturn($state);
+        // Swap actual implementation
+        SsoProviderFactory::set($mockAzureProvider);
+        $uac = new ExtendedUserAccessControl($admin->role->name, $admin->id, $admin->username, '127.0.0.1', 'phpunit');
 
         // Main service features = generate url + cookie
         $sut = new SsoAzureService(new DefaultSecureCookieService());
@@ -58,24 +82,22 @@ class SsoAzureServiceTest extends SsoIntegrationTestCase
         /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
         $ssoState = SsoStateFactory::find()->firstOrFail();
         $this->assertInstanceOf(SsoState::class, $ssoState);
-        $this->assertEquals($user->id, $ssoState->user_id);
+        $this->assertEquals($admin->id, $ssoState->user_id);
         $this->assertEquals('127.0.0.1', $ssoState->ip);
         $this->assertEquals('phpunit', $ssoState->user_agent);
-        $this->assertEquals($setting->id, $ssoState->sso_settings_id);
+        $this->assertEquals($settings->get('id'), $ssoState->sso_settings_id);
 
         // Check URL props
-        $data = $setting->getData();
-        $this->assertNotNull($data);
-        $data = $data->toArray();
-        $this->assertTrue(is_string($data['url']));
-        $this->assertTrue(is_string($data['tenant_id']));
-        $this->assertTrue(is_string($data['client_id']));
-        $this->assertStringContainsString($data['url'] . '/', $url);
-        $this->assertStringContainsString('/' . $data['tenant_id'] . '/', $url);
-        $this->assertStringContainsString('client_id=' . $data['client_id'], $url);
+        $this->assertNotNull($settingsData);
+        $this->assertTrue(is_string($settingsData['url']));
+        $this->assertTrue(is_string($settingsData['tenant_id']));
+        $this->assertTrue(is_string($settingsData['client_id']));
+        $this->assertStringContainsString($settingsData['url'] . '/', $url);
+        $this->assertStringContainsString('/' . $settingsData['tenant_id'] . '/', $url);
+        $this->assertStringContainsString('client_id=' . $settingsData['client_id'], $url);
         $this->assertStringContainsString('state=' . $ssoState->state, $url);
         $this->assertStringContainsString('prompt=login', $url);
-        $this->assertStringContainsString('login_hint=' . rawurlencode($user->username), $url);
+        $this->assertStringContainsString('login_hint=' . rawurlencode($admin->username), $url);
 
         // Check cookie props
         $this->assertTrue($cookie->isHttpOnly());
@@ -87,7 +109,25 @@ class SsoAzureServiceTest extends SsoIntegrationTestCase
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->active()->persist();
-        $this->createAzureSettingsFromConfig($user);
+        $settings = SsoSettingsFactory::make()->azure()->active()->persist();
+        // Decrypt settings data
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg->setDecryptKeyFromFingerprint(
+            Configure::read('passbolt.gpg.serverKey.fingerprint'),
+            Configure::read('passbolt.gpg.serverKey.passphrase')
+        );
+        $settingsData = json_decode($gpg->decrypt($settings->get('data')), true);
+        // Mock provider
+        $mockAzureProvider = $this->getProviderMockForStage1(AzureProvider::class);
+        $state = SsoState::generate();
+        $url = $this->getDummyAzureAuthorizationUrl($user, $state, [
+            'tenant_id' => $settingsData['tenant_id'],
+            'client_id' => $settingsData['client_id'],
+        ]);
+        $mockAzureProvider->method('getAuthorizationUrl')->willReturn($url);
+        $mockAzureProvider->method('getState')->willReturn($state);
+        // Swap actual implementation
+        SsoProviderFactory::set($mockAzureProvider);
         $uac = new ExtendedUserAccessControl($user->role->name, $user->id, $user->username, '127.0.0.1', 'phpunit');
 
         // Main service features = generate url + cookie
@@ -101,7 +141,25 @@ class SsoAzureServiceTest extends SsoIntegrationTestCase
         Configure::write(AbstractSsoService::SSO_SECURITY_REDIRECT_METHOD_CONFIG, 'POST');
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->active()->persist();
-        $this->createAzureSettingsFromConfig($user);
+        $settings = SsoSettingsFactory::make()->azure()->active()->persist();
+        // Decrypt settings data
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg->setDecryptKeyFromFingerprint(
+            Configure::read('passbolt.gpg.serverKey.fingerprint'),
+            Configure::read('passbolt.gpg.serverKey.passphrase')
+        );
+        $settingsData = json_decode($gpg->decrypt($settings->get('data')), true);
+        // Mock provider
+        $mockAzureProvider = $this->getProviderMockForStage1(AzureProvider::class);
+        $state = SsoState::generate();
+        $url = $this->getDummyAzureAuthorizationUrl($user, $state, [
+            'tenant_id' => $settingsData['tenant_id'],
+            'client_id' => $settingsData['client_id'],
+        ]);
+        $mockAzureProvider->method('getAuthorizationUrl')->willReturn($url);
+        $mockAzureProvider->method('getState')->willReturn($state);
+        // Swap actual implementation
+        SsoProviderFactory::set($mockAzureProvider);
         $uac = new ExtendedUserAccessControl($user->role->name, $user->id, $user->username, '127.0.0.1', 'phpunit');
 
         // Main service features = generate url + cookie
@@ -118,8 +176,8 @@ class SsoAzureServiceTest extends SsoIntegrationTestCase
     public function testSsoAzureService_assertResourceOwnerAgainstSsoState_SuccessPromptLogin(): void
     {
         $nonce = SsoState::generate();
-        $user = UserFactory::make()->admin()->active()->persist();
-        $this->createAzureSettingsFromConfig($user);
+        UserFactory::make()->admin()->active()->persist();
+        SsoSettingsFactory::make()->azure()->active()->persist();
         $ssoState = SsoStateFactory::make([
             'nonce' => $nonce,
             'created' => DateTime::now()->subMinutes(2),
@@ -141,8 +199,8 @@ class SsoAzureServiceTest extends SsoIntegrationTestCase
     public function testSsoAzureService_assertResourceOwnerAgainstSsoState_SuccessPromptNone(): void
     {
         $nonce = SsoState::generate();
-        $user = UserFactory::make()->admin()->active()->persist();
-        $this->createAzureSettingsFromConfig($user);
+        UserFactory::make()->admin()->active()->persist();
+        SsoSettingsFactory::make()->azure()->active()->persist();
         $ssoState = SsoStateFactory::make([
             'nonce' => $nonce,
             'created' => DateTime::now()->subMinutes(2),
@@ -163,8 +221,8 @@ class SsoAzureServiceTest extends SsoIntegrationTestCase
 
     public function testSsoAzureService_assertResourceOwnerAgainstSsoState_ErrorNonceMismatch(): void
     {
-        $user = UserFactory::make()->admin()->active()->persist();
-        $this->createAzureSettingsFromConfig($user);
+        UserFactory::make()->admin()->active()->persist();
+        SsoSettingsFactory::make()->azure()->active()->persist();
         $ssoState = SsoStateFactory::make([
             'nonce' => SsoState::generate(),
             'created' => DateTime::now()->subMinutes(2),
@@ -187,8 +245,8 @@ class SsoAzureServiceTest extends SsoIntegrationTestCase
     public function testSsoAzureService_assertResourceOwnerAgainstSsoState_ErrorAuthTime(): void
     {
         $nonce = SsoState::generate();
-        $user = UserFactory::make()->admin()->active()->persist();
-        $settings = $this->createAzureSettingsFromConfig($user);
+        UserFactory::make()->admin()->active()->persist();
+        SsoSettingsFactory::make()->azure()->active()->persist();
         $ssoState = SsoStateFactory::make([
             'nonce' => $nonce,
             'created' => DateTime::now(),
@@ -200,9 +258,6 @@ class SsoAzureServiceTest extends SsoIntegrationTestCase
             'nonce' => $nonce,
             'auth_time' => DateTime::now()->subMinutes(5)->getTimestamp(), // less than sso state create date time
         ]);
-
-        // Make sure prompt is "login", the error will only throw if prompt is "login"
-        $this->assertEquals(SsoSettingsAzureDataForm::PROMPT_LOGIN, $settings->getData()->toArray()['prompt']);
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('You must authenticate with Azure again');

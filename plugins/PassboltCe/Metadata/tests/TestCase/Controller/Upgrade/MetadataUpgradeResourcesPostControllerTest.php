@@ -22,6 +22,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Core\Configure;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
@@ -94,6 +95,47 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
         ], $headers['pagination']);
         // Assert that permissions are not contained
         $this->assertArrayHasKey('permissions', $response[0]);
+    }
+
+    public function testMetadataUpgradeResourcesPostController_Success_Personal_Key_Missing(): void
+    {
+        [$user1, $user2] = UserFactory::make(2)
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->persist();
+        $resource1 = ResourceFactory::make()->withPermissionsFor([$user1])->persist();
+        $resource2 = ResourceFactory::make()->withPermissionsFor([$user2])->persist();
+        $dto = MetadataFolderDto::fromArray($resource1->toArray());
+        $metadataArray = $dto->getClearTextMetadata();
+        $metadata1 = $this->encryptForUser(json_encode($metadataArray), $user1, $this->getAdaNoPassphraseKeyInfo());
+        $dto = MetadataFolderDto::fromArray($resource1->toArray());
+        $metadataArray = $dto->getClearTextMetadata();
+        $metadata2 = $this->encryptForUser(json_encode($metadataArray), $user2, $this->getAdaNoPassphraseKeyInfo());
+
+        $this->logInAsAdmin();
+        $this->postJson('/metadata/upgrade/resources.json?contain[permissions]=1', [
+            [
+                'id' => $resource1->get('id'),
+                'metadata_key_id' => null,
+                'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+                'metadata' => $metadata1,
+                'modified' => $resource1->get('modified'),
+                'modified_by' => $resource1->get('modified_by'),
+            ],
+            [
+                'id' => $resource2->get('id'),
+                'metadata_key_id' => null,
+                'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+                'metadata' => $metadata2,
+                'modified' => $resource2->get('modified'),
+                'modified_by' => $resource2->get('modified_by'),
+            ],
+        ]);
+
+        $this->assertSuccess();
+        $updatedResource1 = ResourceFactory::get($resource1->get('id'));
+        $updatedResource2 = ResourceFactory::get($resource2->get('id'));
+        $this->assertSame($user1->gpgkey->id, $updatedResource1->metadata_key_id);
+        $this->assertSame($user2->gpgkey->id, $updatedResource2->metadata_key_id);
     }
 
     public function testMetadataUpgradeResourcesPostController_MetadataKey_Expired(): void

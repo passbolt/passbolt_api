@@ -17,11 +17,14 @@ declare(strict_types=1);
 
 namespace Passbolt\Sso\Test\TestCase\Utility\Azure\OpenId;
 
+use App\Utility\UuidFactory;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
 use Passbolt\Sso\Test\Lib\AzureProviderTestTrait;
 use Passbolt\Sso\Utility\Azure\OpenId\AzureIdToken;
+use Passbolt\Sso\Utility\Azure\Provider\AzureProvider;
 
 /**
  * @see \Passbolt\Sso\Utility\Azure\OpenId\AzureIdToken
@@ -30,35 +33,62 @@ class AzureIdTokenTest extends TestCase
 {
     use AzureProviderTestTrait;
 
+    private AzureProvider $azureProvider;
+
+    private array $config = [];
+
+    /**
+     * @inheritDoc
+     */
+    protected function setUp(): void
+    {
+        parent::setup();
+
+        $this->config = [
+            'tenant' => UuidFactory::uuid(),
+            'clientId' => 'client-id',
+            'clientSecret' => 'super-strong-client-secret',
+            'redirectUri' => Router::url('/sso/azure/redirect', true),
+        ];
+        $this->azureProvider = new AzureProvider($this->config);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function tearDown(): void
+    {
+        unset($this->azureProvider);
+
+        parent::tearDown();
+    }
+
     public function testSsoAzureIdToken_ErrorMissingOptions(): void
     {
-        $provider = $this->getDummyAzureProvider();
         $this->expectException(InvalidArgumentException::class);
         $options = [];
-        new AzureIdToken($options, $provider);
+        new AzureIdToken($options, $this->azureProvider);
     }
 
     public function testSsoAzureIdToken_ErrorMissinIdToken(): void
     {
-        $provider = $this->getDummyAzureProvider();
         $this->expectException(BadRequestException::class);
         $options = [
             'access_token' => 'test',
             'expires_in' => 0,
         ];
-        new AzureIdToken($options, $provider);
+        new AzureIdToken($options, $this->azureProvider);
     }
 
     public function testSsoAzureIdToken_ErrorInvalidIdToken(): void
     {
-        $provider = $this->getDummyAzureProvider();
         $this->expectException(BadRequestException::class);
         $options = [
             'access_token' => 'test',
             'expires_in' => 0,
             'id_token' => [],
         ];
-        new AzureIdToken($options, $provider);
+        new AzureIdToken($options, $this->azureProvider);
     }
 
     public function testSsoAzureIdToken_ErrorVerificationKeys(): void

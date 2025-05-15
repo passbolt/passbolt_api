@@ -37,7 +37,9 @@ use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use Exception;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
+use Passbolt\Metadata\Model\Rule\IsSharedMetadataKeyUniqueActiveRule;
 use Passbolt\Metadata\Model\Rule\IsV4ToV5UpgradeAllowedRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
@@ -93,6 +95,10 @@ class TagsTable extends Table
 
         $this->belongsToMany('Users', [
             'through' => 'ResourcesTags',
+        ]);
+
+        $this->belongsTo('MetadataKeys', [
+            'className' => 'Passbolt/Metadata.MetadataKeys',
         ]);
     }
 
@@ -182,6 +188,11 @@ class TagsTable extends Table
         $rules->add(new MetadataKeyIdNotExpiredRule(), 'isMetadataKeyNotExpired', [
             'errorField' => 'metadata_key_id',
             'message' => __('The metadata key is marked as expired.'),
+        ]);
+
+        $rules->add(new IsSharedMetadataKeyUniqueActiveRule(), 'isSharedMetadataKeyUniqueActive', [
+            'errorField' => 'metadata_key_id',
+            'message' => __('The shared metadata key should be unique.'),
         ]);
 
         $rules->add(new IsValidEncryptedMetadataRule(), 'isValidEncryptedMetadata', [
@@ -546,5 +557,91 @@ class TagsTable extends Table
         }
 
         return $tagExists;
+    }
+
+    /**
+     * Returns all tags in v4 format that need to be upgraded.
+     * The user_id field is added virtually
+     *
+     * @param array $options query options
+     * @return \Cake\ORM\Query
+     */
+    public function findMetadataUpgradeIndex(array $options): Query
+    {
+        $query = $this->find('v4')->disableHydration();
+
+        $query->contain('ResourcesTags');
+
+        $query
+            ->select([
+                'Tags.id',
+                'Tags.slug',
+                'Tags.is_shared',
+            ]);
+
+        // Add the field user_id
+        $query->formatResults(function (CollectionInterface $tags) {
+            // Filter only tags associated with a resource to cover the case of data inconsistency
+            $tags = $tags->filter(function ($tag) {
+                return is_array($tag) && !empty($tag['resources_tags']);
+            });
+
+            return $tags->map(function ($tag) {
+                $resourceTag = $tag['resources_tags'][0];
+                // If the resource is not shared, populate the user_id field
+                if (!$tag['is_shared'] && is_string($resourceTag['user_id'])) {
+                    $tag['user_id'] = $resourceTag['user_id'];
+                } else {
+                // Otherwise set it to null
+                    $tag['user_id'] = null;
+                }
+                // The association is not rendered
+                unset($tag['resources_tags']);
+
+                return $tag;
+            });
+        });
+
+        if (!isset($options['filter']['is-shared'])) {
+            return $query;
+        }
+
+        $isShared = (bool)$options['filter']['is-shared'];
+        $query->where(['Tags.is_shared' => $isShared]);
+
+        return $query;
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query Query
+     * @return \Cake\ORM\Query
+     */
+    public function findV4(Query $query): Query
+    {
+        return $query->where([
+            $query->newExpr()->isNull($this->aliasField('metadata')),
+        ]);
+    }
+
+    /**
+     * Returns all tags with expired metadata key.
+     *
+     * @return \Cake\ORM\Query
+     */
+    public function findMetadataRotateKeyIndex(): Query
+    {
+        $query = $this->find();
+
+        return $query
+            ->where([
+                'Tags.metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
+                $query->newExpr()->isNotNull('Tags.metadata'),
+                $query->newExpr()->isNotNull('Tags.metadata_key_id'),
+            ])
+            ->innerJoin(['MetadataKeys' => 'metadata_keys'], [
+                'MetadataKeys.id' => new IdentifierExpression('Tags.metadata_key_id'),
+                $query->newExpr()->isNotNull('MetadataKeys.expired'),
+            ])
+            ->disableHydration();
     }
 }

@@ -20,46 +20,88 @@ namespace Passbolt\Sso\Test\TestCase\Controller\Azure;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
-use Passbolt\Sso\Model\Entity\SsoSetting;
+use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
+use Passbolt\Sso\Test\Lib\AzureProviderTestTrait;
 use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
+use Passbolt\Sso\Utility\Azure\Provider\AzureProvider;
+use Passbolt\Sso\Utility\Provider\SsoProviderFactory;
 
 class SsoAzureStage1DryRunControllerTest extends SsoIntegrationTestCase
 {
+    use AzureProviderTestTrait;
+
     /**
      * 200 returns a URL
      */
     public function testSsoAzureStage1DryRunController_Success_PromptLogin(): void
     {
-        $user = UserFactory::make()->admin()->persist();
-        $settings = $this->createAzureSettingsFromConfig($user, SsoSetting::STATUS_DRAFT);
-        $this->logInAs($user);
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->persist();
+        $settings = SsoSettingsFactory::make()->azure()->draft()->persist();
+        // Mock provider
+        $mockAzureProvider = $this->getProviderMockForStage1(AzureProvider::class);
+        $state = SsoState::generate();
+        $url = $this->getDummyAzureAuthorizationUrl($admin, $state);
+        $mockAzureProvider->method('getAuthorizationUrl')->willReturn($url);
+        $mockAzureProvider->method('getState')->willReturn($state);
+        // Swap actual implementation
+        SsoProviderFactory::set($mockAzureProvider);
 
-        $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->id]);
+        $this->logInAs($admin);
+        $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->get('id')]);
 
         $this->assertSuccess();
-        $this->assertStringContainsString('microsoft', $this->_responseJsonBody->url);
-        $this->assertStringContainsString('prompt=login', $this->_responseJsonBody->url);
+        $url = $this->_responseJsonBody->url;
+        $this->assertStringContainsString('microsoft', $url);
+        $this->assertStringContainsString('prompt=login', $url);
+        $this->assertStringContainsString('login_hint=' . urlencode($admin->get('username')), $url);
     }
 
-    /**
-     * 200 returns a URL
-     */
     public function testSsoAzureStage1DryRunController_Success_PromptNoneIsNotPresent(): void
     {
-        $user = UserFactory::make()->admin()->persist();
-        $settings = $this->createAzureSettingsFromConfig(
-            $user,
-            SsoSetting::STATUS_DRAFT,
-            ['prompt' => SsoSettingsAzureDataForm::PROMPT_NONE]
-        );
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->persist();
+        $settings = SsoSettingsFactory::make()->azure()->draft()->persist();
+        // Mock provider
+        $mockAzureProvider = $this->getProviderMockForStage1(AzureProvider::class);
+        $state = SsoState::generate();
+        $url = $this->getDummyAzureAuthorizationUrl($admin, $state, ['prompt' => SsoSettingsAzureDataForm::PROMPT_NONE]);
+        $mockAzureProvider->method('getAuthorizationUrl')->willReturn($url);
+        $mockAzureProvider->method('getState')->willReturn($state);
+        // Swap actual implementation
+        SsoProviderFactory::set($mockAzureProvider);
 
-        $this->logInAs($user);
-        $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->id]);
+        $this->logInAs($admin);
+        $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->get('id')]);
 
         $this->assertSuccess();
         $this->assertStringContainsString('microsoft', $this->_responseJsonBody->url);
         $this->assertStringNotContainsString('prompt', $this->_responseJsonBody->url);
+    }
+
+    public function testSsoAzureStage1DryRunController_Success_WithoutLoginHint(): void
+    {
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->persist();
+        $settings = SsoSettingsFactory::make()->azure()->draft()->persist();
+        // Mock provider
+        $mockAzureProvider = $this->getProviderMockForStage1(AzureProvider::class);
+        $state = SsoState::generate();
+        $url = $this->getDummyAzureAuthorizationUrl($admin, $state, ['login_hint' => false]);
+        $mockAzureProvider->method('getAuthorizationUrl')->willReturn($url);
+        $mockAzureProvider->method('getState')->willReturn($state);
+        // Swap actual implementation
+        SsoProviderFactory::set($mockAzureProvider);
+
+        $this->logInAs($admin);
+        $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->get('id')]);
+
+        $this->assertSuccess();
+        $url = $this->_responseJsonBody->url;
+        $this->assertStringContainsString('microsoft', $url);
+        $this->assertStringContainsString('prompt=login', $url);
+        $this->assertStringNotContainsString('login_hint=', $url);
     }
 
     /**
@@ -70,7 +112,7 @@ class SsoAzureStage1DryRunControllerTest extends SsoIntegrationTestCase
         $user = UserFactory::make()->admin()->persist();
         SsoSettingsFactory::make()->azure()->draft()->persist();
 
-        $this->postJson('/sso/azure/login/dry-run.json', ['user_id' => $user->id]);
+        $this->postJson('/sso/azure/login/dry-run.json', ['user_id' => $user->get('id')]);
         $this->assertError(401);
     }
 
@@ -83,7 +125,7 @@ class SsoAzureStage1DryRunControllerTest extends SsoIntegrationTestCase
         $settings = SsoSettingsFactory::make()->azure()->draft()->persist();
 
         $this->logInAs($user);
-        $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->id]);
+        $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->get('id')]);
         $this->assertError(403);
     }
 
@@ -147,7 +189,7 @@ class SsoAzureStage1DryRunControllerTest extends SsoIntegrationTestCase
         $settings = SsoSettingsFactory::make()->azure()->active()->persist();
 
         $this->logInAs($user);
-        $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->id]);
+        $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->get('id')]);
         $this->assertError(404);
     }
 }

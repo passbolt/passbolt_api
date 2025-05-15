@@ -19,20 +19,82 @@ namespace Passbolt\Sso\Test\TestCase\Controller\Google;
 
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
+use League\OAuth2\Client\Token\AccessToken;
 use Passbolt\Sso\Model\Entity\SsoState;
+use Passbolt\Sso\Test\Factory\SsoAuthenticationTokenFactory;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
 use Passbolt\Sso\Test\Factory\SsoStateFactory;
 use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
+use Passbolt\Sso\Utility\Google\Provider\GoogleProvider;
+use Passbolt\Sso\Utility\Google\ResourceOwner\GoogleResourceOwner;
+use Passbolt\Sso\Utility\Provider\SsoProviderFactory;
 
 /**
  * @covers \Passbolt\Sso\Controller\Google\SsoGoogleStage2Controller
  */
 class SsoGoogleStage2ControllerTest extends SsoIntegrationTestCase
 {
-    public function testSsoGoogleStage2Controller_Success(): void
+    public function testSsoGoogleStage2Controller_Success_User(): void
     {
-        // Requires mocking GoogleService - not implemented
-        $this->markTestIncomplete();
+        $user = UserFactory::make()->user()->active()->persist();
+        $settings = SsoSettingsFactory::make()->google()->active()->persist();
+        $ssoState = SsoStateFactory::make()
+            ->withTypeSsoGetKey()
+            ->userId($user->get('id'))
+            ->ssoSettingsId($settings->get('id'))
+            ->ip(SsoIntegrationTestCase::IP_ADDRESS)
+            ->userAgent(SsoIntegrationTestCase::USER_AGENT)
+            ->persist();
+        $this->cookie('passbolt_sso_state', $ssoState->state);
+        // Mock provider
+        $mockGoogleProvider = $this->getProviderMockForStage2(GoogleProvider::class);
+        $mockGoogleProvider->method('getAccessToken')->willReturn(new AccessToken([
+            'access_token' => 'foo',
+        ]));
+        $mockGoogleProvider->method('getResourceOwner')->willReturn(new GoogleResourceOwner([
+            'email' => $user->get('username'),
+            'nonce' => $ssoState->get('nonce'),
+        ]));
+        // Swap actual implementation
+        SsoProviderFactory::set($mockGoogleProvider);
+
+        $this->get('/sso/google/redirect?state=' . $ssoState->state . '&code=' . UuidFactory::uuid());
+
+        /** @var \Cake\ORM\Entity $token */
+        $token = SsoAuthenticationTokenFactory::find()->where(['type' => SsoState::TYPE_SSO_GET_KEY, 'user_id' => $user->get('id')])->firstOrFail();
+        $this->assertRedirectContains('/sso/login/success?token=' . $token->get('token'));
+    }
+
+    public function testSsoGoogleStage2Controller_Success_Admin(): void
+    {
+        $admin = UserFactory::make()->admin()->active()->persist();
+        $settings = SsoSettingsFactory::make()->google()->draft()->persist();
+        $ssoState = SsoStateFactory::make()
+            ->withTypeSsoGetKey()
+            ->userId($admin->get('id'))
+            ->ssoSettingsId($settings->get('id'))
+            ->ip(SsoIntegrationTestCase::IP_ADDRESS)
+            ->userAgent(SsoIntegrationTestCase::USER_AGENT)
+            ->persist();
+        $this->cookie('passbolt_sso_state', $ssoState->state);
+        // Mock provider
+        $mockGoogleProvider = $this->getProviderMockForStage2(GoogleProvider::class);
+        $mockGoogleProvider->method('getAccessToken')->willReturn(new AccessToken([
+            'access_token' => 'foo',
+        ]));
+        $mockGoogleProvider->method('getResourceOwner')->willReturn(new GoogleResourceOwner([
+            'email' => $admin->get('username'),
+            'nonce' => $ssoState->get('nonce'),
+        ]));
+        // Swap actual implementation
+        SsoProviderFactory::set($mockGoogleProvider);
+
+        $this->logInAs($admin);
+        $this->get('/sso/google/redirect?state=' . $ssoState->state . '&code=' . UuidFactory::uuid());
+
+        /** @var \Cake\ORM\Entity $token */
+        $token = SsoAuthenticationTokenFactory::find()->where(['type' => SsoState::TYPE_SSO_SET_SETTINGS, 'user_id' => $admin->get('id')])->firstOrFail();
+        $this->assertRedirectContains('/sso/login/dry-run/success?token=' . $token->get('token'));
     }
 
     /**
@@ -200,6 +262,7 @@ class SsoGoogleStage2ControllerTest extends SsoIntegrationTestCase
         $user = UserFactory::make()->user()->active()->persist();
         $settings = SsoSettingsFactory::make()->google()->draft()->persist();
         $admin = UserFactory::make()->admin()->active()->persist();
+        /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
         $ssoState = SsoStateFactory::make()
             ->withTypeSsoSetSettings()
             ->userId($admin->id)
@@ -221,6 +284,7 @@ class SsoGoogleStage2ControllerTest extends SsoIntegrationTestCase
         $this->disableFeaturePlugin('SsoRecover');
         $settings = SsoSettingsFactory::make()->google()->active()->persist();
         $admin = UserFactory::make()->admin()->active()->persist();
+        /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
         $ssoState = SsoStateFactory::make()
             ->withTypeSsoRecover()
             ->userId($admin->id)

@@ -114,4 +114,46 @@ class MetadataKeysIndexServiceTest extends AppTestCaseV5
         $metadataPrivateKeys = $result->toArray()[0]['metadata_private_keys'];
         $this->assertCount(2, $metadataPrivateKeys);
     }
+
+    public function testMetadataKeysIndexService_Success_ContainCreator(): void
+    {
+        $user = UserFactory::make()->user()->active()->persist();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier()->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($user)->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($user)->persist();
+
+        $result = $this->service->get($user->get('id'), [
+            'metadata_private_keys' => true,
+            'creator' => true,
+        ]);
+
+        $resultArr = $result->toArray();
+        $this->assertNotEmpty($resultArr);
+        $this->assertCount(1, $resultArr);
+        $this->assertArrayHasKey('creator', $resultArr[0]);
+        $creator = $resultArr[0]['creator'];
+        $this->assertArrayNotHasKey('profile', $creator);
+        // make sure other contains are also present
+        $this->assertArrayHasKey('metadata_private_keys', $result->toArray()[0]);
+        $metadataPrivateKeys = $result->toArray()[0]['metadata_private_keys'];
+        $this->assertCount(2, $metadataPrivateKeys);
+    }
+
+    public function testMetadataKeysIndexService_Success_ContainCreatorProfileAvatar(): void
+    {
+        $user = UserFactory::make()->user()->active()->persist();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier()->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($user)->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($user)->persist();
+
+        $result = $this->service->get($user->get('id'), ['creator.profile' => true]);
+
+        $resultArr = $result->toArray();
+        $this->assertNotEmpty($resultArr);
+        $this->assertCount(1, $resultArr);
+        $this->assertArrayHasKey('creator', $resultArr[0]);
+        $creator = $resultArr[0]['creator'];
+        $this->assertArrayHasKey('profile', $creator);
+        $this->assertArrayHasKey('avatar', $creator['profile']);
+    }
 }

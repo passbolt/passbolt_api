@@ -16,19 +16,14 @@ declare(strict_types=1);
  */
 namespace Passbolt\Sso\Test\Lib;
 
-use App\Error\Exception\CustomValidationException;
-use App\Model\Entity\Role;
-use App\Model\Entity\User;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
-use Cake\I18n\DateTime;
-use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
-use Passbolt\Sso\Model\Dto\SsoSettingsDto;
 use Passbolt\Sso\Model\Entity\SsoSetting;
-use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
-use Passbolt\Sso\Service\SsoSettings\SsoSettingsSetService;
+use Passbolt\Sso\Service\Cache\SsoProviderErrorCacheService;
 use Passbolt\Sso\SsoPlugin;
+use Passbolt\Sso\Utility\Provider\AbstractOauth2Provider;
+use Passbolt\Sso\Utility\Provider\SsoProviderFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class SsoIntegrationTestCase extends AppIntegrationTestCase
 {
@@ -64,90 +59,39 @@ class SsoIntegrationTestCase extends AppIntegrationTestCase
     }
 
     /**
-     * @param User $admin user entity
-     * @param string|null $status status
-     * @return SsoSettingsDto
+     * @inheritDoc
      */
-    public function createAzureSettingsFromConfig(
-        User $admin,
-        ?string $status = SsoSetting::STATUS_ACTIVE,
-        $options = []
-    ): SsoSettingsDto {
-        $azureConfig = Configure::read('passbolt.selenium.sso.active');
-        if (!isset($azureConfig)) {
-            $this->markTestSkipped('Selenium SSO is set to inactive, skipping tests.');
-        }
+    public function tearDown(): void
+    {
+        SsoProviderFactory::clear();
+        SsoProviderErrorCacheService::reset();
 
-        $uac = new UserAccessControl(Role::ADMIN, $admin->id);
-        $data = [
-            'provider' => SsoSetting::PROVIDER_AZURE,
-            'data' => [
-                'url' => Configure::read('passbolt.selenium.sso.azure.url'),
-                'client_id' => Configure::read('passbolt.selenium.sso.azure.clientId'),
-                'tenant_id' => Configure::read('passbolt.selenium.sso.azure.tenantId'),
-                'client_secret' => Configure::read('passbolt.selenium.sso.azure.secretId'),
-                'client_secret_expiry' => new DateTime(Configure::read('passbolt.selenium.sso.azure.secretExpiry')),
-                'prompt' => $options['prompt'] ?? SsoSettingsAzureDataForm::PROMPT_LOGIN,
-                'email_claim' => SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL,
-            ],
-        ];
-
-        try {
-            // create a correct setting using the service
-            (new SsoSettingsSetService())->create($uac, $data);
-            $ssoSettingsTable = $this->fetchTable('Passbolt/Sso.SsoSettings');
-            // activate it the fast way
-            /** @var SsoSetting $setting */
-            $setting = $ssoSettingsTable->find()->firstOrFail();
-            $setting->status = $status;
-            $ssoSettingsTable->save($setting);
-        } catch (CustomValidationException $exception) {
-            $this->fail('Config passbolt.selenium.sso.azure is invalid.');
-        }
-
-        /** @var SsoSettingsDto $dto */
-        $dto = (new SsoSettingsGetService())->getByIdOrFail($setting->id);
-
-        return $dto;
+        parent::tearDown();
     }
 
     /**
-     * @param User $admin User entity (mostly this will be with "admin" role)
-     * @param string|null $status Status.
-     * @return SsoSettingsDto
+     * @param string $providerClass
+     * @return \PHPUnit\Framework\MockObject\MockObject|AbstractOauth2Provider
      */
-    public function createGoogleSettingsFromConfig(User $admin, ?string $status = SsoSetting::STATUS_ACTIVE): SsoSettingsDto
+    protected function getProviderMockForStage1(string $providerClass): AbstractOauth2Provider|MockObject
     {
-        $seleniumSsoConfig = Configure::read('passbolt.selenium.sso.active');
-        if (!isset($seleniumSsoConfig) || !$seleniumSsoConfig) {
-            $this->markTestSkipped('Selenium SSO is set to inactive, skipping tests.');
-        }
+        return $this
+            ->getMockBuilder($providerClass)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getAuthorizationUrl', 'getState'])
+            ->getMock();
+    }
 
-        $uac = new UserAccessControl(Role::ADMIN, $admin->id);
-        $data = [
-            'provider' => SsoSetting::PROVIDER_GOOGLE,
-            'data' => [
-                'client_id' => Configure::read('passbolt.selenium.sso.google.clientId'),
-                'client_secret' => Configure::read('passbolt.selenium.sso.google.secretId'),
-            ],
-        ];
-
-        try {
-            // create a correct setting using the service
-            (new SsoSettingsSetService())->create($uac, $data);
-            $ssoSettingsTable = $this->fetchTable('Passbolt/Sso.SsoSettings');
-            // activate it the fast way
-            /** @var SsoSetting $setting */
-            $setting = $ssoSettingsTable->find()->firstOrFail();
-            $setting->status = $status;
-            $ssoSettingsTable->save($setting);
-        } catch (CustomValidationException $exception) {
-            $this->fail('Config passbolt.selenium.sso.google is invalid.');
-        }
-
-        /** @var \Passbolt\Sso\Model\Dto\SsoSettingsDto $dto */
-        $dto = (new SsoSettingsGetService())->getByIdOrFail($setting->id);
-
-        return $dto;
+    /**
+     * @param string $providerClass
+     * @return \PHPUnit\Framework\MockObject\MockObject|AbstractOauth2Provider
+     */
+    protected function getProviderMockForStage2(string $providerClass): AbstractOauth2Provider|MockObject
+    {
+        return $this
+            ->getMockBuilder($providerClass)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getAccessToken', 'getResourceOwner'])
+            ->getMock();
     }
 }

@@ -95,9 +95,9 @@ class SubscriptionKeyGetService
      * Try to read the key string from file
      * Try new file name first then legacy name, log warnings if issues.
      *
-     * @return string|null
+     * @return string|false|null
      */
-    protected function readFromFile(): ?string
+    protected function readFromFile(): string|false|null
     {
         // New file name
         if (is_readable(self::SUBSCRIPTION_FILE)) {

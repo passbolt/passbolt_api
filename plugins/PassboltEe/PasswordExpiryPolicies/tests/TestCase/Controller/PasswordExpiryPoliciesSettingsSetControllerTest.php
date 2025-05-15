@@ -45,6 +45,7 @@ class PasswordExpiryPoliciesSettingsSetControllerTest extends AppIntegrationTest
     public function testPasswordExpiryPoliciesSetController_Success()
     {
         $this->logInAsAdmin();
+        /** @var array<string, string> $settings */
         $settings = PasswordExpiryPoliciesSettingFactory::make()->getEntity()->value;
         $this->postJson('/password-expiry/settings.json', $settings);
         $this->assertSuccess();

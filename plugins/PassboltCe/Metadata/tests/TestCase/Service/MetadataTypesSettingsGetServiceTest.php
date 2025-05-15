@@ -63,4 +63,58 @@ class MetadataTypesSettingsGetServiceTest extends AppTestCaseV5
         $settings = MetadataTypesSettingsGetService::getSettings();
         $this->assertEquals(MetadataTypesSettingsFactory::getDefaultDataV4(), $settings->toArray());
     }
+
+    /**
+     * @dataProvider creationAllowedMethodsDataProvider
+     * @param array $settingsValues Settings values for arrange part.
+     * @param array $assertions Assertions to perform.
+     * @return void
+     */
+    public function testMetadataTypesSettingsGetService_CreationAllowedMethods(array $settingsValues, array $assertions): void
+    {
+        $data = MetadataTypesSettingsFactory::getDefaultDataV4();
+        foreach ($settingsValues as $settingField => $settingValue) {
+            $data[$settingField] = $settingValue;
+        }
+        MetadataTypesSettingsFactory::make()->value(json_encode($data))->persist();
+
+        $settings = MetadataTypesSettingsGetService::getSettings();
+
+        foreach ($assertions as $method => $result) {
+            $this->assertSame($result, $settings->{$method}());
+        }
+    }
+
+    /**
+     * Data provider.
+     *
+     * @return array[]
+     */
+    public function creationAllowedMethodsDataProvider(): array
+    {
+        return [
+            [
+                'input' => [
+                    MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES => MetadataTypesSettingsDto::V5,
+                    MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE => MetadataTypesSettingsDto::V4,
+                    MetadataTypesSettingsDto::DEFAULT_TAG_TYPE => MetadataTypesSettingsDto::V5,
+                    MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => false,
+                    MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => true,
+                    MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => true,
+                    MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => true,
+                    MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => false,
+                    MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS => true,
+                ],
+                'expected' => [
+                    'isV4ResourceCreationAllowed' => false,
+                    'isV4FolderCreationAllowed' => true,
+                    'isV4TagCreationAllowed' => true,
+                    'isV5ResourceCreationAllowed' => true,
+                    'isV5FolderCreationAllowed' => false,
+                    'isV5TagCreationAllowed' => true,
+                ],
+            ],
+            // More combinations goes here
+        ];
+    }
 }

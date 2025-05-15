@@ -20,6 +20,7 @@ use App\Error\Exception\ValidationException;
 use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Role;
 use App\Model\Entity\Secret;
+use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Http\Exception\InternalErrorException;
@@ -398,10 +399,9 @@ abstract class SyncAction
         if (!isset($entity)) {
             return;
         }
-        if ($this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
+        if ($entity instanceof User && $this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
             $msg = __(
-                'The directory {0} {1} was already suspended in passbolt.',
-                $this->getSingularLoweredEntityType(),
+                'The directory user {0} was already suspended in passbolt.',
                 $this->getEntityName($entity)
             );
         } else {
@@ -459,10 +459,9 @@ abstract class SyncAction
     protected function handleSuccessfulDelete(DirectoryEntry $entry, EntitiesChangesDto $entitiesChangesDto): void
     {
         $entity = $entry->getAssociatedEntity();
-        if ($this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
+        if ($entity instanceof User && $this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
             $msg = __(
-                'The {0} {1} was successfully suspended.',
-                $this->getSingularLoweredEntityType(),
+                'The user {0} was successfully suspended.',
                 $this->getEntityName($entity)
             );
         } else {
@@ -597,7 +596,7 @@ abstract class SyncAction
                 $this->getSingularLoweredEntityType(),
                 $this->getEntityName($existingEntity)
             );
-            $reportData = $this->DirectoryIgnore->get($existingEntity->id);
+            $reportData = $this->DirectoryIgnore->get($existingEntity->get('id'));
         } else {
             $msg = __(
                 'The {0} {1} was not synced because the directory {0} is marked as to be ignored.',

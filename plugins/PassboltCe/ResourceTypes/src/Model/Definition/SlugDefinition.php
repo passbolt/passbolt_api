@@ -19,9 +19,9 @@ namespace Passbolt\ResourceTypes\Model\Definition;
 class SlugDefinition
 {
     /**
-     * @return string
+     * @return string|false
      */
-    public static function passwordString(): string
+    public static function passwordString(): string|false
     {
         return json_encode([
             'resource' => [
@@ -70,9 +70,9 @@ class SlugDefinition
     }
 
     /**
-     * @return string
+     * @return string|false
      */
-    public static function passwordAndDescription(): string
+    public static function passwordAndDescription(): string|false
     {
         return json_encode([
             'resource' => [
@@ -136,9 +136,9 @@ class SlugDefinition
     }
 
     /**
-     * @return string
+     * @return string|false
      */
-    public static function totp(): string
+    public static function totp(): string|false
     {
         return json_encode([
             'resource' => [
@@ -199,9 +199,9 @@ class SlugDefinition
     }
 
     /**
-     * @return string
+     * @return string|false
      */
-    public static function passwordDescriptionTotp(): string
+    public static function passwordDescriptionTotp(): string|false
     {
         return json_encode([
             'resource' => [

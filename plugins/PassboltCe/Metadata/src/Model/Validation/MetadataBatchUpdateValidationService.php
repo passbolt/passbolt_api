@@ -82,6 +82,7 @@ abstract class MetadataBatchUpdateValidationService
                 $metadataKey = $metadataKey->toArray();
             }
             $entity['metadata_key'] = $metadataKey;
+            $entity = $this->setMetadataKeyIdIfNotDefinedAndEntityIsPersonal($entity);
 
             $form = $this->getForm();
             if (!$form->execute($entity)) {
@@ -126,5 +127,16 @@ abstract class MetadataBatchUpdateValidationService
                 $Table->aliasField('id') . ' IN' => $entityIds,
             ])
             ->orderByDesc($Table->aliasField('id'));
+    }
+
+    /**
+     * Set the metadata key ID if not defined and the entity is personal.
+     *
+     * @param array $entity Entity being upgraded
+     * @return array Updated entity array
+     */
+    protected function setMetadataKeyIdIfNotDefinedAndEntityIsPersonal(array $entity): array
+    {
+        return $entity;
     }
 }

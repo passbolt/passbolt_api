@@ -16,19 +16,47 @@ declare(strict_types=1);
  */
 namespace Passbolt\Sso\Test\Lib;
 
+use App\Model\Entity\User;
+use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
-use Passbolt\Sso\Utility\Azure\Provider\AzureProvider;
+use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
+use Passbolt\Sso\Model\Entity\SsoState;
+use Passbolt\Sso\Service\Sso\AbstractSsoService;
+use const PHP_QUERY_RFC3986;
 
 trait AzureProviderTestTrait
 {
-    public function getDummyAzureProvider(): AzureProvider
+    public function getDummyAzureAuthorizationUrl(User $user, string $state, array $options = []): string
     {
-        return new AzureProvider([
-            'clientId' => Configure::read('passbolt.selenium.sso.azure.clientId'),
-            'clientSecret' => Configure::read('passbolt.selenium.sso.azure.secretId'),
-            'redirectUri' => Router::url('/sso/azure/redirect', true),
-            'tenant' => Configure::read('passbolt.selenium.sso.azure.tenantId'),
-        ]);
+        $tenantId = UuidFactory::uuid();
+        $clientId = UuidFactory::uuid();
+        $defaultOptions = [
+            'client_id' => $clientId,
+            'response_type' => 'code',
+            'response_mode' => Configure::read(AbstractSsoService::SSO_SECURITY_REDIRECT_METHOD_CONFIG) === 'POST' ? 'form_post' : 'query',
+            'prompt' => SsoSettingsAzureDataForm::PROMPT_LOGIN,
+            'login_hint' => $user->username,
+            'scope' => 'openid profile email',
+            'redirect_uri' => Router::url('/sso/azure/redirect', true),
+            'state' => $state,
+            'nonce' => SsoState::generate(),
+        ];
+        $options = array_merge($defaultOptions, $options);
+        // prompt should only be set when value is "login"
+        if ($options['prompt'] !== SsoSettingsAzureDataForm::PROMPT_LOGIN) {
+            unset($options['prompt']);
+        }
+        // login hint is disabled
+        if (!$options['login_hint']) {
+            unset($options['login_hint']);
+        }
+        if (isset($options['tenant_id'])) {
+            $tenantId = $options['tenant_id'];
+        }
+
+        $queryParams = http_build_query($options, '', null, PHP_QUERY_RFC3986);
+
+        return "https://login.microsoftonline.com/{$tenantId}/oauth2/v2.0/authorize?" . $queryParams;
     }
 }

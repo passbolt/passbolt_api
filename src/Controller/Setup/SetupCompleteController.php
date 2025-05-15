@@ -69,6 +69,7 @@ class SetupCompleteController extends AppController
         $this->dispatchEvent(self::COMPLETE_SUCCESS_EVENT_NAME, [
             'user' => $user,
             'data' => $this->getRequest()->getData(),
+            'uac' => $uac,
         ]);
 
         $this->success(__('The setup was completed successfully.'));
