@@ -79,6 +79,17 @@ class SanitizeUrlComponent extends Component
                 return '/';
             }
         }
+
+        $isProtocolRelativeUrl1 = str_starts_with($url, '///');
+        $isProtocolRelativeUrl2 = str_starts_with($url, '//');
+        if ($isProtocolRelativeUrl1 || $isProtocolRelativeUrl2) {
+            $strippedUrl = str_replace($isProtocolRelativeUrl1 ? '///' : '//', '', $url);
+            $parseUrl = parse_url($strippedUrl);
+            if (!empty($parseUrl) && isset($parseUrl['path'])) {
+                return '/';
+            }
+        }
+
         if ($escapeSpecialChars) {
             return htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
         }

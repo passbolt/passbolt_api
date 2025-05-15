@@ -35,16 +35,6 @@ class DatacheckCommandTest extends AppTestCase
     use TruncateDirtyTables;
 
     /**
-     * setUp method
-     *
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    /**
      * Basic help test
      */
     public function testDatacheckCommandHelp()

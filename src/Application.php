@@ -49,6 +49,7 @@ use App\Utility\Application\FeaturePluginAwareTrait;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
+use Authentication\Plugin as AuthenticationPlugin;
 use Cake\Console\CommandCollection;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
@@ -63,7 +64,9 @@ use Cake\Http\ServerRequest;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
+use DebugKit\DebugKitPlugin;
 use EmailQueue\Command\SenderCommand;
+use Migrations\MigrationsPlugin;
 use Passbolt\EmailDigest\EmailDigestPlugin;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
@@ -238,12 +241,12 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         // Debug Kit should not be installed on a production system
         if (Configure::read('debug') && Configure::read('debugKit')) {
-            $this->addPlugin('DebugKit', ['bootstrap' => true]);
+            $this->addPlugin(DebugKitPlugin::class, ['bootstrap' => true]);
         }
 
         return $this
-            ->addPlugin('Migrations')
-            ->addPlugin('Authentication');
+            ->addPlugin(MigrationsPlugin::class)
+            ->addPlugin(AuthenticationPlugin::class);
     }
 
     /**

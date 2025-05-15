@@ -214,6 +214,9 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'isInDb' => false,
                 'customSslOptions' => true,
             ],
+            'metadata' => [
+                'canDecryptMetadataPrivateKey' => false,
+            ],
         ];
         $this->assertArrayEqualsCanonicalizing($expectedResponse, $result);
     }
