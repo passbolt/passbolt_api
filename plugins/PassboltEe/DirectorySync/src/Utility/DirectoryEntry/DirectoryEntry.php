@@ -43,16 +43,16 @@ abstract class DirectoryEntry implements ArrayAccess
     /**
      * created date.
      *
-     * @var \Cake\I18n\DateTime|string
+     * @var \Cake\I18n\DateTime|string|null
      */
-    public string|DateTime $created;
+    public string|DateTime|null $created = null;
 
     /**
      * modified date.
      *
-     * @var \Cake\I18n\DateTime|string
+     * @var \Cake\I18n\DateTime|string|null
      */
-    public string|DateTime $modified;
+    public string|DateTime|null $modified = null;
 
     /**
      * Object type.
