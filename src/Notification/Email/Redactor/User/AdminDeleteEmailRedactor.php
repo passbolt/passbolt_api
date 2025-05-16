@@ -25,7 +25,6 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use App\Utility\Purifier;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
@@ -141,8 +140,8 @@ class AdminDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($user, $recipient, $deletedBy) {
-                $operatorFullName = Purifier::clean($deletedBy->profile->full_name);
-                $userFullName = Purifier::clean($user->profile->full_name);
+                $operatorFullName = $deletedBy->profile->full_name;
+                $userFullName = $user->profile->full_name;
 
                 if ($recipient->id === $deletedBy->id) {
                     return __('You deleted administrator {0}', $userFullName);

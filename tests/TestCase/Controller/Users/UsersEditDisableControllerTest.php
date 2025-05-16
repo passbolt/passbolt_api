@@ -96,8 +96,8 @@ class UsersEditDisableControllerTest extends AppIntegrationTestCase
         $user = UserFactory::get($user->id);
         $this->assertTrue($user->isDisabled());
         $this->assertEmailQueueCount(2);
-        $this->assertEmailInBatchContains("The user {$userFullName} has been suspended.", $admin1->username);
-        $this->assertEmailInBatchContains("The user {$userFullName} has been suspended.", $admin2->username);
+        $this->assertEmailInBatchContains("The user {$userFullName} has been suspended.", $admin1->username, '', false);
+        $this->assertEmailInBatchContains("The user {$userFullName} has been suspended.", $admin2->username, '', false);
     }
 
     public function testUsersEditDisableController_Success_Admin_Disable_Admin(): void
@@ -120,8 +120,8 @@ class UsersEditDisableControllerTest extends AppIntegrationTestCase
         $user = UserFactory::get($user->id);
         $this->assertTrue($user->isDisabled());
         $this->assertEmailQueueCount(3);
-        $this->assertEmailInBatchContains("The user {$userFullName} has been suspended.", $admin1->username);
-        $this->assertEmailInBatchContains("The user {$userFullName} has been suspended.", $admin2->username);
+        $this->assertEmailInBatchContains("The user {$userFullName} has been suspended.", $admin1->username, '', false);
+        $this->assertEmailInBatchContains("The user {$userFullName} has been suspended.", $admin2->username, '', false);
         $this->assertEmailInBatchContains('Your account has been suspended.', $user->username);
         $this->assertEmailInBatchContains("mailto:{$admin1->username}", $user->username);
     }
