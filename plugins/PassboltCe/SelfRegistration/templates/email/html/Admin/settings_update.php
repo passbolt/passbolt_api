@@ -11,6 +11,8 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.10.0
+ *
+ * @var array $body
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
@@ -27,7 +29,7 @@ echo $this->element('Email/module/avatar',[
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $modifier,
         'datetime' => \Cake\I18n\DateTime::now(),
-        'text' => $subject
+        'text' => $subject,
     ])
 ]);
 if ($recipient['id'] === $modifier['id']) {
