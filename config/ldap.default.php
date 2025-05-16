@@ -60,6 +60,10 @@ return [
                 //      // Keep commented or empty if default rules work fine.
                 // ],
 
+                // Field fallback configuration. Allows defining backup LDAP attributes to use if a primary one (like email or name) is missing or empty.
+                // Define fallbacks separately for 'user' and 'group' entries.
+                    'fieldFallbacks' => [],
+
                 // Group Object Class. Only used if the server type is openldap. Default: groupOfUniqueNames
                 // 'groupObjectClass' => 'groupOfUniqueNames',
 
