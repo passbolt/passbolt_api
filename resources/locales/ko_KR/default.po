@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-03-21 10:04\n"
+"PO-Revision-Date: 2025-04-21 02:03\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -905,7 +905,7 @@ msgid "The metadata key is marked as expired."
 msgstr "메타데이터 키가 만료된 것으로 표시됩니다."
 
 msgid "It is not allowed to create v5-password-string resource types."
-msgstr "v5-암호 문자열 리소스 유형은 만들 수 없습니다."
+msgstr "v5-비밀번호-문자열 리소스 유형은 만들 수 없습니다."
 
 msgid "The resource type should not be deleted."
 msgstr "리소스 유형은 비워둘 수 없습니다."
@@ -1001,10 +1001,10 @@ msgid "The armored key should be a valid ASCII-armored OpenPGP key."
 msgstr "무장된 키는 유효한 ASCII로 무장된 OpenPGP key여야 합니다."
 
 msgid "The armored key is not valid."
-msgstr "암호화된 키가 유효하지 않습니다."
+msgstr "아머드 키가 유효하지 않습니다."
 
 msgid "The message should be a valid ASCII-armored OpenPGP message."
-msgstr "메시지는 유효한 ASCII-암호화된 OpenPGP 메시지여야 합니다."
+msgstr "메시지는 유효한 ASCII-아머드 OpenPGP 메시지여야 합니다."
 
 msgid "The creation date should be set in the past."
 msgstr "생성 날짜는 과거 날짜로 설정해야 합니다."
@@ -1094,10 +1094,10 @@ msgid "Your account recovery, {0}!"
 msgstr "{0} 계정이 복구되었습니다!"
 
 msgid "You added the password {0}"
-msgstr "{0} 암호가 추가되었습니다"
+msgstr "{0} 비밀번호가 추가되었습니다"
 
 msgid "You added a new password"
-msgstr "새 암호가 추가됨"
+msgstr "새 비밀번호가 추가됨"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} 에 의해 {1} 암호가 삭제됨"
@@ -1373,7 +1373,7 @@ msgid "Check the network configuration to allow this script to check for updates
 msgstr "이 스크립트가 업데이트를 확인할 수 있도록 네트워크 구성을 확인하세요."
 
 msgid "Search engine robots are told not to index content."
-msgstr "검색 엔진 로봇들은 콘텐츠를 인덱싱하지 말라고 지시됩니다."
+msgstr "검색 엔진 로봇이 콘텐츠를 인덱싱하지 않도록 설정되어 있습니다."
 
 msgid "Search engine robots are not told not to index content."
 msgstr "검색 엔진 로봇들에게 콘텐츠를 인덱싱하지 말라고 지시되지 않습니다."
@@ -1688,7 +1688,7 @@ msgid "The public key cannot be used to encrypt a message"
 msgstr "공개 키는 메시지를 해독하는 데 사용할 수 없습니다."
 
 msgid "Make sure that the server private key is valid and that there is no passphrase."
-msgstr "서버 개인 키가 유효한지, 패스프레이즈가 없는지 확인하세요."
+msgstr "서버 개인 키가 유효한지, 비밀문구가 없는지 확인하세요."
 
 msgid "Make sure you imported the private server key in the keyring of the webserver user."
 msgstr "웹 서버 사용자의 키링에 있는 개인 서버 키를 가져왔는지 확인하세요."
@@ -1913,7 +1913,7 @@ msgid "The public key could not be parsed."
 msgstr "공개 키 구문 해석을 할 수 없습니다."
 
 msgid "The armored message must not contain an extra line before the end block."
-msgstr "암호화된 메시지에는 끝 블록 앞에 추가 줄이 없어야 합니다."
+msgstr "아머드 메시지에는 끝 블록 앞에 추가 줄이 없어야 합니다."
 
 msgid "The message must contain an asymmetric packet."
 msgstr "메시지에 비대칭 패킷이 포함되어야 합니다."
@@ -1928,7 +1928,7 @@ msgid "Unknown key validation rule: {0}"
 msgstr "알 수 없는 키 유효성 검사 규칙: {0}"
 
 msgid "The armored message could not be validated."
-msgstr "암호화된 메시지를 검증할 수 없습니다."
+msgstr "아머드 메시지를 검증할 수 없습니다."
 
 msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
 msgstr "구성에서 정의한 OpenPGP 서버 키를 사용하여 암호화할 수 없습니다."
@@ -1943,7 +1943,7 @@ msgid "The config for the server private key fingerprint is not available or inc
 msgstr "서버 개인 키 지문에 대한 구성을 사용할 수 없거나 완전하지 않습니다."
 
 msgid "The config for the server private key passphrase is invalid."
-msgstr "서버 개인 키 패스프레이즈 대한 구성이 올바르지 않습니다."
+msgstr "서버 개인 키 비밀문구에 대한 구성이 올바르지 않습니다."
 
 msgid "The user public key is not available or incomplete."
 msgstr "사용자 공개 키를 사용할 수 없거나 불완전합니다."
@@ -2441,7 +2441,7 @@ msgid "log in passbolt"
 msgstr "패스볼트 로그인"
 
 msgid "{0} shared a folder with you"
-msgstr "{0} 이(가) 당신과 암호를 공유함"
+msgstr "{0} 이(가) 당신과 폴더를 공유함"
 
 msgid "You edited a folder"
 msgstr "폴더를 수정했습니다"
@@ -2453,7 +2453,7 @@ msgid "The user signature could not be verified."
 msgstr "사용자 서명을 확인할 수 없습니다."
 
 msgid "The challenge cannot be decrypted."
-msgstr "챌린지의 암호를 해독할 수 없습니다."
+msgstr "챌린지를 복호화할 수 없습니다."
 
 msgid "The challenge is invalid. Deserialization failed."
 msgstr "챌린지가 유효하지 않습니다. 역직렬화에 실패했습니다."
@@ -2696,19 +2696,19 @@ msgid "A resource identifier is required."
 msgstr "리소스 식별자가 필요합니다."
 
 msgid "The secret identifier should be a valid UUID."
-msgstr "암호 식별자는 유효한 UUID여야 합니다."
+msgstr "기밀 식별자는 유효한 UUID여야 합니다."
 
 msgid "A secret identifier is required."
-msgstr "암호 식별자가 필요합니다."
+msgstr "기밀 식별자가 필요합니다."
 
 msgid "The secret identifier should not be empty."
-msgstr "암호 식별자는 비워둘 수 없습니다."
+msgstr "기밀 식별자는 비워둘 수 없습니다."
 
 msgid "Could not validate secret access data."
-msgstr "암호 접근 데이터를 검사할 수 없습니다."
+msgstr "기밀 접근 데이터를 검사할 수 없습니다."
 
 msgid "Could not validate secret history data."
-msgstr "암호 기록 데이터의 유효성을 검사할 수 없습니다."
+msgstr "기밀 기록 데이터의 유효성을 검사할 수 없습니다."
 
 msgid "Invalid pagination limit set for metadata endpoint."
 msgstr "메타데이터 엔드포인트에 잘못된 페이징 제한이 설정되었습니다"
@@ -2735,10 +2735,10 @@ msgid "The object type is invalid."
 msgstr "객체 유형이 잘못되었습니다."
 
 msgid "A passphrase is required."
-msgstr "패스프레이즈가 필요합니다."
+msgstr "비밀문구가 필요합니다."
 
 msgid "The passphrase should be a valid BMP-UTF8 string."
-msgstr "패스프레이즈는 유효한 BMP-UTF8 문자열이어야합니다."
+msgstr "비밀문구는 유효한 BMP-UTF8 문자열이어야합니다."
 
 msgid "A fingerprint is required."
 msgstr "지문이 필요합니다."
@@ -3152,16 +3152,16 @@ msgid "No user provided."
 msgstr "제공된 사용자가 없음."
 
 msgid "The metadata could not be encrypted for permission id: {0}."
-msgstr "권한 ID {0} 에 대해 메타데이터를 암호화할 수 없습니다."
+msgstr "다음 권한 Id에 대해 메타데이터를 암호화할 수 없습니다: {0}."
 
 msgid "No OpenPGP key found for the user."
 msgstr "사용자에 대한 OpenPGP 키를 찾을 수 없음."
 
 msgid "The metadata could not be encrypted with the user id: {0}."
-msgstr "메타데이터를 사용자 ID {0} 로 암호화할 수 없습니다."
+msgstr "다음 사용자 Id로 메타데이터를 암호화할 수 없습니다: {0}."
 
 msgid "The metadata could not be encrypted with the metadata key id: {0}."
-msgstr "메타데이터를 메타데이터 키 ID {0} 로 암호화할 수 없습니다."
+msgstr "다음 메타데이터 키Id로 메타데이터를 암호화할 수 없습니다: {0}."
 
 msgid "Unable to migrate folder ID: {0} to V5."
 msgstr "폴더 ID {0} 을(를) V5로 마이그레이션할 수 없습니다."
@@ -3275,16 +3275,16 @@ msgid "You have created a new folder."
 msgstr "새 폴더가 생성되었습니다."
 
 msgid "{0} has shared a folder with you."
-msgstr "{0} 이(가) 당신과 암호를 공유함."
+msgstr "{0} 이(가) 당신과 폴더를 공유함."
 
 msgid "You have edited a folder."
 msgstr "폴더를 수정했습니다."
 
 msgid "You have saved a new password"
-msgstr "새 암호를 저장했습니다."
+msgstr "새 비밀번호를 저장했습니다"
 
 msgid "You have created a new password."
-msgstr "새 암호를 생성했습니다."
+msgstr "새 비밀번호를 생성했습니다."
 
 msgid "{0} shared a resource with you"
 msgstr "{0} 이(가) 당신과 리소스를 공유함"
@@ -3455,7 +3455,7 @@ msgid "Please setup the TOTP application."
 msgstr "TOTP 앱을 설정하세요."
 
 msgid "Please provide the one-time password."
-msgstr "일회성 암호를 입력하세요."
+msgstr "일회성 비밀번호를 입력하세요."
 
 msgid "You have been logged out due to too many failed attempts."
 msgstr "실패한 시도 횟수가 너무 많아 로그아웃되었습니다."
@@ -3497,7 +3497,7 @@ msgid "The error description state should be a valid BMP-UTF8 string."
 msgstr "오류 설명 상태는 유효한 BMP-UTF8 문자열이어야합니다."
 
 msgid "Something went wrong when validating the one-time password."
-msgstr "일회성 암호를 확인하는 동안 오류가 발생했습니다."
+msgstr "일회성 비밀번호를 확인하는 동안 오류가 발생했습니다."
 
 msgid "This OTP provision uri is not valid."
 msgstr "이 OTP 프로비저닝 uri는 유효하지 않습니다."
@@ -3575,10 +3575,10 @@ msgid "No configuration set for Duo API hostname."
 msgstr "Duo API 호스트 이름에 대한 구성이 설정되지 않았습니다."
 
 msgid "No configuration set for Duo client secret."
-msgstr "Duo 클라이언트 암호에 대한 구성이 설정되지 않았습니다."
+msgstr "Duo 클라이언트 시크릿이 설정되지 않았습니다."
 
 msgid "This is not a valid Duo client secret."
-msgstr "올바르지 않은 Duo 클라이언트 암호입니다."
+msgstr "올바르지 않은 Duo 클라이언트 시크릿입니다."
 
 msgid "This is not a valid Duo API hostname."
 msgstr "올바르지 않은 Duo API 호스트 이름입니다."
@@ -3734,7 +3734,7 @@ msgid "learn more"
 msgstr "더 알아보기"
 
 msgid "Time based One Time Password (TOTP)"
-msgstr "시간 기반 일회성 암호(TOTP)"
+msgstr "시간 기반 일회성 비밀번호(TOTP)"
 
 msgid "Scan this bar code"
 msgstr "이 바코드를 스캔하세요"
@@ -3743,13 +3743,13 @@ msgid "Enter the six digit number as presented on your phone or tablet."
 msgstr "스마트폰 또는 태블릿에 표시된 대로 6자리 숫자를 입력합니다."
 
 msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
-msgstr "계속하려면 스마트폰 또는 태블릿에 시간 기반 일회성 암호(TOTP)를 지원하는 다음과 같은 앱을 설치해야 합니다:"
+msgstr "계속하려면 스마트폰 또는 태블릿에 시간 기반 일회성 비밀번호(TOTP)를 지원하는 다음과 같은 앱을 설치해야 합니다:"
 
 msgid "or"
 msgstr "또는"
 
 msgid "Getting started with Time based One Time Password (TOTP)"
-msgstr "시간 기반 일회성 암호(TOTP) 시작"
+msgstr "시간 기반 일회성 비밀번호(TOTP) 시작"
 
 msgid "When using a new browser, you need an additional code from your phone."
 msgstr "새 브라우저를 사용할 때 스마트폰의 추가 코드가 필요합니다."
@@ -3758,7 +3758,7 @@ msgid "Once you enter this code, you can log in."
 msgstr "이 코드를 입력하면 로그인할 수 있습니다."
 
 msgid "Time based One Time Password (TOTP) is enabled!"
-msgstr "시간 기반 일회성 암호(TOTP)가 활성화됨!"
+msgstr "시간 기반 일회성 비밀번호(TOTP)가 활성화됨!"
 
 msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
 msgstr "새 기기에서 로그인할 때 모바일의 앱에서 생성된 고유한 인증 코드를 입력해야 합니다."
@@ -3767,13 +3767,13 @@ msgid "Remember this device for a month."
 msgstr "이 기기를 한달 동안 기억하기"
 
 msgid "Yubikey One Time Password"
-msgstr "Yubikey 일회성 암호"
+msgstr "Yubikey 일회성 비밀번호"
 
 msgid "Plug in the yubikey and put your finger on it."
 msgstr "Yubikey를 연결하고 손가락을 대세요."
 
 msgid "Yubikey One Time Password is enabled!"
-msgstr "Yubikey 일회성 암호가 활성화되었습니다!"
+msgstr "Yubikey 일회성 비밀번호가 활성화되었습니다!"
 
 msgid "When logging in from a new device you will need a unique code generated by your yubikey."
 msgstr "새 기기에서 로그인할 때 yubikey에 의해 생성된 고유 코드가 필요합니다."
@@ -3815,34 +3815,34 @@ msgid "The value should be an array."
 msgstr "값은 배열이어야 합니다."
 
 msgid "{0} marked several passwords as expired"
-msgstr "{0} 이(가) 여러 암호를 만료된 것으로 표시했습니다"
+msgstr "{0} 이(가) 여러 비밀번호를 만료된 것으로 표시했습니다"
 
 msgid "Some of your passwords expired"
-msgstr "암호 중 일부가 만료되었습니다"
+msgstr "비밀번호 중 일부가 만료되었습니다"
 
 msgid "{0} marked the password {1} as expired"
-msgstr "{0} 이(가) {1} 암호를 만료된 것으로 표시했습니다"
+msgstr "{0} 이(가) {1} 비밀번호를 만료된 것으로 표시했습니다"
 
 msgid "{0} marked a password as expired"
-msgstr "{0} 이(가) 암호를 만료된 것으로 표시했습니다"
+msgstr "{0} 이(가) 비밀번호를 만료된 것으로 표시했습니다"
 
 msgid "You edited the password expiry settings"
-msgstr "암호 만료 설정을 수정했습니다"
+msgstr "비밀번호 만료 설정을 수정했습니다"
 
 msgid "{0} edited the password expiry settings"
-msgstr "{0} 이(가) 암호 만료 설정을 수정했습니다"
+msgstr "{0} 이(가) 비밀번호 만료 설정을 수정했습니다."
 
 msgid "The send password expire setting should be a boolean."
-msgstr "암호 만료 보내기 설정은 참 또는 거짓이어야 합니다."
+msgstr "비밀번호 만료 보내기 설정은 참 또는 거짓이어야 합니다."
 
 msgid "The password expiry setting does not exist."
-msgstr "암호 만료 설정이 없습니다."
+msgstr "비밀번호 만료 설정이 없습니다."
 
 msgid "Could not validate the password expiry settings."
-msgstr "암호 만료 설정의 유효성을 검사할 수 없습니다."
+msgstr "비밀번호 만료 설정의 유효성을 검사할 수 없습니다."
 
 msgid "The password expiry settings have been updated."
-msgstr "암호 만료 설정이 업데이트되었습니다."
+msgstr "비밀번호 만료 설정이 업데이트되었습니다."
 
 msgid "View them in passbolt"
 msgstr "패스볼트에서 보기"
@@ -3860,10 +3860,10 @@ msgid "You have been requested to change them"
 msgstr "변경 요청을 받았습니다"
 
 msgid "Access for users to your shared passwords have been revoked."
-msgstr "공유 암호에 대한 사용자의 접근이 취소되었습니다."
+msgstr "공유 비밀번호에 대한 사용자의 접근이 취소되었습니다."
 
 msgid "These passwords are now marked as expired."
-msgstr "이 암호들은 이제 만료로 표시되었습니다."
+msgstr "이 비밀번호들은 이제 만료로 표시되었습니다."
 
 msgid "Please rotate them to ensure continued security."
 msgstr "지속적인 보안을 위해 순환해 주세요."
@@ -3875,7 +3875,7 @@ msgid "Change it in passbolt "
 msgstr "패스볼트에서 변경 "
 
 msgid "Could not retrieve the password policies."
-msgstr "암호 정책을 검색할 수 없습니다."
+msgstr "비밀번호 정책을 검색할 수 없습니다."
 
 msgid "The default generator is required."
 msgstr "기본 생성기가 필요합니다."
@@ -3890,115 +3890,115 @@ msgid "The external dictionary check should be a boolean."
 msgstr "외부 사전 확인은 부울이어야 합니다."
 
 msgid "The password generator settings is required."
-msgstr "암호 생성기 설정이 필요합니다."
+msgstr "비밀번호 생성기 설정이 필요합니다."
 
 msgid "The password generator settings should not be empty."
-msgstr "암호 생성기 설정은 비워둘 수 없습니다."
+msgstr "비밀번호 생성기 설정은 비워둘 수 없습니다."
 
 msgid "The password generator settings should have at least one mask selected."
-msgstr "암호 생성기 설정에는 마스킹을 하나 이상 선택해야 합니다."
+msgstr "비밀번호 생성기 설정에는 마스킹을 하나 이상 선택해야 합니다."
 
 msgid "The passphrase generator settings is required."
-msgstr "패스프레이즈 생성기 설정이 필요합니다."
+msgstr "비밀문구 생성기 설정이 필요합니다."
 
 msgid "The passphrase generator settings should not be empty."
-msgstr "패스프레이즈 생성기 설정은 비워둘 수 없습니다."
+msgstr "비밀문구 생성기 설정은 비워둘 수 없습니다."
 
 msgid "Could not validate the password policies settings."
-msgstr "암호 정책 설정의 유효성을 검사할 수 없습니다."
+msgstr "비밀번호 정책 설정의 유효성을 검사할 수 없습니다."
 
 msgid "The passphrase generator words is required."
-msgstr "패스프레이즈 생성기 단어가 필요합니다."
+msgstr "비밀문구 생성기 단어가 필요합니다."
 
 msgid "The passphrase generator words should be between {0} and {1}."
-msgstr "패스프레이즈 생성기는 {0} 에서 {1} 사이입니다."
+msgstr "비밀문구 생성기는 {0} 에서 {1} 사이입니다."
 
 msgid "The passphrase generator word separator is required."
-msgstr "패스프레이즈 생성기 단어 구분 기호가 필요합니다."
+msgstr "비밀문구 생성기 단어 구분 기호가 필요합니다."
 
 msgid "The passphrase generator word separator should be a valid UTF8 string."
-msgstr "패스프레이즈 생성기 단어 구분 기호는 유효한 UTF8 문자열이어야 합니다."
+msgstr "비밀문구 생성기 단어 구분 기호는 유효한 UTF8 문자열이어야 합니다."
 
 msgid "The passphrase generator word separator should be maximum {0} characters."
-msgstr "패스프레이즈 생성기 구분 기호는 최대 {0} 자여야 합니다."
+msgstr "비밀문구 생성기 구분 기호는 최대 {0} 자여야 합니다."
 
 msgid "The passphrase generator word case is required."
-msgstr "패스프레이즈 생성기 단어 대소문자가 필요합니다."
+msgstr "비밀문구 생성기 단어 대소문자가 필요합니다."
 
 msgid "The passphrase generator word case should be one of the following: {0}."
-msgstr "패스프레이즈 생성기 단어 대소문자는 다음 중 하나여야 합니다: {0}."
+msgstr "비밀문구 생성기 단어 대소문자는 다음 중 하나여야 합니다: {0}."
 
 msgid "The password generator length should be between {0} and {1}."
-msgstr "암호 생성기 길이는 {0} 에서 {1} 사이입니다."
+msgstr "비밀번호 생성기 길이는 {0} 에서 {1} 사이입니다."
 
 msgid "The password generator length is required."
-msgstr "패스프레이즈 생성기 길이가 필요합니다."
+msgstr "비밀번호 생성기 길이가 필요합니다."
 
 msgid "The password generator mask upper is required."
-msgstr "암호 생성기 대문자 마스킹이 필요합니다."
+msgstr "비밀번호 생성기 대문자 마스킹이 필요합니다."
 
 msgid "The password generator mask upper should be a boolean type."
-msgstr "암호 생성기 대문자 마스킹은 부울 유형이어야 합니다."
+msgstr "비밀번호 생성기 대문자 마스킹은 부울 유형이어야 합니다."
 
 msgid "The password generator mask lower is required."
-msgstr "암호 생성기 소문자 마스킹이 필요합니다."
+msgstr "비밀번호 생성기 소문자 마스킹이 필요합니다."
 
 msgid "The password generator mask lower should be a boolean type."
-msgstr "암호 생성기 소문자 마스킹은 부울 유형이어야 합니다."
+msgstr "비밀번호 생성기 소문자 마스킹은 부울 유형이어야 합니다."
 
 msgid "The password generator mask digit is required."
-msgstr "암호 생성기 숫자 마스킹이 필요합니다."
+msgstr "비밀번호 생성기 숫자 마스킹이 필요합니다."
 
 msgid "The password generator mask digit should be a boolean type."
-msgstr "암호 생성기 숫자 마스킹은 부울 유형이어야 합니다."
+msgstr "비밀번호 생성기 숫자 마스킹은 부울 유형이어야 합니다."
 
 msgid "The password generator mask parenthesis is required."
-msgstr "암호 생성기 괄호 마스킹이 필요합니다."
+msgstr "비밀번호 생성기 괄호 마스킹이 필요합니다."
 
 msgid "The password generator mask parenthesis should be a boolean type."
-msgstr "암호 생성기 괄호 마스킹은 부울 유형이어야 합니다."
+msgstr "비밀번호 생성기 괄호 마스킹은 부울 유형이어야 합니다."
 
 msgid "The password generator mask emoji is required."
-msgstr "암호 생성기 이모지 마스킹이 필요합니다."
+msgstr "비밀번호 생성기 이모지 마스킹이 필요합니다."
 
 msgid "The password generator mask emoji should be a boolean type."
-msgstr "암호 생성기 이모지 마스킹은 부울 유형이어야 합니다."
+msgstr "비밀번호 생성기 이모지 마스킹은 부울 유형이어야 합니다."
 
 msgid "The password generator mask char1 is required."
-msgstr "암호 생성기 첫 번재 문자 마스킹이 필요합니다."
+msgstr "비밀번호 생성기 첫 번재 문자 마스킹이 필요합니다."
 
 msgid "The password generator mask char1 should be a boolean type."
-msgstr "암호 생성기 첫 번째 문자 마스킹은 부울 유형이어야 합니다."
+msgstr "비밀번호 생성기 첫 번째 문자 마스킹은 부울 유형이어야 합니다."
 
 msgid "The password generator mask char2 is required."
-msgstr "암호 생성기 두 번째 문자 마스킹이 필요합니다."
+msgstr "비밀번호 생성기 두 번째 문자 마스킹이 필요합니다."
 
 msgid "The password generator mask char2 should be a boolean type."
-msgstr "암호 생성기 두 번째 문자 마스킹은 부울 유형이어야 합니다."
+msgstr "비밀번호 생성기 두 번째 문자 마스킹은 부울 유형이어야 합니다."
 
 msgid "The password generator mask char3 is required."
-msgstr "암호 생성기 세 번째 문자 마스킹이 필요합니다."
+msgstr "비밀번호 생성기 세 번째 문자 마스킹이 필요합니다."
 
 msgid "The password generator mask char3 should be a boolean type."
-msgstr "암호 생성기 세 번째 문자 마스킹은 부울 유형이어야 합니다."
+msgstr "비밀번호 생성기 세 번째 문자 마스킹은 부울 유형이어야 합니다."
 
 msgid "The password generator mask char4 is required."
-msgstr "암호 생성기 네 번째 문자 마스킹이 필요합니다."
+msgstr "비밀번호 생성기 네 번째 문자 마스킹이 필요합니다."
 
 msgid "The password generator mask char4 should be a boolean type."
-msgstr "암호 생성기 네 번째 문자 마스킹은 부울 유형이어야 합니다."
+msgstr "비밀번호 생성기 네 번째 문자 마스킹은 부울 유형이어야 합니다."
 
 msgid "The password generator mask char5 is required."
-msgstr "암호 생성기 다섯 번째 문자 마스킹이 필요합니다."
+msgstr "비밀번호 생성기 다섯 번째 문자 마스킹이 필요합니다."
 
 msgid "The password generator mask char5 should be a boolean type."
-msgstr "암호 생성기 다섯 번째 문자 마스킹은 부울 유형이어야 합니다."
+msgstr "비밀번호 생성기 다섯 번째 문자 마스킹은 부울 유형이어야 합니다."
 
 msgid "The password generator exclude look alike chars is required."
-msgstr "암호 생성기의 유사 문자 제외가 필요합니다."
+msgstr "비밀번호 생성기의 유사 문자 제외가 필요합니다."
 
 msgid "The password generator exclude look alike chars should be a boolean type."
-msgstr "암호 생성기의 유사 문자 제외는 부울 유형이어야 합니다."
+msgstr "비밀번호 생성기의 유사 문자 제외는 부울 유형이어야 합니다."
 
 msgid "Record not found"
 msgstr "레코드가 존재하지 않음"
@@ -4334,10 +4334,10 @@ msgid "The username should be a valid BMP-UTF8 string."
 msgstr "사용자이름은 유효한 BMP-UTF8 문자열이어야합니다."
 
 msgid "A password is required."
-msgstr "암호가 필요합니다."
+msgstr "비밀번호가 필요합니다."
 
 msgid "The password should be a valid BMP-UTF8 string."
-msgstr "암호는 유효한 BMP-UTF8 문자열이어야합니다."
+msgstr "비밀번호는 유효한 BMP-UTF8 문자열이어야합니다."
 
 msgid "The test email should be a valid email address."
 msgstr "테스트 이메일은 유효한 이메일 주소여야 합니다."
@@ -4484,7 +4484,7 @@ msgid "The database driver should be one of the following: {0}."
 msgstr "데이터베이스 드라이버는 다음 중 하나여야 합니다: {0}."
 
 msgid "The password should not contain quotes."
-msgstr "암호는 따옴표를 포함할 수 없습니다."
+msgstr "비밀번호는 따옴표를 포함할 수 없습니다."
 
 msgid "A database name is required."
 msgstr "데이타베이스 이름이 필요합니다."
@@ -4538,7 +4538,7 @@ msgid "The OpenPGP private key cannot be used to decrypt."
 msgstr "OpenPGP 개인 키를 사용하여 복호화할 수 없습니다."
 
 msgid "Please note that passbolt does not support OpenPGP key protected with a secret."
-msgstr "패스볼트는 암호로 보호된 OpenPGP 키를 지원하지 않습니다."
+msgstr "패스볼트는 비밀번호로 보호된 OpenPGP 키를 지원하지 않습니다."
 
 msgid "The fingerprint should not be empty."
 msgstr "지문은 비워둘 수 없습니다."
@@ -4637,10 +4637,10 @@ msgid "username"
 msgstr "사용자이름"
 
 msgid "password"
-msgstr "암호"
+msgstr "비밀번호"
 
 msgid "Password"
-msgstr "암호"
+msgstr "비밀번호"
 
 msgid "database name"
 msgstr "데이타베이스 이름"
@@ -4973,7 +4973,7 @@ msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다!"
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
-msgstr "이 사용자는 개인 키 및(또는) 패스프레이즈를 분실하여 계정 복구 프로세스를 완료할 수 없습니다."
+msgstr "이 사용자는 개인 키 및(또는) 비밀문구를 분실하여 계정 복구 프로세스를 완료할 수 없습니다."
 
 msgid "Unfortunately, they will need your help to delete their account and restart from scratch."
 msgstr "안타깝게도 계정을 삭제하고 처음부터 다시 시작하려면 귀하의 도움이 필요합니다."
@@ -5000,7 +5000,7 @@ msgid "Welcome to {0}!"
 msgstr "{0} 에 오신 것을 환영합니다!"
 
 msgid "{0} used the self registration feature to create an account on passbolt."
-msgstr "{0} 이(가) 자체 등록 기능을 사용하여 암호 볼트에 계정을 생성했습니다."
+msgstr "{0} 이(가) 자체 등록 기능을 사용하여 패스볼트에 계정을 생성했습니다."
 
 msgid "You have initiated an account recovery!"
 msgstr "계정 복구가 시작되었습니다."
@@ -5033,7 +5033,7 @@ msgid "{0} just invited you to join passbolt at {1}"
 msgstr "{0} 이(가) {1} 에 패스볼트에 가입하도록 초대했습니다."
 
 msgid "Passbolt is an open source password manager."
-msgstr "패스볼트는 오픈소스 암호 관리자입니다."
+msgstr "패스볼트는 오픈소스 비밀번호 관리자입니다."
 
 msgid "It is designed to allow sharing credentials securely with your team!"
 msgstr "팀과 안전하게 자격 증명을 공유할 수 있도록 고안되었습니다!"
@@ -5084,10 +5084,10 @@ msgid "{0} deleted the group \"{1}\" you were a member of."
 msgstr "{0} 이(가) 사용자가 속한 그룹 \"{1}\"을(를) 삭제했습니다."
 
 msgid "All passwords that were shared only with this group were also deleted."
-msgstr "이 그룹에서만 공유되었던 모든 암호 또한 삭제되었습니다."
+msgstr "이 그룹에서만 공유되었던 모든 비밀번호도 삭제되었습니다."
 
 msgid "As member of the group you now have access to all the passwords that are shared with this group."
-msgstr "이제 그룹의 구성원으로서 이 그룹과 공유되는 모든 암호에 접근할 수 있습니다."
+msgstr "이제 그룹의 구성원으로서 이 그룹과 공유되는 모든 비밀번호에 접근할 수 있습니다."
 
 msgid "And as group manager you are also authorized to edit the members of the group."
 msgstr "또한 그룹 관리자로서 그룹 구성원을 편집할 수 있는 권한이 있습니다."
@@ -5096,7 +5096,7 @@ msgid "You are no longer a member of this group."
 msgstr "더 이상 이 그룹의 구성원이 아닙니다."
 
 msgid "You are no longer authorized to access the passwords shared with this group."
-msgstr "이 그룹과 공유한 암호에 더 이상 접근할 수 있는 권한이 없습니다."
+msgstr "이 그룹과 공유한 비밀번호에 더 이상 접근할 수 있는 권한이 없습니다."
 
 msgid "Please contact {0} or another group manager if this is a mistake."
 msgstr "오류가 발생한 경우 {0} 또는 다른 그룹 관리자에게 문의하십시오."
@@ -5108,7 +5108,7 @@ msgid "As group manager you are now authorized to edit the members of this group
 msgstr "이제 그룹 관리자로서 이 그룹의 구성원을 편집할 수 있는 권한이 부여됩니다."
 
 msgid "As member of the group you still have access to all the passwords that are shared with this group."
-msgstr "그룹의 구성원으로서 이 그룹과 공유되는 모든 암호에 대한 접근 권한이 있습니다."
+msgstr "그룹의 구성원으로서 이 그룹과 공유되는 모든 비밀번호에 대한 접근 권한이 있습니다."
 
 msgid "You are no longer a group manager of this group."
 msgstr "더 이상 이 그룹의 그룹 관리자가 아닙니다"
@@ -5138,10 +5138,10 @@ msgid "Description: {0}"
 msgstr "설명: {0}"
 
 msgid "{0} shared a password with you"
-msgstr "{0} 이(가) 당신과 암호를 공유함"
+msgstr "{0} 이(가) 당신과 비밀번호를 공유함"
 
 msgid "{0} shared passwords with you"
-msgstr "{0} 이(가) 당신과 암호를 공유함"
+msgstr "{0} 이(가) 당신과 비밀번호를 공유함"
 
 msgid "{0} resources were shared with you."
 msgstr "{0} 이(가) 당신과 리소스를 공유함"
@@ -5150,7 +5150,7 @@ msgid "{0} just activated their account on passbolt!"
 msgstr "{0} 이(가) 패스볼트에서 계정을 활성화했습니다!"
 
 msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "이제 사용자의 패스볼트 활성화 되었으며 암호를 공유할 수 있습니다."
+msgstr "이제 사용자의 패스볼트 활성화 되었으며 비밀번호를 공유할 수 있습니다."
 
 msgid "This user was invited by you {0}."
 msgstr "{0} 이(가) 이 사용자를 초대했습니다."

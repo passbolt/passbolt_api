@@ -55,9 +55,9 @@ class Avatar extends Entity
     /**
      * Get data in string format.
      *
-     * @return string
+     * @return mixed
      */
-    public function getDataInStringFormat(): string
+    public function getDataInStringFormat(): mixed
     {
         $data = $this->data ?? '';
 

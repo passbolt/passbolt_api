@@ -30,6 +30,7 @@ trait FoldersRelationsModelTrait
     public static function addFolderRelation(?array $data = [], ?array $options = [])
     {
         $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+        /** @psalm-suppress UndefinedMagicMethod  */
         $folderRelation = $foldersRelationsTable->findByForeignIdAndUserId($data['foreign_id'], $data['user_id'])->first();
         if (!empty($folderRelation)) {
             return $folderRelation;
