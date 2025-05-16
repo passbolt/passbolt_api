@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Tags\Test\TestCase\Model\Table\Tags;
 
+use App\Test\Factory\UserFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
@@ -72,6 +73,60 @@ class TagsTableFindMetadataUpgradeIndexTest extends TestCase
                 ], $tag);
             }
         }
+    }
+
+    public function testTagsTableFindMetadataUpgradeIndex_Tag_On_Multiple_Resources_Personal()
+    {
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        $tag = TagFactory::make()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->persist();
+        ResourcesTagFactory::make(2)
+            ->with('Users', $user)
+            ->with('Tags', $tag)
+            ->persist();
+
+        /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
+        $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
+        $result = $Tags->findMetadataUpgradeIndex([])->toArray();
+        $this->assertSame(1, count($result));
+        $this->assertSame([
+            'id' => $tag->id,
+            'slug' => $tag->slug,
+            'is_shared' => false,
+            'user_id' => $user->id,
+        ], $result[0]);
+    }
+
+    public function testTagsTableFindMetadataUpgradeIndex_Tag_On_Multiple_Resources_Shared()
+    {
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        $tag = TagFactory::make()->isShared()->persist();
+        $user = UserFactory::make()->user()->persist();
+        ResourcesTagFactory::make(2)
+            ->with('Users', $user)
+            ->with('Tags', $tag)
+            ->persist();
+
+        /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
+        $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
+        $result = $Tags->findMetadataUpgradeIndex([])->toArray();
+        $this->assertSame(1, count($result));
+        $this->assertSame([
+            'id' => $tag->id,
+            'slug' => $tag->slug,
+            'is_shared' => true,
+            'user_id' => null,
+        ], $result[0]);
+    }
+
+    public function testTagsTableFindMetadataUpgradeIndex_Tag_With_No_Associations()
+    {
+        TagFactory::make()->isShared()->persist();
+        /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
+        $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
+        $result = $Tags->findMetadataUpgradeIndex([])->toArray();
+        $this->assertSame(0, count($result));
     }
 
     public function testTagsTableFindMetadataUpgradeIndex_Shared()
@@ -142,8 +197,7 @@ class TagsTableFindMetadataUpgradeIndexTest extends TestCase
         $resourceTagPersonal->get('user');
         // The tag is supposed to be personal, but for testing-sake,
         // we introduce here a DB inconsistency to test how the finder reacts
-        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTagPersonal2 */
-        $resourceTagPersonal2 = ResourcesTagFactory::make()
+        ResourcesTagFactory::make()
             ->with('Users')
             ->with('Tags', $personalTag)
             ->persist();
@@ -155,12 +209,9 @@ class TagsTableFindMetadataUpgradeIndexTest extends TestCase
         $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
         $result = $Tags->findMetadataUpgradeIndex([])->toArray();
 
-        $userIdsRetrieved = Hash::extract($result, '{n}.user_id');
-        $this->assertSame(2, count($result));
+        $this->assertSame(1, count($result));
         foreach ($result as $tag) {
             $this->assertSame($personalTag->id, $tag['id']);
         }
-        $this->assertTrue(in_array($resourceTagPersonal->user_id, $userIdsRetrieved));
-        $this->assertTrue(in_array($resourceTagPersonal2->user_id, $userIdsRetrieved));
     }
 }
