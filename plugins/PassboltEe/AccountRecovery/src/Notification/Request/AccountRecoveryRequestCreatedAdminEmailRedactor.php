@@ -24,7 +24,6 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
@@ -114,18 +113,19 @@ class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmail
         $subject = (new LocaleService())->translateString(
             $locale,
             function () use ($user) {
-                $name = Purifier::clean($user->profile->first_name) . ' ' . Purifier::clean($user->profile->last_name);
-
-                return __('{0} has initiated a recovery request', $name);
+                return __('{0} has initiated a recovery request', $user->profile->full_name);
             }
         );
 
-        $data = ['body' => [
-            'user' => $user,
-            'admin' => $admin,
-            'created' => $request->created,
-            'requestId' => $request->id,
-        ], 'title' => $subject,];
+        $data = [
+            'body' => [
+               'user' => $user,
+                'admin' => $admin,
+                'created' => $request->created,
+                'requestId' => $request->id,
+            ],
+            'title' => $subject,
+        ];
 
         return new Email($admin, $subject, $data, self::ADMIN_TEMPLATE);
     }

@@ -24,7 +24,6 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\ExtendedUserAccessControl;
-use App\Utility\Purifier;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
@@ -129,7 +128,7 @@ class SsoSettingsActivatedEmailRedactor implements SubscribedEmailRedactorInterf
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($operator) {
-                return __('{0} activated the SSO setting', Purifier::clean($operator->profile->first_name));
+                return __('{0} activated the SSO setting', $operator->profile->first_name);
             }
         );
 

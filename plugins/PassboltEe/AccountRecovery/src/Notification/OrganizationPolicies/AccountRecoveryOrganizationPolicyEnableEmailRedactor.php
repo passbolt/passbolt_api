@@ -20,7 +20,6 @@ namespace Passbolt\AccountRecovery\Notification\OrganizationPolicies;
 use App\Model\Entity\User;
 use App\Notification\Email\Email;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
-use App\Utility\Purifier;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AbstractAccountRecoveryOrganizationPolicySetService; // phpcs:ignore
 use Passbolt\Locale\Service\GetUserLocaleService;
@@ -60,20 +59,23 @@ class AccountRecoveryOrganizationPolicyEnableEmailRedactor extends AbstractAccou
 
                 return __(
                     '{0} has set the account recovery organization policy to {1}.',
-                    Purifier::clean($user->profile->first_name),
+                    $user->profile->first_name,
                     $policy->policy
                 );
             }
         );
 
-        $data = ['body' => [
-            'user' => $user,
-            'admin' => $admin,
-            'created' => $policy->created,
-            'policy' => $policy->policy,
-            'subject' => $subject,
-            'fingerprint' => $policy->account_recovery_organization_public_key->fingerprint,
-        ], 'title' => $subject,];
+        $data = [
+            'body' => [
+                'user' => $user,
+                'admin' => $admin,
+                'created' => $policy->created,
+                'policy' => $policy->policy,
+                'subject' => $subject,
+                'fingerprint' => $policy->account_recovery_organization_public_key->fingerprint,
+            ],
+            'title' => $subject,
+        ];
 
         return new Email($admin, $subject, $data, self::EMAIL_TEMPLATE);
     }

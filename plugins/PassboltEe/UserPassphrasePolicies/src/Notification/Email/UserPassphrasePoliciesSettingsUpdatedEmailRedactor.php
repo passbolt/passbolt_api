@@ -24,7 +24,6 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\ExtendedUserAccessControl;
-use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use InvalidArgumentException;
@@ -117,11 +116,9 @@ class UserPassphrasePoliciesSettingsUpdatedEmailRedactor implements SubscribedEm
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($operator, $recipient) {
-                $operatorFullName = Purifier::clean($operator->profile->first_name) . ' ' . Purifier::clean($operator->profile->last_name); // phpcs:ignore
-
                 return $operator->id === $recipient->id ?
                     __('You edited the user passphrase policy') :
-                    __('{0} edited the user passphrase policy', $operatorFullName);
+                    __('{0} edited the user passphrase policy', $operator->profile->full_name);
             }
         );
 
