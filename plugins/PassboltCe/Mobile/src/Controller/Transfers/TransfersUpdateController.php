@@ -53,7 +53,7 @@ class TransfersUpdateController extends AppController
         $this->Authentication->allowUnauthenticated(['updateNoSession']);
         $this->Transfers = $this->fetchTable('Passbolt/Mobile.Transfers');
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

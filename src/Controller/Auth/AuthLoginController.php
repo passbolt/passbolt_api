@@ -38,7 +38,7 @@ class AuthLoginController extends AppController
             'loginPost',
         ]);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

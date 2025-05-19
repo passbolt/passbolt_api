@@ -61,7 +61,7 @@ class PassboltCommand extends Command implements PassboltCommandInterface
      * @param \Cake\Console\CommandCollection|null $passboltCommandCollection Collection of commands used to display the list of passbolt commands
      * @see PassboltBuildCommandsListener
      */
-    public function __construct(?CommandFactoryInterface $factory = null, ?CommandCollection $passboltCommandCollection = null)
+    public function __construct(?CommandFactoryInterface $factory = null, ?CommandCollection $passboltCommandCollection = null) // phpcs:ignore
     {
         parent::__construct($factory);
 

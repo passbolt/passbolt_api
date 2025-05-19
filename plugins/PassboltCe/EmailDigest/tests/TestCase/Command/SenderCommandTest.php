@@ -100,8 +100,7 @@ class SenderCommandTest extends AppIntegrationTestCase
     {
         $frenchLocale = 'fr-FR';
 
-        /** @var \App\Model\Entity\User $frenchSpeakingUser */
-        $frenchSpeakingUser = UserFactory::make()->withLocale($frenchLocale)->persist();
+        UserFactory::make()->withLocale($frenchLocale)->persist();
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(4)])->persist();
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(3)])
             ->setLocale($frenchLocale)

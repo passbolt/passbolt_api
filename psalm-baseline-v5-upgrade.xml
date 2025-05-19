@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
+<files psalm-version="6.10.0@9c0add4eb88d4b169ac04acb7c679918cbb9c252">
+  <file src="plugins/PassboltCe/AccountSettings/src/Model/Table/AccountSettingsTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\AccountSettings\Model\Entity\AccountSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
   <file src="plugins/PassboltCe/AccountSettings/tests/TestCase/Controller/Themes/ThemesSelectControllerTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
@@ -25,6 +30,9 @@
       <code><![CDATA[FoldersHistoryTable]]></code>
       <code><![CDATA[FoldersHistoryTable]]></code>
     </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Folders\Model\Entity\FolderHistory get($primaryKey, ?array $options = [])]]></code>
+    </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltCe/Folders/src/Model/Table/FoldersRelationsHistoryTable.php">
     <ImplementedParamTypeMismatch>
@@ -35,6 +43,19 @@
       <code><![CDATA[FoldersRelationsHistoryTable]]></code>
       <code><![CDATA[FoldersRelationsHistoryTable]]></code>
     </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, ?array $options = [])]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Folders/src/Model/Table/FoldersRelationsTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Folders\Model\Entity\FoldersRelation get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Folders/src/Model/Table/FoldersTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Folders\Model\Entity\Folder get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltCe/Folders/src/Model/Traits/Folders/FoldersFindersTrait.php">
     <TypeDoesNotContainType>
@@ -366,36 +387,34 @@
       <code><![CDATA[$frenchUser2->username]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltCe/Log/tests/Factory/ActionFactory.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[ActionFactory]]></code>
-    </MethodSignatureMismatch>
+  <file src="plugins/PassboltCe/Log/src/Model/Table/ActionLogsTable.php">
     <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\Log\Model\Entity\Action|\Passbolt\Log\Model\Entity\Action[] persist()]]></code>
+      <code><![CDATA[\Passbolt\Log\Model\Entity\ActionLog newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="plugins/PassboltCe/Log/tests/Factory/ActionLogFactory.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[ActionLogFactory]]></code>
-    </MethodSignatureMismatch>
+  <file src="plugins/PassboltCe/Log/src/Model/Table/ActionsTable.php">
     <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\Log\Model\Entity\ActionLog|\Passbolt\Log\Model\Entity\ActionLog[] persist()]]></code>
+      <code><![CDATA[\Passbolt\Log\Model\Entity\Action newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="plugins/PassboltCe/Log/tests/Factory/EntitiesHistoryFactory.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[EntitiesHistoryFactory]]></code>
-    </MethodSignatureMismatch>
+  <file src="plugins/PassboltCe/Log/src/Model/Table/EntitiesHistoryTable.php">
     <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\Log\Model\Entity\EntityHistory|\Passbolt\Log\Model\Entity\EntityHistory[] persist()]]></code>
+      <code><![CDATA[\Passbolt\Log\Model\Entity\EntityHistory newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="plugins/PassboltCe/Log/tests/Factory/SecretAccessFactory.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[SecretAccessFactory]]></code>
-    </MethodSignatureMismatch>
+  <file src="plugins/PassboltCe/Log/src/Model/Table/PermissionsHistoryTable.php">
     <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\Log\Model\Entity\SecretAccess|\Passbolt\Log\Model\Entity\SecretAccess[] persist()]]></code>
+      <code><![CDATA[\Passbolt\Log\Model\Entity\PermissionHistory newEmptyEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Log/src/Model/Table/SecretAccessesTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Log\Model\Entity\SecretAccess newEmptyEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Log/src/Model/Table/SecretsHistoryTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Log\Model\Entity\SecretHistory newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Resources/ResourcesControllerLogTest.php">
@@ -428,6 +447,21 @@
     <InvalidPropertyFetch>
       <code><![CDATA[$actionLog->action_id]]></code>
     </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/src/Model/Table/MetadataKeysTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Metadata\Model\Entity\MetadataKey newEmptyEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/src/Model/Table/MetadataPrivateKeysTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Metadata\Model\Entity\MetadataPrivateKey newEmptyEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/src/Model/Table/MetadataSessionKeysTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Metadata\Model\Entity\MetadataSessionKey newEmptyEntity()]]></code>
+    </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltCe/Metadata/src/Notification/Email/Redactor/MetadataKeyCreateEmailRedactor.php">
     <InvalidArgument>
@@ -484,6 +518,9 @@
       <code><![CDATA[TransfersTable]]></code>
       <code><![CDATA[TransfersTable]]></code>
     </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Mobile\Model\Entity\Transfer get($primaryKey, ?array $options = [])]]></code>
+    </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltCe/Mobile/tests/TestCase/Controller/Transfers/TransfersUpdateControllerTest.php">
     <InvalidPropertyFetch>
@@ -747,6 +784,16 @@
       <code><![CDATA[PasswordExpirySettingFactory]]></code>
     </MethodSignatureMismatch>
   </file>
+  <file src="plugins/PassboltCe/Rbacs/src/Model/Table/RbacsTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Rbacs\Model\Entity\Rbac get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Rbacs/src/Model/Table/UiActionsTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Rbacs\Model\Entity\UiAction newEmptyEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
   <file src="plugins/PassboltCe/Rbacs/src/Service/Rbacs/RbacsInsertDefaultsService.php">
     <NoInterfaceProperties>
       <code><![CDATA[$uiaction->id]]></code>
@@ -774,6 +821,11 @@
       <code><![CDATA[$user->role]]></code>
       <code><![CDATA[$user->username]]></code>
     </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/ResourceTypes/src/Model/Table/ResourceTypesTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\ResourceTypes\Model\Entity\ResourceType get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltCe/ResourceTypes/tests/Factory/ResourceTypeFactory.php">
     <MethodSignatureMismatch>
@@ -817,6 +869,11 @@
       <code><![CDATA[$event]]></code>
     </InvalidArgument>
   </file>
+  <file src="plugins/PassboltCe/WebInstaller/src/Controller/WebInstallerController.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Cake\Http\Response|null]]></code>
+    </ImplementedReturnTypeMismatch>
+  </file>
   <file src="plugins/PassboltCe/WebInstaller/tests/Lib/DatabaseTrait.php">
     <UndefinedInterfaceMethod>
       <code><![CDATA[getSchemaCollection]]></code>
@@ -836,6 +893,82 @@
     <InvalidArgument>
       <code><![CDATA['name']]></code>
     </InvalidArgument>
+  </file>
+  <file src="src/Model/Table/AuthenticationTokensTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\AuthenticationToken get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+      <code><![CDATA[\App\Model\Entity\AuthenticationToken get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Model/Table/AvatarsTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\Avatar newEmptyEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Model/Table/CommentsTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\Comment get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Model/Table/FavoritesTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\Favorite get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Model/Table/GpgkeysTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\Gpgkey get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Model/Table/GroupsTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\Group get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Model/Table/GroupsUsersTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\GroupsUser get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Model/Table/OrganizationSettingsTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\OrganizationSetting newEmptyEntity()]]></code>
+      <code><![CDATA[\App\Model\Entity\OrganizationSetting newEmptyEntity()]]></code>
+      <code><![CDATA[\App\Model\Entity\OrganizationSetting newEmptyEntity()]]></code>
+      <code><![CDATA[\App\Model\Entity\OrganizationSetting newEmptyEntity()]]></code>
+      <code><![CDATA[\App\Model\Entity\OrganizationSetting newEmptyEntity()]]></code>
+      <code><![CDATA[\App\Model\Entity\OrganizationSetting newEmptyEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Model/Table/PermissionsTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\Permission get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Model/Table/ProfilesTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\Profile get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Model/Table/ResourcesTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\Resource get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Model/Table/RolesTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\Role get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Model/Table/SecretsTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\Secret get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Model/Table/UsersTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\User get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Model/Traits/Resources/ResourcesFindersTrait.php">
     <TypeDoesNotContainType>
