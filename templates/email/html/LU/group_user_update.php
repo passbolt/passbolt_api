@@ -11,6 +11,8 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
+ *
+ * @var array $body
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
@@ -51,5 +53,5 @@ echo $this->element('Email/module/text', [
 
 echo $this->element('Email/module/button', [
     'url' => Router::url('/', true),
-    'text' => __('log in passbolt')
+    'text' => __('Log in passbolt')
 ]);

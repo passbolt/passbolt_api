@@ -29,7 +29,7 @@ echo $this->element('Email/module/avatar', [
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
-        'datetime' => \Cake\I18n\DateTime::now(),
+        'datetime' => DateTime::now(),
         'text' => __('{0} shared a folder with you', Purifier::clean($user['profile']['first_name'])),
     ]),
 ]);

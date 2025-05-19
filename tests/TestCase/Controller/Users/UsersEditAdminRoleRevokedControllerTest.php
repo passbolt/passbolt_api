@@ -75,14 +75,9 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
         // Email assertions
         $this->assertEventFired(UsersEditController::EVENT_USER_AFTER_UPDATE);
         $this->assertEmailQueueCount(2);
-        $userFullName = Purifier::clean($jane->profile->first_name . ' ' . $jane->profile->last_name);
+        $emailText = Purifier::clean(sprintf('%s\'s admin role has been revoked', $jane->profile->full_name));
         foreach ([$john, $ada] as $admin) {
-            $this->assertEmailInBatchContains(
-                sprintf('%s\'s admin role has been revoked', $userFullName),
-                $admin->username,
-                '',
-                false
-            );
+            $this->assertEmailInBatchContains($emailText, $admin->username, '', false);
             $this->assertEmailInBatchContains(
                 Router::url('/app/users/view/' . $jane->id, true),
                 $admin->username
@@ -147,13 +142,9 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
             Router::url('/app/users/view/' . $jane->id, true),
         ], $jane->username);
         $userFullName = Purifier::clean($jane->profile->first_name . ' ' . $jane->profile->last_name);
+        $title = Purifier::clean(sprintf('%s\'s admin role has been revoked', $jane->profile->full_name));
         foreach ([$john, $ada] as $admin) {
-            $this->assertEmailInBatchContains(
-                sprintf('%s\'s admin role has been revoked', $userFullName),
-                $admin->username,
-                '',
-                false
-            );
+            $this->assertEmailInBatchContains($title, $admin->username, '', false);
             $this->assertEmailInBatchContains(
                 [
                     "{$john->profile->full_name} changed the role of {$userFullName} to user.",

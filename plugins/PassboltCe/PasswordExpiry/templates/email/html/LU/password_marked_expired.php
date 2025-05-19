@@ -15,6 +15,7 @@
  * @see \Passbolt\PasswordExpiry\Notification\Email\PasswordExpirySettingsUpdatedEmailRedactor
  * @var \App\View\AppView $this
  * @var array $body
+ * @var string $title
  */
 
 use App\Utility\Purifier;
@@ -35,11 +36,11 @@ echo $this->element('Email/module/avatar', [
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $operator,
         'datetime' => \Cake\I18n\DateTime::now(),
-        'text' => $title,
+        'text' => Purifier::clean($title),
     ]),
 ]);
 
-$text = $title . '. ';
+$text = Purifier::clean($title) . '. ';
 $text .= __('Please rotate it to ensure continued security.') . '<br/>';
 
 echo $this->element('Email/module/text', [

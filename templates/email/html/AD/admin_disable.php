@@ -12,6 +12,9 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.3.0
  *
+ * @var array $body
+ * @var string $title
+ *
  * @var \App\View\AppView $this
  */
 use App\Utility\Purifier;
@@ -28,7 +31,7 @@ echo $this->element('Email/module/avatar', [
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
         'datetime' => $user['modified'],
-        'text' => $title,
+        'text' => Purifier::clean($title),
     ])
 ]);
 

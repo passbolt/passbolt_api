@@ -23,7 +23,6 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
@@ -100,7 +99,7 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
      */
     private function getSubjectForOtherAdmin(User $recipient, User $modifier): string
     {
-        $modifierFirstName = Purifier::clean($modifier['profile']['first_name']);
+        $modifierFirstName = $modifier['profile']['first_name'];
 
         return (new LocaleService())->translateString(
             $recipient->locale,
