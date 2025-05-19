@@ -60,5 +60,5 @@ echo $this->element('Email/module/user_info', compact('userAgent', 'clientIp'));
 
 echo $this->element('Email/module/button', [
     'url' => Router::url('/app/administration/user-passphrase-policies', true),
-    'text' => __('view it in passbolt'),
+    'text' => __('View it in passbolt'),
 ]);

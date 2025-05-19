@@ -23,7 +23,6 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
@@ -127,11 +126,11 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function createEmail(User $recipient, User $operator, Folder $folder, bool $isV5): Email
     {
-        $userFirstName = Purifier::clean($operator->profile->first_name);
+        $userFirstName = $operator->profile->first_name;
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($userFirstName, $folder, $isV5) {
-                $subject = __('{0} shared the folder {1}', $userFirstName, Purifier::clean($folder->name));
+                $subject = __('{0} shared the folder {1}', $userFirstName, $folder->name);
                 if ($isV5) {
                     $subject = __('{0} shared a folder', $userFirstName);
                 }

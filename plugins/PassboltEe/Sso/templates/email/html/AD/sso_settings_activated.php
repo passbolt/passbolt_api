@@ -41,7 +41,7 @@ echo $this->element('Email/module/avatar', [
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $operator,
         'datetime' => $ssoSetting['modified'],
-        'text' => $title,
+        'text' => Purifier::clean($title),
     ]),
 ]);
 
@@ -60,5 +60,5 @@ echo $this->element('Email/module/user_info', compact('userAgent', 'clientIp'));
 
 echo $this->element('Email/module/button', [
     'url' => Router::url('/app/administration/sso', true),
-    'text' => __('view it in passbolt'),
+    'text' => __('Viewq  it in passbolt'),
 ]);

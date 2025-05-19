@@ -15,6 +15,7 @@
  * @see \Passbolt\PasswordPoliciesUpdate\Notification\Email\PasswordPoliciesSettingsUpdatedEmailRedactor
  * @var \App\View\AppView $this
  * @var array $body
+ * @var string $title
  */
 
 use App\Utility\Purifier;
@@ -40,9 +41,7 @@ echo $this->element('Email/module/avatar', [
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $operator,
         'datetime' => $passwordPolicySettings['modified'],
-        'text' => $operator['id'] === $recipient['id'] ?
-            __('You edited the password policy') :
-            __('{0} edited the password policy', Purifier::clean($operator['profile']['first_name'])),
+        'text' => Purifier::clean($title),
     ]),
 ]);
 

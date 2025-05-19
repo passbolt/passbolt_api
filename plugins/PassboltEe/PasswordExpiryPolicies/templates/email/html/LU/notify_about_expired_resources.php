@@ -15,8 +15,10 @@
  * @see \Passbolt\PasswordExpiry\Notification\Email\PasswordExpirySettingsUpdatedEmailRedactor
  * @var \App\View\AppView $this
  * @var array $body
+ * @var string $title
  */
 
+use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
 use Cake\I18n\DateTime;
 use Cake\Routing\Router;
@@ -29,7 +31,7 @@ $message = $body['message'];
 echo $this->element('Email/module/avatar', [
     'url' => AvatarHelper::getAvatarUrl(),
     'text' => $this->element('Email/module/avatar_anonymous_text', [
-        'title' => $title,
+        'title' => Purifier::clean($title),
         'text' => __('You have been requested to change them'),
         'datetime' => DateTime::now(),
     ]),

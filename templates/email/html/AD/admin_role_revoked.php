@@ -15,9 +15,9 @@
  * @see \App\Notification\Email\Redactor\User\UserAdminRoleRevokedEmailRedactor
  * @var \App\View\AppView $this
  * @var array $body
+ * @var string $title
  */
 
-use App\Model\Entity\Role;
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
 use Cake\Routing\Router;
@@ -43,7 +43,7 @@ echo $this->element('Email/module/avatar', [
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $operator,
         'datetime' => $user['modified'],
-        'text' => $title,
+        'text' => Purifier::clean($title),
     ]),
 ]);
 
