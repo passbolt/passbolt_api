@@ -41,8 +41,11 @@ class DirectorySyncCommand extends PassboltCommand
     /**
      * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
      */
-    public function __construct(ProcessUserService $processUserService, ?CommandFactoryInterface $factory = null, ?CommandCollection $passboltCommandCollection = null)
-    {
+    public function __construct(
+        ProcessUserService $processUserService,
+        ?CommandFactoryInterface $factory = null,
+        ?CommandCollection $passboltCommandCollection = null
+    ) {
         parent::__construct($factory, $passboltCommandCollection);
         $this->processUserService = $processUserService;
     }

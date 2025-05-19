@@ -29,17 +29,13 @@ use Passbolt\DirectorySync\Actions\AllSyncAction;
 class DirectorySyncController extends DirectoryController
 {
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\EventInterface $event An Event instance
-     * @throws \Cake\Http\Exception\ForbiddenException if the controller is accessed by a non admin
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
     public function beforeFilter(EventInterface $event)
     {
         $this->User->assertIsAdmin('Only administrators can access directory sync functionalities');
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**
