@@ -36,7 +36,7 @@ class SetupStartController extends AppController
     {
         $this->Authentication->allowUnauthenticated(['start']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

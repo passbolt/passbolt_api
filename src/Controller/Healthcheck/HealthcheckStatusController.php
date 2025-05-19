@@ -28,7 +28,7 @@ class HealthcheckStatusController extends AppController
     {
         $this->Authentication->allowUnauthenticated(['status']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

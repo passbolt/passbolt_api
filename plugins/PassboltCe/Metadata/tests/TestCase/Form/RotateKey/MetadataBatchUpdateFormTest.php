@@ -53,7 +53,10 @@ class MetadataBatchUpdateFormTest extends TestCase
 
     public function testMetadataBatchUpdateForm_Success(): void
     {
-        $this->assertTrue($this->form->execute($this->getDefaultData()));
+        $defaultData = $this->getDefaultData();
+        unset($defaultData['metadata_key']['expired']);
+        $result = $this->form->execute($defaultData);
+        $this->assertTrue($result);
     }
 
     public function testMetadataBatchUpdateForm_Error_Empty(): void
