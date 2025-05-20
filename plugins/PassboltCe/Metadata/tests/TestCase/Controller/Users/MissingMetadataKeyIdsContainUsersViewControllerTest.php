@@ -66,7 +66,6 @@ class MissingMetadataKeyIdsContainUsersViewControllerTest extends AppIntegration
 
     public function testMissingMetadataKeyIdsContainUsersViewController_Success_UserId_No_Key_Missing(): void
     {
-        $this->disableErrorHandlerMiddleware();
         $admin = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->admin()->active()->persist();
         $user = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->user()->active()->persist();
         // metadata key
