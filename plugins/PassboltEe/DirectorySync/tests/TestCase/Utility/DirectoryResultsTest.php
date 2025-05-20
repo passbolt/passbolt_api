@@ -167,6 +167,7 @@ class DirectoryResultsTest extends DirectorySyncDeprecatedIntegrationTestCase
         $expectedEntities = [
             'CN=User4,OU=PassboltUsers,DC=passbolt,DC=local',
             'CN=User5,OU=PassboltUsers,DC=passbolt,DC=local',
+            'CN=User7,OU=PassboltUsers,DC=passbolt,DC=local',
             'CN=Administration,OU=PassboltUsers,DC=passbolt,DC=local',
             'CN=Managers,OU=PassboltUsers,DC=passbolt,DC=local',
             'CN=User1,OU=PassboltUsers,DC=passbolt,DC=local',

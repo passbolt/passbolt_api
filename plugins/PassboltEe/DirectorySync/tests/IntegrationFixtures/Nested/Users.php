@@ -96,4 +96,17 @@ return [
             ],
         ],
     ],
+    [
+        'id' => UuidFactory::uuid('ldap.user.id.user7'),
+        'directory_name' => 'CN=User7,OU=PassboltUsers,DC=passbolt,DC=local',
+        'directory_created' => null,
+        'directory_modified' => null,
+        'user' => [
+            'username' => 'user1@passbolt.com',
+            'profile' => [
+                'first_name' => 'user',
+                'last_name' => 'one',
+            ],
+        ],
+    ],
 ];
