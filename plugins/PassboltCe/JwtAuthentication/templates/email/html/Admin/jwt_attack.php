@@ -17,7 +17,8 @@ use App\View\Helper\AvatarHelper;
 use Cake\I18n\DateTime;
 
 $user = $body['user'];
-$ip = $body['ip'];
+$clientIp = $body['clientIp'];
+$userAgent = $body['userAgent'];
 $message = $body['message'];
 
 echo $this->element('Email/module/avatar',[
@@ -31,9 +32,10 @@ echo $this->element('Email/module/avatar',[
 
 $text = '<h3>' . __('Security warning!') . '</h3><br/>';
 $text = '<h4>' . $message . '</h4><br/>';
-$text .= __('An unknown user with IP: {0} attempted to identify as {1}.', $ip, $user['username']);
+$text .= __('An unknown user attempted to identify as {0}.', $user['username']);
 $text .= ' ' . __('This is a potential security issue.');
 $text .= ' ' . __('Please investigate!');
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
+echo $this->element('Email/module/user_info', compact('userAgent', 'clientIp'));
