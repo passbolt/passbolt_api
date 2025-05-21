@@ -33,5 +33,7 @@ class IgnoreCreateCommandTest extends DirectorySyncConsoleIntegrationTestCase
         $this->exec('directory_sync ignore_create -h');
         $this->assertExitSuccess();
         $this->assertOutputContains('Add a record as to be ignored.');
+        $this->assertOutputContains('The record UUID');
+        $this->assertOutputContains('The model name (Users, Groups, DirectoryEntries)');
     }
 }

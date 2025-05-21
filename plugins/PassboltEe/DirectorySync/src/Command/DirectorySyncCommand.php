@@ -127,13 +127,13 @@ class DirectorySyncCommand extends PassboltCommand
         $parser->addArgument('groups', [
             'help' => __d('cake_console', 'Synchronize groups'),
         ]);
-        $parser->addArgument('ignore-list', [
+        $parser->addArgument('ignore_list', [
             'help' => __d('cake_console', 'List all the ignored record during the directory synchronization process.'),
         ]);
-        $parser->addArgument('ignore-create', [
+        $parser->addArgument('ignore_create', [
             'help' => __d('cake_console', 'Start ignoring a record during the directory synchronization process.'),
         ]);
-        $parser->addArgument('ignore-delete', [
+        $parser->addArgument('ignore_delete', [
             'help' => __d('cake_console', 'Stop ignoring a record during the directory synchronization process.'),
         ]);
         $parser->addArgument('debug', [
