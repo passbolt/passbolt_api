@@ -269,10 +269,10 @@ abstract class SyncAction
     private function formatDirectoryData(): void
     {
         foreach ($this->directoryData as $key => $data) {
-            if (get_class($data['directory_created']) !== DateTime::class) {
+            if (is_object($data['directory_created']) && get_class($data['directory_created']) !== DateTime::class) {
                 $this->directoryData[$key]['directory_created'] = new DateTime($data['directory_created']);
             }
-            if (get_class($data['directory_modified']) !== DateTime::class) {
+            if (is_object($data['directory_modified']) && get_class($data['directory_modified']) !== DateTime::class) {
                 $this->directoryData[$key]['directory_modified'] = new DateTime($data['directory_modified']);
             }
         }
