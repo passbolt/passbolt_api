@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-03-22 01:55\n"
+"POT-Creation-Date: 2025-05-21 10:34+0000\n"
+"PO-Revision-Date: 2025-05-21 11:10\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -904,6 +904,9 @@ msgstr "Ключ метаданных не существует или был у
 msgid "The metadata key is marked as expired."
 msgstr "Ключ метаданных помечен как просроченный."
 
+msgid "The shared metadata key should be unique."
+msgstr ""
+
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Запрещено создавать типы ресурсов v5-password-string."
 
@@ -1101,6 +1104,9 @@ msgstr "Вы добавили новый пароль"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} удалил пароль {1}"
+
+msgid "{0} deleted a password"
+msgstr ""
 
 msgid "You edited a resource"
 msgstr "Вы изменили ресурс"
@@ -2347,6 +2353,9 @@ msgstr "Настройки, выбранные администратором, �
 msgid "The metadata key does not exist."
 msgstr "Ключ метаданных не существует."
 
+msgid "The folder metadata provided cannot be decrypted."
+msgstr ""
+
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Папка типа personal не может быть передана другим пользователям или группе."
 
@@ -2581,8 +2590,8 @@ msgstr "Подтвердите, что токен уже использовал�
 msgid "Security warning!"
 msgstr "Предупреждение безопасности!"
 
-msgid "An unknown user with IP: {0} attempted to identify as {1}."
-msgstr "Неизвестный пользователь с IP-адресом: {0} попытался идентифицировать себя как {1}."
+msgid "An unknown user attempted to identify as {0}."
+msgstr ""
 
 msgid "This is a potential security issue."
 msgstr "Это потенциальная проблема безопасности."
@@ -2590,8 +2599,8 @@ msgstr "Это потенциальная проблема безопаснос�
 msgid "Please investigate!"
 msgstr "Пожалуйста, исследуйте!"
 
-msgid "An unknown user with IP: {0}  attempted to steal your login data."
-msgstr "Неизвестный пользователь с IP-адресом: {0} попытался украсть ваши данные для входа."
+msgid "An unknown user attempted to steal your login data."
+msgstr ""
 
 msgid "Please get in touch with one of your administrators."
 msgstr "Пожалуйста, свяжитесь с одним из ваших администраторов."
@@ -2722,9 +2731,6 @@ msgstr "Идентификатор ключа метаданных должен 
 msgid "The private key identifier should be a UUID."
 msgstr "Идентификатор закрытого ключа должен быть UUID."
 
-msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr "Указан недопустимый лимит пагинации для endpoint'а обновления метаданных."
-
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
 msgstr "Параметр missing_metadata_key_ids разрешён только для администраторов."
 
@@ -2818,6 +2824,9 @@ msgstr "Чтобы установить тип содержимого по ум�
 msgid "Both v4 and v5 settings cannot be disabled."
 msgstr "Невозможно отключить одновременно настройки v4 и v5."
 
+msgid "The metadata key type should be shared key."
+msgstr "Тип ключа метаданных должен быть shared key."
+
 msgid "The metadata key should not be deleted."
 msgstr "Ключ метаданных не должен быть удалён."
 
@@ -2835,9 +2844,6 @@ msgstr "Требуется тип ключа метаданных."
 
 msgid "The metadata key type should not be empty."
 msgstr "Тип ключа метаданных не должен быть пустым."
-
-msgid "The metadata key type should be shared key."
-msgstr "Тип ключа метаданных должен быть shared key."
 
 msgid "A metadata is required."
 msgstr "Требуются метаданные."
@@ -3202,9 +3208,6 @@ msgstr "Отпечаток ключа метаданных недоступен 
 msgid "The metadata armored key is not available or incomplete."
 msgstr "Бронированный ключ метаданных недоступен или неполон."
 
-msgid "The resource metadata key data could not be updated."
-msgstr "Не удалось обновить данные ключа метаданных ресурса."
-
 msgid "The request data should not be empty."
 msgstr "Данные запроса не должны быть пустыми."
 
@@ -3216,6 +3219,12 @@ msgstr "Указанная дата изменения не совпадает."
 
 msgid "The provided modified by does not match."
 msgstr "Указанный идентификатор пользователя, который внёс изменения, не совпадает."
+
+msgid "The folder metadata key data could not be updated."
+msgstr ""
+
+msgid "The resource metadata key data could not be updated."
+msgstr "Не удалось обновить данные ключа метаданных ресурса."
 
 msgid "The user identifier should be a UUID."
 msgstr "Идентификатор пользователя должен быть UUID."
@@ -3285,6 +3294,12 @@ msgstr "Вы сохранили новый пароль"
 
 msgid "You have created a new password."
 msgstr "Вы создали новый пароль."
+
+msgid "{0} deleted a password."
+msgstr ""
+
+msgid "Log in passbolt"
+msgstr "Войти"
 
 msgid "{0} shared a resource with you"
 msgstr "{0} поделился с вами ресурсом"
@@ -3801,9 +3816,6 @@ msgstr "Настройки многофакторной аутентификац
 
 msgid "Please contact your administrator if you didn't request this action."
 msgstr "Если вы не запрашивали это действие, обратитесь к администратору."
-
-msgid "Log in passbolt"
-msgstr "Войти"
 
 msgid "The automatic_expiry field must be true."
 msgstr "Поле automatic_expiry должно иметь значение true."
