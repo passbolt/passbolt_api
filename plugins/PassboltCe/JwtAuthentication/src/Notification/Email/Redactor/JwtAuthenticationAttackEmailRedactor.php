@@ -128,7 +128,8 @@ class JwtAuthenticationAttackEmailRedactor implements SubscribedEmailRedactorInt
             [
                 'body' => [
                     'user' => $user,
-                    'ip' => $exception->getController()->getRequest()->clientIp(),
+                    'clientIp' => $exception->getController()->User->ip(),
+                    'userAgent' => $exception->getController()->User->userAgent(),
                     'message' => $exception->getMessage(),
                 ],
                 'title' => $subject,
@@ -169,7 +170,8 @@ class JwtAuthenticationAttackEmailRedactor implements SubscribedEmailRedactorInt
                 [
                     'body' => [
                         'user' => $user,
-                        'ip' => $exception->getController()->getRequest()->clientIp(),
+                        'clientIp' => $exception->getController()->User->ip(),
+                        'userAgent' => $exception->getController()->User->userAgent(),
                         'message' => $exception->getMessage(),
                     ],
                     'title' => $subject,
