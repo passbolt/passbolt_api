@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2025-02-14 07:10+0000\n"
+"POT-Creation-Date: 2025-05-21 10:34+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -902,6 +902,9 @@ msgstr ""
 msgid "The metadata key is marked as expired."
 msgstr ""
 
+msgid "The shared metadata key should be unique."
+msgstr ""
+
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr ""
 
@@ -1098,6 +1101,9 @@ msgid "You added a new password"
 msgstr ""
 
 msgid "{0} deleted the password {1}"
+msgstr ""
+
+msgid "{0} deleted a password"
 msgstr ""
 
 msgid "You edited a resource"
@@ -2345,6 +2351,9 @@ msgstr ""
 msgid "The metadata key does not exist."
 msgstr ""
 
+msgid "The folder metadata provided cannot be decrypted."
+msgstr ""
+
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr ""
 
@@ -2579,7 +2588,7 @@ msgstr ""
 msgid "Security warning!"
 msgstr ""
 
-msgid "An unknown user with IP: {0} attempted to identify as {1}."
+msgid "An unknown user attempted to identify as {0}."
 msgstr ""
 
 msgid "This is a potential security issue."
@@ -2588,7 +2597,7 @@ msgstr ""
 msgid "Please investigate!"
 msgstr ""
 
-msgid "An unknown user with IP: {0}  attempted to steal your login data."
+msgid "An unknown user attempted to steal your login data."
 msgstr ""
 
 msgid "Please get in touch with one of your administrators."
@@ -2720,9 +2729,6 @@ msgstr ""
 msgid "The private key identifier should be a UUID."
 msgstr ""
 
-msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr ""
-
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
 msgstr ""
 
@@ -2816,6 +2822,9 @@ msgstr ""
 msgid "Both v4 and v5 settings cannot be disabled."
 msgstr ""
 
+msgid "The metadata key type should be shared key."
+msgstr ""
+
 msgid "The metadata key should not be deleted."
 msgstr ""
 
@@ -2832,9 +2841,6 @@ msgid "A metadata key type is required."
 msgstr ""
 
 msgid "The metadata key type should not be empty."
-msgstr ""
-
-msgid "The metadata key type should be shared key."
 msgstr ""
 
 msgid "A metadata is required."
@@ -3200,9 +3206,6 @@ msgstr ""
 msgid "The metadata armored key is not available or incomplete."
 msgstr ""
 
-msgid "The resource metadata key data could not be updated."
-msgstr ""
-
 msgid "The request data should not be empty."
 msgstr ""
 
@@ -3213,6 +3216,12 @@ msgid "The provided modified date does not match."
 msgstr ""
 
 msgid "The provided modified by does not match."
+msgstr ""
+
+msgid "The folder metadata key data could not be updated."
+msgstr ""
+
+msgid "The resource metadata key data could not be updated."
 msgstr ""
 
 msgid "The user identifier should be a UUID."
@@ -3282,6 +3291,12 @@ msgid "You have saved a new password"
 msgstr ""
 
 msgid "You have created a new password."
+msgstr ""
+
+msgid "{0} deleted a password."
+msgstr ""
+
+msgid "Log in passbolt"
 msgstr ""
 
 msgid "{0} shared a resource with you"
@@ -3798,9 +3813,6 @@ msgid "Multi-factor authentication settings were reset for your account by an ad
 msgstr ""
 
 msgid "Please contact your administrator if you didn't request this action."
-msgstr ""
-
-msgid "Log in passbolt"
 msgstr ""
 
 msgid "The automatic_expiry field must be true."
