@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-04-21 02:03\n"
+"POT-Creation-Date: 2025-05-21 10:34+0000\n"
+"PO-Revision-Date: 2025-05-21 11:09\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -904,6 +904,9 @@ msgstr "메타데이터 키가 없거나 삭제되었습니다."
 msgid "The metadata key is marked as expired."
 msgstr "메타데이터 키가 만료된 것으로 표시됩니다."
 
+msgid "The shared metadata key should be unique."
+msgstr ""
+
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "v5-비밀번호-문자열 리소스 유형은 만들 수 없습니다."
 
@@ -1101,6 +1104,9 @@ msgstr "새 비밀번호가 추가됨"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} 에 의해 {1} 암호가 삭제됨"
+
+msgid "{0} deleted a password"
+msgstr ""
 
 msgid "You edited a resource"
 msgstr "리소스가 수정됨"
@@ -2347,6 +2353,9 @@ msgstr "관리자가 선택한 설정으로 인해 폴더를 다운그레이드�
 msgid "The metadata key does not exist."
 msgstr "메타데이터 키가 존재하지 않습니다."
 
+msgid "The folder metadata provided cannot be decrypted."
+msgstr ""
+
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "개인 유형의 폴더는 다른 사용자 또는 그룹과 공유할 수 없습니다."
 
@@ -2581,8 +2590,8 @@ msgstr "확인 토큰이 과거에 이미 사용되었습니다."
 msgid "Security warning!"
 msgstr "보안 경고!"
 
-msgid "An unknown user with IP: {0} attempted to identify as {1}."
-msgstr "IP가 {0} 인 알 수 없는 사용자가 {1} (으)로 식별하려고 시도했습니다."
+msgid "An unknown user attempted to identify as {0}."
+msgstr ""
 
 msgid "This is a potential security issue."
 msgstr "잠재적인 보안 문제입니다."
@@ -2590,8 +2599,8 @@ msgstr "잠재적인 보안 문제입니다."
 msgid "Please investigate!"
 msgstr "조사해주세요!"
 
-msgid "An unknown user with IP: {0}  attempted to steal your login data."
-msgstr "IP가 {0} 인 알 수 없는 사용자가 사용자 데이터를 탈취하려고 시도했습니다."
+msgid "An unknown user attempted to steal your login data."
+msgstr ""
 
 msgid "Please get in touch with one of your administrators."
 msgstr "관리자 중 한명에게 연락하세요."
@@ -2722,9 +2731,6 @@ msgstr "메타데이터 키 식별자는 유효한 UUID여야 합니다."
 msgid "The private key identifier should be a UUID."
 msgstr "개인 키 식별자는 UUID여야 합니다."
 
-msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr "메타데이터 업그레이드 엔드포인트에 잘못된 페이징 제한이 설정되었습니다."
-
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
 msgstr "missing_metadata_key_ids 포함은 관리자에게만 허용됩니다."
 
@@ -2818,6 +2824,9 @@ msgstr "기본값으로 설정하려면 콘텐츠 유형이 활성화되어 있�
 msgid "Both v4 and v5 settings cannot be disabled."
 msgstr "v4 및 v5 설정을 모두 비활성화할 수 없습니다."
 
+msgid "The metadata key type should be shared key."
+msgstr "메타데이터 키 유형은 공유 키여야 합니다."
+
 msgid "The metadata key should not be deleted."
 msgstr "메타데이터 키는 삭제될 수 없습니다."
 
@@ -2835,9 +2844,6 @@ msgstr "메타데이터 키 유형이 필요합니다."
 
 msgid "The metadata key type should not be empty."
 msgstr "메타데이터 키 유형은 비워둘 수 없습니다."
-
-msgid "The metadata key type should be shared key."
-msgstr "메타데이터 키 유형은 공유 키여야 합니다."
 
 msgid "A metadata is required."
 msgstr "메타데이터가 필요합니다."
@@ -3202,9 +3208,6 @@ msgstr "메타데이터 키 지문을 사용할 수 없거나 불완전합니다
 msgid "The metadata armored key is not available or incomplete."
 msgstr "메타데이터 아머드 키를 사용할 수 없거나 불완전합니다."
 
-msgid "The resource metadata key data could not be updated."
-msgstr "리소스 메타데이터 키 데이터를 업데이트할 수 없습니다."
-
 msgid "The request data should not be empty."
 msgstr "요청 데이터는 비워둘 수 없습니다."
 
@@ -3216,6 +3219,12 @@ msgstr "제공된 수정 날짜가 일치하지 않습니다."
 
 msgid "The provided modified by does not match."
 msgstr "제공된 수정자가 일치하지 않습니다."
+
+msgid "The folder metadata key data could not be updated."
+msgstr ""
+
+msgid "The resource metadata key data could not be updated."
+msgstr "리소스 메타데이터 키 데이터를 업데이트할 수 없습니다."
 
 msgid "The user identifier should be a UUID."
 msgstr "사용자 식별자는 유효한 UUID여야 합니다."
@@ -3285,6 +3294,12 @@ msgstr "새 비밀번호를 저장했습니다"
 
 msgid "You have created a new password."
 msgstr "새 비밀번호를 생성했습니다."
+
+msgid "{0} deleted a password."
+msgstr ""
+
+msgid "Log in passbolt"
+msgstr "패스볼트 로그인"
 
 msgid "{0} shared a resource with you"
 msgstr "{0} 이(가) 당신과 리소스를 공유함"
@@ -3801,9 +3816,6 @@ msgstr "관리자가 다단계 인증 설정을 재설정했습니다."
 
 msgid "Please contact your administrator if you didn't request this action."
 msgstr "이 작업을 요청하지 않은 경우 관리자에게 문의하세요."
-
-msgid "Log in passbolt"
-msgstr "패스볼트 로그인"
 
 msgid "The automatic_expiry field must be true."
 msgstr "Automatic_expiry 필드가 true 여야 합니다."
