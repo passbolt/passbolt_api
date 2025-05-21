@@ -9,7 +9,7 @@ declare(strict_types=1);
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.6.0
@@ -285,7 +285,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
         $this->postJson('/directorysync/settings/test.json?api-version=2', $formData);
         $this->assertSuccess();
         $this->assertTrue(isset($this->_responseJsonBody->users));
-        $this->assertEquals(6, count($this->_responseJsonBody->users));
+        $this->assertEquals(7, count($this->_responseJsonBody->users));
         $this->assertTrue(isset($this->_responseJsonBody->groups));
         $this->assertEquals(5, count($this->_responseJsonBody->groups));
         $this->assertTrue(isset($this->_responseJsonBody->tree));
