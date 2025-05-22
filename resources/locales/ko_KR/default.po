@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:32+0000\n"
-"PO-Revision-Date: 2025-05-21 11:11\n"
+"PO-Revision-Date: 2025-05-22 00:36\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -905,7 +905,7 @@ msgid "The metadata key is marked as expired."
 msgstr "메타데이터 키가 만료된 것으로 표시됩니다."
 
 msgid "The shared metadata key should be unique."
-msgstr ""
+msgstr "공유 메타데이터 키는 고유해야 합니다."
 
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "v5-비밀번호-문자열 리소스 유형은 만들 수 없습니다."
@@ -1112,7 +1112,7 @@ msgid "{0} deleted the password {1}"
 msgstr "{0} 에 의해 {1} 암호가 삭제됨"
 
 msgid "{0} deleted a password"
-msgstr ""
+msgstr "{0} 에 의해 비밀번호가 삭제됨"
 
 msgid "You edited a resource"
 msgstr "리소스가 수정됨"
@@ -2360,7 +2360,7 @@ msgid "The metadata key does not exist."
 msgstr "메타데이터 키가 존재하지 않습니다."
 
 msgid "The folder metadata provided cannot be decrypted."
-msgstr ""
+msgstr "제공된 폴더 메타데이터를 복호화할 수 없습니다."
 
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "개인 유형의 폴더는 다른 사용자 또는 그룹과 공유할 수 없습니다."
@@ -4988,7 +4988,7 @@ msgid "You cannot reuse account recovery organization public keys."
 msgstr "계정 복구 조직 공개 키는 재사용할 수 없습니다."
 
 msgid "You cannot reuse the metadata keys."
-msgstr ""
+msgstr "메타데이터 키는 재사용할 수 없습니다."
 
 msgid "Could not validate public key data."
 msgstr "공개 키 데이터를 검사할 수 없습니다."
@@ -5477,7 +5477,7 @@ msgid "The directory {0} {1} was not deleted because it is ignored."
 msgstr "{0} {1} 디렉토리가 무시되어 삭제되지 않았습니다."
 
 msgid "The directory user {0} was already suspended in passbolt."
-msgstr ""
+msgstr "디렉토리 사용자 {0}은(는) 이미 패스볼트에서 일시 중단되었습니다."
 
 msgid "The directory {0} {1} was already deleted in passbolt."
 msgstr "{0} {1} 디렉토리가 패스볼트에서 이미 삭제되었습니다."
@@ -5489,7 +5489,7 @@ msgid "The {0} {1} could not be deleted because they are the only manager of one
 msgstr "{0} {1} 은(는) 하나 이상의 그룹의 유일한 관리자이기 때문에 삭제할 수 없습니다."
 
 msgid "The user {0} was successfully suspended."
-msgstr ""
+msgstr "{0} 사용자가 성공적으로 일시중지되었습니다."
 
 msgid "The {0} {1} was successfully deleted."
 msgstr "{0} {1} 이(가) 삭제되었습니다."
@@ -6125,7 +6125,7 @@ msgid "The prompt should be one of the following: {0}."
 msgstr "프롬프트는 다음 중 하나여야 합니다: {0}."
 
 msgid "The login hint should be a boolean."
-msgstr ""
+msgstr "로그인 힌트는 부울 값이어야 합니다."
 
 msgid "The client id is too large."
 msgstr "클라이언트 ID가 너무 큽니다."
@@ -6674,7 +6674,7 @@ msgid "The is shared should be a boolean type."
 msgstr "공유는 부울 유형이어야 합니다."
 
 msgid "The tags plugin is in read-only mode."
-msgstr ""
+msgstr "태그 플러그인은 읽기 전용 모드입니다."
 
 msgid "The tag should not be empty."
 msgstr "태그는 비워둘 수 없습니다."
@@ -6722,7 +6722,7 @@ msgid "Unable to migrate tag id: {0} to V5."
 msgstr "태그 ID: {0} 을(를) V5로 마이그레이션할 수 없습니다."
 
 msgid "The tag metadata key data could not be updated."
-msgstr ""
+msgstr "태그 메타데이터 키 데이터를 업데이트할 수 없습니다."
 
 msgid "Could not save the tags, try again later."
 msgstr "태그를 저장할 수 없습니다, 나중에 재시도 하세요."
