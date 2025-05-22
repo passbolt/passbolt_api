@@ -4,7 +4,7 @@ This is a maintenance release to fix reported issues from Pro customers where di
 
 Thank you for the valuable feedback and patience!
 
-## [5.1.1-test.1] - 2025-05-21
+## [5.1.1] - 2025-05-22
 ### Fixed
 - PB-42701 Fix the contain of missing metadata key on view user endpoint
 
