@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-03-22 01:55\n"
+"POT-Creation-Date: 2025-05-21 10:34+0000\n"
+"PO-Revision-Date: 2025-05-21 11:09\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -904,6 +904,9 @@ msgstr "Klucz metadanych nie istnieje lub został usunięty."
 msgid "The metadata key is marked as expired."
 msgstr "Klucz metadanych został oznaczony jako wygasły."
 
+msgid "The shared metadata key should be unique."
+msgstr ""
+
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Nie można utworzyć zasobów typu v5-password-string."
 
@@ -1101,6 +1104,9 @@ msgstr "Udało Ci się dodać nowe hasło"
 
 msgid "{0} deleted the password {1}"
 msgstr "Użytkownik {0} usunął hasło {1}"
+
+msgid "{0} deleted a password"
+msgstr ""
 
 msgid "You edited a resource"
 msgstr "Udało Ci się edytować zasób"
@@ -2347,6 +2353,9 @@ msgstr "Ustawienia wybrane przez administratora uniemożliwiają obniżenie typu
 msgid "The metadata key does not exist."
 msgstr "Klucz metadanych nie istnieje."
 
+msgid "The folder metadata provided cannot be decrypted."
+msgstr ""
+
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Folder typu prywatnego nie może być udostępniany innym użytkownikom ani grupie."
 
@@ -2581,8 +2590,8 @@ msgstr "Token weryfikacji był już wcześniej używany."
 msgid "Security warning!"
 msgstr "Ostrzeżenie!"
 
-msgid "An unknown user with IP: {0} attempted to identify as {1}."
-msgstr "Nieznany użytkownik o adresie IP {0} próbował zidentyfikować się jako użytkownik {1}."
+msgid "An unknown user attempted to identify as {0}."
+msgstr ""
 
 msgid "This is a potential security issue."
 msgstr "Jest to potencjalna luka w zabezpieczeniach."
@@ -2590,8 +2599,8 @@ msgstr "Jest to potencjalna luka w zabezpieczeniach."
 msgid "Please investigate!"
 msgstr "Sprawdź, czy wszystko jest w porządku!"
 
-msgid "An unknown user with IP: {0}  attempted to steal your login data."
-msgstr "Nieznany użytkownik o adresie IP {0} próbował ukraść Twoje dane logowania."
+msgid "An unknown user attempted to steal your login data."
+msgstr ""
 
 msgid "Please get in touch with one of your administrators."
 msgstr "Skontaktuj się z jednym z Twoich administratorów."
@@ -2722,9 +2731,6 @@ msgstr "Identyfikator klucza metadanych powinien być UUID."
 msgid "The private key identifier should be a UUID."
 msgstr "Identyfikator klucza prywatnego powinien być UUID."
 
-msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr "Nieprawidłowy limit stronicowania dla punktu końcowego aktualizacji metadanych."
-
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
 msgstr "Pole missing_metadata_key_ids jest dozwolone wyłącznie dla administratorów."
 
@@ -2818,6 +2824,9 @@ msgstr "Typ zawartości musi być włączony, aby można go było ustawić jako 
 msgid "Both v4 and v5 settings cannot be disabled."
 msgstr "Nie można wyłączyć zarówno ustawień v4, jak i v5."
 
+msgid "The metadata key type should be shared key."
+msgstr "Typ klucza metadanych powinien być kluczem udostępnionym."
+
 msgid "The metadata key should not be deleted."
 msgstr "Klucz metadanych nie powinien być usunięty."
 
@@ -2835,9 +2844,6 @@ msgstr "Wymagany jest typ klucza metadanych."
 
 msgid "The metadata key type should not be empty."
 msgstr "Typ klucza metadanych nie powinien być pusty."
-
-msgid "The metadata key type should be shared key."
-msgstr "Typ klucza metadanych powinien być kluczem udostępnionym."
 
 msgid "A metadata is required."
 msgstr "Wymagane są metadane."
@@ -3202,9 +3208,6 @@ msgstr "Odcisk palca klucza metadanych jest niedostępny lub niekompletny."
 msgid "The metadata armored key is not available or incomplete."
 msgstr "Opancerzony klucz metadanych jest niedostępny lub niekompletny."
 
-msgid "The resource metadata key data could not be updated."
-msgstr "Nie udało się zaktualizować danych klucza metadanych zasobu."
-
 msgid "The request data should not be empty."
 msgstr "Dane żądania nie powinny być puste."
 
@@ -3216,6 +3219,12 @@ msgstr "Podana data modyfikacji nie pasuje."
 
 msgid "The provided modified by does not match."
 msgstr "Podana informacja o modyfikującym nie pasuje."
+
+msgid "The folder metadata key data could not be updated."
+msgstr ""
+
+msgid "The resource metadata key data could not be updated."
+msgstr "Nie udało się zaktualizować danych klucza metadanych zasobu."
 
 msgid "The user identifier should be a UUID."
 msgstr "Identyfikator użytkownika powinien być identyfikatorem UUID."
@@ -3285,6 +3294,12 @@ msgstr "Udało Ci się zapisać nowe hasło"
 
 msgid "You have created a new password."
 msgstr "Utworzyłeś nowe hasło."
+
+msgid "{0} deleted a password."
+msgstr ""
+
+msgid "Log in passbolt"
+msgstr "Zaloguj się do passbolt"
 
 msgid "{0} shared a resource with you"
 msgstr "Użytkownik {0} udostępnił Ci zasób"
@@ -3801,9 +3816,6 @@ msgstr "Administrator zresetował ustawienia uwierzytelniania wieloskładnikoweg
 
 msgid "Please contact your administrator if you didn't request this action."
 msgstr "Skontaktuj się z administratorem, jeśli to nie Ty prosiłeś o tę akcję."
-
-msgid "Log in passbolt"
-msgstr "Zaloguj się do passbolt"
 
 msgid "The automatic_expiry field must be true."
 msgstr "Pole automatic_expiry musi mieć wartość true."

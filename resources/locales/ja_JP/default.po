@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-03-22 01:55\n"
+"POT-Creation-Date: 2025-05-21 10:34+0000\n"
+"PO-Revision-Date: 2025-05-21 11:09\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -904,6 +904,9 @@ msgstr "メタデータキーが存在しないか、削除されました。"
 msgid "The metadata key is marked as expired."
 msgstr "メタデータキーは期限切れとしてマークされています。"
 
+msgid "The shared metadata key should be unique."
+msgstr ""
+
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "V5-password-string リソースタイプの作成は許可されていません。"
 
@@ -1101,6 +1104,9 @@ msgstr "新しいパスワードを追加しました"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} さんがパスワード {1} を削除しました"
+
+msgid "{0} deleted a password"
+msgstr ""
 
 msgid "You edited a resource"
 msgstr "リソースを編集しました"
@@ -2347,6 +2353,9 @@ msgstr "管理者が選択した設定により、フォルダーのダウング
 msgid "The metadata key does not exist."
 msgstr "メタデータキーが存在しません。"
 
+msgid "The folder metadata provided cannot be decrypted."
+msgstr ""
+
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Personalタイプのフォルダーは他のユーザーやグループと共有できません。"
 
@@ -2581,8 +2590,8 @@ msgstr "検証トークンは過去にすでに使用されています。"
 msgid "Security warning!"
 msgstr "セキュリティ警告！"
 
-msgid "An unknown user with IP: {0} attempted to identify as {1}."
-msgstr "IP: {0} を持つ不明なユーザーが{1} として識別しようとしました。"
+msgid "An unknown user attempted to identify as {0}."
+msgstr ""
 
 msgid "This is a potential security issue."
 msgstr "これは潜在的なセキュリティ上の問題です。"
@@ -2590,8 +2599,8 @@ msgstr "これは潜在的なセキュリティ上の問題です。"
 msgid "Please investigate!"
 msgstr "調査してください！"
 
-msgid "An unknown user with IP: {0}  attempted to steal your login data."
-msgstr "IP: {0} を持つ不明なユーザーがあなたのログインデータを盗もうとしました。"
+msgid "An unknown user attempted to steal your login data."
+msgstr ""
 
 msgid "Please get in touch with one of your administrators."
 msgstr "管理者に連絡してください。"
@@ -2722,9 +2731,6 @@ msgstr "メタデータキーの識別子はUUIDである必要があります�
 msgid "The private key identifier should be a UUID."
 msgstr "秘密鍵の識別子はUUIDである必要があります。"
 
-msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr "メタデータアップグレードエンドポイントで無効なページネーション制限が設定されました。"
-
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
 msgstr "missing_metadata_key_ids は管理者のみが使用できます。"
 
@@ -2818,6 +2824,9 @@ msgstr "コンテンツタイプをデフォルトに設定するには、有効
 msgid "Both v4 and v5 settings cannot be disabled."
 msgstr "v4 と v5 の両方の設定を無効にすることはできません。"
 
+msgid "The metadata key type should be shared key."
+msgstr "メタデータ鍵のタイプは共有鍵である必要があります。"
+
 msgid "The metadata key should not be deleted."
 msgstr "メタデータ鍵を削除すべきではありません。"
 
@@ -2835,9 +2844,6 @@ msgstr "メタデータ鍵のタイプが必要です。"
 
 msgid "The metadata key type should not be empty."
 msgstr "メタデータ鍵のタイプは空にしないでください。"
-
-msgid "The metadata key type should be shared key."
-msgstr "メタデータ鍵のタイプは共有鍵である必要があります。"
 
 msgid "A metadata is required."
 msgstr "メタデータが必要です。"
@@ -3202,9 +3208,6 @@ msgstr "メタデータ鍵の指紋が利用できないか、不完全です。
 msgid "The metadata armored key is not available or incomplete."
 msgstr "メタデータのアーマード鍵が利用できないか、不完全です。"
 
-msgid "The resource metadata key data could not be updated."
-msgstr "リソースのメタデータ鍵データを更新できませんでした。"
-
 msgid "The request data should not be empty."
 msgstr "リクエストデータは空にしないでください。"
 
@@ -3216,6 +3219,12 @@ msgstr "指定された変更日が一致しません。"
 
 msgid "The provided modified by does not match."
 msgstr "指定された変更者が一致しません。"
+
+msgid "The folder metadata key data could not be updated."
+msgstr ""
+
+msgid "The resource metadata key data could not be updated."
+msgstr "リソースのメタデータ鍵データを更新できませんでした。"
 
 msgid "The user identifier should be a UUID."
 msgstr "ユーザー識別子はUUIDでなければなりません。"
@@ -3285,6 +3294,12 @@ msgstr "新しいパスワードを保存しました"
 
 msgid "You have created a new password."
 msgstr "新しいパスワードを作成しました。"
+
+msgid "{0} deleted a password."
+msgstr ""
+
+msgid "Log in passbolt"
+msgstr "パスボルトにログイン"
 
 msgid "{0} shared a resource with you"
 msgstr "{0} さんがリソースを共有しました"
@@ -3801,9 +3816,6 @@ msgstr "管理者により、アカウントの多要素認証設定がリセッ
 
 msgid "Please contact your administrator if you didn't request this action."
 msgstr "この操作をリクエストしていない場合は、管理者に問い合わせてください。"
-
-msgid "Log in passbolt"
-msgstr "パスボルトにログイン"
 
 msgid "The automatic_expiry field must be true."
 msgstr "automatic_expiry フィールドは true でなければなりません。"
