@@ -91,7 +91,7 @@ class IgnoreListCommand extends DirectorySyncCommand
         $io->helper('Table')->output($records);
         $io->out();
         $io->out('[help] you can stop ignoring records with the following command.');
-        $io->out('       ./bin/cake directory_sync ignore-create [ID]');
+        $io->out('       ./bin/cake directory_sync ignore_create [ID]');
         $io->out();
 
         return $this->successCode();

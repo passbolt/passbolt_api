@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-02-14 06:14+0000\n"
-"PO-Revision-Date: 2025-03-22 01:57\n"
+"POT-Creation-Date: 2025-05-21 10:32+0000\n"
+"PO-Revision-Date: 2025-05-21 11:11\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian\n"
 "MIME-Version: 1.0\n"
@@ -904,6 +904,9 @@ msgstr "Cheia de metadate nu există sau a fost ștearsă."
 msgid "The metadata key is marked as expired."
 msgstr "Cheia de metadate este marcată ca expirată."
 
+msgid "The shared metadata key should be unique."
+msgstr ""
+
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Crearea de resurse de tip v5-password-string nu este permisă."
 
@@ -1107,6 +1110,9 @@ msgstr "Ați adăugat o parolă nouă"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} a șters parola {1}"
+
+msgid "{0} deleted a password"
+msgstr ""
 
 msgid "You edited a resource"
 msgstr "Ați editat o resursă"
@@ -2353,6 +2359,9 @@ msgstr "Setările selectate de administratorul dumneavoastră împiedică retrog
 msgid "The metadata key does not exist."
 msgstr "Cheia de metadate nu există."
 
+msgid "The folder metadata provided cannot be decrypted."
+msgstr ""
+
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Un folder de tip personal nu poate fi partajat cu alți utilizatori sau cu un grup."
 
@@ -2587,8 +2596,8 @@ msgstr "Token-ul de verificare a fost deja folosit în trecut."
 msgid "Security warning!"
 msgstr "Avertisment de securitate!"
 
-msgid "An unknown user with IP: {0} attempted to identify as {1}."
-msgstr "Un utilizator necunoscut cu IP: {0} a încercat să se identifice ca {1}."
+msgid "An unknown user attempted to identify as {0}."
+msgstr ""
 
 msgid "This is a potential security issue."
 msgstr "Aceasta este o posibilă problemă de securitate."
@@ -2596,8 +2605,8 @@ msgstr "Aceasta este o posibilă problemă de securitate."
 msgid "Please investigate!"
 msgstr "Vă rugăm să investigați!"
 
-msgid "An unknown user with IP: {0}  attempted to steal your login data."
-msgstr "Un utilizator necunoscut cu IP: {0}  a încercat să îți fure datele de autentificare."
+msgid "An unknown user attempted to steal your login data."
+msgstr ""
 
 msgid "Please get in touch with one of your administrators."
 msgstr "Vă rugăm să luați legătura cu unul dintre administratorii dumneavoastră."
@@ -2728,9 +2737,6 @@ msgstr "Identificatorul cheii de metadate ar trebui să fie un UUID."
 msgid "The private key identifier should be a UUID."
 msgstr "Identificatorul cheii private ar trebui să fie un UUID."
 
-msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr "Limită de paginare invalidă setată pentru endpoint-ul de upgrade de metadata."
-
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
 msgstr "Parametrul missing_metadata_key_ids este permis doar pentru administratori."
 
@@ -2824,6 +2830,9 @@ msgstr "Tipul de conținut trebuie să fie activat pentru a fi setat ca implicit
 msgid "Both v4 and v5 settings cannot be disabled."
 msgstr "Atât setările v4, cât și cele v5 nu pot fi dezactivate."
 
+msgid "The metadata key type should be shared key."
+msgstr "Tipul cheii de metadata ar trebui să fie o cheie partajată."
+
 msgid "The metadata key should not be deleted."
 msgstr "Cheia de metadata nu ar trebui să fie ștearsă."
 
@@ -2841,9 +2850,6 @@ msgstr "Un tip de cheie de metadata este necesar."
 
 msgid "The metadata key type should not be empty."
 msgstr "Tipul cheii de metadata nu trebuie să fie gol."
-
-msgid "The metadata key type should be shared key."
-msgstr "Tipul cheii de metadata ar trebui să fie o cheie partajată."
 
 msgid "A metadata is required."
 msgstr "Este necesară o metadata."
@@ -3208,9 +3214,6 @@ msgstr "Amprenta cheii de metadata nu este disponibilă sau este incompletă."
 msgid "The metadata armored key is not available or incomplete."
 msgstr "Cheia blindată de metadata nu este disponibilă sau este incompletă."
 
-msgid "The resource metadata key data could not be updated."
-msgstr "Datele cheii de metadata a resursei nu au putut fi actualizate."
-
 msgid "The request data should not be empty."
 msgstr "Datele solicitării nu trebuie să fie goale."
 
@@ -3222,6 +3225,12 @@ msgstr "Data modificării furnizată nu se potrivește."
 
 msgid "The provided modified by does not match."
 msgstr "Autorul modificării furnizat nu se potrivește."
+
+msgid "The folder metadata key data could not be updated."
+msgstr ""
+
+msgid "The resource metadata key data could not be updated."
+msgstr "Datele cheii de metadata a resursei nu au putut fi actualizate."
 
 msgid "The user identifier should be a UUID."
 msgstr "Identificatorul de utilizator ar trebui să fie un UUID."
@@ -3291,6 +3300,12 @@ msgstr "Ați salvat o nouă parolă"
 
 msgid "You have created a new password."
 msgstr "Ați creat o nouă parolă."
+
+msgid "{0} deleted a password."
+msgstr ""
+
+msgid "Log in passbolt"
+msgstr "Accesează Passbolt"
 
 msgid "{0} shared a resource with you"
 msgstr "{0} a partajat o resursă cu dvs"
@@ -3807,9 +3822,6 @@ msgstr "Setările pentru autentificarea multi-factor au fost resetate de un admi
 
 msgid "Please contact your administrator if you didn't request this action."
 msgstr "Vă rugăm să contactați administratorul dacă nu ați solicitat această acțiune."
-
-msgid "Log in passbolt"
-msgstr "Accesează Passbolt"
 
 msgid "The automatic_expiry field must be true."
 msgstr "Câmpul automatic_expiry trebuie să fie true."
@@ -4975,6 +4987,9 @@ msgstr "Nu puteți reutiliza cheile utilizatorului."
 msgid "You cannot reuse account recovery organization public keys."
 msgstr "Nu puteți reutiliza cheile publice ale organizației pentru recuperarea contului."
 
+msgid "You cannot reuse the metadata keys."
+msgstr ""
+
 msgid "Could not validate public key data."
 msgstr "Nu s-au putut valida datele cheii publice."
 
@@ -5461,8 +5476,8 @@ msgstr "Passbolt {0} {1} nu a fost ștearsă deoarece este marcată ca fiind ign
 msgid "The directory {0} {1} was not deleted because it is ignored."
 msgstr "Directorul {0} {1} nu a fost șters deoarece este ignorat."
 
-msgid "The directory {0} {1} was already suspended in passbolt."
-msgstr "Directorul {0} {1} era deja suspendat în Passbolt."
+msgid "The directory user {0} was already suspended in passbolt."
+msgstr ""
 
 msgid "The directory {0} {1} was already deleted in passbolt."
 msgstr "Directorul {0} {1} a fost deja șters din Passbolt."
@@ -5473,8 +5488,8 @@ msgstr "Utilizatorul {0} nu a putut fi șters deoarece este singurul proprietar 
 msgid "The {0} {1} could not be deleted because they are the only manager of one or more groups."
 msgstr "{0} {1} nu a putut fi șters deoarece este singurul manager al unuia sau mai multor grupuri."
 
-msgid "The {0} {1} was successfully suspended."
-msgstr "{0} {1} a fost suspendat cu succes."
+msgid "The user {0} was successfully suspended."
+msgstr ""
 
 msgid "The {0} {1} was successfully deleted."
 msgstr "{0} {1} a fost șters cu succes."
@@ -6109,6 +6124,9 @@ msgstr "Prompt-ul nu trebuie să fie gol."
 msgid "The prompt should be one of the following: {0}."
 msgstr "Prompt-ul ar trebui să fie unul dintre următoarele: {0}."
 
+msgid "The login hint should be a boolean."
+msgstr ""
+
 msgid "The client id is too large."
 msgstr "Id-ul clientului este prea mare."
 
@@ -6655,6 +6673,9 @@ msgstr "Eticheta lipsește sau nu aparține utilizatorului curent."
 msgid "The is shared should be a boolean type."
 msgstr "Valoarea is shared ar trebui să fie de tip boolean."
 
+msgid "The tags plugin is in read-only mode."
+msgstr ""
+
 msgid "The tag should not be empty."
 msgstr "Eticheta nu trebuie să fie goală."
 
@@ -6699,6 +6720,9 @@ msgstr "Utilizatorul nu conține date pentru eticheta cu id-ul: \"{0}\"."
 
 msgid "Unable to migrate tag id: {0} to V5."
 msgstr "Imposibil de migrat eticheta cu id-ul: {0} la V5."
+
+msgid "The tag metadata key data could not be updated."
+msgstr ""
 
 msgid "Could not save the tags, try again later."
 msgstr "Etichetele nu au putut fi salvate, încercați mai târziu."

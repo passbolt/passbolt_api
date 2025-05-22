@@ -138,6 +138,11 @@ class MissingMetadataKeyIdsContainListener implements EventListenerInterface
 
         $query->formatResults(function (CollectionInterface $results) use ($metadataKeysIds) {
             return $results->map(function (EntityInterface $entity) use ($metadataKeysIds) {
+                // Since CakePHP 5, formatResults is being called several times.
+                // Thus, if the metadata_private_keys was already unset, we can skip the rest of the code.
+                if (!isset($entity['metadata_private_keys'])) {
+                    return $entity;
+                }
                 if ($entity->get('active')) {
                     // get missing metadata keys
                     $userMetadataKeysIds = Hash::extract($entity, 'metadata_private_keys.{n}.metadata_key_id');

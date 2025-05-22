@@ -106,6 +106,7 @@ class GroupsCommand extends DirectorySyncCommand
         try {
             $dryRun = $args->getOption('dry-run') || !$args->getOption('persist');
 
+            $this->model = 'Groups';
             $action = new GroupSyncAction($this->expireResourcesService);
             $action->setDryRun($dryRun);
             $reports = $action->execute();
