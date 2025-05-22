@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-02-14 06:14+0000\n"
-"PO-Revision-Date: 2025-03-22 01:57\n"
+"POT-Creation-Date: 2025-05-21 10:32+0000\n"
+"PO-Revision-Date: 2025-05-21 11:11\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -904,6 +904,9 @@ msgstr "Der Metadaten-Schlüssel existiert nicht oder wurde gelöscht."
 msgid "The metadata key is marked as expired."
 msgstr "Der Metadaten-Schlüssel wurde als abgelaufen markiert."
 
+msgid "The shared metadata key should be unique."
+msgstr ""
+
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Es ist nicht erlaubt, Ressourcentypen vom Typ v5-password-string zu erstellen."
 
@@ -1107,6 +1110,9 @@ msgstr "Sie haben ein neues Passwort hinzugefügt"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} hat das Passwort {1} gelöscht"
+
+msgid "{0} deleted a password"
+msgstr ""
 
 msgid "You edited a resource"
 msgstr "Sie haben eine Ressource bearbeitet"
@@ -2353,6 +2359,9 @@ msgstr "Die von Ihrem Administrator ausgewählten Einstellungen verhindern eine 
 msgid "The metadata key does not exist."
 msgstr "Der Metadaten-Schlüssel existiert nicht."
 
+msgid "The folder metadata provided cannot be decrypted."
+msgstr ""
+
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Ein Ordner vom Typ \"persönlich\" kann nicht mit anderen Benutzern oder einer Gruppe geteilt werden."
 
@@ -2587,8 +2596,8 @@ msgstr "Das Verify-Token wurde in der Vergangenheit bereits verwendet."
 msgid "Security warning!"
 msgstr "Sicherheitswarnung!"
 
-msgid "An unknown user with IP: {0} attempted to identify as {1}."
-msgstr "Ein unbekannter Nutzer mit IP: {0} versuchte sich als {1} zu identifizieren."
+msgid "An unknown user attempted to identify as {0}."
+msgstr ""
 
 msgid "This is a potential security issue."
 msgstr "Dies ist ein potenzieller Sicherheitsproblem."
@@ -2596,8 +2605,8 @@ msgstr "Dies ist ein potenzieller Sicherheitsproblem."
 msgid "Please investigate!"
 msgstr "Bitte untersuchen Sie!"
 
-msgid "An unknown user with IP: {0}  attempted to steal your login data."
-msgstr "Ein unbekannter Nutzer mit IP: {0}  hat versucht, Ihre Login-Daten zu stehlen."
+msgid "An unknown user attempted to steal your login data."
+msgstr ""
 
 msgid "Please get in touch with one of your administrators."
 msgstr "Bitte kontaktieren Sie einen Ihrer Administratoren."
@@ -2728,9 +2737,6 @@ msgstr "Der Identifikator des Metadaten-Schlüssels sollte eine UUID sein."
 msgid "The private key identifier should be a UUID."
 msgstr "Der Identifikator von dem privaten Schlüssel sollte eine UUID sein."
 
-msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr "Ungültiges Paginierungslimit für den Metadaten-Upgrade-Endpunkt festgelegt."
-
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
 msgstr "Die Angabe von missing_metadata_key_ids ist nur für Administratoren zulässig."
 
@@ -2824,6 +2830,9 @@ msgstr "Der Inhaltstyp muss aktiviert sein, um als Standard festgelegt zu werden
 msgid "Both v4 and v5 settings cannot be disabled."
 msgstr "Sowohl v4- als auch v5-Einstellungen können nicht deaktiviert werden."
 
+msgid "The metadata key type should be shared key."
+msgstr "Der Metadaten-Schlüsseltyp sollte ein freigegebener Schlüssel sein."
+
 msgid "The metadata key should not be deleted."
 msgstr "Der Metadaten-Schlüssel sollte nicht gelöscht werden."
 
@@ -2841,9 +2850,6 @@ msgstr "Ein Metadaten-Schlüsseltyp ist erforderlich."
 
 msgid "The metadata key type should not be empty."
 msgstr "Der Metadaten-Schlüsseltyp darf nicht leer sein."
-
-msgid "The metadata key type should be shared key."
-msgstr "Der Metadaten-Schlüsseltyp sollte ein freigegebener Schlüssel sein."
 
 msgid "A metadata is required."
 msgstr "Metadaten sind erforderlich."
@@ -3208,9 +3214,6 @@ msgstr "Der Fingerabdruck des Metadaten-Schlüssels ist nicht verfügbar oder un
 msgid "The metadata armored key is not available or incomplete."
 msgstr "Der gepanzerte Metadaten-Schlüssel ist nicht verfügbar oder unvollständig."
 
-msgid "The resource metadata key data could not be updated."
-msgstr "Die Metadaten-Schlüsseldaten der Ressource konnten nicht aktualisiert werden."
-
 msgid "The request data should not be empty."
 msgstr "Die Anfragedaten sollten nicht leer sein."
 
@@ -3222,6 +3225,12 @@ msgstr "Das angegebene Änderungsdatum stimmt nicht überein."
 
 msgid "The provided modified by does not match."
 msgstr "Der angegebene 'modified by' stimmt nicht überein."
+
+msgid "The folder metadata key data could not be updated."
+msgstr ""
+
+msgid "The resource metadata key data could not be updated."
+msgstr "Die Metadaten-Schlüsseldaten der Ressource konnten nicht aktualisiert werden."
 
 msgid "The user identifier should be a UUID."
 msgstr "Der Benutzer-Identifikator sollte eine UUID sein."
@@ -3291,6 +3300,12 @@ msgstr "Sie haben ein neues Passwort gespeichert"
 
 msgid "You have created a new password."
 msgstr "Sie haben ein neues Passwort erstellt."
+
+msgid "{0} deleted a password."
+msgstr ""
+
+msgid "Log in passbolt"
+msgstr "Bei Passbolt eInloggen"
 
 msgid "{0} shared a resource with you"
 msgstr "{0} hat eine Ressource mit Ihnen geteilt"
@@ -3807,9 +3822,6 @@ msgstr "Einstellungen zur Multi-Faktor-Authentifizierung wurden für Ihr Konto v
 
 msgid "Please contact your administrator if you didn't request this action."
 msgstr "Bitte kontaktieren Sie Ihren Administrator, wenn Sie diese Aktion nicht angefordert haben."
-
-msgid "Log in passbolt"
-msgstr "Bei Passbolt eInloggen"
 
 msgid "The automatic_expiry field must be true."
 msgstr "Das Feld „automatic_expiry“ muss wahr sein."
@@ -4975,6 +4987,9 @@ msgstr "Sie können die Benutzerschlüssel nicht wiederverwenden."
 msgid "You cannot reuse account recovery organization public keys."
 msgstr "Sie können die Organisation öffentlichen Schlüssel zur Kontowiederherstellung nicht wiederverwenden."
 
+msgid "You cannot reuse the metadata keys."
+msgstr ""
+
 msgid "Could not validate public key data."
 msgstr "Öffentliche Schlüsseldaten konnten nicht validiert werden."
 
@@ -5461,8 +5476,8 @@ msgstr "Das Passbolt {0} {1} wurde nicht gelöscht, da es als zu ignorieren mark
 msgid "The directory {0} {1} was not deleted because it is ignored."
 msgstr "Das Verzeichnis {0} {1} wurde nicht gelöscht, weil es ignoriert wird."
 
-msgid "The directory {0} {1} was already suspended in passbolt."
-msgstr "Das Verzeichnis {0} {1} wurde bereits in Passbolt gelöscht."
+msgid "The directory user {0} was already suspended in passbolt."
+msgstr ""
 
 msgid "The directory {0} {1} was already deleted in passbolt."
 msgstr "Das Verzeichnis {0} {1} wurde bereits in Passbolt gelöscht."
@@ -5473,8 +5488,8 @@ msgstr "Der Benutzer {0} konnte nicht gelöscht werden, da er der einzige Besitz
 msgid "The {0} {1} could not be deleted because they are the only manager of one or more groups."
 msgstr "Die {0} {1} konnte nicht gelöscht werden, da sie der einzige Manager einer oder mehrerer Gruppen sind."
 
-msgid "The {0} {1} was successfully suspended."
-msgstr "Der {0} {1} wurde erfolgreich gelöscht."
+msgid "The user {0} was successfully suspended."
+msgstr ""
 
 msgid "The {0} {1} was successfully deleted."
 msgstr "Der {0} {1} wurde erfolgreich gelöscht."
@@ -6109,6 +6124,9 @@ msgstr "Die Eingabeaufforderung darf nicht leer sein."
 msgid "The prompt should be one of the following: {0}."
 msgstr "Die Richtlinie sollte eine der folgenden sein: {0}."
 
+msgid "The login hint should be a boolean."
+msgstr ""
+
 msgid "The client id is too large."
 msgstr "Die Client-ID ist zu lange."
 
@@ -6655,6 +6673,9 @@ msgstr "Der Tag fehlt oder gehört nicht dem aktuellen Benutzer."
 msgid "The is shared should be a boolean type."
 msgstr "Der 'is shared'-Wert sollte ein boolescher Typ sein."
 
+msgid "The tags plugin is in read-only mode."
+msgstr ""
+
 msgid "The tag should not be empty."
 msgstr "Der Tag darf nicht leer sein."
 
@@ -6699,6 +6720,9 @@ msgstr "Benutzerdaten fehlen für die Tag-ID \\\"{0}\\\"."
 
 msgid "Unable to migrate tag id: {0} to V5."
 msgstr "Tag-ID: {0} kann nicht auf V5 migriert werden."
+
+msgid "The tag metadata key data could not be updated."
+msgstr ""
 
 msgid "Could not save the tags, try again later."
 msgstr "Tags konnten nicht gespeichert werden, bitte versuchen Sie es später erneut."
