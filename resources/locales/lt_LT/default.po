@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-03-22 01:55\n"
+"POT-Creation-Date: 2025-05-21 10:34+0000\n"
+"PO-Revision-Date: 2025-05-21 11:09\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -904,6 +904,9 @@ msgstr "Metaduomenų raktas neegzistuoja arba buvo ištrintas."
 msgid "The metadata key is marked as expired."
 msgstr "Metaduomenų raktas pažymėtas kaip pasibaigęs."
 
+msgid "The shared metadata key should be unique."
+msgstr ""
+
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Draudžiama kurti v5-password-string išteklių tipus."
 
@@ -1101,6 +1104,9 @@ msgstr "Pridėjote naują slaptažodį"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} ištrynė slaptažodį {1}"
+
+msgid "{0} deleted a password"
+msgstr ""
 
 msgid "You edited a resource"
 msgstr "Redagavote išteklį"
@@ -2347,6 +2353,9 @@ msgstr "Administratorius pasirinko nustatymus, kurie neleidžia nuleisti aplanko
 msgid "The metadata key does not exist."
 msgstr "Metaduomenų raktas neegzistuoja."
 
+msgid "The folder metadata provided cannot be decrypted."
+msgstr ""
+
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Asmeninio tipo aplanko negalima bendrinti su kitais naudotojais ar grupe."
 
@@ -2581,8 +2590,8 @@ msgstr "Patvirtinimo prieigos raktas jau buvo naudojamas praeityje."
 msgid "Security warning!"
 msgstr "Apsaugos Įspėjimas!"
 
-msgid "An unknown user with IP: {0} attempted to identify as {1}."
-msgstr "Nežinomas vartotojas, kurio IP: {0}, bandė identifikuotis kaip {1}."
+msgid "An unknown user attempted to identify as {0}."
+msgstr ""
 
 msgid "This is a potential security issue."
 msgstr "Tai galima saugumo problema."
@@ -2590,8 +2599,8 @@ msgstr "Tai galima saugumo problema."
 msgid "Please investigate!"
 msgstr "Prašome ištirti!"
 
-msgid "An unknown user with IP: {0}  attempted to steal your login data."
-msgstr "Nežinomas naudotojas, kurio IP: {0}, bandė pavogti jūsų prisijungimo duomenis."
+msgid "An unknown user attempted to steal your login data."
+msgstr ""
 
 msgid "Please get in touch with one of your administrators."
 msgstr "Susisiekite su vienu iš savo administratorių."
@@ -2722,9 +2731,6 @@ msgstr "Metaduomenų rakto identifikatorius turi būti galiojantis UUID."
 msgid "The private key identifier should be a UUID."
 msgstr "Privataus rakto identifikatorius turi būti galiojantis UUID."
 
-msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr "Neteisingai nustatytas puslapiavimo limitas metaduomenų atnaujinimo sąsajai."
-
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
 msgstr "Parametras \"missing_metadata_key_ids\" leidžiamas tik administratoriams."
 
@@ -2818,6 +2824,9 @@ msgstr "Kad būtų galima nustatyti kaip numatytąjį, turite įjungti turinio t
 msgid "Both v4 and v5 settings cannot be disabled."
 msgstr "Negalima išjungti tiek v4, tiek v5 nustatymų."
 
+msgid "The metadata key type should be shared key."
+msgstr "Metaduomenų rakto tipas turi būti bendrinamas raktas."
+
 msgid "The metadata key should not be deleted."
 msgstr "Metaduomenų rakto negalima ištrinti."
 
@@ -2835,9 +2844,6 @@ msgstr "Reikalingas metaduomenų rakto tipas."
 
 msgid "The metadata key type should not be empty."
 msgstr "Metaduomenų rakto tipas neturi būti tuščias."
-
-msgid "The metadata key type should be shared key."
-msgstr "Metaduomenų rakto tipas turi būti bendrinamas raktas."
 
 msgid "A metadata is required."
 msgstr "Reikalingi metaduomenys."
@@ -3202,9 +3208,6 @@ msgstr "Metaduomenų rakto piršto atspaudas nepasiekiamas arba neužbaigtas."
 msgid "The metadata armored key is not available or incomplete."
 msgstr "Metaduomenų šarvuotas raktas nepasiekiamas arba neužbaigtas."
 
-msgid "The resource metadata key data could not be updated."
-msgstr "Nepavyko atnaujinti išteklių metaduomenų rakto duomenų."
-
 msgid "The request data should not be empty."
 msgstr "Užklausos duomenys neturi būti tušti."
 
@@ -3216,6 +3219,12 @@ msgstr "Nurodyta modifikavimo data nesutampa."
 
 msgid "The provided modified by does not match."
 msgstr "Nurodyta 'modified by' reikšmė nesutampa."
+
+msgid "The folder metadata key data could not be updated."
+msgstr ""
+
+msgid "The resource metadata key data could not be updated."
+msgstr "Nepavyko atnaujinti išteklių metaduomenų rakto duomenų."
 
 msgid "The user identifier should be a UUID."
 msgstr "Vartotojo identifikatorius turi būti UUID."
@@ -3285,6 +3294,12 @@ msgstr "Išsaugojote naują slaptažodį"
 
 msgid "You have created a new password."
 msgstr "Sukūrėte naują slaptažodį."
+
+msgid "{0} deleted a password."
+msgstr ""
+
+msgid "Log in passbolt"
+msgstr "Prisijungti \"Passbolt\""
 
 msgid "{0} shared a resource with you"
 msgstr "{0} pasidalino ištekliumi su jumis"
@@ -3801,9 +3816,6 @@ msgstr "Administratorius iš naujo nustatė kelių veiksnių autentifikavimo nus
 
 msgid "Please contact your administrator if you didn't request this action."
 msgstr "Jei neprašėte šio veiksmo, susisiekite su administratoriumi."
-
-msgid "Log in passbolt"
-msgstr "Prisijungti \"Passbolt\""
 
 msgid "The automatic_expiry field must be true."
 msgstr "Laukas automatic_expiry turi būti true."

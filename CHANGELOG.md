@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.1.1] - 2025-05-22
+### Fixed
+- PB-42701 Fix the contain of missing metadata key on view user endpoint
+
+### Security
+- PB-42687 Security alert emails should display user IP and user agent only if configured
+
+## [5.1.1-test.1] - 2025-05-21
+### Fixed
+- PB-42701 Fix the contain of missing metadata key on view user endpoint
+
+### Security
+- PB-42687 Security alert emails should display user IP and user agent only if configured
+
 ## [5.1.0] - 2025-05-15
 ### Added
 - PB-40712 Enable password expiry by default for new instances
