@@ -53,11 +53,12 @@ class DirectoryResultsIgnoreInvalidTest extends DirectorySyncDeprecatedIntegrati
         $DirectoryResults->initializeWithEntries($users, $groups);
         $invalidUsers = $DirectoryResults->getInvalidUsers();
 
-        $this->assertEquals(count($invalidUsers), 2);
+        $this->assertEquals(count($invalidUsers), 3);
 
         $expectedUsers = [
             'CN=User5,OU=PassboltUsers,DC=passbolt,DC=local',
             'CN=User6,OU=PassboltUsers,DC=passbolt,DC=local',
+            'CN=User7,OU=PassboltUsers,DC=passbolt,DC=local',
         ];
 
         foreach ($invalidUsers as $key => $invalidUser) {

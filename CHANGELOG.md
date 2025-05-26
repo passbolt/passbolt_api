@@ -2,6 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.1.1] - 2025-05-22
+### Fixed
+- PB-42594 Fix directory_sync ignore-create CLI command shared from help message is not working
+- PB-42691 Make created & modified dates from AD/LDAP server optional
+- PB-42592 Fix missing attribute in ldap default configuration file
+- PB-42689 Fix type errors in directory_sync users & groups commands
+- PB-42701 Fix the contain of missing metadata key on view user endpoint
+
+### Security
+- PB-42687 Security alert emails should display user IP and user agent only if configured
+
+## [5.1.1-test.1] - 2025-05-21
+### Fixed
+- PB-42594 Fix directory_sync ignore-create CLI command shared from help message is not working
+- PB-42691 Make created & modified dates from AD/LDAP server optional
+- PB-42592 Fix missing attribute in ldap default configuration file
+- PB-42689 Fix type errors in directory_sync users & groups commands
+- PB-42701 Fix the contain of missing metadata key on view user endpoint
+
+### Security
+- PB-42687 Security alert emails should display user IP and user agent only if configured
+
 ## [5.1.0] - 2025-05-15
 ### Added
 - PB-40712 Enable password expiry by default for new instances

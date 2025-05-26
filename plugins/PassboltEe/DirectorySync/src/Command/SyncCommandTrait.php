@@ -112,7 +112,7 @@ trait SyncCommandTrait
 
                     $p = str_pad('', $this->pad);
                     $io->out($p . __('To ignore this error in the next sync please run'));
-                    $io->out($p . "./bin/cake directory_sync ignore-create --id=$id --model=$model");
+                    $io->out($p . "./bin/cake directory_sync ignore_create --id=$id --model=$model");
                 }
                 break;
             case Alias::STATUS_SYNC:

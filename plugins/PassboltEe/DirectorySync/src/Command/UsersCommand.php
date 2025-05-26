@@ -113,6 +113,7 @@ class UsersCommand extends DirectorySyncCommand
         try {
             $dryRun = $args->getOption('dry-run') || !$args->getOption('persist');
 
+            $this->model = 'Users';
             $action = new UserSyncAction($this->expireResourcesService);
             $action->setDryRun($dryRun);
             $reports = $action->execute();
