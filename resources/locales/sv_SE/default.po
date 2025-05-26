@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-03-22 01:55\n"
+"POT-Creation-Date: 2025-05-21 10:34+0000\n"
+"PO-Revision-Date: 2025-05-21 11:10\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -904,6 +904,9 @@ msgstr "\"Metadatanyckeln finns inte eller har raderats.\""
 msgid "The metadata key is marked as expired."
 msgstr "\"Metadatanyckeln är markerad som utgången.\""
 
+msgid "The shared metadata key should be unique."
+msgstr ""
+
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "\"Det är inte tillåtet att skapa resurstyper av typen v5-password-string.\""
 
@@ -1101,6 +1104,9 @@ msgstr "\"Du lade till ett nytt lösenord\""
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} tog bort lösenordet {1}"
+
+msgid "{0} deleted a password"
+msgstr ""
 
 msgid "You edited a resource"
 msgstr "\"Du redigerade en resurs\""
@@ -2347,6 +2353,9 @@ msgstr "\"Inställningarna som valts av din administratör förhindrar nedgrader
 msgid "The metadata key does not exist."
 msgstr "\"Metadatanyckeln finns inte.\""
 
+msgid "The folder metadata provided cannot be decrypted."
+msgstr ""
+
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "\"En mapp av typen personlig kan inte delas med andra användare eller en grupp.\""
 
@@ -2581,8 +2590,8 @@ msgstr "Verifieringstoken har redan använts tidigare."
 msgid "Security warning!"
 msgstr "Säkerhetsvarning!"
 
-msgid "An unknown user with IP: {0} attempted to identify as {1}."
-msgstr "En okänd användare med IP: {0} försökte identifiera sig som {1}."
+msgid "An unknown user attempted to identify as {0}."
+msgstr ""
 
 msgid "This is a potential security issue."
 msgstr "Detta är en potentiell säkerhetsfråga."
@@ -2590,8 +2599,8 @@ msgstr "Detta är en potentiell säkerhetsfråga."
 msgid "Please investigate!"
 msgstr "Vänligen undersök!"
 
-msgid "An unknown user with IP: {0}  attempted to steal your login data."
-msgstr "En okänd användare med IP: {0}  försökte stjäla dina inloggningsuppgifter."
+msgid "An unknown user attempted to steal your login data."
+msgstr ""
 
 msgid "Please get in touch with one of your administrators."
 msgstr "Vänligen kontakta en av dina administratörer."
@@ -2722,9 +2731,6 @@ msgstr "\"Metadatanyckelns identifierare bör vara ett UUID.\""
 msgid "The private key identifier should be a UUID."
 msgstr "\"Den privata nyckelns identifierare bör vara ett UUID.\""
 
-msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr "Ogiltig pagineringsgräns angiven för metadata-uppgraderingsendpoint."
-
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
 msgstr "Parametern \"missing_metadata_key_ids\" är endast tillåten för administratörer."
 
@@ -2818,6 +2824,9 @@ msgstr "Innehållstypen måste vara aktiverad för att kunna anges som standard.
 msgid "Both v4 and v5 settings cannot be disabled."
 msgstr "Både v4 och v5-inställningar kan inte inaktiveras."
 
+msgid "The metadata key type should be shared key."
+msgstr "Metadata-nyckeltypen bör vara en delad nyckel."
+
 msgid "The metadata key should not be deleted."
 msgstr "Metadata-nyckeln bör inte vara raderad."
 
@@ -2835,9 +2844,6 @@ msgstr "En metadata-nyckeltyp krävs."
 
 msgid "The metadata key type should not be empty."
 msgstr "Metadata-nyckeltypen får inte vara tom."
-
-msgid "The metadata key type should be shared key."
-msgstr "Metadata-nyckeltypen bör vara en delad nyckel."
 
 msgid "A metadata is required."
 msgstr "Metadata krävs."
@@ -3202,9 +3208,6 @@ msgstr "Metadata-nyckelns fingeravtryck är inte tillgängligt eller ofullständ
 msgid "The metadata armored key is not available or incomplete."
 msgstr "Metadata-nyckeln i armor-format är inte tillgänglig eller ofullständig."
 
-msgid "The resource metadata key data could not be updated."
-msgstr "Resursens metadata-nyckeldata kunde inte uppdateras."
-
 msgid "The request data should not be empty."
 msgstr "Förfrågningsdata får inte vara tom."
 
@@ -3216,6 +3219,12 @@ msgstr "Det angivna ändringsdatumet stämmer inte överens."
 
 msgid "The provided modified by does not match."
 msgstr "Den angivna \\\"modified by\\\" stämmer inte överens."
+
+msgid "The folder metadata key data could not be updated."
+msgstr ""
+
+msgid "The resource metadata key data could not be updated."
+msgstr "Resursens metadata-nyckeldata kunde inte uppdateras."
 
 msgid "The user identifier should be a UUID."
 msgstr "Användaridentifieraren bör vara ett giltigt UUID."
@@ -3285,6 +3294,12 @@ msgstr "Du har sparat ett nytt lösenord"
 
 msgid "You have created a new password."
 msgstr "Du har skapat ett nytt lösenord."
+
+msgid "{0} deleted a password."
+msgstr ""
+
+msgid "Log in passbolt"
+msgstr "Logga in till passbolt"
 
 msgid "{0} shared a resource with you"
 msgstr "{0} har delat en resurs med dig"
@@ -3801,9 +3816,6 @@ msgstr "Dina multifaktor-autentiseringsinställningar har återställts för dit
 
 msgid "Please contact your administrator if you didn't request this action."
 msgstr "Kontakta din administratör om du inte begärde denna åtgärd."
-
-msgid "Log in passbolt"
-msgstr "Logga in till passbolt"
 
 msgid "The automatic_expiry field must be true."
 msgstr "Fältet \\\"automatic_expiry\\\" måste vara sant."

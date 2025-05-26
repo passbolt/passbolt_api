@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-03-22 01:55\n"
+"POT-Creation-Date: 2025-05-21 10:34+0000\n"
+"PO-Revision-Date: 2025-05-21 11:09\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -904,6 +904,9 @@ msgstr "De metadata-sleutel bestaat niet of is verwijderd."
 msgid "The metadata key is marked as expired."
 msgstr "De metadata-sleutel is gemarkeerd als verlopen."
 
+msgid "The shared metadata key should be unique."
+msgstr ""
+
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Het is niet toegestaan om resourcetypes van het type v5-password-string te maken."
 
@@ -1101,6 +1104,9 @@ msgstr "Je hebt een nieuw wachtwoord toegevoegd"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} heeft het wachtwoord {1} verwijderd"
+
+msgid "{0} deleted a password"
+msgstr ""
 
 msgid "You edited a resource"
 msgstr "Je hebt een resource bewerkt"
@@ -2347,6 +2353,9 @@ msgstr "De instellingen die uw beheerder heeft gekozen voorkomen het downgraden 
 msgid "The metadata key does not exist."
 msgstr "De metadata-sleutel bestaat niet."
 
+msgid "The folder metadata provided cannot be decrypted."
+msgstr ""
+
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Een map van het type persoonlijk kan niet met andere gebruikers of een groep worden gedeeld."
 
@@ -2581,8 +2590,8 @@ msgstr "Dit verificatietoken is in het verleden al eens gebruikt."
 msgid "Security warning!"
 msgstr "Veiligheidswaarschuwing!"
 
-msgid "An unknown user with IP: {0} attempted to identify as {1}."
-msgstr "Een onbekende gebruiker met IP: {0} probeerde zich te identificeren als {1}."
+msgid "An unknown user attempted to identify as {0}."
+msgstr ""
 
 msgid "This is a potential security issue."
 msgstr "Dit is een potentieel veiligheidsprobleem."
@@ -2590,8 +2599,8 @@ msgstr "Dit is een potentieel veiligheidsprobleem."
 msgid "Please investigate!"
 msgstr "Zoek dit alstublieft uit!"
 
-msgid "An unknown user with IP: {0}  attempted to steal your login data."
-msgstr "Een onbekende gebruiker met IP: {0} probeerde uw inloggegevens te stelen."
+msgid "An unknown user attempted to steal your login data."
+msgstr ""
 
 msgid "Please get in touch with one of your administrators."
 msgstr "Neem contact op met één van uw beheerders."
@@ -2722,9 +2731,6 @@ msgstr "De metadata-sleutelidentificatie moet een UUID zijn."
 msgid "The private key identifier should be a UUID."
 msgstr "De identificatie van de privésleutel moet een UUID zijn."
 
-msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr "Ongeldige paginatie-limiet ingesteld voor de metadata-upgrade-endpoint."
-
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
 msgstr "De eigenschap missing_metadata_key_ids is alleen toegestaan voor beheerders."
 
@@ -2818,6 +2824,9 @@ msgstr "Het inhoudstype moet worden ingeschakeld voordat het als standaard kan w
 msgid "Both v4 and v5 settings cannot be disabled."
 msgstr "Zowel v4- als v5-instellingen kunnen niet worden uitgeschakeld."
 
+msgid "The metadata key type should be shared key."
+msgstr "Het metadata-sleuteltype moet een gedeelde sleutel zijn."
+
 msgid "The metadata key should not be deleted."
 msgstr "De metadata-sleutel mag niet worden verwijderd."
 
@@ -2835,9 +2844,6 @@ msgstr "Een metadata-sleuteltype is vereist."
 
 msgid "The metadata key type should not be empty."
 msgstr "Het metadata-sleuteltype mag niet leeg zijn."
-
-msgid "The metadata key type should be shared key."
-msgstr "Het metadata-sleuteltype moet een gedeelde sleutel zijn."
 
 msgid "A metadata is required."
 msgstr "Metadata is vereist."
@@ -3202,9 +3208,6 @@ msgstr "De vingerafdruk van de metadata-sleutel is niet beschikbaar of onvolledi
 msgid "The metadata armored key is not available or incomplete."
 msgstr "De gepantserde metadata-sleutel is niet beschikbaar of onvolledig."
 
-msgid "The resource metadata key data could not be updated."
-msgstr "De resourcemetadata-sleutelgegevens konden niet worden bijgewerkt."
-
 msgid "The request data should not be empty."
 msgstr "De verzoekgegevens moeten ingevuld worden."
 
@@ -3216,6 +3219,12 @@ msgstr "De opgegeven wijzigingsdatum komt niet overeen."
 
 msgid "The provided modified by does not match."
 msgstr "'Modified by' komt niet overeen met de opgegeven waarde."
+
+msgid "The folder metadata key data could not be updated."
+msgstr ""
+
+msgid "The resource metadata key data could not be updated."
+msgstr "De resourcemetadata-sleutelgegevens konden niet worden bijgewerkt."
 
 msgid "The user identifier should be a UUID."
 msgstr "De gebruikers-ID moet een geldige UUID zijn."
@@ -3285,6 +3294,12 @@ msgstr "Je hebt een nieuw wachtwoord opgeslagen"
 
 msgid "You have created a new password."
 msgstr "Je hebt een nieuw wachtwoord aangemaakt."
+
+msgid "{0} deleted a password."
+msgstr ""
+
+msgid "Log in passbolt"
+msgstr "Meld je aan bij Passbolt"
 
 msgid "{0} shared a resource with you"
 msgstr "{0} heeft een middel met je gedeeld"
@@ -3801,9 +3816,6 @@ msgstr "De Multi-factor Authenticatie-instellingen voor jouw account zijn opnieu
 
 msgid "Please contact your administrator if you didn't request this action."
 msgstr "Neem contact op met je beheerder als je niet om deze actie hebt gevraagd."
-
-msgid "Log in passbolt"
-msgstr "Meld je aan bij Passbolt"
 
 msgid "The automatic_expiry field must be true."
 msgstr "Het veld automatic_expiry moet true zijn."
