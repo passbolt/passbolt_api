@@ -73,6 +73,10 @@ return [
                         'locale' => 'sl-SI',
                         'label' => 'Slovenščina',
                     ],
+                    [
+                        'locale' => 'uk-UA',
+                        'label' => 'Українська',
+                    ],
                 ],
             ],
         ],
