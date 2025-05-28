@@ -130,7 +130,7 @@
             "Passbolt\\Rbacs\\": "./plugins/PassboltCe/Rbacs/src",
             "Passbolt\\PasswordPolicies\\": "./plugins/PassboltCe/PasswordPolicies/src",
             "Passbolt\\Metadata\\": "./plugins/PassboltCe/Metadata/src",
-            "Passbolt\\UserGpgKeyPolicies\\": "./plugins/PassboltCe/UserGpgKeyPolicies/src"
+            "Passbolt\\UserKeyPolicies\\": "./plugins/PassboltCe/UserKeyPolicies/src"
         }
     },
     "autoload-dev": {
@@ -157,7 +157,7 @@
             "Passbolt\\Rbacs\\Test\\": "./plugins/PassboltCe/Rbacs/tests",
             "Passbolt\\PasswordPolicies\\Test\\": "./plugins/PassboltCe/PasswordPolicies/tests",
             "Passbolt\\Metadata\\Test\\": "./plugins/PassboltCe/Metadata/tests",
-            "Passbolt\\UserGpgKeyPolicies\\Test\\": "./plugins/PassboltCe/UserGpgKeyPolicies/tests"
+            "Passbolt\\UserKeyPolicies\\Test\\": "./plugins/PassboltCe/UserKeyPolicies/tests"
         }
     },
     "scripts": {

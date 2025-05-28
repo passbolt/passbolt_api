@@ -91,7 +91,7 @@ class BaseSolutionBootstrapper
         }
 
         $this->addFeaturePluginIfEnabled($app, 'PasswordPolicies');
-        $this->addFeaturePluginIfEnabled($app, 'UserGpgKeyPolicies');
+        $this->addFeaturePluginIfEnabled($app, 'UserKeyPolicies');
     }
 
     /**

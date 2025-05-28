@@ -12,15 +12,26 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         5.1.1
+ * @since         5.2.0
  */
 use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
-$routes->plugin('Passbolt/UserGpgKeyPolicies', ['path' => '/user-gpg-key-policies'], function (RouteBuilder $routes) { // phpcs:ignore
+$routes->plugin('Passbolt/UserKeyPolicies', ['path' => '/user-key-policies'], function (RouteBuilder $routes) { // phpcs:ignore
     $routes->setExtensions(['json']);
 
     $routes
-        ->connect('/settings', ['controller' => 'UserGpgKeyPoliciesGetSettings', 'action' => 'get'])
+        ->connect('/settings', ['controller' => 'UserKeyPoliciesGetSettings', 'action' => 'get'])
+        ->setMethods(['GET']);
+});
+
+$routes->scope('/setup/user-key-policies', function (RouteBuilder $routes): void {
+    $routes->setExtensions(['json']);
+
+    $routes
+        ->connect(
+            '/settings',
+            ['controller' => 'UserKeyPoliciesGetSettings', 'action' => 'get', 'plugin' => 'Passbolt/UserKeyPolicies']
+        )
         ->setMethods(['GET']);
 });

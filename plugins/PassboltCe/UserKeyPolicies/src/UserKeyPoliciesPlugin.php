@@ -12,19 +12,20 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         5.1.1
+ * @since         5.2.0
  */
-namespace Passbolt\UserGpgKeyPolicies;
+namespace Passbolt\UserKeyPolicies;
 
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\BasePlugin;
 
-class UserGpgKeyPoliciesPlugin extends BasePlugin
+class UserKeyPoliciesPlugin extends BasePlugin
 {
     use FeaturePluginAwareTrait;
 
-    public const PREFERRED_KEY_TYPE_CONFIG_KEY = 'passbolt.plugins.userGpgKeyPolicies.preferred_key_type';
+    public const PREFERRED_KEY_TYPE_CONFIG_KEY = 'passbolt.plugins.userKeyPolicies';
 
-    public const PREFERRED_KEY_TYPE_ENV_KEY =
-        'PASSBOLT_PLUGINS_USER_GPG_KEY_POLICIES_PREFERRED_KEY_TYPE';
+    public const PREFERRED_KEY_TYPE_ENV_KEY_PREFERRED_KEY_TYPE = 'PASSBOLT_PLUGINS_USER_KEY_POLICIES_PREFERRED_KEY_TYPE'; // phpcs:ignore
+    public const PREFERRED_KEY_TYPE_ENV_KEY_PREFERRED_KEY_SIZE = 'PASSBOLT_PLUGINS_USER_KEY_POLICIES_PREFERRED_KEY_SIZE'; // phpcs:ignore
+    public const PREFERRED_KEY_TYPE_ENV_KEY_PREFERRED_KEY_CURVE = 'PASSBOLT_PLUGINS_USER_KEY_POLICIES_PREFERRED_KEY_CURVE'; // phpcs:ignore
 }

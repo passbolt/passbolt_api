@@ -12,11 +12,11 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         5.1.1
+ * @since         5.2.0
  */
-namespace Passbolt\UserGpgKeyPolicies\Model\Dto;
+namespace Passbolt\UserKeyPolicies\Model\Dto;
 
-class UserGpgKeyPoliciesSettingsDto
+class UserKeyPoliciesSettingsDto
 {
     /**
      * Source default.
@@ -40,30 +40,68 @@ class UserGpgKeyPoliciesSettingsDto
     public const SOURCE_ENV = 'env';
 
     /**
-     * GPG key type RSA
+     * Key type RSA
      *
      * @var string
      */
-    public const GPG_KEY_TYPE_RSA = 'RSA';
+    public const KEY_TYPE_RSA = 'rsa';
 
     /**
-     * GPG key type EdDSA
+     * Key type curve
      *
      * @var string
      */
-    public const GPG_KEY_TYPE_EDDSA = 'EdDSA';
+    public const KEY_TYPE_CURVE = 'curve';
 
     /**
-     * Default value of gpg key type
+     * Default value of key type
      *
      * @var string
      */
-    public const DEFAULT_GPG_KEY_TYPE = self::GPG_KEY_TYPE_RSA;
+    public const DEFAULT_KEY_TYPE = self::KEY_TYPE_RSA;
+
+    /**
+     * Default key size (should be used with RSA - which is default).
+     *
+     * @var int
+     */
+    public const DEFAULT_KEY_SIZE = self::KEY_SIZE_3072;
+
+    /**
+     * Key size: 3072
+     *
+     * @var int
+     */
+    public const KEY_SIZE_3072 = 3072;
+
+    /**
+     * Key size: 4096
+     *
+     * @var int
+     */
+    public const KEY_SIZE_4096 = 4096;
+
+    /**
+     * Legacy curve type for ECC.
+     *
+     * @var string
+     */
+    public const KEY_CURVE_ED25519_LEGACY = 'curve25519_legacy+ed25519_legacy';
 
     /**
      * @var string|null
      */
     public ?string $preferred_key_type = null;
+
+    /**
+     * @var int|null
+     */
+    public ?int $preferred_key_size = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $preferred_key_curve = null;
 
     /**
      * @var string|null
@@ -72,14 +110,19 @@ class UserGpgKeyPoliciesSettingsDto
 
     /**
      * @param string|null $keyType Key type.
-     * @param string|null $source Source of these settings (can be env or default).
+     * @param string|int|null $keySize Key size.
+     * @param string|null $keyCurve Key curve.
+     * @param string|null $source Source of these settings (can be: file, env or default).
      */
     public function __construct(
-        string|null $keyType,
-        ?string     $source
-    )
-    {
+        ?string $keyType,
+        int|string|null $keySize,
+        ?string $keyCurve,
+        ?string $source
+    ) {
         $this->preferred_key_type = self::marshalKeyType($keyType);
+        $this->preferred_key_size = self::marshalKeySize($keySize);
+        $this->preferred_key_curve = $keyCurve === 'null' ? null : $keyCurve;
         $this->source = $source;
     }
 
@@ -95,18 +138,40 @@ class UserGpgKeyPoliciesSettingsDto
      */
     private static function marshalKeyType(string $keyType): string
     {
-        if ($keyType && is_string($keyType)) {
-            switch (strtolower($keyType)) {
-                case strtolower(self::GPG_KEY_TYPE_RSA):
-                    $keyType = self::GPG_KEY_TYPE_RSA;
-                    break;
-                case strtolower(self::GPG_KEY_TYPE_EDDSA):
-                    $keyType = self::GPG_KEY_TYPE_EDDSA;
-                    break;
-            }
+        switch (strtolower($keyType)) {
+            case self::KEY_TYPE_RSA:
+                $keyType = self::KEY_TYPE_RSA;
+                break;
+            case self::KEY_TYPE_CURVE:
+                $keyType = self::KEY_TYPE_CURVE;
+                break;
         }
 
         return $keyType;
+    }
+
+    /**
+     * @param mixed $keySize Value to marshal.
+     * @return int|null
+     */
+    private static function marshalKeySize(mixed $keySize): ?int
+    {
+        if (is_int($keySize) || is_null($keySize)) {
+            return $keySize;
+        }
+
+        $keySize = (int)$keySize;
+
+        /**
+         * In scenarios where converting value to integer return zero,
+         * i.e. when 'null' value is set via env variable and converted to integer,
+         * we consider it null which is also a fallback value.
+         */
+        if ($keySize === 0) {
+            $keySize = null;
+        }
+
+        return $keySize;
     }
 
     /**
@@ -119,6 +184,8 @@ class UserGpgKeyPoliciesSettingsDto
     {
         return new self(
             $data['preferred_key_type'] ?? null,
+            $data['preferred_key_size'] ?? null,
+            $data['preferred_key_curve'] ?? null,
             $data['source'] ?? null,
         );
     }
@@ -132,6 +199,8 @@ class UserGpgKeyPoliciesSettingsDto
     {
         return [
             'preferred_key_type' => $this->preferred_key_type,
+            'preferred_key_size' => $this->preferred_key_size,
+            'preferred_key_curve' => $this->preferred_key_curve,
             'source' => $this->source,
         ];
     }
@@ -145,7 +214,9 @@ class UserGpgKeyPoliciesSettingsDto
     public static function createFromDefault(array $data = []): self
     {
         return self::createFromArray(array_merge([
-            'preferred_key_type' => self::DEFAULT_GPG_KEY_TYPE,
+            'preferred_key_type' => self::DEFAULT_KEY_TYPE,
+            'preferred_key_size' => self::DEFAULT_KEY_SIZE,
+            'preferred_key_curve' => null, // null for RSA, curve25519_legacy+ed25519_legacy for CURVE
             'source' => self::SOURCE_DEFAULT,
         ], $data));
     }

@@ -12,13 +12,13 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         5.1.1
+ * @since         5.2.0
  */
 
 return [
     'passbolt' => [
         'plugins' => [
-            'UserGpgKeyPolicies' => [
+            'userKeyPolicies' => [
                 'version' => '1.0.0',
                 'enabled' => true,
                 'settingsVisibility' => [
@@ -27,13 +27,13 @@ return [
                     ],
                 ],
                 /**
-                 * Preferred key type.
-                 * Set it in passbolt.php or via the environment variable PASSBOLT_PLUGINS_USER_GPG_KEY_POLICIES_PREFERRED_KEY_TYPE
-                 * to override the API default.
-                 * Allowed values: "RSA", "EdDSA"
-                 * As of v5.1.0, the default is set to "RSA".
+                 * Set below configuration in passbolt.php or via the environment variables to override the API default.
+                 * See UserKeyPoliciesPlugin.php file for available env variables.
+                 * See `UserKeyPoliciesSettingsDto::createFromDefault()` for default values.
                  */
-                // 'preferred_key_type' => 'rsa',
+                // 'preferred_key_type' => 'rsa', // Allowed values: "rsa", "curve"
+                // 'preferred_key_size' => 3072, // For RSA allowed values are 3072, 4096. Otherwise, `null`.
+                // 'preferred_key_curve' => null, // For Curve type, allowed values is "curve25519_legacy+ed25519_legacy". Otherwise, `null`.
             ],
         ],
     ],
