@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-05-29 16:37\n"
+"PO-Revision-Date: 2025-05-29 17:38\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -905,7 +905,7 @@ msgid "The metadata key is marked as expired."
 msgstr "Klucz metadanych został oznaczony jako wygasły."
 
 msgid "The shared metadata key should be unique."
-msgstr ""
+msgstr "Współdzielony klucz metadanych powinien być unikalny."
 
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Nie można utworzyć zasobów typu v5-password-string."
@@ -1955,7 +1955,7 @@ msgid "The user public key is not available or incomplete."
 msgstr "Klucz publiczny użytkownika jest niedostępny lub niekompletny."
 
 msgid "The user public key fingerprint is not available or incomplete."
-msgstr "Odcisk palca klucza publicznego użytkownika jest niedostępny lub niekompletny."
+msgstr "Odcisk klucza publicznego użytkownika jest niedostępny lub niekompletny."
 
 msgid "The user armored key is not available or incomplete."
 msgstr "Opancerzony klucz użytkownika jest niedostępny lub niekompletny."
@@ -2354,7 +2354,7 @@ msgid "The metadata key does not exist."
 msgstr "Klucz metadanych nie istnieje."
 
 msgid "The folder metadata provided cannot be decrypted."
-msgstr ""
+msgstr "Podane metadane folderu nie mogą być odszyfrowane."
 
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Folder typu prywatnego nie może być udostępniany innym użytkownikom ani grupie."
@@ -2591,7 +2591,7 @@ msgid "Security warning!"
 msgstr "Ostrzeżenie!"
 
 msgid "An unknown user attempted to identify as {0}."
-msgstr ""
+msgstr "Nieznany użytkownik próbował zidentyfikować się jako {0}."
 
 msgid "This is a potential security issue."
 msgstr "Jest to potencjalna luka w zabezpieczeniach."
@@ -2600,7 +2600,7 @@ msgid "Please investigate!"
 msgstr "Sprawdź, czy wszystko jest w porządku!"
 
 msgid "An unknown user attempted to steal your login data."
-msgstr ""
+msgstr "Nieznany użytkownik usiłował ukraść Twoje dane logowania."
 
 msgid "Please get in touch with one of your administrators."
 msgstr "Skontaktuj się z jednym z Twoich administratorów."
@@ -2750,10 +2750,10 @@ msgid "A fingerprint is required."
 msgstr "Odcisk palca jest wymagany."
 
 msgid "A fingerprint should not be greater than 51 characters."
-msgstr "Odcisk palca nie powinien być dłuższy niż 51 znaków."
+msgstr "Odcisk nie powinien być dłuższy niż 51 znaków."
 
 msgid "A fingerprint should not be empty."
-msgstr "Odcisk palca nie powinien być pusty."
+msgstr "Odcisk nie powinien być pusty."
 
 msgid "The fingerprint should be a valid alphanumeric string."
 msgstr "Odcisk palca powinien być prawidłowym ciągiem alfanumerycznym."
@@ -2765,7 +2765,7 @@ msgid "The value is not a valid OpenPGP private key."
 msgstr "Wartość nie jest prawidłowym kluczem prywatnym OpenPGP."
 
 msgid "The fingerprint does not match the OpenPGP private keys fingerprint."
-msgstr "Odcisk palca nie odpowiada odciskowi palca kluczy prywatnych OpenPGP."
+msgstr "Odcisk nie odpowiada odciskowi kluczy prywatnych OpenPGP."
 
 msgid "A domain is required."
 msgstr "Domena jest wymagana."
@@ -2945,7 +2945,7 @@ msgid "The modifier is required."
 msgstr "Pole dotyczące modyfikującego jest wymagane."
 
 msgid "The fingerprint is already in use."
-msgstr "Odcisk palca jest już używany."
+msgstr "Odcisk jest już używany."
 
 msgid "Already two metadata keys are active."
 msgstr "Dwa klucze metadanych są już aktywne."
@@ -3023,7 +3023,7 @@ msgid "The metadata key could not be deleted."
 msgstr "Nie można usunąć klucza metadanych."
 
 msgid "The metadata key fingerprint is invalid."
-msgstr "Odcisk palca klucza metadanych jest nieprawidłowy."
+msgstr "Odcisk klucza metadanych jest nieprawidłowy."
 
 msgid "The metadata key is already marked as expired."
 msgstr "Klucz metadanych jest już oznaczony jako wygasły."
@@ -3203,7 +3203,7 @@ msgid "The metadata key is not available or incomplete."
 msgstr "Klucz metadanych jest niedostępny lub niekompletny."
 
 msgid "The metadata key fingerprint is not available or incomplete."
-msgstr "Odcisk palca klucza metadanych jest niedostępny lub niekompletny."
+msgstr "Odcisk klucza metadanych jest niedostępny lub niekompletny."
 
 msgid "The metadata armored key is not available or incomplete."
 msgstr "Opancerzony klucz metadanych jest niedostępny lub niekompletny."
