@@ -180,7 +180,7 @@ class UserKeyPoliciesGetSettingsControllerTest extends AppIntegrationTestCase
         ]);
         $this->getJson('/setup/user-key-policies/settings.json?' . $queryParams);
 
-        $this->assertBadRequestError('Invalid user details provided');
+        $this->assertBadRequestError('No registration authentication token found for the given user');
     }
 
     public static function userKeyPoliciesSettingsBadQueryParametersProvider(): array
@@ -245,7 +245,7 @@ class UserKeyPoliciesGetSettingsControllerTest extends AppIntegrationTestCase
             'token' => $token->token,
         ]);
         $this->getJson('/setup/user-key-policies/settings.json?' . $queryParams);
-        $this->assertForbiddenError('Unable to authenticate the guest user with the provided credentials');
+        $this->assertBadRequestError('The registration authentication token is expired');
     }
 
     public function testUserKeyPoliciesGetSettingsController_Error_SessionConfusion(): void
@@ -262,6 +262,6 @@ class UserKeyPoliciesGetSettingsControllerTest extends AppIntegrationTestCase
         $queryParams = http_build_query(['user_id' => $user->get('id'), 'token' => $token->token]);
         $this->getJson('/setup/user-key-policies/settings.json?' . $queryParams);
 
-        $this->assertBadRequestError('Unable to recognize the user');
+        $this->assertBadRequestError("Conflicting authentication parameters, provide user_id\/token only when the user is not already signed in");
     }
 }

@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\UserKeyPolicies\Controller;
 
 use App\Controller\AppController;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use Cake\Event\EventInterface;
@@ -81,7 +82,7 @@ class UserKeyPoliciesGetSettingsController extends AppController
         if ($isLoggedIn) {
             if ($isUserToken) {
                 // session confusion: If user is logged in but still authentication token is provided we consider it bad request.
-                throw new BadRequestException(__('Unable to recognize the user.'));
+                throw new BadRequestException(__('Conflicting authentication parameters, provide user_id/token only when the user is not already signed in.')); // phpcs:ignore
             }
 
             return;
@@ -105,13 +106,21 @@ class UserKeyPoliciesGetSettingsController extends AppController
             throw new BadRequestException(__('The authentication token must be a valid UUID.'));
         }
 
+        $errorMsg = __('Unable to authenticate the guest user with the provided credentials.');
+
         try {
             (new AuthenticationTokenGetService())
                 ->getActiveNotExpiredOrFail($authToken, $userId, AuthenticationToken::TYPE_REGISTER);
         } catch (NotFoundException $exception) {
-            throw new BadRequestException(__('Invalid user details provided.'), null, $exception);
+            $errorMsg .= ' ';
+            $errorMsg .= __('No registration authentication token found for the given user.');
+            throw new BadRequestException($errorMsg, null, $exception);
+        } catch (CustomValidationException $exception) {
+            $errorMsg .= ' ';
+            $errorMsg .= __('The registration authentication token is expired.');
+            throw new BadRequestException($errorMsg, null, $exception);
         } catch (Exception $exception) {
-            throw new ForbiddenException(__('Unable to authenticate the guest user with the provided credentials.'), null, $exception); // phpcs:ignore
+            throw new ForbiddenException($errorMsg, null, $exception); // phpcs:ignore
         }
     }
 }
