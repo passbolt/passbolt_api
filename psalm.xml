@@ -35,7 +35,6 @@
             <directory name="plugins/PassboltEe/SsoRecover/templates/" />
             <directory name="plugins/PassboltEe/PasswordPoliciesUpdate/templates/" />
             <directory name="plugins/PassboltEe/UserPassphrasePolicies/templates/" />
-            <directory name="plugins/PassboltEe/PasswordExpiryPolicies/templates/" />
         </ignoreFiles>
     </projectFiles>
 
