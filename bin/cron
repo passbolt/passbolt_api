@@ -7,3 +7,9 @@ set -euo pipefail
 DIR=$(dirname "$(readlink -f "$0")")
 
 "$DIR"/cake passbolt email_digest send
+
+
+currenttime=$(date +%H:%M)
+if [ "$currenttime" = "08:00" ]; then
+    "$DIR"/cake passbolt notify_about_expired_resources
+fi
