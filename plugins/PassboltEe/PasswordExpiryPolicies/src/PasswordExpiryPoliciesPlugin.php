@@ -16,13 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\PasswordExpiryPolicies;
 
-use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsServiceInterface;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpirySetSettingsServiceInterface;
-use Passbolt\PasswordExpiryPolicies\Command\PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand;
-use Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService;
 use Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesResourcesExpiryUpdateService;
 use Passbolt\PasswordExpiryPolicies\Service\Settings\PasswordExpiryPoliciesGetSettingsService;
 use Passbolt\PasswordExpiryPolicies\Service\Settings\PasswordExpiryPoliciesSetSettingsService;
@@ -47,17 +44,6 @@ class PasswordExpiryPoliciesPlugin extends BasePlugin
     /**
      * @inheritDoc
      */
-    public function console(CommandCollection $commands): CommandCollection
-    {
-        return $commands->add(
-            'passbolt notify_about_expired_resources',
-            PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand::class
-        );
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function services(ContainerInterface $container): void
     {
         $container
@@ -66,12 +52,6 @@ class PasswordExpiryPoliciesPlugin extends BasePlugin
         $container
             ->extend(PasswordExpirySetSettingsServiceInterface::class)
             ->setConcrete(PasswordExpiryPoliciesSetSettingsService::class);
-        $container
-            ->add(PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService::class)
-            ->addArgument(PasswordExpiryGetSettingsServiceInterface::class);
-        $container
-            ->add(PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand::class)
-            ->addArgument(PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService::class);
         $container->add(PasswordExpiryPoliciesResourcesExpiryUpdateService::class);
     }
 }

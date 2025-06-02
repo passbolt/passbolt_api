@@ -31,6 +31,7 @@ class PasswordExpiryRedactorPool extends AbstractSubscribedEmailRedactorPool
         $redactors[] = new PasswordExpirySettingsUpdatedEmailRedactor();
         $redactors[] = new PasswordExpiryExpiredResourcesEmailRedactor();
         $redactors[] = new PasswordExpiryPasswordMarkedExpiredEmailRedactor();
+        $redactors[] = new PasswordExpiryNotifyAboutExpiredResourcesEmailRedactor();
 
         return $redactors;
     }
