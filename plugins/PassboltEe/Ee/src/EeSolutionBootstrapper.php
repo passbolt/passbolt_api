@@ -99,7 +99,9 @@ class EeSolutionBootstrapper extends BaseSolutionBootstrapper
         $this->addFeaturePluginIfEnabled($app, 'PasswordPolicies');
         $this->addFeaturePluginIfEnabled($app, 'PasswordPoliciesUpdate');
         $this->addFeaturePluginIfEnabled($app, 'UserPassphrasePolicies');
-        $this->addFeaturePluginIfEnabled($app, 'PasswordExpiryPolicies');
+        if ($this->isFeaturePluginEnabled(PasswordExpiryPlugin::class)) {
+            $this->addFeaturePluginIfEnabled($app, 'PasswordExpiryPolicies');
+        }
         $this->addFeaturePluginIfEnabled($app, 'UserKeyPolicies');
     }
 }
