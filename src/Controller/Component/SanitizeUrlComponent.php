@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Controller\Component;
 
 use Cake\Controller\Component;
+use Cake\Routing\Router;
 
 class SanitizeUrlComponent extends Component
 {
@@ -80,14 +81,9 @@ class SanitizeUrlComponent extends Component
             }
         }
 
-        $isProtocolRelativeUrl1 = str_starts_with($url, '///');
-        $isProtocolRelativeUrl2 = str_starts_with($url, '//');
-        if ($isProtocolRelativeUrl1 || $isProtocolRelativeUrl2) {
-            $strippedUrl = str_replace($isProtocolRelativeUrl1 ? '///' : '//', '', $url);
-            $parseUrl = parse_url($strippedUrl);
-            if (!empty($parseUrl) && isset($parseUrl['path'])) {
-                return '/';
-            }
+        $isProtocolRelativeUrl = str_starts_with($url, '//');
+        if ($isProtocolRelativeUrl && !$this->isHostSame($url)) {
+            return '/';
         }
 
         if ($escapeSpecialChars) {
@@ -95,6 +91,26 @@ class SanitizeUrlComponent extends Component
         }
 
         return $url;
+    }
+
+    /**
+     * @param string $url URL to check.
+     * @return bool
+     */
+    private function isHostSame(string $url): bool
+    {
+        $urlComponents = parse_url($url);
+
+        if (!is_array($urlComponents) || empty($urlComponents['host'])) {
+            return false;
+        }
+
+        $passboltUrlComponents = parse_url(Router::url('/', true));
+        if (empty($passboltUrlComponents['host'])) {
+            return false;
+        }
+
+        return $passboltUrlComponents['host'] === $urlComponents['host'];
     }
 
     /**

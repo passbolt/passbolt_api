@@ -21,6 +21,7 @@ use App\Controller\Component\SanitizeUrlComponent;
 use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
 use Cake\Http\ServerRequest;
+use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 
 class SanitizeUrlComponentTest extends TestCase
@@ -68,6 +69,8 @@ class SanitizeUrlComponentTest extends TestCase
     public function dataForTestSanitizeUrlComponent_SanitizeRedirect(): array
     {
         $baseUrl = '/foo';
+        $urlElements = parse_url(Router::url('/', true));
+        $host = $urlElements['host'];
 
         return [
             [$baseUrl, '/'],
@@ -82,6 +85,8 @@ class SanitizeUrlComponentTest extends TestCase
             [$baseUrl . '?redirect=www.evil.com', '/'],
             [$baseUrl . '?redirect=///evil.com', '/'],
             [$baseUrl . '?redirect=//evil.com', '/'],
+            [$baseUrl . '?redirect=/////evil.com', '/'],
+            [$baseUrl . '?redirect=////////////////////////////evil.com', '/'],
             [$baseUrl . '?redirect=///evil.com/mfa/verify', '/'],
             [$baseUrl . '?redirect=//evil.com/mfa/verify', '/'],
             [$baseUrl . '?redirect=ftp://evil.com/', '/'],
@@ -97,6 +102,7 @@ class SanitizeUrlComponentTest extends TestCase
             [$baseUrl . '?redirect=javascript:alert(document.domain)', '/'],
             [$baseUrl . '?redirect=' . $baseUrl, '/'],
             [$baseUrl . '?redirect=/mfa', '/mfa'],
+            [$baseUrl . "?redirect=//$host", "//$host"],
         ];
     }
 
