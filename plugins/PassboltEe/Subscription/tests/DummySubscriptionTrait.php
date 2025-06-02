@@ -89,12 +89,12 @@ trait DummySubscriptionTrait
     protected function getValidSubscription(): array
     {
         return [
-            'customer_id' => 'test',
-            'subscription_id' => 'test',
+            'customer_id' => '19AD6KUmxjkn08O',
+            'subscription_id' => '19AD6KUmxk3el8i',
             'users' => 2,
-            'email' => 'test@passbolt.com',
-            'expiry' => '2025-06-01',
-            'created' => '2018-03-01',
+            'email' => 'license.dev@passbolt.com',
+            'expiry' => '2030-06-01',
+            'created' => '2025-06-02',
         ];
     }
 
