@@ -61,15 +61,15 @@ class CommandBootstrap
      */
     private function _initUserAction(): void
     {
-        // Context will look like the example below:
-        // CMD passbolt install --no-admin
-        $args = $_SERVER['argv'];
-        $args[0] = 'CMD';
-        $context = implode(' ', $args);
-
         try {
             UserAction::getInstance();
         } catch (Exception $e) {
+            // Context will look like the example below:
+            // CMD passbolt install --no-admin
+            $args = $_SERVER['argv'];
+            $args[0] = 'CMD';
+            $context = implode(' ', $args);
+
             $uac = new UserAccessControl(Role::GUEST, null);
             UserAction::getInstance($uac, 'shell', $context);
         }

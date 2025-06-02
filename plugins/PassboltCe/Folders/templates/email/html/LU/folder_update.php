@@ -26,7 +26,7 @@ if (PHP_SAPI === 'cli') {
 $user = $body['user'];
 $folder = $body['folder'];
 $isOperator = $body['isOperator'];
-$userFirstName = $body['userFirstName'];
+$userFirstName = Purifier::clean($body['userFirstName']);
 $avatarText = $isOperator ? __('You edited a folder') : __('{0} edited a folder', $userFirstName);
 
 echo $this->element('Email/module/avatar', [
