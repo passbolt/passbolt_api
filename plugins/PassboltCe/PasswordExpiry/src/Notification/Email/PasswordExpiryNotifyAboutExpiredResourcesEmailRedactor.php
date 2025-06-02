@@ -64,7 +64,7 @@ class PasswordExpiryNotifyAboutExpiredResourcesEmailRedactor implements Subscrib
 
         // Send emails to all the owners
         foreach ($users as $user) {
-            $emailCollection->addEmail($this->createEmail($user),);
+            $emailCollection->addEmail($this->createEmail($user));
         }
 
         return $emailCollection;

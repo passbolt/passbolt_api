@@ -90,8 +90,7 @@ class PasswordExpiryGetOwnersOfExpiredResourcesService
         $UsersTable = TableRegistry::getTableLocator()->get('Users');
         $usersToNotify = $UsersTable
             ->find('notDisabled')
-            ->find('activeNotDeleted')
-            ->orderBy([], true); // Remove any order as it is not relevant here and breaks in MySQL
+            ->find('activeNotDeleted');
 
         return $UsersTable->filterQueryByResourcesAccess($usersToNotify, $expiringResourceIds, [Permission::OWNER]);
     }

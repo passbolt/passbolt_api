@@ -125,4 +125,34 @@ class PasswordExpiryNotifyAboutExpiredResourcesCommandTest extends AppIntegratio
         $this->assertEmailInBatchContains($expectedContent, $ownerOfExpiredResource1->username);
         $this->assertEmailInBatchContains($expectedContent, $ownerOfExpiredResource2->username);
     }
+
+    public function testPasswordExpiryNotifyAboutExpiredResourcesCommand_Do_Not_Notify_Owners_Of_Passwords_Expired_In_The_Past()
+    {
+        PasswordExpirySettingFactory::make()->persist();
+        $user = UserFactory::make()->user()->persist();
+        ResourceFactory::make()
+            ->expired(DateTime::yesterday())
+            ->withPermissionsFor([$user])
+            ->persist();
+
+        $this->exec('passbolt notify_about_expired_resources');
+        $this->assertExitSuccess();
+        $this->assertOutputContains('0 resource owners were notified of their passwords expiring today.');
+        $this->assertEmailQueueCount(0);
+    }
+
+    public function testPasswordExpiryNotifyAboutExpiredResourcesCommand_Do_Not_Notify_Owners_When_No_Passwords_Are_Expired()
+    {
+        PasswordExpirySettingFactory::make()->persist();
+        $user = UserFactory::make()->user()->persist();
+        ResourceFactory::make()
+            ->expired(DateTime::tomorrow())
+            ->withPermissionsFor([$user])
+            ->persist();
+
+        $this->exec('passbolt notify_about_expired_resources');
+        $this->assertExitSuccess();
+        $this->assertOutputContains('0 resource owners were notified of their passwords expiring today.');
+        $this->assertEmailQueueCount(0);
+    }
 }
