@@ -67,6 +67,9 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
         ->setMethods(['POST']);
     $routes->connect('/keys/privates', ['controller' => 'MetadataMissingPrivateKeysShare', 'action' => 'share'])
         ->setMethods(['POST']);
+    // alias of /keys/privates
+    $routes->connect('/keys/private', ['controller' => 'MetadataMissingPrivateKeysShare', 'action' => 'share'])
+        ->setMethods(['PUT', 'POST']);
 
     /**
      * Metadata session keys routes
