@@ -1441,6 +1441,8 @@
   "UI Permissions": "UI-rättigheter",
   "Uid": "UID",
   "Unable to copy the TOTP": "Det gick inte att kopiera TOTP",
+  "Unable to load/refresh the folders.": "Unable to load/refresh the folders.",
+  "Unable to load/refresh the resources.": "Unable to load/refresh the resources.",
   "Unable to preview the TOTP": "Det gick inte att förhandsgranska TOTP",
   "Unable to use the password on this page. Copy and paste the information instead.": "Det går inte att använda lösenordet på den här sidan. Kopiera och klistra in informationen istället.",
   "Unchanged": "Oförändrad",

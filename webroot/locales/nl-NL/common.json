@@ -1441,6 +1441,8 @@
   "UI Permissions": "Gebruikersmachtigingen",
   "Uid": "UID",
   "Unable to copy the TOTP": "Kan de TOTP niet kopiëren",
+  "Unable to load/refresh the folders.": "Unable to load/refresh the folders.",
+  "Unable to load/refresh the resources.": "Unable to load/refresh the resources.",
   "Unable to preview the TOTP": "Kan de TOTP niet weergeven",
   "Unable to use the password on this page. Copy and paste the information instead.": "Kan het wachtwoord op deze pagina niet gebruiken. Kopieer en plak in plaats daarvan de informatie.",
   "Unchanged": "Ongewijzigd",
