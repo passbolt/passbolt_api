@@ -1441,6 +1441,8 @@
   "UI Permissions": "Naudotojo sąsajos leidimai",
   "Uid": "Uid",
   "Unable to copy the TOTP": "Nepavyko nukopijuoti TOTP",
+  "Unable to load/refresh the folders.": "Unable to load/refresh the folders.",
+  "Unable to load/refresh the resources.": "Unable to load/refresh the resources.",
   "Unable to preview the TOTP": "Nepavyko peržiūrėti TOTP",
   "Unable to use the password on this page. Copy and paste the information instead.": "Nepavyksta naudoti slaptažodžio šiame puslapyje. Verčiau nukopijuokite ir įklijuokite informaciją.",
   "Unchanged": "Nepakeista",

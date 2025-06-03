@@ -11,6 +11,8 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
+ *
+ * @var array $body
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;

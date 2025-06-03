@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+
 use App\Utility\Purifier;
 use Cake\I18n\DateTime;
 

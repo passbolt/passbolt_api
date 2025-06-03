@@ -11,7 +11,10 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
+ *
+ * @var string $title
  */
+use App\Utility\Purifier;
 use Cake\Routing\Router;
 /*
  *  IMPORTANT: do not modify directly!
@@ -29,7 +32,7 @@ $fullBaseUrl = $fullBaseUrl ?? Router::fullBaseUrl();
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title><?php echo $title; ?></title>
+    <title><?php echo Purifier::clean($title); ?></title>
     <style type="text/css">
         /*////// RESET STYLES //////*/
         body, #bodyTable, #bodyCell {height:100% !important; margin:0; padding:0; width:100% !important;}

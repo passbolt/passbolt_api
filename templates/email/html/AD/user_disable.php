@@ -11,6 +11,9 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.3.0
+ *
+ * @var array $body
+ * @var string $title
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
@@ -26,7 +29,7 @@ echo $this->element('Email/module/avatar',[
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
         'datetime' => $user['modified'],
-        'text' => $title,
+        'text' => Purifier::clean($title),
     ])
 ]);
 
