@@ -1441,6 +1441,8 @@
   "UI Permissions": "UIパーミッション",
   "Uid": "Uid",
   "Unable to copy the TOTP": "TOTPをコピーできません",
+  "Unable to load/refresh the folders.": "Unable to load/refresh the folders.",
+  "Unable to load/refresh the resources.": "Unable to load/refresh the resources.",
   "Unable to preview the TOTP": "TOTPをプレビューできません",
   "Unable to use the password on this page. Copy and paste the information instead.": "このページではパスワードを使用できません。代わりに情報をコピー＆ペーストしてください。",
   "Unchanged": "変更なし",

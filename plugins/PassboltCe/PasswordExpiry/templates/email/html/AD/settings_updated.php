@@ -15,8 +15,10 @@
  * @see \Passbolt\PasswordExpiry\Notification\Email\PasswordExpirySettingsUpdatedEmailRedactor
  * @var \App\View\AppView $this
  * @var array $body
+ * @var string $title
  */
 
+use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
 use Cake\Routing\Router;
 
@@ -37,7 +39,7 @@ echo $this->element('Email/module/avatar', [
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $operator,
         'datetime' => $setting['modified'],
-        'text' => $title,
+        'text' => Purifier::clean($title),
     ]),
 ]);
 

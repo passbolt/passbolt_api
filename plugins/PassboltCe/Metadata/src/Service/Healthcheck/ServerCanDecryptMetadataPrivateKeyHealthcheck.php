@@ -26,6 +26,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query\SelectQuery;
 use Exception;
+use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 use PDOException;
 
 class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServiceInterface
@@ -50,6 +51,13 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
      */
     public function check(): HealthcheckServiceInterface
     {
+        $settingsDto = MetadataTypesSettingsGetService::getSettings();
+        if (!$settingsDto->isV5ResourceCreationAllowed()) {
+            $this->status = true;
+
+            return $this;
+        }
+
         try {
             $metadataPrivateKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys');
             /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $serverMetadataPrivateKey */

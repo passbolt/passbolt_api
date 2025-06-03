@@ -25,7 +25,6 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Users\UserRecoverService;
-use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
@@ -75,7 +74,7 @@ class SelfRegistrationUserEmailRedactor implements SubscribedEmailRedactorInterf
      */
     private function getSubject(User $user): string
     {
-        $userFirstName = Purifier::clean($user->profile->first_name);
+        $userFirstName = $user->profile->first_name;
 
         return (new LocaleService())->translateString(
             $user->locale,

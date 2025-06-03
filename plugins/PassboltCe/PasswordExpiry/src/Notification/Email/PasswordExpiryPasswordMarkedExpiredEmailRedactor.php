@@ -25,7 +25,6 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query\SelectQuery;
@@ -98,8 +97,8 @@ class PasswordExpiryPasswordMarkedExpiredEmailRedactor implements SubscribedEmai
      */
     private function createEmail(User $user, User $operator, Resource $resource): Email
     {
-        $resourceName = Purifier::clean($resource->name);
-        $operatorFullName = Purifier::clean($operator->profile->full_name);
+        $resourceName = $resource->name;
+        $operatorFullName = $operator->profile->full_name;
         $resourceId = $resource->id;
         $isV5 = $this->isResourceV5($resource);
         $subject = (new LocaleService())->translateString(

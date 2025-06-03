@@ -22,6 +22,7 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Passbolt\Metadata\Service\Healthcheck\ServerCanDecryptMetadataPrivateKeyHealthcheck;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
 /**
  * @covers \Passbolt\Metadata\Service\Healthcheck\ServerCanDecryptMetadataPrivateKeyHealthcheck
@@ -38,9 +39,36 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheckTest extends AppTestCaseV5
         parent::tearDown();
     }
 
-    public function testMetadataServerCanDecryptMetadataPrivateKeyHealthcheck_Success(): void
+    public function testMetadataServerCanDecryptMetadataPrivateKeyHealthcheck_Success_V5(): void
     {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey()->withServerPrivateKey()->persist();
+
+        $service = new ServerCanDecryptMetadataPrivateKeyHealthcheck();
+        $service->check();
+
+        $this->assertTrue($service->isPassed());
+        $this->assertSame(HealthcheckServiceCollector::DOMAIN_METADATA, $service->domain());
+        $this->assertSame(HealthcheckServiceCollector::DOMAIN_METADATA, $service->cliOption());
+        $this->assertSame(HealthcheckServiceCollector::LEVEL_ERROR, $service->level());
+        $this->assertSame('canDecryptMetadataPrivateKey', $service->getLegacyArrayKey());
+    }
+
+    public function testMetadataServerCanDecryptMetadataPrivateKeyHealthcheck_Success_V4NoSettingsPresent(): void
+    {
+        $service = new ServerCanDecryptMetadataPrivateKeyHealthcheck();
+        $service->check();
+
+        $this->assertTrue($service->isPassed());
+        $this->assertSame(HealthcheckServiceCollector::DOMAIN_METADATA, $service->domain());
+        $this->assertSame(HealthcheckServiceCollector::DOMAIN_METADATA, $service->cliOption());
+        $this->assertSame(HealthcheckServiceCollector::LEVEL_ERROR, $service->level());
+        $this->assertSame('canDecryptMetadataPrivateKey', $service->getLegacyArrayKey());
+    }
+
+    public function testMetadataServerCanDecryptMetadataPrivateKeyHealthcheck_Success_V4Settings(): void
+    {
+        MetadataTypesSettingsFactory::make()->v4()->persist();
 
         $service = new ServerCanDecryptMetadataPrivateKeyHealthcheck();
         $service->check();
@@ -54,6 +82,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheckTest extends AppTestCaseV5
 
     public function testMetadataServerCanDecryptMetadataPrivateKeyHealthcheck_Error_UnableToDecrypt(): void
     {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         // Set a message that is not for server
         $msg = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'ada_for_betty_signed.msg');
         MetadataPrivateKeyFactory::make(['user_id' => null, 'data' => $msg])->withMetadataKey()->persist();
@@ -67,6 +96,8 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheckTest extends AppTestCaseV5
 
     public function testMetadataServerCanDecryptMetadataPrivateKeyHealthcheck_Error_NoPrivateKeys(): void
     {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+
         $service = new ServerCanDecryptMetadataPrivateKeyHealthcheck();
         $service->check();
 
@@ -76,6 +107,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheckTest extends AppTestCaseV5
 
     public function testMetadataServerCanDecryptMetadataPrivateKeyHealthcheck_Error_RelatedMetadataKeyIsDeleted(): void
     {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         MetadataPrivateKeyFactory::make()
             ->with('MetadataKeys', MetadataKeyFactory::make()->deleted()->withServerKey()->withCreatorAndModifier())
             ->withServerPrivateKey()

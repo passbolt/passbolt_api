@@ -24,7 +24,6 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\ExtendedUserAccessControl;
-use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use InvalidArgumentException;
@@ -128,7 +127,7 @@ class PasswordPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRed
             function () use ($operator, $recipient) {
                 return $operator->id === $recipient->id ?
                     __('You edited the password policy') :
-                    __('{0} edited the password policy', Purifier::clean($operator->profile->first_name));
+                    __('{0} edited the password policy', $operator->profile->first_name);
             }
         );
 

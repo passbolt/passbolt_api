@@ -15,8 +15,10 @@
  * @see \Passbolt\PasswordExpiry\Notification\Email\PasswordExpirySettingsUpdatedEmailRedactor
  * @var \App\View\AppView $this
  * @var array $body
+ * @var string $title
  */
 
+use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
 use Cake\I18n\DateTime;
 use Cake\Routing\Router;
@@ -25,11 +27,12 @@ if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
 $message = $body['message'];
+$user = $body['user'];
 
 echo $this->element('Email/module/avatar', [
-    'url' => AvatarHelper::getAvatarUrl(),
-    'text' => $this->element('Email/module/avatar_anonymous_text', [
-        'title' => $title,
+    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
+    'text' => $this->element('Email/module/avatar_text', [
+        'user' => $user,
         'text' => __('You have been requested to change them'),
         'datetime' => DateTime::now(),
     ]),

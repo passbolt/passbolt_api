@@ -11,6 +11,9 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.6.0
+ *
+ * @var array $body
+ * @var string $title
  */
 
 use App\Utility\Purifier;
@@ -37,7 +40,7 @@ echo $this->element('Email/module/avatar',[
     ])
 ]);
 
-$text = '<h3>' . $title . '</h3><br/>';
+$text = '<h3>' . Purifier::clean($title) . '</h3><br/>';
 $text .= __('Your organization recovery contacts have reviewed and approved your account recovery request.');
 $text .= __('Please click on the link below to continue.');
 $text .= '<br/><b>' . __('Important')  . ': ' . __('Please use the same computer and browser that you used to initiate the request.') . '</b>';

@@ -145,7 +145,8 @@
             "Passbolt\\PasswordPoliciesUpdate\\": "./plugins/PassboltEe/PasswordPoliciesUpdate/src",
             "Passbolt\\UserPassphrasePolicies\\": "./plugins/PassboltEe/UserPassphrasePolicies/src",
             "Passbolt\\PasswordExpiryPolicies\\": "./plugins/PassboltEe/PasswordExpiryPolicies/src",
-            "Passbolt\\Metadata\\": "./plugins/PassboltCe/Metadata/src"
+            "Passbolt\\Metadata\\": "./plugins/PassboltCe/Metadata/src",
+            "Passbolt\\UserKeyPolicies\\": "./plugins/PassboltCe/UserKeyPolicies/src"
         }
     },
     "autoload-dev": {
@@ -184,7 +185,8 @@
             "Passbolt\\PasswordPoliciesUpdate\\Test\\": "./plugins/PassboltEe/PasswordPoliciesUpdate/tests",
             "Passbolt\\UserPassphrasePolicies\\Test\\": "./plugins/PassboltEe/UserPassphrasePolicies/tests",
             "Passbolt\\PasswordExpiryPolicies\\Test\\": "./plugins/PassboltEe/PasswordExpiryPolicies/tests",
-            "Passbolt\\Metadata\\Test\\": "./plugins/PassboltCe/Metadata/tests"
+            "Passbolt\\Metadata\\Test\\": "./plugins/PassboltCe/Metadata/tests",
+            "Passbolt\\UserKeyPolicies\\Test\\": "./plugins/PassboltCe/UserKeyPolicies/tests"
         }
     },
     "scripts": {

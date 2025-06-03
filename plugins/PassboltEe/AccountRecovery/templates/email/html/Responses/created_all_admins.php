@@ -11,6 +11,9 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.6.0
+ *
+ * @var array $body
+ * @var string $title
  */
 
 use App\Utility\Purifier;
@@ -43,7 +46,7 @@ echo $this->element('Email/module/avatar',[
     ])
 ]);
 
-$text = '<h3>' . $title . '</h3><br/>';
+$text = '<h3>' . Purifier::clean($title) . '</h3><br/>';
 $text .= __(
     '{0} ({1}) has set the status of the request initiated by {2} ({3}) to {4}.',
     $adminName,

@@ -20,7 +20,6 @@ namespace Passbolt\AccountRecovery\Notification\OrganizationPolicies;
 use App\Model\Entity\User;
 use App\Notification\Email\Email;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
-use App\Utility\Purifier;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AbstractAccountRecoveryOrganizationPolicySetService; // phpcs:ignore
 use Passbolt\Locale\Service\GetUserLocaleService;
@@ -58,19 +57,19 @@ class AccountRecoveryOrganizationPolicyDisableEmailRedactor extends AbstractAcco
                     return __('You have disabled the account recovery.');
                 }
 
-                return __(
-                    '{0} has disabled the account recovery.',
-                    Purifier::clean($user->profile->first_name)
-                );
+                return __('{0} has disabled the account recovery.', $user->profile->first_name);
             }
         );
 
-        $data = ['body' => [
-            'user' => $user,
-            'admin' => $admin,
-            'created' => $policy->created,
-            'subject' => $subject,
-        ], 'title' => $subject,];
+        $data = [
+            'body' => [
+                'user' => $user,
+                'admin' => $admin,
+                'created' => $policy->created,
+                'subject' => $subject,
+            ],
+            'title' => $subject,
+        ];
 
         return new Email($admin, $subject, $data, self::EMAIL_TEMPLATE);
     }

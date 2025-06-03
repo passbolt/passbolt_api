@@ -124,12 +124,15 @@ class AccountRecoveryResponseApprovedUserEmailRedactor implements SubscribedEmai
             }
         );
 
-        $data = ['body' => [
-            'user' => $user,
-            'admin' => $admin,
-            'created' => $response->modified,
-            'authenticationToken' => $authenticationToken,
-        ], 'title' => $subject,];
+        $data = [
+            'body' => [
+                'user' => $user,
+                'admin' => $admin,
+                'created' => $response->modified,
+                'authenticationToken' => $authenticationToken,
+            ],
+            'title' => $subject,
+        ];
 
         return new Email($user, $subject, $data, self::USER_TEMPLATE);
     }
