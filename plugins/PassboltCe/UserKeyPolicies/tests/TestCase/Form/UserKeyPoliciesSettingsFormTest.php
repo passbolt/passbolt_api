@@ -51,9 +51,9 @@ class UserKeyPoliciesSettingsFormTest extends AppTestCase
         parent::tearDown();
     }
 
-    protected function getDummyUserKeyPoliciesSettings(): array
+    protected function getDummyUserKeyPoliciesSettings(array $data = []): array
     {
-        return UserKeyPoliciesSettingsDto::createFromDefault([])->toArray();
+        return UserKeyPoliciesSettingsDto::createFromDefault($data)->toArray();
     }
 
     public function testUserKeyPoliciesSettingsForm_Validate_PreferredKeyType(): void
@@ -86,26 +86,42 @@ class UserKeyPoliciesSettingsFormTest extends AppTestCase
         );
     }
 
-    public function testUserKeyPoliciesSettingsForm_Validate_PreferredKeyCurve(): void
+    public function testUserKeyPoliciesSettingsForm_Validate_PreferredKeyCurve_WithCurve(): void
     {
+        $data = $this->getDummyUserKeyPoliciesSettings([
+            'preferred_key_type' => UserKeyPoliciesSettingsDto::KEY_TYPE_CURVE,
+            'preferred_key_size' => null,
+            'preferred_key_curve' => UserKeyPoliciesSettingsDto::KEY_CURVE_ED25519_LEGACY,
+        ]);
+
         $testCases = [
             'requirePresence' => self::getRequirePresenceTestCases(),
             'inList' => self::getInListTestCases(UserKeyPoliciesSettingsForm::ALLOWED_KEY_CURVES),
-            'allowNull' => self::getAllowNullValueTestCase(),
         ];
 
         $this->assertFormFieldFormatValidation(
             UserKeyPoliciesSettingsForm::class,
             'preferred_key_curve',
-            $this->getDummyUserKeyPoliciesSettings(),
+            $data,
             $testCases
         );
     }
 
+    public function testUserKeyPoliciesSettingsForm_Validate_PreferredKeyCurve_WithRSA(): void
+    {
+        $data = $this->getDummyUserKeyPoliciesSettings([
+            'preferred_key_type' => UserKeyPoliciesSettingsDto::KEY_TYPE_RSA,
+            'preferred_key_curve' => null,
+        ]);
+        $result = $this->form->validate($data);
+        $this->assertTrue($result);
+    }
+
     public function testUserKeyPoliciesSettingsForm_Validate_InvalidPreferredKeyType(): void
     {
-        $data = $this->getDummyUserKeyPoliciesSettings();
-        $data['preferred_key_type'] = 'foo-bar';
+        $data = $this->getDummyUserKeyPoliciesSettings([
+            'preferred_key_type' => 'foo-bar',
+        ]);
         $result = $this->form->validate($data);
         $this->assertFalse($result);
         $this->assertTrue(Hash::check($this->form->getErrors(), 'preferred_key_type.inList'));
@@ -145,8 +161,7 @@ class UserKeyPoliciesSettingsFormTest extends AppTestCase
      */
     public function testUserKeyPoliciesSettingsForm_Validate_ValidCombinations(array $inputData): void
     {
-        $data = $this->getDummyUserKeyPoliciesSettings();
-        $data = array_merge($data, $inputData);
+        $data = $this->getDummyUserKeyPoliciesSettings($inputData);
         $result = $this->form->validate($data);
         $this->assertTrue($result);
     }
@@ -183,6 +198,14 @@ class UserKeyPoliciesSettingsFormTest extends AppTestCase
                 ],
                 'error key' => 'preferred_key_type.invalid_key_type_curve_combination',
             ],
+            [
+                'data' => [
+                    'preferred_key_type' => UserKeyPoliciesSettingsDto::KEY_TYPE_RSA,
+                    'preferred_key_size' => UserKeyPoliciesSettingsDto::KEY_SIZE_4096,
+                    'preferred_key_curve' => UserKeyPoliciesSettingsDto::KEY_CURVE_ED25519_LEGACY,
+                ],
+                'error key' => 'preferred_key_type.invalid_key_type_curve_combination',
+            ],
         ];
     }
 
@@ -194,8 +217,7 @@ class UserKeyPoliciesSettingsFormTest extends AppTestCase
      */
     public function testUserKeyPoliciesSettingsForm_Validate_InvalidTypeSizeCurveCombinations(array $providerData, string $errorKeyPath): void
     {
-        $data = $this->getDummyUserKeyPoliciesSettings();
-        $data = array_merge($data, $providerData);
+        $data = $this->getDummyUserKeyPoliciesSettings($providerData);
 
         $result = $this->form->validate($data);
 
