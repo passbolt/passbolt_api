@@ -166,6 +166,28 @@ class MissingMetadataKeyIdsContainUsersIndexControllerTest extends AppIntegratio
         }
     }
 
+    public function testMissingMetadataKeyIdsContainUsersIndexController_Success_With_Two_Metadata_Keys()
+    {
+        $admin = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())
+            ->admin()
+            ->active()
+            ->persist();
+
+        // Create a metadata without private key associated to the user
+        $metadataKey1 = MetadataKeyFactory::make()->withCreatorAndModifier($admin)->withServerPrivateKey()->persist();
+        // Create a metadata with private key associated to the user
+        $metadataKey2 = MetadataKeyFactory::make()->withCreatorAndModifier($admin)->withServerPrivateKey()->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey2)->withUserPrivateKey($admin->get('gpgkey'))->persist();
+
+        $this->logInAs($admin);
+        $queryParams = http_build_query(['contain' => ['missing_metadata_key_ids' => true]]);
+        $this->getJson("/users.json?{$queryParams}");
+
+        $this->assertSuccess();
+        $this->assertSame([$metadataKey1->get('id')], $this->_responseJsonBody[0]->missing_metadata_key_ids);
+    }
+
     public function testMissingMetadataKeyIdsContainUsersIndexController_Success_ReturnsExpireKeys()
     {
         $activeUser1 = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->user()->active()->persist();
