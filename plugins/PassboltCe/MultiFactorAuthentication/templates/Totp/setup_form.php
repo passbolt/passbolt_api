@@ -3,8 +3,9 @@
  * @var \App\View\AppView $this
  * @var mixed $totpSetupForm
  */
-    use Cake\Core\Configure;
-    use Cake\Routing\Router;
+
+use App\Utility\Purifier;
+use Cake\Routing\Router;
 
     $title = __('Time based One Time Password (TOTP)');
     $this->assign('title', $title);
@@ -37,7 +38,7 @@
                     </div>
                 </div>
                 <div class="actions-wrapper">
-                    <a href="<?= Router::url('/mfa/setup/totp/start', true); ?>" class="button cancel">Cancel</a>
+                    <a href="<?= Purifier::clean(Router::url('/mfa/setup/totp/start', true)); ?>" class="button cancel">Cancel</a>
                     <button type="submit" class="button primary">Validate</button>
                 </div>
             </div>
