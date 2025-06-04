@@ -48,7 +48,7 @@ $reportCreator = Purifier::clean($reportCreator);
     </div>
     <div class="col6 company-info last">
         <div class="logo">
-            <img src="<?= Router::url('/img/logo/logo.png', true); ?>" alt="Passbolt logo"/>
+            <img src="<?= Purifier::clean(Router::url('/img/logo/logo.png', true)); ?>" alt="Passbolt logo"/>
         </div>
     </div>
 </div>
