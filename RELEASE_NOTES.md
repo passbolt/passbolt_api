@@ -1,6 +1,14 @@
-TBD
+Release song: https://www.youtube.com/watch?v=ZA2JknKrCbM
 
-## [5.2.0-test.1] - 2025-06-03
+Passbolt v5.2.0 is now available as a release candidate.
+This version introduces the long-awaited metadata properties for v5 resources (beta): users can set a custom icon for
+a resource and associate multiple URIs with it. The release also ships with various bug fixes.
+For full details, please see the changelog.
+
+As always, we warmly invite the community to test these new features before the production release, and we thank
+everyone for their valuable feedback and bug reports.
+
+## [5.2.0-rc.1] - 2025-06-04
 ### Added
 - PB-42861 As a user I can use passbolt in Slovenian language
 - PB-42986 As a user I can use passbolt in Ukrainian language
@@ -18,6 +26,7 @@ TBD
 - PB-42687 Security alert emails should display user IP and user agent only if configured
 - PB-42378 PBL-13-001 - Fixes open redirect on MFA step in login
 - PB-42379 PBL-13-004 - Fixes HTML injections in email notifications
+- PB-43115 Fix XSS in email footer where the full base URL was not escaped or sanitized
 
 ### Maintenance
 - PB-42935 Upgrade API babel dev dependency
