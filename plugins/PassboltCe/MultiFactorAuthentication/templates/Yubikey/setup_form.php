@@ -3,8 +3,10 @@
  * @var \App\View\AppView $this
  * @var mixed $yubikeySetupForm
  */
-    use Cake\Core\Configure;
-    use Cake\Routing\Router;
+
+use App\Utility\Purifier;
+use Cake\Core\Configure;
+use Cake\Routing\Router;
 
     $title = __('Yubikey One Time Password');
     $this->assign('title', $title);
@@ -30,7 +32,7 @@
                 </div>
             </div>
             <div class="actions-wrapper">
-                <a href="<?= Router::url('/mfa/setup/select', true); ?>" class="button cancel">Cancel</a>
+                <a href="<?= Purifier::clean(Router::url('/mfa/setup/select', true)); ?>" class="button cancel">Cancel</a>
                 <button type="submit" class="button primary">Validate</button>
             </div>
         </div>
