@@ -171,6 +171,8 @@ class UserKeyPoliciesSettingsForm extends Form
 
         if ($value === UserKeyPoliciesSettingsDto::KEY_TYPE_CURVE && $keyCurve === null) { // Curve value must be present for curve type
             return false;
+        } elseif ($value === UserKeyPoliciesSettingsDto::KEY_TYPE_RSA && $keyCurve !== null) { // RSA can't have elliptic-curve setting
+            return false;
         }
 
         return true;
