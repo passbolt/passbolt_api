@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2020-11-11 13:56+0100\n"
-"PO-Revision-Date: 2025-06-05 08:10\n"
+"PO-Revision-Date: 2025-06-05 09:14\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 #: Error/error400.php:36
 #: Error/error500.php:40
 msgid "Error"
-msgstr "Napaka"
+msgstr "Napake"
 
 #: Error/error400.php:37
 msgid "The requested address {0} was not found on this server."
@@ -47,15 +47,15 @@ msgstr "Manjka ali je napačna vrsta piškotka CSRF."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:290
 msgid "Missing or invalid CSRF cookie."
-msgstr "Manjka ali je neveljaven piškotek CSRF."
+msgstr "Manjkajoč ali neveljaven CSRF piškotek."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:311
 msgid "CSRF token from either the request body or request headers did not match or is missing."
-msgstr "Žeton CSRF iz telesa zahteve ali glav zahteve se ne ujema ali manjka."
+msgstr "CSRF žeton iz telesa ali glave zahteve se ne ujema ali manjka."
 
 #: Http/Response.php:1490
 msgid "The requested file contains `..` and will not be read."
-msgstr "Zahtevana datoteka vsebuje \\\"..\\\" in ne bo prebrana."
+msgstr "Zahtevana datoteka vsebuje `..` in ne bo prebrana."
 
 #: Http/Response.php:1498
 msgid "The requested file was not found"
@@ -87,7 +87,7 @@ msgstr[3] "{0,number,integer} bajtov"
 
 #: I18n/RelativeTimeFormatter.php:86
 msgid "{0} from now"
-msgstr "Čez {0}"
+msgstr "{0} od zdaj naprej"
 
 #: I18n/RelativeTimeFormatter.php:86
 msgid "{0} ago"
@@ -120,54 +120,54 @@ msgstr "pred približno uro"
 #: I18n/RelativeTimeFormatter.php:160
 #: I18n/RelativeTimeFormatter.php:370
 msgid "about a day ago"
-msgstr "pred približno dnevom"
+msgstr "pred približno enim dnevom"
 
 #: I18n/RelativeTimeFormatter.php:161
 #: I18n/RelativeTimeFormatter.php:371
 msgid "about a week ago"
-msgstr "pred približno tednom"
+msgstr "pred približno enim tednom"
 
 #: I18n/RelativeTimeFormatter.php:162
 #: I18n/RelativeTimeFormatter.php:372
 msgid "about a month ago"
-msgstr "pred približno mesecem"
+msgstr "pred približno enim mesecem"
 
 #: I18n/RelativeTimeFormatter.php:163
 #: I18n/RelativeTimeFormatter.php:373
 msgid "about a year ago"
-msgstr "pred približno letom"
+msgstr "pred približno enim letom"
 
 #: I18n/RelativeTimeFormatter.php:174
 msgid "in about a second"
-msgstr "čez približno sekundo"
+msgstr "čez približno eno sekundo"
 
 #: I18n/RelativeTimeFormatter.php:175
 msgid "in about a minute"
-msgstr "čez približno minuto"
+msgstr "čez približno eno minuto"
 
 #: I18n/RelativeTimeFormatter.php:176
 msgid "in about an hour"
-msgstr "čez približno uro"
+msgstr "čez približno eno uro"
 
 #: I18n/RelativeTimeFormatter.php:177
 #: I18n/RelativeTimeFormatter.php:384
 msgid "in about a day"
-msgstr "čez približno dan"
+msgstr "čez približno en dan"
 
 #: I18n/RelativeTimeFormatter.php:178
 #: I18n/RelativeTimeFormatter.php:385
 msgid "in about a week"
-msgstr "čez približno teden"
+msgstr "čez približno en teden"
 
 #: I18n/RelativeTimeFormatter.php:179
 #: I18n/RelativeTimeFormatter.php:386
 msgid "in about a month"
-msgstr "čez približno mesec"
+msgstr "čez približno en mesec"
 
 #: I18n/RelativeTimeFormatter.php:180
 #: I18n/RelativeTimeFormatter.php:387
 msgid "in about a year"
-msgstr "čez približno leto"
+msgstr "čez približno eno leto"
 
 #: I18n/RelativeTimeFormatter.php:342
 msgid "today"
@@ -275,7 +275,7 @@ msgstr "To polje je obvezno"
 #: Validation/Validator.php:2520
 #: View/Form/ArrayContext.php:249
 msgid "This field cannot be left empty"
-msgstr "Tega polja ni mogoče pustiti praznega"
+msgstr "To polje ne sme ostati prazno."
 
 #: Validation/Validator.php:2672
 msgid "The provided value is invalid"
@@ -291,5 +291,5 @@ msgstr "Novo {0}"
 
 #: View/Helper/FormHelper.php:1890
 msgid "Submit"
-msgstr "Pošlji"
+msgstr "Oddaj"
 
