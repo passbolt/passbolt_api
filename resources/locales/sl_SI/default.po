@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-06-05 10:16\n"
+"PO-Revision-Date: 2025-06-05 11:17\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -44,10 +44,10 @@ msgid "Invalid verify token type."
 msgstr "Neveljaven tip žetona za preverjanje."
 
 msgid "Invalid verify token format, "
-msgstr "Neveljavna oblika preveritvenega tokena,"
+msgstr "Nepravilna oblika žetona za preverjanje,"
 
 msgid "sections are missing or using wrong delimiters."
-msgstr "manjkajo odseki ali so uporabljena napačna ločila."
+msgstr "manjkajo ali so uporabljeni napačni razmejitveni znaki (delimiterji)."
 
 msgid "the version numbers do not match."
 msgstr "številke različic se ne ujemajo."
@@ -404,19 +404,19 @@ msgid "The token should be a valid UUID."
 msgstr "Token mora biti veljaven UUID."
 
 msgid "A token is required."
-msgstr "Potrebujemo token."
+msgstr "Žeton je obvezen."
 
 msgid "The token should not be empty."
-msgstr "Token ne sme biti prazen."
+msgstr "Žeton ne sme biti prazen."
 
 msgid "The type should be one of the following: {0}."
-msgstr "Vrsta mora biti ena od naslednjih: {0}."
+msgstr "Tip mora biti ena od naslednjih: {0}."
 
 msgid "A type is required."
-msgstr "Vrsta je obvezna."
+msgstr "Tip je obvezen."
 
 msgid "The type should not be empty."
-msgstr "Vrsta ne sme biti prazna."
+msgstr "Tip ne sme biti prazen."
 
 msgid "A user identifier is required."
 msgstr "Identifikator uporabnika je obvezen."
@@ -428,10 +428,10 @@ msgid "The active status should be a valid boolean."
 msgstr "Aktivno stanje mora biti veljavna logična vrednost."
 
 msgid "An active status is required"
-msgstr "Aktivno stanje je obvezno"
+msgstr "Potreben je aktiven status"
 
 msgid "It is not possible to create an authentication token for this user."
-msgstr "Za tega uporabnika ni mogoče ustvariti avtentikacijskega tokena."
+msgstr "Za tega uporabnika ni mogoče ustvariti avtentikacijskega žetona."
 
 msgid "A file is required."
 msgstr "Potrebna je datoteka."
