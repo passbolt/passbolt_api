@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-05-27 08:21\n"
+"PO-Revision-Date: 2025-06-05 10:16\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgid "Decryption failed."
 msgstr "Dešifriranje ni uspelo."
 
 msgid "Failed to create token."
-msgstr "Ni uspelo ustvariti tokena."
+msgstr "Ustvarjanje žetona ni uspelo."
 
 msgid "The user token result should be a valid UUID."
 msgstr "Rezultat uporabniškega tokena mora biti veljaven UUID."
@@ -59,7 +59,7 @@ msgid "it is not a UUID."
 msgstr "ni UUID."
 
 msgid "wrong token data length."
-msgstr "napačna dolžina podatkov tokena."
+msgstr "napačna dolžina podatkov v žetonu."
 
 msgid "There is no user associated with this key."
 msgstr "S tem ključem ni povezan noben uporabnik."
@@ -80,7 +80,7 @@ msgid "You are successfully logged out."
 msgstr "Uspešno ste se odjavili."
 
 msgid "The logout route should only be accessed with POST method."
-msgstr "Pot do odjave je mogoče dostopati samo s POST metodo."
+msgstr "Do odjave je mogoče dostopati samo s POST metodo."
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "Informacije o javnem ključu OpenPGP niso bile najdene v konfiguraciji."
@@ -110,7 +110,7 @@ msgid "Invalid order. \"{0}\" is not a valid field."
 msgstr "Neveljavno razvrščanje. \"{0}\" ni veljavno polje."
 
 msgid "Invalid pagination."
-msgstr "Neveljavno straničenje."
+msgstr "Nepravilno paginiranje."
 
 msgid "Invalid query string. The filter parameter should be an array."
 msgstr "Neveljaven niz poizvedbe. Parameter filter mora biti polje."
@@ -143,7 +143,7 @@ msgid "\"{0}\" is not a valid search filter. It is not a UTF8 string."
 msgstr "\"{0}\" ni veljaven iskalni filter. Ni UTF8 niz."
 
 msgid "It should be between 1 and 64 char in length."
-msgstr "Mora biti dolg med 1 in 64 znakov."
+msgstr "Dolžina naj bo med 1 in 64 znaki."
 
 msgid "\"{0}\" is not a valid user filter."
 msgstr "\"{0}\" ni veljaven filter uporabnika."
@@ -182,7 +182,7 @@ msgid "\"{0}\" is not a valid contain value."
 msgstr "\"{0}\" ni veljavna vrednost contain."
 
 msgid "undefined user agent"
-msgstr "neopredeljen uporabniški agent"
+msgstr "nedefiniran uporabniški agent"
 
 msgid "Access restricted to administrators."
 msgstr "Dostop omejen na administratorje."
@@ -203,7 +203,7 @@ msgid "The resource was marked as favorite."
 msgstr "Vir je bil označen kot priljubljen."
 
 msgid "The favorite id is not valid."
-msgstr "ID priljubljene ni veljaven."
+msgstr "ID priljubljenega ni veljaven."
 
 msgid "The favorite was deleted."
 msgstr "Priljubljeno je bilo izbrisano."
