@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2020-11-11 13:56+0100\n"
-"PO-Revision-Date: 2025-05-27 08:21\n"
+"PO-Revision-Date: 2025-06-05 08:10\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgstr "Nimate dovoljenja za dostop do te lokacije."
 
 #: Error/ExceptionRenderer.php:304
 msgid "Not Found"
-msgstr "Ni najdeno"
+msgstr "Ni mogoče najti"
 
 #: Error/ExceptionRenderer.php:306
 msgid "An Internal Error Has Occurred."
