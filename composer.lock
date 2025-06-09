@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32234385c34cbf7643869f9015189077",
+    "content-hash": "da90ca8c43054799f55b2cebbef0270c",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5546,16 +5546,16 @@
         },
         {
             "name": "passbolt/passbolt-selenium-api",
-            "version": "dev-cakephp5",
+            "version": "dev-feature/PB-42939_Fix-selenium-api-plugin-resetInstance-endpoint",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-selenium-api",
-                "reference": "b35fa836d4f4711f2457e45197473d68960998ad"
+                "reference": "fee6db733122f26aeb57dcea9b2a06e45453a142"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/b35fa836d4f4711f2457e45197473d68960998ad",
-                "reference": "b35fa836d4f4711f2457e45197473d68960998ad",
+                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/fee6db733122f26aeb57dcea9b2a06e45453a142",
+                "reference": "fee6db733122f26aeb57dcea9b2a06e45453a142",
                 "shasum": ""
             },
             "require": {
@@ -5600,7 +5600,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2025-03-11T06:52:06+00:00"
+            "time": "2025-06-09T07:17:26+00:00"
         },
         {
             "name": "passbolt/passbolt-test-data",
@@ -7893,12 +7893,12 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
+        "bcrowe/cakephp-api-pagination": 20,
         "cakephp/cakephp": 20,
         "lorenzo/cakephp-email-queue": 20,
-        "bcrowe/cakephp-api-pagination": 20,
-        "psy/psysh": 0,
         "passbolt/passbolt-selenium-api": 20,
-        "passbolt/passbolt-test-data": 20
+        "passbolt/passbolt-test-data": 20,
+        "psy/psysh": 0
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -7913,7 +7913,7 @@
         "ext-pdo": "*",
         "ext-curl": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.2"
     },
