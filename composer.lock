@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "da90ca8c43054799f55b2cebbef0270c",
+    "content-hash": "7e3de0cf53b906138affb7444f59c48a",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5546,16 +5546,16 @@
         },
         {
             "name": "passbolt/passbolt-selenium-api",
-            "version": "dev-feature/PB-42939_Fix-selenium-api-plugin-resetInstance-endpoint",
+            "version": "dev-cakephp5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-selenium-api",
-                "reference": "fee6db733122f26aeb57dcea9b2a06e45453a142"
+                "reference": "0d46ae337ba71659191e7625c96ff2f861da44d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/fee6db733122f26aeb57dcea9b2a06e45453a142",
-                "reference": "fee6db733122f26aeb57dcea9b2a06e45453a142",
+                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/0d46ae337ba71659191e7625c96ff2f861da44d1",
+                "reference": "0d46ae337ba71659191e7625c96ff2f861da44d1",
                 "shasum": ""
             },
             "require": {
@@ -5600,7 +5600,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2025-06-09T07:17:26+00:00"
+            "time": "2025-06-10T09:23:34+00:00"
         },
         {
             "name": "passbolt/passbolt-test-data",
