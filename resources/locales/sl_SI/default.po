@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-06-10 12:26\n"
+"PO-Revision-Date: 2025-06-10 13:24\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -68,7 +68,7 @@ msgid "Page not found."
 msgstr "Stran ni bila najdena."
 
 msgid "Please use .json extension in URL or accept application/json."
-msgstr "Uporabite razširitev .json v URL-ju ali sprejmite application/json."
+msgstr "Uporabite .json v URL-ju ali sprejmite application/json."
 
 msgid "The request data can not be empty."
 msgstr "Podatki zahtevka ne smejo biti prazni."
@@ -188,7 +188,7 @@ msgid "Access restricted to administrators."
 msgstr "Dostop omejen na administratorje."
 
 msgid "Access restricted to unauthenticated users."
-msgstr "Dostop je omejen na nepoverjene uporabnike."
+msgstr "Dostop je omejen na neavtentificirane uporabnike."
 
 msgid "The user should not be logged in."
 msgstr "Uporabnik ne sme biti prijavljen."
@@ -299,7 +299,7 @@ msgid "The setup was completed successfully."
 msgstr "Nastavitev je bila uspešno dokončana."
 
 msgid "Only guests are allowed to start setup."
-msgstr "Samo gostje smejo začeti s nastavitvijo."
+msgstr "Samo gostje smejo začeti z nastavitvijo."
 
 msgid "You are not authorized to share this resource."
 msgstr "Nimate dovoljenja za deljenje tega vira."
@@ -515,7 +515,7 @@ msgid "The user cannot delete this comment."
 msgstr "Uporabnik tega komentarja ne more izbrisati."
 
 msgid "The commented object type does not exist."
-msgstr "Komentiran objekt ne obstaja."
+msgstr "Komentirana vrsta predmeta ne obstaja."
 
 msgid "The favorite object type should be one of the following: {0}."
 msgstr "Vrsta priljubljenega objekta mora biti ena od naslednjih: {0}."
@@ -551,13 +551,13 @@ msgid "The armored key should not be empty."
 msgstr "Ključ v ASCII obliki ne sme biti prazen."
 
 msgid "The fingerprint should be a valid ASCII string."
-msgstr "FingerPrint mora biti veljaven niz ASCII."
+msgstr "Prstni odtis mora biti veljaven niz ASCII."
 
 msgid "A fingerprint is required"
-msgstr "FingerPrint je obvezen"
+msgstr "Prstni odtis je obvezen"
 
 msgid "The fingerprint should not be empty"
-msgstr "FingerPrint ne sme biti prazen"
+msgstr "Prstni odtis ne sme biti prazen"
 
 msgid "A length is required."
 msgstr "Dolžina je obvezna."
@@ -653,7 +653,7 @@ msgid "The name is already used by another group."
 msgstr "Ime že uporablja druga skupina."
 
 msgid "A group manager should be provided."
-msgstr "Zagotovi se naj manager skupine."
+msgstr "Zagotoviti je treba vodjo skupine."
 
 msgid "The group should not be soft deleted."
 msgstr "Skupina ne sme biti mehko izbrisana."
@@ -905,7 +905,7 @@ msgid "The metadata key is marked as expired."
 msgstr "Ključ metapodatkov je označen kot potekel."
 
 msgid "The shared metadata key should be unique."
-msgstr ""
+msgstr "Ključ metapodatkov v skupni rabi mora biti edinstven."
 
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Ustvarjanje tipov vira v5-password-string ni dovoljeno."
@@ -1106,7 +1106,7 @@ msgid "{0} deleted the password {1}"
 msgstr "{0} je izbrisal geslo {1}"
 
 msgid "{0} deleted a password"
-msgstr ""
+msgstr "{0} je izbrisal geslo"
 
 msgid "You edited a resource"
 msgstr "Uredili ste vir"
@@ -1412,7 +1412,7 @@ msgid "The self registration provider is: {0}."
 msgstr "Ponudnik samoregistracije je: {0}."
 
 msgid "The deprecated self registration public setting was not found in {0}."
-msgstr "Zastarela javna nastavitev za samoregistracijo ni bila najdena v {0}."
+msgstr "{0}Zastarela javna nastavitev za samoregistracijo ni bila najdena v {0}."
 
 msgid "The deprecated self registration public setting was found in {0}."
 msgstr "Zastarela javna nastavitev za samoregistracijo je bila najdena v {0}."
@@ -2354,7 +2354,7 @@ msgid "The metadata key does not exist."
 msgstr "Ključ metapodatkov ne obstaja."
 
 msgid "The folder metadata provided cannot be decrypted."
-msgstr ""
+msgstr "Predloženih metapodatkov mape ni mogoče dešifrirati."
 
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Mape tipa \"personal\" ni mogoče deliti z drugimi uporabniki ali skupino."
@@ -2591,7 +2591,7 @@ msgid "Security warning!"
 msgstr "Varnostno opozorilo!"
 
 msgid "An unknown user attempted to identify as {0}."
-msgstr ""
+msgstr "Neznani uporabnik se je poskušal identificirati kot {0}."
 
 msgid "This is a potential security issue."
 msgstr "To je mogoče varnostno tveganje."
@@ -2600,7 +2600,7 @@ msgid "Please investigate!"
 msgstr "Prosimo, raziščite!"
 
 msgid "An unknown user attempted to steal your login data."
-msgstr ""
+msgstr "Neznani uporabnik je poskušal ukrasti vaše prijavne podatke."
 
 msgid "Please get in touch with one of your administrators."
 msgstr "Prosimo, stori kontakt z enim izmed vaših administratorjev."
@@ -3221,7 +3221,7 @@ msgid "The provided modified by does not match."
 msgstr "Vrednost \"modified by\", ki je bila posredovana, se ne ujema."
 
 msgid "The folder metadata key data could not be updated."
-msgstr ""
+msgstr "Podatkov metapodatkovnega ključa mape ni bilo mogoče posodobiti."
 
 msgid "The resource metadata key data could not be updated."
 msgstr "Podatkov ključa metapodatkov vira ni bilo mogoče posodobiti."
@@ -3296,7 +3296,7 @@ msgid "You have created a new password."
 msgstr "Ustvarili ste novo geslo."
 
 msgid "{0} deleted a password."
-msgstr ""
+msgstr "{0} je izbrisal geslo."
 
 msgid "Log in passbolt"
 msgstr "Prijavi se v passbolt"
