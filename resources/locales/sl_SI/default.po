@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-06-10 11:23\n"
+"PO-Revision-Date: 2025-06-10 12:26\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -56,7 +56,7 @@ msgid "wrong version number."
 msgstr "napačna številka različice."
 
 msgid "it is not a UUID."
-msgstr "ni UUID."
+msgstr "to ni UUID."
 
 msgid "wrong token data length."
 msgstr "napačna dolžina podatkov v žetonu."
@@ -359,7 +359,7 @@ msgid "You are not authorized to edit the role."
 msgstr "Nimate dovoljenja za urejanje vloge."
 
 msgid "Multiple has-access filters are not supported."
-msgstr "Več filtrov do-dostopa ni podprtih."
+msgstr "Več filtrov ni podprtih."
 
 msgid "This operation is not allowed for this user."
 msgstr "Uporabnik za to operacijo nima dovoljenja."
@@ -614,7 +614,7 @@ msgid "A valid OpenPGP key must be provided."
 msgstr "Zagotoviti je treba veljaven OpenPGP ključ."
 
 msgid "The OpenPGP armored key could not be parsed."
-msgstr "Oklepni OpenPGP ključ ni bilo mogoče razčleniti."
+msgstr "Kodiranega OpenPGP ključa ni bilo mogoče obdelati."
 
 msgid "The OpenPGP armored key could not be validated."
 msgstr "Oklepnega OpenPGP ključa ni bilo mogoče potrditi."
@@ -1019,7 +1019,7 @@ msgid "The date should not be set in the future."
 msgstr "Datuma ni dovoljeno nastaviti v prihodnosti."
 
 msgid "The date could not be parsed."
-msgstr "Datuma ni bilo mogoče razčleniti."
+msgstr "Datuma ni bilo mogoče obdelati."
 
 msgid "The email should be a valid email address."
 msgstr "E-poštni naslov mora biti veljaven."
@@ -1916,7 +1916,7 @@ msgid "Recipient information could not be found."
 msgstr "Informacije o prejemniku ni bilo mogoče najti."
 
 msgid "The public key could not be parsed."
-msgstr "Javnega ključa ni bilo mogoče razčleniti."
+msgstr "Javnega ključa ni bilo mogoče obdelati."
 
 msgid "The armored message must not contain an extra line before the end block."
 msgstr "Oklepno sporočilo ne sme vsebovati dodatne vrstice pred končnim blokom."
@@ -2312,7 +2312,7 @@ msgid "The user id should not be empty."
 msgstr "ID uporabnika ne sme biti prazen."
 
 msgid "Could not validate folders relations history data."
-msgstr "Ni bilo mogoče potrditi podatkov zgodovine odnosov map."
+msgstr "Ni bilo mogoče potrditi podatkov o zgodovini odnosov v mapah."
 
 msgid "The child object type is required."
 msgstr "Vrsta podrejenega objekta je zahtevana."
@@ -3404,7 +3404,7 @@ msgid "The current page does not match the total number of pages."
 msgstr "Trenutna stran se ne ujema s skupnim številom strani."
 
 msgid "The authentication token is missing."
-msgstr "Avtentikacijskega žetona ni."
+msgstr "Manjka avtentikacijski žeton."
 
 msgid "The authentication token is not valid for this user."
 msgstr "Avtentikacijski žeton za tega uporabnika ni veljaven."
@@ -4274,7 +4274,7 @@ msgid "Email domain safe list"
 msgstr "Seznam dovoljenih domen e-pošte"
 
 msgid "Could not parse the self registration settings found in database."
-msgstr "Ni bilo mogoče razčleniti nastavitev samoregistracije, ki so bile najdene v bazi podatkov."
+msgstr "Ni bilo mogoče obdelati nastavitev samoregistracije, ki so bile najdene v bazi podatkov."
 
 msgid "Could not validate the self registration settings found in database."
 msgstr "Ni bilo mogoče preveriti nastavitev samoregistracije, ki so bile najdene v bazi podatkov."
@@ -4961,7 +4961,7 @@ msgid "Other users can still share resources with you and add you to a group."
 msgstr "Drugi uporabniki lahko še vedno delijo vire z vami in vas dodajo v skupino."
 
 msgid "Contact your admin"
-msgstr "Obrnite se na svojega skrbnika"
+msgstr "Obrnite se na skrbnika"
 
 msgid "{0} changed your role to user."
 msgstr "{0} je spremenil vašo vlogo v \"user\"."
@@ -4976,7 +4976,7 @@ msgid "You"
 msgstr "Vi"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
-msgstr "{0} ({1}) je pravkar dokončal obnovo računa. Prosto stori kontakt z uporabnikom, če vam to dejanje zdi sumljivo."
+msgstr "{0} ({1}) je pravkar zaključil obnovitev računa. Če menite, da je to dejanje sumljivo, lahko stopite v stik s tem uporabnikom."
 
 msgid "View user in passbolt"
 msgstr "Oglejte si uporabnika v passboltu"
