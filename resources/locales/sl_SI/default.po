@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-06-11 12:36\n"
+"PO-Revision-Date: 2025-06-11 13:37\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -1226,10 +1226,10 @@ msgid "The send on user recovered setting should be a boolean."
 msgstr "Nastavitev za pošiljanje ob vzpostavitvi uporabnika mora biti logična vrednost."
 
 msgid "The token is expired."
-msgstr "Token je potekel."
+msgstr "Žeton je potekel."
 
 msgid "The authentication token is not valid."
-msgstr "Avtentikacijski token ni veljaven."
+msgstr "Avtentikacijski žeton ni veljaven."
 
 msgid "The authentication token could not be found."
 msgstr "Avtentikacijskega žetona ni bilo mogoče najti."
@@ -2069,10 +2069,10 @@ msgid "The secrets of all the users having access to the resource are required."
 msgstr "Skrivnosti vseh uporabnikov, ki imajo dostop do vira, so obvezne."
 
 msgid "An authentication token should be provided."
-msgstr "Zagotoviti je treba avtentikacijski token."
+msgstr "Zagotoviti je treba avtentikacijski žeton."
 
 msgid "The authentication token should be a valid UUID."
-msgstr "Avtentikacijski token mora biti veljaven UUID."
+msgstr "Avtentikacijski žeton mora biti veljaven UUID."
 
 msgid "An OpenPGP key must be provided."
 msgstr "Zagotoviti je treba OpenPGP ključ."
@@ -3536,10 +3536,10 @@ msgid "This yubikey is not associated with this user."
 msgstr "Ta Yubikey ni povezan s tem uporabnikom."
 
 msgid "No Duo error provided"
-msgstr "Ni zagotovljene napake Duo"
+msgstr "Napaka Duo ni podana"
 
 msgid "No Duo error description provided"
-msgstr "Ni zagotovljenega opisa napake Duo"
+msgstr "Ni podanega opisa napake Duo"
 
 msgid "Your multi-factor authentication settings were reset by you."
 msgstr "Vaše nastavitve večfaktorske avtentikacije ste ponastavili sami."
@@ -4736,7 +4736,7 @@ msgid "Server Name"
 msgstr "Ime strežnika"
 
 msgid "admin@your-server.com"
-msgstr "admin@vase-streznik.com"
+msgstr "admin@vas-streznik.com"
 
 msgid "Server Email"
 msgstr "E-pošta strežnika"
