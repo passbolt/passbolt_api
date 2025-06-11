@@ -108,7 +108,7 @@ class AccountRecoveryRequestCreatedUserEmailRedactor implements SubscribedEmailR
             }
         );
 
-        $data = ['body' => ['user' => $user, 'created' => $request->created,], 'title' => $subject,];
+        $data = ['body' => ['user' => $user, 'created' => $request->created], 'title' => $subject];
 
         return new Email($user, $subject, $data, self::USER_TEMPLATE);
     }

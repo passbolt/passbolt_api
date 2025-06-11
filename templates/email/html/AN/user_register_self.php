@@ -31,8 +31,9 @@ echo $this->element('Email/module/avatar',[
 ]);
 
 $text = '<h3>' . __('Welcome {0}', Purifier::clean($user['profile']['first_name'])) . ',</h3><br/>';
+$passboltBaseUrl = Purifier::clean(Router::url('/',true));
 $text .= __('You just opened an account on passbolt at {0}.',
-    '<a href="' . Router::url('/',true) . '">' . Router::url('/',true) . '</a>'
+    '<a href="' . $passboltBaseUrl . '">' . $passboltBaseUrl . '</a>'
 );
 $text .= ' ' . __('Passbolt is an open source password manager.');
 $text .= ' ' .__('It is designed to allow sharing credentials securely with your team!');
@@ -45,5 +46,5 @@ echo $this->element('Email/module/text', [
 
 echo $this->element('Email/module/button', [
     'url' => Router::url('/setup/start/' . $user['id'] . '/' . $token['token'], true),
-    'text' => __('get started')
+    'text' => __('Get started')
 ]);

@@ -47,6 +47,13 @@ trait FormatValidationTrait
     public static $FIELD_NOT_SCALAR = '__FIELD_NOT_SCALAR__';
 
     /**
+     * Placeholder value to replace the value with actual null type.
+     *
+     * @var string
+     */
+    public static $FIELD_NULL = '__FIELD_NULL__';
+
+    /**
      * Adjust entity data before validation.
      * This function will mainly process special fields such as FIELD_NOT_PROVIDED,
      * FIELD_EMPTY and FIELD_NOT_SCALAR and replace the value with what it should be.
@@ -65,6 +72,8 @@ trait FormatValidationTrait
             $data = Hash::insert($data, $fieldName, '');
         } elseif ($value === self::$FIELD_NOT_PROVIDED) {
             $data = Hash::remove($data, $fieldName);
+        } elseif ($value === self::$FIELD_NULL) {
+            $data = Hash::insert($data, $fieldName, null);
         }
 
         return $data;
@@ -240,6 +249,22 @@ trait FormatValidationTrait
         ];
 
         return $test;
+    }
+
+    /**
+     * Test case to allow a field to be nullable.
+     *
+     * @return array
+     */
+    public static function getAllowNullValueTestCase(): array
+    {
+        return [
+            // not required since it's truthy condition
+            // 'rule_name' => 'allowNull',
+            'test_cases' => [
+                self::$FIELD_NULL => true,
+            ],
+        ];
     }
 
     /**

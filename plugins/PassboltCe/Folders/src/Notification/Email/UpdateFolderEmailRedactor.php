@@ -24,7 +24,6 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
-use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
@@ -138,7 +137,7 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     private function createEmail(User $recipient, User $operator, Folder $folder, bool $isV5): Email
     {
         $isOperator = $recipient->id === $operator->id;
-        $userFirstName = Purifier::clean($operator->profile->first_name);
+        $userFirstName = $operator->profile->first_name;
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($isOperator, $userFirstName, $folder, $isV5) {
@@ -148,7 +147,7 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
                 }
 
                 if (!$isV5) {
-                    $subject .= ' ' . Purifier::clean($folder->name);
+                    $subject .= ' ' . $folder->name;
                 }
 
                 return $subject;

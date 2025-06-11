@@ -23,7 +23,6 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Locale\Service\LocaleService;
@@ -106,7 +105,7 @@ class PasswordExpirySettingsUpdatedEmailRedactor implements SubscribedEmailRedac
         string $clientIp,
         string $userAgent
     ): Email {
-        $operatorFullName = Purifier::clean($operator->profile->full_name);
+        $operatorFullName = $operator->profile->full_name;
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($operator, $recipient, $operatorFullName) {

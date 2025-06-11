@@ -11,6 +11,9 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.6.0
+ *
+ * @var array $body
+ * @var string $title
  */
 
 use App\Utility\Purifier;
@@ -38,7 +41,7 @@ echo $this->element('Email/module/avatar',[
     ])
 ]);
 
-$text = '<h3>' . $title . '</h3><br/>';
+$text = '<h3>' . Purifier::clean($title) . '</h3><br/>';
 $text .= __('You have set the status of the account recovery request initiated by {0} ({1}) to {2}.', $userName, $userEmail, $status);
 
 echo $this->element('Email/module/text', [

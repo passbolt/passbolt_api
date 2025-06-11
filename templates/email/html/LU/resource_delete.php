@@ -30,7 +30,7 @@ echo $this->element('Email/module/avatar',[
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
         'datetime' => $resource['modified'],
-        'text' => $subject,
+        'text' => Purifier::clean($subject),
     ])
 ]);
 
@@ -51,5 +51,5 @@ echo $this->element('Email/module/text', [
 
 echo $this->element('Email/module/button', [
     'url' => Router::url('/', true),
-    'text' => __('log in passbolt')
+    'text' => __('Log in passbolt'),
 ]);

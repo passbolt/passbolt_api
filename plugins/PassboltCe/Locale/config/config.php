@@ -69,6 +69,14 @@ return [
                         'locale' => 'sv-SE',
                         'label' => 'Svenska',
                     ],
+                    [
+                        'locale' => 'sl-SI',
+                        'label' => 'Slovenščina',
+                    ],
+                    [
+                        'locale' => 'uk-UA',
+                        'label' => 'Українська',
+                    ],
                 ],
             ],
         ],

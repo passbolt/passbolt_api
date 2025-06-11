@@ -17,7 +17,6 @@
  * @var array $body
  */
 
-use App\Model\Entity\Role;
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
 use Cake\Routing\Router;

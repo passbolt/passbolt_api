@@ -15,6 +15,7 @@
  * @see \Passbolt\MfaPolicies\Notification\Email\MfaPoliciesSettingsUpdatedEmailRedactor
  * @var \App\View\AppView $this
  * @var array $body
+ * @var string $title
  */
 
 use App\Utility\Purifier;
@@ -40,9 +41,7 @@ echo $this->element('Email/module/avatar', [
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $operator,
         'datetime' => $mfaPolicySettings['modified'],
-        'text' => $operator['id'] === $recipient['id'] ?
-            __('You edited the MFA policy') :
-            __('{0} edited the MFA policy', Purifier::clean($operator['profile']['first_name'])),
+        'text' => Purifier::clean($title),
     ]),
 ]);
 
@@ -63,5 +62,5 @@ echo $this->element('Email/module/user_info', compact('userAgent', 'clientIp'));
 
 echo $this->element('Email/module/button', [
     'url' => Router::url('/app/administration/mfa-policy', true),
-    'text' => __('view it in passbolt'),
+    'text' => __('View it in passbolt'),
 ]);

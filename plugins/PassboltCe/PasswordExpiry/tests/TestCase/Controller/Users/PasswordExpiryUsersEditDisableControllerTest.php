@@ -91,7 +91,7 @@ class PasswordExpiryUsersEditDisableControllerTest extends AppIntegrationTestCas
         $this->assertFalse($resourcesSharedViaGroupNotViewed->isExpired());
 
         $this->assertEmailQueueCount(4);
-        $userFullName = h(Purifier::clean($userFullName));
+        $userFullName = Purifier::clean($userFullName);
         $this->assertEmailInBatchContains(
             "The user {$userFullName} has been suspended.",
             $admin1->username,

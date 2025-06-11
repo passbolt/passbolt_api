@@ -24,7 +24,6 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
@@ -123,19 +122,22 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
                 return __(
                     'Suspicious account recovery request issued from IP {0} for {1}',
                     $clientIp,
-                    Purifier::clean($user->profile->first_name)
+                    $user->profile->first_name
                 );
             }
         );
 
-        $data = ['body' => [
-            'user' => $user,
-            'admin' => $admin,
-            'clientIp' => $clientIp,
-            'requestId' => $requestId,
-            'created' => DateTime::now(),
-            'subject' => $subject,
-        ], 'title' => $subject,];
+        $data = [
+            'body' => [
+                'user' => $user,
+                'admin' => $admin,
+                'clientIp' => $clientIp,
+                'requestId' => $requestId,
+                'created' => DateTime::now(),
+                'subject' => $subject,
+            ],
+            'title' => $subject,
+        ];
 
         return new Email($admin, $subject, $data, self::ADMIN_TEMPLATE);
     }

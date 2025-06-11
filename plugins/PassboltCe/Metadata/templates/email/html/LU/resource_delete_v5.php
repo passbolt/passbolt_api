@@ -28,7 +28,7 @@ echo $this->element('Email/module/avatar',[
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
         'datetime' => $resource['modified'],
-        'text' => $subject,
+        'text' => Purifier::clean($subject),
     ])
 ]);
 
