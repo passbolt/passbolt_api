@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+## Description: Create passbolt main & test database on db container using 'root' user privileges
+## Usage: create_passbolt_db
+## Example: "ddev create_passbolt_db"
+## DBTypes: mysql,mariadb
+## ExecRaw: true
+
+# Prefer 'mariadb' instead of 'mysql' (older versions of MariaDB only have the 'mysql' binary)
+if [[ "${DDEV_DATABASE}" == "mariadb"* ]] && command -v mariadb >/dev/null 2>&1; then
+    mariadb -e "CREATE DATABASE IF NOT EXISTS passbolt; GRANT ALL PRIVILEGES ON passbolt.* TO 'db'@'%'; FLUSH PRIVILEGES;"
+    mariadb -e "CREATE DATABASE IF NOT EXISTS test_passbolt; GRANT ALL PRIVILEGES ON test_passbolt.* TO 'db'@'%'; FLUSH PRIVILEGES;"
+else
+    mysql -e "CREATE DATABASE IF NOT EXISTS passbolt; GRANT ALL PRIVILEGES ON passbolt.* TO 'db'@'%'; FLUSH PRIVILEGES;"
+    mysql -e "CREATE DATABASE IF NOT EXISTS test_passbolt; GRANT ALL PRIVILEGES ON test_passbolt.* TO 'db'@'%'; FLUSH PRIVILEGES;"
+fi

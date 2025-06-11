@@ -1,0 +1,18 @@
+#ddev-generated
+# Install cron package; this can be done in webimage_extra_packages, but put it here for now.
+RUN (apt-get update || true) && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confold" --no-install-recommends --no-install-suggests cron
+
+# Copy our custom config
+COPY ./cron.conf /etc/supervisor/conf.d/cron.conf
+
+# Make it so you can add to cron.d without root privileges
+RUN chmod 777 /etc/cron.d /var/run
+
+# Copy over our custom jobs
+COPY ./*.cron /etc/cron.d/
+
+# Give execution rights on the cron jobs
+RUN chmod -f 0644 /etc/cron.d/*.cron || true
+
+# Concatenate files
+RUN { cat /etc/cron.d/*.cron; } | crontab -u ${username} -
