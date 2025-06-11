@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-06-05 11:17\n"
+"PO-Revision-Date: 2025-06-10 13:24\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -56,7 +56,7 @@ msgid "wrong version number."
 msgstr "napačna številka različice."
 
 msgid "it is not a UUID."
-msgstr "ni UUID."
+msgstr "to ni UUID."
 
 msgid "wrong token data length."
 msgstr "napačna dolžina podatkov v žetonu."
@@ -68,7 +68,7 @@ msgid "Page not found."
 msgstr "Stran ni bila najdena."
 
 msgid "Please use .json extension in URL or accept application/json."
-msgstr "Uporabite razširitev .json v URL-ju ali sprejmite application/json."
+msgstr "Uporabite .json v URL-ju ali sprejmite application/json."
 
 msgid "The request data can not be empty."
 msgstr "Podatki zahtevka ne smejo biti prazni."
@@ -188,7 +188,7 @@ msgid "Access restricted to administrators."
 msgstr "Dostop omejen na administratorje."
 
 msgid "Access restricted to unauthenticated users."
-msgstr "Dostop je omejen na nepoverjene uporabnike."
+msgstr "Dostop je omejen na neavtentificirane uporabnike."
 
 msgid "The user should not be logged in."
 msgstr "Uporabnik ne sme biti prijavljen."
@@ -299,7 +299,7 @@ msgid "The setup was completed successfully."
 msgstr "Nastavitev je bila uspešno dokončana."
 
 msgid "Only guests are allowed to start setup."
-msgstr "Samo gostje smejo začeti s nastavitvijo."
+msgstr "Samo gostje smejo začeti z nastavitvijo."
 
 msgid "You are not authorized to share this resource."
 msgstr "Nimate dovoljenja za deljenje tega vira."
@@ -359,7 +359,7 @@ msgid "You are not authorized to edit the role."
 msgstr "Nimate dovoljenja za urejanje vloge."
 
 msgid "Multiple has-access filters are not supported."
-msgstr "Več filtrov do-dostopa ni podprtih."
+msgstr "Več filtrov ni podprtih."
 
 msgid "This operation is not allowed for this user."
 msgstr "Uporabnik za to operacijo nima dovoljenja."
@@ -515,7 +515,7 @@ msgid "The user cannot delete this comment."
 msgstr "Uporabnik tega komentarja ne more izbrisati."
 
 msgid "The commented object type does not exist."
-msgstr "Komentiran objekt ne obstaja."
+msgstr "Komentirana vrsta predmeta ne obstaja."
 
 msgid "The favorite object type should be one of the following: {0}."
 msgstr "Vrsta priljubljenega objekta mora biti ena od naslednjih: {0}."
@@ -551,13 +551,13 @@ msgid "The armored key should not be empty."
 msgstr "Ključ v ASCII obliki ne sme biti prazen."
 
 msgid "The fingerprint should be a valid ASCII string."
-msgstr "FingerPrint mora biti veljaven niz ASCII."
+msgstr "Prstni odtis mora biti veljaven niz ASCII."
 
 msgid "A fingerprint is required"
-msgstr "FingerPrint je obvezen"
+msgstr "Prstni odtis je obvezen"
 
 msgid "The fingerprint should not be empty"
-msgstr "FingerPrint ne sme biti prazen"
+msgstr "Prstni odtis ne sme biti prazen"
 
 msgid "A length is required."
 msgstr "Dolžina je obvezna."
@@ -614,7 +614,7 @@ msgid "A valid OpenPGP key must be provided."
 msgstr "Zagotoviti je treba veljaven OpenPGP ključ."
 
 msgid "The OpenPGP armored key could not be parsed."
-msgstr "Oklepni OpenPGP ključ ni bilo mogoče razčleniti."
+msgstr "Kodiranega OpenPGP ključa ni bilo mogoče obdelati."
 
 msgid "The OpenPGP armored key could not be validated."
 msgstr "Oklepnega OpenPGP ključa ni bilo mogoče potrditi."
@@ -653,7 +653,7 @@ msgid "The name is already used by another group."
 msgstr "Ime že uporablja druga skupina."
 
 msgid "A group manager should be provided."
-msgstr "Zagotovi se naj manager skupine."
+msgstr "Zagotoviti je treba vodjo skupine."
 
 msgid "The group should not be soft deleted."
 msgstr "Skupina ne sme biti mehko izbrisana."
@@ -905,7 +905,7 @@ msgid "The metadata key is marked as expired."
 msgstr "Ključ metapodatkov je označen kot potekel."
 
 msgid "The shared metadata key should be unique."
-msgstr ""
+msgstr "Ključ metapodatkov v skupni rabi mora biti edinstven."
 
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Ustvarjanje tipov vira v5-password-string ni dovoljeno."
@@ -1019,7 +1019,7 @@ msgid "The date should not be set in the future."
 msgstr "Datuma ni dovoljeno nastaviti v prihodnosti."
 
 msgid "The date could not be parsed."
-msgstr "Datuma ni bilo mogoče razčleniti."
+msgstr "Datuma ni bilo mogoče obdelati."
 
 msgid "The email should be a valid email address."
 msgstr "E-poštni naslov mora biti veljaven."
@@ -1106,7 +1106,7 @@ msgid "{0} deleted the password {1}"
 msgstr "{0} je izbrisal geslo {1}"
 
 msgid "{0} deleted a password"
-msgstr ""
+msgstr "{0} je izbrisal geslo"
 
 msgid "You edited a resource"
 msgstr "Uredili ste vir"
@@ -1412,7 +1412,7 @@ msgid "The self registration provider is: {0}."
 msgstr "Ponudnik samoregistracije je: {0}."
 
 msgid "The deprecated self registration public setting was not found in {0}."
-msgstr "Zastarela javna nastavitev za samoregistracijo ni bila najdena v {0}."
+msgstr "{0}Zastarela javna nastavitev za samoregistracijo ni bila najdena v {0}."
 
 msgid "The deprecated self registration public setting was found in {0}."
 msgstr "Zastarela javna nastavitev za samoregistracijo je bila najdena v {0}."
@@ -1916,7 +1916,7 @@ msgid "Recipient information could not be found."
 msgstr "Informacije o prejemniku ni bilo mogoče najti."
 
 msgid "The public key could not be parsed."
-msgstr "Javnega ključa ni bilo mogoče razčleniti."
+msgstr "Javnega ključa ni bilo mogoče obdelati."
 
 msgid "The armored message must not contain an extra line before the end block."
 msgstr "Oklepno sporočilo ne sme vsebovati dodatne vrstice pred končnim blokom."
@@ -2312,7 +2312,7 @@ msgid "The user id should not be empty."
 msgstr "ID uporabnika ne sme biti prazen."
 
 msgid "Could not validate folders relations history data."
-msgstr "Ni bilo mogoče potrditi podatkov zgodovine odnosov map."
+msgstr "Ni bilo mogoče potrditi podatkov o zgodovini odnosov v mapah."
 
 msgid "The child object type is required."
 msgstr "Vrsta podrejenega objekta je zahtevana."
@@ -2354,7 +2354,7 @@ msgid "The metadata key does not exist."
 msgstr "Ključ metapodatkov ne obstaja."
 
 msgid "The folder metadata provided cannot be decrypted."
-msgstr ""
+msgstr "Predloženih metapodatkov mape ni mogoče dešifrirati."
 
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Mape tipa \"personal\" ni mogoče deliti z drugimi uporabniki ali skupino."
@@ -2591,7 +2591,7 @@ msgid "Security warning!"
 msgstr "Varnostno opozorilo!"
 
 msgid "An unknown user attempted to identify as {0}."
-msgstr ""
+msgstr "Neznani uporabnik se je poskušal identificirati kot {0}."
 
 msgid "This is a potential security issue."
 msgstr "To je mogoče varnostno tveganje."
@@ -2600,7 +2600,7 @@ msgid "Please investigate!"
 msgstr "Prosimo, raziščite!"
 
 msgid "An unknown user attempted to steal your login data."
-msgstr ""
+msgstr "Neznani uporabnik je poskušal ukrasti vaše prijavne podatke."
 
 msgid "Please get in touch with one of your administrators."
 msgstr "Prosimo, stori kontakt z enim izmed vaših administratorjev."
@@ -3221,7 +3221,7 @@ msgid "The provided modified by does not match."
 msgstr "Vrednost \"modified by\", ki je bila posredovana, se ne ujema."
 
 msgid "The folder metadata key data could not be updated."
-msgstr ""
+msgstr "Podatkov metapodatkovnega ključa mape ni bilo mogoče posodobiti."
 
 msgid "The resource metadata key data could not be updated."
 msgstr "Podatkov ključa metapodatkov vira ni bilo mogoče posodobiti."
@@ -3296,7 +3296,7 @@ msgid "You have created a new password."
 msgstr "Ustvarili ste novo geslo."
 
 msgid "{0} deleted a password."
-msgstr ""
+msgstr "{0} je izbrisal geslo."
 
 msgid "Log in passbolt"
 msgstr "Prijavi se v passbolt"
@@ -3404,7 +3404,7 @@ msgid "The current page does not match the total number of pages."
 msgstr "Trenutna stran se ne ujema s skupnim številom strani."
 
 msgid "The authentication token is missing."
-msgstr "Avtentikacijskega žetona ni."
+msgstr "Manjka avtentikacijski žeton."
 
 msgid "The authentication token is not valid for this user."
 msgstr "Avtentikacijski žeton za tega uporabnika ni veljaven."
@@ -4274,7 +4274,7 @@ msgid "Email domain safe list"
 msgstr "Seznam dovoljenih domen e-pošte"
 
 msgid "Could not parse the self registration settings found in database."
-msgstr "Ni bilo mogoče razčleniti nastavitev samoregistracije, ki so bile najdene v bazi podatkov."
+msgstr "Ni bilo mogoče obdelati nastavitev samoregistracije, ki so bile najdene v bazi podatkov."
 
 msgid "Could not validate the self registration settings found in database."
 msgstr "Ni bilo mogoče preveriti nastavitev samoregistracije, ki so bile najdene v bazi podatkov."
@@ -4916,10 +4916,10 @@ msgid "is not anymore group manager"
 msgstr "ni več manager skupine"
 
 msgid "User Agent: "
-msgstr "Uporabniški agent: "
+msgstr "Uporabniški agent:"
 
 msgid "User IP: "
-msgstr "Uporabniški IP: "
+msgstr "Uporabniški IP:"
 
 msgid "Terms"
 msgstr "Pogoji"
@@ -4961,7 +4961,7 @@ msgid "Other users can still share resources with you and add you to a group."
 msgstr "Drugi uporabniki lahko še vedno delijo vire z vami in vas dodajo v skupino."
 
 msgid "Contact your admin"
-msgstr "Obrnite se na svojega skrbnika"
+msgstr "Obrnite se na skrbnika"
 
 msgid "{0} changed your role to user."
 msgstr "{0} je spremenil vašo vlogo v \"user\"."
@@ -4976,7 +4976,7 @@ msgid "You"
 msgstr "Vi"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
-msgstr "{0} ({1}) je pravkar dokončal obnovo računa. Prosto stori kontakt z uporabnikom, če vam to dejanje zdi sumljivo."
+msgstr "{0} ({1}) je pravkar zaključil obnovitev računa. Če menite, da je to dejanje sumljivo, lahko stopite v stik s tem uporabnikom."
 
 msgid "View user in passbolt"
 msgstr "Oglejte si uporabnika v passboltu"
