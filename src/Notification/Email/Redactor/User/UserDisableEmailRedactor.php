@@ -25,7 +25,6 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Locale\Service\LocaleService;
@@ -106,7 +105,7 @@ class UserDisableEmailRedactor implements SubscribedEmailRedactorInterface
         User $recipient,
         User $user
     ): Email {
-        $userFullName = Purifier::clean($user->profile->first_name) . ' ' . Purifier::clean($user->profile->last_name);
+        $userFullName = $user->profile->full_name;
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($userFullName) {

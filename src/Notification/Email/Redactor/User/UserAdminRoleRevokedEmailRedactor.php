@@ -26,7 +26,6 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\ExtendedUserAccessControl;
-use App\Utility\Purifier;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
@@ -137,11 +136,9 @@ class UserAdminRoleRevokedEmailRedactor implements SubscribedEmailRedactorInterf
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($user, $recipient) {
-                $userFullName = Purifier::clean($user->profile->full_name);
-
                 return $user->id === $recipient->id ?
                     __('Your admin role has been revoked') :
-                    __('{0}\'s admin role has been revoked', $userFullName);
+                    __('{0}\'s admin role has been revoked', $user->profile->full_name);
             }
         );
 

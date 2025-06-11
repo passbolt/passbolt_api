@@ -26,7 +26,7 @@ if (PHP_SAPI === 'cli') {
 $user = $body['user'];
 $folder = $body['folder'];
 $isOperator = $body['isOperator'];
-$userFirstName = $body['userFirstName'];
+$userFirstName = Purifier::clean($body['userFirstName']);
 $avatarText = $isOperator ? __('You deleted a folder') : __('{0} deleted a folder', $userFirstName);
 
 echo $this->element('Email/module/avatar', [
@@ -46,5 +46,5 @@ echo $this->element('Email/module/text', [
 
 echo $this->element('Email/module/button', [
     'url' => Router::url('/', true),
-    'text' => __('log in passbolt'),
+    'text' => __('Log in passbolt'),
 ]);

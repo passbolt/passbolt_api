@@ -1,0 +1,295 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"POT-Creation-Date: 2020-11-11 13:56+0100\n"
+"PO-Revision-Date: 2025-06-05 09:14\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Slovenian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
+"X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"X-Crowdin-Project-ID: 2\n"
+"X-Crowdin-Language: sl\n"
+"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/cake.po\n"
+"X-Crowdin-File-ID: 338\n"
+"Language: sl_SI\n"
+
+#: Error/error400.php:36
+#: Error/error500.php:40
+msgid "Error"
+msgstr "Napake"
+
+#: Error/error400.php:37
+msgid "The requested address {0} was not found on this server."
+msgstr "Zahtevanega naslova {0} na tem strežniku ni bilo mogoče najti."
+
+#: Error/error500.php:38
+msgid "An Internal Error Has Occurred"
+msgstr "Prišlo je do notranje napake"
+
+#: Controller/Component/AuthComponent.php:462
+msgid "You are not authorized to access that location."
+msgstr "Nimate dovoljenja za dostop do te lokacije."
+
+#: Error/ExceptionRenderer.php:304
+msgid "Not Found"
+msgstr "Ni mogoče najti"
+
+#: Error/ExceptionRenderer.php:306
+msgid "An Internal Error Has Occurred."
+msgstr "Prišlo je do notranje napake."
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:286
+msgid "Missing or incorrect CSRF cookie type."
+msgstr "Manjka ali je napačna vrsta piškotka CSRF."
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:290
+msgid "Missing or invalid CSRF cookie."
+msgstr "Manjkajoč ali neveljaven CSRF piškotek."
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:311
+msgid "CSRF token from either the request body or request headers did not match or is missing."
+msgstr "CSRF žeton iz telesa ali glave zahteve se ne ujema ali manjka."
+
+#: Http/Response.php:1490
+msgid "The requested file contains `..` and will not be read."
+msgstr "Zahtevana datoteka vsebuje `..` in ne bo prebrana."
+
+#: Http/Response.php:1498
+msgid "The requested file was not found"
+msgstr "Zahtevana datoteka ni bila najdena"
+
+#: I18n/Number.php:116
+msgid "{0,number,#,###.##} KB"
+msgstr "{0,number,#,###.##} KB"
+
+#: I18n/Number.php:118
+msgid "{0,number,#,###.##} MB"
+msgstr "{0,number,#,###.##} MB"
+
+#: I18n/Number.php:120
+msgid "{0,number,#,###.##} GB"
+msgstr "{0,number,#,###.##} GB"
+
+#: I18n/Number.php:122
+msgid "{0,number,#,###.##} TB"
+msgstr "{0,number,#,###.##} TB"
+
+#: I18n/Number.php:114
+msgid "{0,number,integer} Byte"
+msgid_plural "{0,number,integer} Bytes"
+msgstr[0] "{0,number,integer} bajt"
+msgstr[1] "{0,number,integer} bajta"
+msgstr[2] "{0,number,integer} bajti"
+msgstr[3] "{0,number,integer} bajtov"
+
+#: I18n/RelativeTimeFormatter.php:86
+msgid "{0} from now"
+msgstr "{0} od zdaj naprej"
+
+#: I18n/RelativeTimeFormatter.php:86
+msgid "{0} ago"
+msgstr "Pred {0}"
+
+#: I18n/RelativeTimeFormatter.php:89
+msgid "{0} after"
+msgstr "Po {0}"
+
+#: I18n/RelativeTimeFormatter.php:89
+msgid "{0} before"
+msgstr "Pred {0}"
+
+#: I18n/RelativeTimeFormatter.php:120
+msgid "just now"
+msgstr "ravnokar"
+
+#: I18n/RelativeTimeFormatter.php:157
+msgid "about a second ago"
+msgstr "pred približno sekundo"
+
+#: I18n/RelativeTimeFormatter.php:158
+msgid "about a minute ago"
+msgstr "pred približno minuto"
+
+#: I18n/RelativeTimeFormatter.php:159
+msgid "about an hour ago"
+msgstr "pred približno uro"
+
+#: I18n/RelativeTimeFormatter.php:160
+#: I18n/RelativeTimeFormatter.php:370
+msgid "about a day ago"
+msgstr "pred približno enim dnevom"
+
+#: I18n/RelativeTimeFormatter.php:161
+#: I18n/RelativeTimeFormatter.php:371
+msgid "about a week ago"
+msgstr "pred približno enim tednom"
+
+#: I18n/RelativeTimeFormatter.php:162
+#: I18n/RelativeTimeFormatter.php:372
+msgid "about a month ago"
+msgstr "pred približno enim mesecem"
+
+#: I18n/RelativeTimeFormatter.php:163
+#: I18n/RelativeTimeFormatter.php:373
+msgid "about a year ago"
+msgstr "pred približno enim letom"
+
+#: I18n/RelativeTimeFormatter.php:174
+msgid "in about a second"
+msgstr "čez približno eno sekundo"
+
+#: I18n/RelativeTimeFormatter.php:175
+msgid "in about a minute"
+msgstr "čez približno eno minuto"
+
+#: I18n/RelativeTimeFormatter.php:176
+msgid "in about an hour"
+msgstr "čez približno eno uro"
+
+#: I18n/RelativeTimeFormatter.php:177
+#: I18n/RelativeTimeFormatter.php:384
+msgid "in about a day"
+msgstr "čez približno en dan"
+
+#: I18n/RelativeTimeFormatter.php:178
+#: I18n/RelativeTimeFormatter.php:385
+msgid "in about a week"
+msgstr "čez približno en teden"
+
+#: I18n/RelativeTimeFormatter.php:179
+#: I18n/RelativeTimeFormatter.php:386
+msgid "in about a month"
+msgstr "čez približno en mesec"
+
+#: I18n/RelativeTimeFormatter.php:180
+#: I18n/RelativeTimeFormatter.php:387
+msgid "in about a year"
+msgstr "čez približno eno leto"
+
+#: I18n/RelativeTimeFormatter.php:342
+msgid "today"
+msgstr "danes"
+
+#: I18n/RelativeTimeFormatter.php:409
+msgid "%s ago"
+msgstr "pred %s"
+
+#: I18n/RelativeTimeFormatter.php:410
+msgid "on %s"
+msgstr "na %s"
+
+#: I18n/RelativeTimeFormatter.php:53
+#: I18n/RelativeTimeFormatter.php:132
+#: I18n/RelativeTimeFormatter.php:354
+msgid "{0} year"
+msgid_plural "{0} years"
+msgstr[0] "{0} leto"
+msgstr[1] "{0} leti"
+msgstr[2] "{0} leta"
+msgstr[3] "{0} let"
+
+#: I18n/RelativeTimeFormatter.php:57
+#: I18n/RelativeTimeFormatter.php:135
+#: I18n/RelativeTimeFormatter.php:357
+msgid "{0} month"
+msgid_plural "{0} months"
+msgstr[0] "{0} mesec"
+msgstr[1] "{0} meseca"
+msgstr[2] "{0} meseci"
+msgstr[3] "{0} mesecev"
+
+#: I18n/RelativeTimeFormatter.php:63
+#: I18n/RelativeTimeFormatter.php:138
+#: I18n/RelativeTimeFormatter.php:360
+msgid "{0} week"
+msgid_plural "{0} weeks"
+msgstr[0] "{0} teden"
+msgstr[1] "{0} tedna"
+msgstr[2] "{0} tedni"
+msgstr[3] "{0} tednov"
+
+#: I18n/RelativeTimeFormatter.php:65
+#: I18n/RelativeTimeFormatter.php:141
+#: I18n/RelativeTimeFormatter.php:363
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0} dan"
+msgstr[1] "{0} dneva"
+msgstr[2] "{0} dnevi"
+msgstr[3] "{0} dni"
+
+#: I18n/RelativeTimeFormatter.php:70
+#: I18n/RelativeTimeFormatter.php:144
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0} ura"
+msgstr[1] "{0} uri"
+msgstr[2] "{0} ure"
+msgstr[3] "{0} ur"
+
+#: I18n/RelativeTimeFormatter.php:74
+#: I18n/RelativeTimeFormatter.php:147
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0} minuta"
+msgstr[1] "{0} minuti"
+msgstr[2] "{0} minute"
+msgstr[3] "{0} minut"
+
+#: I18n/RelativeTimeFormatter.php:78
+#: I18n/RelativeTimeFormatter.php:150
+msgid "{0} second"
+msgid_plural "{0} seconds"
+msgstr[0] "{0} sekunda"
+msgstr[1] "{0} sekundi"
+msgstr[2] "{0} sekunde"
+msgstr[3] "{0} sekund"
+
+#: ORM/RulesChecker.php:55
+msgid "This value is already in use"
+msgstr "Ta vrednost se že uporablja"
+
+#: ORM/RulesChecker.php:102
+msgid "This value does not exist"
+msgstr "Ta vrednost ne obstaja"
+
+#: ORM/RulesChecker.php:224
+msgid "Cannot modify row: a constraint for the `{0}` association fails."
+msgstr "Ni mogoče spremeniti vrstice: omejitev za povezavo `{0}` ni izpolnjena."
+
+#: ORM/RulesChecker.php:262
+msgid "The count does not match {0}{1}"
+msgstr "Število se ne ujema z {0}{1}"
+
+#: Utility/Text.php:915
+msgid "and"
+msgstr "in"
+
+#: Validation/Validator.php:2500
+msgid "This field is required"
+msgstr "To polje je obvezno"
+
+#: Validation/Validator.php:2520
+#: View/Form/ArrayContext.php:249
+msgid "This field cannot be left empty"
+msgstr "To polje ne sme ostati prazno."
+
+#: Validation/Validator.php:2672
+msgid "The provided value is invalid"
+msgstr "Navedena vrednost je neveljavna"
+
+#: View/Helper/FormHelper.php:981
+msgid "Edit {0}"
+msgstr "Uredi {0}"
+
+#: View/Helper/FormHelper.php:983
+msgid "New {0}"
+msgstr "Novo {0}"
+
+#: View/Helper/FormHelper.php:1890
+msgid "Submit"
+msgstr "Oddaj"
+

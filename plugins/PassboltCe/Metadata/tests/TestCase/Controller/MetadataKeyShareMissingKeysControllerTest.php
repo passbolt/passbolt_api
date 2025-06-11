@@ -31,7 +31,25 @@ class MetadataKeyShareMissingKeysControllerTest extends AppIntegrationTestCaseV5
 {
     use GpgMetadataKeysTestTrait;
 
-    public function testMetadataMissingPrivateKeysShareController_Success(): void
+    /**
+     * URLs mapped to this controller.
+     *
+     * @return array[]
+     */
+    public static function metadataKeyShareMissingKeysUrlProvider(): array
+    {
+        return [
+            ['/metadata/keys/privates.json'],
+            ['/metadata/keys/private.json'],
+        ];
+    }
+
+    /**
+     * @dataProvider metadataKeyShareMissingKeysUrlProvider
+     * @param string $url URL to send request to.
+     * @return void
+     */
+    public function testMetadataMissingPrivateKeysShareController_Success(string $url): void
     {
         /** @var \App\Model\Entity\User $admin */
         $admin = UserFactory::make()->admin()->persist();
@@ -45,7 +63,7 @@ class MetadataKeyShareMissingKeysControllerTest extends AppIntegrationTestCaseV5
         $this->logInAs($admin);
         $data = $this->getValidPrivateKeyData($user->gpgkey->armored_key);
         $data2 = $this->getValidPrivateKeyData($user2->gpgkey->armored_key);
-        $this->postJson('/metadata/keys/privates.json', [
+        $this->postJson($url, [
             [
                 'metadata_key_id' => $key->get('id'),
                 'user_id' => $user->get('id'),
@@ -74,7 +92,12 @@ class MetadataKeyShareMissingKeysControllerTest extends AppIntegrationTestCaseV5
         $this->assertEmpty($response);
     }
 
-    public function testMetadataMissingPrivateKeysShareController_Success_WithExpiredKey(): void
+    /**
+     * @dataProvider metadataKeyShareMissingKeysUrlProvider
+     * @param string $url URL to send request to.
+     * @return void
+     */
+    public function testMetadataMissingPrivateKeysShareController_Success_WithExpiredKey(string $url): void
     {
         /** @var \App\Model\Entity\User $admin */
         $admin = UserFactory::make()->admin()->persist();
@@ -85,7 +108,7 @@ class MetadataKeyShareMissingKeysControllerTest extends AppIntegrationTestCaseV5
 
         $this->logInAs($admin);
         $data = $this->getValidPrivateKeyData($user->gpgkey->armored_key);
-        $this->postJson('/metadata/keys/privates.json', [
+        $this->postJson($url, [
             [
                 'metadata_key_id' => $key->get('id'),
                 'user_id' => $user->get('id'),
@@ -102,13 +125,23 @@ class MetadataKeyShareMissingKeysControllerTest extends AppIntegrationTestCaseV5
         $this->assertSame($data, $resultKeys[0]->data);
     }
 
-    public function testMetadataMissingPrivateKeysShareController_ErrorNotLoggedIn(): void
+    /**
+     * @dataProvider metadataKeyShareMissingKeysUrlProvider
+     * @param string $url URL to send request to.
+     * @return void
+     */
+    public function testMetadataMissingPrivateKeysShareController_ErrorNotLoggedIn(string $url): void
     {
-        $this->postJson('/metadata/keys/privates.json', []);
+        $this->postJson($url, []);
         $this->assertAuthenticationError();
     }
 
-    public function testMetadataMissingPrivateKeysShareController_ErrorNotAdministrator(): void
+    /**
+     * @dataProvider metadataKeyShareMissingKeysUrlProvider
+     * @param string $url URL to send request to.
+     * @return void
+     */
+    public function testMetadataMissingPrivateKeysShareController_ErrorNotAdministrator(string $url): void
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->withValidGpgKey()->persist();
@@ -116,7 +149,7 @@ class MetadataKeyShareMissingKeysControllerTest extends AppIntegrationTestCaseV5
         $metadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
 
         $this->logInAsUser();
-        $this->postJson('/metadata/keys/privates.json', [
+        $this->postJson($url, [
             [
                 'metadata_key_id' => $metadataKey->get('id'),
                 'user_id' => $user->id,
@@ -126,16 +159,26 @@ class MetadataKeyShareMissingKeysControllerTest extends AppIntegrationTestCaseV5
         $this->assertResponseCode(403);
     }
 
-    public function testMetadataMissingPrivateKeysShareController_ErrorEmptyData(): void
+    /**
+     * @dataProvider metadataKeyShareMissingKeysUrlProvider
+     * @param string $url URL to send request to.
+     * @return void
+     */
+    public function testMetadataMissingPrivateKeysShareController_ErrorEmptyData(string $url): void
     {
         /** @var \App\Model\Entity\User $admin */
         $admin = UserFactory::make()->admin()->persist();
         $this->logInAs($admin);
-        $this->postJson('/metadata/keys/privates.json', []);
+        $this->postJson($url, []);
         $this->assertResponseCode(400);
     }
 
-    public function testMetadataMissingPrivateKeysShareController_ErrorMetadataAlreadyExistForUser(): void
+    /**
+     * @dataProvider metadataKeyShareMissingKeysUrlProvider
+     * @param string $url URL to send request to.
+     * @return void
+     */
+    public function testMetadataMissingPrivateKeysShareController_ErrorMetadataAlreadyExistForUser(string $url): void
     {
         /** @var \App\Model\Entity\User $admin */
         $admin = UserFactory::make()->admin()->persist();
@@ -146,7 +189,7 @@ class MetadataKeyShareMissingKeysControllerTest extends AppIntegrationTestCaseV5
         MetadataPrivateKeyFactory::make()->withMetadataKey($key)->withUserPrivateKey($user->gpgkey)->persist();
 
         $this->logInAs($admin);
-        $this->postJson('/metadata/keys/privates.json', [
+        $this->postJson($url, [
             [
                 'metadata_key_id' => $key->get('id'),
                 'user_id' => $user->get('id'),
@@ -161,7 +204,12 @@ class MetadataKeyShareMissingKeysControllerTest extends AppIntegrationTestCaseV5
         $this->assertArrayHasKey('_isUnique', $response[0]['user_id']);
     }
 
-    public function testMetadataMissingPrivateKeysShareController_ErrorDataNotEncryptedWithUserKey(): void
+    /**
+     * @dataProvider metadataKeyShareMissingKeysUrlProvider
+     * @param string $url URL to send request to.
+     * @return void
+     */
+    public function testMetadataMissingPrivateKeysShareController_ErrorDataNotEncryptedWithUserKey(string $url): void
     {
         /** @var \App\Model\Entity\User $admin */
         $admin = UserFactory::make()
@@ -175,7 +223,7 @@ class MetadataKeyShareMissingKeysControllerTest extends AppIntegrationTestCaseV5
         $key = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
 
         $this->logInAs($admin);
-        $this->postJson('/metadata/keys/privates.json', [
+        $this->postJson($url, [
             [
                 'metadata_key_id' => $key->get('id'),
                 'user_id' => $user->get('id'),

@@ -5,14 +5,16 @@
  * @var mixed $verifyForm
  * @var bool $isRememberMeForAMonthEnabled
  */
-    use Cake\Routing\Router;
-    use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+
+use App\Utility\Purifier;
+use Cake\Routing\Router;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
     $title = __('Multi factor authentication verification');
     $this->assign('title', $title);
     $this->assign('pageClass', 'login');
     $formContext = [
-        'url' => Router::url('/mfa/verify/yubikey?redirect=' . $redirect, true),
+        'url' => Purifier::clean(Router::url('/mfa/verify/yubikey?redirect=' . $redirect, true)),
         'class' => ['yubikey-setup'],
     ];
     ?>
