@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:32+0000\n"
-"PO-Revision-Date: 2025-06-12 07:35\n"
+"PO-Revision-Date: 2025-06-12 08:34\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -5540,7 +5540,7 @@ msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because 
 msgstr "{0} {1} ni bilo mogoče preslikati z obstoječim {0} v Passbolt, ker je bil ustvarjen pozneje."
 
 msgid "The user {0} full name has been successfully updated to {1} {2}."
-msgstr "Polno ime uporabnika {0} je bilo uspešno posodobljeno na {1} {2}"
+msgstr "Polno ime uporabnika {0} je bilo uspešno posodobljeno na {1} {2}."
 
 msgid "The user {0} full name could not be updated to {1} {2}."
 msgstr "Polnega imena uporabnika {0} ni bilo mogoče posodobiti na {1} {2}."
