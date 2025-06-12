@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-06-12 11:17\n"
+"PO-Revision-Date: 2025-06-12 12:18\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -1754,16 +1754,16 @@ msgid "Ensure the keyring location exists and is accessible by the webserver use
 msgstr "Prepričajte se, da mesto ključnice obstaja in je dostopno uporabniku spletnega strežnika."
 
 msgid "You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}."
-msgstr "Lokacijo ključnice lahko spremenite z urejanjem spremenljivk GPG.env.setenv in GPG.env.home v {0}."
+msgstr "Lokacijo zbirke ključev lahko spremenite z urejanjem spremenljivk GPG.env.setenv in GPG.env.home v {0}."
 
 msgid "The directory {0} containing the keyring is writable by the webserver user."
-msgstr "Imenik {0}, ki vsebuje ključnico, je zapisljiv za uporabnika spletnega strežnika."
+msgstr "Imenik {0}, ki vsebuje zbirko ključev, je zapisljiv za uporabnika spletnega strežnika."
 
 msgid "The directory {0} containing the keyring is not writable by the webserver user."
-msgstr "Imenik {0}, ki vsebuje ključnico, ni zapisljiv za uporabnika spletnega strežnika."
+msgstr "Imenik {0}, ki vsebuje zbirko ključev, ni zapisljiv za uporabnika spletnega strežnika."
 
 msgid "Ensure the keyring location is accessible by the webserver user."
-msgstr "Prepričajte se, da je mesto ključnice dostopno uporabniku spletnega strežnika."
+msgstr "Prepričajte se, da je mesto zbirke ključev dostopno uporabniku spletnega strežnika."
 
 msgid "The server OpenPGP key is not the default one."
 msgstr "Strežniški ključ OpenPGP ni privzeti ključ."
@@ -1811,13 +1811,13 @@ msgid "The server key does not have a valid email id."
 msgstr "Strežniški ključ nima veljavnega e-poštnega naslova."
 
 msgid "The server public key defined in the {0} (or environment variables) is in the keyring."
-msgstr "Javni strežniški ključ, določen v {0} (ali okoljskih spremenljivkah), je v ključnici."
+msgstr "Javni strežniški ključ, določen v {0} (ali okoljskih spremenljivkah), je v zbirki ključev."
 
 msgid "The server public key defined in the {0} (or environment variables) is not in the keyring"
-msgstr "Javni strežniški ključ, določen v {0} (ali okoljskih spremenljivkah), ni v ključnici."
+msgstr "Javni strežniški ključ, določen v {0} (ali okoljskih spremenljivkah), ni v zbirki ključev."
 
 msgid "Import the private server key in the keyring of the webserver user."
-msgstr "Uvozite zasebni strežniški ključ v ključnico uporabnika spletnega strežnika."
+msgstr "Uvozite zasebni strežniški ključ v zbirko ključev uporabnika spletnega strežnika."
 
 msgid "The public key file is defined in {0} and readable."
 msgstr "Datoteka javnega ključa je določena v {0} in je berljiva."
@@ -2204,7 +2204,7 @@ msgid "This is not a valid OpenPGP armored marker."
 msgstr "To ni veljaven označevalec OpenPGP."
 
 msgid "The key {0} was not found in the keyring"
-msgstr "Ključ {0} ni bil najden v ključniku"
+msgstr "Ključ {0} ni bil najden v zbirki ključev"
 
 msgid "A value for the theme should be provided."
 msgstr "Za temo je potrebna vrednost."
@@ -3884,7 +3884,7 @@ msgid "Please rotate it to ensure continued security."
 msgstr "Prosimo, zamenjajte ga, da zagotovite nadaljnjo varnost."
 
 msgid "Change it in passbolt "
-msgstr "Spremeni v Passbolt "
+msgstr "Spremeni v Passboltu"
 
 msgid "Could not retrieve the password policies."
 msgstr "Ni bilo mogoče pridobiti pravil gesla."
@@ -4562,7 +4562,7 @@ msgid "A full base url is required."
 msgstr "Potreben je poln osnovni URL."
 
 msgid "The full base url should not be empty"
-msgstr "Polni osnovni URL ne sme biti prazen."
+msgstr "Polni osnovni URL ne sme biti prazen"
 
 msgid "The full base url should be a valid BMP-UTF8 string."
 msgstr "Polni osnovni URL mora biti veljaven BMP-UTF8 niz."
