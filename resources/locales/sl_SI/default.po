@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:32+0000\n"
-"PO-Revision-Date: 2025-06-10 13:24\n"
+"PO-Revision-Date: 2025-06-12 08:34\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -155,7 +155,7 @@ msgid "\"{0}\" is not a valid group filter."
 msgstr "\"{0}\" ni veljaven filter skupine."
 
 msgid "\"{0}\" is not a valid parent filter."
-msgstr "\\\"{0}\\\" ni veljaven nadrejeni filter."
+msgstr "\"{0}\" ni veljaven nadrejeni filter."
 
 msgid "\"{0}\" is not a valid resource id for filter {1}."
 msgstr "\"{0}\" ni veljaven ID vira za filter {1}."
@@ -164,7 +164,7 @@ msgid "\"{0}\" is not a valid group id for filter {1}."
 msgstr "\"{0}\" ni veljaven ID skupine za filter {1}."
 
 msgid "\"{0}\" is not a valid parent id for filter {1}."
-msgstr "\\\"{0}\\\" ni veljaven nadrejeni ID za filter {1}."
+msgstr "\"{0}\" ni veljaven nadrejeni ID za filter {1}."
 
 msgid "\"{0}\" is not a valid timestamp for filter {1}."
 msgstr "\"{0}\" ni veljaven časovni žig za filter {1}."
@@ -674,13 +674,13 @@ msgid "The group identifier should not be empty."
 msgstr "Identifikator skupine ne sme biti prazen."
 
 msgid "The group manager status should be a valid boolean."
-msgstr "Status managerja skupine mora biti veljavna logična vrednost."
+msgstr "Status upravitelja skupine mora biti veljavna logična vrednost."
 
 msgid "A group manager status is required."
-msgstr "Status managerja skupine je obvezen."
+msgstr "Status upravitelja skupine je obvezen."
 
 msgid "The group manager status should not be empty."
-msgstr "Status managerja skupine ne sme biti prazen."
+msgstr "Status upravitelja skupine ne sme biti prazen."
 
 msgid "The user is already member of this group."
 msgstr "Uporabnik je že član te skupine."
@@ -1046,10 +1046,10 @@ msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "Identifikator ključa mora biti niz 8 šestnajstiških znakov."
 
 msgid "The provided IP is invalid."
-msgstr "Navedeni IP ni veljaven"
+msgstr "Navedeni IP ni veljaven."
 
 msgid "The provided user agent is invalid."
-msgstr "Navedeni uporabniški agent ni veljaven"
+msgstr "Navedeni uporabniški agent ni veljaven."
 
 msgid "{0} updated your memberships in several groups"
 msgstr "{0} je posodobil vaša članstva v več skupinah"
@@ -1232,10 +1232,10 @@ msgid "The send on user recovered setting should be a boolean."
 msgstr "Nastavitev za pošiljanje ob vzpostavitvi uporabnika mora biti logična vrednost."
 
 msgid "The token is expired."
-msgstr "Token je potekel."
+msgstr "Žeton je potekel."
 
 msgid "The authentication token is not valid."
-msgstr "Avtentikacijski token ni veljaven."
+msgstr "Avtentikacijski žeton ni veljaven."
 
 msgid "The authentication token could not be found."
 msgstr "Avtentikacijskega žetona ni bilo mogoče najti."
@@ -1520,7 +1520,7 @@ msgid "Select a valid domain name as defined by section 2.3.1 of http://www.ietf
 msgstr "Izberite veljavno ime domene, kot je opredeljeno v razdelku 2.3.1 na http://www.ietf.org/rfc/rfc1035.txt"
 
 msgid "IMPORTANT: Using an empty App.fullBaseUrl can lead to host header injection attack: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
-msgstr "POMEMBNO: Uporaba praznega App.fullBaseUrl lahko vodi do napada vstavitve glave gostitelja: https:\\/\\/owasp.org\\/www-project-web-security-testing-guide\\/v42\\/4-Web_Application_Security_Testing\\/07-Input_Validation_Testing\\/17-Testing_for_Host_Header_Injection"
+msgstr "POMEMBNO: Uporaba prazne datoteke App.fullBaseUrl lahko privede do napada z vbrizgavanjem glave gostitelja: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
 
 msgid "The application is able to connect to the database"
 msgstr "Aplikacija se lahko poveže z zbirko podatkov"
@@ -2075,10 +2075,10 @@ msgid "The secrets of all the users having access to the resource are required."
 msgstr "Skrivnosti vseh uporabnikov, ki imajo dostop do vira, so obvezne."
 
 msgid "An authentication token should be provided."
-msgstr "Zagotoviti je treba avtentikacijski token."
+msgstr "Zagotoviti je treba avtentikacijski žeton."
 
 msgid "The authentication token should be a valid UUID."
-msgstr "Avtentikacijski token mora biti veljaven UUID."
+msgstr "Avtentikacijski žeton mora biti veljaven UUID."
 
 msgid "An OpenPGP key must be provided."
 msgstr "Zagotoviti je treba OpenPGP ključ."
@@ -2396,7 +2396,7 @@ msgid "Could not validate folder data."
 msgstr "Ni bilo mogoče potrditi podatkov mape."
 
 msgid "The folder parent id should be a valid UUID."
-msgstr "ID nadrejenega imenika bi moral biti veljaven UUID"
+msgstr "ID nadrejenega imenika bi moral biti veljaven UUID."
 
 msgid "The folder parent must exist."
 msgstr "Le dossier parent doit exister. (Prevod ni na voljo)"
@@ -2411,7 +2411,7 @@ msgid "The folder does not exist."
 msgstr "Mapa ne obstaja."
 
 msgid "You cannot delete this resource"
-msgstr "Tega vira ni mogoče izbrisati."
+msgstr "Tega vira ni mogoče izbrisati"
 
 msgid "You are not allowed to update the permissions of this folder."
 msgstr "Nimate dovoljenja za posodabljanje dovoljenj te mape."
@@ -2891,7 +2891,7 @@ msgid "False"
 msgstr "False"
 
 msgid "Zero-knowledge key share"
-msgstr "Delitev ključa z ničelno-znanjem"
+msgstr "Delitev ključa z ničelnim znanjem"
 
 msgid "The metadata private key data must be an array."
 msgstr "Podatki zasebnega ključa metapodatkov morajo biti tabela."
@@ -2930,25 +2930,25 @@ msgid "Allow creation of V4 tags"
 msgstr "Dovoli ustvarjanje oznak V4"
 
 msgid "No permission found for the entity: {0}"
-msgstr "Za entiteto {0} ni bilo najdenega dovoljenja."
+msgstr "Za entiteto {0} ni bilo najdenega dovoljenja"
 
 msgid "The identifier of the user who created the metadata key should be a valid UUID."
 msgstr "Identifikator uporabnika, ki je ustvaril ključ metapodatkov, mora biti veljaven UUID."
 
 msgid "The creator is required."
-msgstr "Potreben je \"creator\"."
+msgstr "Zahtevan je ustvarjalec."
 
 msgid "The identifier of the user who modified the metadata key should be a valid UUID."
 msgstr "Identifikator uporabnika, ki je spremenil ključ metapodatkov, mora biti veljaven UUID."
 
 msgid "A expired date is required."
-msgstr "Polje \"expired date\" je zahtevano."
+msgstr "Potreben je datum poteka."
 
 msgid "The expired date should not be empty."
-msgstr "\"expired date\" ne sme biti prazno."
+msgstr "Datum poteka ne sme biti prazen."
 
 msgid "The modifier is required."
-msgstr "Zahtevan je \"modifier\"."
+msgstr "Modifikator je obvezen."
 
 msgid "The fingerprint is already in use."
 msgstr "Odtis je že v uporabi."
@@ -2969,7 +2969,7 @@ msgid "The data is not valid. Please make sure it is encrypted for the correct k
 msgstr "Podatek ni veljaven. Prepričajte se, da je šifriran za pravilni ključ."
 
 msgid "The entity must be an array."
-msgstr "\"entity\" mora biti tabela."
+msgstr "Entiteta mora biti polje."
 
 msgid "Entity {0} not found."
 msgstr "Entiteta {0} ni bila najdena."
@@ -3086,7 +3086,7 @@ msgid "The metadata private key could not be created."
 msgstr "Zasebnega ključa metapodatkov ni bilo mogoče ustvariti."
 
 msgid "Please try again later."
-msgstr "Prosimo, poskusite kasneje"
+msgstr "Prosimo, poskusite kasneje."
 
 msgid "The metadata private key could not be validated."
 msgstr "Zasebnega ključa metapodatkov ni bilo mogoče preveriti."
@@ -3158,7 +3158,7 @@ msgid "Folder ID \"{0}\" is already V5"
 msgstr "Mapa z ID \"{0}\" je že V5"
 
 msgid "No permission found for folder ID {0}"
-msgstr "Za mapo z ID {0} ni bilo najdenega dovoljenja."
+msgstr "Za mapo z ID {0} ni bilo najdenega dovoljenja"
 
 msgid "No user provided."
 msgstr "Ni bilo navedenega uporabnika."
@@ -3194,7 +3194,7 @@ msgid "Resource ID \"{0}\" is already V5"
 msgstr "Vir z ID \"{0}\" je že V5"
 
 msgid "No permission found for resource ID {0}"
-msgstr "Za vir z ID {0} ni bilo najdenega dovoljenja."
+msgstr "Za vir z ID {0} ni bilo najdenega dovoljenja"
 
 msgid "Unable to migrate resource ID: {0} to V5."
 msgstr "Vira z ID: {0} ni mogoče migrirati na V5."
@@ -3449,7 +3449,7 @@ msgid "This functionality is not available using AJAX/JSON."
 msgstr "Ta funkcionalnost ni na voljo pri uporabi AJAX/JSON."
 
 msgid "This authentication provider is already setup. Disable it first"
-msgstr "Ta ponudnik preverjanja pristnosti je že nastavljen. Najprej ga onemogočite."
+msgstr "Ta ponudnik preverjanja pristnosti je že nastavljen. Najprej ga onemogočite"
 
 msgid "Multi Factor Authentication is configured!"
 msgstr "Večfaktorska avtentikacija je nastavljena!"
@@ -3542,10 +3542,10 @@ msgid "This yubikey is not associated with this user."
 msgstr "Ta Yubikey ni povezan s tem uporabnikom."
 
 msgid "No Duo error provided"
-msgstr "Ni zagotovljene napake Duo"
+msgstr "Napaka Duo ni podana"
 
 msgid "No Duo error description provided"
-msgstr "Ni zagotovljenega opisa napake Duo"
+msgstr "Ni podanega opisa napake Duo"
 
 msgid "Your multi-factor authentication settings were reset by you."
 msgstr "Vaše nastavitve večfaktorske avtentikacije ste ponastavili sami."
@@ -4751,7 +4751,7 @@ msgid "Server Name"
 msgstr "Ime strežnika"
 
 msgid "admin@your-server.com"
-msgstr "admin@vase-streznik.com"
+msgstr "admin@vas-streznik.com"
 
 msgid "Server Email"
 msgstr "E-pošta strežnika"
@@ -5540,7 +5540,7 @@ msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because 
 msgstr "{0} {1} ni bilo mogoče preslikati z obstoječim {0} v Passbolt, ker je bil ustvarjen pozneje."
 
 msgid "The user {0} full name has been successfully updated to {1} {2}."
-msgstr "Polno ime uporabnika {0} je bilo uspešno posodobljeno na {1} {2}"
+msgstr "Polno ime uporabnika {0} je bilo uspešno posodobljeno na {1} {2}."
 
 msgid "The user {0} full name could not be updated to {1} {2}."
 msgstr "Polnega imena uporabnika {0} ni bilo mogoče posodobiti na {1} {2}."
@@ -5900,22 +5900,22 @@ msgid "Directory Sync"
 msgstr "Sinhronizacija imenika"
 
 msgid "Only administrators are allowed to create/update MFA policies settings."
-msgstr "Samo administratorji lahko ustvarijo/posodobijo nastavitve politike MFA"
+msgstr "Samo administratorji lahko ustvarijo/posodobijo nastavitve politike MFA."
 
 msgid "Could not validate the MFA policies settings."
-msgstr "Ni bilo mogoče preveriti nastavitev politike MFA"
+msgstr "Ni bilo mogoče preveriti nastavitev politike MFA."
 
 msgid "The policy field is required."
-msgstr "Potrebno je polje politike"
+msgstr "Potrebno je polje politike."
 
 msgid "The type of the policy should be one of the following: {0}."
-msgstr "Tip politike bi moral biti en od naslednjih: {0}"
+msgstr "Tip politike bi moral biti en od naslednjih: {0}."
 
 msgid "The remember me for a month field is required."
-msgstr "Potrebno je polje zapomni me za mesec"
+msgstr "Potrebno je polje zapomni me za mesec."
 
 msgid "The remember me for a month should be a boolean type."
-msgstr "Polje zapomni me za mesec bi moral biti boolean tip"
+msgstr "Polje zapomni me za mesec bi moral biti boolean tip."
 
 msgid "You edited the MFA policy"
 msgstr "Uredili ste politiko MFA"
@@ -5948,7 +5948,7 @@ msgid "Some of your passwords are expired or expiring in {0} days."
 msgstr "Nekatera vaša gesla so že potekla ali pa bodo potekla čez {0} dni."
 
 msgid "The send password about to expire setting should be a boolean."
-msgstr "Nastavitev \"send password about to expire\" mora biti logična vrednost."
+msgstr "Nastavitev Pošlji geslo pred iztekom veljavnosti mora biti logična vrednost."
 
 msgid "Password expiry is not activated."
 msgstr "Potek gesel ni aktiviran."
@@ -5990,10 +5990,10 @@ msgid "you"
 msgstr "vi"
 
 msgid "SsoRecover plugin is disabled."
-msgstr "Vtičnik SsoRecover je onemogočen"
+msgstr "Vtičnik SsoRecover je onemogočen."
 
 msgid "The SSO state type is invalid."
-msgstr "Tip stanja SSO ni veljaven"
+msgstr "Tip stanja SSO ni veljaven."
 
 msgid "CSRF issue. The state in URL and Cookies do not match."
 msgstr "Problem CSRF. Stanje v URL in piškotkih se ne ujemata."
@@ -6002,67 +6002,67 @@ msgid "CSRF issue. The state in request data does not match with cookie value."
 msgstr "Težava CSRF. Stanje v podatkih zahteve se ne ujema z vrednostjo piškotka."
 
 msgid "The state is required in cookie."
-msgstr "Stanje je potrebno v piškotku"
+msgstr "Stanje je potrebno v piškotku."
 
 msgid "The token is required in URL parameters."
 msgstr "Žeton je potreben v parametrih URL."
 
 msgid "The state is required in URL parameters."
-msgstr "Stanje je potrebno v parametrih URL"
+msgstr "Stanje je potrebno v parametrih URL."
 
 msgid "The code is required in URL parameters."
-msgstr "Koda je potrebna v parametrih URL"
+msgstr "Koda je potrebna v parametrih URL."
 
 msgid "The code is required in request data."
 msgstr "V podatkih zahteve je potrebna koda."
 
 msgid "The user id is required in URL parameters."
-msgstr "ID uporabnika je potreben v parametrih URL"
+msgstr "ID uporabnika je potreben v parametrih URL."
 
 msgid "The settings id is required in URL parameters."
-msgstr "ID nastavitve je potreben v parametrih URL"
+msgstr "ID nastavitve je potreben v parametrih URL."
 
 msgid "The user does not exist or is not active."
 msgstr "Uporabnik ne obstaja ali ni aktiven."
 
 msgid "The SSO setting does not exist."
-msgstr "Nastavitev SSO ne obstaja"
+msgstr "Nastavitev SSO ne obstaja."
 
 msgid "Information about the key is required."
-msgstr "Potrebne so informacije o ključu"
+msgstr "Potrebne so informacije o ključu."
 
 msgid "The SSO key id should be a uuid."
-msgstr "ID ključa SSO bi moral biti uuid"
+msgstr "ID ključa SSO bi moral biti uuid."
 
 msgid "The key could not be found"
 msgstr "Ključa ni bilo mogoče najti"
 
 msgid "The SSO setting id should be a uuid."
-msgstr "ID nastavitve SSO bi moral biti uuid"
+msgstr "ID nastavitve SSO bi moral biti uuid."
 
 msgid "The SSO settings were activated."
-msgstr "Nastavitve SSO so bile aktivirane"
+msgstr "Nastavitve SSO so bile aktivirane."
 
 msgid "The draft setting was saved."
-msgstr "Nastavitev osnutka je bila shranjena"
+msgstr "Nastavitev osnutka je bila shranjena."
 
 msgid "The SSO settings were deleted."
-msgstr "Nastavitve SSO so bile izbrisane"
+msgstr "Nastavitve SSO so bile izbrisane."
 
 msgid "Ajax/Json request not supported."
-msgstr "Zahteva Ajax/Json ni podprta"
+msgstr "Zahteva Ajax/Json ni podprta."
 
 msgid "A provider is required."
-msgstr "Ponudnik je potreben"
+msgstr "Ponudnik je potreben."
 
 msgid "The provider is not supported."
-msgstr "Ponudnik ni podprt"
+msgstr "Ponudnik ni podprt."
 
 msgid "Data is required."
-msgstr "Podatki so potrebni"
+msgstr "Podatki so potrebni."
 
 msgid "Data must be an array of properties."
-msgstr "Podatki morajo biti seznam lastnosti"
+msgstr "Podatki morajo biti seznam lastnosti."
 
 msgid "The email claim should not be empty."
 msgstr "Trditev e-pošte ne sme biti prazna."
