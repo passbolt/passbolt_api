@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+## Description: Init passbolt env: install composer deps, create databases and run db migrations
+## Usage: init_passbolt
+## Example: "ddev init_pasbolt"
+## DBTypes: mysql,mariadb
+## ExecRaw: true
+
+set -eo pipefail
+
+ddev composer install
+ddev create_passbolt_db
+if [ ! -f config/jwt/jwt.key ] || [ ! -f config/jwt/jwt.pem ]; then
+    ddev cake passbolt create_jwt_keys
+fi
+ddev cake migrations migrate

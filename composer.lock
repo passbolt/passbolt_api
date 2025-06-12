@@ -6595,12 +6595,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-selenium-api",
-                "reference": "b35fa836d4f4711f2457e45197473d68960998ad"
+                "reference": "0d46ae337ba71659191e7625c96ff2f861da44d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/b35fa836d4f4711f2457e45197473d68960998ad",
-                "reference": "b35fa836d4f4711f2457e45197473d68960998ad",
+                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/0d46ae337ba71659191e7625c96ff2f861da44d1",
+                "reference": "0d46ae337ba71659191e7625c96ff2f861da44d1",
                 "shasum": ""
             },
             "require": {
@@ -6645,7 +6645,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2025-03-11T06:52:06+00:00"
+            "time": "2025-06-10T09:23:34+00:00"
         },
         {
             "name": "passbolt/passbolt-test-data",
@@ -8912,12 +8912,12 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
+        "bcrowe/cakephp-api-pagination": 20,
         "cakephp/cakephp": 20,
         "lorenzo/cakephp-email-queue": 20,
-        "bcrowe/cakephp-api-pagination": 20,
-        "psy/psysh": 0,
         "passbolt/passbolt-selenium-api": 20,
-        "passbolt/passbolt-test-data": 20
+        "passbolt/passbolt-test-data": 20,
+        "psy/psysh": 0
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -8933,7 +8933,7 @@
         "ext-curl": "*",
         "ext-ldap": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.2"
     },
