@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailNotificationSettings\Test\TestCase\Controllers;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
@@ -109,7 +110,8 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
         ];
 
         // Mock DB settings
-        $this->setEmailNotificationSettings($cases);
+        $uac = UserFactory::make()->admin()->persistedUAC();
+        $this->setEmailNotificationSettings($cases, $uac);
 
         $this->logInAsAdmin();
         $this->getJson('/settings/emails/notifications.json?api-version=v2');
@@ -170,7 +172,8 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
         }
 
         // Override with DB settings
-        $this->setEmailNotificationSettings($cases);
+        $uac = UserFactory::make()->admin()->persistedUAC();
+        $this->setEmailNotificationSettings($cases, $uac);
 
         $this->logInAsAdmin();
         $this->getJson('/settings/emails/notifications.json?api-version=v2');

@@ -80,10 +80,11 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireTest extends AppTes
         PasswordExpiryPoliciesSettingFactory::make()
             ->setField('value.expiry_notification', $notifyInDays)
             ->persist();
+        $uac = UserFactory::make()->admin()->persistedUAC();
         $this->setEmailNotificationSettings([
             'send.password.aboutToExpire' => $notifyIfAboutToExpire,
             'send.password.expire' => $notifyIfExpiresToday,
-        ]);
+        ], $uac);
         if (is_string($expectedResult)) {
             $this->expectExceptionMessage($expectedResult);
             $this->expectException(StopException::class);
