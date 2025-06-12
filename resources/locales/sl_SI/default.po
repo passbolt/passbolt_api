@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-06-11 13:37\n"
+"PO-Revision-Date: 2025-06-12 06:26\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -155,7 +155,7 @@ msgid "\"{0}\" is not a valid group filter."
 msgstr "\"{0}\" ni veljaven filter skupine."
 
 msgid "\"{0}\" is not a valid parent filter."
-msgstr "\\\"{0}\\\" ni veljaven nadrejeni filter."
+msgstr "\"{0}\" ni veljaven nadrejeni filter."
 
 msgid "\"{0}\" is not a valid resource id for filter {1}."
 msgstr "\"{0}\" ni veljaven ID vira za filter {1}."
@@ -164,7 +164,7 @@ msgid "\"{0}\" is not a valid group id for filter {1}."
 msgstr "\"{0}\" ni veljaven ID skupine za filter {1}."
 
 msgid "\"{0}\" is not a valid parent id for filter {1}."
-msgstr "\\\"{0}\\\" ni veljaven nadrejeni ID za filter {1}."
+msgstr "\"{0}\" ni veljaven nadrejeni ID za filter {1}."
 
 msgid "\"{0}\" is not a valid timestamp for filter {1}."
 msgstr "\"{0}\" ni veljaven časovni žig za filter {1}."
@@ -1514,7 +1514,7 @@ msgid "Select a valid domain name as defined by section 2.3.1 of http://www.ietf
 msgstr "Izberite veljavno ime domene, kot je opredeljeno v razdelku 2.3.1 na http://www.ietf.org/rfc/rfc1035.txt"
 
 msgid "IMPORTANT: Using an empty App.fullBaseUrl can lead to host header injection attack: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
-msgstr "POMEMBNO: Uporaba praznega App.fullBaseUrl lahko vodi do napada vstavitve glave gostitelja: https:\\/\\/owasp.org\\/www-project-web-security-testing-guide\\/v42\\/4-Web_Application_Security_Testing\\/07-Input_Validation_Testing\\/17-Testing_for_Host_Header_Injection"
+msgstr "POMEMBNO: Uporaba prazne datoteke App.fullBaseUrl lahko privede do napada z vbrizgavanjem glave gostitelja: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
 
 msgid "The application is able to connect to the database"
 msgstr "Aplikacija se lahko poveže z zbirko podatkov"
