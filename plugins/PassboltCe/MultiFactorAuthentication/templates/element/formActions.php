@@ -4,8 +4,10 @@
  * @var mixed $currentProvider
  * @var mixed $providers
  */
-    use Cake\Routing\Router;
-    use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+
+use App\Utility\Purifier;
+use Cake\Routing\Router;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 ?>
 <div class="form-actions">
 <?php if ($currentProvider !== MfaSettings::PROVIDER_DUO) :?>
@@ -21,7 +23,7 @@
         } else {
             $i++;
         } ?>
-    <a href="<?= Router::url("/mfa/verify/" . $providers[$i] . "?redirect=" . $redirect, true); ?>">
+    <a href="<?= Purifier::clean(Router::url("/mfa/verify/" . $providers[$i] . "?redirect=" . $redirect, true)); ?>">
         <?= __('Or try with another provider'); ?>
     </a>
     <?php endif;

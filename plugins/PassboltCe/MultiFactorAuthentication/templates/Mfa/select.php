@@ -4,6 +4,8 @@
  * @var array $body
  * @var bool $isMfaPossible
  */
+
+use App\Utility\Purifier;
 use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
@@ -25,8 +27,8 @@ $this->assign('pageClass', 'iframe mfa');
                 <?php if ($body[MfaSettings::ORG_SETTINGS]['totp']) : ?>
                 <li>
                     <?php $start = !$body[MfaSettings::ACCOUNT_SETTINGS]['totp'] ? 'start' : ''; ?>
-                    <a href="<?= Router::url("/mfa/setup/totp/$start", true); ?>">
-                        <img src="<?= Router::url('/img/third_party/google-authenticator.svg', true); ?>" />
+                    <a href="<?= Purifier::clean(Router::url("/mfa/setup/totp/$start", true)); ?>">
+                        <img src="<?= Purifier::clean(Router::url('/img/third_party/google-authenticator.svg', true)); ?>" />
                         <span>TOTP authenticator</span>
                     </a>
                     <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['totp']) : ?>
@@ -42,8 +44,8 @@ $this->assign('pageClass', 'iframe mfa');
                 <?php endif; ?>
                 <?php if ($body[MfaSettings::ORG_SETTINGS]['duo']) : ?>
                 <li>
-                    <a role="button" href="<?= Router::url('/mfa/setup/duo', true); ?>">
-                        <img src="<?= Router::url('/img/third_party/duo.svg', true); ?>" />
+                    <a role="button" href="<?= Purifier::clean(Router::url('/mfa/setup/duo', true)); ?>">
+                        <img src="<?= Purifier::clean(Router::url('/img/third_party/duo.svg', true)); ?>" />
                         <span>Duo MFA</span>
                     </a>
                     <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['duo']) : ?>
@@ -59,8 +61,8 @@ $this->assign('pageClass', 'iframe mfa');
                 <?php endif; ?>
                 <?php if ($body[MfaSettings::ORG_SETTINGS]['yubikey']) : ?>
                 <li>
-                    <a role="button" href="<?= Router::url('/mfa/setup/yubikey', true); ?>">
-                        <img src="<?= Router::url('/img/third_party/yubikey.svg', true); ?>" />
+                    <a role="button" href="<?= Purifier::clean(Router::url('/mfa/setup/yubikey', true)); ?>">
+                        <img src="<?= Purifier::clean(Router::url('/img/third_party/yubikey.svg', true)); ?>" />
                         <span>Yubikey OTP</span>
                     </a>
                     <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['yubikey']) : ?>

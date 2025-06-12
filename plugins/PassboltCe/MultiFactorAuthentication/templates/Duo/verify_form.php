@@ -5,7 +5,9 @@
  * @var mixed $verifyForm
  * @var string $formUrl
  */
-    use Cake\Routing\Router;
+
+use App\Utility\Purifier;
+use Cake\Routing\Router;
     use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
     $title = __('Multi factor authentication verification');
@@ -19,7 +21,7 @@
     ?>
 
 <div class="login-form ">
-    <img src="<?= Router::url('/img/third_party/duo.svg', true); ?>" class="centered-login-provider-icon" />
+    <img src="<?= Purifier::clean(Router::url('/img/third_party/duo.svg', true)); ?>" class="centered-login-provider-icon" />
     <h1 class="centered-text login-title">
         <?= __('Multi Factor Authentication Required'); ?>
     </h1>

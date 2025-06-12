@@ -2,7 +2,9 @@
 /**
  * @var \App\View\AppView $this
  */
-    use Cake\Routing\Router;
+
+use App\Utility\Purifier;
+use Cake\Routing\Router;
 
     $title = __('Getting started with Time based One Time Password (TOTP)');
     $this->assign('title', $title);
@@ -168,10 +170,10 @@
                 </div>
             </div>
             <div class="actions-wrapper">
-                <a class="button cancel" href="<?= Router::url('/mfa/setup/select', true); ?>">
+                <a class="button cancel" href="<?= Purifier::clean(Router::url('/mfa/setup/select', true)); ?>">
                     <?= __('Cancel'); ?>
                 </a>
-                <a class="button primary" href="<?= Router::url('/mfa/setup/totp', true); ?>">
+                <a class="button primary" href="<?= Purifier::clean(Router::url('/mfa/setup/totp', true)); ?>">
                     <?= __('Get started'); ?>
                 </a>
             </div>

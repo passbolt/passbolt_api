@@ -32,9 +32,10 @@ echo $this->element('Email/module/avatar',[
 ]);
 
 $text = '<h3>' . __('Welcome {0}', Purifier::clean($user['profile']['first_name'])) . ',</h3><br/>';
+$passboltBaseUrl = Purifier::clean(Router::url('/',true));
 $text .= __('{0} just invited you to join passbolt at {1}',
         ucfirst(Purifier::clean($admin['profile']['first_name'])),
-        '<a href="' . Router::url('/',true) . '">' . Router::url('/',true) . '</a>'
+        '<a href="' . $passboltBaseUrl . '">' . $passboltBaseUrl . '</a>'
         );
 $text .= ' ' . __('Passbolt is an open source password manager.');
 $text .= ' ' . __('It is designed to allow sharing credentials securely with your team!');

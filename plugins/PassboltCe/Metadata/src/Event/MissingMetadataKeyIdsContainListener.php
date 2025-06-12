@@ -149,7 +149,7 @@ class MissingMetadataKeyIdsContainListener implements EventListenerInterface
                     if (empty($userMetadataKeysIds)) {
                         $missingUserMetadataKeysIds = $metadataKeysIds;
                     } else {
-                        $missingUserMetadataKeysIds = array_diff($metadataKeysIds, $userMetadataKeysIds);
+                        $missingUserMetadataKeysIds = array_values(array_diff($metadataKeysIds, $userMetadataKeysIds));
                     }
                     $entity['missing_metadata_key_ids'] = $missingUserMetadataKeysIds;
                 } else {
