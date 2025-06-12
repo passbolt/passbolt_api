@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Model\Entity\Permission;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\TestCase\Controller\Share\ShareControllerTest;
 use App\Utility\UuidFactory;
@@ -48,12 +49,13 @@ class ShareNotificationTest extends ShareControllerTest
 
     public function testShareNotificationSuccess(): void
     {
+        $uac = UserFactory::make()->admin()->persistedUAC();
         $this->setEmailNotificationSettings([
             'show.description' => true,
             'show.username' => true,
             'show.uri' => true,
             'show.secret' => true,
-        ]);
+        ], $uac);
 
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
