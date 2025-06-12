@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-06-12 06:26\n"
+"PO-Revision-Date: 2025-06-12 07:35\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -2390,7 +2390,7 @@ msgid "Could not validate folder data."
 msgstr "Ni bilo mogoče potrditi podatkov mape."
 
 msgid "The folder parent id should be a valid UUID."
-msgstr "ID nadrejenega imenika bi moral biti veljaven UUID"
+msgstr "ID nadrejenega imenika bi moral biti veljaven UUID."
 
 msgid "The folder parent must exist."
 msgstr "Le dossier parent doit exister. (Prevod ni na voljo)"
@@ -2405,7 +2405,7 @@ msgid "The folder does not exist."
 msgstr "Mapa ne obstaja."
 
 msgid "You cannot delete this resource"
-msgstr "Tega vira ni mogoče izbrisati."
+msgstr "Tega vira ni mogoče izbrisati"
 
 msgid "You are not allowed to update the permissions of this folder."
 msgstr "Nimate dovoljenja za posodabljanje dovoljenj te mape."
@@ -2885,7 +2885,7 @@ msgid "False"
 msgstr "False"
 
 msgid "Zero-knowledge key share"
-msgstr "Delitev ključa z ničelno-znanjem"
+msgstr "Delitev ključa z ničelnim znanjem"
 
 msgid "The metadata private key data must be an array."
 msgstr "Podatki zasebnega ključa metapodatkov morajo biti tabela."
@@ -2924,25 +2924,25 @@ msgid "Allow creation of V4 tags"
 msgstr "Dovoli ustvarjanje oznak V4"
 
 msgid "No permission found for the entity: {0}"
-msgstr "Za entiteto {0} ni bilo najdenega dovoljenja."
+msgstr "Za entiteto {0} ni bilo najdenega dovoljenja"
 
 msgid "The identifier of the user who created the metadata key should be a valid UUID."
 msgstr "Identifikator uporabnika, ki je ustvaril ključ metapodatkov, mora biti veljaven UUID."
 
 msgid "The creator is required."
-msgstr "Potreben je \"creator\"."
+msgstr "Zahtevan je ustvarjalec."
 
 msgid "The identifier of the user who modified the metadata key should be a valid UUID."
 msgstr "Identifikator uporabnika, ki je spremenil ključ metapodatkov, mora biti veljaven UUID."
 
 msgid "A expired date is required."
-msgstr "Polje \"expired date\" je zahtevano."
+msgstr "Potreben je datum poteka."
 
 msgid "The expired date should not be empty."
-msgstr "\"expired date\" ne sme biti prazno."
+msgstr "Datum poteka ne sme biti prazen."
 
 msgid "The modifier is required."
-msgstr "Zahtevan je \"modifier\"."
+msgstr "Modifikator je obvezen."
 
 msgid "The fingerprint is already in use."
 msgstr "Odtis je že v uporabi."
@@ -2963,7 +2963,7 @@ msgid "The data is not valid. Please make sure it is encrypted for the correct k
 msgstr "Podatek ni veljaven. Prepričajte se, da je šifriran za pravilni ključ."
 
 msgid "The entity must be an array."
-msgstr "\"entity\" mora biti tabela."
+msgstr "Entiteta mora biti polje."
 
 msgid "Entity {0} not found."
 msgstr "Entiteta {0} ni bila najdena."
@@ -3080,7 +3080,7 @@ msgid "The metadata private key could not be created."
 msgstr "Zasebnega ključa metapodatkov ni bilo mogoče ustvariti."
 
 msgid "Please try again later."
-msgstr "Prosimo, poskusite kasneje"
+msgstr "Prosimo, poskusite kasneje."
 
 msgid "The metadata private key could not be validated."
 msgstr "Zasebnega ključa metapodatkov ni bilo mogoče preveriti."
@@ -3152,7 +3152,7 @@ msgid "Folder ID \"{0}\" is already V5"
 msgstr "Mapa z ID \"{0}\" je že V5"
 
 msgid "No permission found for folder ID {0}"
-msgstr "Za mapo z ID {0} ni bilo najdenega dovoljenja."
+msgstr "Za mapo z ID {0} ni bilo najdenega dovoljenja"
 
 msgid "No user provided."
 msgstr "Ni bilo navedenega uporabnika."
@@ -3188,7 +3188,7 @@ msgid "Resource ID \"{0}\" is already V5"
 msgstr "Vir z ID \"{0}\" je že V5"
 
 msgid "No permission found for resource ID {0}"
-msgstr "Za vir z ID {0} ni bilo najdenega dovoljenja."
+msgstr "Za vir z ID {0} ni bilo najdenega dovoljenja"
 
 msgid "Unable to migrate resource ID: {0} to V5."
 msgstr "Vira z ID: {0} ni mogoče migrirati na V5."
@@ -3443,7 +3443,7 @@ msgid "This functionality is not available using AJAX/JSON."
 msgstr "Ta funkcionalnost ni na voljo pri uporabi AJAX/JSON."
 
 msgid "This authentication provider is already setup. Disable it first"
-msgstr "Ta ponudnik preverjanja pristnosti je že nastavljen. Najprej ga onemogočite."
+msgstr "Ta ponudnik preverjanja pristnosti je že nastavljen. Najprej ga onemogočite"
 
 msgid "Multi Factor Authentication is configured!"
 msgstr "Večfaktorska avtentikacija je nastavljena!"
