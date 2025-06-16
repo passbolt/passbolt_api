@@ -18,22 +18,17 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Model\Entity\Permission;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\TestCase\Controller\Share\ShareControllerTest;
-use App\Utility\UuidFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class ShareNotificationTest extends ShareControllerTest
 {
     use EmailQueueTrait;
     use EmailNotificationSettingsTestTrait;
-
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles',
-        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
-        'app.Base/Secrets', 'app.Base/Favorites',
-    ];
 
     public function setUp(): void
     {
@@ -57,57 +52,71 @@ class ShareNotificationTest extends ShareControllerTest
             'show.secret' => true,
         ], $uac);
 
-        // Define actors of this tests
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        // Users
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $userEId = UuidFactory::uuid('user.id.edith');
-        $userFId = UuidFactory::uuid('user.id.frances');
-        // Groups
-        $groupBId = UuidFactory::uuid('group.id.board');
-        $groupFId = UuidFactory::uuid('group.id.freelancer');
-        $groupAId = UuidFactory::uuid('group.id.accounting');
+        // Create users.
+        [$userA, $userB, $userE, $userMemberOfTheGroupToAddPermissionOn, $userMemberOfTheGroupToAddPermissionOn2, $userOwner] = UserFactory::make(6)->persist();
 
-        // Expected results.
-        $expectedAddedUsersIds = [];
-        $expectedRemovedUsersIds = [];
+        // Create groups.
+        [$groupB, $groupF] = GroupFactory::make(2)->withGroupsManagersFor([$userOwner])->persist();
+        // Create group to add permission to
+        $groupToAddPermissionTo = GroupFactory::make()
+            ->withGroupsManagersFor([
+                $userOwner,
+                $userMemberOfTheGroupToAddPermissionOn,
+                $userMemberOfTheGroupToAddPermissionOn2,
+            ])
+            ->persist();
+
+        // Create a resource shared with ada betty freelancer and board (all OWNER).
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userOwner, $userA, $userB, $groupF, $groupB])
+            ->withSecretsFor([$userOwner, $userA, $userB])
+            ->persist();
+
+        // Permissions
+        $permissionUserAId = $resource->permissions[1]->id;
+        $permissionUserBId = $resource->permissions[2]->id;
+        $permissionGroupFId = $resource->permissions[3]->id;
+        $permissionGroupBId = $resource->permissions[4]->id;
 
         // Build the changes.
         $data = ['permissions' => []];
 
-        // Users permissions changes.
+        // User permissions changes.
         // Change the permission of the user Ada to read (no users are expected to be added or removed).
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'type' => Permission::READ];
+        $data['permissions'][] = ['id' => $permissionUserAId, 'type' => Permission::READ];
         // Delete the permission of the user Betty.
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'delete' => true];
-        $expectedRemovedUsersIds[] = $userBId;
+        $data['permissions'][] = ['id' => $permissionUserBId, 'delete' => true];
         // Add an owner permission for the user Edith
-        $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
-        $data['secrets'][] = ['user_id' => $userEId, 'data' => $this->getValidSecret()];
-        $expectedAddedUsersIds[] = $userEId;
+        $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userE->id, 'type' => Permission::OWNER];
+        $data['secrets'][] = ['user_id' => $userE->id, 'data' => $this->getValidSecret()];
 
-        // Groups permissions changes.
+        // Group permissions changes.
         // Change the permission of the group Board (no users are expected to be added or removed).
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$groupBId"), 'type' => Permission::OWNER];
+        $data['permissions'][] = ['id' => $permissionGroupBId, 'type' => Permission::UPDATE];
         // Delete the permission of the group Freelancer.
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$groupFId"), 'delete' => true];
+        $data['permissions'][] = ['id' => $permissionGroupFId, 'delete' => true];
         // Add a read permission for the group Accounting.
-        $data['permissions'][] = ['aro' => 'Group', 'aro_foreign_key' => $groupAId, 'type' => Permission::READ];
-        $data['secrets'][] = ['user_id' => $userFId, 'data' => $this->getValidSecret()];
+        $data['permissions'][] = ['aro' => 'Group', 'aro_foreign_key' => $groupToAddPermissionTo->id, 'type' => Permission::READ];
+        $data['secrets'][] = ['user_id' => $userMemberOfTheGroupToAddPermissionOn->id, 'data' => $this->getValidSecret()];
+        $data['secrets'][] = ['user_id' => $userMemberOfTheGroupToAddPermissionOn2->id, 'data' => $this->getValidSecret()];
 
-        $this->authenticateAs('ada');
+        $resourceId = $resource->id;
+        $this->logInAs($userOwner);
         $this->putJson("/share/resource/$resourceId.json", $data);
         $this->assertSuccess();
 
-        // check email notification
-        $this->assertEmailInBatchContains('shared a password with you', 'edith@passbolt.com');
-        $this->assertEmailInBatchContains('Name: cakephp', 'edith@passbolt.com');
-        $this->assertEmailInBatchContains('Username: cake', 'edith@passbolt.com');
-        $this->assertEmailInBatchContains('The rapid and tasty php development framework', 'edith@passbolt.com');
-        $this->assertEmailInBatchContains('URL: cakephp.org', 'edith@passbolt.com');
-        $this->assertEmailInBatchContains('BEGIN PGP MESSAGE', 'edith@passbolt.com');
-
-        $this->assertEmailInBatchContains('shared a password with you', 'frances@passbolt.com');
+        // Check email notification should have 2 emails.
+        $this->assertEmailInBatchContains(
+            ['shared a password with you',
+            'Name: ' . $resource->name,
+            'Username: ' . $resource->username,
+            $resource->description,
+            'URL: ' . $resource->uri,
+            'BEGIN PGP MESSAGE'],
+            $userE->username
+        );
+        $this->assertEmailInBatchContains('shared a password with you', $userMemberOfTheGroupToAddPermissionOn->username);
+        $this->assertEmailInBatchContains('shared a password with you', $userMemberOfTheGroupToAddPermissionOn2->username);
+        $this->assertEmailQueueCount(3);
     }
 }
