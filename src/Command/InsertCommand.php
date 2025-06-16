@@ -28,10 +28,17 @@ class InsertCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Populate the database with dummy data test.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
         $parser
-            ->setDescription(__('Populate the database with dummy data test.'))
             ->addArgument('scenario', [
                 'help' => 'The scenario to play.',
                 'required' => true,

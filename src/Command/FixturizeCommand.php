@@ -29,6 +29,13 @@ use PassboltTestData\Lib\DataCommand;
  */
 class FixturizeCommand extends PassboltCommand
 {
+    /**
+     * @inheritDoc
+     */
+    public static function getCommandDescription(): string
+    {
+        return __('Fixturize a dummy scenario.');
+    }
 
     /**
      * @inheritDoc
@@ -119,7 +126,7 @@ class FixturizeCommand extends PassboltCommand
             'help' => 'The scenario to fixturize.',
             'required' => true,
             'choices' => array_keys(Configure::read('PassboltTestData.scenarios')),
-        ])->setDescription(__('Fixturize a dummy scenario.'));
+        ]);
 
         return $parser;
     }
