@@ -26,14 +26,6 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
 
-    /**
-     * @var array
-     */
-    public array $fixtures = [
-        'app.Base/Users',
-        'app.Base/Roles',
-    ];
-
     public function setUp(): void
     {
         parent::setUp();
