@@ -18,13 +18,10 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Service\Secrets;
 
 use App\Error\Exception\CustomValidationException;
-use App\Model\Entity\Permission;
-use App\Model\Entity\Role;
-use App\Model\Table\PermissionsTable;
 use App\Service\Secrets\SecretsUpdateSecretsService;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UserAccessControl;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -35,18 +32,6 @@ use Cake\Utility\Hash;
  */
 class SecretsUpdateSecretsServiceTest extends AppTestCase
 {
-    public array $fixtures = [
-        'app.Base/Groups',
-        'app.Base/GroupsUsers',
-        'app.Base/Permissions',
-        'app.Base/Resources',
-        'app.Base/Secrets',
-        'app.Base/Users',
-        'app.Base/Gpgkeys',
-        'app.Base/Roles',
-        'app.Base/Profiles',
-    ];
-
     /**
      * @var \App\Model\Table\SecretsTable
      */
@@ -74,73 +59,50 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
 
     public function testUpdateSecretsSuccess_AddSecrets()
     {
-        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdateSecretsSuccess_AddSecrets();
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        // Add Betty's permission without secret.
+        $r1 = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->withSecretsFor([$userA])->persist();
 
-        $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
-            ['user_id' => $userBId, 'data' => Hash::get(self::getDummySecretData(), 'data')],
+            ['user_id' => $userB->id, 'data' => Hash::get(self::getDummySecretData(), 'data')],
         ];
 
-        $this->service->updateSecrets($uac, $resource1->id, $data);
+        $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
 
         // Assert secrets
-        $secrets = $this->Secrets->findByResourceId($resource1->id)->toArray();
+        $secrets = $this->Secrets->findByResourceId($r1->id)->toArray();
         $this->assertCount(2, $secrets);
-        $this->assertSecretExists($resource1->id, $userAId);
-        $this->assertSecretExists($resource1->id, $userBId);
-        $secret = $this->Secrets->findByResourceIdAndUserId($resource1->id, $userBId)->first();
+        $this->assertSecretExists($r1->id, $userA->id);
+        $this->assertSecretExists($r1->id, $userB->id);
+        $secret = $this->Secrets->findByResourceIdAndUserId($r1->id, $userB->id)->first();
         $this->assertEquals($data[0]['data'], $secret->data);
-    }
-
-    private function insertFixture_UpdateSecretsSuccess_AddSecrets()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $for = [$userAId => Permission::OWNER];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $for);
-        // Add Betty's permission without secret.
-        $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource1->id, PermissionsTable::USER_ARO, $userBId, Permission::OWNER);
-
-        return [$resource1, $userAId, $userBId];
     }
 
     public function testUpdateSecretsError_AddSecrets_NotAllSecretsProvided()
     {
-        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdateSecretsError_AddSecrets_NotAllSecretsProvided(); // phpcs:ignore
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        // Add Betty's permission without secret.
+        $r1 = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->withSecretsFor([$userA])->persist();
 
-        $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [];
 
         try {
-            $this->service->updateSecrets($uac, $resource1->id, $data);
+            $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertUpdateSecretsValidationException($e, 'secrets_provided');
         }
     }
 
-    private function insertFixture_UpdateSecretsError_AddSecrets_NotAllSecretsProvided()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $for = [$userAId => Permission::OWNER];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $for);
-        // Add Betty's permission without secret.
-        $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource1->id, PermissionsTable::USER_ARO, $userBId, Permission::OWNER);
-
-        return [$resource1, $userAId, $userBId];
-    }
-
     public function testUpdateSecretsError_AddSecrets_ValidationExceptions_UserWithoutAccess()
     {
-        [$resource1, $userAId] = $this->insertFixture_UpdateSecretsError_AddSecrets_ValidationExceptions_UserWithoutAccess();
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withSecretsFor([$userA])->persist();
 
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $data = [['user_id' => $userBId, 'data' => Hash::get(self::getDummySecretData(), 'data')], ];
+        $data = [['user_id' => $userB->id, 'data' => Hash::get(self::getDummySecretData(), 'data')], ];
 
         try {
-            $this->service->updateSecrets($uac, $resource1->id, $data);
+            $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertUpdateSecretsValidationException($e, '0.resource_id.has_resource_access');
@@ -154,76 +116,47 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
         $this->assertNotNull($error, "Expected error not found : {$errorFieldName}. Errors: " . json_encode($e->getErrors()));
     }
 
-    private function insertFixture_UpdateSecretsError_AddSecrets_ValidationExceptions_UserWithoutAccess()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $for = [$userAId => Permission::OWNER];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $for);
-
-        return [$resource1, $userAId];
-    }
-
     public function testUpdateSecretsError_AddSecrets_ValidationExceptions_SoftDeletedUser()
     {
-        [$resource1, $userAId] = $this->insertFixture_UpdateSecretsError_AddSecrets_ValidationExceptions_SoftDeletedUser();
+        $userA = UserFactory::make()->persist();
+        $userB = UserFactory::make()->deleted()->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$userA,$userB])->withSecretsFor([$userA])->persist();
 
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userBId = UuidFactory::uuid('user.id.sofia');
-        $data = [['user_id' => $userBId, 'data' => Hash::get(self::getDummySecretData(), 'data')], ];
+        $data = [['user_id' => $userB->id, 'data' => Hash::get(self::getDummySecretData(), 'data')], ];
 
         try {
-            $this->service->updateSecrets($uac, $resource1->id, $data);
+            $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertUpdateSecretsValidationException($e, '0.user_id.user_is_not_soft_deleted');
         }
     }
 
-    private function insertFixture_UpdateSecretsError_AddSecrets_ValidationExceptions_SoftDeletedUser()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $for = [$userAId => Permission::OWNER];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $for);
-
-        return [$resource1, $userAId];
-    }
-
     /* DELETE SECRETS */
 
     public function testUpdateSecretsSuccess_DeleteSecrets()
     {
-        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdateSecretsSuccess_DeleteSecrets(); // phpcs:ignore
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        // Betty has no permissions but has secret.
+        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withSecretsFor([$userA,$userB])->persist();
 
-        $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [];
 
-        $this->service->updateSecrets($uac, $resource1->id, $data);
+        $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
 
         // Assert secrets
-        $secrets = $this->Secrets->findByResourceId($resource1->id)->toArray();
+        $secrets = $this->Secrets->findByResourceId($r1->id)->toArray();
         $this->assertCount(1, $secrets);
-        $this->assertSecretExists($resource1->id, $userAId);
-    }
-
-    private function insertFixture_UpdateSecretsSuccess_DeleteSecrets()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $for = [$userAId => Permission::OWNER, $userBId => Permission::OWNER];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $for);
-        // Remove Betty's permission but keep the secret.
-        $this->Permissions->deleteAll(['aco_foreign_key' => $resource1->id, 'aro_foreign_key' => $userBId]);
-
-        return [$resource1, $userAId, $userBId];
+        $this->assertSecretExists($r1->id, $userA->id);
     }
 
     /* UPDATE SECRETS */
 
     public function testUpdateSecretsSuccess_UpdateSecrets()
     {
-        [$resource1, $userAId] = $this->insertFixture_UpdateSecretsSuccess_UpdateSecrets();
+        $userA = UserFactory::make()->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withSecretsFor([$userA])->persist();
 
-        $uac = new UserAccessControl(Role::USER, $userAId);
         $encryptedSecret = '-----BEGIN PGP MESSAGE-----
 
 hQIMA+p38wQEIh7oARAA01hXtj/fXnMEbilhaL1xihs+2kjJXFROw24/W+GmUQgP
@@ -242,11 +175,11 @@ URIWI7R+VCewqviRfmezc4M=
 =50Mc
 -----END PGP MESSAGE-----';
         $data = [
-            ['user_id' => $userAId, 'data' => $encryptedSecret],
+            ['user_id' => $userA->id, 'data' => $encryptedSecret],
         ];
 
         try {
-            $this->service->updateSecrets($uac, $resource1->id, $data);
+            $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
         } catch (CustomValidationException $validationException) {
             $data = json_encode($data);
             $errors = json_encode($validationException->getErrors());
@@ -254,44 +187,25 @@ URIWI7R+VCewqviRfmezc4M=
         }
 
         // Assert secrets
-        $secrets = $this->Secrets->findByResourceId($resource1->id)->toArray();
+        $secrets = $this->Secrets->findByResourceId($r1->id)->toArray();
         $this->assertCount(1, $secrets);
-        $this->assertSecretExists($resource1->id, $userAId);
-        $secret = $this->Secrets->findByResourceIdAndUserId($resource1->id, $userAId)->first();
+        $this->assertSecretExists($r1->id, $userA->id);
+        $secret = $this->Secrets->findByResourceIdAndUserId($r1->id, $userA->id)->first();
         $this->assertEquals($encryptedSecret, $secret->data);
-    }
-
-    private function insertFixture_UpdateSecretsSuccess_UpdateSecrets()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $for = [$userAId => Permission::OWNER];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $for);
-
-        return [$resource1, $userAId];
     }
 
     public function testUpdateSecretsError_UpdateSecrets_ValidationExceptions_InvalidGpgMessage()
     {
-        [$resource1, $userAId] = $this->insertFixture_UpdateSecretsError_UpdateSecrets_ValidationExceptions_InvalidGpgMessage();
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withSecretsFor([$userA])->persist();
 
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userBId = UuidFactory::uuid('user.id.sofia');
-        $data = [['user_id' => $userBId, 'data' => 'invalid-message']];
+        $data = [['user_id' => $userB->id, 'data' => 'invalid-message']];
 
         try {
-            $this->service->updateSecrets($uac, $resource1->id, $data);
+            $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertUpdateSecretsValidationException($e, '0.data.isValidOpenPGPMessage');
         }
-    }
-
-    private function insertFixture_UpdateSecretsError_UpdateSecrets_ValidationExceptions_InvalidGpgMessage()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $for = [$userAId => Permission::OWNER];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $for);
-
-        return [$resource1, $userAId];
     }
 }
