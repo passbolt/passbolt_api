@@ -6,14 +6,14 @@
 	  /_/    \__,_/____/____/_,___/\____/_/\__/
 
 	The open source password manager for teams
-	Copyright (c) 2023 Passbolt SA
+	Copyright (c) 2025 Passbolt SA
 	https://www.passbolt.com
 
 ## License
 
 Passbolt - Open source password manager for teams
 
-(c) 2023 Passbolt SA
+(c) 2025 Passbolt SA
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
 Public License (AGPL) as published by the Free Software Foundation version 3.
@@ -30,5 +30,5 @@ see [GNU Affero General Public License v3](http://www.gnu.org/licenses/agpl-3.0.
 
 ## About Passbolt Test Data
 
-This is a CakePHP plugin to provide fixtures to run the Passbolt API 
+This is a CakePHP plugin to provide fixtures to run the Passbolt API
 unit and integration tests.

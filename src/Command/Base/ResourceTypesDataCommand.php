@@ -265,6 +265,44 @@ class ResourceTypesDataCommand extends DataCommand
                 ]),
                 'created' => date("Y-m-d H:i:s"),
                 'modified' => date("Y-m-d H:i:s"),
+            ],
+            [
+                'v5-password-string' => [
+                    'id' => UuidFactory::uuid('resource-types.id.v5-password-string'),
+                    'slug' => ResourceType::SLUG_V5_PASSWORD_STRING,
+                    'name' => 'Simple Password (Deprecated)',
+                    'description' => 'The original passbolt resource type, kept for backward compatibility reasons.',
+                    'definition' => json_encode([]),
+                    'created' => date("Y-m-d H:i:s"),
+                    'modified' => date("Y-m-d H:i:s"),
+                ],
+                'v5-default' => [
+                    'id' => UuidFactory::uuid('resource-types.id.v5-default'),
+                    'slug' => ResourceType::SLUG_V5_DEFAULT,
+                    'name' => 'Default resource type',
+                    'description' => 'The new default resource type introduced with v5.',
+                    'definition' => json_encode([]),
+                    'created' => date("Y-m-d H:i:s"),
+                    'modified' => date("Y-m-d H:i:s"),
+                ],
+                'v5-totp-standalone' => [
+                    'id' => UuidFactory::uuid('resource-types.id.v5-totp-standalone'),
+                    'slug' => ResourceType::SLUG_V5_TOTP_STANDALONE,
+                    'name' => 'Standalone TOTP',
+                    'description' => 'The new standalone TOTP resource type introduced with v5.',
+                    'definition' => json_encode([]),
+                    'created' => date("Y-m-d H:i:s"),
+                    'modified' => date("Y-m-d H:i:s"),
+                ],
+                'v5-default-with-totp' => [
+                    'id' => UuidFactory::uuid('resource-types.id.v5-default-with-totp'),
+                    'slug' => ResourceType::SLUG_V5_DEFAULT_WITH_TOTP,
+                    'name' => 'Default resource type with TOTP',
+                    'description' => 'The new default resource type with a TOTP introduced with v5.',
+                    'definition' => json_encode([]),
+                    'created' => date("Y-m-d H:i:s"),
+                    'modified' => date("Y-m-d H:i:s"),
+                ],
             ]
         ];
     }
