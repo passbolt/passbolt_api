@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e3de0cf53b906138affb7444f59c48a",
+    "content-hash": "8ac58f900588d49a0baca080ce2b49dd",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5604,16 +5604,16 @@
         },
         {
             "name": "passbolt/passbolt-test-data",
-            "version": "dev-cakephp5",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-test-data",
-                "reference": "75bf182692301efd5f4118f6f29b0b3a8619a41d"
+                "reference": "e0e3771"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-test-data/zipball/75bf182692301efd5f4118f6f29b0b3a8619a41d",
-                "reference": "75bf182692301efd5f4118f6f29b0b3a8619a41d",
+                "url": "https://api.github.com/repos/passbolt/passbolt-test-data/zipball/e0e3771",
+                "reference": "e0e3771",
                 "shasum": ""
             },
             "require": {
@@ -5623,6 +5623,7 @@
             "require-dev": {
                 "phpunit/phpunit": "^10.1.0"
             },
+            "default-branch": true,
             "type": "cakephp-plugin",
             "autoload": {
                 "psr-4": {
@@ -5655,7 +5656,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2025-04-22T09:33:36+00:00"
+            "time": "2025-06-16T15:30:34+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -7893,12 +7894,12 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "bcrowe/cakephp-api-pagination": 20,
         "cakephp/cakephp": 20,
         "lorenzo/cakephp-email-queue": 20,
+        "bcrowe/cakephp-api-pagination": 20,
+        "psy/psysh": 0,
         "passbolt/passbolt-selenium-api": 20,
-        "passbolt/passbolt-test-data": 20,
-        "psy/psysh": 0
+        "passbolt/passbolt-test-data": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -7913,7 +7914,7 @@
         "ext-pdo": "*",
         "ext-curl": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.2"
     },
