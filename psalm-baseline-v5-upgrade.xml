@@ -74,11 +74,6 @@
       <code><![CDATA[ResourceFactory]]></code>
     </MethodSignatureMismatch>
   </file>
-  <file src="plugins/PassboltCe/Folders/tests/TestCase/Controller/Folders/FoldersIndexControllerPaginationTest.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$user->id]]></code>
-    </InvalidPropertyFetch>
-  </file>
   <file src="plugins/PassboltCe/Folders/tests/TestCase/Controller/Folders/FoldersIndexControllerTest.php">
     <InvalidArgument>
       <code><![CDATA[$folder->children_folders]]></code>
