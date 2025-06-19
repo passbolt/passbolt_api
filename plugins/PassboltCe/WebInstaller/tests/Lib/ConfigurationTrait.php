@@ -64,15 +64,17 @@ trait ConfigurationTrait
         return $this->installerFriendly;
     }
 
-    /*
+    /**
      * Backup the passbolt configuration
+     *
+     * @return void
      */
-
     protected function backupConfiguration()
     {
         // Backup the config and restore it after each test.
         $this->backupConfig = [];
         if (file_exists(CONFIG . 'passbolt.php')) {
+            // TODO: Instead of backing up like this copy it somewhere safe so it can be retrieved later
             $this->backupConfig['passboltConfig'] = file_get_contents(CONFIG . 'passbolt.php');
         }
         if (file_exists(CONFIG . 'license')) {
@@ -136,7 +138,11 @@ trait ConfigurationTrait
         }
 
         // Write the keys
-        Configure::write('passbolt.gpg.serverKey.public', $this->backupConfig['public']);
-        Configure::write('passbolt.gpg.serverKey.private', $this->backupConfig['private']);
+        if (!empty($this->backupConfig['public'])) {
+            Configure::write('passbolt.gpg.serverKey.public', $this->backupConfig['public']);
+        }
+        if (!empty($this->backupConfig['private'])) {
+            Configure::write('passbolt.gpg.serverKey.private', $this->backupConfig['private']);
+        }
     }
 }
