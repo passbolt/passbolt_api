@@ -25,7 +25,6 @@ use App\View\Helper\AvatarHelper;
 use ArrayObject;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
-use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
@@ -138,18 +137,14 @@ class AvatarsTable extends Table
      *
      * @param \Cake\Event\Event $event the event
      * @param \App\Model\Entity\Avatar $avatar entity
-     * @return \Cake\Datasource\EntityInterface|bool
+     * @return void
      */
-    public function beforeSave(Event $event, Avatar $avatar): EntityInterface|bool
+    public function beforeSave(Event $event, Avatar $avatar): void
     {
         if (!$this->setData($avatar)) {
             $avatar->setError('data', __('Could not save the data in {0} format.', AvatarHelper::IMAGE_EXTENSION));
             $event->stopPropagation();
-
-            return false;
         }
-
-        return $avatar;
     }
 
     /**

@@ -50,8 +50,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
         $settingActivated = 'send.comment.add';
         $this->setEmailNotificationSetting($settingActivated, true);
         $settingDeactivated = 'show.comment';
-        $userEnabled = UserFactory::make()->getEntity();
-        $userEnabled->disabled = null;
+        $userEnabled = UserFactory::make()->notDisabled()->getEntity();
         $userDisabled = UserFactory::make()->disabled()->getEntity();
         $redactorAlwaysActive = $this->createSubscribedRedactor(
             [$event],
@@ -98,8 +97,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
         $settingActivated = 'send.comment.add';
         $this->setEmailNotificationSetting($settingActivated, true);
         $settingDeactivated = 'show.comment';
-        $userEnabled = UserFactory::make()->getEntity();
-        $userEnabled->disabled = null;
+        $userEnabled = UserFactory::make()->notDisabled()->getEntity();
         $userDisabled = UserFactory::make()->disabled()->getEntity();
         $redactorAlwaysActive = $this->createSubscribedRedactor(
             [$event],

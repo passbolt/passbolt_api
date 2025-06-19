@@ -19,13 +19,12 @@ use Migrations\AbstractMigration;
 
 class V2136CleanupUnusedActionLogs extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $actionToCleanup = 'AuthIsAuthenticated.isAuthenticated';
 
-        $actionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
-        $actionLogsTable->deleteAll([
+        $this->getDeleteBuilder()->delete('action_logs')->where([
             'action_id' => UserAction::actionId($actionToCleanup)
-        ]);
+        ])->execute();
     }
 }

@@ -51,7 +51,7 @@ class HealthcheckIndexController extends AppController
 
         $this->Authentication->allowUnauthenticated(['index']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

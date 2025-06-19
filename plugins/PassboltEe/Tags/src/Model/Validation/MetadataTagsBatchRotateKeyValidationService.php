@@ -53,6 +53,7 @@ class MetadataTagsBatchRotateKeyValidationService extends MetadataBatchUpdateVal
 
         return $tags->select([
             'Tags.id',
+            'Tags.slug',
             'MetadataKeys.id',
             'MetadataKeys.expired',
             'MetadataKeys.deleted',
