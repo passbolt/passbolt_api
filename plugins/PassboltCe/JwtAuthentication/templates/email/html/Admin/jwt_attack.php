@@ -11,29 +11,33 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.3.0
+ *
+ * @var array $body
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
 use Cake\I18n\DateTime;
 
 $user = $body['user'];
-$ip = $body['ip'];
+$clientIp = $body['clientIp'];
+$userAgent = $body['userAgent'];
 $message = $body['message'];
 
 echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
-        'datetime' => \Cake\I18n\DateTime::now(),
+        'datetime' => DateTime::now(),
         'text' => __('Security warning!')
     ])
 ]);
 
 $text = '<h3>' . __('Security warning!') . '</h3><br/>';
 $text = '<h4>' . $message . '</h4><br/>';
-$text .= __('An unknown user with IP: {0} attempted to identify as {1}.', $ip, $user['username']);
+$text .= __('An unknown user attempted to identify as {0}.', $user['username']);
 $text .= ' ' . __('This is a potential security issue.');
 $text .= ' ' . __('Please investigate!');
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
+echo $this->element('Email/module/user_info', compact('userAgent', 'clientIp'));

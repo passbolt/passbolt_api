@@ -43,7 +43,7 @@ return [
         // set in bootstrap.php
         'originalFullBaseUrl' => '',
         'v5' => [
-            'enabled' => filter_var(env('PASSBOLT_V5_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+            'enabled' => true,
         ],
 
         // Authentication & Authorisation.
@@ -314,6 +314,9 @@ return [
             'disableUser' => [
                 // Feature flag to allow client to tune behavior for backward compatibility
                 'enabled' => true
+            ],
+            'userKeyPolicies' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_USER_KEY_POLICIES_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
             ],
         ],
 

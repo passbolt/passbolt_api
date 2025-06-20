@@ -21,6 +21,7 @@ use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\EmailTestTrait;
+use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
@@ -107,6 +108,18 @@ class PreviewCommandTest extends AppIntegrationTestCase
         $emailHtml = $this->_out->output();
         $this->assertMailBodyStringCount(1, '<head>', 0, $emailHtml);
         $this->assertMailBodyStringCount(1, '</head>', 0, $emailHtml);
+    }
+
+    public function testPreviewCommand_BaseUrlIsEscaped(): void
+    {
+        $fullBaseUrl = 'https://passbolt.local#"<script>alert(1)</script>';
+        Configure::write('App.fullBaseUrl', $fullBaseUrl);
+        EmailQueueFactory::make()->persist();
+
+        $this->exec('passbolt email_digest preview --body');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains(Purifier::clean($fullBaseUrl));
     }
 
     /**

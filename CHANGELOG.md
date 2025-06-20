@@ -2,6 +2,166 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.2.0] - 2025-06-11
+### Added
+- PB-42861 As a user I can use passbolt in Slovenian language
+- PB-42986 As a user I can use passbolt in Ukrainian language
+- PB-42878 Add User GPG key policies (ECC by default) support behind a feature flag
+- PB-41966 As a resource owner I should receive a notification on the day that my resources expire
+
+### Improved
+- PB-42706 Alias POST /metadata/keys/privates.json endpoint to POST /metadata/keys/private.json
+
+### Fixed
+- PB-42800 The check metadata key presence in the healthcheck should not fail if no metadata key is required
+- PB-42701 Fixes the contain of missing metadata key on view user endpoint
+- PB-42592 Add missing attribute in ldap default configuration file
+- PB-42574 Fix LDAP Typed property error
+
+### Security
+- PB-42687 Security alert emails should display user IP and user agent only if configured
+- PB-42379 PBL-13-004 - Fixes HTML injections in email notifications
+
+### Maintenance
+- PB-42935 Upgrade API babel dev dependency
+- PB-42893 Upgrade API lock-link-api dev dependency
+- PB-42923 refactor code to remove warning in selenium execution context
+
+## [5.2.0-rc.1] - 2025-06-04
+### Added
+- PB-42861 As a user I can use passbolt in Slovenian language
+- PB-42986 As a user I can use passbolt in Ukrainian language
+- PB-42878 Add User GPG key policies (ECC by default) support behind a feature flag
+- PB-41966 As a resource owner I should receive a notification on the day that my resources expire
+
+### Improved
+- PB-42706 Alias POST /metadata/keys/privates.json endpoint to POST /metadata/keys/private.json
+
+### Fixed
+- PB-42800 The check metadata key presence in the healthcheck should not fail if no metadata key is required
+- PB-42701 Fixes the contain of missing metadata key on view user endpoint
+
+### Security
+- PB-42687 Security alert emails should display user IP and user agent only if configured
+- PB-42378 PBL-13-001 - Fixes open redirect on MFA step in login
+- PB-42379 PBL-13-004 - Fixes HTML injections in email notifications
+- PB-43115 Fix XSS in email footer where the full base URL was not escaped or sanitized
+
+### Maintenance
+- PB-42935 Upgrade API babel dev dependency
+- PB-42893 Upgrade API lock-link-api dev dependency
+- PB-42923 refactor code to remove warning in selenium execution context
+
+## [5.2.0-test.1] - 2025-06-03
+### Added
+- PB-42861 As a user I can use passbolt in Slovenian language
+- PB-42986 As a user I can use passbolt in Ukrainian language
+- PB-42878 Add User GPG key policies (ECC by default) support behind a feature flag
+- PB-41966 As a resource owner I should receive a notification on the day that my resources expire
+
+### Improved
+- PB-42706 Alias POST /metadata/keys/privates.json endpoint to POST /metadata/keys/private.json
+
+### Fixed
+- PB-42800 The check metadata key presence in the healthcheck should not fail if no metadata key is required
+- PB-42701 Fixes the contain of missing metadata key on view user endpoint
+
+### Security
+- PB-42687 Security alert emails should display user IP and user agent only if configured
+- PB-42378 PBL-13-001 - Fixes open redirect on MFA step in login
+- PB-42379 PBL-13-004 - Fixes HTML injections in email notifications
+
+### Maintenance
+- PB-42935 Upgrade API babel dev dependency
+- PB-42893 Upgrade API lock-link-api dev dependency
+- PB-42923 refactor code to remove warning in selenium execution context
+
+## [5.1.1] - 2025-05-22
+### Fixed
+- PB-42701 Fix the contain of missing metadata key on view user endpoint
+
+### Security
+- PB-42687 Security alert emails should display user IP and user agent only if configured
+
+## [5.1.1-test.1] - 2025-05-21
+### Fixed
+- PB-42701 Fix the contain of missing metadata key on view user endpoint
+
+### Security
+- PB-42687 Security alert emails should display user IP and user agent only if configured
+
+## [5.1.0] - 2025-05-15
+### Added
+- PB-40712 Enable password expiry by default for new instances
+- PB-41629 As a client I should know if the metadata plugin is set as in beta
+- PB-41628 Enable the metadata plugin by default
+
+### Fixed
+- PB-41736 Adjust the datacheck command to support v5 resources
+- PB-41769 Fix action_logs_purge command only purging 100 records
+- PB-42108 Fix the APP_BASE variable ignored when generated URLs with CakePHP
+
+### Security
+- PB-42378 PBL-13-001 - Sanitize open redirect on MFA step in login
+
+### Improved
+- PB-41840 Return creator along metadata keys on GET /metadata/keys.json
+- PB-42117 Populate metadata key ID for personal resources if null in payload
+
+### Maintenance
+- PB-40626 Update passbolt-test-data to improve PHP 8.4 compatibility
+- PB-40365 Updates the test pipelines to cover PHP 8.4
+- PB-40630 Bump bacon/bacon-qr-code to v3.0
+- PB-40627 Bump league/flysystem package to v3.29
+- PB-40625 Bump Spomky-Labs/otphp package to v11.3
+- PB-40641 Replace vimeo/psalm to psalm/phar
+
+## [5.1.0-rc.1] - 2025-05-12
+### Added
+- PB-40712 Enable password expiry by default for new instances
+- PB-41629 As a client I should know if the metadata plugin is set as in beta
+- PB-41628 Enable the metadata plugin by default
+
+### Fixed
+- PB-41736 Adjust the datacheck command to support v5 resources
+- PB-41769 Fix action_logs_purge command only purging 100 records
+- PB-42108 Fix the APP_BASE variable ignored when generated URLs with CakePHP
+
+### Improved
+- PB-41840 Return creator along metadata keys on GET /metadata/keys.json
+- PB-42117 Populate metadata key ID for personal resources if null in payload
+
+### Maintenance
+- PB-40626 Update passbolt-test-data to improve PHP 8.4 compatibility
+- PB-40365 Updates the test pipelines to cover PHP 8.4
+- PB-40630 Bump bacon/bacon-qr-code to v3.0
+- PB-40627 Bump league/flysystem package to v3.29
+- PB-40625 Bump Spomky-Labs/otphp package to v11.3
+- PB-40641 Replace vimeo/psalm to psalm/phar
+
+## [5.1.0-test.1] - 2025-05-07
+### Added
+- PB-40712 Enable password expiry by default for new instances
+- PB-41629 As a client I should know if the metadata plugin is set as in beta
+- PB-41628 The metadata plugin is enabled by default
+
+### Fixed
+- PB-41736 Adjust datacheck command to support v5 resources
+- PB-41769 Fix action_logs_purge command only purging 100 records
+- PB-42108 Fix APP_BASE not included in generated URLs
+
+### Improved
+- PB-41840 Return creator along metadata keys on GET /metadata/keys.json
+- PB-42117 Populate metadata key ID for personal resources if null in payload
+
+### Maintenance
+- PB-40626 Update passbolt-test-data to improve PHP 8.4 compatibility
+- PB-40365 Updates the test pipelines to cover PHP 8.4
+- PB-40630 Bump bacon/bacon-qr-code to v3.0
+- PB-40627 Bump league/flysystem package to v3.29
+- PB-40625 Bump Spomky-Labs/otphp package to v11.3
+- PB-40641 Replace vimeo/psalm to psalm/phar
+
 ## [5.0.0] - 2025-04-10
 ### Added
 - PB-39434 As an administrator I can log user actions on file in an SIEM compatible format

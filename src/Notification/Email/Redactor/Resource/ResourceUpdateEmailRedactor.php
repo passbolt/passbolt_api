@@ -26,7 +26,6 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Resources\ResourcesUpdateService;
-use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -145,14 +144,13 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
                     if ($isRecipientPerformingTheAction) {
                         $subject = __('You edited a resource');
                     } else {
-                        $subject = __('{0} edited a resource', Purifier::clean($owner->profile->first_name));
+                        $subject = __('{0} edited a resource', $owner->profile->first_name);
                     }
                 } else {
-                    $resourceName = Purifier::clean($resource->name);
                     if ($isRecipientPerformingTheAction) {
-                        $subject = __('You edited the resource {0}', $resourceName);
+                        $subject = __('You edited the resource {0}', $resource->name);
                     } else {
-                        $subject = __('{0} edited the resource {1}', Purifier::clean($owner->profile->first_name), $resourceName); // phpcs:ignore
+                        $subject = __('{0} edited the resource {1}', $owner->profile->first_name, $resource->name); // phpcs:ignore
                     }
                 }
 

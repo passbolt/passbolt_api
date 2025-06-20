@@ -64,7 +64,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCaseV5
         $json = $gpg->decrypt($privateKey->data);
         $privateKeyDto = json_decode($json, true, 2, JSON_THROW_ON_ERROR);
         $this->assertEquals($this->getValidPrivateKeyCleartext(), $privateKeyDto);
-        $this->assertSame($user->id, $privateKey->created_by);
-        $this->assertSame($user->id, $privateKey->modified_by);
+        $this->assertNull($privateKey->created_by);
+        $this->assertNull($privateKey->modified_by);
     }
 }

@@ -85,6 +85,7 @@ trait FoldersModelTrait
     public function addFolderFor(?array $data = [], ?array $users = [], ?array $groups = [], ?array $options = [])
     {
         $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+        /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = TableRegistry::getTableLocator()->get('Users');
 
         reset($users);

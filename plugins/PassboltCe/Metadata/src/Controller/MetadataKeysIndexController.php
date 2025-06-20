@@ -31,7 +31,7 @@ class MetadataKeysIndexController extends AppController
         $this->assertJson();
 
         $options = $this->QueryString->get([
-            'contain' => ['metadata_private_keys'],
+            'contain' => ['metadata_private_keys', 'creator', 'creator.profile'],
             'filter' => ['deleted', 'expired'],
         ]);
 

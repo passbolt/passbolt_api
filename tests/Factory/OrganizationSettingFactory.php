@@ -30,6 +30,7 @@ use Faker\Generator;
  * @method \App\Model\Entity\OrganizationSetting getEntity()
  * @method \App\Model\Entity\OrganizationSetting[] getEntities()
  * @method static \App\Model\Entity\OrganizationSetting get($primaryKey, array $options = [])
+ * @method static \App\Model\Entity\OrganizationSetting firstOrFail(ExpressionInterface|Closure|array|string|null $conditions = null)
  */
 class OrganizationSettingFactory extends CakephpBaseFactory
 {

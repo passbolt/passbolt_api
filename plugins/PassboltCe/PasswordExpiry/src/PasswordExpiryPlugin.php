@@ -16,18 +16,23 @@ declare(strict_types=1);
  */
 namespace Passbolt\PasswordExpiry;
 
+use App\Service\Command\ProcessUserService;
 use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
+use Passbolt\PasswordExpiry\Command\PasswordExpiryNotifyAboutExpiredResourcesCommand;
+use Passbolt\PasswordExpiry\Event\PasswordExpiryFirstUserSetupCompleteEventListener;
 use Passbolt\PasswordExpiry\Event\PasswordExpiryResourceMarkedAsExpiredEventListener;
 use Passbolt\PasswordExpiry\Notification\DigestTemplate\PasswordExpiryPasswordMarkedExpiredDigestTemplate;
 use Passbolt\PasswordExpiry\Notification\Email\PasswordExpiryRedactorPool;
 use Passbolt\PasswordExpiry\Notification\NotificationSettings\PasswordExpiryNotificationSettingsDefinition;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesService;
+use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryGetOwnersOfExpiredResourcesService;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsService;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsServiceInterface;
@@ -48,6 +53,7 @@ class PasswordExpiryPlugin extends BasePlugin
         // Register email redactors and listen to user disabling/deleting
         $app->getEventManager()
             ->on(new PasswordExpiryResourceMarkedAsExpiredEventListener())
+            ->on(new PasswordExpiryFirstUserSetupCompleteEventListener())
             ->on(new PasswordExpiryNotificationSettingsDefinition())
             ->on(new PasswordExpiryRedactorPool());
 
@@ -75,5 +81,25 @@ class PasswordExpiryPlugin extends BasePlugin
             ->extend(ResourcesExpireResourcesServiceInterface::class)
             ->setConcrete(PasswordExpiryExpireResourcesService::class)
             ->addArgument(PasswordExpiryValidationServiceInterface::class);
+        $container
+            ->add(PasswordExpiryGetOwnersOfExpiredResourcesService::class)
+            ->addArgument(PasswordExpiryGetSettingsServiceInterface::class);
+        $container
+            ->add(PasswordExpiryNotifyAboutExpiredResourcesCommand::class)
+            ->addArguments([
+                ProcessUserService::class,
+                PasswordExpiryGetOwnersOfExpiredResourcesService::class,
+            ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function console(CommandCollection $commands): CommandCollection
+    {
+        return $commands->add(
+            'passbolt notify_about_expired_resources',
+            PasswordExpiryNotifyAboutExpiredResourcesCommand::class
+        );
     }
 }

@@ -27,7 +27,7 @@ class JsonTraceFormatter extends JsonFormatter
     /**
      * @inheritDoc
      */
-    public function format($level, string $message, array $context = []): string
+    public function format($level, string $message, array $context = []): string // @psalm-suppress FalsableReturnStatement
     {
         $trace = $context[self::TRACE] ?? null;
         if (!is_string($trace)) {
@@ -43,6 +43,7 @@ class JsonTraceFormatter extends JsonFormatter
         $trace = explode(PHP_EOL, $trace);
         $log[self::TRACE] = $trace;
 
+        /** @psalm-suppress FalsableReturnStatement */
         return json_encode($log);
     }
 }

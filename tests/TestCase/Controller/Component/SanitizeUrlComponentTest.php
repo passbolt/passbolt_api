@@ -21,6 +21,7 @@ use App\Controller\Component\SanitizeUrlComponent;
 use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
 use Cake\Http\ServerRequest;
+use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 
 class SanitizeUrlComponentTest extends TestCase
@@ -68,6 +69,8 @@ class SanitizeUrlComponentTest extends TestCase
     public function dataForTestSanitizeUrlComponent_SanitizeRedirect(): array
     {
         $baseUrl = '/foo';
+        $urlElements = parse_url(Router::url('/', true));
+        $host = $urlElements['host'];
 
         return [
             [$baseUrl, '/'],
@@ -76,15 +79,30 @@ class SanitizeUrlComponentTest extends TestCase
             [$baseUrl . '?redirect=/', '/'],
             [$baseUrl . '?redirect=test', '/'],
             [$baseUrl . '?redirect=http://evil.com', '/'],
+            [$baseUrl . '?redirect=https://evil.com', '/'],
+            [$baseUrl . '?redirect=https://www.evil.com', '/'],
             [$baseUrl . '?redirect=evil.com', '/'],
+            [$baseUrl . '?redirect=www.evil.com', '/'],
+            [$baseUrl . '?redirect=///evil.com', '/'],
+            [$baseUrl . '?redirect=//evil.com', '/'],
+            [$baseUrl . '?redirect=/////evil.com', '/'],
+            [$baseUrl . '?redirect=////////////////////////////evil.com', '/'],
+            [$baseUrl . '?redirect=///evil.com/mfa/verify', '/'],
+            [$baseUrl . '?redirect=//evil.com/mfa/verify', '/'],
+            [$baseUrl . '?redirect=ftp://evil.com/', '/'],
+            [$baseUrl . '?redirect=ssh://login@evil.com:12345/repository.git', '/'],
             [$baseUrl . '?redirect=8.8.8.8', '/'],
             [$baseUrl . '?redirect=/8.8.8.8', '/8.8.8.8'],
             [$baseUrl . '?redirect=/a', '/a'],
             [$baseUrl . '?redirect=/app/users', '/app/users'],
             [$baseUrl . '?redirect=/../../root', '/'],
+            [$baseUrl . '?redirect=../../root', '/'],
+            [$baseUrl . '?redirect=../../../redirect?url=http://evil.com', '/'],
             [$baseUrl . '?redirect=/<script>', '/&lt;script&gt;'],
+            [$baseUrl . '?redirect=javascript:alert(document.domain)', '/'],
             [$baseUrl . '?redirect=' . $baseUrl, '/'],
             [$baseUrl . '?redirect=/mfa', '/mfa'],
+            [$baseUrl . "?redirect=//$host", "//$host"],
         ];
     }
 

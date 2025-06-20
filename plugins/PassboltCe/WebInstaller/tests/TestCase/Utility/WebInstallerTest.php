@@ -151,6 +151,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
 
         // Create first user
         $Users = TableRegistry::getTableLocator()->get('Users');
+        /** @psalm-suppress UndefinedMagicPropertyFetch */
         $roleAdminId = $Users->Roles->getIdByName(Role::ADMIN);
         $userSettings = [
             'username' => 'aurore@passbolt.com',

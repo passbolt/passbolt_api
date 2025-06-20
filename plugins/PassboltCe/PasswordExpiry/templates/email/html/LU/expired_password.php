@@ -15,6 +15,7 @@
  * @see \Passbolt\PasswordExpiry\Notification\Email\PasswordExpirySettingsUpdatedEmailRedactor
  * @var \App\View\AppView $this
  * @var array $body
+ * @var string $title
  */
 
 use App\Utility\Purifier;
@@ -29,9 +30,9 @@ if (PHP_SAPI === 'cli') {
 echo $this->element('Email/module/avatar', [
     'url' => AvatarHelper::getAvatarUrl(),
     'text' => $this->element('Email/module/avatar_anonymous_text', [
-        'title' => $title,
+        'title' => Purifier::clean($title),
         'text' => __('You have been requested to change them'),
-        'datetime' => \Cake\I18n\DateTime::now(),
+        'datetime' => DateTime::now(),
     ]),
 ]);
 

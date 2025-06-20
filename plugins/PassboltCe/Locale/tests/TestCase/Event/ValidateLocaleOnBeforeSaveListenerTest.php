@@ -68,12 +68,13 @@ class ValidateLocaleOnBeforeSaveListenerTest extends TestCase
             $this->expectException($expectException);
         }
 
-        $setting = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings')
-            ->createOrUpdateSetting(
-                UserFactory::make()->persist()->id,
-                LocaleService::SETTING_PROPERTY,
-                $locale
-            );
+        /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $accountSettingsTable */
+        $accountSettingsTable = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
+        $setting = $accountSettingsTable->createOrUpdateSetting(
+            UserFactory::make()->persist()->id,
+            LocaleService::SETTING_PROPERTY,
+            $locale
+        );
 
         $this->assertSame('fr-FR', $setting->get('value'));
     }

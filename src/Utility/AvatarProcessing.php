@@ -46,7 +46,9 @@ class AvatarProcessing
         $heightRatio = $size->getHeight() / $cropHeight; // < 1 if the image height is smaller than the crop
         $minRatio = min($widthRatio, $heightRatio); // Resize along the smallest ratio
 
+        /** @psalm-suppress InvalidOperand */
         $newWidth = (int)($size->getWidth() / $minRatio);
+        /** @psalm-suppress InvalidOperand */
         $newHeight = (int)($size->getHeight() / $minRatio);
         $image->resize(new Box($newWidth, $newHeight));
 
