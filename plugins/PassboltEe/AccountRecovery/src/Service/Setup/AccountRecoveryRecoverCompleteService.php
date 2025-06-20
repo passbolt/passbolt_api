@@ -75,9 +75,10 @@ class AccountRecoveryRecoverCompleteService extends RecoverCompleteService
             ->contain('AccountRecoveryResponses', function (Query $query) {
                 return $query
                     ->select([
-                    'AccountRecoveryResponses.id',
-                    'AccountRecoveryResponses.account_recovery_request_id',
-                ]);
+                        'AccountRecoveryResponses.id',
+                        'AccountRecoveryResponses.account_recovery_request_id',
+                        'AccountRecoveryResponses.data',
+                    ]);
             })
             ->firstOrFail();
 

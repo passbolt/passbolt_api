@@ -33,7 +33,7 @@ class AuthLogoutController extends AppController
         $this->assertGetEndPointIsEnabled();
         $this->Authentication->allowUnauthenticated(['logout']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

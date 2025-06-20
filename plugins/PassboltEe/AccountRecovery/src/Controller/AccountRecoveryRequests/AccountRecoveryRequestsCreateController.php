@@ -36,7 +36,7 @@ class AccountRecoveryRequestsCreateController extends AppController
     {
         $this->Authentication->allowUnauthenticated(['create']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

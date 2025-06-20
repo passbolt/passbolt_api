@@ -45,6 +45,9 @@ class MetadataRotateKeyFoldersUpdateService extends AbstractMetadataRotateKeyUpd
     {
         /** @var \Passbolt\Folders\Model\Table\FoldersTable $foldersTable */
         $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+        /** @var \Cake\ORM\RulesChecker $rules */
+        $rules = $foldersTable->rulesChecker();
+        $foldersTable->buildRulesV5($rules);
 
         $entities = [];
         foreach ($data as $i => $values) {
@@ -70,9 +73,6 @@ class MetadataRotateKeyFoldersUpdateService extends AbstractMetadataRotateKeyUpd
             foreach (MetadataFolderDto::V4_META_PROPS as $prop) {
                 $entity->set($prop, null);
             }
-            /** @var \Cake\ORM\RulesChecker $rules */
-            $rules = $foldersTable->rulesChecker();
-            $foldersTable->buildRulesV5($rules);
 
             if ($entity->getErrors()) {
                 $errors = [$i => $entity->getErrors()];

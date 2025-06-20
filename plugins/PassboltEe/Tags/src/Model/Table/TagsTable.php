@@ -213,14 +213,14 @@ class TagsTable extends Table
      * @param \Cake\Datasource\EntityInterface $entity Entity object.
      * @param \ArrayObject $options Options array.
      * @param string $operation Create/update operation.
-     * @return bool Return result when event is stopped, void otherwise.
+     * @return void
      */
     public function beforeRules(
         EventInterface $event,
         EntityInterface $entity,
         ArrayObject $options,
         string $operation
-    ): bool {
+    ): void {
         $dto = MetadataTagDto::fromArray($entity->toArray());
 
         if (!$dto->isV5()) {
@@ -229,8 +229,6 @@ class TagsTable extends Table
             $event->stopPropagation();
             $event->setResult(true);
         }
-
-        return true;
     }
 
     /**
@@ -406,6 +404,10 @@ class TagsTable extends Table
         $collection = [];
         $errors = [];
 
+        /** @var \Cake\ORM\RulesChecker $rules */
+        $rules = $this->rulesChecker();
+        $this->buildRulesV5($rules);
+
         foreach ($tags as $i => $tag) {
             if (is_string($tag)) {
                 $tag = ['slug' => $tag];
@@ -463,9 +465,6 @@ class TagsTable extends Table
                 ],
                 'validate' => 'v5',
             ];
-            /** @var \Cake\ORM\RulesChecker $rules */
-            $rules = $this->rulesChecker();
-            $this->buildRulesV5($rules);
         } else {
             $data = ['slug' => $tag['slug']];
             $options = [
