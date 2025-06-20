@@ -23,6 +23,7 @@ use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UserAccessControl;
+use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -61,6 +62,7 @@ class PermissionsUpdatePermissionsService
      * @param string $acoForeignkey The target entity id
      * @param array|null $data The permissions to update
      * @return \App\Model\Dto\EntitiesChangesDto
+     * @throws \Cake\Http\Exception\BadRequestException If the permissions passed
      * @throws \Exception If something unexpected occurred
      */
     public function updatePermissions(
@@ -72,6 +74,12 @@ class PermissionsUpdatePermissionsService
         $entitiesChanges = new EntitiesChangesDto();
 
         foreach ($data as $rowIndex => $row) {
+            if (!is_array($row)) {
+                throw new BadRequestException(__('The permissions data must be an array.'));
+            }
+            if (!is_int($rowIndex)) {
+                throw new BadRequestException(__('The permissions data array keys must be integers.'));
+            }
             $permissionId = Hash::get($row, 'id', null);
 
             // A new permission is provided when no id is found in the raw data.

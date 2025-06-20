@@ -95,11 +95,6 @@
       <code><![CDATA[ResourceFactory]]></code>
     </MethodSignatureMismatch>
   </file>
-  <file src="plugins/PassboltCe/Folders/tests/TestCase/Controller/Folders/FoldersIndexControllerPaginationTest.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$user->id]]></code>
-    </InvalidPropertyFetch>
-  </file>
   <file src="plugins/PassboltCe/Folders/tests/TestCase/Controller/Folders/FoldersIndexControllerTest.php">
     <InvalidArgument>
       <code><![CDATA[$folder->children_folders]]></code>
@@ -858,6 +853,11 @@
       <code><![CDATA[$user->role]]></code>
       <code><![CDATA[$user->username]]></code>
     </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/ResourceTypes/src/Model/Table/ResourceTypesTable.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\ResourceTypes\Model\Entity\ResourceType get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltCe/ResourceTypes/src/Model/Table/ResourceTypesTable.php">
     <MoreSpecificImplementedParamType>
