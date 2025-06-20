@@ -28,7 +28,6 @@ class NotificationOrgSettingsPostControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
 
-        $this->loadNotificationSettings();
         (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
     }
 

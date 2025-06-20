@@ -45,6 +45,9 @@ class MetadataRotateKeyResourcesUpdateService extends AbstractMetadataRotateKeyU
     {
         /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
+        /** @var \Cake\ORM\RulesChecker $rules */
+        $rules = $resourcesTable->rulesChecker();
+        $resourcesTable->buildRulesV5($rules);
 
         $entities = [];
         foreach ($data as $i => $values) {
@@ -74,9 +77,6 @@ class MetadataRotateKeyResourcesUpdateService extends AbstractMetadataRotateKeyU
             foreach (MetadataResourceDto::V4_META_PROPS as $prop) {
                 $entity->set($prop, null);
             }
-            /** @var \Cake\ORM\RulesChecker $rules */
-            $rules = $resourcesTable->rulesChecker();
-            $resourcesTable->buildRulesV5($rules);
 
             if ($entity->getErrors()) {
                 $errors = [$i => $entity->getErrors()];

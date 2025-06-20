@@ -39,7 +39,7 @@ class AddHasManyMetadataPrivateKeysToUsersListener implements EventListenerInter
     public function addHasManyMetadataPrivateKeysAssociation(EventInterface $event): void
     {
         $subject = $event->getSubject();
-        if (!$subject instanceof UsersTable) {
+        if (!$subject instanceof UsersTable || $subject->hasAssociation('MetadataPrivateKeys')) {
             return;
         }
 

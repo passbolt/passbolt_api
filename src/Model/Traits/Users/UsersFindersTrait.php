@@ -73,7 +73,7 @@ trait UsersFindersTrait
         $subQuery = $this->GroupsUsers->find()
             ->select('GroupsUsers.user_id')
             ->where(['GroupsUsers.group_id IN' => $groupsIds])
-            ->group('GroupsUsers.user_id')
+            ->groupBy('GroupsUsers.user_id')
             ->having([$having => count($groupsIds)]);
 
         // Execute the sub query and extract the user ids.
@@ -313,7 +313,7 @@ trait UsersFindersTrait
 
         // Ordering options
         if (isset($options['order'])) {
-            $query->order($options['order']);
+            $query->orderBy($options['order']);
         }
 
         return $query;
@@ -406,7 +406,7 @@ trait UsersFindersTrait
                 'Roles',
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ])
-            ->order(['Users.active' => 'DESC']);
+            ->orderBy(['Users.active' => 'DESC']);
     }
 
     /**
@@ -462,7 +462,7 @@ trait UsersFindersTrait
             // MAX() here is just to make MySQL happy without that query breaks in MySQL(especially in 5.7)
             ->select(['lower_username' => 'MAX(LOWER(Users.username))'])
             ->where(['deleted' => false])
-            ->group('LOWER(Users.username)')
+            ->groupBy('LOWER(Users.username)')
             ->having('count(*) > 1');
 
         return $this->find('list', keyField: 'id', valueField: 'username')
@@ -545,7 +545,7 @@ trait UsersFindersTrait
                 'Users.active' => true,
                 'Roles.name' => Role::ADMIN,
             ])
-            ->order(['Users.created' => 'ASC'])
+            ->orderBy(['Users.created' => 'ASC'])
             ->contain(['Roles'])
             ->first();
 
@@ -581,7 +581,7 @@ trait UsersFindersTrait
                     'Roles.name' => Role::ADMIN,
                 ]
             )
-            ->order(['Users.created' => 'ASC'])
+            ->orderBy(['Users.created' => 'ASC'])
             ->contain(['Roles']);
     }
 

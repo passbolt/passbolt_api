@@ -74,6 +74,10 @@ class MfaMiddlewareLoginTest extends MfaIntegrationTestCase
         $plaintext = $this->gpg->decrypt($msg, true);
         $this->assertFalse(!$plaintext, 'Could not decrypt the server generated User Auth Token: ' . $msg);
 
+        // Clear up state!
+        $this->clearPlugins();
+        $this->getTableLocator()->clear();
+
         // Send it back!
         $this->postJson('/auth/login.json', [
             'data' => [

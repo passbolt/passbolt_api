@@ -35,7 +35,7 @@ class PreviewNextEmailsBatchController extends AppController
             throw new NotFoundException();
         }
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**
