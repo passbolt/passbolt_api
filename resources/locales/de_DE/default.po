@@ -5009,7 +5009,7 @@ msgid "Welcome back!"
 msgstr "Willkommen zurück!"
 
 msgid "You just requested to recover your passbolt account on this device."
-msgstr "Sie gerade angefordert, Ihren passbolt-Zugang auf diesem Gerät wiederherzustellen."
+msgstr "Sie haben gerade angefordert, Ihren passbolt-Zugang auf diesem Gerät wiederherzustellen."
 
 msgid "Make sure you have a backup of your secret key handy."
 msgstr "Stellen Sie unbedingt sicher, dass Sie ein Backup Ihres geheimen Schlüssels zur Hand haben."
