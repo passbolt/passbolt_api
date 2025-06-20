@@ -417,6 +417,38 @@
       <code><![CDATA[\Passbolt\Log\Model\Entity\SecretHistory newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
+  <file src="plugins/PassboltCe/Log/tests/Factory/ActionFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[ActionFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Log\Model\Entity\Action|\Passbolt\Log\Model\Entity\Action[] persist()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Log/tests/Factory/ActionLogFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[ActionLogFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Log\Model\Entity\ActionLog|\Passbolt\Log\Model\Entity\ActionLog[] persist()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Log/tests/Factory/EntitiesHistoryFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[EntitiesHistoryFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Log\Model\Entity\EntityHistory|\Passbolt\Log\Model\Entity\EntityHistory[] persist()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Log/tests/Factory/SecretAccessFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[SecretAccessFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Log\Model\Entity\SecretAccess|\Passbolt\Log\Model\Entity\SecretAccess[] persist()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
   <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Resources/ResourcesControllerLogTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
@@ -897,7 +929,6 @@
   <file src="src/Model/Table/AuthenticationTokensTable.php">
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\App\Model\Entity\AuthenticationToken get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
-      <code><![CDATA[\App\Model\Entity\AuthenticationToken get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Model/Table/AvatarsTable.php">
@@ -932,10 +963,6 @@
   </file>
   <file src="src/Model/Table/OrganizationSettingsTable.php">
     <MoreSpecificImplementedParamType>
-      <code><![CDATA[\App\Model\Entity\OrganizationSetting newEmptyEntity()]]></code>
-      <code><![CDATA[\App\Model\Entity\OrganizationSetting newEmptyEntity()]]></code>
-      <code><![CDATA[\App\Model\Entity\OrganizationSetting newEmptyEntity()]]></code>
-      <code><![CDATA[\App\Model\Entity\OrganizationSetting newEmptyEntity()]]></code>
       <code><![CDATA[\App\Model\Entity\OrganizationSetting newEmptyEntity()]]></code>
       <code><![CDATA[\App\Model\Entity\OrganizationSetting newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
