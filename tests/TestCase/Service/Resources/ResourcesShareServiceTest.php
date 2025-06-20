@@ -29,6 +29,7 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -511,5 +512,31 @@ hcciUFw5
         ]];
         $this->expectException(NotFoundException::class);
         $this->service->shareDryRun($uac, $resourceId, $data);
+    }
+
+    public function testResourceShareService_Permissions_Not_An_Array_Should_Not_Throw_500()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $userBId = UuidFactory::uuid();
+        $uac = $this->makeUac($user);
+
+        $data = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::READ];
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The permissions data must be an array.');
+        $this->service->share($uac, $resource->get('id'), $data);
+    }
+
+    public function testResourceShareService_Permissions_Key_Not_An_Integer_Should_Not_Throw_500()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $userB = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($user);
+
+        $data['permissions'] = ['b' => ['aro' => 'User', 'aro_foreign_key' => $userB->get('id'), 'type' => Permission::READ]];
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The permissions data array keys must be integers.');
+        $this->service->share($uac, $resource->get('id'), $data);
     }
 }
