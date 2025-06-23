@@ -17,24 +17,15 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
-use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\Model\PermissionsModelTrait;
-use App\Utility\UuidFactory;
+use App\Test\Factory\UserFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * Passbolt\Folders\Controller\Folders\FoldersDeleteController Test Case
@@ -44,18 +35,6 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
 {
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-    use PermissionsModelTrait;
-
-    public array $fixtures = [
-    GpgkeysFixture::class,
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        RolesFixture::class,
-        UsersFixture::class,
-    ];
 
     public $Permissions;
     public $FoldersRelations;
@@ -80,79 +59,58 @@ class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersDeleteFolder_PersoSuccess1_DeleteFolder()
     {
-        $folder = $this->insertPersoSuccess1Fixture();
-
-        $this->authenticateAs('ada');
-        $this->deleteJson("/folders/{$folder->id}.json?api-version=2");
-        $this->assertSuccess();
-        $this->assertFolderNotExist($folder->id);
-    }
-
-    private function insertPersoSuccess1Fixture()
-    {
         // Ada has access to folder A as a OWNER
         // A (Ada:O)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $userI = UserFactory::make()->persist();
+        $folderA = FolderFactory::make()->withPermissionsFor([$userI])->persist();
 
-        return $folderA;
+        $this->logInAs($userI);
+        $this->deleteJson("/folders/{$folderA->get('id')}.json?api-version=2");
+        $this->assertSuccess();
+        $this->assertFolderNotExist($folderA->get('id'));
     }
 
     public function testFoldersDeleteFolder_PersoSuccess3_CascadeDelete()
     {
-        [$folderA, $folderB] = $this->insertPersoSuccess3Fixture();
-
-        $this->authenticateAs('ada');
-        $this->deleteJson("/folders/{$folderA->id}.json?cascade=1&api-version=2");
-        $this->assertSuccess();
-        $this->assertFolderNotExist($folderA->id);
-        $this->assertFolderNotExist($folderB->id);
-    }
-
-    private function insertPersoSuccess3Fixture()
-    {
         // Ada has access to folder A as a OWNER
         // Ada has access to folder B as a OWNER
         // Folder B is in folder A
         // A (Ada:O)
         // |
         // B (Ada:O)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $userI = UserFactory::make()->persist();
+        $folderA = FolderFactory::make()->withPermissionsFor([$userI])->persist();
+        $folderB = FolderFactory::make()->withPermissionsFor([$userI])->withFoldersRelationsFor([$userI], $folderA)->persist();
 
-        return [$folderA, $folderB];
+        $this->logInAs($userI);
+        $this->deleteJson("/folders/{$folderA->get('id')}.json?cascade=1&api-version=2");
+        $this->assertSuccess();
+        $this->assertFolderNotExist($folderA->get('id'));
+        $this->assertFolderNotExist($folderB->get('id'));
     }
 
     public function testFoldersDeleteFolder_PersoSuccess2_NoCascadeMoveChildrenToRoo()
     {
-        [$folderA, $folderB] = $this->insertPersoSuccess2Fixture();
-
-        $this->authenticateAs('ada');
-        $this->deleteJson("/folders/{$folderA->id}.json?api-version=2");
-        $this->assertSuccess();
-        $this->assertFolderNotExist($folderA->id);
-        $this->assertFolder($folderB->id);
-    }
-
-    private function insertPersoSuccess2Fixture()
-    {
         // Ada has access to folder A as a OWNER
         // Ada has access to folder B as a OWNER
         // Folder B is in folder A
         // A (Ada:O)
         // |
         // B (Ada:O)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $userI = UserFactory::make()->persist();
+        $folderA = FolderFactory::make()->withPermissionsFor([$userI])->persist();
+        $folderB = FolderFactory::make()->withPermissionsFor([$userI])->withFoldersRelationsFor([$userI], $folderA)->persist();
 
-        return [$folderA, $folderB];
+        $this->logInAs($userI);
+        $this->deleteJson("/folders/{$folderA->get('id')}.json?api-version=2");
+        $this->assertSuccess();
+        $this->assertFolderNotExist($folderA->get('id'));
+        $this->assertFolder($folderB->get('id'));
     }
 
     public function testFoldersDeleteFolder_Error_NotValidIdParameter()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $resourceId = 'invalid-id';
         $this->deleteJson("/folders/$resourceId.json?api-version=2");
         $this->assertError(400, 'The folder id is not valid.');
@@ -161,15 +119,15 @@ class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
     public function testFoldersDeleteFolder_Error_IsProtectedByCsrfToken()
     {
         $this->disableCsrfToken();
-        $this->authenticateAs('ada');
-        $folderId = UuidFactory::uuid('folder.id.folder');
+        $this->logInAsUser();
+        $folderId = FolderFactory::make()->persist()->get('id');
         $this->delete("/folders/{$folderId}.json?api-version=2");
         $this->assertResponseCode(403);
     }
 
     public function testFoldersDeleteFolder_Error_NotAuthenticated()
     {
-        $folderId = UuidFactory::uuid('folder.id.folder');
+        $folderId = FolderFactory::make()->persist()->get('id');
         $this->deleteJson("/folders/{$folderId}.json?api-version=2");
         $this->assertAuthenticationError();
     }
