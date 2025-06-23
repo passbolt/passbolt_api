@@ -17,21 +17,16 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
-use App\Model\Table\PermissionsTable;
-use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\PaginationTestTrait;
 use Cake\Utility\Hash;
-use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 class FoldersIndexControllerPaginationTest extends FoldersIntegrationTestCase
 {
-    use FoldersRelationsModelTrait;
     use PaginationTestTrait;
 
-    public function dataProviderForSortingDirection(): array
+    public static function dataProviderForSortingDirection(): array
     {
         return [
             [],
@@ -65,20 +60,13 @@ class FoldersIndexControllerPaginationTest extends FoldersIntegrationTestCase
         $page = 2;
         $expectedCurrent = 9;
 
-        $user = UserFactory::make()->user()->persist();
+        $user = $this->logInAsUser();
         $data = Hash::merge(
             $this->getArrayOfDistinctRandomStrings($numberOfFolders, 'name'),
             $this->getArrayOfDistinctRandomPastDates($numberOfFolders, 'created'),
             $this->getArrayOfDistinctRandomPastDates($numberOfFolders, 'modified'),
         );
-        $folders = FolderFactory::make($data)->persist();
-
-        foreach ($folders as $folder) {
-            $this->addPermission(PermissionsTable::FOLDER_ACO, $folder->get('id'), null, $user->id);
-            $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folder->id, 'user_id' => $user->id, 'folder_parent_id' => FoldersRelation::ROOT]);
-        }
-
-        $this->logInAs($user);
+        FolderFactory::make($data)->withPermissionsFor([$user])->withFoldersRelationsFor([$user])->persist();
 
         $paginationParameter = [
             'limit=' . $limit,

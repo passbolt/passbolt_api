@@ -31,7 +31,13 @@ class JsonTraceFormatter extends JsonFormatter
     {
         $trace = $context[self::TRACE] ?? null;
         if (!is_string($trace)) {
-            return parent::format($level, $message, $context);
+            try {
+                $message = mb_convert_encoding($message,'UTF-8', 'UTF-8');
+
+                return parent::format($level, $message, $context);
+            } catch (\Throwable $e) {
+                return parent::format($level, $e->getMessage(), $context);
+            }
         }
 
         $log = [

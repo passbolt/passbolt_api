@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.13.0
+ * @since         4.9.0
  */
 
 namespace App\Test\TestCase\Service\Resources;
@@ -22,9 +22,14 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Service\Resources\ResourcesShareService;
+use App\Test\Factory\FavoriteFactory;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -47,7 +52,7 @@ class ResourcesShareServiceTest extends AppTestCase
     public $Favorites;
 
     /**
-     * @var \Passbolt\AccountSettings\Model\Table\PermissionsTable $Permissions
+     * @var PermissionsTable $Permissions
      */
     public $Permissions;
 
@@ -61,12 +66,6 @@ class ResourcesShareServiceTest extends AppTestCase
      */
     public $service;
 
-    public array $fixtures = [
-        'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites',
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/GroupsUsers', 'app.Base/Groups',
-    ];
-
     public function setUp(): void
     {
         parent::setUp();
@@ -77,6 +76,7 @@ class ResourcesShareServiceTest extends AppTestCase
         $this->service = new ResourcesShareService(
             new ResourcesExpireResourcesFallbackServiceService()
         );
+        RoleFactory::make()->guest()->persist();
     }
 
     public function tearDown(): void
@@ -105,70 +105,78 @@ hcciUFw5
 -----END PGP MESSAGE-----';
     }
 
-    /* SHARE */
-
-    public function testShareSuccess()
+    public function testResourceShareService_Success()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        [$userA, $userB, $userC, $userD, $userE, $userF, $userG, $userH, $userI] = UserFactory::make(9)->user()
+            ->persist();
+        $uac = $this->makeUac($userA);
+
+        // Groups
+        $groupA = GroupFactory::make()->persist();
+        $groupB = GroupFactory::make()
+            ->withGroupsUsersFor([$userD, $userE, $userF, $userG, $userH])
+            ->persist();
+        $groupC = GroupFactory::make()
+            ->withGroupsUsersFor([$userI])
+            ->persist();
 
         // Define actors of this tests
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        // Users
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $userEId = UuidFactory::uuid('user.id.edith');
-        $userFId = UuidFactory::uuid('user.id.frances');
-        $userJId = UuidFactory::uuid('user.id.jean');
-        $userKId = UuidFactory::uuid('user.id.kathleen');
-        $userLId = UuidFactory::uuid('user.id.lynne');
-        $userMId = UuidFactory::uuid('user.id.marlyn');
-        $userNId = UuidFactory::uuid('user.id.nancy');
-        // Groups
-        $groupBId = UuidFactory::uuid('group.id.board');
-        $groupFId = UuidFactory::uuid('group.id.freelancer');
-        $groupAId = UuidFactory::uuid('group.id.accounting');
+        $resource = ResourceFactory::make()
+            ->withSecretsFor([$userA, $userB, $userC, $userD, $userE, $userF, $userG, $userH, $userI])
+            ->withPermissionsFor([$userA, $groupB])
+            ->withPermissionsFor([$userB, $groupA], Permission::READ)
+            ->persist();
+
+        // Permissions
+        $permissionUserAId = $resource->permissions[0]->id;
+        $permissionGroupBId = $resource->permissions[1]->id;
+        $permissionUserBId = $resource->permissions[2]->id;
+        $permissionGroupAId = $resource->permissions[3]->id;
+        // Expected results.
+        $expectedAddedUsersIds = [];
+        $expectedRemovedUsersIds = [];
 
         // Build the changes.
         $changes = [];
         $secrets = [];
 
-        // Expected results.
-        $expectedAddedUsersIds = [];
-        $expectedRemovedUsersIds = [];
-
         // Users permissions changes.
         // Change the permission of the user Ada to read (no users are expected to be added or removed).
-        $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'type' => Permission::READ];
-        // Delete the permission of the user Betty.
-        $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'delete' => true];
-        $expectedRemovedUsersIds[] = $userBId;
-        // Add an owner permission for the user Edith
-        $changes[] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
-        $secrets[] = ['user_id' => $userEId, 'data' => $this->getValidSecret()];
-        $expectedAddedUsersIds[] = $userEId;
+
+        $changes[] = ['id' => $permissionUserAId, 'type' => Permission::READ];
+        // Delete the permission of the userB.
+        $changes[] = ['id' => $permissionUserBId, 'delete' => true];
+        $expectedRemovedUsersIds[] = $userB->id;
+        // Add an owner permission for the userC
+        $changes[] = ['aro' => 'User', 'aro_foreign_key' => $userC->id, 'type' => Permission::OWNER];
+        $secrets[] = ['user_id' => $userC->id, 'data' => $this->getValidSecret()];
+        $expectedAddedUsersIds[] = $userC->id;
 
         // Groups permissions changes.
-        // Change the permission of the group Board (no users are expected to be added or removed).
-        $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$groupBId"), 'type' => Permission::OWNER];
-        // Delete the permission of the group Freelancer.
-        $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$groupFId"), 'delete' => true];
-        $expectedRemovedUsersIds = array_merge($expectedRemovedUsersIds, [$userJId, $userKId, $userLId, $userMId, $userNId]);
-        // Add a read permission for the group Accounting.
-        $changes[] = ['aro' => 'Group', 'aro_foreign_key' => $groupAId, 'type' => Permission::READ];
-        $secrets[] = ['user_id' => $userFId, 'data' => $this->getValidSecret()];
-        $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
+        // Change the permission of the groupB (no users are expected to be added or removed).
 
-        // Share.
-        $resource = $this->service->share($uac, $resourceId, $changes, $secrets);
+        $changes[] = ['id' => $permissionGroupAId, 'type' => Permission::OWNER];
+        // Delete the permission of the group Freelancer.
+        $changes[] = ['id' => $permissionGroupBId, 'delete' => true];
+        $expectedRemovedUsersIds = array_merge($expectedRemovedUsersIds, [$userD->id, $userE->id, $userF->id,
+            $userG->id,
+            $userH->id]);
+        // Add a read permission for the group Accounting.
+        $changes[] = ['aro' => 'Group', 'aro_foreign_key' => $groupC->id, 'type' => Permission::READ];
+        $secrets[] = ['user_id' => $userI->id, 'data' => $this->getValidSecret()];
+        $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userI->id]);
+
+        // Share
+        $resource = $this->service->share($uac, $resource->id, $changes, $secrets);
         $this->assertFalse($resource->hasErrors());
 
         // Load the resource.
-        $resource = $this->Resources->get($resourceId, contain: ['Permissions', 'Secrets']);
+        $resource = $this->Resources->get($resource->id, contain: ['Permissions', 'Secrets']);
 
         // Verify that all the allowed users have a secret for the resource.
         $secretsUsersIds = Hash::extract($resource->secrets, '{n}.user_id');
-        $hasAccessUsers = $this->Users->findIndex(Role::USER, ['filter' => ['has-access' => [$resourceId]]])->all()->toArray();
+        $hasAccessUsers = $this->Users->findIndex(Role::USER, ['filter' => ['has-access' => [$resource->id]]])->all()
+            ->toArray();
         $hasAccessUsersIds = Hash::extract($hasAccessUsers, '{n}.id');
         $this->assertEquals(count($secretsUsersIds), count($hasAccessUsersIds));
         $this->assertEmpty(array_diff($secretsUsersIds, $hasAccessUsersIds));
@@ -185,15 +193,23 @@ hcciUFw5
         }
     }
 
-    public function testShareLostAccessFavoritesDeleted()
+    /* SHARE */
+
+    public function testResourceShareService_LostAccessFavoritesDeleted()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $uac = $this->makeUac($userA);
 
         // Define actors of this tests
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        // Users
-        $userDId = UuidFactory::uuid('user.id.dame');
+        $resource = ResourceFactory::make()
+            ->withSecretsFor([$userA, $userB])
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+        $resourceB = ResourceFactory::make()->withSecretsFor([$userB])->persist();
+
+        // Permissions
+        $permissionUserBId = $resource->permissions[1]->id;
 
         // Build the changes.
         $changes = [];
@@ -204,32 +220,39 @@ hcciUFw5
 
         // Users permissions changes.
         // Delete the permission of the user Betty.
-        $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userDId"), 'delete' => true];
-        $expectedRemovedUsersIds[] = $userDId;
+
+        $changes[] = ['id' => $permissionUserBId, 'delete' => true];
+        $expectedRemovedUsersIds[] = $userB->id;
 
         // Share.
-        $resource = $this->service->share($uac, $resourceId, $changes, $secrets);
+        $resource = $this->service->share($uac, $resource->id, $changes, $secrets);
         $this->assertFalse($resource->hasErrors());
+
+        FavoriteFactory::make()->setUser($userB)->setResource($resourceB)->persist();
 
         // Ensure the apache favorite for Dame is deleted
         // But the other favorites for this resource are not touched.
         $resources = $this->Favorites->find()
-            ->where(['user_id' => $userDId])
+            ->where(['user_id' => $userB->id])
             ->all();
         $resourcesId = Hash::extract($resources->toArray(), '{n}.foreign_key');
-        $this->assertNotContains($resourceId, $resourcesId);
-        $this->assertcontains(UuidFactory::uuid('resource.id.april'), $resourcesId);
+        $this->assertNotContains($resource->id, $resourcesId);
+        $this->assertcontains($resourceB->id, $resourcesId);
     }
 
-    public function testShareValidationError()
+    public function testResourceShareService_ValidationError()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        [$userA, $userE] = UserFactory::make(2)->user()->persist();
+        $uac = $this->makeUac($userA);
+        $resourceA = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->persist();
+        $resourceAPermissionId = $resourceA->permissions[0]->id;
+        $resourceB = ResourceFactory::make()
+            ->withPermissionsFor([$userE], Permission::READ)
+            ->persist();
+        $resourceBPermissionId = $resourceB->permissions[0]->id;
 
-        $resourceApacheId = UuidFactory::uuid('resource.id.apache');
-        $resourceAprilId = UuidFactory::uuid('resource.id.april');
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userEId = UuidFactory::uuid('user.id.edith');
         $testCases = [
             'cannot update a permission that does not exist' => [
                 'errorField' => 'permissions.0.id.exists',
@@ -241,7 +264,7 @@ hcciUFw5
                 'errorField' => 'permissions.0.id.exists',
                 'data' => [
                     'permissions' => [[
-                        'id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"),
+                        'id' => $resourceBPermissionId,
                         'delete' => true]],
                 ],
             ],
@@ -255,15 +278,15 @@ hcciUFw5
                 'errorField' => 'permissions.0.type.inList',
                 'data' => [
                     'permissions' => [[
-                        'id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"), 'type' => 42]]],
+                        'id' => $resourceAPermissionId, 'type' => 42]]],
             ],
             'cannot add a secret with invalid data' => [
                 'errorField' => 'secrets.0.data.isValidOpenPGPMessage',
                 'data' => [
                     'permissions' => [[
-                        'aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::READ]],
+                        'aro' => 'User', 'aro_foreign_key' => $userE->id, 'type' => Permission::READ]],
                     'secrets' => [[
-                        'user_id' => $userEId, 'data' => 'INVALID GPG MESSAGE']],
+                        'user_id' => $userE->id, 'data' => 'INVALID GPG MESSAGE']],
                 ],
             ],
             // Test build rules.
@@ -271,7 +294,7 @@ hcciUFw5
                 'errorField' => 'permissions.at_least_one_owner',
                 'data' => [
                     'permissions' => [[
-                        'id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"),
+                        'id' => $resourceAPermissionId,
                         'delete' => true]],
                 ],
             ],
@@ -280,7 +303,7 @@ hcciUFw5
                 'data' => [
                     'permissions' => [[
                         'aro' => 'User',
-                        'aro_foreign_key' => UuidFactory::uuid('user.id.sofia'),
+                        'aro_foreign_key' => UserFactory::make()->user()->deleted()->persist()->id,
                         'type' => Permission::OWNER]]],
             ],
             'cannot add a permissions for an inactive user' => [
@@ -288,7 +311,7 @@ hcciUFw5
                 'data' => [
                     'permissions' => [[
                         'aro' => 'User',
-                        'aro_foreign_key' => UuidFactory::uuid('user.id.ruth'),
+                        'aro_foreign_key' => UserFactory::make()->user()->inactive()->persist()->id,
                         'type' => Permission::OWNER]]],
             ],
         ];
@@ -297,7 +320,7 @@ hcciUFw5
             $permissions = Hash::get($case, 'data.permissions', []);
             $secrets = Hash::get($case, 'data.secrets', []);
             try {
-                $this->service->share($uac, $resourceApacheId, $permissions, $secrets);
+                $this->service->share($uac, $resourceA->id, $permissions, $secrets);
             } catch (ValidationException $e) {
                 $this->assertEquals('Could not validate resource data.', $e->getMessage());
                 $error = Hash::get($e->getErrors(), $case['errorField']);
@@ -309,17 +332,16 @@ hcciUFw5
         }
     }
 
-    public function testShareErrorRuleResourceIsNotSoftDeleted()
+    public function testResourceShareService_Error_ResourceIsSoftDeleted()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userAId);
-
-        $resourceId = UuidFactory::uuid('resource.id.jquery');
+        $user = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($user);
+        $resourceId = ResourceFactory::make()->deleted()->persist()->id;
         $data = [[
             'aro' => 'User',
-            'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => Permission::OWNER]];
-
+            'aro_foreign_key' => $user->id,
+            'type' => Permission::OWNER,
+        ]];
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('The resource does not exist.');
         $this->service->share($uac, $resourceId, $data);
@@ -327,27 +349,27 @@ hcciUFw5
 
     /* SHARE DRY RUN */
 
-    public function testShareDryRunSuccess()
+    public function testResourceShareService_DryRun_Success()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        [$userA, $userB, $userC, $userD, $userE, $userF, $userG, $userH, $userI] = UserFactory::make(10)->user()
+            ->persist();
+        $uac = $this->makeUac($userA);
+
+        // Groups
+        $groupA = GroupFactory::make()->persist();
+        $groupB = GroupFactory::make()->withGroupsUsersFor([$userD, $userE, $userF, $userG, $userH])->persist();
+        $groupC = GroupFactory::make()->withGroupsUsersFor([$userI])->persist();
 
         // Define actors of this tests
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        // Users
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $userEId = UuidFactory::uuid('user.id.edith');
-        $userFId = UuidFactory::uuid('user.id.frances');
-        $userJId = UuidFactory::uuid('user.id.jean');
-        $userKId = UuidFactory::uuid('user.id.kathleen');
-        $userLId = UuidFactory::uuid('user.id.lynne');
-        $userMId = UuidFactory::uuid('user.id.marlyn');
-        $userNId = UuidFactory::uuid('user.id.nancy');
-        // Groups
-        $groupBId = UuidFactory::uuid('group.id.board');
-        $groupFId = UuidFactory::uuid('group.id.freelancer');
-        $groupAId = UuidFactory::uuid('group.id.accounting');
+        $resource = ResourceFactory::make()->withSecretsFor([$userA, $userB, $userC, $userD, $userE, $userF, $userG, $userH, $userI])
+            ->withPermissionsFor([$userA, $groupB])
+            ->withPermissionsFor([$userB, $groupA], Permission::READ)
+            ->persist();
+
+        $permissionUserAId = $resource->permissions[0]->id;
+        $permissionGroupBId = $resource->permissions[1]->id;
+        $permissionUserBId = $resource->permissions[2]->id;
+        $permissionGroupAId = $resource->permissions[3]->id;
 
         // Expected results.
         $expectedAddedUsersIds = [];
@@ -358,26 +380,29 @@ hcciUFw5
 
         // Users permissions changes.
         // Change the permission of the user Ada to read (no users are expected to be added or removed).
-        $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'type' => Permission::READ];
-        // Delete the permission of the user Betty.
-        $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'delete' => true];
-        $expectedRemovedUsersIds[] = $userBId;
-        // Add an owner permission for the user Edith
-        $changes[] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
-        $expectedAddedUsersIds[] = $userEId;
+
+        $changes[] = ['id' => $permissionUserAId, 'type' => Permission::READ];
+        // Delete the permission of the user B.
+        $changes[] = ['id' => $permissionUserBId, 'delete' => true];
+        $expectedRemovedUsersIds[] = $userB->id;
+        // Add an owner permission for the user C
+        $changes[] = ['aro' => 'User', 'aro_foreign_key' => $userC->id, 'type' => Permission::OWNER];
+        $expectedAddedUsersIds[] = $userC->id;
 
         // Groups permissions changes.
         // Change the permission of the group Board (no users are expected to be added or removed).
-        $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$groupBId"), 'type' => Permission::OWNER];
+        $changes[] = ['id' => $permissionGroupAId, 'type' => Permission::OWNER];
         // Delete the permission of the group Freelancer.
-        $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$groupFId"), 'delete' => true];
-        $expectedRemovedUsersIds = array_merge($expectedRemovedUsersIds, [$userJId, $userKId, $userLId, $userMId, $userNId]);
+        $changes[] = ['id' => $permissionGroupBId, 'delete' => true];
+        $expectedRemovedUsersIds = array_merge($expectedRemovedUsersIds, [$userD->id, $userE->id, $userF->id,
+            $userG->id,
+            $userH->id]);
         // Add a read permission for the group Accounting.
-        $changes[] = ['aro' => 'Group', 'aro_foreign_key' => $groupAId, 'type' => Permission::READ];
-        $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
+        $changes[] = ['aro' => 'Group', 'aro_foreign_key' => $groupC->id, 'type' => Permission::READ];
+        $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userI->id]);
 
         // Share dry run.
-        $result = $this->service->shareDryRun($uac, $resourceId, $changes);
+        $result = $this->service->shareDryRun($uac, $resource->id, $changes);
         $this->assertNotEmpty($result);
         $this->assertNotEmpty($result['added']);
         $addedUsersIds = $result['added'];
@@ -396,14 +421,20 @@ hcciUFw5
      * @see App\Test\TestCase\Model\Table\Permissions\PatchEntitiesWithChangesTest
      */
 
-    public function testShareDryRunValidationError()
+    public function testResourceShareService_DryRun_ValidationError()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
 
-        $resourceApacheId = UuidFactory::uuid('resource.id.apache');
-        $resourceAprilId = UuidFactory::uuid('resource.id.april');
-        $userAId = UuidFactory::uuid('user.id.ada');
+        $resourceApache = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->persist();
+        $resourceApacheId = $resourceApache->id;
+        $resourceApachePermissionId = $resourceApache->permissions[0]->id;
+        $resourceApril = ResourceFactory::make()
+            ->withPermissionsFor([UserFactory::make()->user()->persist()])
+            ->persist();
+        $resourceAprilPermissionId = $resourceApril->permissions[0]->id;
         $testCases = [
             // Check some validation format rules, just to ensure they are well returned by the
             // PatchEntitiesWithChanges function
@@ -414,7 +445,7 @@ hcciUFw5
             'cannot delete a permission of another resource' => [
                 'errorField' => 'permissions.0.id.exists',
                 'data' => [[
-                    'id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"),
+                    'id' => $resourceAprilPermissionId,
                     'delete' => true]],
             ],
             'cannot add a permission with invalid data' => [
@@ -423,27 +454,27 @@ hcciUFw5
             ],
             'cannot update a permission with a wrong permission type' => [
                 'errorField' => 'permissions.0.type.inList',
-                'data' => [['id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"), 'type' => 42]],
+                'data' => [['id' => $resourceApachePermissionId, 'type' => 42]],
             ],
             // Test build rules.
             'cannot remove the latest owner' => [
                 'errorField' => 'permissions.at_least_one_owner',
                 'data' => [[
-                    'id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"),
+                    'id' => $resourceApachePermissionId,
                     'delete' => true]],
             ],
             'cannot add a permissions for a deleted user' => [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
                 'data' => [[
                     'aro' => 'User',
-                    'aro_foreign_key' => UuidFactory::uuid('user.id.sofia'),
+                    'aro_foreign_key' => UserFactory::make()->user()->deleted()->persist()->id,
                     'type' => Permission::OWNER]],
             ],
             'cannot add a permissions for an inactive user' => [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
                 'data' => [[
                     'aro' => 'User',
-                    'aro_foreign_key' => UuidFactory::uuid('user.id.ruth'),
+                    'aro_foreign_key' => UserFactory::make()->user()->inactive()->persist()->id,
                     'type' => Permission::OWNER]],
             ],
         ];
@@ -462,18 +493,50 @@ hcciUFw5
         }
     }
 
-    public function testShareDryRunErrorRuleResourceIsSoftDeleted()
+    /**
+     * @throws Exception
+     */
+    public function testResourceShareService_DryRun_Error_ResourceIsSoftDeleted()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
 
-        $resourceId = UuidFactory::uuid('resource.id.jquery');
+        $resourceId = ResourceFactory::make()
+            ->deleted()
+            ->persist()
+            ->id;
         $data = [[
             'aro' => 'User',
-            'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
+            'aro_foreign_key' => $userA->id,
             'type' => Permission::OWNER,
         ]];
         $this->expectException(NotFoundException::class);
         $this->service->shareDryRun($uac, $resourceId, $data);
+    }
+
+    public function testResourceShareService_Permissions_Not_An_Array_Should_Not_Throw_500()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $userBId = UuidFactory::uuid();
+        $uac = $this->makeUac($user);
+
+        $data = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::READ];
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The permissions data must be an array.');
+        $this->service->share($uac, $resource->get('id'), $data);
+    }
+
+    public function testResourceShareService_Permissions_Key_Not_An_Integer_Should_Not_Throw_500()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $userB = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($user);
+
+        $data['permissions'] = ['b' => ['aro' => 'User', 'aro_foreign_key' => $userB->get('id'), 'type' => Permission::READ]];
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The permissions data array keys must be integers.');
+        $this->service->share($uac, $resource->get('id'), $data);
     }
 }

@@ -24,7 +24,6 @@ use Cake\Event\Event;
 use Cake\TestSuite\TestCase;
 use CakephpFixtureFactories\Command\PersistCommand;
 use Migrations\Command\MigrationsCreateCommand;
-use PassboltTestData\Command\DummyCommand;
 use PassboltTestData\Command\InsertCommand;
 
 class PassboltBuildCommandsListenerTest extends TestCase
@@ -39,7 +38,6 @@ class PassboltBuildCommandsListenerTest extends TestCase
         $commands = new CommandCollection([
             'fixture_factories_persist' => PersistCommand::class,
             'passbolt insert' => InsertCommand::class,
-            'passbolt dummy' => DummyCommand::class,
             'migrations create' => MigrationsCreateCommand::class,
         ]);
 
@@ -51,7 +49,6 @@ class PassboltBuildCommandsListenerTest extends TestCase
         $passboltCommand = $container->get(PassboltCommand::class);
         $expectedCommands = new CommandCollection([
             'insert' => InsertCommand::class,
-            'dummy' => DummyCommand::class,
         ]);
         $this->assertEquals($expectedCommands, $passboltCommand->getPassboltCommandCollection());
     }
