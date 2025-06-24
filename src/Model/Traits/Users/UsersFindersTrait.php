@@ -472,7 +472,7 @@ trait UsersFindersTrait
                 'LOWER(username) IN' => $subQueryOfLowerCasedUsernameDuplicates,
                 'deleted' => false,
             ])
-            ->orderAsc('LOWER(username)');
+            ->orderByAsc('LOWER(username)');
     }
 
     /**
