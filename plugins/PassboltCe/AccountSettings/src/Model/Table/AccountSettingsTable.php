@@ -40,7 +40,7 @@ use Passbolt\AccountSettings\Model\Table\Traits\ThemeSettingsTrait;
  * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting newEmptyEntity()
  * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method iterable<\Passbolt\AccountSettings\Model\Entity\AccountSetting>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])

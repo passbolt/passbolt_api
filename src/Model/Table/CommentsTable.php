@@ -45,7 +45,7 @@ use InvalidArgumentException;
  * @method \App\Model\Entity\Comment|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Comment patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Comment[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\Comment findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Comment findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Creator
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier

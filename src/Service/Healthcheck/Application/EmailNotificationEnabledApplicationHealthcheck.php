@@ -20,6 +20,7 @@ namespace App\Service\Healthcheck\Application;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use Exception;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 class EmailNotificationEnabledApplicationHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
@@ -36,7 +37,11 @@ class EmailNotificationEnabledApplicationHealthcheck implements HealthcheckServi
      */
     public function check(): HealthcheckServiceInterface
     {
-        $sendSettings = json_encode(EmailNotificationSettings::get('send'));
+        try {
+            $sendSettings = json_encode(EmailNotificationSettings::get('send'));
+        } catch (Exception $e) {
+            return $this;
+        }
         $this->status = !(preg_match('/false/', $sendSettings) === 1);
 
         return $this;

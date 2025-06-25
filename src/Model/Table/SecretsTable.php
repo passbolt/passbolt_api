@@ -40,7 +40,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Secret|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Secret patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Secret[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\Secret findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Secret findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @property \Passbolt\Log\Model\Table\SecretsHistoryTable&\Cake\ORM\Association\BelongsTo $SecretsHistory
  * @property \Passbolt\Log\Model\Table\SecretAccessesTable&\Cake\ORM\Association\HasMany $SecretAccesses

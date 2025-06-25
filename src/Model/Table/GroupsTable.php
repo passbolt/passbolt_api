@@ -46,7 +46,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Group|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Group patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Group[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\Group findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Group findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @property \App\Model\Table\GroupsUsersTable&\Cake\ORM\Association\HasOne $MyGroupUser
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions

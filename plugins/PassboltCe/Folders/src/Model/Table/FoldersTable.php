@@ -45,7 +45,7 @@ use Passbolt\Metadata\Model\Rule\MetadataKeyIdNotExpiredRule;
  * @method \Passbolt\Folders\Model\Entity\Folder saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Folders\Model\Entity\Folder patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Folders\Model\Entity\Folder[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @mixin \Passbolt\Folders\Model\Behavior\FolderizableBehavior
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Creator
