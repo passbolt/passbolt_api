@@ -43,7 +43,7 @@ use Throwable;
  * @method \App\Model\Entity\Avatar newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\Avatar[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\Avatar get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
- * @method \App\Model\Entity\Avatar findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Avatar findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @method \App\Model\Entity\Avatar patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Avatar[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \App\Model\Entity\Avatar|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

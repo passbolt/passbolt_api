@@ -62,7 +62,7 @@ use Throwable;
  * @method \App\Model\Entity\Resource|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Resource patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Resource[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\Resource findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Resource findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @property \App\Model\Table\FavoritesTable&\Cake\ORM\Association\HasOne $Favorites
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasOne $Permission

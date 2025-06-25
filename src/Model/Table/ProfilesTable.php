@@ -30,7 +30,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Profile|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Profile patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Profile[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\Profile findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Profile findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @property \App\Model\Table\AvatarsTable&\Cake\ORM\Association\HasOne $Avatars
  * @method \App\Model\Entity\Profile newEmptyEntity()
