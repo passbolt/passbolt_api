@@ -54,11 +54,10 @@ class MetadataRotateKeyTagsIndexController extends AppController
         // Performance improvement: map query result datetime properties to string.
         ISOFormatDateTimeType::mapDatetimeTypesToMe();
         $tags = $this->Tags->findMetadataRotateKeyIndex();
-        $this->paginate($tags);
-        $tags = $tags->all();
+        $tags = $this->paginate($tags)->toArray();
         ISOFormatDateTimeType::remapDatetimeTypesToDefault();
 
-        $tags = (new MetadataTagsRenderService())->renderTags($tags->toArray());
+        $tags = (new MetadataTagsRenderService())->renderTags($tags);
         $this->success(__('The operation was successful.'), $tags);
     }
 }
