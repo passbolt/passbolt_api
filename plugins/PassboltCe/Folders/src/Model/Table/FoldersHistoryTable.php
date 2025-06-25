@@ -28,14 +28,14 @@ use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
 /**
  * FoldersHistory Model
  *
- * @method \Passbolt\Folders\Model\Entity\FolderHistory get($primaryKey, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FolderHistory get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Folders\Model\Entity\FolderHistory newEntity($data = null, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FolderHistory[] newEntities(array $data, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FolderHistory|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Folders\Model\Entity\FolderHistory saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Folders\Model\Entity\FolderHistory patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FolderHistory[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FolderHistory findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FolderHistory findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, callable|array|null $callback = null, array $options = [])
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasOne $Permission
  * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasOne $EntitiesHistory
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions

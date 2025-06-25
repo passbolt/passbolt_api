@@ -97,7 +97,7 @@ class TransfersUpdateController extends AppController
     protected function main(string $id, ?string $authToken = null): void
     {
         $this->assertRequestData($id);
-        $this->transfer = $this->Transfers->get($id, ['contain' => ['AuthenticationTokens', 'Users']]);
+        $this->transfer = $this->Transfers->get($id, contain: ['AuthenticationTokens', 'Users']);
         if (isset($authToken)) {
             $uac = $this->assertAuthToken($authToken);
         } else {
@@ -115,7 +115,7 @@ class TransfersUpdateController extends AppController
             'Users.Profiles' => AvatarsTable::addContainAvatar(),
         ];
 
-        $updatedTransfer = $this->Transfers->get($id, ['contain' => $contain]);
+        $updatedTransfer = $this->Transfers->get($id, contain: $contain);
         $this->success(__('The operation was successful.'), $updatedTransfer);
     }
 
