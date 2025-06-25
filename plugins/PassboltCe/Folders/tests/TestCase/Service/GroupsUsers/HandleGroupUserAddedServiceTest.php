@@ -62,6 +62,7 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
         // R1 (Ada:O, G1:O)
         // R2 (Ada:O, G1:O)
         [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \App\Model\Entity\Group $g1 */
         $g1 = GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
         $userBGroupUser = $g1->groups_users[1];
         [$r1,$r2] = ResourceFactory::make(2)
@@ -92,12 +93,15 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
         // R1 (Ada:O, G1:O)
         // R2 (Betty:O, G1:O)
         [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \App\Model\Entity\Group $g1 */
         $g1 = GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
         $userBGroupUser = $g1->groups_users[1];
+        /** @var \App\Model\Entity\Resource $r1 */
         $r1 = ResourceFactory::make()
             ->withPermissionsFor([$userA, $g1])
             ->withSecretsFor([$userA, $g1])
             ->persist();
+        /** @var \App\Model\Entity\Resource $r2 */
         $r2 = ResourceFactory::make()
             ->withPermissionsFor([$userB, $g1])
             ->withSecretsFor([$userB, $g1])
@@ -127,6 +131,7 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
         // A (Ada:O, G1:O)
         // B (Ada:O, G1:O)
         [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \App\Model\Entity\Group $group */
         $group = GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
         $userBGroupUser = $group->groups_users[1];
         [$folderA, $folderB] = FolderFactory::make(2)
@@ -157,12 +162,15 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
         // A (Ada:O, G1:O)
         // B (Betty:O, G1:O)
         [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \App\Model\Entity\Group $group */
         $group = GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
         $userBGroupUser = $group->groups_users[1];
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
         $folderA = FolderFactory::make()
             ->withPermissionsFor([$userA, $group])
             ->withFoldersRelationsFor([$userA])
             ->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderB */
         $folderB = FolderFactory::make()
             ->withPermissionsFor([$userB, $group])
             ->withFoldersRelationsFor([$userA, $userB])
