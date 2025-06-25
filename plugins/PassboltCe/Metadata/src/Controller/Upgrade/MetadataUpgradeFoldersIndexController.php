@@ -58,8 +58,7 @@ class MetadataUpgradeFoldersIndexController extends AppController
         // Performance improvement: map query result datetime properties to string.
         ISOFormatDateTimeType::mapDatetimeTypesToMe();
         $folders = $this->Folders->findMetadataUpgradeIndex($options);
-        $this->paginate($folders);
-        $folders = $folders->all();
+        $folders = $this->paginate($folders);
         ISOFormatDateTimeType::remapDatetimeTypesToDefault();
 
         $folders = (new MetadataFoldersRenderService())->renderFolders($folders->toArray());
