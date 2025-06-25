@@ -17,22 +17,15 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Test\TestCase\Service\GroupsUsers;
 
-use App\Model\Entity\Permission;
-use App\Model\Entity\Role;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\ResourcesFixture;
-use App\Test\Fixture\Base\SecretsFixture;
-use App\Test\Fixture\Base\UsersFixture;
-use App\Utility\UserAccessControl;
-use App\Utility\UuidFactory;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\GroupsUsers\HandleGroupUserAddedService;
+use Passbolt\Folders\Test\Factory\FolderFactory;
+use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * \Passbolt\Folders\Service\Groups\HandleGroupUserAddedServiceTest Test Case
@@ -46,17 +39,6 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 class HandleGroupUserAddedServiceTest extends FoldersTestCase
 {
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-
-    public array $fixtures = [
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        ResourcesFixture::class,
-        SecretsFixture::class,
-        UsersFixture::class,
-    ];
 
     /**
      * @var HandleGroupUserAddedService
@@ -71,25 +53,6 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
 
     public function testGroupsAfterUserAddedSuccess_AddResourceToUserTree()
     {
-        [$r1, $r2, $g1, $userAId] = $this->insertFixture_AddResourceToUserTree();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userBId = UuidFactory::uuid('user.id.betty');
-
-        // Prepare the test by deleting the group user entry
-        $userBGroupUser = $this->addGroupUser(['group_id' => $g1->id, 'user_id' => $userBId]);
-
-        $this->service->handle($uac, $userBGroupUser);
-
-        $this->assertItemIsInTrees($r1->id, 2);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
-        $this->assertItemIsInTrees($r2->id, 2);
-        $this->assertFolderRelation($r2->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-        $this->assertFolderRelation($r2->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
-    }
-
-    public function insertFixture_AddResourceToUserTree()
-    {
         // Ada is OWNER of resource R1
         // G1 is OWNER of resource R1
         // Ada is OWNER of resource R2
@@ -98,36 +61,27 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
         // ----
         // R1 (Ada:O, G1:O)
         // R2 (Ada:O, G1:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
+        $userBGroupUser = $g1->groups_users[1];
+        [$r1,$r2] = ResourceFactory::make(2)
+            ->withPermissionsFor([$userA, $g1])
+            ->withSecretsFor([$userA, $g1])
+            ->persist();
+        FoldersRelationFactory::make(['folder_parent_id' => null])->foreignModelResource($r1)->user($userA)->persist();
+        FoldersRelationFactory::make(['folder_parent_id' => null])->foreignModelResource($r2)->user($userA)->persist();
 
-        return [$r1, $r2, $g1, $userAId];
+        $this->service->handle($this->makeUac($userA), $userBGroupUser);
+
+        $this->assertItemIsInTrees($r1->id, 2);
+        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
+        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, null);
+        $this->assertItemIsInTrees($r2->id, 2);
+        $this->assertFolderRelation($r2->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
+        $this->assertFolderRelation($r2->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, null);
     }
 
     public function testGroupsAfterUserAddedSuccess_ResourceWasAlreadyInUserTree()
-    {
-        [$r1, $r2, $g1, $userAId] = $this->insertFixture_ResourceWasAlreadyInUserTree();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userBId = UuidFactory::uuid('user.id.betty');
-
-        // Prepare the test by deleting the group user entry
-        $userBGroupUser = $this->addGroupUser(['group_id' => $g1->id, 'user_id' => $userBId]);
-
-        $this->service->handle($uac, $userBGroupUser);
-
-        $this->assertItemIsInTrees($r1->id, 2);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
-        $this->assertItemIsInTrees($r2->id, 2);
-        $this->assertFolderRelation($r2->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-        $this->assertFolderRelation($r2->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
-    }
-
-    public function insertFixture_ResourceWasAlreadyInUserTree()
     {
         // Ada is OWNER of resource R1
         // G1 is OWNER of resource R1
@@ -137,36 +91,32 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
         // ----
         // R1 (Ada:O, G1:O)
         // R2 (Betty:O, G1:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
+        $userBGroupUser = $g1->groups_users[1];
+        $r1 = ResourceFactory::make()
+            ->withPermissionsFor([$userA, $g1])
+            ->withSecretsFor([$userA, $g1])
+            ->persist();
+        $r2 = ResourceFactory::make()
+            ->withPermissionsFor([$userB, $g1])
+            ->withSecretsFor([$userB, $g1])
+            ->persist();
+        FoldersRelationFactory::make(['folder_parent_id' => null])->foreignModelResource($r1)->user($userA)->persist();
+        FoldersRelationFactory::make(['folder_parent_id' => null])->foreignModelResource($r2)->user($userA)->persist();
+        FoldersRelationFactory::make(['folder_parent_id' => null])->foreignModelResource($r2)->user($userB)->persist();
 
-        return [$r1, $r2, $g1, $userAId];
+        $this->service->handle($this->makeUac($userA), $userBGroupUser);
+
+        $this->assertItemIsInTrees($r1->id, 2);
+        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
+        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, null);
+        $this->assertItemIsInTrees($r2->id, 2);
+        $this->assertFolderRelation($r2->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
+        $this->assertFolderRelation($r2->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, null);
     }
 
     public function testGroupsAfterUserAddedSuccess_AddFolderToUserTree()
-    {
-        [$folderA, $folderB, $g1, $userAId] = $this->insertFixture_AddFolderToUserTree();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userBId = UuidFactory::uuid('user.id.betty');
-
-        // Prepare the test by deleting the group user entry
-        $userBGroupUser = $this->addGroupUser(['group_id' => $g1->id, 'user_id' => $userBId]);
-
-        $this->service->handle($uac, $userBGroupUser);
-
-        $this->assertItemIsInTrees($folderA->id, 2);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
-        $this->assertItemIsInTrees($folderB->id, 2);
-        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
-    }
-
-    public function insertFixture_AddFolderToUserTree()
     {
         // Ada is OWNER of folder A
         // G1 is OWNER of folder A
@@ -176,35 +126,27 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
         // ----
         // A (Ada:O, G1:O)
         // B (Ada:O, G1:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-        ]]);
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
+        $userBGroupUser = $group->groups_users[1];
+        [$folderA, $folderB] = FolderFactory::make(2)
+            ->withPermissionsFor([$userA, $group])
+            ->withFoldersRelationsFor([$userA])
+            ->persist();
 
-        return [$folderA, $folderB, $g1, $userAId];
-    }
-
-    public function testGroupsAfterUserAddedSuccess_FolderWasAlreadyInUserTree()
-    {
-        [$folderA, $folderB, $g1, $userAId, $userBId] = $this->insertFixture_FolderWasAlreadyInUserTree();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-
-        // Prepare the test by deleting the group user entry
-        $userBGroupUser = $this->addGroupUser(['group_id' => $g1->id, 'user_id' => $userBId]);
+        $uac = $this->makeUac($userA);
 
         $this->service->handle($uac, $userBGroupUser);
 
         $this->assertItemIsInTrees($folderA->id, 2);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userA->id, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userB->id, null);
         $this->assertItemIsInTrees($folderB->id, 2);
-        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userA->id, null);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userB->id, null);
     }
 
-    public function insertFixture_FolderWasAlreadyInUserTree()
+    public function testGroupsAfterUserAddedSuccess_FolderWasAlreadyInUserTree()
     {
         // Ada is OWNER of folder A
         // G1 is OWNER of folder A
@@ -214,14 +156,27 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
         // ----
         // A (Ada:O, G1:O)
         // B (Betty:O, G1:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-        ]]);
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B'], [$userBId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
+        $userBGroupUser = $group->groups_users[1];
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA, $group])
+            ->withFoldersRelationsFor([$userA])
+            ->persist();
+        $folderB = FolderFactory::make()
+            ->withPermissionsFor([$userB, $group])
+            ->withFoldersRelationsFor([$userA, $userB])
+            ->persist();
 
-        return [$folderA, $folderB, $g1, $userAId, $userBId];
+        $uac = $this->makeUac($userA);
+
+        $this->service->handle($uac, $userBGroupUser);
+
+        $this->assertItemIsInTrees($folderA->id, 2);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userA->id, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userB->id, null);
+        $this->assertItemIsInTrees($folderB->id, 2);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userA->id, null);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userB->id, null);
     }
 }
