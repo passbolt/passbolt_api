@@ -25,7 +25,7 @@ use Passbolt\Folders\Service\GroupsUsers\HandleGroupUserAddedService;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
-use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
+use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * \Passbolt\Folders\Service\Groups\HandleGroupUserAddedServiceTest Test Case
@@ -38,7 +38,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
  */
 class HandleGroupUserAddedServiceTest extends FoldersTestCase
 {
-    use FoldersModelTrait;
+    use FoldersRelationsModelTrait;
 
     /**
      * @var HandleGroupUserAddedService
@@ -68,8 +68,8 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
             ->withPermissionsFor([$userA, $g1])
             ->withSecretsFor([$userA, $g1])
             ->persist();
-        FoldersRelationFactory::make(['folder_parent_id' => null])->foreignModelResource($r1)->user($userA)->persist();
-        FoldersRelationFactory::make(['folder_parent_id' => null])->foreignModelResource($r2)->user($userA)->persist();
+        FoldersRelationFactory::make()->root()->foreignModelResource($r1)->user($userA)->persist();
+        FoldersRelationFactory::make()->root()->foreignModelResource($r2)->user($userA)->persist();
 
         $this->service->handle($this->makeUac($userA), $userBGroupUser);
 
@@ -102,9 +102,9 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
             ->withPermissionsFor([$userB, $g1])
             ->withSecretsFor([$userB, $g1])
             ->persist();
-        FoldersRelationFactory::make(['folder_parent_id' => null])->foreignModelResource($r1)->user($userA)->persist();
-        FoldersRelationFactory::make(['folder_parent_id' => null])->foreignModelResource($r2)->user($userA)->persist();
-        FoldersRelationFactory::make(['folder_parent_id' => null])->foreignModelResource($r2)->user($userB)->persist();
+        FoldersRelationFactory::make()->root()->foreignModelResource($r1)->user($userA)->persist();
+        FoldersRelationFactory::make()->root()->foreignModelResource($r2)->user($userA)->persist();
+        FoldersRelationFactory::make()->root()->foreignModelResource($r2)->user($userB)->persist();
 
         $this->service->handle($this->makeUac($userA), $userBGroupUser);
 
