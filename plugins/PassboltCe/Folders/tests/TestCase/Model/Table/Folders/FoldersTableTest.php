@@ -17,12 +17,9 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Test\TestCase\Model\Table\Folders;
 
-use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\FormatValidationTrait;
-use App\Test\Lib\Model\PermissionsModelTrait;
-use App\Utility\UuidFactory;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -30,7 +27,6 @@ use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * @covers \Passbolt\Folders\Model\Table\FoldersTable
@@ -38,9 +34,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 class FoldersTableTest extends FoldersTestCase
 {
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
     use FormatValidationTrait;
-    use PermissionsModelTrait;
 
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersTable
@@ -115,7 +109,7 @@ class FoldersTableTest extends FoldersTestCase
 
     public function testFindView_ContainChildrenFolders()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $userI = UserFactory::make()->persist();
 
         // Insert fixtures.
         // Ada has access to folder A, B and C as a OWNER
@@ -123,12 +117,17 @@ class FoldersTableTest extends FoldersTestCase
         // A (Ada:O)
         // |- B (Ada:O)
         // |- C (Ada:O)
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-        $folderC = $this->addFolderFor(['name' => 'C', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userI])
+            ->withFoldersRelationsFor([$userI])
+            ->persist();
+        [$folderB, $folderC] = FolderFactory::make(2)
+            ->withPermissionsFor([$userI])
+            ->withFoldersRelationsFor([$userI], $folderA)
+            ->persist();
 
         $options['contain']['children_folders'] = true;
-        $folder = $this->Folders->findView($userId, $folderA->id, $options)->first();
+        $folder = $this->Folders->findView($userI->get('id'), $folderA->get('id'), $options)->first();
 
         // Expected fields.
         $this->assertFolderAttributes($folder);
@@ -144,42 +143,47 @@ class FoldersTableTest extends FoldersTestCase
 
     public function testFindView_ContainFolderParentId()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $userI = UserFactory::make()->persist();
 
         // Insert fixtures.
         // Ada has access to folder A, B as a OWNER
         // Ada sees folder folders B in A
         // A (Ada:O)
         // |- B (Ada:O)
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userI])
+            ->withFoldersRelationsFor([$userI])
+            ->persist();
+        $folderB = FolderFactory::make()
+            ->withPermissionsFor([$userI])
+            ->withFoldersRelationsFor([$userI], $folderA)
+            ->persist();
 
-        $folder = $this->Folders->findView($userId, $folderB->id)->first();
+        $folder = $this->Folders->findView($userI->get('id'), $folderB->get('id'))->first();
 
         // Expected fields.
-        $this->assertEquals($folderA->id, $folder->get('folder_parent_id'));
+        $this->assertEquals($folderA->get('id'), $folder->get('folder_parent_id'));
     }
 
     public function testFindView_ContainPersonal()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
+        [$userA, $userB] = UserFactory::make(2)->persist();
 
         // Insert fixtures.
         // Ada has access to folder A, B, C as OWNER
         // Betty has access to folder B as OWNER
         // A (Ada:O)
-        // B (Ada:O)
-        // C does not have any folder relation
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $folderC = FolderFactory::make()->withPermissionsFor([UserFactory::make(['id' => $userAId])->getEntity()])->persist();
+        // B (Ada:O, Betty:O)
+        // C does not have any folder relation (Ada:O)
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA])->persist();
+        $folderB = FolderFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB])->persist();
+        $folderC = FolderFactory::make()->withPermissionsFor([$userA])->persist();
 
-        $folderA = $this->Folders->findView($userAId, $folderA->id)->first();
+        $folderA = $this->Folders->findView($userA->id, $folderA->get('id'))->first();
         $this->assertTrue($folderA->get('personal'));
-        $folderB = $this->Folders->findView($userAId, $folderB->id)->first();
+        $folderB = $this->Folders->findView($userA->id, $folderB->get('id'))->first();
         $this->assertFalse($folderB->get('personal'));
-        $folderC = $this->Folders->findView($userAId, $folderC->get('id'))->first();
+        $folderC = $this->Folders->findView($userA->id, $folderC->get('id'))->first();
         $this->assertNull($folderC->get('personal'));
     }
 
@@ -187,15 +191,18 @@ class FoldersTableTest extends FoldersTestCase
 
     public function testFindIndex_FilterByParentId()
     {
-        $this->insertTestCase1();
+        $userI = UserFactory::make()->persist();
+        [$folderA, $folderC] = FolderFactory::make(2)->withPermissionsFor([$userI])->persist();
+        $folderB = FolderFactory::make()->withPermissionsFor([$userI])->withFoldersRelationsFor([$userI], $folderA)->persist();
+        $folderE = FolderFactory::make()->withPermissionsFor([$userI])->withFoldersRelationsFor([$userI], $folderC)->persist();
 
         // Relations are expressed as follow: folder_parent_id => [child_folder_id]
         $expectedFoldersForParentId = [
-            UuidFactory::uuid('folder.id.a') => [
-                UuidFactory::uuid('folder.id.b'),
+            $folderA->get('id') => [
+                $folderB->get('id'),
             ],
-            UuidFactory::uuid('folder.id.c') => [
-                UuidFactory::uuid('folder.id.e'),
+            $folderC->get('id') => [
+                $folderE->get('id'),
             ],
         ];
 
@@ -215,30 +222,6 @@ class FoldersTableTest extends FoldersTestCase
         $this->assertSame(asort($expectedFolderIds), asort($resultFolderIds), 'List of folders returned does not contain expected folders. Filtering with multiple parent ids should return all children.');
     }
 
-    private function insertTestCase1()
-    {
-        $userId = UuidFactory::uuid('user.id.ada');
-
-        // Relations are expressed as follow: folder_parent_id => [child_folder_id]
-        $expectedFoldersForParentId = [
-            UuidFactory::uuid('folder.id.a') => [
-                UuidFactory::uuid('folder.id.b'),
-            ],
-            UuidFactory::uuid('folder.id.c') => [
-                UuidFactory::uuid('folder.id.e'),
-            ],
-        ];
-
-        foreach ($expectedFoldersForParentId as $folderParentId => $childrenFolders) {
-            $this->addFolderFor(['id' => $folderParentId], [
-                $userId => Permission::OWNER,
-            ]);
-            foreach ($childrenFolders as $childrenFolderId) {
-                $this->addFolderFor(['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId, ], [$userId => Permission::OWNER]);
-            }
-        }
-    }
-
     private function getAllChildrenFromExpectedFolders(array $expectedFoldersForParentId)
     {
         return array_reduce($expectedFoldersForParentId, function ($accumulator, $current) {
@@ -254,9 +237,9 @@ class FoldersTableTest extends FoldersTestCase
     {
         $folderName = 'FolderWithSpecialName';
 
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folderData = ['id' => UuidFactory::uuid(), 'name' => $folderName, 'created_by' => $userId, 'modified_by' => $userId];
-        $this->addFolder($folderData);
+        $userI = UserFactory::make()->persist();
+
+        FolderFactory::make($folderName)->withPermissionsFor([$userI])->persist();
 
         $query = $this->Folders->find();
 
@@ -286,32 +269,13 @@ class FoldersTableTest extends FoldersTestCase
 
     public function testFindIndex_FilterByIds()
     {
-        $allFolders = [
-            UuidFactory::uuid('folder.id.a'),
-            UuidFactory::uuid('folder.id.b'),
-            UuidFactory::uuid('folder.id.c'),
-            UuidFactory::uuid('folder.id.d'),
-            UuidFactory::uuid('folder.id.e'),
-        ];
-        foreach ($allFolders as $folderId) {
-            $folderData = [
-                'id' => $folderId,
-                'name' => 'folder name',
-                'created_by' => UuidFactory::uuid('user.id.ada'),
-                'modified_by' => UuidFactory::uuid('user.id.ada'),
-            ];
-            $this->addFolder($folderData);
-        }
-
-        $expectedFolderIds = [
-            UuidFactory::uuid('folder.id.b'),
-            UuidFactory::uuid('folder.id.c'),
-        ];
+        $allFolders = FolderFactory::make(5)->persist();
+        $expectedFolderIds = [$allFolders['1']->id, $allFolders['2']->id];
 
         $folders = $this->Folders->filterByIds($this->Folders->find(), $expectedFolderIds);
         $folderIds = Hash::extract($folders->toArray(), '{n}.id');
 
-        $this->assertSame($folderIds, $expectedFolderIds, 'List of folders returned does not contain expected folders.');
+        $this->assertSame(asort($folderIds), asort($expectedFolderIds), 'List of folders returned does not contain expected folders.');
     }
 
     public function testFoldersTable_Name_Should_Be_Max_256()

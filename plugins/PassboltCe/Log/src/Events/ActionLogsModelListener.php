@@ -69,11 +69,6 @@ class ActionLogsModelListener implements EventListenerInterface
             ]);
             $table->hasMany('Passbolt/Log.SecretAccesses');
         }
-        if ($modelName == 'SecretAccesses') {
-            $table->belongsTo('Passbolt/Log.EntitiesHistory', [
-                'foreignKey' => 'foreign_key',
-            ]);
-        }
         if (Configure::read('passbolt.plugins.folders.enabled')) {
             if ($modelName == 'Folders') {
                 $table->belongsTo('FoldersHistory', [

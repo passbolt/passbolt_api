@@ -24,6 +24,8 @@ use DateTime;
 
 trait FoldersModelTrait
 {
+    use FoldersRelationsModelTrait;
+
     public function addFolder($data = [], ?array $options = [])
     {
         $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');

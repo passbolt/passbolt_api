@@ -21,32 +21,6 @@
       <code><![CDATA[$dbEmailNotifSettings->value]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltCe/Folders/src/Model/Table/FoldersHistoryTable.php">
-    <ImplementedParamTypeMismatch>
-      <code><![CDATA[\Passbolt\Folders\Model\Entity\FolderHistory get($primaryKey, ?array $options = [])]]></code>
-      <code><![CDATA[\Passbolt\Folders\Model\Entity\FolderHistory get($primaryKey, ?array $options = [])]]></code>
-    </ImplementedParamTypeMismatch>
-    <MethodSignatureMismatch>
-      <code><![CDATA[FoldersHistoryTable]]></code>
-      <code><![CDATA[FoldersHistoryTable]]></code>
-    </MethodSignatureMismatch>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\Folders\Model\Entity\FolderHistory get($primaryKey, ?array $options = [])]]></code>
-    </MoreSpecificImplementedParamType>
-  </file>
-  <file src="plugins/PassboltCe/Folders/src/Model/Table/FoldersRelationsHistoryTable.php">
-    <ImplementedParamTypeMismatch>
-      <code><![CDATA[\Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, ?array $options = [])]]></code>
-      <code><![CDATA[\Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, ?array $options = [])]]></code>
-    </ImplementedParamTypeMismatch>
-    <MethodSignatureMismatch>
-      <code><![CDATA[FoldersRelationsHistoryTable]]></code>
-      <code><![CDATA[FoldersRelationsHistoryTable]]></code>
-    </MethodSignatureMismatch>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, ?array $options = [])]]></code>
-    </MoreSpecificImplementedParamType>
-  </file>
   <file src="plugins/PassboltCe/Folders/src/Model/Table/FoldersRelationsTable.php">
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\Folders\Model\Entity\FoldersRelation get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
@@ -540,19 +514,6 @@
     <MethodSignatureMismatch>
       <code><![CDATA[MetadataTypesSettingsFactory]]></code>
     </MethodSignatureMismatch>
-  </file>
-  <file src="plugins/PassboltCe/Mobile/src/Model/Table/TransfersTable.php">
-    <ImplementedParamTypeMismatch>
-      <code><![CDATA[\Passbolt\Mobile\Model\Entity\Transfer get($primaryKey, ?array $options = [])]]></code>
-      <code><![CDATA[\Passbolt\Mobile\Model\Entity\Transfer get($primaryKey, ?array $options = [])]]></code>
-    </ImplementedParamTypeMismatch>
-    <MethodSignatureMismatch>
-      <code><![CDATA[TransfersTable]]></code>
-      <code><![CDATA[TransfersTable]]></code>
-    </MethodSignatureMismatch>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\Mobile\Model\Entity\Transfer get($primaryKey, ?array $options = [])]]></code>
-    </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltCe/Mobile/tests/TestCase/Controller/Transfers/TransfersUpdateControllerTest.php">
     <InvalidPropertyFetch>

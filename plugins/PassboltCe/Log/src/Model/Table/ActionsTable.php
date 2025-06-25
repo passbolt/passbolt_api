@@ -33,7 +33,7 @@ use Passbolt\Log\Model\Entity\Action;
  * @method \Passbolt\Log\Model\Entity\Action newEntity(array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\Action[] newEntities(array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\Action get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
- * @method \Passbolt\Log\Model\Entity\Action findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Log\Model\Entity\Action findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @method \Passbolt\Log\Model\Entity\Action patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\Action[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\Action|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
