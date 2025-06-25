@@ -68,8 +68,7 @@ class MetadataUpgradeResourcesPostController extends AppController
         // Performance improvement: map query result datetime properties to string.
         ISOFormatDateTimeType::mapDatetimeTypesToMe();
         $resources = $this->Resources->findMetadataUpgradeIndex($options);
-        $this->paginate($resources);
-        $resources = $resources->all();
+        $resources = $this->paginate($resources);
         ISOFormatDateTimeType::remapDatetimeTypesToDefault();
 
         $resources = (new MetadataResourcesRenderService())->renderResources($resources->toArray());

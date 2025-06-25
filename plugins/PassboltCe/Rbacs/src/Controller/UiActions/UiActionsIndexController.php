@@ -62,7 +62,7 @@ class UiActionsIndexController extends AppController
         $this->User->assertIsAdmin();
 
         $uiActions = $this->UiActions->find();
-        $this->paginate($uiActions);
+        $uiActions = $this->paginate($uiActions);
 
         $uiActions = $this->decorateUiActionsWithControlFunctions($uiActions->toArray());
 

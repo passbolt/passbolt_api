@@ -95,9 +95,9 @@ class ResourcesIndexController extends AppController
         // Performance improvement: map query result datetime properties to string.
         ISOFormatDateTimeType::mapDatetimeTypesToMe();
         $resources = $this->Resources->findIndex($this->User->id(), $options)->disableHydration();
-        $this->paginate($resources);
-        $resources = $resources->all();
-        $resources = FolderizableBehavior::unsetPersonalPropertyIfNullOnResultSet($resources);
+        /** @var \Cake\Datasource\ResultSetInterface $paginatedResources */
+        $paginatedResources = $this->paginate($resources)->items();
+        $resources = FolderizableBehavior::unsetPersonalPropertyIfNullOnResultSet($paginatedResources);
         ISOFormatDateTimeType::remapDatetimeTypesToDefault();
         $this->_logSecretAccesses($resources, $options);
         $resources = (new MetadataResourcesRenderService())->renderResources($resources->toArray());
