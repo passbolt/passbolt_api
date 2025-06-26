@@ -379,7 +379,6 @@ class UsersTable extends Table
             'profile' => true,
             'gpgkey' => false,
         ];
-        debug($roleName);
         // only admins can set roles
         if ($uac->isAdmin()) {
             $accessibleUserFields['role_id'] = true;

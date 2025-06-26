@@ -16,21 +16,22 @@ declare(strict_types=1);
  */
 namespace Passbolt\Scim\Service\Healthcheck;
 
+use App\Service\Healthcheck\HealthcheckCliInterface;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
+use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Passbolt\Ee\Service\Healthcheck\EeHealthcheckServiceCollector;
 
-class ScimHealthcheckService
+class ScimHealthcheckService implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     use FeaturePluginAwareTrait;
 
     /**
-     * @return array
+     * Status of this health check if it is passed or failed.
+     *
+     * @var bool
      */
-    public function getHealthcheck(): array
-    {
-        return [
-            'isScimPluginEnabled' => $this->isScimPluginEnabled(),
-        ];
-    }
+    private bool $status = false;
 
     /**
      * Checks if the plugin is enabled
@@ -40,5 +41,88 @@ class ScimHealthcheckService
     protected function isScimPluginEnabled(): bool
     {
         return $this->isFeaturePluginEnabled('Scim');
+    }
+
+    /**
+     * Performs the actual check and returns itself.
+     *
+     * @return $this
+     */
+    public function check(): HealthcheckServiceInterface
+    {
+        $this->status =  $this->isScimPluginEnabled();
+
+        return $this;
+    }
+
+    /**
+     * Health check domain key this check belongs to.
+     *
+     * @return string
+     */
+    public function domain(): string
+    {
+        return EeHealthcheckServiceCollector::DOMAIN_SCIM;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPassed(): bool
+    {
+        return $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function level(): string
+    {
+        return HealthcheckServiceCollector::LEVEL_NOTICE;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSuccessMessage(): string
+    {
+        return __('SCIM plugin is enabled.');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFailureMessage(): string
+    {
+        return __('SCIM plugin is disabled.');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getHelpMessage(): array|string|null
+    {
+        return null;
+    }
+
+    /**
+     * CLI Option for this check.
+     *
+     * @return string
+     */
+    public function cliOption(): string
+    {
+        return EeHealthcheckServiceCollector::DOMAIN_SCIM;
+    }
+
+    /**
+     * Returns the array key used when returning check result.
+     *
+     * @deprecated As of v4.7.0, this is mostly used to keep BC.
+     * @return string
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'isScimPluginEnabled';
     }
 }

@@ -17,8 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim;
 
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Cake\Core\BasePlugin;
+use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
+use Passbolt\Scim\Service\Healthcheck\ScimHealthcheckService;
 
 class ScimPlugin extends BasePlugin
 {
@@ -34,5 +37,18 @@ class ScimPlugin extends BasePlugin
     public function bootstrap(PluginApplicationInterface $app): void
     {
         parent::bootstrap($app);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        // SSO Health checks
+        $container->add(ScimHealthcheckService::class);
+        // Add SSO health check services to collector
+        $container
+            ->extend(HealthcheckServiceCollector::class)
+            ->addMethodCall('addService', [ScimHealthcheckService::class]);
     }
 }
