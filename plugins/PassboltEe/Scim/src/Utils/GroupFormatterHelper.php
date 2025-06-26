@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace PassboltEe\Scim\src\Utils;
+namespace Passbolt\Scim\Utils;
 
 class GroupFormatterHelper
 {

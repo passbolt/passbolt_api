@@ -25,6 +25,7 @@ class ScimSetSettingsController extends AppController
      * SCIM POST/PUT action
      *
      * @return void
+     * @throws \Exception
      */
     public function setSettings(): void
     {

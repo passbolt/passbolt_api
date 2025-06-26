@@ -32,7 +32,7 @@ class ScimEntry extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'foreign_key' => false,
         'foreign_model' => false,
         'external_identifier' => false,

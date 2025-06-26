@@ -24,5 +24,5 @@ class ConflictException extends ScimException
     /**
      * @inheritDoc
      */
-    protected $_defaultCode = 409;
+    protected int $_defaultCode = 409;
 }

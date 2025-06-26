@@ -19,12 +19,14 @@ namespace Passbolt\Scim\Resources\ResourceType;
 
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Model\Table\UsersTable;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\EntityInterface;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
+use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Passbolt\Scim\Exception\ConflictException;
 use Passbolt\Scim\Exception\ScimException;
@@ -108,9 +110,9 @@ class UserResourceType extends BaseResourceType
     ];
 
     /**
-     * @var \App\Model\Table\UsersTable
+     * @var \App\Model\Table\UsersTable|\Cake\ORM\Table
      */
-    protected $Users;
+    protected UsersTable|Table $Users;
 
     /**
      * Formatter helper
