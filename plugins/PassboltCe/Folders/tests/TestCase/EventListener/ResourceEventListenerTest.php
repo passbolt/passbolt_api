@@ -20,7 +20,6 @@ namespace Passbolt\Folders\Test\TestCase\EventListener;
 use App\Model\Entity\Permission;
 use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
 use App\Test\Factory\PermissionFactory;
-use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
@@ -32,6 +31,7 @@ use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTra
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -120,8 +120,11 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         $userA = UserFactory::make()->persist();
         $folder = FolderFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA])->persist();
         /** @var \App\Model\Entity\Resource $resource */
-        $resource = ResourceFactory::make()->withPermissionsFor([$userA])->withSecretsFor([$userA])->persist();
-        FoldersRelationFactory::make($resource)->foreignModelResource($resource)->user($userA)->folderParent($folder)->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA])
+            ->withFoldersRelationsFor([$userA], $folder)
+            ->persist();
 
         $data = $resource->toArray();
         $data['folder_parent_id'] = null;
@@ -138,8 +141,11 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         [$userA, $userB] = UserFactory::make(2)->persist();
         $folder = FolderFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB])->persist();
         /** @var \App\Model\Entity\Resource $resource */
-        $resource = ResourceFactory::make()->withPermissionsFor([$userA])->withSecretsFor([$userA])->persist();
-        FoldersRelationFactory::make()->foreignModelResource($resource)->user($userA)->folderParent($folder)->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA])
+            ->withFoldersRelationsFor([$userA], $folder)
+            ->persist();
 
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userB->id, 'type' => Permission::OWNER];
         $data['secrets'][] = ['user_id' => $userB->id, 'data' => Hash::get($this->getDummySecretData(), 'data')];
@@ -163,9 +169,11 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         [$userA, $userB] = UserFactory::make(2)->persist();
         $folder = FolderFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB])->persist();
         /** @var \App\Model\Entity\Resource $resource */
-        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->withSecretsFor([$userA, $userB])->persist();
-        FoldersRelationFactory::make()->foreignModelResource($resource)->user($userA)->folderParent($folder)->persist();
-        FoldersRelationFactory::make()->foreignModelResource($resource)->user($userB)->folderParent($folder)->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA, $userB])
+            ->withSecretsFor([$userA, $userB])
+            ->withFoldersRelationsFor([$userA, $userB], $folder)
+            ->persist();
 
         $permission = $resource->permissions[1];
         $data['permissions'][] = ['id' => $permission->get('id'), 'delete' => true];
