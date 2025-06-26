@@ -18,12 +18,11 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Service\GroupsUsers;
 
 use App\Test\Factory\GroupFactory;
-use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\GroupsUsers\HandleGroupUserAddedService;
 use Passbolt\Folders\Test\Factory\FolderFactory;
-use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
@@ -68,9 +67,8 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
         [$r1,$r2] = ResourceFactory::make(2)
             ->withPermissionsFor([$userA, $g1])
             ->withSecretsFor([$userA, $g1])
+            ->withFoldersRelationsFor([$userA])
             ->persist();
-        FoldersRelationFactory::make()->root()->foreignModelResource($r1)->user($userA)->persist();
-        FoldersRelationFactory::make()->root()->foreignModelResource($r2)->user($userA)->persist();
 
         $this->service->handle($this->makeUac($userA), $userBGroupUser);
 
@@ -100,15 +98,14 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
         $r1 = ResourceFactory::make()
             ->withPermissionsFor([$userA, $g1])
             ->withSecretsFor([$userA, $g1])
+            ->withFoldersRelationsFor([$userA])
             ->persist();
         /** @var \App\Model\Entity\Resource $r2 */
         $r2 = ResourceFactory::make()
             ->withPermissionsFor([$userB, $g1])
             ->withSecretsFor([$userB, $g1])
+            ->withFoldersRelationsFor([$userA, $userB])
             ->persist();
-        FoldersRelationFactory::make()->root()->foreignModelResource($r1)->user($userA)->persist();
-        FoldersRelationFactory::make()->root()->foreignModelResource($r2)->user($userA)->persist();
-        FoldersRelationFactory::make()->root()->foreignModelResource($r2)->user($userB)->persist();
 
         $this->service->handle($this->makeUac($userA), $userBGroupUser);
 

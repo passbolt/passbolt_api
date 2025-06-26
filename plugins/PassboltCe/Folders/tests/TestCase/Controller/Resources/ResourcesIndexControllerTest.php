@@ -27,7 +27,6 @@ use Cake\Utility\Hash;
 use Closure;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Test\Factory\FolderFactory;
-use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
 use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
@@ -222,13 +221,11 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
         $ada = UserFactory::make()->user()->persist();
         $betty = UserFactory::make()->user()->persist();
         $group = GroupFactory::make()->withGroupsManagersFor([$ada])->withGroupsUsersFor([$betty])->persist();
-        $resource1 = ResourceFactory::make()->withPermissionsFor([$group], Permission::READ)->persist();
-        $resource2 = ResourceFactory::make()->withPermissionsFor([$group], Permission::READ)->persist();
         $folder = FolderFactory::make()->withPermissionsFor([$group], Permission::READ)->persist();
-        FoldersRelationFactory::make()->foreignModelResource($resource1)->user($ada)->folderParent($folder)->persist();
-        FoldersRelationFactory::make()->foreignModelResource($resource2)->user($ada)->folderParent($folder)->persist();
-        FoldersRelationFactory::make()->foreignModelResource($resource1)->user($betty)->folderParent($folder)->persist();
-        FoldersRelationFactory::make()->foreignModelResource($resource2)->user($betty)->folderParent($folder)->persist();
+        [$resource1, $resource2] = ResourceFactory::make(2)
+            ->withPermissionsFor([$group], Permission::READ)
+            ->withFoldersRelationsFor([$ada, $betty], $folder)
+            ->persist();
         // login with Ada
         $this->logInAs($ada);
 
