@@ -18,12 +18,11 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Service\Resources;
 
 use App\Test\Factory\GroupFactory;
-use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\Resources\ResourcesAfterAccessRevokedService;
-use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 
@@ -60,9 +59,7 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
         // R1 (Ada:O, Betty:O)
         [$userA, $userB] = UserFactory::make(2)->persist();
         /** @var \App\Model\Entity\Resource $r1 */
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->persist();
-        FoldersRelationFactory::make()->root()->foreignModelResource($r1)->user($userA)->persist();
-        FoldersRelationFactory::make()->root()->foreignModelResource($r1)->user($userB)->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB])->persist();
 
         /** @var \App\Model\Entity\Permission $permission */
         $permission = $r1->permissions[1];
@@ -83,10 +80,7 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
         [$userA, $userB, $userC] = UserFactory::make(3)->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$userB, $userC])->persist();
         /** @var \App\Model\Entity\Resource $r1 */
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA, $g1])->persist();
-        FoldersRelationFactory::make()->root()->foreignModelResource($r1)->user($userA)->persist();
-        FoldersRelationFactory::make()->root()->foreignModelResource($r1)->user($userB)->persist();
-        FoldersRelationFactory::make()->root()->foreignModelResource($r1)->user($userC)->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$userA, $g1])->withFoldersRelationsFor([$userA, $userB, $userC])->persist();
 
         /** @var \App\Model\Entity\Permission $permission */
         $permission = $r1->permissions[1];
