@@ -17,13 +17,12 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Test\TestCase\Controller\FoldersRelations;
 
-use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Test\Factory\FolderFactory;
-use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 
@@ -75,8 +74,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
         /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
         $folderA = FolderFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA])->persist();
         /** @var \App\Model\Entity\Resource $r1 */
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->persist();
-        FoldersRelationFactory::make()->root()->foreignModelResource($r1)->user($userA)->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA])->persist();
 
         $this->logInAs($userA);
         $data['folder_parent_id'] = $folderA->id;
