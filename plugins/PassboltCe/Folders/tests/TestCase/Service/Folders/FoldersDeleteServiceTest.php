@@ -18,33 +18,20 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Service\Folders;
 
 use App\Model\Entity\Permission;
-use App\Model\Entity\Role;
 use App\Notification\Email\EmailSubscriptionDispatcher;
-use App\Test\Fixture\Alt0\SecretsFixture;
-use App\Test\Fixture\Base\FavoritesFixture;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\ResourcesFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\UsersFixture;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
-use App\Test\Lib\Model\PermissionsModelTrait;
-use App\Test\Lib\Model\ResourcesModelTrait;
-use App\Test\Lib\Utility\FixtureProviderTrait;
-use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\Folders\FoldersDeleteService;
+use Passbolt\Folders\Test\Factory\FolderFactory;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * Passbolt\Folders\Service\FoldersDeleteService Test Case
@@ -56,35 +43,12 @@ class FoldersDeleteServiceTest extends FoldersTestCase
 {
     use EmailNotificationSettingsTestTrait;
     use EmailQueueTrait;
-    use FixtureProviderTrait;
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-    use LocatorAwareTrait;
-    use PermissionsModelTrait;
-    use ResourcesModelTrait;
-
-    public array $fixtures = [
-        GpgkeysFixture::class,
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        UsersFixture::class,
-        ResourcesFixture::class,
-        RolesFixture::class,
-        SecretsFixture::class,
-        FavoritesFixture::class,
-    ];
 
     /**
      * @var FoldersDeleteService
      */
     private $service;
-
-    /**
-     * @var \App\Model\Table\ResourcesTable
-     */
-    protected $Resources;
 
     /**
      * setUp method
@@ -99,7 +63,6 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
 
         $this->service = new FoldersDeleteService();
-        $this->Resources = $this->fetchTable('Resources');
     }
 
     public function tearDown(): void
@@ -112,104 +75,72 @@ class FoldersDeleteServiceTest extends FoldersTestCase
 
     public function testFolderDelete_CommonError1_FolderNotExist()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        $user = UserFactory::make()->persist();
 
         $this->expectException(NotFoundException::class);
-        $this->service->delete($uac, UuidFactory::uuid());
+        $this->service->delete($this->makeUac($user), UuidFactory::uuid());
     }
 
     public function testFolderDelete_CommonError2_NoAccess()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $folder = $this->addFolderFor(['name' => 'A'], [$userBId => Permission::READ]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = FolderFactory::make()->withPermissionsFor([$userB], Permission::READ)->persist();
 
         $this->expectException(ForbiddenException::class);
-        $this->service->delete($uac, $folder->id);
+        $this->service->delete($this->makeUac($userA), $folder->id);
     }
 
     public function testFolderDelete_CommonSuccess2_NotifyUsersAfterDelete()
     {
-        $fixtures = $this->insertSharedSuccess2Fixture();
-        $folderA = $fixtures[0];
-        $userAId = $fixtures[2];
+        // Ada is OWNER of folder A
+        // Betty is OWNER of folder A
+        // ---
+        // A (Ada:O, Betty:O)
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make(['name' => 'A'])->withPermissionsFor([$userA, $userB])->persist();
 
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $this->service->delete($uac, $folderA->id);
+        $this->service->delete($this->makeUac($userA), $folderA->id);
 
         $this->assertEmailQueueCount(2);
-        $this->assertEmailSubject('ada@passbolt.com', 'You deleted the folder A');
-        $this->assertEmailInBatchContains('You deleted a folder', 'ada@passbolt.com');
-        $this->assertEmailSubject('betty@passbolt.com', 'Ada deleted the folder A');
-        $this->assertEmailInBatchContains('Ada deleted a folder', 'betty@passbolt.com');
+        $this->assertEmailSubject($userA->username, 'You deleted the folder A');
+        $this->assertEmailInBatchContains('You deleted a folder', $userA->username);
+        $this->assertEmailSubject($userB->username, "{$userA->profile->first_name} deleted the folder A");
+        $this->assertEmailInBatchContains("{$userA->profile->first_name} deleted a folder", $userB->username);
     }
 
     /* PERSONAL FOLDER */
 
-    private function insertPersoSuccess1Fixture()
+    public function testFolderDelete_PersoSuccess1_DeleteFolder()
     {
         // Ada has access to folder A as a OWNER
         // ---
         // A (Ada:O)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $userA = UserFactory::make()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
 
-        return $folderA;
-    }
-
-    public function testFolderDelete_PersoSuccess1_DeleteFolder()
-    {
-        $folder = $this->insertPersoSuccess1Fixture();
-
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $this->service->delete($uac, $folder->id);
-        $this->assertFolderNotExist($folder->id);
+        $this->service->delete($this->makeUac($userA), $folderA->id);
+        $this->assertFolderNotExist($folderA->id);
     }
 
     public function testFolderDelete_PersoSuccess2_NoCascadeMoveChildrenToRoot()
     {
-        [$parentFolder, $folder] = $this->insertPersoSuccess2Fixture();
+        /** @var \App\Model\Entity\User $userA */
+        $userA = UserFactory::make()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderB */
+        $folderB = FolderFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA], $folderA)->persist();
 
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $this->service->delete($uac, $parentFolder->id, false);
-        $this->assertFolderNotExist($parentFolder->id);
-        $this->assertFolder($folder->id);
-        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId, null);
-    }
-
-    private function insertPersoSuccess2Fixture()
-    {
-        // Ada is OWNER of folder A
-        // Ada is OWNER of folder B
-        // ---
-        // A (Ada:O)
-        // |
-        // B (Ada:O)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-
-        return [$folderA, $folderB];
+        $this->service->delete($this->makeUac($userA), $folderA->id, false);
+        $this->assertFolderNotExist($folderA->id);
+        $this->assertFolder($folderB->id);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userA->id, null);
     }
 
     public function testFolderDelete_PersoSuccess3_CascadeDelete()
-    {
-        [$folderA, $resource1, $folderB, $resource2] = $this->insertPersoSuccess3Fixture();
-
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $this->service->delete($uac, $folderA->id, true);
-        $this->assertFolderNotExist($folderA->id);
-        $this->assertResourceIsSoftDeleted($resource1->id);
-        $this->assertFolderNotExist($folderB->id);
-        $this->assertResourceIsSoftDeleted($resource2->id);
-    }
-
-    private function insertPersoSuccess3Fixture()
     {
         // Ada is OWNER of folder A
         // Ada is OWNER of resource R1
@@ -223,31 +154,22 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         // |- R1 (Ada:O)
         // |- B (Ada:O)
         //    |- R2 (Ada:O)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $resource1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-        $resource2 = $this->addResourceFor(['name' => 'R2', 'folder_parent_id' => $folderB->id], [$userId => Permission::OWNER]);
+        $userA = UserFactory::make()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
+        $resource1 = ResourceFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA], $folderA)->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderB */
+        $folderB = FolderFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA], $folderA)->persist();
+        $resource2 = ResourceFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA], $folderB)->persist();
 
-        return [$folderA, $resource1, $folderB, $resource2];
+        $this->service->delete($this->makeUac($userA), $folderA->id, true);
+        $this->assertFolderNotExist($folderA->id);
+        $this->assertResourceIsSoftDeleted($resource1->id);
+        $this->assertFolderNotExist($folderB->id);
+        $this->assertResourceIsSoftDeleted($resource2->id);
     }
 
     public function testFolderDelete_PersoSuccess4_CascadeDeleteContentMoveToRootWhenInsufficientPermission()
-    {
-        [$folderA, $resource1] = $this->insertPersoSuccess4Fixture();
-
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-
-        $this->service->delete($uac, $folderA->id, true);
-
-        $this->assertFolderNotExist($folderA->id);
-        $this->assertResourceIsNotSoftDeleted($resource1->id);
-        $this->assertPermission($resource1->id, $userId, Permission::READ);
-        $this->assertFolderRelation($resource1->id, 'Resource', $userId, null);
-    }
-
-    private function insertPersoSuccess4Fixture()
     {
         // Ada is OWNER of folder A
         // Ada has read ACCESS on resource R1
@@ -256,88 +178,60 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         // ---
         //  A (Ada:O)
         // |- R1 (Ada:R, Betty:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
-        $resource1 = $this->addResourceFor(
-            ['name' => 'R1', 'folder_parent_id' => $folderA->id],
-            [$userBId => Permission::OWNER, $userAId => Permission::READ]
-        );
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
+        $resource1 = ResourceFactory::make()
+            ->withPermissionsFor([$userA], Permission::READ)
+            ->withPermissionsFor([$userB])
+            ->withFoldersRelationsFor([$userA, $userB], $folderA)
+            ->persist();
 
-        return [$folderA, $resource1];
+        $this->service->delete($this->makeUac($userA), $folderA->id, true);
+
+        $this->assertFolderNotExist($folderA->id);
+        $this->assertResourceIsNotSoftDeleted($resource1->id);
+        $this->assertPermission($resource1->id, $userA->id, Permission::READ);
+        $this->assertFolderRelation($resource1->id, 'Resource', $userA->id, null);
     }
 
     /* SHARED FOLDER */
 
     public function testFolderDelete_SharedError1_InsufficientPermission()
     {
-        [$folderA] = $this->insertSharedErrorFixture();
-
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-
-        $this->expectException(ForbiddenException::class);
-        $this->service->delete($uac, $folderA->id, true);
-    }
-
-    private function insertSharedErrorFixture()
-    {
         // Ada has access to folder A as a READ
         // Betty is OWNER of folder A
         // A (Ada:R, Betty:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA], Permission::READ)->withPermissionsFor([$userB])->persist();
 
-        return [$folderA];
+        $this->expectException(ForbiddenException::class);
+        $this->service->delete($this->makeUac($userA), $folderA->id, true);
     }
 
     public function testFolderDelete_SharedSuccess1_DeleteSharedFolder()
     {
-        [$folderA] = $this->insertSharedSuccess1Fixture();
+        // Ada is OWNER of folder A
+        // Betty has access to folder A as a READ
+        // Carol is manager of group 1
+        // Group 1 has access to folder A as a READ
+        //
+        // G1 (Carol:O)
+        // A (Ada:O, Betty:R, G1:R)
+        [$userA, $userB, $userC] = UserFactory::make(3)->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$userC])->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB, $g1], Permission::READ)
+            ->persist();
 
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-
-        $this->service->delete($uac, $folderA->id, true);
+        $this->service->delete($this->makeUac($userA), $folderA->id, true);
         $this->assertFolderNotExist($folderA->id);
-    }
-
-    private function insertSharedSuccess1Fixture()
-    {
-        // Ada has access to folder A as a READ
-        // Betty is OWNER of folder A
-        // A (Ada:O, Betty:R)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userCId, 'is_admin' => true],
-        ]]);
-        $folderA = $this->addFolderFor(['name' => 'A'], [
-            $userAId => Permission::OWNER,
-            $userBId => Permission::READ,
-            $g1->id => Permission::READ,
-        ]);
-
-        return [$folderA];
     }
 
     public function testFolderDelete_SharedSuccess2_NoCascadeMoveChildrenToRoot()
-    {
-        [$folderA, $folderB] = $this->insertSharedSuccess2Fixture();
-
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $this->service->delete($uac, $folderA->id, false);
-        $this->assertFolderNotExist($folderA->id);
-        $this->assertFolder($folderB->id);
-        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
-    }
-
-    private function insertSharedSuccess2Fixture()
     {
         // Ada is OWNER of folder A
         // Betty is OWNER of folder A
@@ -348,28 +242,20 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         // A (Ada:O, Betty:O)
         // |
         // B (Ada:O, Betty:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA, $userB])->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderB */
+        $folderB = FolderFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB], $folderA)->persist();
 
-        return [$folderA, $folderB, $userAId, $userBId];
+        $this->service->delete($this->makeUac($userA), $folderA->id, false);
+        $this->assertFolderNotExist($folderA->id);
+        $this->assertFolder($folderB->id);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userA->id, null);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userB->id, null);
     }
 
     public function testFolderDelete_SharedSuccess3_CascadeDelete()
-    {
-        [$folderA, $resource1, $folderB, $resource2] = $this->insertSharedSucces3Fixture();
-
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $this->service->delete($uac, $folderA->id, true);
-        $this->assertFolderNotExist($folderA->id);
-        $this->assertResourceIsSoftDeleted($resource1->id);
-        $this->assertFolderNotExist($folderB->id);
-        $this->assertResourceIsSoftDeleted($resource2->id);
-    }
-
-    private function insertSharedSucces3Fixture()
     {
         // Ada is OWNER of folder A
         // Betty is OWNER of folder A
@@ -387,44 +273,22 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         // |- R1 (Ada:O, Betty:O)
         // |- B (Ada:O, Betty:O)
         //    |- R2 (Ada:O, Betty:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $resource1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $resource2 = $this->addResourceFor(['name' => 'R2', 'folder_parent_id' => $folderB->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA, $userB])->persist();
+        $resource1 = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB], $folderA)->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderB */
+        $folderB = FolderFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB], $folderA)->persist();
+        $resource2 = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB], $folderB)->persist();
 
-        return [$folderA, $resource1, $folderB, $resource2];
+        $this->service->delete($this->makeUac($userA), $folderA->id, true);
+        $this->assertFolderNotExist($folderA->id);
+        $this->assertResourceIsSoftDeleted($resource1->id);
+        $this->assertFolderNotExist($folderB->id);
+        $this->assertResourceIsSoftDeleted($resource2->id);
     }
 
     public function testFolderDelete_SharedSuccess4_CascadeDeleteContentMoveToRootWhenInsufficientPermission()
-    {
-        [$folderA, $resource1, $folderB, $resource2, $folderC] = $this->insertSharedSuccess4Fixture();
-
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $this->service->delete($uac, $folderA->id, true);
-        $this->assertFolderNotExist($folderA->id);
-        $this->assertResourceIsNotSoftDeleted($resource1->id);
-        $this->assertPermission($resource1->id, $userAId, Permission::READ);
-        $this->assertPermission($resource1->id, $userBId, Permission::OWNER);
-        $this->assertFolderRelation($resource1->id, 'Resource', $userAId, null);
-        $this->assertFolderRelation($resource1->id, 'Resource', $userBId, null);
-        $this->assertFolder($folderB->id);
-        $this->assertPermission($folderB->id, $userAId, Permission::READ);
-        $this->assertPermission($folderB->id, $userBId, Permission::OWNER);
-        $this->assertFolderRelation($folderB->id, 'Folder', $userAId, null);
-        $this->assertFolderRelation($folderB->id, 'Folder', $userBId, null);
-        $this->assertResourceIsNotSoftDeleted($resource2->id);
-        $this->assertPermission($resource2->id, $userBId, Permission::OWNER);
-        $this->assertFolderRelation($resource2->id, 'Resource', $userBId, null);
-        $this->assertFolder($folderC->id);
-        $this->assertPermission($folderC->id, $userBId, Permission::OWNER);
-        $this->assertFolderRelation($folderC->id, 'Folder', $userBId, null);
-    }
-
-    private function insertSharedSuccess4Fixture()
     {
         // Ada is OWNER of folder A
         // Betty is OWNER of folder A
@@ -444,14 +308,41 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         // |- B (Ada:R, Betty:O)
         // |- R2 (Betty:O)
         // |- C (Betty:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $resource1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
-        $resource2 = $this->addResourceFor(['name' => 'R2', 'folder_parent_id' => $folderA->id], [$userBId => Permission::OWNER]);
-        $folderC = $this->addFolderFor(['name' => 'C', 'folder_parent_id' => $folderA->id], [$userBId => Permission::OWNER]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA, $userB])->persist();
+        $resource1 = ResourceFactory::make()
+            ->withPermissionsFor([$userA], Permission::READ)
+            ->withPermissionsFor([$userB])
+            ->withFoldersRelationsFor([$userA, $userB], $folderA)
+            ->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderB */
+        $folderB = FolderFactory::make()
+            ->withPermissionsFor([$userA], Permission::READ)
+            ->withPermissionsFor([$userB])
+            ->withFoldersRelationsFor([$userA, $userB], $folderA)
+            ->persist();
+        $resource2 = ResourceFactory::make()->withPermissionsFor([$userB])->withFoldersRelationsFor([$userB], $folderA)->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderC */
+        $folderC = FolderFactory::make()->withPermissionsFor([$userB])->withFoldersRelationsFor([$userB], $folderA)->persist();
 
-        return [$folderA, $resource1, $folderB, $resource2, $folderC];
+        $this->service->delete($this->makeUac($userA), $folderA->id, true);
+        $this->assertFolderNotExist($folderA->id);
+        $this->assertResourceIsNotSoftDeleted($resource1->id);
+        $this->assertPermission($resource1->id, $userA->id, Permission::READ);
+        $this->assertPermission($resource1->id, $userB->id, Permission::OWNER);
+        $this->assertFolderRelation($resource1->id, 'Resource', $userA->id, null);
+        $this->assertFolderRelation($resource1->id, 'Resource', $userB->id, null);
+        $this->assertFolder($folderB->id);
+        $this->assertPermission($folderB->id, $userA->id, Permission::READ);
+        $this->assertPermission($folderB->id, $userB->id, Permission::OWNER);
+        $this->assertFolderRelation($folderB->id, 'Folder', $userA->id, null);
+        $this->assertFolderRelation($folderB->id, 'Folder', $userB->id, null);
+        $this->assertResourceIsNotSoftDeleted($resource2->id);
+        $this->assertPermission($resource2->id, $userB->id, Permission::OWNER);
+        $this->assertFolderRelation($resource2->id, 'Resource', $userB->id, null);
+        $this->assertFolder($folderC->id);
+        $this->assertPermission($folderC->id, $userB->id, Permission::OWNER);
+        $this->assertFolderRelation($folderC->id, 'Folder', $userB->id, null);
     }
 }
