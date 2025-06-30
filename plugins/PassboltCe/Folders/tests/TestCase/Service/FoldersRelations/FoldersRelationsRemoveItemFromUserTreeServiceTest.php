@@ -191,7 +191,8 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
         // Betty is OWNER of resource R1
         // R1 (Ada:O, Betty:O)
         [$userA, $userB] = UserFactory::make(2)->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB])->persist();
+        /** @var \App\Model\Entity\Resource $r1 */
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA, $userB])->withPermissionsFor([$userA, $userB])->persist();
 
         // Remove the permission for the user we want to remove the folder from the tree.
         $this->permissionsTable->deleteAll(['aco_foreign_key' => $r1->id, 'aro_foreign_key' => $userB->id]);
@@ -216,7 +217,8 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
         [$userA, $userB] = UserFactory::make(2)->persist();
         /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
         $folderA = FolderFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB])->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB], $folderA)->persist();
+        /** @var \App\Model\Entity\Resource $r1 */
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA, $userB], $folderA)->withPermissionsFor([$userA, $userB])->persist();
 
         // Remove the permission for the user we want to remove the folder from the tree.
         $this->permissionsTable->deleteAll(['aco_foreign_key' => $r1->id, 'aro_foreign_key' => $userB->id]);
