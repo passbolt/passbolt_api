@@ -223,8 +223,8 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
         $group = GroupFactory::make()->withGroupsManagersFor([$ada])->withGroupsUsersFor([$betty])->persist();
         $folder = FolderFactory::make()->withPermissionsFor([$group], Permission::READ)->persist();
         [$resource1, $resource2] = ResourceFactory::make(2)
-            ->withPermissionsFor([$group], Permission::READ)
             ->withFoldersRelationsFor([$ada, $betty], $folder)
+            ->withPermissionsFor([$group], Permission::READ)
             ->persist();
         // login with Ada
         $this->logInAs($ada);

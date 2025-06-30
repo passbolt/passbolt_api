@@ -49,8 +49,8 @@ class ResourcesAfterSoftDeleteServiceTest extends FoldersTestCase
     {
         [$userA, $userB] = UserFactory::make(2)->persist();
         $resource = ResourceFactory::make()
-            ->withPermissionsFor([$userA, $userB])
             ->withFoldersRelationsFor([$userA, $userB])
+            ->withPermissionsFor([$userA, $userB])
             ->persist();
 
         $this->service->afterSoftDelete($resource);

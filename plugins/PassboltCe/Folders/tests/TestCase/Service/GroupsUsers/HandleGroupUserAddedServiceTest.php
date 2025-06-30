@@ -65,9 +65,9 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
         $g1 = GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
         $userBGroupUser = $g1->groups_users[1];
         [$r1,$r2] = ResourceFactory::make(2)
+            ->withFoldersRelationsFor([$userA])
             ->withPermissionsFor([$userA, $g1])
             ->withSecretsFor([$userA, $g1])
-            ->withFoldersRelationsFor([$userA])
             ->persist();
 
         $this->service->handle($this->makeUac($userA), $userBGroupUser);
@@ -96,15 +96,15 @@ class HandleGroupUserAddedServiceTest extends FoldersTestCase
         $userBGroupUser = $g1->groups_users[1];
         /** @var \App\Model\Entity\Resource $r1 */
         $r1 = ResourceFactory::make()
+            ->withFoldersRelationsFor([$userA])
             ->withPermissionsFor([$userA, $g1])
             ->withSecretsFor([$userA, $g1])
-            ->withFoldersRelationsFor([$userA])
             ->persist();
         /** @var \App\Model\Entity\Resource $r2 */
         $r2 = ResourceFactory::make()
+            ->withFoldersRelationsFor([$userA, $userB])
             ->withPermissionsFor([$userB, $g1])
             ->withSecretsFor([$userB, $g1])
-            ->withFoldersRelationsFor([$userA, $userB])
             ->persist();
 
         $this->service->handle($this->makeUac($userA), $userBGroupUser);

@@ -89,8 +89,8 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         // |- 2 (Ada:O)
         $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
         [$resource1, $resource2] = ResourceFactory::make(2)
-            ->withPermissionsFor([$userA])
             ->withFoldersRelationsFor([$userA], $folderA)
+            ->withPermissionsFor([$userA])
             ->persist();
 
         $this->logInAs($userA);
