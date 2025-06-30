@@ -59,7 +59,7 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
         // R1 (Ada:O, Betty:O)
         [$userA, $userB] = UserFactory::make(2)->persist();
         /** @var \App\Model\Entity\Resource $r1 */
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB])->persist();
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA, $userB])->withPermissionsFor([$userA, $userB])->persist();
 
         /** @var \App\Model\Entity\Permission $permission */
         $permission = $r1->permissions[1];
@@ -80,7 +80,7 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
         [$userA, $userB, $userC] = UserFactory::make(3)->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$userB, $userC])->persist();
         /** @var \App\Model\Entity\Resource $r1 */
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA, $g1])->withFoldersRelationsFor([$userA, $userB, $userC])->persist();
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA, $userB, $userC])->withPermissionsFor([$userA, $g1])->persist();
 
         /** @var \App\Model\Entity\Permission $permission */
         $permission = $r1->permissions[1];
