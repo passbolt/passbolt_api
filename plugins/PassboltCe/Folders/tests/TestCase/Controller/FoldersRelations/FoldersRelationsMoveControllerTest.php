@@ -74,7 +74,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
         /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
         $folderA = FolderFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA])->persist();
         /** @var \App\Model\Entity\Resource $r1 */
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA])->persist();
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA])->withPermissionsFor([$userA])->persist();
 
         $this->logInAs($userA);
         $data['folder_parent_id'] = $folderA->id;
