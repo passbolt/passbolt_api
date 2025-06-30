@@ -121,9 +121,9 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         $folder = FolderFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA])->persist();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()
+            ->withFoldersRelationsFor([$userA], $folder)
             ->withPermissionsFor([$userA])
             ->withSecretsFor([$userA])
-            ->withFoldersRelationsFor([$userA], $folder)
             ->persist();
 
         $data = $resource->toArray();
@@ -142,9 +142,9 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         $folder = FolderFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB])->persist();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()
+            ->withFoldersRelationsFor([$userA], $folder)
             ->withPermissionsFor([$userA])
             ->withSecretsFor([$userA])
-            ->withFoldersRelationsFor([$userA], $folder)
             ->persist();
 
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userB->id, 'type' => Permission::OWNER];
@@ -170,9 +170,9 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         $folder = FolderFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB])->persist();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()
+            ->withFoldersRelationsFor([$userA, $userB], $folder)
             ->withPermissionsFor([$userA, $userB])
             ->withSecretsFor([$userA, $userB])
-            ->withFoldersRelationsFor([$userA, $userB], $folder)
             ->persist();
 
         $permission = $resource->permissions[1];
