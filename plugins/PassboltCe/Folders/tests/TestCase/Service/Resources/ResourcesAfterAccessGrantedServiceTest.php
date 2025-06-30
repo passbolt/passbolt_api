@@ -51,14 +51,14 @@ class ResourcesAfterAccessGrantedServiceTest extends FoldersTestCase
         // Ada is OWNER of resource R1
         // R1 (Ada:O)
         [$userA, $userB] = UserFactory::make(2)->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA])->persist();
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA])->withPermissionsFor([$userA])->persist();
 
         $permission = PermissionFactory::make()->typeOwner()->acoResource($r1)->aroUser($userB)->persist();
         $this->service->afterAccessGranted($this->makeUac($userA), $permission);
 
-        $this->assertItemIsInTrees($r1->id, 2);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, null);
+        $this->assertItemIsInTrees($r1->get('id'), 2);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, null);
     }
 
     public function testResourceAfterAccessGrantedSuccess_UserPermissionAdded_GroupUserAlreadyHavingAccess()
@@ -69,13 +69,13 @@ class ResourcesAfterAccessGrantedServiceTest extends FoldersTestCase
         /** @var \App\Model\Entity\User $userA */
         $userA = UserFactory::make()->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
-        $r1 = ResourceFactory::make()->withCreatorAndPermission($userA)->withPermissionsFor([$g1])->withFoldersRelationsFor([$userA])->persist();
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA])->withCreatorAndPermission($userA)->withPermissionsFor([$g1])->persist();
 
         $permission = PermissionFactory::make()->typeOwner()->acoResource($r1)->aroUser($userA)->persist();
         $this->service->afterAccessGranted($this->makeUac($userA), $permission);
 
-        $this->assertItemIsInTrees($r1->id, 1);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
+        $this->assertItemIsInTrees($r1->get('id'), 1);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
     }
 
     public function testResourceAfterAccessGrantedSuccess_GroupPermissionAdded()
@@ -84,16 +84,16 @@ class ResourcesAfterAccessGrantedServiceTest extends FoldersTestCase
         // G1 is OWNER of resource R1
         // R1 (Ada:O)
         [$userA, $userB, $userC] = UserFactory::make(3)->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA])->persist();
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA])->withPermissionsFor([$userA])->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$userB, $userC])->persist();
 
         $permission = PermissionFactory::make()->typeOwner()->acoResource($r1)->aroGroup($g1)->persist();
         $this->service->afterAccessGranted($this->makeUac($userA), $permission);
 
-        $this->assertItemIsInTrees($r1->id, 3);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, null);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userC->id, null);
+        $this->assertItemIsInTrees($r1->get('id'), 3);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, null);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userC->id, null);
     }
 
     public function testResourceAfterAccessGrantedSuccess_GroupPermissionAdded_UserAlreadyHaveDirectAccess()
@@ -102,14 +102,14 @@ class ResourcesAfterAccessGrantedServiceTest extends FoldersTestCase
         // G1 is OWNER of resource R1
         // R1 (Ada:O, G1:O)
         [$userA, $userB] = UserFactory::make(2)->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA])->persist();
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA])->withPermissionsFor([$userA])->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
 
         $permission = PermissionFactory::make()->typeOwner()->acoResource($r1)->aroGroup($g1)->persist();
         $this->service->afterAccessGranted($this->makeUac($userA), $permission);
 
-        $this->assertItemIsInTrees($r1->id, 2);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, null);
+        $this->assertItemIsInTrees($r1->get('id'), 2);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, null);
     }
 }
