@@ -67,9 +67,9 @@ class HandleGroupUserDeletedServiceTest extends FoldersTestCase
         /** @var \App\Model\Entity\Group $g1 */
         $g1 = GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
         [$r1, $r2] = ResourceFactory::make(2)
+            ->withFoldersRelationsFor([$userA, $userB])
             ->withPermissionsFor([$userA, $g1])
             ->withSecretsFor([$userA, $g1])
-            ->withFoldersRelationsFor([$userA, $userB])
             ->persist();
 
         // Prepare the test by deleting the group user entry
@@ -96,9 +96,9 @@ class HandleGroupUserDeletedServiceTest extends FoldersTestCase
         /** @var \App\Model\Entity\Group $g1 */
         $g1 = GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
         [$r1, $r2] = ResourceFactory::make(2)
+            ->withFoldersRelationsFor([$userA, $userB])
             ->withPermissionsFor([$userB, $g1])
             ->withSecretsFor([$userB, $g1])
-            ->withFoldersRelationsFor([$userA, $userB])
             ->persist();
 
         // Prepare the test by deleting the group user entry
