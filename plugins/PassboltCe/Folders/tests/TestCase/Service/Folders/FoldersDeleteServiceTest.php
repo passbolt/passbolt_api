@@ -157,10 +157,12 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $userA = UserFactory::make()->persist();
         /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
         $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
-        $resource1 = ResourceFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA], $folderA)->persist();
+        /** @var \App\Model\Entity\Resource $resource1 */
+        $resource1 = ResourceFactory::make()->withFoldersRelationsFor([$userA], $folderA)->withPermissionsFor([$userA])->persist();
         /** @var \Passbolt\Folders\Model\Entity\Folder $folderB */
         $folderB = FolderFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA], $folderA)->persist();
-        $resource2 = ResourceFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA], $folderB)->persist();
+        /** @var \App\Model\Entity\Resource $resource2 */
+        $resource2 = ResourceFactory::make()->withFoldersRelationsFor([$userA], $folderB)->withPermissionsFor([$userA])->persist();
 
         $this->service->delete($this->makeUac($userA), $folderA->id, true);
         $this->assertFolderNotExist($folderA->id);
@@ -181,10 +183,11 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         [$userA, $userB] = UserFactory::make(2)->persist();
         /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
         $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
+        /** @var \App\Model\Entity\Resource $resource1 */
         $resource1 = ResourceFactory::make()
+            ->withFoldersRelationsFor([$userA, $userB], $folderA)
             ->withPermissionsFor([$userA], Permission::READ)
             ->withPermissionsFor([$userB])
-            ->withFoldersRelationsFor([$userA, $userB], $folderA)
             ->persist();
 
         $this->service->delete($this->makeUac($userA), $folderA->id, true);
@@ -276,10 +279,12 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         [$userA, $userB] = UserFactory::make(2)->persist();
         /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
         $folderA = FolderFactory::make()->withPermissionsFor([$userA, $userB])->persist();
-        $resource1 = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB], $folderA)->persist();
+        /** @var \App\Model\Entity\Resource $resource1 */
+        $resource1 = ResourceFactory::make()->withFoldersRelationsFor([$userA, $userB], $folderA)->withPermissionsFor([$userA, $userB])->persist();
         /** @var \Passbolt\Folders\Model\Entity\Folder $folderB */
         $folderB = FolderFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB], $folderA)->persist();
-        $resource2 = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB], $folderB)->persist();
+        /** @var \App\Model\Entity\Resource $resource2 */
+        $resource2 = ResourceFactory::make()->withFoldersRelationsFor([$userA, $userB], $folderB)->withPermissionsFor([$userA, $userB])->persist();
 
         $this->service->delete($this->makeUac($userA), $folderA->id, true);
         $this->assertFolderNotExist($folderA->id);
@@ -311,10 +316,11 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         [$userA, $userB] = UserFactory::make(2)->persist();
         /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
         $folderA = FolderFactory::make()->withPermissionsFor([$userA, $userB])->persist();
+        /** @var \App\Model\Entity\Resource $resource1 */
         $resource1 = ResourceFactory::make()
+            ->withFoldersRelationsFor([$userA, $userB], $folderA)
             ->withPermissionsFor([$userA], Permission::READ)
             ->withPermissionsFor([$userB])
-            ->withFoldersRelationsFor([$userA, $userB], $folderA)
             ->persist();
         /** @var \Passbolt\Folders\Model\Entity\Folder $folderB */
         $folderB = FolderFactory::make()
@@ -322,7 +328,8 @@ class FoldersDeleteServiceTest extends FoldersTestCase
             ->withPermissionsFor([$userB])
             ->withFoldersRelationsFor([$userA, $userB], $folderA)
             ->persist();
-        $resource2 = ResourceFactory::make()->withPermissionsFor([$userB])->withFoldersRelationsFor([$userB], $folderA)->persist();
+        /** @var \App\Model\Entity\Resource $resource2 */
+        $resource2 = ResourceFactory::make()->withFoldersRelationsFor([$userB], $folderA)->withPermissionsFor([$userB])->persist();
         /** @var \Passbolt\Folders\Model\Entity\Folder $folderC */
         $folderC = FolderFactory::make()->withPermissionsFor([$userB])->withFoldersRelationsFor([$userB], $folderA)->persist();
 
