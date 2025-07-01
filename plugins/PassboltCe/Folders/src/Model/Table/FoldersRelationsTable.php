@@ -46,7 +46,7 @@ use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemsToUserTree
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation newEmptyEntity()
  * @method iterable<\Passbolt\Folders\Model\Entity\FoldersRelation>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
  * @method iterable<\Passbolt\Folders\Model\Entity\FoldersRelation>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])

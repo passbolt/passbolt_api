@@ -32,7 +32,7 @@ class RecoverAbortController extends AppController
     {
         $this->Authentication->allowUnauthenticated(['abort']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

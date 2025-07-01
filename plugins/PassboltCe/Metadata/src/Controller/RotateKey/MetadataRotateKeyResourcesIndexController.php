@@ -55,8 +55,7 @@ class MetadataRotateKeyResourcesIndexController extends AppController
         // Performance improvement: map query result datetime properties to string.
         ISOFormatDateTimeType::mapDatetimeTypesToMe();
         $resources = $this->Resources->findMetadataRotateKeyIndex();
-        $this->paginate($resources);
-        $resources = $resources->all();
+        $resources = $this->paginate($resources);
         ISOFormatDateTimeType::remapDatetimeTypesToDefault();
 
         $resources = (new MetadataResourcesRenderService())->renderResources($resources->toArray());

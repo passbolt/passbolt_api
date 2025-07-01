@@ -174,14 +174,26 @@ abstract class AbstractSso2Stage2Controller extends AbstractSsoController
 
                 $ssoRecoverAssertService = new SsoRecoverAssertService();
 
-                $successUrl = $ssoRecoverAssertService->assertAndGetRedirectUrl(
-                    $service,
-                    $ssoState,
-                    $code,
-                    $this->User->ip(),
-                    $this->User->userAgent(),
-                    $this->getProviderName()
-                );
+                try {
+                    $successUrl = $ssoRecoverAssertService->assertAndGetRedirectUrl(
+                        $service,
+                        $ssoState,
+                        $code,
+                        $this->User->ip(),
+                        $this->User->userAgent(),
+                        $this->getProviderName()
+                    );
+                } catch (Exception $e) {
+                    $event = new Event(self::EVENT_PROVIDER_ERROR_RESOURCE_OWNER, $this, ['exception' => $e]);
+                    $this->getEventManager()->dispatch($event);
+                    // To map 500(internal error/provider specific exceptions) to 4xx exception
+                    if (isset($event->getResult()['customException'])) {
+                        $e = $event->getResult()['customException'];
+                    }
+
+                    throw $e;
+                }
+
                 break;
             default:
                 throw new BadRequestException(__('The SSO state type is invalid.'));

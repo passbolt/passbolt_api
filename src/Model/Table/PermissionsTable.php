@@ -40,7 +40,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Permission|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Permission patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Permission[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\Permission findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Permission findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @property \Passbolt\Log\Model\Table\PermissionsHistoryTable&\Cake\ORM\Association\BelongsTo $PermissionsHistory
  * @method \App\Model\Entity\Permission newEmptyEntity()

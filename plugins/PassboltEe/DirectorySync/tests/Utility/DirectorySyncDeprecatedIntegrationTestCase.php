@@ -80,7 +80,6 @@ abstract class DirectorySyncDeprecatedIntegrationTestCase extends AppIntegration
         Configure::write('passbolt.plugins.directorySync.test', true);
         $this->enableDirectoryIntegration();
         $this->loadPlugins(['Passbolt/EmailDigest' => []]);
-        $this->loadPlugins(['Passbolt/Locale' => []]);
     }
 
     /**

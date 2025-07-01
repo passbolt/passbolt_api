@@ -41,7 +41,7 @@ class UsersRegisterController extends AppController
     {
         $this->Authentication->allowUnauthenticated(['registerGet', 'registerPost']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

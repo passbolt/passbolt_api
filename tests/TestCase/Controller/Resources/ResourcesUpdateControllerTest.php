@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Controller\Resources;
 
 use App\Model\Entity\Permission;
 use App\Service\Resources\ResourcesUpdateService;
+use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
@@ -28,6 +29,7 @@ use App\Test\Lib\Model\SecretsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 {
@@ -39,7 +41,18 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         // enable event tracking
         EventManager::instance()->setEventList(new EventList());
         RoleFactory::make()->guest()->persist();
-        [$r1, $userA, $userB] = $this->insertFixture_UpdateResourceMeta();
+        // UserA aka Ada is CREATOR of resource R1
+        // UserB aka Betty is OWNER of resource R1
+        // ---
+        // R1 (Ada:C, Betty:O)
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        ResourceTypeFactory::make()->default()->persist();
+        $r1 = ResourceFactory::make()
+            ->withCreatorAndPermission($userA)
+            ->withPermissionsFor([$userB])
+            ->withSecretsFor([$userA, $userB])
+            ->persist();
+
         $this->logInAs($userB);
 
         $data = [
@@ -86,23 +99,22 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         );
     }
 
-    private function insertFixture_UpdateResourceMeta(): array
-    {
-        // UserA aka Ada is OWNER of resource R1
-        // UserB aka Betty is OWNER of resource R1
-        // ---
-        // R1 (Ada:O, Betty:O)
-        [$userA, $userB] = UserFactory::make(2)->user()->persist();
-
-        $r1 = $this->addResourceFor(['name' => 'R1', 'username' => 'R1 username', 'uri' => 'https://r1.com', 'description' => 'R1 description'], [$userA->id => Permission::OWNER, $userB->id => Permission::OWNER]);
-
-        return [$r1, $userA, $userB];
-    }
-
     public function testUpdateResourcesController_Success_UpdateResourceSecrets(): void
     {
         RoleFactory::make()->guest()->persist();
-        [$r1, $g1, $userA, $userB, $userC] = $this->insertFixture_UpdateResourceSecrets(); // phpcs:ignore
+        // Ada is OWNER of resource R1
+        // Betty is OWNER of resource R1
+        // G1 is OWNER of resource R1
+        // ---
+        // R1 (Ada:O, Betty:O, G1:O)
+        [$userA, $userB, $userC] = UserFactory::make(3)->withValidGpgKey()->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$userA, $userC])->persist();
+        ResourceTypeFactory::make()->default()->persist();
+        $r1 = ResourceFactory::make()
+            ->withCreatorAndPermission($userA)
+            ->withPermissionsFor([$userB, $g1])
+            ->persist();
+
         $this->logInAs($userB);
         $r1EncryptedSecretA = $this->encryptMessageFor($userA->id, 'R1 secret updated');
         $r1EncryptedSecretB = $this->encryptMessageFor($userB->id, 'R1 secret updated');
@@ -147,23 +159,6 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEquals($r1EncryptedSecretB, $resourceUpdated->secrets[0]->data);
     }
 
-    private function insertFixture_UpdateResourceSecrets(): array
-    {
-        // Ada is OWNER of resource R1
-        // Betty is OWNER of resource R1
-        // G1 is OWNER of resource R1
-        // ---
-        // R1 (Ada:O, Betty:O, G1:O)
-        [$userA, $userB, $userC] = UserFactory::make(3)->withValidGpgKey()->persist();
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userA->id, 'is_admin' => true],
-            ['user_id' => $userC->id, 'is_admin' => true],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1', 'username' => 'R1 username', 'uri' => 'https://r1.com', 'description' => 'R1 description'], [$userA->id => Permission::OWNER, $userB->id => Permission::OWNER], [$g1->id => Permission::OWNER]);
-
-        return [$r1, $g1, $userA, $userB, $userC];
-    }
-
     public function testUpdateResourcesController_Error_NotValidId(): void
     {
         $this->logInAsUser();
@@ -174,7 +169,17 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 
     public function testUpdateResourcesController_Error_ValidationErrors(): void
     {
-        [$r1, $userA, $userB] = $this->insertFixture_UpdateResourceMeta(); // phpcs:ignore
+        // UserA aka Ada is OWNER of resource R1
+        // UserB aka Betty is OWNER of resource R1
+        // ---
+        // R1 (Ada:O, Betty:O)
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        ResourceTypeFactory::make()->default()->persist();
+        $r1 = ResourceFactory::make()
+            ->withPermissionsFor([$userA, $userB])
+            ->withSecretsFor([$userA, $userB])
+            ->persist();
+
         $this->logInAs($userA);
 
         $data = [
@@ -195,26 +200,23 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 
     public function testUpdateResourcesController_Error_InsufficientPermission(): void
     {
-        [$r1, $userA, $userB] = $this->insertFixture_InsufficientPermission(); // phpcs:ignore
+        // Ada is OWNER of resource R1
+        // Betty has READ on resource R1
+        // ---
+        // R1 (Ada:O, Betty:R)
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        ResourceTypeFactory::make()->default()->persist();
+        $r1 = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+
         $data = [
             'name' => ['Updated name'],
         ];
         $this->logInAs($userB);
         $this->putJson("/resources/$r1->id.json", $data);
         $this->assertError(403, 'You are not allowed to update this resource.');
-    }
-
-    private function insertFixture_InsufficientPermission(): array
-    {
-        // Ada is OWNER of resource R1
-        // Betty has READ on resource R1
-        // ---
-        // R1 (Ada:O, Betty:R)
-        [$userA, $userB] = UserFactory::make(2)->user()->persist();
-
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userA->id => Permission::OWNER, $userB->id => Permission::READ]);
-
-        return [$r1, $userA, $userB];
     }
 
     public function testUpdateResourcesController_Error_NotAuthenticated(): void
@@ -234,7 +236,15 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 
     public function testUpdateResourcesController_Error_NoAccessToResource(): void
     {
-        [$r1, $userA, $userB] = $this->insertFixture_InsufficientPermission(); // phpcs:ignore
+        // Ada is OWNER of resource R1
+        // ---
+        // R1 (Ada:O)
+        $userA = UserFactory::make()->user()->persist();
+        ResourceTypeFactory::make()->default()->persist();
+        $r1 = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->persist();
+
         $this->logInAsUser();
         $this->putJson("/resources/$r1->id.json");
         $this->assertError(404, 'The resource does not exist.');

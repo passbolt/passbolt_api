@@ -44,7 +44,7 @@ return [
         // The fully qualified domain name (including protocol) to your application’s root
         // e.g. where the passbolt instance will be reachable to your end users.
         // This information is need to render images in emails for example.
-        'fullBaseUrl' => 'https://www.passbolt.test',
+        'fullBaseUrl' => env('APP_FULL_BASE_URL', 'https://www.passbolt.test'),
         // OPTIONAL
         // You can specify the base directory the app resides in.
         // Useful if you are running passbolt in a subdirectory like example.com/passbolt
@@ -52,37 +52,45 @@ return [
         // 'base' => '/subdir'
     ],
 
-    // Database configuration.
+    /**
+     * Database configuration (overwrites settings from config/app.php).
+     */
     'Datasources' => [
         'default' => [
-            'host' => 'localhost',
-            //'port' => 'non_standard_port_number',
-            'username' => 'user',
-            'password' => 'secret',
-            'database' => 'passbolt',
+            'host' => env('DATASOURCES_DEFAULT_HOST', 'localhost'),
+            'port' => env('DATASOURCES_DEFAULT_PORT', 3306),
+            'username' => env('DATASOURCES_DEFAULT_USERNAME', 'user'),
+            'password' => env('DATASOURCES_DEFAULT_PASSWORD', 'secret'),
+            'database' => env('DATASOURCES_DEFAULT_DATABASE', 'passbolt'),
         ],
     ],
 
-    // Email configuration.
+    /**
+     * Email configuration (overwrites settings from config/app.php).
+     */
     'EmailTransport' => [
         'default' => [
-            'host' => 'localhost',
-            'port' => 25,
-            'username' => 'user',
-            'password' => 'secret',
+            'host' => env('EMAIL_TRANSPORT_DEFAULT_HOST', 'localhost'),
+            'port' => env('EMAIL_TRANSPORT_DEFAULT_PORT', 25),
+            'timeout' => env('EMAIL_TRANSPORT_DEFAULT_TIMEOUT', 30),
+            'username' => env('EMAIL_TRANSPORT_DEFAULT_USERNAME', 'user'),
+            'password' => env('EMAIL_TRANSPORT_DEFAULT_PASSWORD', 'secret'),
+            'client' => env('EMAIL_TRANSPORT_DEFAULT_CLIENT', null),
             // Is this a secure connection? true if yes, null if no.
-            'tls' => null,
-            //'timeout' => 30,
-            //'client' => null,
-            //'url' => null,
+            'tls' => env('EMAIL_TRANSPORT_DEFAULT_TLS', null),
+            'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
     ],
+
+    /**
+     * Email delivery profiles (overwrites settings from config/app.php).
+     */
     'Email' => [
         'default' => [
-            // Defines the default name and email of the sender of the emails.
-            'from' => ['passbolt@your_organization.com' => 'Passbolt'],
-            //'charset' => 'utf-8',
-            //'headerCharset' => 'utf-8',
+            'transport' => env('EMAIL_DEFAULT_TRANSPORT', 'default'),
+            'from' => [
+                env('EMAIL_DEFAULT_FROM', 'you@localhost.test') => env('EMAIL_DEFAULT_FROM_NAME', 'Passbolt')
+            ],
         ],
     ],
 
@@ -95,7 +103,7 @@ return [
      * you can use the demo config example provided in the next section below.
      */
     'passbolt' => [
-        // GPG Configuration.
+        // GPG Configuration (overwrites configurations from config/default.php).
         // The keyring must to be owned and accessible by the webserver user.
         // Example: www-data user on Debian
         'gpg' => [
@@ -111,12 +119,17 @@ return [
             // Replace GNUPGHOME with above value even if it is set.
             //'putenv' => false,
 
-            // Main server key.
+            /**
+             * Main server key information.
+             * `fingerprint` - Fingerprint of the server key.
+             * `public` - Path to the server public key (i.e. CONFIG . 'gpg' . DS . 'serverkey.asc').
+             * `private` - Path to the server private key (i.e. CONFIG . 'gpg' . DS . 'serverkey_private.asc').
+             */
             'serverKey' => [
                 // Server private key fingerprint.
-                'fingerprint' => '',
-                //'public' => CONFIG . 'gpg' . DS . 'serverkey.asc',
-                //'private' => CONFIG . 'gpg' . DS . 'serverkey_private.asc',
+                'fingerprint' => env('PASSBOLT_GPG_SERVER_KEY_FINGERPRINT', ''),
+                'public' => env('PASSBOLT_GPG_SERVER_KEY_PUBLIC', CONFIG . 'gpg' . DS . 'serverkey.asc'),
+                'private' => env('PASSBOLT_GPG_SERVER_KEY_PRIVATE', CONFIG . 'gpg' . DS . 'serverkey_private.asc'),
             ],
         ],
     ],

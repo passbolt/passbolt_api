@@ -34,7 +34,7 @@ use Passbolt\Rbacs\Model\Rule\IsControlFunctionAllowedRule;
  * @method \Passbolt\Rbacs\Model\Entity\Rbac saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\Rbac patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\Rbac[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \Passbolt\Rbacs\Model\Entity\Rbac findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Rbacs\Model\Entity\Rbac findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Creator
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier

@@ -17,14 +17,16 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Test\TestCase\Model\Table\FoldersRelations;
 
-use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Test\Factory\FolderFactory;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -161,13 +163,13 @@ class FoldersRelationsTableTest extends FoldersTestCase
         // Insert fixtures.
         // Ada has access to folder A as a OWNER
         // A (Ada:O)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folder = $this->addFolderFor(['name' => 'folder'], [$userId => Permission::OWNER]);
+        $userI = UserFactory::make()->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$userI])->withFoldersRelationsFor([$userI])->persist();
 
         $data = [
             'foreign_model' => 'Folder',
-            'foreign_id' => $folder->id,
-            'user_id' => $userId,
+            'foreign_id' => $folder->get('id'),
+            'user_id' => $userI->get('id'),
         ];
         $folder = self::getDummyFolderRelationEntity($data);
         $save = $this->FoldersRelations->save($folder);
@@ -207,9 +209,10 @@ class FoldersRelationsTableTest extends FoldersTestCase
 
     public function testFoldersRelationsErrorBuildRuleCreate_ForeignIdExists_ResourceSoftDeleted()
     {
+        $resource = ResourceFactory::make()->deleted()->persist();
         $data = [
             'foreign_model' => 'Resource',
-            'foreign_id' => UuidFactory::uuid('resource.id.jquery'),
+            'foreign_id' => $resource->get('id'),
         ];
         $folder = self::getDummyFolderRelationEntity($data);
         $save = $this->FoldersRelations->save($folder);
@@ -224,11 +227,11 @@ class FoldersRelationsTableTest extends FoldersTestCase
         // Insert fixtures.
         // Ada has access to folder A as a OWNER
         // A (Ada:O)
-        $folder = $this->addFolderFor(['name' => 'folder'], [UuidFactory::uuid('user.id.ada') => Permission::OWNER]);
-
+        $userI = UserFactory::make()->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$userI])->withFoldersRelationsFor([$userI])->persist();
         $data = [
             'foreign_model' => 'Folder',
-            'foreign_id' => $folder->id,
+            'foreign_id' => $folder->get('id'),
             'user_id' => UuidFactory::uuid('user.id.not-exist'),
         ];
         $folder = self::getDummyFolderRelationEntity($data);
@@ -244,12 +247,14 @@ class FoldersRelationsTableTest extends FoldersTestCase
         // Insert fixtures.
         // Ada has access to folder A as a OWNER
         // A (Ada:O)
-        $folder = $this->addFolderFor(['name' => 'folder'], [UuidFactory::uuid('user.id.ada') => Permission::OWNER]);
+        $userA = UserFactory::make()->persist();
+        $userI = UserFactory::make()->deleted()->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$userI])->withFoldersRelationsFor([$userA, $userI])->persist();
 
         $data = [
             'foreign_model' => 'Folder',
-            'foreign_id' => $folder->id,
-            'user_id' => UuidFactory::uuid('user.id.sofia'),
+            'foreign_id' => $folder->get('id'),
+            'user_id' => $userI->get('id'),
         ];
         $folder = self::getDummyFolderRelationEntity($data);
         $save = $this->FoldersRelations->save($folder);

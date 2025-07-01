@@ -111,6 +111,7 @@ class DirectoryOrgSettings
         /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $data = $OrganizationSettings->getFirstSettingOrFail(self::ORG_SETTINGS_PROPERTY);
+        /** @var array $settings */
         $settings = json_decode($data->value, true);
         $domains = Hash::get($settings, 'ldap.domains', []);
         foreach ($domains as $domain => $properties) {

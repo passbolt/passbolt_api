@@ -148,15 +148,19 @@ class SaveTest extends AppTestCase
         );
     }
 
-    public function testValidationUsername()
+    /**
+     * @dataProvider mxCheckKeyConfigValueProvider
+     * @param bool $checkMx Email MX validation config value.
+     * @return void
+     */
+    public function testValidationUsername(bool $checkMx)
     {
-        $checkMx = Configure::read(EmailValidationRule::MX_CHECK_KEY);
+        Configure::write(EmailValidationRule::MX_CHECK_KEY, $checkMx);
 
         $testCases = [
             'requirePresence' => self::getRequirePresenceTestCases(),
             'email' => self::getEmailTestCases($checkMx),
         ];
-
         $this->assertFieldFormatValidation(
             $this->Users,
             'username',
@@ -164,23 +168,21 @@ class SaveTest extends AppTestCase
             self::getEntityDefaultOptions(),
             $testCases
         );
+    }
 
-        Configure::write(EmailValidationRule::MX_CHECK_KEY, !$checkMx);
+    /**
+     * Data provider.
+     *
+     * @return array
+     */
+    public static function mxCheckKeyConfigValueProvider(): array
+    {
+        $checkMx = Configure::read(EmailValidationRule::MX_CHECK_KEY);
 
-        $this->_reloadValidationRules($this->Users);
-
-        $testCases = [
-            'requirePresence' => self::getRequirePresenceTestCases(),
-            'email' => self::getEmailTestCases(!$checkMx),
+        return [
+            [$checkMx],
+            [!$checkMx],
         ];
-
-        $this->assertFieldFormatValidation(
-            $this->Users,
-            'username',
-            self::getDummyUser(),
-            self::getEntityDefaultOptions(),
-            $testCases
-        );
     }
 
     public function testValidationActive()

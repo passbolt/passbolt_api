@@ -55,8 +55,7 @@ class MetadataRotateKeyFoldersIndexController extends AppController
         // Performance improvement: map query result datetime properties to string.
         ISOFormatDateTimeType::mapDatetimeTypesToMe();
         $folders = $this->Folders->findMetadataRotateKeyIndex();
-        $this->paginate($folders);
-        $folders = $folders->all();
+        $folders = $this->paginate($folders);
         ISOFormatDateTimeType::remapDatetimeTypesToDefault();
 
         $folders = (new MetadataFoldersRenderService())->renderFolders($folders->toArray());

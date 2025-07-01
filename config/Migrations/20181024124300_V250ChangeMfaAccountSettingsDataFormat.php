@@ -26,26 +26,20 @@ class V250ChangeMfaAccountSettingsDataFormat extends AbstractMigration
      */
     public function up()
     {
-        $connectionName = 'default';
-        $options = $this->input->getOptions();
-        if (isset($options['connection'])) {
-            $connectionName = $options['connection'];
-        }
-        $connection = ConnectionManager::get($connectionName);
-        $accountSettings = TableRegistry::getTableLocator()->get('AccountSettings', [
-            'connection' => $connection
-        ]);
-        $settings = $accountSettings->find()
-            ->select()
+        $stmt = $this
+            ->getSelectBuilder()
+            ->select('*')
+            ->from('account_settings')
             ->where(['property' => 'mfa'])
-            ->all();
+            ->execute();
+        $settings = $stmt->fetchAll(\PDO::FETCH_BOTH);
 
-        if ($settings->count() === 0) {
+        if (empty($settings)) {
             return;
         }
 
         foreach ($settings as $setting) {
-            $value = json_decode($setting->value, true);
+            $value = json_decode($setting['value'], true);
 
             $providers = [];
 
@@ -63,7 +57,7 @@ class V250ChangeMfaAccountSettingsDataFormat extends AbstractMigration
             // Change verified field
             foreach ($value['otp'] as $key => $prop) {
                 if ($key === 'verified') {
-                    $value['totp']['verified'] = $setting->created;
+                    $value['totp']['verified'] = $setting['created'];
                 } else {
                     $value['totp'][$key] = $prop;
                 }
@@ -71,8 +65,12 @@ class V250ChangeMfaAccountSettingsDataFormat extends AbstractMigration
 
             // Remove old provider key
             unset($value['otp']);
-            $setting->value = json_encode($value);
+
+            $this
+                ->getUpdateBuilder()
+                ->update('account_settings')
+                ->set(['value' => json_encode($value)])
+                ->where(['property' => 'mfa']);
         }
-        $accountSettings->saveMany($settings);
     }
 }

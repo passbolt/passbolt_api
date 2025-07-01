@@ -36,7 +36,7 @@ trait FoldersRelationsFindersTrait
         $foldersIdsNotPersonalQuery = $this->find()
             ->select(['foreign_id'])
             ->where(['foreign_model' => FoldersRelation::FOREIGN_MODEL_FOLDER])
-            ->group('foreign_id')
+            ->groupBy('foreign_id')
             ->having('count(foreign_id) > 1');
 
         return $query->where(['foreign_id IN' => $foldersIdsNotPersonalQuery]);
@@ -117,7 +117,7 @@ trait FoldersRelationsFindersTrait
         // Find users accesses = direct users accesses + inherited users accesses.
         $userExpectedAccessesQuery = $directUsersSecretsQuery
             ->union($inheritedUsersSecretsQuery)
-            ->group(['aco_foreign_key', 'user_id']);
+            ->groupBy(['aco_foreign_key', 'user_id']);
 
         /*
          * Find users accesses for which a folder relation is missing.

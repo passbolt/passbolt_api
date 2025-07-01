@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Notification\NotificationSettings\Utility;
 
 use App\Model\Entity\Role;
 use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
@@ -118,7 +119,8 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
             'send.password.share' => false,
         ];
 
-        $this->setEmailNotificationSettings($cases);
+        $uac = UserFactory::make()->admin()->persistedUAC();
+        $this->setEmailNotificationSettings($cases, $uac);
         foreach ($cases as $config => $expected) {
             $triggerSettingFromDb = EmailNotificationSettings::get($config);
 
