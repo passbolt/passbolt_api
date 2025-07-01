@@ -19,27 +19,18 @@ namespace Passbolt\Folders\Test\TestCase\Service\Folders;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
-use App\Model\Entity\Role;
 use App\Notification\Email\EmailSubscriptionDispatcher;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\UsersFixture;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
-use App\Test\Lib\Model\PermissionsModelTrait;
-use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Utility\Hash;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\Folders\FoldersCreateService;
+use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 
 /**
@@ -53,18 +44,6 @@ class FoldersCreateServiceTest extends FoldersTestCase
     use EmailQueueTrait;
     use EventDispatcherTrait;
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-    use PermissionsModelTrait;
-
-    public array $fixtures = [
-        GpgkeysFixture::class,
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        RolesFixture::class,
-        UsersFixture::class,
-    ];
 
     /**
      * @var FoldersCreateService
@@ -87,12 +66,11 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
     public function testCreateFolder_CommonError1_ValidationError()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
+        $userA = UserFactory::make()->persist();
         $folderData = MetadataFolderDto::fromArray(['name' => '']);
 
         try {
-            $this->service->create($uac, $folderData);
+            $this->service->create($this->makeUac($userA), $folderData);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate folder data.', $e->getMessage());
@@ -102,15 +80,14 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
     public function testCreateFolder_CommonError2_ParentFolderNotExist()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
+        $userA = UserFactory::make()->persist();
         $folderData = MetadataFolderDto::fromArray([
             'name' => 'B',
             'folder_parent_id' => UuidFactory::uuid('folder.id.not-exist'),
         ]);
 
         try {
-            $this->service->create($uac, $folderData);
+            $this->service->create($this->makeUac($userA), $folderData);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate folder data.', $e->getMessage());
@@ -120,29 +97,21 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
     public function testCreateFolder_CommonError3_ParentFolderNoPermission()
     {
-        [$parentFolder] = $this->insertCommonError3Fixture();
+        // Betty is OWNER of folder A
+        // A (Betty:O)
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()->withPermissionsFor([$userB])->withFoldersRelationsFor([$userB])->persist();
 
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $parentFolder->id]);
+        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $folderA->id]);
 
         try {
-            $this->service->create($uac, $folderData);
+            $this->service->create($this->makeUac($userA), $folderData);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate folder data.', $e->getMessage());
             $this->assertNotEmpty(Hash::get($e->getErrors(), 'folder_parent_id.has_folder_access'));
         }
-    }
-
-    private function insertCommonError3Fixture()
-    {
-        // Betty is OWNER of folder A
-        // A (Betty:O)
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userBId => Permission::OWNER]);
-
-        return [$folderA];
     }
 
     public function testCreateFolder_CommonSuccess_NotifyUserAfterCreate()
@@ -151,13 +120,13 @@ class FoldersCreateServiceTest extends FoldersTestCase
         $this->setEmailNotificationSetting('send.folder.create', true);
         (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
 
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
+        /** @var \App\Model\Entity\User $userA */
+        $userA = UserFactory::make()->persist();
         $folderData = MetadataFolderDto::fromArray(['name' => 'A']);
-        $this->service->create($uac, $folderData);
+        $this->service->create($this->makeUac($userA), $folderData);
 
         $this->assertEmailIsInQueue([
-            'email' => 'ada@passbolt.com',
+            'email' => $userA->username,
             'subject' => 'You added the folder A',
             'template' => 'Passbolt/Folders.LU/folder_create',
         ]);
@@ -169,58 +138,58 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
     public function testCreateFolder_PersoSuccess1_CreateToRoot()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
+        /** @var \App\Model\Entity\User $userA */
+        $userA = UserFactory::make()->persist();
         $folderData = MetadataFolderDto::fromArray(['name' => 'A']);
-        $folder = $this->service->create($uac, $folderData);
+        $folder = $this->service->create($this->makeUac($userA), $folderData);
 
         $this->assertEquals('A', $folder->name);
         $this->assertEquals(null, $folder->folder_parent_id);
-        $this->assertEquals($userId, $folder->created_by);
-        $this->assertEquals($userId, $folder->modified_by);
-        $this->assertPermission($folder->id, $userId, Permission::OWNER);
-        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId);
+        $this->assertEquals($userA->id, $folder->created_by);
+        $this->assertEquals($userA->id, $folder->modified_by);
+        $this->assertPermission($folder->id, $userA->id, Permission::OWNER);
+        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userA->id);
     }
 
     public function testCreateFolder_PersoSuccess2_CreateInFolder()
     {
-        $parentFolder = $this->insertPersoSuccess2Fixture();
-
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $parentFolder->id]);
-        $folder = $this->service->create($uac, $folderData);
-
-        $this->assertEquals('B', $folder->name);
-        $this->assertEquals($parentFolder->id, $folder->folder_parent_id);
-        $this->assertEquals($userId, $folder->created_by);
-        $this->assertEquals($userId, $folder->modified_by);
-        $this->assertPermission($folder->id, $userId, Permission::OWNER);
-        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId, $parentFolder->id);
-    }
-
-    private function insertPersoSuccess2Fixture()
-    {
         // Ada has access to folder A as a OWNER
         // A (Ada:O)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        /** @var \App\Model\Entity\User $userA */
+        $userA = UserFactory::make()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA])->persist();
 
-        return $folderA;
+        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $folderA->id]);
+        $folder = $this->service->create($this->makeUac($userA), $folderData);
+
+        $this->assertEquals('B', $folder->name);
+        $this->assertEquals($folderA->id, $folder->folder_parent_id);
+        $this->assertEquals($userA->id, $folder->created_by);
+        $this->assertEquals($userA->id, $folder->modified_by);
+        $this->assertPermission($folder->id, $userA->id, Permission::OWNER);
+        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userA->id, $folderA->id);
     }
 
     /* SHARED FOLDER */
 
     public function testCreateFolder_SharedError1_ParentFolderInsufficientPermission()
     {
-        [$parentFolder] = $this->insertSharedError1Fixture();
+        // Ada has access to folder A as a READ
+        // Betty is OWNER of folder A
+        // A (Ada:R, Betty:O)
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userB])
+            ->withPermissionsFor([$userA], Permission::READ)
+            ->withFoldersRelationsFor([$userA, $userB])
+            ->persist();
 
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $parentFolder->id]);
+        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $folderA->id]);
 
         try {
-            $this->service->create($uac, $folderData);
+            $this->service->create($this->makeUac($userA), $folderData);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate folder data.', $e->getMessage());
@@ -228,47 +197,29 @@ class FoldersCreateServiceTest extends FoldersTestCase
         }
     }
 
-    private function insertSharedError1Fixture()
-    {
-        // Ada has access to folder A as a READ
-        // Betty is OWNER of folder A
-        // A (Ada:R, Betty:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
-
-        return [$folderA];
-    }
-
     public function testCreateFolder_SharedSuccess1_CreateInFolder()
-    {
-        [$folderA] = $this->insertSharedSuccess1Fixture();
-
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $folderA->id]);
-        $folderB = $this->service->create($uac, $folderData);
-
-        $this->assertEquals('B', $folderB->name);
-        $this->assertEquals($folderA->id, $folderB->folder_parent_id);
-        $this->assertEquals($userAId, $folderB->created_by);
-        $this->assertEquals($userAId, $folderB->modified_by);
-        $this->assertPermission($folderB->id, $userAId, Permission::OWNER);
-        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
-        $this->assertPermissionNotExist($folderB->id, $userBId);
-        $this->assertFolderRelationNotExist($folderB->id, $userBId, $folderA->id);
-    }
-
-    private function insertSharedSuccess1Fixture()
     {
         // Ada is OWNER of folder A
         // Betty has READ on folder A
         // A (Ada:O, Betty:R)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->withFoldersRelationsFor([$userA, $userB])
+            ->persist();
 
-        return [$folderA];
+        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $folderA->id]);
+        $folderB = $this->service->create($this->makeUac($userA), $folderData);
+
+        $this->assertEquals('B', $folderB->name);
+        $this->assertEquals($folderA->id, $folderB->folder_parent_id);
+        $this->assertEquals($userA->id, $folderB->created_by);
+        $this->assertEquals($userA->id, $folderB->modified_by);
+        $this->assertPermission($folderB->id, $userA->id, Permission::OWNER);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userA->id, $folderA->id);
+        $this->assertPermissionNotExist($folderB->id, $userB->id);
+        $this->assertFolderRelationNotExist($folderB->id, $userB->id, $folderA->id);
     }
 }
