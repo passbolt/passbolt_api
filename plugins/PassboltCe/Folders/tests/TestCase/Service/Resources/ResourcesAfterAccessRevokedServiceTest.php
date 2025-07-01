@@ -17,23 +17,14 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Test\TestCase\Service\Resources;
 
-use App\Model\Entity\Permission;
-use App\Model\Entity\Role;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\ResourcesFixture;
-use App\Test\Fixture\Base\SecretsFixture;
-use App\Test\Fixture\Base\UsersFixture;
-use App\Utility\UserAccessControl;
-use App\Utility\UuidFactory;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\Resources\ResourcesAfterAccessRevokedService;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * Passbolt\Folders\Service\Folders\ResourcesAfterAccessRevokedService Test Case
@@ -43,17 +34,6 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
 {
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-
-    public array $fixtures = [
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        ResourcesFixture::class,
-        SecretsFixture::class,
-        UsersFixture::class,
-    ];
 
     /**
      * @var ResourcesAfterAccessRevokedService
@@ -74,63 +54,40 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
 
     public function testResourceAfterAccessRevokedSuccess_UserPermissionRevoked()
     {
-        [$r1, $userAId, $userBId] = $this->insertFixture_UserPermissionRevoked();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-
-        /** @var \App\Model\Entity\Permission $permission */
-        $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($r1->get('id'), $userBId)->first();
-        $this->permissionsTable->delete($permission);
-        $this->service->afterAccessRevoked($uac, $permission);
-
-        $this->assertItemIsInTrees($r1->get('id'), 1);
-        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-    }
-
-    public function insertFixture_UserPermissionRevoked()
-    {
         // Ada is OWNER of resource R1
         // Betty is OWNER of resource R1
         // R1 (Ada:O, Betty:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \App\Model\Entity\Resource $r1 */
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA, $userB])->withPermissionsFor([$userA, $userB])->persist();
 
-        return [$r1, $userAId, $userBId];
+        /** @var \App\Model\Entity\Permission $permission */
+        $permission = $r1->permissions[1];
+        $this->permissionsTable->delete($permission);
+        $this->service->afterAccessRevoked($this->makeUac($userA), $permission);
+
+        $this->assertItemIsInTrees($r1->get('id'), 1);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
     }
 
     public function testResourceAfterAccessRevokedSuccess_GroupPermissionRevoked()
-    {
-        $fixtures = $this->insertFixture_GroupPermissionRevoked();
-        $r1 = $fixtures[0];
-        $g1 = $fixtures[1];
-        $userAId = $fixtures[2];
-        $uac = new UserAccessControl(Role::USER, $userAId);
-
-        /** @var \App\Model\Entity\Permission $permission */
-        $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($r1->get('id'), $g1->get('id'))->first();
-        $this->permissionsTable->delete($permission);
-        $this->service->afterAccessRevoked($uac, $permission);
-
-        $this->assertItemIsInTrees($r1->id, 1);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-    }
-
-    public function insertFixture_GroupPermissionRevoked()
     {
         // Ada is OWNER of resource R1
         // G1 is OWNER of resource R1
         // Betty is member of G1
         // Carol is member of G1
-        // R1 (Ada:O, G1)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userBId, 'is_admin' => true],
-            ['user_id' => $userCId, 'is_admin' => true],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        // R1 (Ada:O, G1:O)
+        [$userA, $userB, $userC] = UserFactory::make(3)->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$userB, $userC])->persist();
+        /** @var \App\Model\Entity\Resource $r1 */
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA, $userB, $userC])->withPermissionsFor([$userA, $g1])->persist();
 
-        return [$r1, $g1, $userAId, $userBId, $userCId];
+        /** @var \App\Model\Entity\Permission $permission */
+        $permission = $r1->permissions[1];
+        $this->permissionsTable->delete($permission);
+        $this->service->afterAccessRevoked($this->makeUac($userA), $permission);
+
+        $this->assertItemIsInTrees($r1->id, 1);
+        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
     }
 }
