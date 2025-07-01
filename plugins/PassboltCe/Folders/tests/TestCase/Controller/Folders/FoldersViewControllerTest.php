@@ -18,14 +18,13 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Test\Factory\GroupFactory;
-use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Test\Factory\FolderFactory;
-use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 
@@ -89,9 +88,10 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         // |- 1 (Ada:O)
         // |- 2 (Ada:O)
         $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
-        [$resource1, $resource2] = ResourceFactory::make(2)->withPermissionsFor([$userA])->persist();
-        FoldersRelationFactory::make()->folderParent($folderA)->foreignModelResource($resource1)->user($userA)->persist();
-        FoldersRelationFactory::make()->folderParent($folderA)->foreignModelResource($resource2)->user($userA)->persist();
+        [$resource1, $resource2] = ResourceFactory::make(2)
+            ->withFoldersRelationsFor([$userA], $folderA)
+            ->withPermissionsFor([$userA])
+            ->persist();
 
         $this->logInAs($userA);
         $this->getJson("/folders/{$folderA->get('id')}.json?contain[children_resources]=1&api-version=2");

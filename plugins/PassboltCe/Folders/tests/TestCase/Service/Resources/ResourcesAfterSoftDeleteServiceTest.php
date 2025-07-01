@@ -17,11 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Test\TestCase\Service\Resources;
 
-use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use Passbolt\Folders\Service\Resources\ResourcesAfterSoftDeleteService;
-use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 
@@ -49,9 +48,10 @@ class ResourcesAfterSoftDeleteServiceTest extends FoldersTestCase
     public function testResourcesAfterCreateServiceSuccess_AfterResourceSoftDeleted()
     {
         [$userA, $userB] = UserFactory::make(2)->persist();
-        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->persist();
-        FoldersRelationFactory::make()->foreignModelResource($resource)->user($userA)->persist();
-        FoldersRelationFactory::make()->foreignModelResource($resource)->user($userB)->persist();
+        $resource = ResourceFactory::make()
+            ->withFoldersRelationsFor([$userA, $userB])
+            ->withPermissionsFor([$userA, $userB])
+            ->persist();
 
         $this->service->afterSoftDelete($resource);
 
