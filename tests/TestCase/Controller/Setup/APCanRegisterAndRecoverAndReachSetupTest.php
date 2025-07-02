@@ -75,7 +75,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
         /** @var \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens */
         $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $tokens = $AuthenticationTokens
-            ->findByUserId($user->id)->order(['created' => 'DESC'])
+            ->findByUserId($user->id)->orderBy(['created' => 'DESC'])
             ->all()->toArray();
         $this->assertEquals($tokens[0]['type'], AuthenticationToken::TYPE_REGISTER);
 
@@ -89,7 +89,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
 
         // There should be two valid auth tokens
         $tokens = $AuthenticationTokens
-            ->findByUserId($user->id)->order(['created' => 'DESC'])
+            ->findByUserId($user->id)->orderBy(['created' => 'DESC'])
             ->all()->toArray();
         $this->assertEquals(count($tokens), 2);
         $this->assertEquals($tokens[0]['type'], AuthenticationToken::TYPE_REGISTER);

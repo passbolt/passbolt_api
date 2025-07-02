@@ -32,7 +32,7 @@ class SsoSettingsViewCurrentController extends AppController
     {
         $this->Authentication->allowUnauthenticated(['viewCurrent']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

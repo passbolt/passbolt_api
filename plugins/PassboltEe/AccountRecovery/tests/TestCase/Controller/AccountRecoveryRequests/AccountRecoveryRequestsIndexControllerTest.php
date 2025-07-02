@@ -162,7 +162,7 @@ class AccountRecoveryRequestsIndexControllerTest extends AccountRecoveryIntegrat
         $this->assertTrue(isset($r->modified));
     }
 
-    public function testAccountRecoveryRequestsIndexController_Success_FilterHasUsers()
+    public function testAccountRecoveryRequestsIndexController_Success_FilterHasUsersWithValidSearchString()
     {
         $ada = UuidFactory::uuid('user.id.ada');
         $betty = UuidFactory::uuid('user.id.betty');
@@ -173,9 +173,20 @@ class AccountRecoveryRequestsIndexControllerTest extends AccountRecoveryIntegrat
         $this->logInAsAdmin();
         $this->getJson("/account-recovery/requests.json?filter[has-users][]=$ada&filter[has-users][]=$betty");
         $this->assertTrue(count($this->_responseJsonBody) === 2);
+    }
+
+    public function testAccountRecoveryRequestsIndexController_Success_FilterHasUsersWithInvalidSearchString()
+    {
+        $ada = UuidFactory::uuid('user.id.ada');
+        $betty = UuidFactory::uuid('user.id.betty');
+        AccountRecoveryRequestFactory::make(5)->persist();
+        AccountRecoveryRequestFactory::make()->withUser($ada)->persist();
+        AccountRecoveryRequestFactory::make()->withUser($betty)->persist();
+
+        $this->logInAsAdmin();
 
         $this->getJson('/account-recovery/requests.json?filter[has-users][]=' . UuidFactory::uuid());
-        $this->assertTrue(count($this->_responseJsonBody) === 0);
+        $this->assertTrue(count($this->getResponseBodyAsArray()) === 0);
     }
 
     public function testAccountRecoveryRequestsIndexController_ErrorForbidden()

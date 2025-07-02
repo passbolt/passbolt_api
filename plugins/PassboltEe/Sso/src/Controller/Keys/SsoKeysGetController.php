@@ -35,7 +35,7 @@ class SsoKeysGetController extends AbstractSsoController
     {
         $this->Authentication->allowUnauthenticated(['get']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

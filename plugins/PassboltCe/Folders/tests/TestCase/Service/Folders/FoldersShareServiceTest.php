@@ -22,6 +22,7 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
 use App\Notification\Email\EmailSubscriptionDispatcher;
+use App\Test\Factory\UserFactory;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
@@ -36,12 +37,14 @@ use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\Folders\FoldersShareService;
+use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -562,5 +565,31 @@ class FoldersShareServiceTest extends FoldersTestCase
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
 
         return [$folderA, $userAId, $userBId];
+    }
+
+    public function testFoldersShareService_Permissions_Not_An_Array_Should_Not_Throw_500()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$user])->persist();
+        $userBId = UuidFactory::uuid();
+        $uac = new UserAccessControl(Role::USER, $user->get('id'));
+
+        $data['permissions'] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::READ];
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The permissions data must be an array.');
+        $this->service->share($uac, $folder->get('id'), $data);
+    }
+
+    public function testFoldersShareService_Permissions_Key_Not_An_Integer_Should_Not_Throw_500()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$user])->persist();
+        $userB = UserFactory::make()->user()->persist();
+        $uac = new UserAccessControl(Role::USER, $user->get('id'));
+
+        $data['permissions'] = ['b' => ['aro' => 'User', 'aro_foreign_key' => $userB->get('id'), 'type' => Permission::READ]];
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The permissions data array keys must be integers.');
+        $this->service->share($uac, $folder->get('id'), $data);
     }
 }

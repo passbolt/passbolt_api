@@ -17,17 +17,13 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Test\TestCase\Model\Table\Permissions;
 
-use App\Model\Entity\Permission;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\ResourceTypesFixture;
-use App\Test\Fixture\Base\SecretsFixture;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\CleanupTrait;
-use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
-use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * Passbolt\Folders\Model\Table\FoldersRelationsTable Test Case
@@ -35,19 +31,6 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 class PermissionsCleanupTest extends FoldersTestCase
 {
     use CleanupTrait;
-    use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-
-    /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public array $fixtures = [
-        GroupsFixture::class,
-        ResourceTypesFixture::class,
-        SecretsFixture::class,
-    ];
 
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersTable
@@ -70,14 +53,12 @@ class PermissionsCleanupTest extends FoldersTestCase
     {
         $originalCount = 4;
         $checkOptions = ['cleanupCount' => 2];
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-
-        $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        FolderFactory::make(['name' => 'FA'])->withPermissionsFor([$userA, $userB])->persist();
+        ResourceFactory::make(['name' => 'R1'])->withPermissionsFor([$userA, $userB])->persist();
+        $folderB = FolderFactory::make()->withPermissionsFor([$userA, $userB])->persist();
         // The folder B is going to be hard deleted
-        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $this->foldersTable->deleteAll(['id' => $folderB->id]);
+        $this->foldersTable->deleteAll(['id' => $folderB->get('id')]);
 
         $this->runCleanupChecks('Permissions', 'cleanupHardDeletedFolders', $originalCount, $checkOptions);
     }

@@ -27,7 +27,7 @@ class AvatarsViewController extends AppController
     {
         $this->Authentication->allowUnauthenticated(['view']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

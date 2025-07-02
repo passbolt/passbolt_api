@@ -58,6 +58,10 @@ class UsersIndexContainPendingAccountRecoveryRequestControllerTest extends Accou
             $this->assertObjectNotHasAttribute('pending_account_recovery_request', $user);
         }
 
+        // Required to clear up associations
+        $this->clearPlugins();
+        $this->getTableLocator()->clear();
+
         ### Login as admin
         $this->logInAsAdmin();
         $this->getJson('/users.json?contain[pending_account_recovery_request]=1');

@@ -50,8 +50,7 @@ class MfaUserSettingsDeleteController extends MfaController
     }
 
     /**
-     * @param \Cake\Event\EventInterface $event An event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
     public function beforeFilter(EventInterface $event)
     {
@@ -61,7 +60,7 @@ class MfaUserSettingsDeleteController extends MfaController
             throw new ForbiddenException(__('You are not allowed to access this location.'));
         }
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

@@ -130,16 +130,11 @@ class PreviewCommandTest extends AppIntegrationTestCase
      */
     public function testPreviewCommandLocale(): void
     {
-        $this->loadPlugins(['Passbolt/Locale' => []]);
         $frenchLocale = 'fr-FR';
-        /** @var \App\Model\Entity\User $frenchSpeakingUser */
-        $frenchSpeakingUser = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
+        UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 
-        EmailQueueFactory::make()->listeningToBeforeSave()->persist();
-        EmailQueueFactory::make()
-            ->listeningToBeforeSave()
-            ->setRecipient($frenchSpeakingUser->username)
-            ->persist();
+        EmailQueueFactory::make()->persist();
+        EmailQueueFactory::make()->setLocale($frenchLocale)->persist();
 
         $this->exec('passbolt email_digest preview --body');
         $emailHtml = $this->_out->output();

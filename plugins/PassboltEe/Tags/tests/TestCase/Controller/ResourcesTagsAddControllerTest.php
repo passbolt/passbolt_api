@@ -364,6 +364,10 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->assertSuccess();
         $tag1Id = $this->_responseJsonBody[0]->id;
 
+        // Required to clear up associations
+        $this->clearPlugins();
+        $this->getTableLocator()->clear();
+
         $this->logInAs($user2);
         $this->postJson('/tags/' . $resource->id . '.json?api-version=2', $data);
         $this->assertSuccess();

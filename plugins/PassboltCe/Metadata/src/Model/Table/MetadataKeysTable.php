@@ -42,7 +42,7 @@ use Passbolt\Metadata\Model\Rule\MaxNoOfActiveMetadataKeysRule;
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey newEntity(array $data, array $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey[] newEntities(array $data, array $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
- * @method \Passbolt\Metadata\Model\Entity\MetadataKey findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Metadata\Model\Entity\MetadataKey findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

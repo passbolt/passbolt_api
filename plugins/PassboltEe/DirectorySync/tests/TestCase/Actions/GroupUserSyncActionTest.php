@@ -50,6 +50,7 @@ class GroupUserSyncActionTest extends DirectorySyncDeprecatedIntegrationTestCase
     {
         parent::setUp();
 
+        $this->loadPlugins(['Passbolt/Locale' => []]);
         $this->initAction();
         // Enable email notifications
         $this->loadNotificationSettings();

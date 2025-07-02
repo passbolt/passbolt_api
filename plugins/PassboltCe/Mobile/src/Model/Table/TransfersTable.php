@@ -30,13 +30,13 @@ use Passbolt\Mobile\Model\Entity\Transfer;
  *
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  * @property \App\Model\Table\AuthenticationTokensTable|\Cake\ORM\Association\BelongsTo $AuthenticationTokens
- * @method \Passbolt\Mobile\Model\Entity\Transfer get($primaryKey, ?array $options = [])
+ * @method \Passbolt\Mobile\Model\Entity\Transfer get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Mobile\Model\Entity\Transfer newEntity($data = null, ?array $options = [])
  * @method \Passbolt\Mobile\Model\Entity\Transfer[] newEntities(array $data, ?array $options = [])
  * @method \Cake\Datasource\EntityInterface|false save(\Cake\Datasource\EntityInterface $entity, \ArrayAccess|array $options = [])
  * @method \Passbolt\Mobile\Model\Entity\Transfer patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
  * @method \Passbolt\Mobile\Model\Entity\Transfer[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\Mobile\Model\Entity\Transfer findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @method \Passbolt\Mobile\Model\Entity\Transfer findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, callable|array|null $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class TransfersTable extends Table

@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Service;
 
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\TableRegistry;
@@ -92,6 +93,8 @@ class MetadataTypesSettingsGetService
             $data = json_decode($setting->value, true, 2, JSON_THROW_ON_ERROR);
 
             self::$settings = (new MetadataTypesSettingsAssertService())->assert($data);
+        } catch (RecordNotFoundException) {
+            self::$settings = self::getDefaultSettings();
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
 

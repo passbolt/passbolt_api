@@ -70,11 +70,11 @@ class PasswordPoliciesSettingsTable extends OrganizationSettingsTable
      *
      * @param \Cake\Event\Event $event Model.beforeFind event.
      * @param \Cake\ORM\Query $query Any query performed on the present table.
-     * @return \Cake\ORM\Query
+     * @return void
      */
-    public function beforeFind(Event $event, Query $query): Query
+    public function beforeFind(Event $event, Query $query): void
     {
-        return $query->where([
+        $query->where([
             $this->aliasField('property_id') => $this->getPropertyId(),
         ]);
     }

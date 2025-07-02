@@ -134,13 +134,16 @@ class FolderizableBehavior extends Behavior
      */
     public function formatResults(SelectQuery $query, string $userId): SelectQuery
     {
-        $this->table()->hasOne('FolderParentId')
-            ->setClassName('Passbolt/Folders.FoldersRelations')
-            ->setForeignKey('foreign_id')
-            ->setConditions([
-                'FolderParentId.user_id' => $userId,
-                $query->expr()->isNotNull('FolderParentId.folder_parent_id'),
-            ]);
+        if (!$this->table()->hasAssociation('FolderParentId')) {
+            $this->table()->hasOne('FolderParentId')
+                ->setClassName('Passbolt/Folders.FoldersRelations')
+                ->setForeignKey('foreign_id')
+                ->setConditions([
+                    'FolderParentId.user_id' => $userId,
+                    $query->expr()->isNotNull('FolderParentId.folder_parent_id'),
+                ]);
+        }
+
         $query->contain('FolderParentId', function (SelectQuery $q) {
             return $q->select([
                 'folder_parent_id' => 'FolderParentId.folder_parent_id',

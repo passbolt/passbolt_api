@@ -28,7 +28,7 @@ use Passbolt\Rbacs\Model\Entity\UiAction;
  * @method \Passbolt\Rbacs\Model\Entity\UiAction newEntity(array $data, array $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\UiAction[] newEntities(array $data, array $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\UiAction get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
- * @method \Passbolt\Rbacs\Model\Entity\UiAction findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Rbacs\Model\Entity\UiAction findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\UiAction patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\UiAction[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\UiAction|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
