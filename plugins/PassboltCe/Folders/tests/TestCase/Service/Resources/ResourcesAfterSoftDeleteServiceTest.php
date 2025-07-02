@@ -17,19 +17,12 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Test\TestCase\Service\Resources;
 
-use App\Model\Entity\Permission;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ResourcesFixture;
-use App\Test\Fixture\Base\SecretsFixture;
-use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\Model\ResourcesModelTrait;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\FixtureProviderTrait;
-use App\Utility\UuidFactory;
 use Passbolt\Folders\Service\Resources\ResourcesAfterSoftDeleteService;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * Passbolt\Folders\Service\Folders\ResourcesAfterSoftDeleteService Test Case
@@ -40,16 +33,6 @@ class ResourcesAfterSoftDeleteServiceTest extends FoldersTestCase
 {
     use FixtureProviderTrait;
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-    use ResourcesModelTrait;
-
-    public array $fixtures = [
-        GroupsFixture::class,
-        PermissionsFixture::class,
-        UsersFixture::class,
-        ResourcesFixture::class,
-        SecretsFixture::class,
-    ];
 
     /**
      * @var ResourcesAfterSoftDeleteService
@@ -64,20 +47,14 @@ class ResourcesAfterSoftDeleteServiceTest extends FoldersTestCase
 
     public function testResourcesAfterCreateServiceSuccess_AfterResourceSoftDeleted()
     {
-        $fixtures = $this->insertFixture_AfterResourceSoftDeleted();
-        $resource = $fixtures[0];
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $resource = ResourceFactory::make()
+            ->withFoldersRelationsFor([$userA, $userB])
+            ->withPermissionsFor([$userA, $userB])
+            ->persist();
 
         $this->service->afterSoftDelete($resource);
 
-        $this->assertItemIsInTrees($resource->id, 0);
-    }
-
-    private function insertFixture_AfterResourceSoftDeleted()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $resource = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-
-        return [$resource, $userAId, $userBId];
+        $this->assertItemIsInTrees($resource->get('id'), 0);
     }
 }

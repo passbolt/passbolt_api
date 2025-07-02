@@ -174,4 +174,12 @@ class FoldersRelationFactory extends CakephpBaseFactory
     {
         return $this->patchData(['user_id' => $user->id]);
     }
+
+    /**
+     * @return FoldersRelationFactory
+     */
+    public function root(): self
+    {
+        return $this->setField('folder_parent_id', FoldersRelation::ROOT);
+    }
 }
