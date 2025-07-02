@@ -18,18 +18,10 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\Model\PermissionsModelTrait;
+use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
+use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
-use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * Passbolt\Folders\Controller\Folders\FoldersUpdateController Test Case
@@ -38,27 +30,17 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
 {
-    use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-    use PermissionsModelTrait;
-
-    public array $fixtures = [
-    GpgkeysFixture::class,
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        RolesFixture::class,
-        UsersFixture::class,
-    ];
-
     public function testFoldersUpdateSuccess_UpdateName()
     {
-        [$folderA, $userAId] = $this->insertFixture_UpdateName(); // phpcs:ignore
+        // Ada has access to folder A as a OWNER
+        // ----
+        // A (Ada:O)
+        $userA = UserFactory::make()->persist();
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
 
         $data = ['name' => 'A updated'];
-        $this->authenticateAs('ada');
-        $this->postJson("/folders/{$folderA->id}.json?api-version=2", $data);
+        $this->logInAs($userA);
+        $this->postJson("/folders/{$folderA->get('id')}.json?api-version=2", $data);
         $this->assertSuccess();
 
         // Assert controller response
@@ -66,20 +48,9 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
         $this->assertEquals($data['name'], $folderUpdated->name);
     }
 
-    private function insertFixture_UpdateName()
-    {
-        // Ada has access to folder A as a OWNER
-        // ----
-        // A (Ada:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
-
-        return [$folderA, $userAId];
-    }
-
     public function testFoldersUpdateError_NotValidId()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $folderId = 'invalid-id';
         $this->putJson("/move/folder/$folderId.json?api-version=2");
         $this->assertError(400, 'The object identifier should be a valid UUID.');
@@ -87,67 +58,77 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersUpdateError_ValidationErrors()
     {
-        [$folderA, $userAId] = $this->insertFixture_UpdateName(); // phpcs:ignore
-        $this->authenticateAs('ada');
+        // Ada has access to folder A as a OWNER
+        // ----
+        // A (Ada:O)
+        $userA = UserFactory::make()->persist();
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
+
+        $this->logInAs($userA);
         $data = ['name' => ''];
-        $this->putJson("/folders/$folderA->id.json?api-version=2", $data);
+        $this->putJson("/folders/{$folderA->get('id')}.json?api-version=2", $data);
         $this->assertError(400, 'Could not validate folder data.');
     }
 
     public function testFoldersUpdateError_CsrfToken()
     {
         $this->disableCsrfToken();
-        $this->authenticateAs('ada');
-        $folderId = UuidFactory::uuid();
+        $this->logInAsUser();
+        $folderId = FolderFactory::make()->persist()->get('id');
         $this->put("/folders/{$folderId}.json?api-version=2");
         $this->assertResponseCode(403);
     }
 
     public function testFoldersResourcesUpdateError_InsufficientPermission()
     {
-        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission(); // phpcs:ignore
-        $data = [
-            'name' => 'A updated',
-        ];
-        $this->authenticateAs('betty');
-        $this->putJson("/folders/$folderA->id.json", $data);
-        $this->assertError(403, 'You are not allowed to update this folder.');
-    }
-
-    private function insertFixture_InsufficientPermission()
-    {
         // Ada is OWNER of folder A
         // Betty has READ on folder A
         // ---
         // A (Ada:O, Betty:R)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
 
-        return [$folderA, $userAId, $userBId];
+        $data = [
+            'name' => 'A updated',
+        ];
+        $this->logInAs($userB);
+        $this->putJson("/folders/{$folderA->get('id')}.json", $data);
+        $this->assertError(403, 'You are not allowed to update this folder.');
     }
 
     public function testFoldersUpdateError_NotAuthenticated()
     {
-        $folderId = UuidFactory::uuid();
+        $folderId = FolderFactory::make()->persist()->get('id');
         $this->putJson("/folders/{$folderId}.json?api-version=2", []);
         $this->assertAuthenticationError();
     }
 
     public function testFoldersUpdateResourcesError_FolderDoesNotExist()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $folderId = UuidFactory::uuid();
-        $this->putJson("/folders/$folderId.json");
+        $this->putJson("/folders/{$folderId}.json");
         $this->assertError(404, 'The folder does not exist.');
     }
 
     public function testFoldersUpdateResourcesError_NoAccessToFolder()
     {
-        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission(); // phpcs:ignore
-        $this->authenticateAs('dame');
+        // Ada is OWNER of folder A
+        // Betty has READ on folder A
+        // ---
+        // A (Ada:O, Betty:R)
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+
+        $this->logInAsUser();
         $data = ['name' => 'A updated'];
-        $this->putJson("/folders/$folderA->id.json", $data);
+        $this->putJson("/folders/{$folderA->get('id')}.json", $data);
         $this->assertError(404, 'The folder does not exist.');
     }
 }

@@ -52,8 +52,8 @@ class DuoCallbackForm extends Form
 
         $validator
             ->requirePresence('duo_code', true, __('A duo code is required.'))
-            ->utf8('state', __('The duo code state should be a valid BMP-UTF8 string.'))
-            ->notEmptyString('state', __('The duo code should not be empty.'));
+            ->utf8('duo_code', __('The duo code state should be a valid BMP-UTF8 string.'))
+            ->notEmptyString('duo_code', __('The duo code should not be empty.'));
 
         $validator
             ->utf8('error', __('The error description should be a valid BMP-UTF8 string.'))

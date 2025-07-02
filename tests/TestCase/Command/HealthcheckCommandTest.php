@@ -277,7 +277,9 @@ class HealthcheckCommandTest extends AppTestCase
 
     public function testHealthcheckCommand_Gpg_Happy_Path()
     {
-        $gnupgHome = getenv('GNUPGHOME') ?: '/root/.gnupg';
+        $uid = posix_getuid();
+        $user = posix_getpwuid($uid);
+        $gnupgHome = getenv('GNUPGHOME') ?: $user['dir'] . '/.gnupg';
         $this->exec('passbolt healthcheck --gpg');
 
         $this->assertExitSuccess();

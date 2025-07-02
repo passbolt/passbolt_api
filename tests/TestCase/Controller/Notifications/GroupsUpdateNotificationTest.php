@@ -44,14 +44,14 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
     public function testGroupsUpdateNotification_NotificationEnabled(): void
     {
+        $uac = UserFactory::make()->admin()->persistedUAC();
         $this->setEmailNotificationSettings([
             'send.group.user.add' => true,
             'send.group.user.update' => true,
             'send.group.user.delete' => true,
             'send.group.manager.update' => true,
-        ]);
+        ], $uac);
         RoleFactory::make()->user()->persist();
-        RoleFactory::make()->admin()->persist();
 
         $admin = UserFactory::make()->admin()->active()->persist();
         [$add, $add2, $remove, $promote, $demote, $ga] = UserFactory::make(6)->user()->active()->persist();
@@ -116,14 +116,14 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
     public function testGroupsUpdateNotification_NotificationDisabled(): void
     {
+        $uac = UserFactory::make()->admin()->persistedUAC();
         $this->setEmailNotificationSettings([
             'send.group.user.add' => false,
             'send.group.user.update' => false,
             'send.group.user.delete' => false,
             'send.group.manager.update' => false,
-        ]);
+        ], $uac);
         RoleFactory::make()->user()->persist();
-        RoleFactory::make()->admin()->persist();
 
         $admin = UserFactory::make()->admin()->active()->persist();
         [$add, $add2, $remove, $promote, $demote, $ga] = UserFactory::make(6)->user()->active()->persist();

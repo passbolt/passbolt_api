@@ -61,11 +61,6 @@ class Email
      */
     public function isRecipientUserDisabled(): bool
     {
-        $isDisabledInUserProperties = array_key_exists('disabled', $this->recipientUser->toArray());
-        if (!$isDisabledInUserProperties) {
-            return true;
-        }
-
         return $this->recipientUser->isDisabled();
     }
 

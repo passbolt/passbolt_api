@@ -80,6 +80,12 @@ class SmtpTransportBeforeSendEventListener implements EventListenerInterface
                 'username' => $this->configInDB['username'],
                 'password' => $this->configInDB['password'],
             ];
+        } else {
+            // Consider empty username & password as 'None' authentication type
+            if (empty($defaultConfig['username']) && empty($defaultConfig['password'])) {
+                $defaultConfig['username'] = null;
+                $defaultConfig['password'] = null;
+            }
         }
 
         // Merge SSL Options if present in config

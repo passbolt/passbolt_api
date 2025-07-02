@@ -20,7 +20,8 @@ namespace App\Service\Healthcheck\Application;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use Cake\Core\Configure;
+use Exception;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 class EmailNotificationEnabledApplicationHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -36,8 +37,12 @@ class EmailNotificationEnabledApplicationHealthcheck implements HealthcheckServi
      */
     public function check(): HealthcheckServiceInterface
     {
-        $sendEmailJson = json_encode(Configure::read('passbolt.email.send'));
-        $this->status = !(preg_match('/false/', $sendEmailJson) === 1);
+        try {
+            $sendSettings = json_encode(EmailNotificationSettings::get('send'));
+        } catch (Exception $e) {
+            return $this;
+        }
+        $this->status = !(preg_match('/false/', $sendSettings) === 1);
 
         return $this;
     }

@@ -17,13 +17,17 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Log\Formatter;
 
 use App\Log\Formatter\JsonTraceFormatter;
+use Cake\Log\Log;
+use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 
 /**
- * @covers \App\Log\Formatter\JsonTraceFormatter
+ * @covers JsonTraceFormatter
  */
 class JsonTraceFormatterTest extends TestCase
 {
+    use IntegrationTestTrait;
+
     /**
      * @return void
      */
@@ -77,5 +81,23 @@ class JsonTraceFormatterTest extends TestCase
             get_class($this) . '->testJsonTraceFormatter_On_Real_Trace()',
             $traceInResult[0]
         );
+    }
+
+    public function testJsonTraceFormatter_On_Hacked_Url_Should_Not_Throw_500_Exception()
+    {
+        $backupConfig = $logErrorConfig = Log::getConfig('error');
+        // Set the formatter to JsonTrace
+        $logErrorConfig['formatter'] = JsonTraceFormatter::class;
+        Log::drop('error');
+        Log::setConfig('error', $logErrorConfig);
+        // Request a non parsable URL in JSON
+        $this->get("/%c0%");
+        $this->assertResponseError();
+        // The response should not throw a 500
+        $this->assertResponseCode(404);
+        $this->assertResponseContains('Error: Missing Route');
+        $this->assertResponseContains('A route matching `/�%` could not be found');
+        Log::drop('error');
+        Log::setConfig('error', $backupConfig);
     }
 }

@@ -105,6 +105,22 @@ trait SmtpSettingsTestTrait
         TransportFactory::get('default')->setConfig($validConfig);
     }
 
+    /**
+     * @param array $config Configuration to override.
+     * @return void
+     */
+    private function reconfigureTransportFactory(array $config): void
+    {
+        $defaultConfig = TransportFactory::get('default')->getConfig();
+
+        // Override config
+        $configOverridden = array_merge($defaultConfig, $config);
+
+        // Re-configure (needs a drop first)
+        TransportFactory::drop('default');
+        TransportFactory::setConfig('default', $configOverridden);
+    }
+
     private function makeDummyPassboltFile(array $data)
     {
         $phpConfig = new PhpConfig(TMP . 'tests' . DS);

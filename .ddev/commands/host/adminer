@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+## #ddev-generated: If you want to edit and own this file, remove this line.
+## Description: Launch a browser with Adminer
+## Usage: adminer
+## Example: "ddev adminer"
+
+DDEV_ADMINER_PORT=9100
+DDEV_ADMINER_HTTPS_PORT=9101
+
+if [ ${DDEV_PRIMARY_URL%://*} = "http" ] || [ -n "${GITPOD_WORKSPACE_ID:-}" ] || [ "${CODESPACES:-}" = "true" ]; then
+    ddev launch :$DDEV_ADMINER_PORT
+else
+    ddev launch :$DDEV_ADMINER_HTTPS_PORT
+fi

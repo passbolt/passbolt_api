@@ -50,7 +50,6 @@ class SmtpSettingsEmailDigestPreviewCommandTest extends TestCase
     {
         parent::setUp();
         $this->clearPlugins();
-        $this->loadPlugins(['Passbolt/EmailDigest' => []]);
         EmailNotificationSettings::flushCache();
         EventManager::instance()->setEventList(new EventList());
         $this->enableFeaturePlugin('SmtpSettings');

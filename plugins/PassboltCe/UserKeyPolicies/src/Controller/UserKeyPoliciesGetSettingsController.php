@@ -42,7 +42,7 @@ class UserKeyPoliciesGetSettingsController extends AppController
     {
         $this->Authentication->allowUnauthenticated(['get']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

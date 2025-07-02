@@ -30,7 +30,7 @@ class AuthVerifyController extends AppController
     {
         $this->Authentication->allowUnauthenticated(['verifyGet']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**
