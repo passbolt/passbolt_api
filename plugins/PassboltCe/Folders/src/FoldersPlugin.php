@@ -65,7 +65,7 @@ class FoldersPlugin extends BasePlugin
      */
     public static function addAssociationsToResourcesTable(Table $table): void
     {
-        if (!($table instanceof ResourcesTable)) {
+        if (!($table instanceof ResourcesTable) || $table->hasAssociation('FoldersRelations')) {
             return;
         }
 
@@ -85,7 +85,7 @@ class FoldersPlugin extends BasePlugin
      */
     public static function addAssociationsToPermissionsTable(Table $table): void
     {
-        if (!($table instanceof PermissionsTable)) {
+        if (!($table instanceof PermissionsTable) || $table->hasAssociation('Folders')) {
             return;
         }
 

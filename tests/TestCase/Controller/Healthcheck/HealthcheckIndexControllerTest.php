@@ -109,6 +109,9 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
         $tableCount = count($connection->getSchemaCollection()->listTables());
         $result = $this->getResponseBodyAsArray();
         $https = strpos((string)Configure::read('App.fullBaseUrl'), 'https') === 0;
+        $uid = posix_getuid();
+        $user = posix_getpwuid($uid);
+        $gnupgHome = $user['dir'] . '/.gnupg';
         $expectedResponse = [
             'ssl' => [
                 'peerValid' => true,
@@ -162,7 +165,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'lib' => true,
                 'gpgKeyNotDefault' => false,
                 'info' => [
-                    'gpgHome' => getenv('GNUPGHOME') ?: '/root/.gnupg',
+                    'gpgHome' => getenv('GNUPGHOME') ?: $gnupgHome,
                     'gpgKeyPrivate' => Configure::read('passbolt.gpg.serverKey.private'),
                 ],
                 'gpgHomeWritable' => true,

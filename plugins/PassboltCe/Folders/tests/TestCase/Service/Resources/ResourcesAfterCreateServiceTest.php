@@ -17,24 +17,15 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Test\TestCase\Service\Resources;
 
-use App\Model\Entity\Permission;
-use App\Model\Entity\Role;
-use App\Model\Table\PermissionsTable;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ResourcesFixture;
-use App\Test\Fixture\Base\SecretsFixture;
-use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\Model\ResourcesModelTrait;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\FixtureProviderTrait;
-use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\Resources\ResourcesAfterCreateService;
+use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * Passbolt\Folders\Service\Folders\ResourcesAfterCreateService Test Case
@@ -45,17 +36,6 @@ class ResourcesAfterCreateServiceTest extends FoldersTestCase
 {
     use FixtureProviderTrait;
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-    use ResourcesModelTrait;
-
-    public array $fixtures = [
-        GroupsUsersFixture::class,
-        GroupsFixture::class,
-        PermissionsFixture::class,
-        UsersFixture::class,
-        ResourcesFixture::class,
-        SecretsFixture::class,
-    ];
 
     /**
      * @var ResourcesAfterCreateService
@@ -70,74 +50,52 @@ class ResourcesAfterCreateServiceTest extends FoldersTestCase
 
     public function testResourcesAfterCreateServiceSuccess_CreateToRoot()
     {
-        [$resource, $userAId] = $this->insertFixture_CreateToRoot();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        $userA = UserFactory::make()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA])->persist();
 
-        $this->service->afterCreate($uac, $resource);
+        $this->service->afterCreate($this->makeUac($userA), $resource);
 
         $this->assertItemIsInTrees($resource->id, 1);
-        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-    }
-
-    private function insertFixture_CreateToRoot()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $resource = $this->addResource();
-        $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, PermissionsTable::USER_ARO, $userAId);
-
-        return [$resource, $userAId];
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->get('id'), null);
     }
 
     public function testResourcesAfterCreateServiceSuccess_CreateIntoFolder()
     {
-        [$folder, $resource, $userAId] = $this->insertFixture_CreateIntoFolder();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        $userA = UserFactory::make()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA])->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$userA])->persist();
 
-        $data['folder_parent_id'] = $folder->id;
-        $this->service->afterCreate($uac, $resource, $data);
+        $data['folder_parent_id'] = $folder->get('id');
+        $this->service->afterCreate($this->makeUac($userA), $resource, $data);
 
         $this->assertItemIsInTrees($resource->id, 1);
-        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, $folder->id);
-    }
-
-    public function insertFixture_CreateIntoFolder()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $folder = $this->addFolderFor([], [$userAId => Permission::OWNER]);
-        $resource = $this->addResource();
-        $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, PermissionsTable::USER_ARO, $userAId);
-
-        return [$folder, $resource, $userAId];
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->get('id'), $folder->get('id'));
     }
 
     public function testResourcesAfterCreateServiceError_FolderParentNotExist()
     {
-        [$resource, $userAId] = $this->insertFixture_CreateToRoot();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        $userA = UserFactory::make()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA])->persist();
+
         $data['folder_parent_id'] = UuidFactory::uuid();
 
-        $this->service->afterCreate($uac, $resource, $data);
+        $this->service->afterCreate($this->makeUac($userA), $resource, $data);
         $this->assertEntityError($resource, 'folder_parent_id.folder_exists');
     }
 
     public function testResourcesAfterCreateServiceError_FolderParentNotAllowed()
     {
-        [$folder, $resource, $userAId, $userBId] = $this->insertFixture_FolderParentNotAllowed(); // phpcs:ignore
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $data['folder_parent_id'] = $folder->id;
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \App\Model\Entity\Resource $resrouce */
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$userB])->persist();
 
-        $this->service->afterCreate($uac, $resource, $data);
+        $data['folder_parent_id'] = $folder->get('id');
+
+        $this->service->afterCreate($this->makeUac($userA), $resource, $data);
         $this->assertEntityError($resource, 'folder_parent_id.has_folder_access');
-    }
-
-    public function insertFixture_FolderParentNotAllowed()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-
-        $resource = $this->addResourceFor([], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $folder = $this->addFolderFor([], [$userBId => Permission::OWNER]);
-
-        return [$folder, $resource, $userAId, $userBId];
     }
 }

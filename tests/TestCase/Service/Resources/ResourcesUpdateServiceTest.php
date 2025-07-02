@@ -18,27 +18,17 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Service\Resources;
 
 use App\Error\Exception\ValidationException;
-use App\Model\Entity\Permission;
-use App\Model\Entity\Role;
 use App\Service\Resources\ResourcesUpdateService;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\PermissionFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ResourcesFixture;
-use App\Test\Fixture\Base\SecretsFixture;
-use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\SecretsModelTrait;
-use App\Utility\UserAccessControl;
-use App\Utility\UuidFactory;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
@@ -51,16 +41,6 @@ class ResourcesUpdateServiceTest extends AppTestCase
 {
     use GroupsModelTrait;
     use SecretsModelTrait;
-
-    public array $fixtures = [
-        GpgkeysFixture::class,
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ResourcesFixture::class,
-        SecretsFixture::class,
-        UsersFixture::class,
-    ];
 
     /**
      * @var ResourcesTable
@@ -167,110 +147,92 @@ class ResourcesUpdateServiceTest extends AppTestCase
 
     public function testUpdateResourcesError_UpdateResourceMeta_ValidationError()
     {
-        [$r1, $userAId] = $this->insertFixture_UpdateResourceMeta_ValidationError();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        // Ada is OWNER of resource R1
+        // ---
+        // R1 (Ada:O)
+        $userA = UserFactory::make()->withValidGpgKey()->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withSecretsFor([$userA])->persist();
 
         $data = [
             'name' => '',
         ];
 
         try {
-            $this->service->update($uac, $r1->id, new MetadataResourceDto($data));
+            $this->service->update($this->makeUac($userA), $r1->id, new MetadataResourceDto($data));
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate resource data.', $e->getMessage());
-            $this->assertNotEmpty(Hash::get($e->getErrors(), 'name._empty'));
+            $this->assertSame([
+                'name' => [
+                    '_empty' => 'The name should not be empty.',
+                ],
+            ], $e->getErrors());
         }
-    }
-
-    private function insertFixture_UpdateResourceMeta_ValidationError()
-    {
-        // Ada is OWNER of resource R1
-        // ---
-        // R1 (Ada:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $r1 = $this->addResourceFor(['name' => 'R1', 'username' => 'R1 username', 'uri' => 'https://r1.com', 'description' => 'R1 description'], [$userAId => Permission::OWNER]);
-
-        return [$r1, $userAId];
     }
 
     public function testUpdateResourcesError_UpdateResourceSecrets_ValidationError()
     {
-        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_UpdateResourceSecrets_ValidationError(); // phpcs:ignore
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        // Ada is OWNER of resource R1
+        // Betty is OWNER of resource R1
+        // Group is OWNER of resource R1
+        // ---
+        // R1 (Ada:O, Betty:O, G1:O)
+        [$userA, $userB, $userC] = UserFactory::make(3)->withValidGpgKey()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA,$userC])->persist();
+        $r1 = ResourceFactory::make()
+            ->with('ResourceTypes', ResourceTypeFactory::make()->default())
+            ->withPermissionsFor([$userA,$userB,$group])
+            ->withSecretsFor([$userA,$userB,$group])
+            ->persist();
 
-        $r1EncryptedSecretA = $this->encryptMessageFor($userAId, 'R1 secret updated');
+        $r1EncryptedSecretA = $this->encryptMessageFor($userA->id, 'R1 secret updated');
         $data = [
             'secrets' => [
-                ['user_id' => $userAId, 'data' => $r1EncryptedSecretA],
+                ['user_id' => $userA->id, 'data' => $r1EncryptedSecretA],
             ],
         ];
 
         try {
-            $this->service->update($uac, $r1->id, new MetadataResourceDto($data));
+            $this->service->update($this->makeUac($userA), $r1->id, new MetadataResourceDto($data));
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate resource data.', $e->getMessage());
-            $this->assertNotEmpty(Hash::get($e->getErrors(), 'secrets.secrets_provided'));
+            $this->assertSame([
+                'secrets' => [
+                    'secrets_provided' => 'The secrets of all the users having access to the resource are required.',
+                ],
+            ], $e->getErrors());
         }
-    }
-
-    private function insertFixture_UpdateResourceSecrets_ValidationError()
-    {
-        // Ada is OWNER of resource R1
-        // Betty is OWNER of resource R1
-        // G1 is OWNER of resource R1
-        // ---
-        // R1 (Ada:O, Betty:O, G1:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-            ['user_id' => $userCId, 'is_admin' => true],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1', 'username' => 'R1 username', 'uri' => 'https://r1.com', 'description' => 'R1 description'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-
-        return [$r1, $g1, $userAId, $userBId, $userCId];
     }
 
     public function testUpdateResourcesError_InsufficientPermission()
     {
-        [$r1, $userAId, $userBId] = $this->insertFixture_UpdateResourcesError_InsufficientPermission(); // phpcs:ignore
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        // Ada has READ on resource R1
+        // Betty is OWNER of resource R1
+        // ---
+        // R1 (Ada:R, Betty:O)
+        [$userA, $userB] = UserFactory::make(2)->withValidGpgKey()->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$userB])->withSecretsFor([$userB])->persist();
+        PermissionFactory::make()->acoResource($r1)->aroUser($userA)->typeRead()->persist();
+
         $data = [
             'name' => 'R1 updated',
         ];
 
         try {
-            $this->service->update($uac, $r1->id, new MetadataResourceDto($data));
+            $this->service->update($this->makeUac($userA), $r1->id, new MetadataResourceDto($data));
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ForbiddenException $e) {
             $this->assertEquals('You are not allowed to update this resource.', $e->getMessage());
         }
     }
 
-    private function insertFixture_UpdateResourcesError_InsufficientPermission()
-    {
-        // Ada has READ on resource R1
-        // Betty is OWNER of resource R1
-        // ---
-        // R1 (Ada:R, Betty:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
-
-        return [$r1, $userAId, $userBId];
-    }
-
     public function testUpdateResourcesError_ResourceDoesNotExist()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $notFoundId = UuidFactory::uuid();
+        [$userA, $userNotFound] = UserFactory::make(2)->withValidGpgKey()->persist();
 
         try {
-            $this->service->update($uac, $notFoundId, new MetadataResourceDto());
+            $this->service->update($this->makeUac($userA), $userNotFound->id, new MetadataResourceDto());
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (NotFoundException $e) {
             $this->assertEquals('The resource does not exist.', $e->getMessage());

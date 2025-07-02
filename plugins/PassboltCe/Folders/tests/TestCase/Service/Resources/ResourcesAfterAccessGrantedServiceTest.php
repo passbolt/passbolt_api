@@ -17,23 +17,14 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Test\TestCase\Service\Resources;
 
-use App\Model\Entity\Permission;
-use App\Model\Entity\Role;
-use App\Model\Table\PermissionsTable;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\ResourcesFixture;
-use App\Test\Fixture\Base\SecretsFixture;
-use App\Test\Fixture\Base\UsersFixture;
-use App\Utility\UserAccessControl;
-use App\Utility\UuidFactory;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\PermissionFactory;
+use App\Test\Factory\UserFactory;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\Resources\ResourcesAfterAccessGrantedService;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * Passbolt\Folders\Service\Folders\ResourcesAfterAccessGrantedService Test Case
@@ -43,17 +34,6 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 class ResourcesAfterAccessGrantedServiceTest extends FoldersTestCase
 {
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-
-    public array $fixtures = [
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        ResourcesFixture::class,
-        SecretsFixture::class,
-        UsersFixture::class,
-    ];
 
     /**
      * @var ResourcesAfterAccessGrantedService
@@ -68,111 +48,68 @@ class ResourcesAfterAccessGrantedServiceTest extends FoldersTestCase
 
     public function testResourceAfterAccessGrantedSuccess_UserPermissionAdded()
     {
-        [$r1, $userAId] = $this->insertFixture_UserPermissionAdded();
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $uac = new UserAccessControl(Role::USER, $userAId);
-
-        $permission = $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, PermissionsTable::USER_ARO, $userBId);
-        $this->service->afterAccessGranted($uac, $permission);
-
-        $this->assertItemIsInTrees($r1->id, 2);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
-    }
-
-    public function insertFixture_UserPermissionAdded()
-    {
         // Ada is OWNER of resource R1
         // R1 (Ada:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA])->withPermissionsFor([$userA])->persist();
 
-        return [$r1, $userAId];
+        $permission = PermissionFactory::make()->typeOwner()->acoResource($r1)->aroUser($userB)->persist();
+        $this->service->afterAccessGranted($this->makeUac($userA), $permission);
+
+        $this->assertItemIsInTrees($r1->get('id'), 2);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, null);
     }
 
     public function testResourceAfterAccessGrantedSuccess_UserPermissionAdded_GroupUserAlreadyHavingAccess()
     {
-        [$r1, $g1, $userAId] = $this->insertFixture_UserPermissionAdded_GroupUserAlreadyHavingAccess(); // phpcs:ignore
-        $uac = new UserAccessControl(Role::USER, $userAId);
-
-        $permission = $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, PermissionsTable::USER_ARO, $userAId);
-        $this->service->afterAccessGranted($uac, $permission);
-
-        $this->assertItemIsInTrees($r1->id, 1);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-    }
-
-    public function insertFixture_UserPermissionAdded_GroupUserAlreadyHavingAccess()
-    {
         // Ada is OWNER of resource R1
         // R1 (Ada:O)
         // G1 is OWNER of resource R1
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1', 'created_by' => $userAId, 'modified_by' => $userAId], [], [$g1->id => Permission::OWNER]);
+        /** @var \App\Model\Entity\User $userA */
+        $userA = UserFactory::make()->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA])->withCreatorAndPermission($userA)->withPermissionsFor([$g1])->persist();
 
-        return [$r1, $g1, $userAId];
+        $permission = PermissionFactory::make()->typeOwner()->acoResource($r1)->aroUser($userA)->persist();
+        $this->service->afterAccessGranted($this->makeUac($userA), $permission);
+
+        $this->assertItemIsInTrees($r1->get('id'), 1);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
     }
 
     public function testResourceAfterAccessGrantedSuccess_GroupPermissionAdded()
     {
-        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_GroupPermissionAdded();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-
-        $permission = $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, PermissionsTable::GROUP_ARO, $g1->id);
-        $this->service->afterAccessGranted($uac, $permission);
-
-        $this->assertItemIsInTrees($r1->id, 3);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userCId, null);
-    }
-
-    public function insertFixture_GroupPermissionAdded()
-    {
         // Ada is OWNER of resource R1
         // G1 is OWNER of resource R1
         // R1 (Ada:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER]);
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userBId, 'is_admin' => true],
-            ['user_id' => $userCId, 'is_admin' => true],
-        ]]);
+        [$userA, $userB, $userC] = UserFactory::make(3)->persist();
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA])->withPermissionsFor([$userA])->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$userB, $userC])->persist();
 
-        return [$r1, $g1, $userAId, $userBId, $userCId];
+        $permission = PermissionFactory::make()->typeOwner()->acoResource($r1)->aroGroup($g1)->persist();
+        $this->service->afterAccessGranted($this->makeUac($userA), $permission);
+
+        $this->assertItemIsInTrees($r1->get('id'), 3);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, null);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userC->id, null);
     }
 
     public function testResourceAfterAccessGrantedSuccess_GroupPermissionAdded_UserAlreadyHaveDirectAccess()
     {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_GroupPermissionAdded_UserAlreadyHaveDirectAccess();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-
-        $permission = $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, PermissionsTable::GROUP_ARO, $g1->id);
-        $this->service->afterAccessGranted($uac, $permission);
-
-        $this->assertItemIsInTrees($r1->id, 2);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
-    }
-
-    public function insertFixture_GroupPermissionAdded_UserAlreadyHaveDirectAccess()
-    {
         // Ada is OWNER of resource R1
         // G1 is OWNER of resource R1
         // R1 (Ada:O, G1:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER]);
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-            ['user_id' => $userBId, 'is_admin' => true],
-        ]]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $r1 = ResourceFactory::make()->withFoldersRelationsFor([$userA])->withPermissionsFor([$userA])->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
 
-        return [$r1, $g1, $userAId, $userBId];
+        $permission = PermissionFactory::make()->typeOwner()->acoResource($r1)->aroGroup($g1)->persist();
+        $this->service->afterAccessGranted($this->makeUac($userA), $permission);
+
+        $this->assertItemIsInTrees($r1->get('id'), 2);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, null);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, null);
     }
 }

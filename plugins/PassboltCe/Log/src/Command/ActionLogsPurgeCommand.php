@@ -72,6 +72,7 @@ class ActionLogsPurgeCommand extends PassboltCommand
                 'default' => self::DEFAULT_LIMIT,
                 'help' => __('Maximum number of rows to purge.'),
             ])
+            ->removeOption('verbose')
             ->addOption('verbose', [
                 'short' => 'v',
                 'boolean' => true,

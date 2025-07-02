@@ -40,7 +40,7 @@ use InvalidArgumentException;
  * @method \App\Model\Entity\AuthenticationToken|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\AuthenticationToken patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\AuthenticationToken[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\AuthenticationToken findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @method \App\Model\Entity\AuthenticationToken firstOrFail()
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @method \App\Model\Entity\AuthenticationToken newEmptyEntity()

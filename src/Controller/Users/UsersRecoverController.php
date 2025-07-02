@@ -40,7 +40,7 @@ class UsersRecoverController extends AppController
     {
         $this->Authentication->allowUnauthenticated(['recoverGet', 'recoverPost']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

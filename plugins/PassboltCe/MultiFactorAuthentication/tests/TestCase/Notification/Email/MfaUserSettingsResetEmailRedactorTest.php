@@ -80,6 +80,7 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
         $user->username = 'ada@passbolt.com';
         $user->id = $userId;
         $user->locale = 'Foo';
+        // Unable to set value to NULL. Bug introduced with https://github.com/cakephp/cakephp/commit/2c08c770145d8e408ad85f7320e87f67988e8745
         $user->disabled = null;
         $uac = new UserAccessControl('admin', $userId, 'ada@passbolt.com');
         $event = new Event(MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT);
@@ -89,9 +90,9 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
         ]);
 
         $emailCollection = $this->sut->onSubscribedEvent($event);
-        $email = $emailCollection->getEmails()[0];
 
         $this->assertCount(1, $emailCollection->getEmails());
+        $email = $emailCollection->getEmails()[0];
         $this->assertEquals(__('Your multi-factor authentication settings were reset by you.'), $email->getSubject());
         $this->assertEquals(MfaUserSettingsResetEmailRedactor::TEMPLATE_SELF, $email->getTemplate());
         $this->assertEquals([

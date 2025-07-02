@@ -30,7 +30,7 @@ use Cake\Validation\Validator;
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting newEntity(array $data, array $options = [])
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[] newEntities(array $data, array $options = [])
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
- * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -81,11 +81,11 @@ class PasswordExpirySettingsTable extends OrganizationSettingsTable
      *
      * @param \Cake\Event\Event $event Model.beforeFind event.
      * @param \Cake\ORM\Query\SelectQuery $query Any query performed on the present table.
-     * @return \Cake\ORM\Query\SelectQuery
+     * @return void
      */
-    public function beforeFind(Event $event, SelectQuery $query): SelectQuery
+    public function beforeFind(Event $event, SelectQuery $query): void
     {
-        return $query->where([
+        $query->where([
             $this->aliasField('property_id') => $this->getPropertyId(),
         ]);
     }

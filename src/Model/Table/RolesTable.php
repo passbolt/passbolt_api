@@ -32,7 +32,7 @@ use InvalidArgumentException;
  * @method \App\Model\Entity\Role|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Role patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Role[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\Role findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Role findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @property \Cake\ORM\Table&\Cake\ORM\Association\HasMany $ControllerLogs
  * @method \App\Model\Entity\Role newEmptyEntity()

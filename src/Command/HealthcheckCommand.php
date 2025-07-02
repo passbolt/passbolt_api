@@ -178,7 +178,7 @@ class HealthcheckCommand extends PassboltCommand
 
         $io->out(' Healthcheck shell', 0);
         $io->out();
-        $io->out('If you want to have more information about the different checks, please take a look at the documentation: https://www.passbolt.com/docs/admin/server-maintenance/passbolt-api-status/', 0); // phpcs:ignore
+        $io->out(' If you want to have more information about the different checks, please take a look at the documentation: https://www.passbolt.com/docs/admin/server-maintenance/passbolt-api-status/', 0); // phpcs:ignore
         // Get services from collector and run checks
         $resultCollection = new Collection([]);
         foreach ($healthcheckServices as $healthcheckService) {

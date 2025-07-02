@@ -43,7 +43,7 @@ use InvalidArgumentException;
  * @method \App\Model\Entity\GroupsUser|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\GroupsUser patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\GroupsUser[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\GroupsUser findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\GroupsUser findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @method \App\Model\Entity\GroupsUser newEmptyEntity()
  * @method \App\Model\Entity\GroupsUser saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])

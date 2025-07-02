@@ -48,7 +48,7 @@ use InvalidArgumentException;
  * @method \App\Model\Entity\Gpgkey|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Gpgkey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Gpgkey[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\Gpgkey findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Gpgkey findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @method \App\Model\Entity\Gpgkey newEmptyEntity()
  * @method \App\Model\Entity\Gpgkey saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])

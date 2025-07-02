@@ -18,80 +18,63 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Controller\Groups;
 
 use App\Model\Entity\Permission;
-use App\Test\Fixture\Base\FavoritesFixture;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\SecretsFixture;
-use App\Test\Fixture\Base\UsersFixture;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\GroupsModelTrait;
-use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
-use App\Utility\UuidFactory;
+use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
 {
     use FixtureProviderTrait;
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
     use GroupsModelTrait;
-    use PermissionsModelTrait;
-
-    public array $fixtures = [
-    FavoritesFixture::class,
-        GpgkeysFixture::class,
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        ProfilesFixture::class,
-        RolesFixture::class,
-        SecretsFixture::class,
-        UsersFixture::class,
-    ];
 
     public function testFoldersGroupsDeleteSuccess_PersonalFolder()
-    {
-        [$folderA, $g1, $userAId] = $this->insertFixture_PersonalFolder(); // phpcs:ignore
-        $this->authenticateAs('admin');
-
-        $this->deleteJson("/groups/$g1->id.json?api-version=v2");
-        $this->assertSuccess();
-        $this->assertGroupIsSoftDeleted($g1->id);
-        $this->assertFolderNotExist($folderA->id);
-    }
-
-    private function insertFixture_PersonalFolder()
     {
         // G1 is OWNER of folder A
         // Ada is member of group G1
         // ---
         // A (G1:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $g1Data = [
-            'groups_users' => [
-                ['user_id' => $userAId, 'is_admin' => true],
-            ],
-        ];
-        $g1 = $this->addGroup($g1Data);
-        $folderA = $this->addFolderFor(['name' => 'A'], [], [$g1->id => Permission::OWNER]);
+        $userA = UserFactory::make()->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$g1])
+            ->withFoldersRelationsFor([$g1])
+            ->persist();
 
-        return [$folderA, $g1, $userAId];
+        $this->logInAsAdmin();
+
+        $this->deleteJson("/groups/{$g1->get('id')}.json?api-version=v2");
+        $this->assertSuccess();
+        $this->assertGroupIsSoftDeleted($g1->get('id'));
+        $this->assertFolderNotExist($folderA->get('id'));
     }
 
     public function testFoldersGroupsDeleteError_SoleOwnerFolder_FolderSharedWithUser()
     {
-        [$folderA, $g1, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser(); // phpcs:ignore
-        $this->authenticateAs('admin');
+        // G1 is OWNER of folder A
+        // Betty has READ on folder A
+        // Ada is member of G1
+        // ---
+        // A (G1:O, Betty:R)
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$g1])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->withFoldersRelationsFor([$g1, $userB])
+            ->persist();
 
-        $this->deleteJson("/groups/$g1->id.json?api-version=v2");
+        $this->logInAsAdmin();
+
+        $this->deleteJson("/groups/{$g1->get('id')}.json?api-version=v2");
 
         $this->assertError(400);
-        $this->assertUserIsNotSoftDeleted($userAId);
-        $this->assertFolder($folderA->id);
+        $this->assertUserIsNotSoftDeleted($userA->id);
+        $this->assertFolder($folderA->get('id'));
         $this->assertStringContainsString('transfer the ownership', $this->_responseJsonHeader->message);
 
         $errors = $this->_responseJsonBody->errors;
@@ -99,26 +82,6 @@ class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
 
         $folder = $errors->folders->sole_owner[0];
         $this->assertFolderAttributes($folder);
-        $this->assertEquals($folder->id, $folderA->id);
-    }
-
-    private function insertFixture_SoleOwnerFolder_FolderSharedWithUser()
-    {
-        // G1 is OWNER of folder A
-        // Betty has READ on folder A
-        // Ada is member of G1
-        // ---
-        // A (G1:O, Betty:R)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $g1Data = [
-            'groups_users' => [
-                ['user_id' => $userAId, 'is_admin' => true],
-            ],
-        ];
-        $g1 = $this->addGroup($g1Data);
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userBId => Permission::READ], [$g1->id => Permission::OWNER]);
-
-        return [$folderA, $g1, $userAId, $userBId];
+        $this->assertEquals($folder->id, $folderA->get('id'));
     }
 }

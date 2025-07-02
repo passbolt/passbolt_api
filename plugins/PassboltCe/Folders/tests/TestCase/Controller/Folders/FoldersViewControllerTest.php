@@ -17,32 +17,16 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
-use App\Model\Entity\Permission;
-use App\Model\Table\GroupsTable;
-use App\Model\Table\GroupsUsersTable;
-use App\Model\Table\PermissionsTable;
-use App\Test\Fixture\Alt0\SecretsFixture;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\ResourcesFixture;
-use App\Test\Fixture\Base\ResourceTypesFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\UsersFixture;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\GroupsModelTrait;
-use App\Test\Lib\Model\GroupsUsersModelTrait;
-use App\Test\Lib\Model\ProfilesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Passbolt\Folders\Model\Table\FoldersRelationsTable;
-use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Test\Factory\FolderFactory;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * Passbolt\Folders\Controller\Folders\FoldersViewController Test Case
@@ -52,34 +36,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 class FoldersViewControllerTest extends FoldersIntegrationTestCase
 {
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
     use GroupsModelTrait;
-    use GroupsUsersModelTrait;
-    use ProfilesModelTrait;
-
-    /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public array $fixtures = [
-        GpgkeysFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        RolesFixture::class,
-        UsersFixture::class,
-        SecretsFixture::class,
-        ResourcesFixture::class,
-        ResourceTypesFixture::class,
-        GroupsFixture::class,
-    ];
-
-    public $Groups;
-    public $GroupsUsers;
-    public $Permissions;
-    public $FoldersRelations;
-    public $Folders;
 
     /**
      * setUp method
@@ -90,34 +47,22 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);
-        $config = TableRegistry::getTableLocator()->exists('Folders') ? [] : ['className' => FoldersTable::class];
-        $this->Folders = TableRegistry::getTableLocator()->get('Folders', $config);
-        $config = TableRegistry::getTableLocator()->exists('FoldersRelations') ? [] : ['className' => FoldersRelationsTable::class];
-        $this->FoldersRelations = TableRegistry::getTableLocator()->get('FoldersRelations', $config);
-        $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
-        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
-        $config = TableRegistry::getTableLocator()->exists('GroupsUsers') ? [] : ['className' => GroupsUsersTable::class];
-        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers', $config);
-        $config = TableRegistry::getTableLocator()->exists('Groups') ? [] : ['className' => GroupsTable::class];
-        $this->Groups = TableRegistry::getTableLocator()->get('Groups', $config);
     }
 
     public function testFoldersViewSuccess_ContainChildrenFolders()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $userA = UserFactory::make()->persist();
 
-        // Insert fixtures.
         // Ada has access to folder A, B and C as a OWNER
         // Ada see folder folders B and C in A
         // A (Ada:O)
         // |- B (Ada:O)
         // |- C (Ada:O)
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-        $folderC = $this->addFolderFor(['name' => 'C', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
+        [$folderB, $folderC] = FolderFactory::make(2)->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA], $folderA)->persist();
 
-        $this->authenticateAs('ada');
-        $this->getJson("/folders/{$folderA->id}.json?contain[children_folders]=1&api-version=2");
+        $this->logInAs($userA);
+        $this->getJson("/folders/{$folderA->get('id')}.json?contain[children_folders]=1&api-version=2");
         $this->assertSuccess();
 
         $result = $this->_responseJsonBody;
@@ -125,7 +70,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         $this->assertCount(2, $result->children_folders);
         foreach ($result->children_folders as $childFolder) {
             $this->assertFolderAttributes($childFolder);
-            $this->assertObjectHasFolderParentIdAttribute($childFolder, $folderA->id);
+            $this->assertObjectHasFolderParentIdAttribute($childFolder, $folderA->get('id'));
         }
         $childrenFoldersIds = Hash::extract($result->children_folders, '{n}.id');
         $this->assertContains($folderB->id, $childrenFoldersIds);
@@ -134,20 +79,22 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersViewSuccess_ContainChildrenResources()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $userA = UserFactory::make()->persist();
 
-        // Insert fixtures.
-        // Ada has access to folder A, B and C as a OWNER
-        // Ada see folder folders B and C in A
+        // Ada has access to folder A as a OWNER
+        // Ada has access to resource 1 and 2 as a OWNER
+        // Ada see folder resources 1 and 2 in A
         // A (Ada:O)
-        // |- B (Ada:O)
-        // |- C (Ada:O)
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $resource1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-        $resource2 = $this->addResourceFor(['name' => 'R2', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        // |- 1 (Ada:O)
+        // |- 2 (Ada:O)
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
+        [$resource1, $resource2] = ResourceFactory::make(2)
+            ->withFoldersRelationsFor([$userA], $folderA)
+            ->withPermissionsFor([$userA])
+            ->persist();
 
-        $this->authenticateAs('ada');
-        $this->getJson("/folders/{$folderA->id}.json?contain[children_resources]=1&api-version=2");
+        $this->logInAs($userA);
+        $this->getJson("/folders/{$folderA->get('id')}.json?contain[children_resources]=1&api-version=2");
         $this->assertSuccess();
 
         $result = $this->_responseJsonBody;
@@ -163,7 +110,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersViewError_NotValidIdParameter()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $resourceId = 'invalid-id';
         $this->getJson("/folders/$resourceId.json?api-version=2");
         $this->assertError(400, 'The folder id is not valid.');
@@ -171,14 +118,14 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersViewError_NotAuthenticated()
     {
-        $folderId = UuidFactory::uuid('folder.id.folder');
+        $folderId = FolderFactory::make()->persist()->get('id');
         $this->getJson("/folders/{$folderId}.json?api-version=2");
         $this->assertAuthenticationError();
     }
 
     public function testFoldersViewError_DoesNotExist()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $folderId = UuidFactory::uuid();
         $this->getJson("/folders/{$folderId}.json?api-version=2");
         $this->assertResponseError('The folder does not exist.');
@@ -186,10 +133,12 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersViewSuccess_ContainPermissionsGroup()
     {
-        $folder = $this->insertContainPermissionsGroupFixture();
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$group, $userA])->withFoldersRelationsFor([$userA])->persist();
 
-        $this->authenticateAs('ada');
-        $this->getJson("/folders/{$folder->id}.json?contain[permissions]=1&contain[permissions.group]=1&api-version=2");
+        $this->logInAs($userA);
+        $this->getJson("/folders/{$folder->get('id')}.json?contain[permissions]=1&contain[permissions.group]=1&api-version=2");
 
         $this->assertSuccess();
         /** @var \Passbolt\Folders\Model\Entity\Folder[] $result */
@@ -206,29 +155,12 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         $this->assertGroupAttributes($permission->group);
     }
 
-    public function insertContainPermissionsGroupFixture()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $groupData = [
-            'groups_users' => [
-                ['user_id' => $userAId, 'is_admin' => true],
-                ['user_id' => $userBId],
-            ],
-        ];
-        $group = $this->addGroup($groupData);
-        $folder = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
-        $this->addPermission('Folder', $folder->id, 'Group', $group->id, Permission::OWNER);
-
-        return $folder;
-    }
-
     public function testFoldersViewSuccess_ContainPermissionsUserProfile()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folder = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $this->authenticateAs('ada');
-        $this->getJson("/folders/{$folder->id}.json?contain[permissions.user.profile]=1&api-version=2");
+        $userA = UserFactory::make()->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA])->persist();
+        $this->logInAs($userA);
+        $this->getJson("/folders/{$folder->get('id')}.json?contain[permissions.user.profile]=1&api-version=2");
 
         $this->assertSuccess();
         /** @var \Passbolt\Folders\Model\Entity\Folder[] $result */
