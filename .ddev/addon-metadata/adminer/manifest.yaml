@@ -1,0 +1,10 @@
+name: adminer
+repository: ddev/ddev-adminer
+version: v1.1.4
+install_date: "2025-05-10T22:25:05+02:00"
+project_files:
+    - docker-compose.adminer.yaml
+    - docker-compose.adminer_norouter.yaml
+    - commands/host/adminer
+global_files: []
+removal_actions: []

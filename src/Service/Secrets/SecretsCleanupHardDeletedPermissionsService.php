@@ -91,8 +91,8 @@ class SecretsCleanupHardDeletedPermissionsService
             ]);
 
         $userExpectedSecretsQuery = $directUsersSecretsQuery
-            ->union($inheritedUsersSecretsQuery->group(['resource_id', 'user_id']))
-            ->group(['resource_id', 'user_id']);
+            ->union($inheritedUsersSecretsQuery->groupBy(['resource_id', 'user_id']))
+            ->groupBy(['resource_id', 'user_id']);
 
         // Use a "LEFT JOIN" instead of a "NOT IN" for performance reason.
         return $this->Secrets->find()

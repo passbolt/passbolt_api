@@ -35,7 +35,7 @@ class SetupCompleteController extends AppController
     {
         $this->Authentication->allowUnauthenticated(['complete']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

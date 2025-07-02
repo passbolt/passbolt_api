@@ -16,11 +16,9 @@ declare(strict_types=1);
  */
 namespace Passbolt\SelfRegistration\Service\Healthcheck;
 
-use App\Error\Exception\FormValidationException;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
-use Cake\Database\Exception\MissingConnectionException;
-use Cake\Http\Exception\InternalErrorException;
+use Exception;
 use Passbolt\SelfRegistration\Form\Settings\SelfRegistrationBaseSettingsForm;
 use Passbolt\SelfRegistration\Service\SelfRegistrationGetSettingsService;
 
@@ -75,7 +73,7 @@ class SelfRegistrationHealthcheckService
             } else {
                 $settings = $this->selfRegistrationSettings;
             }
-        } catch (FormValidationException | MissingConnectionException | InternalErrorException $e) {
+        } catch (Exception $e) {
             return null;
         }
 

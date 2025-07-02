@@ -18,82 +18,34 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Controller\Users;
 
 use App\Model\Entity\Permission;
-use App\Test\Fixture\Base\FavoritesFixture;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\SecretsFixture;
-use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\Model\PermissionsModelTrait;
-use App\Test\Lib\Utility\FixtureProviderTrait;
-use App\Utility\UuidFactory;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
+use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 class UsersDeleteControllerTest extends FoldersIntegrationTestCase
 {
-    use FixtureProviderTrait;
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-    use PermissionsModelTrait;
-
-    public array $fixtures = [
-    FavoritesFixture::class,
-        GpgkeysFixture::class,
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        ProfilesFixture::class,
-        RolesFixture::class,
-        SecretsFixture::class,
-        UsersFixture::class,
-    ];
 
     public function testFoldersUsersDeleteSuccess_PersonalFolder()
-    {
-        [$folderA, $userAId] = $this->insertFixture_PersonalFolder();
-        $this->authenticateAs('admin');
-
-        $this->deleteJson("/users/$userAId.json?api-version=v2");
-        $this->assertSuccess();
-        $this->assertUserIsSoftDeleted($userAId);
-        $this->assertFolderNotExist($folderA->id);
-    }
-
-    private function insertFixture_PersonalFolder()
     {
         // Ada is OWNER of folder A
         // ---
         // A (Ada:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
+        RoleFactory::make()->guest()->persist();
+        $userA = UserFactory::make()->persist();
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
 
-        return [$folderA, $userAId];
+        $this->logInAsAdmin();
+
+        $this->deleteJson("/users/{$userA->get('id')}.json?api-version=v2");
+        $this->assertSuccess();
+        $this->assertUserIsSoftDeleted($userA->get('id'));
+        $this->assertFolderNotExist($folderA->get('id'));
     }
 
     public function testFoldersUsersDeleteError_SoleOwnerFolder_FolderSharedWithUser()
-    {
-        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser(); // phpcs:ignore
-        $this->authenticateAs('admin');
-
-        $this->deleteJson("/users/$userAId.json?api-version=v2");
-
-        $this->assertError(400);
-        $this->assertUserIsNotSoftDeleted($userAId);
-        $this->assertFolder($folderA->id);
-        $this->assertStringContainsString('transfer the ownership', $this->_responseJsonHeader->message);
-
-        $errors = $this->_responseJsonBody->errors;
-        $this->assertEquals(1, count($errors->folders->sole_owner));
-
-        $folder = $errors->folders->sole_owner[0];
-        $this->assertFolderAttributes($folder);
-        $this->assertEquals($folder->id, $folderA->id);
-    }
-
-    private function insertFixture_SoleOwnerFolder_FolderSharedWithUser()
     {
         // Ada is OWNER of folder A
         // Betty has READ on folder A
@@ -101,11 +53,28 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
         // ---
         // A (Ada:O, Betty:R)
         // B (Ada:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
-        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER]);
+        RoleFactory::make()->guest()->persist();
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+        FolderFactory::make()->withPermissionsFor([$userA])->persist();
 
-        return [$folderA, $folderB, $userAId, $userBId];
+        $this->logInAsAdmin();
+
+        $this->deleteJson("/users/{$userA->get('id')}.json?api-version=v2");
+
+        $this->assertError(400);
+        $this->assertUserIsNotSoftDeleted($userA->get('id'));
+        $this->assertFolder($folderA->get('id'));
+        $this->assertStringContainsString('transfer the ownership', $this->_responseJsonHeader->message);
+
+        $errors = $this->_responseJsonBody->errors;
+        $this->assertEquals(1, count($errors->folders->sole_owner));
+
+        $folder = $errors->folders->sole_owner[0];
+        $this->assertFolderAttributes($folder);
+        $this->assertEquals($folder->id, $folderA->get('id'));
     }
 }

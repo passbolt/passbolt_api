@@ -191,7 +191,7 @@ trait GroupsFindersTrait
                 if (count($order) === 2) {
                     $dir = $order[1];
                 }
-                $query->order([$order[0] => $dir]);
+                $query->orderBy([$order[0] => $dir]);
             }
         }
 

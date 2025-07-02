@@ -113,6 +113,10 @@ class UsersIndexControllerTest extends MfaIntegrationTestCase
         $this->assertTrue($userInResponse->is_mfa_enabled);
         $this->assertSame($userWithMfa->get('id'), $userInResponse->id);
 
+        // Required to clear up associations
+        $this->clearPlugins();
+        $this->getTableLocator()->clear();
+
         $this->getJson('/users.json?filter[is-mfa-enabled]=0&contain[is_mfa_enabled]=1');
         $this->assertSuccess();
         $responseJsonBody = (array)$this->_responseJsonBody;

@@ -30,7 +30,7 @@ class SelfRegistrationDryRunController extends AppController
     {
         $this->Authentication->allowUnauthenticated(['dryRun']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

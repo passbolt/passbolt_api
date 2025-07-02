@@ -19,24 +19,18 @@ namespace Passbolt\Folders\Test\TestCase\Service\Folders;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
-use App\Model\Entity\Role;
 use App\Notification\Email\EmailSubscriptionDispatcher;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\UsersFixture;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
-use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Service\Folders\FoldersUpdateService;
+use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -55,15 +49,6 @@ class FoldersUpdateServiceTest extends FoldersTestCase
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
     use PermissionsModelTrait;
-
-    public array $fixtures = [
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        RolesFixture::class,
-        UsersFixture::class,
-    ];
 
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersTable
@@ -99,52 +84,53 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public function testUpdateFolderSuccess_UpdateFolderMeta()
     {
-        [$folderA, $userAId] = $this->insertFixture_UpdateFolderMeta();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-
-        $this->service->update($uac, $folderA->id, MetadataFolderDto::fromArray(['name' => 'new name']));
-
-        $folderBUpdated = $this->foldersTable->findById($folderA->id)->first();
-        $this->assertEquals('new name', $folderBUpdated->get('name'));
-    }
-
-    private function insertFixture_UpdateFolderMeta()
-    {
         // Ada is OWNER of folder A
         // ---
         // A (Ada:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
+        $userA = UserFactory::make()->persist();
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
 
-        return [$folderA, $userAId];
+        $this->service->update($this->makeUac($userA), $folderA->get('id'), MetadataFolderDto::fromArray(['name' => 'new name']));
+
+        $folderBUpdated = $this->foldersTable->findById($folderA->get('id'))->first();
+        $this->assertEquals('new name', $folderBUpdated->get('name'));
     }
 
     public function testUpdateFolderSuccess_NotifyUserAfterUpdate()
     {
-        $fixtures = $this->insertFixture_InsufficientPermission();
-        $folderA = $fixtures[0];
-        $userAId = $fixtures[1];
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        // Ada is OWNER of folder A
+        // Betty has READ on folder A
+        // ---
+        // A (Ada:O, Betty:R)
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
 
         $name = 'new name';
         $dto = MetadataFolderDto::fromArray(['name' => $name]);
-        $this->service->update($uac, $folderA->id, $dto);
+        $this->service->update($this->makeUac($userA), $folderA->get('id'), $dto);
 
         $this->assertEmailQueueCount(2);
-        $this->assertEmailSubject('ada@passbolt.com', "You edited the folder $name");
-        $this->assertEmailInBatchContains('You edited a folder', 'ada@passbolt.com');
-        $this->assertEmailSubject('betty@passbolt.com', "Ada edited the folder $name");
-        $this->assertEmailInBatchContains('Ada edited a folder', 'betty@passbolt.com');
+        $this->assertEmailSubject($userA->username, "You edited the folder $name");
+        $this->assertEmailInBatchContains('You edited a folder', $userA->username);
+        $this->assertEmailSubject($userB->username, "{$userA->profile->first_name} edited the folder $name");
+        $this->assertEmailInBatchContains("{$userA->profile->first_name} edited a folder", $userB->username);
     }
 
     public function testUpdateFolderError_ValidationError()
     {
-        [$folderA, $userAId] = $this->insertFixture_UpdateFolderMeta();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        // Ada is OWNER of folder A
+        // ---
+        // A (Ada:O)
+        $userA = UserFactory::make()->persist();
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
+
         $folderData = ['name' => ''];
 
         try {
-            $this->service->update($uac, $folderA->id, MetadataFolderDto::fromArray($folderData));
+            $this->service->update($this->makeUac($userA), $folderA->get('id'), MetadataFolderDto::fromArray($folderData));
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate folder data.', $e->getMessage());
@@ -155,44 +141,39 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public function testUpdateFolderError_InsufficientPermission()
     {
-        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission(); // phpcs:ignore
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $uac = new UserAccessControl(Role::USER, $userBId);
-
-        $this->expectException(ForbiddenException::class);
-        $this->service->update($uac, $folderA->id, MetadataFolderDto::fromArray(['name' => 'new name']));
-    }
-
-    private function insertFixture_InsufficientPermission()
-    {
         // Ada is OWNER of folder A
         // Betty has READ on folder A
         // ---
         // A (Ada:O, Betty:R)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
 
-        return [$folderA, $userAId, $userBId];
+        $this->expectException(ForbiddenException::class);
+        $this->service->update($this->makeUac($userB), $folderA->get('id'), MetadataFolderDto::fromArray(['name' => 'new name']));
     }
 
     public function testUpdateFolderError_DoesNotExist()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        $userA = UserFactory::make()->persist();
         $notExistFolderId = UuidFactory::uuid();
 
         $this->expectException(NotFoundException::class);
-        $this->service->update($uac, $notExistFolderId, MetadataFolderDto::fromArray(['name' => 'new name']));
+        $this->service->update($this->makeUac($userA), $notExistFolderId, MetadataFolderDto::fromArray(['name' => 'new name']));
     }
 
     public function testUpdateFolderError_NoAccessToFolder()
     {
-        [$folderA, $userAId] = $this->insertFixture_UpdateFolderMeta(); // phpcs:ignore
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $uac = new UserAccessControl(Role::USER, $userBId);
+        // Ada is OWNER of folder A
+        // Betty has NO permissions on folder A
+        // ---
+        // A (Ada:O)
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
 
         $this->expectException(NotFoundException::class);
-        $this->service->update($uac, $folderA->id, MetadataFolderDto::fromArray(['name' => 'new name']));
+        $this->service->update($this->makeUac($userB), $folderA->get('id'), MetadataFolderDto::fromArray(['name' => 'new name']));
     }
 }

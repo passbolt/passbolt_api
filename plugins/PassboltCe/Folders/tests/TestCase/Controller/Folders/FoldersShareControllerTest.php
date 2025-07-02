@@ -18,19 +18,11 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\Model\PermissionsModelTrait;
+use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
-use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * Passbolt\Folders\Controller\Folders\FoldersUpdatePermissionsController Test Case
@@ -39,20 +31,6 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class FoldersShareControllerTest extends FoldersIntegrationTestCase
 {
-    use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-    use PermissionsModelTrait;
-
-    public array $fixtures = [
-        GpgkeysFixture::class,
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        RolesFixture::class,
-        UsersFixture::class,
-    ];
-
     /**
      * setUp method
      *
@@ -68,7 +46,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersShareFolder_CommonError1_DoesNotExist()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $folderId = UuidFactory::uuid();
         $this->postJson("/share/folder/{$folderId}.json?api-version=2");
         $this->assertError(404, 'The folder does not exist.');
@@ -76,24 +54,24 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersShareFolder_CommonError2_NoPermission()
     {
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folder = $this->addFolderFor(['name' => 'A'], [$userBId => Permission::READ]);
+        $userB = UserFactory::make()->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$userB], Permission::READ)->persist();
 
-        $this->authenticateAs('ada');
-        $this->postJson("/share/folder/{$folder->id}.json?api-version=2");
+        $this->logInAsUser();
+        $this->postJson("/share/folder/{$folder->get('id')}.json?api-version=2");
         $this->assertForbiddenError('You are not allowed to update the permissions of this folder.');
     }
 
     public function testFoldersShareFolder_CommonError_NotAuthenticated()
     {
-        $folderId = UuidFactory::uuid('folder.id.folder');
+        $folderId = FolderFactory::make()->persist()->get('id');
         $this->putJson("/folders/{$folderId}.json?api-version=2");
         $this->assertAuthenticationError();
     }
 
     public function testFoldersShareFolder_CommonError_NotValidIdParameter()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $resourceId = 'invalid-id';
         $this->putJson("/share/folder/$resourceId.json?api-version=2");
         $this->assertError(400, 'The folder id is not valid.');
@@ -102,8 +80,8 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
     public function testFoldersShareFolder_CommonError_IsProtectedByCsrfToken()
     {
         $this->disableCsrfToken();
-        $this->authenticateAs('ada');
-        $folderId = UuidFactory::uuid('folder.id.folder');
+        $this->logInAsUser();
+        $folderId = FolderFactory::make()->persist()->get('id');
         $this->put("/folders/{$folderId}.json?api-version=2");
         $this->assertResponseCode(403);
     }
@@ -114,22 +92,17 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersShareFolder_SharedError1_InsufficientPermission()
     {
-        $folder = $this->insertSharedError1Fixture();
-
-        $this->authenticateAs('ada');
-        $this->postJson("/share/folder/{$folder->id}.json?api-version=2");
-        $this->assertForbiddenError('You are not allowed to update the permissions of this folder.');
-    }
-
-    public function insertSharedError1Fixture()
-    {
-        // Ada has UPDATE access on folder A
+        // Ada has READ access on folder A
         // Betty has access to folder A as a OWNER
         // A (Ada:R, Betty:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folder = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::UPDATE, $userBId => Permission::OWNER]);
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $folder = FolderFactory::make()
+            ->withPermissionsFor([$userB])
+            ->withPermissionsFor([$userA], Permission::READ)
+            ->persist();
 
-        return $folder;
+        $this->logInAs($userA);
+        $this->postJson("/share/folder/{$folder->get('id')}.json?api-version=2");
+        $this->assertForbiddenError('You are not allowed to update the permissions of this folder.');
     }
 }

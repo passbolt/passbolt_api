@@ -52,11 +52,6 @@
             "type": "vcs",
             "url": "https://github.com/passbolt/cakephp-email-queue.git",
             "no-api": true
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/passbolt/cakephp.git",
-            "no-api": true
         }
     ],
     "require": {
@@ -70,7 +65,7 @@
         "ext-pdo": "*",
         "ext-curl": "*",
         "composer/composer": "^2.8.1",
-        "cakephp/cakephp": "v5.0.x-dev as 5.0.11",
+        "cakephp/cakephp": "^5.2.5",
         "cakephp/migrations": "^4.0.0",
         "cakephp/plugin-installer": "^2.0",
         "mobiledetect/mobiledetectlib": "^4.8.03",
@@ -95,8 +90,8 @@
         "cakephp/bake": "^3.0.0",
         "phpunit/phpunit": "^10.1.0",
         "cakephp/cakephp-codesniffer": "^5.0",
-        "passbolt/passbolt-selenium-api": "dev-cakephp5",
-        "passbolt/passbolt-test-data": "dev-cakephp5#75bf182692301efd5f4118f6f29b0b3a8619a41d",
+        "passbolt/passbolt-selenium-api": "dev-cakephp5#0d46ae337ba71659191e7625c96ff2f861da44d1",
+        "passbolt/passbolt-test-data": "dev-master#e0e3771",
         "vierge-noire/cakephp-fixture-factories": "^v3.0",
         "cakephp/localized": "^5.0",
         "cakedc/cakephp-phpstan": "^3.2",

@@ -20,32 +20,21 @@ namespace Passbolt\Folders\Test\TestCase\EventListener;
 use App\Model\Entity\Permission;
 use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
 use App\Test\Factory\PermissionFactory;
-use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\RoleFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
-use App\Test\Fixture\Alt0\SecretsFixture;
-use App\Test\Fixture\Base\FavoritesFixture;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\ResourcesFixture;
-use App\Test\Fixture\Base\ResourceTypesFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\EmailQueueTrait;
-use App\Test\Lib\Model\ResourcesModelTrait;
-use App\Test\Lib\Model\SecretsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Test\Factory\FolderFactory;
+use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * \Passbolt\Folders\EventListener\ResourcesEventListener Test Case
@@ -56,34 +45,11 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
 {
     use EmailQueueTrait;
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-    use ResourcesModelTrait;
-    use SecretsModelTrait;
     use EmailNotificationSettingsTestTrait;
-
-    public array $fixtures = [
-        GpgkeysFixture::class,
-        GroupsUsersFixture::class,
-        GroupsFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        UsersFixture::class,
-        FavoritesFixture::class,
-        RolesFixture::class,
-        SecretsFixture::class,
-        ResourcesFixture::class,
-        ResourceTypesFixture::class,
-    ];
-
-    /**
-     * @var \App\Model\Table\PermissionsTable
-     */
-    private $permissionsTable;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
     }
 
     public function testFoldersResourcesEventListenerSuccess_AfterResourceAdded()
@@ -91,21 +57,26 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         $this->loadNotificationSettings();
         $this->setEmailNotificationSetting('send.password.create', true);
 
-        [$userId, $folder] = $this->insertFixture_AfterResourceAdded();
+        ResourceTypeFactory::make()->default()->persist();
+        /** @var \App\Model\Entity\User $userA */
+        $userA = UserFactory::make()->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$userA])->persist();
+        FoldersRelationFactory::make()->user($userA)->folderParent($folder)->persist();
+
         $data = [
             'name' => 'R1',
-            'folder_parent_id' => $folder->id,
+            'folder_parent_id' => $folder->get('id'),
             'secrets' => [$this->getDummySecretData(['resource_id' => null])],
         ];
 
-        $this->authenticateAs('ada');
+        $this->logInAs($userA);
         $this->postJson('/resources.json?api-version=v2', $data);
         $this->assertSuccess();
 
         $resource = $this->_responseJsonBody;
-        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userId, $folder->id);
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, $folder->get('id'));
         $this->assertEmailIsInQueue([
-            'email' => 'ada@passbolt.com',
+            'email' => $userA->username,
             'subject' => 'You added the password ' . $data['name'],
             'template' => ResourceCreateEmailRedactor::TEMPLATE,
         ]);
@@ -142,45 +113,44 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         $this->unloadNotificationSettings();
     }
 
-    public function insertFixture_AfterResourceAdded()
-    {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folder = $this->addFolderFor([], [$userId => Permission::OWNER]);
-        $folder = $this->addFolderFor(['folder_parent_id' => $folder->id], [$userId => Permission::OWNER]);
-
-        return [$userId, $folder];
-    }
-
     public function testFoldersResourcesEventListenerSuccess_AfterResourceSoftDeleted()
     {
-        [$userId, $resource] = $this->insertFixture_AfterResourceSoftDeleted();
+        RoleFactory::make()->guest()->persist();
+        /** @var \App\Model\Entity\User $userA */
+        $userA = UserFactory::make()->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA])->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->withFoldersRelationsFor([$userA], $folder)
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA])
+            ->persist();
+
         $data = $resource->toArray();
         $data['folder_parent_id'] = null;
 
-        $this->authenticateAs('ada');
+        $this->logInAs($userA);
         $this->deleteJson("/resources/{$resource->id}.json?api-version=v2", $data);
         $this->assertSuccess();
 
-        $this->assertFolderRelationNotExist($resource->id, $userId);
-    }
-
-    public function insertFixture_AfterResourceSoftDeleted()
-    {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folder = $this->addFolderFor([], [$userId => Permission::OWNER]);
-        $resource = $this->addResourceFor(['folder_parent_id' => $folder->id], [$userId => Permission::OWNER]);
-
-        return [$userId, $resource];
+        $this->assertFolderRelationNotExist($resource->id, $userA->id);
     }
 
     public function testFoldersResourcesEventListenerSuccess_AfterAccessGranted()
     {
-        [$folder, $resource, $userAId, $userBId] = $this->insertFixture_AfterAccessGranted();
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB])->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->withFoldersRelationsFor([$userA], $folder)
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA])
+            ->persist();
 
-        $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
-        $data['secrets'][] = ['user_id' => $userBId, 'data' => Hash::get($this->getDummySecretData(), 'data')];
+        $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userB->id, 'type' => Permission::OWNER];
+        $data['secrets'][] = ['user_id' => $userB->id, 'data' => Hash::get($this->getDummySecretData(), 'data')];
 
-        $this->authenticateAs('ada');
+        $this->logInAs($userA);
         /*
          * If not cleared, the folderizable behavior cannot be applied on the ResourcesTable as the ResourcesTable is already in the registry.
          * Error: Unknown finder method "folder_parent" on App\Model\Table\ResourcesTable.
@@ -190,28 +160,25 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         $this->assertSuccess();
 
         $this->assertItemIsInTrees($resource->id, 2);
-        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, $folder->id);
-        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, $folder->id);
-    }
-
-    public function insertFixture_AfterAccessGranted()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folder = $this->addFolderFor([], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $resource = $this->addResourceFor(['folder_parent_id' => $folder->id], [$userAId => Permission::OWNER]);
-
-        return [$folder, $resource, $userAId, $userBId];
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, $folder->get('id'));
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, $folder->get('id'));
     }
 
     public function testFoldersResourcesEventListenerSuccess_AfterAccessRevoked()
     {
-        [$folder, $resource, $userAId, $userBId] = $this->insertFixture_AfterAccessRevoked();
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$userA, $userB])->withFoldersRelationsFor([$userA, $userB])->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->withFoldersRelationsFor([$userA, $userB], $folder)
+            ->withPermissionsFor([$userA, $userB])
+            ->withSecretsFor([$userA, $userB])
+            ->persist();
 
-        $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($resource->id, $userBId)->first();
+        $permission = $resource->permissions[1];
         $data['permissions'][] = ['id' => $permission->get('id'), 'delete' => true];
 
-        $this->authenticateAs('ada');
+        $this->loginAs($userA);
         /*
          * If not cleared, the folderizable behavior cannot be applied on the ResourcesTable as the ResourcesTable is already in the registry.
          * Error: Unknown finder method "folder_parent" on App\Model\Table\ResourcesTable.
@@ -221,16 +188,6 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         $this->assertSuccess();
 
         $this->assertItemIsInTrees($resource->id, 1);
-        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, $folder->id);
-    }
-
-    public function insertFixture_AfterAccessRevoked()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folder = $this->addFolderFor([], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $resource = $this->addResourceFor(['folder_parent_id' => $folder->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-
-        return [$folder, $resource, $userAId, $userBId];
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userA->id, $folder->get('id'));
     }
 }

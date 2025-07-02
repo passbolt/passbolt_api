@@ -24,11 +24,14 @@ class V300DeleteMetadataOfSoftDeletedResources extends AbstractMigration
      */
     public function up()
     {
-        TableRegistry::getTableLocator()->get('Resources')
-            ->updateAll([
+        $this
+            ->getUpdateBuilder()
+            ->update('resources')
+            ->set([
                 'username' => null,
                 'uri' => null,
                 'description' => null,
-            ], ['deleted' => true]);
+            ])
+            ->where(['deleted' => true]);
     }
 }
