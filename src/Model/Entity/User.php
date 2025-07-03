@@ -76,6 +76,21 @@ class User extends Entity implements IdentityInterface
     ];
 
     /**
+     * @var array<string>
+     */
+    protected array $_hidden = ['virtual_last_logged_in'];
+
+    /**
+     * Use computed value from subquery (UsersFindersTrait::findlastLoggedIn()) and not return the actual value from the field.
+     *
+     * @return mixed
+     */
+    protected function _getLastLoggedIn(): mixed
+    {
+        return $this->_fields['virtual_last_logged_in'] ?? null;
+    }
+
+    /**
      * Authentication\IdentityInterface method
      *
      * @return string|null

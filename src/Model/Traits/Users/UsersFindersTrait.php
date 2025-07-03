@@ -641,9 +641,9 @@ trait UsersFindersTrait
             ->limit(1);
 
         $selectTypeMap = $query->getSelectTypeMap();
-        $selectTypeMap->addDefaults(['last_logged_in' => 'datetime']);
+        $selectTypeMap->addDefaults(['virtual_last_logged_in' => 'datetime']);
 
-        $query->selectAlso(['last_logged_in' => $subQuery]);
+        $query->selectAlso(['virtual_last_logged_in' => $subQuery]);
 
         return $query;
     }
