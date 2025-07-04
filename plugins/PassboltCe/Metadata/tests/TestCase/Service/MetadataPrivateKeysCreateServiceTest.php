@@ -161,7 +161,7 @@ class MetadataPrivateKeysCreateServiceTest extends AppTestCaseV5
         $uac = new UserAccessControl(Role::ADMIN, $admin->id);
         $data = [
             'user_id' => $user->id,
-            'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+            'data' => $this->getEncryptedMetadataPrivateKeyForUser(),
         ];
         $sut = new MetadataPrivateKeysCreateService();
         $this->expectException(NotFoundException::class);

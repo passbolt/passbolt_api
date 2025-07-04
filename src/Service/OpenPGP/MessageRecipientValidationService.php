@@ -26,7 +26,7 @@ class MessageRecipientValidationService
     /**
      * @param array $messageInfo see MessageValidationService::getMessageInfo
      * @param array $keyInfo see PublicKeyValidationService::getPublicKeyInfo
-     * @throw CustomValidationException if the message info or key info are not workable
+     * @throws \App\Error\Exception\CustomValidationException if the message info or key info are not workable
      * @return bool
      */
     public static function isMessageForRecipient(array $messageInfo, array $keyInfo): bool
