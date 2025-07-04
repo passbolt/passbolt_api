@@ -53,7 +53,7 @@ class MetadataKeyCreateFormTest extends TestCase
             'armored_key' => $data['public_key'],
             'metadata_private_keys' => [[
                 'user_id' => UuidFactory::uuid(),
-                'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+                'data' => $this->getEncryptedMetadataPrivateKeyForUser(),
             ]],
         ];
     }

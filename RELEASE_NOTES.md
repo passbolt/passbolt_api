@@ -1,12 +1,14 @@
-Release song: TBD
+Release song: https://www.youtube.com/watch?v=ubWL8VAPoYw
 
 ## [5.3.0-test.1] - 2025-07-02
 ### Added
-- PB-43066 As a developer I can setup my development environment using ddev
-- PB-41664 OpenID Connect and Active Directory Federation Services are now enabled by default
+- PB-41664 Enables OpenID Connect and ADFS SSO by default
+- PB-43066 As a developer I can setup my development environment using dev
+- PB-43188 Add Custom Fields Standalone resource type migration
 
 ### Improved
 - PB-43383 Improves the performance of most paginated endpoints
+- PB-43659 Improve error handling when metadata key could not be saved due to unexpected reason
 
 ### Fixed
 - PB-43375 As a user performing an account recovery, Azure SSO should not return a 500 error when secret keys are expired
@@ -20,7 +22,7 @@ Release song: TBD
 - PB-42071 Fixes 500 errors on malformed UTF-8 character-based URLs when using the JsonTraceFormatter class
 
 ### Maintenance
-- PB-42177 Upgrade CakePHP version to 5.2.5
-- PB-43010 Replaces the use of static fixtures with fixture factories in multiple test case
+- PB-42177 Upgrades CakePHP version to 5.2.5
+- PB-43010 Replaces the use of static fixtures with fixture factories in multiple test cases
 - PB-41724 Map _cake_core_ cache config with _cake_translations_ in the bootstrap.php file
 - PB-42380 Adds the missing v5 resource types on data insertion in the passbolt-test-data vendor
