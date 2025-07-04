@@ -87,7 +87,6 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
                 'Migrations',
                 'Authentication',
                 'EmailQueue',
-                'BryanCrowe/ApiPagination',
             ],
             self::EXPECTED_EE_PLUGINS,
             [
@@ -108,7 +107,6 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
             'Migrations',
             'Authentication',
             'EmailQueue',
-            'BryanCrowe/ApiPagination',
             'PassboltSeleniumApi',
             'PassboltTestData',
             'Passbolt/Ee',
