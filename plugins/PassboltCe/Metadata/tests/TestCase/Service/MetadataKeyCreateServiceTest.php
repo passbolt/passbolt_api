@@ -84,7 +84,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                 ],
                 [
                     'user_id' => $uac->getId(),
-                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyForUser(),
                 ],
             ],
         ]);
@@ -268,11 +268,11 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             'metadata_private_keys' => [
                 [
                     'user_id' => null, // server key
-                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyForUser(),
                 ],
                 [
                     'user_id' => $uac->getId(),
-                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyForUser(),
                 ],
             ],
         ]);
@@ -304,7 +304,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                 ],
                 [
                     'user_id' => $uac->getId(),
-                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyForUser(),
                 ],
                 [
                     // Same user, different encrypted message
@@ -352,7 +352,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                 ],
                 [
                     'user_id' => $uac->getId(),
-                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyForUser(),
                 ],
             ],
         ]);
