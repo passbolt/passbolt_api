@@ -8,7 +8,7 @@
 
 set -eo pipefail
 
-ddev composer install
+ddev composer install --no-interaction
 ddev create_passbolt_db
 if [ ! -f config/jwt/jwt.key ] || [ ! -f config/jwt/jwt.pem ]; then
     ddev cake passbolt create_jwt_keys
