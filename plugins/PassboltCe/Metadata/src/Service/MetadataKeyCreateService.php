@@ -103,6 +103,11 @@ class MetadataKeyCreateService
                 __('The metadata key could not be saved.'),
                 $errors
             );
+        } catch (CustomValidationException $e) { // @phpstan-ignore-line
+            $msg = __('The metadata key could not be saved.');
+            $msg .= ' ' . $e->getMessage();
+
+            throw new CustomValidationException($msg, $e->getErrors(), $e->getTable(), $e->getCode(), $e);
         } catch (Exception $e) { // @phpstan-ignore-line
             throw new InternalErrorException(__('Could not save the metadata key, please try again later.'), null, $e);
         }

@@ -114,7 +114,7 @@ trait GpgMetadataKeysTestTrait
      *
      * @return false|string
      */
-    public function getEncryptedMetadataPrivateKeyFoUser()
+    public function getEncryptedMetadataPrivateKeyForUser()
     {
         return file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_private_key_for_maki.msg');
     }
