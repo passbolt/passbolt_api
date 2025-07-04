@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4367827cbedf9ebfcf2b524271d7e623",
+    "content-hash": "52afc4ceccaad207eed24390e55a765b",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2030,12 +2030,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/cakephp-email-queue.git",
-                "reference": "7903ab082b113d35b3428a957bdd7859703cc024"
+                "reference": "30c24a0dbebd5a91ce7db9ce3a67db1a0d4711e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/cakephp-email-queue/zipball/7903ab082b113d35b3428a957bdd7859703cc024",
-                "reference": "7903ab082b113d35b3428a957bdd7859703cc024",
+                "url": "https://api.github.com/repos/passbolt/cakephp-email-queue/zipball/30c24a0dbebd5a91ce7db9ce3a67db1a0d4711e3",
+                "reference": "30c24a0dbebd5a91ce7db9ce3a67db1a0d4711e3",
                 "shasum": ""
             },
             "require": {
@@ -2078,7 +2078,7 @@
                 "preview",
                 "queue"
             ],
-            "time": "2025-03-26T08:46:24+00:00"
+            "time": "2025-07-04T12:39:10+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -7829,11 +7829,11 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "bcrowe/cakephp-api-pagination": 20,
         "lorenzo/cakephp-email-queue": 20,
+        "bcrowe/cakephp-api-pagination": 20,
+        "psy/psysh": 0,
         "passbolt/passbolt-selenium-api": 20,
-        "passbolt/passbolt-test-data": 20,
-        "psy/psysh": 0
+        "passbolt/passbolt-test-data": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -7848,7 +7848,7 @@
         "ext-pdo": "*",
         "ext-curl": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.2"
     },
