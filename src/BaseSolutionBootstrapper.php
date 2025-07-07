@@ -39,6 +39,7 @@ class BaseSolutionBootstrapper
     public function addFeaturePlugins(Application $app): void
     {
         if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
+            $app->addPlugin('Passbolt/TestData', ['bootstrap' => true, 'routes' => false]);
             $app->addPlugin('PassboltSeleniumApi', ['bootstrap' => true, 'routes' => true]);
             $app->addPlugin('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
         }
