@@ -21,6 +21,9 @@
             <directory>plugins/PassboltCe/*/tests/TestCase</directory>
             <exclude>plugins/PassboltCe/WebInstaller/tests/TestCase</exclude>
         </testsuite>
+        <testsuite name="dev">
+            <directory>plugins/PassboltDev/*/tests/TestCase</directory>
+        </testsuite>
         <testsuite name="ee">
             <directory>plugins/PassboltEe/*/tests/TestCase</directory>
         </testsuite>
