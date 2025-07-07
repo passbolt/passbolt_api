@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "52afc4ceccaad207eed24390e55a765b",
+    "content-hash": "603885586a8ec0af3f5ff6a72ede1742",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5550,12 +5550,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-test-data",
-                "reference": "e0e3771"
+                "reference": "be1fe75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-test-data/zipball/e0e3771",
-                "reference": "e0e3771",
+                "url": "https://api.github.com/repos/passbolt/passbolt-test-data/zipball/be1fe75",
+                "reference": "be1fe75",
                 "shasum": ""
             },
             "require": {
@@ -5598,7 +5598,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2025-06-16T15:30:34+00:00"
+            "time": "2025-07-07T14:30:26+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -7829,11 +7829,11 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "lorenzo/cakephp-email-queue": 20,
         "bcrowe/cakephp-api-pagination": 20,
-        "psy/psysh": 0,
+        "lorenzo/cakephp-email-queue": 20,
         "passbolt/passbolt-selenium-api": 20,
-        "passbolt/passbolt-test-data": 20
+        "passbolt/passbolt-test-data": 20,
+        "psy/psysh": 0
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -7848,7 +7848,7 @@
         "ext-pdo": "*",
         "ext-curl": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.2"
     },
