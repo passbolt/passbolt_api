@@ -73,7 +73,7 @@ class AppController extends Controller
         $safeMode = $safeMode && preg_match('/^https/', Configure::read('App.fullBaseUrl'));
         $this->set('safeMode', $safeMode);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

@@ -19,19 +19,14 @@ namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\UsersFixture;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
+use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -46,16 +41,6 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
     use PermissionsModelTrait;
-
-    public array $fixtures = [
-        GpgkeysFixture::class,
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        RolesFixture::class,
-        UsersFixture::class,
-    ];
 
     public $FoldersRelations;
     public $Permissions;
@@ -77,9 +62,9 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersCreateFolder_PersoSuccess1_CreateFolder()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $userI = UserFactory::make()->user()->persist();
         $data = ['name' => 'A'];
-        $this->authenticateAs('ada');
+        $this->logInAs($userI);
         $this->postJson('/folders.json?api-version=2', $data);
         $this->assertSuccess();
 
@@ -87,20 +72,20 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $folder = $this->_responseJsonBody;
         $this->assertFolderAttributes($folder);
         $this->assertEquals($data['name'], $folder->name);
-        $this->assertEquals($userId, $folder->created_by);
-        $this->assertEquals($userId, $folder->modified_by);
+        $this->assertEquals($userI->get('id'), $folder->created_by);
+        $this->assertEquals($userI->get('id'), $folder->modified_by);
     }
 
     public function testFoldersCreateFolder_PersoSuccess2_CreateInFolder()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $parentFolder = $this->insertPersoSuccess2Fixture();
+        $userI = UserFactory::make()->user()->persist();
+        $folderA = FolderFactory::make()->withPermissionsFor([$userI])->persist();
 
         $data = [
             'name' => 'B',
-            'folder_parent_id' => $parentFolder->id,
+            'folder_parent_id' => $folderA->get('id'),
         ];
-        $this->authenticateAs('ada');
+        $this->logInAs($userI);
         $this->postJson('/folders.json?api-version=2', $data);
         $this->assertSuccess();
 
@@ -109,24 +94,14 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $this->assertFolderAttributes($folder);
         $this->assertEquals($data['name'], $folder->name);
         $this->assertEquals($data['folder_parent_id'], $folder->folder_parent_id);
-        $this->assertEquals($userId, $folder->created_by);
-        $this->assertEquals($userId, $folder->modified_by);
-    }
-
-    private function insertPersoSuccess2Fixture()
-    {
-        // Ada has access to folder A as a OWNER
-        // A (Ada:O)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-
-        return $folderA;
+        $this->assertEquals($userI->get('id'), $folder->created_by);
+        $this->assertEquals($userI->get('id'), $folder->modified_by);
     }
 
     public function testFoldersCreateFolder_CommonError1_ValidationError()
     {
         $data = ['name' => ''];
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->postJson('/folders.json?api-version=2', $data);
         $this->assertError(400, 'Could not validate folder data.');
         $arr = $this->getResponseBodyAsArray();
@@ -141,7 +116,7 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
             'name' => 'B',
             'folder_parent_id' => UuidFactory::uuid('folder.id.not-exist'),
         ];
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->postJson('/folders.json?api-version=2', $data);
         $this->assertError(400, 'Could not validate folder data');
         $arr = $this->getResponseBodyAsArray();
@@ -152,13 +127,17 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersCreateFolder_SharedError1_ParentFolderInsufficientPermission()
     {
-        $parentFolder = $this->insertSharedError1Fixture();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA], Permission::READ)
+            ->withPermissionsFor([$userB])
+            ->persist();
 
         $data = [
             'name' => 'B',
-            'folder_parent_id' => $parentFolder->id,
+            'folder_parent_id' => $folderA->get('id'),
         ];
-        $this->authenticateAs('ada');
+        $this->logInAs($userA);
         $this->postJson('/folders.json?api-version=2', $data);
         $arr = $this->getResponseBodyAsArray();
         $error = Hash::get($arr, 'folder_parent_id');
@@ -166,22 +145,10 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $this->assertEquals('You are not allowed to create content into the parent folder.', $error['has_folder_access']);
     }
 
-    private function insertSharedError1Fixture()
-    {
-        // Ada has access to folder A in READ
-        // Betty has access to folder A as OWNER
-        // A (Ada:R, Betty:0)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folder = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
-
-        return $folder;
-    }
-
     public function testFoldersCreateFolderError_IsProtectedByCsrfToken()
     {
         $this->disableCsrfToken();
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->post('/folders.json?api-version=2');
         $this->assertResponseCode(403);
     }

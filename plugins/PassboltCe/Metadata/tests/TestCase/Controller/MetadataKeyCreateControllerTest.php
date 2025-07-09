@@ -73,7 +73,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
                 ],
                 [
                     'user_id' => $user['id'],
-                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyForUser(),
                 ],
             ],
         ]);
@@ -132,7 +132,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
                 ],
                 [
                     'user_id' => $user['id'],
-                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyForUser(),
                 ],
             ],
             'expired' => null,
@@ -251,7 +251,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
                 ],
                 [
                     'user_id' => $user['id'],
-                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyForUser(),
                 ],
             ],
         ]);
@@ -279,7 +279,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
                 ],
                 [
                     'user_id' => $user['id'],
-                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyForUser(),
                 ],
             ],
             'deleted' => DateTime::yesterday()->format('Y-m-d H:i:s'),

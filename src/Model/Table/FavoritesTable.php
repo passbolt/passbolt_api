@@ -38,7 +38,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Favorite|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Favorite patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Favorite[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\Favorite findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Favorite findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @method \App\Model\Entity\Favorite newEmptyEntity()
  * @method \App\Model\Entity\Favorite saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32234385c34cbf7643869f9015189077",
+    "content-hash": "52afc4ceccaad207eed24390e55a765b",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -264,31 +264,31 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "v5.0.x-dev",
+            "version": "5.2.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/passbolt/cakephp.git",
-                "reference": "b6f0c344c07dcb27af1f6c2815e4055ae9ae7489"
+                "url": "https://github.com/cakephp/cakephp.git",
+                "reference": "c1fc1c5b4e73eee0628f5cddffc1c2d7d6ffa466"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/cakephp/zipball/b6f0c344c07dcb27af1f6c2815e4055ae9ae7489",
-                "reference": "b6f0c344c07dcb27af1f6c2815e4055ae9ae7489",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/c1fc1c5b4e73eee0628f5cddffc1c2d7d6ffa466",
+                "reference": "c1fc1c5b4e73eee0628f5cddffc1c2d7d6ffa466",
                 "shasum": ""
             },
             "require": {
-                "cakephp/chronos": "^3.0.2",
-                "composer/ca-bundle": "^1.2",
+                "cakephp/chronos": "^3.1",
+                "composer/ca-bundle": "^1.5",
                 "ext-intl": "*",
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "laminas/laminas-diactoros": "^3.0",
+                "laminas/laminas-diactoros": "^3.3",
                 "laminas/laminas-httphandlerrunner": "^2.6",
                 "league/container": "^4.2",
                 "php": ">=8.1",
                 "psr/container": "^1.1 || ^2.0",
                 "psr/http-client": "^1.0.2",
-                "psr/http-factory": "^1.0.2",
+                "psr/http-factory": "^1.1",
                 "psr/http-message": "^1.1 || ^2.0",
                 "psr/http-server-handler": "^1.0.2",
                 "psr/http-server-middleware": "^1.0.2",
@@ -321,27 +321,25 @@
                 "cakephp/validation": "self.version"
             },
             "require-dev": {
-                "cakephp/cakephp-codesniffer": "^5.0",
-                "http-interop/http-factory-tests": "^2.0",
+                "cakephp/cakephp-codesniffer": "^5.2",
+                "http-interop/http-factory-tests": "dev-main",
                 "mikey179/vfsstream": "^1.6.10",
                 "mockery/mockery": "^1.6",
                 "paragonie/csp-builder": "^2.3 || ^3.0",
-                "phpstan/extension-installer": "^1.3",
-                "phpstan/phpstan": "1.12.3",
-                "phpunit/phpunit": "^10.1.0 <=10.5.3",
-                "symplify/phpstan-rules": "^12.4"
+                "phpunit/phpunit": "^10.5.5 || ^11.1.3 || ^12.0.9"
             },
             "suggest": {
                 "ext-curl": "To enable more efficient network calls in Http\\Client.",
                 "ext-openssl": "To use Security::encrypt() or have secure CSRF token generation.",
-                "lib-ICU": "To use locale-aware features in the I18n and Database packages",
                 "paragonie/csp-builder": "CSP builder, to use the CSP Middleware"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-5.next": "5.2.x-dev"
+                }
+            },
             "autoload": {
-                "psr-4": {
-                    "Cake\\": "src/"
-                },
                 "files": [
                     "src/Core/functions.php",
                     "src/Error/functions.php",
@@ -350,68 +348,12 @@
                     "src/ORM/bootstrap.php",
                     "src/Routing/functions.php",
                     "src/Utility/bootstrap.php"
-                ]
-            },
-            "autoload-dev": {
+                ],
                 "psr-4": {
-                    "Cake\\PHPStan\\": "tests/PHPStan/",
-                    "Cake\\Test\\": "tests/",
-                    "TestApp\\": "tests/test_app/TestApp/",
-                    "TestApp\\Test\\": "tests/test_app/TestApp/tests/",
-                    "TestPlugin\\": "tests/test_app/Plugin/TestPlugin/src/",
-                    "TestPlugin\\Test\\": "tests/test_app/Plugin/TestPlugin/tests/",
-                    "TestPluginTwo\\": "tests/test_app/Plugin/TestPluginTwo/src/",
-                    "Company\\TestPluginThree\\": "tests/test_app/Plugin/Company/TestPluginThree/src/",
-                    "Company\\TestPluginThree\\Test\\": "tests/test_app/Plugin/Company/TestPluginThree/tests/",
-                    "Named\\": "tests/test_app/Plugin/Named/src/"
+                    "Cake\\": "src/"
                 }
             },
-            "scripts": {
-                "check": [
-                    "@cs-check",
-                    "@test"
-                ],
-                "cs-check": [
-                    "phpcs --colors --parallel=16 -p"
-                ],
-                "cs-fix": [
-                    "phpcbf --colors --parallel=16 -p"
-                ],
-                "phpstan": [
-                    "phpstan analyse"
-                ],
-                "psalm": [
-                    "tools/psalm --show-info=false"
-                ],
-                "stan": [
-                    "@phpstan",
-                    "@psalm"
-                ],
-                "phpstan-tests": [
-                    "phpstan analyze -c tests/phpstan.neon"
-                ],
-                "phpstan-baseline": [
-                    "phpstan --generate-baseline"
-                ],
-                "psalm-baseline": [
-                    "tools/psalm  --set-baseline=psalm-baseline.xml"
-                ],
-                "stan-setup": [
-                    "phive install"
-                ],
-                "lowest": [
-                    "validate-prefer-lowest"
-                ],
-                "lowest-setup": [
-                    "composer update --prefer-lowest --prefer-stable --prefer-dist --no-interaction && cp composer.json composer.backup && composer require --dev dereuromark/composer-prefer-lowest && mv composer.backup composer.json"
-                ],
-                "test": [
-                    "phpunit"
-                ],
-                "test-coverage": [
-                    "phpunit --coverage-clover=clover.xml"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -435,11 +377,11 @@
                 "validation"
             ],
             "support": {
-                "issues": "https://github.com/cakephp/cakephp/issues",
                 "forum": "https://discourse.cakephp.org/",
+                "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/cakephp"
             },
-            "time": "2025-05-06T03:57:39+00:00"
+            "time": "2025-06-21T03:24:54+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -611,16 +553,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.5.5",
+            "version": "1.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "08c50d5ec4c6ced7d0271d2862dec8c1033283e6"
+                "reference": "d665d22c417056996c59019579f1967dfe5c1e82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/08c50d5ec4c6ced7d0271d2862dec8c1033283e6",
-                "reference": "08c50d5ec4c6ced7d0271d2862dec8c1033283e6",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/d665d22c417056996c59019579f1967dfe5c1e82",
+                "reference": "d665d22c417056996c59019579f1967dfe5c1e82",
                 "shasum": ""
             },
             "require": {
@@ -667,7 +609,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.5.5"
+                "source": "https://github.com/composer/ca-bundle/tree/1.5.7"
             },
             "funding": [
                 {
@@ -683,7 +625,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-08T16:17:16+00:00"
+            "time": "2025-05-26T15:08:54+00:00"
         },
         {
             "name": "composer/class-map-generator",
@@ -1659,16 +1601,16 @@
         },
         {
             "name": "laminas/laminas-diactoros",
-            "version": "3.5.0",
+            "version": "3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-diactoros.git",
-                "reference": "143a16306602ce56b8b092a7914fef03c37f9ed2"
+                "reference": "b068eac123f21c0e592de41deeb7403b88e0a89f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/143a16306602ce56b8b092a7914fef03c37f9ed2",
-                "reference": "143a16306602ce56b8b092a7914fef03c37f9ed2",
+                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/b068eac123f21c0e592de41deeb7403b88e0a89f",
+                "reference": "b068eac123f21c0e592de41deeb7403b88e0a89f",
                 "shasum": ""
             },
             "require": {
@@ -1689,7 +1631,7 @@
                 "ext-gd": "*",
                 "ext-libxml": "*",
                 "http-interop/http-factory-tests": "^2.2.0",
-                "laminas/laminas-coding-standard": "~2.5.0",
+                "laminas/laminas-coding-standard": "~3.0.0",
                 "php-http/psr7-integration-tests": "^1.4.0",
                 "phpunit/phpunit": "^10.5.36",
                 "psalm/plugin-phpunit": "^0.19.0",
@@ -1743,20 +1685,20 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2024-10-14T11:59:49+00:00"
+            "time": "2025-05-05T16:03:34+00:00"
         },
         {
             "name": "laminas/laminas-httphandlerrunner",
-            "version": "2.11.0",
+            "version": "2.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-httphandlerrunner.git",
-                "reference": "c428d9f67f280d155637cbe2b7245b5188c8cdae"
+                "reference": "b14da3519c650e9436e410cfedee6f860312eff9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-httphandlerrunner/zipball/c428d9f67f280d155637cbe2b7245b5188c8cdae",
-                "reference": "c428d9f67f280d155637cbe2b7245b5188c8cdae",
+                "url": "https://api.github.com/repos/laminas/laminas-httphandlerrunner/zipball/b14da3519c650e9436e410cfedee6f860312eff9",
+                "reference": "b14da3519c650e9436e410cfedee6f860312eff9",
                 "shasum": ""
             },
             "require": {
@@ -1766,11 +1708,11 @@
                 "psr/http-server-handler": "^1.0"
             },
             "require-dev": {
-                "laminas/laminas-coding-standard": "~3.0.0",
-                "laminas/laminas-diactoros": "^3.4.0",
-                "phpunit/phpunit": "^10.5.36",
-                "psalm/plugin-phpunit": "^0.19.0",
-                "vimeo/psalm": "^5.26.1"
+                "laminas/laminas-coding-standard": "~3.1.0",
+                "laminas/laminas-diactoros": "^3.6.0",
+                "phpunit/phpunit": "^10.5.46",
+                "psalm/plugin-phpunit": "^0.19.5",
+                "vimeo/psalm": "^6.10.3"
             },
             "type": "library",
             "extra": {
@@ -1810,20 +1752,20 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2024-10-17T20:37:17+00:00"
+            "time": "2025-05-13T21:21:16+00:00"
         },
         {
             "name": "league/container",
-            "version": "4.2.4",
+            "version": "4.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/container.git",
-                "reference": "7ea728b013b9a156c409c6f0fc3624071b742dec"
+                "reference": "d3cebb0ff4685ff61c749e54b27db49319e2ec00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/container/zipball/7ea728b013b9a156c409c6f0fc3624071b742dec",
-                "reference": "7ea728b013b9a156c409c6f0fc3624071b742dec",
+                "url": "https://api.github.com/repos/thephpleague/container/zipball/d3cebb0ff4685ff61c749e54b27db49319e2ec00",
+                "reference": "d3cebb0ff4685ff61c749e54b27db49319e2ec00",
                 "shasum": ""
             },
             "require": {
@@ -1884,7 +1826,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/container/issues",
-                "source": "https://github.com/thephpleague/container/tree/4.2.4"
+                "source": "https://github.com/thephpleague/container/tree/4.2.5"
             },
             "funding": [
                 {
@@ -1892,7 +1834,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-10T12:42:13+00:00"
+            "time": "2025-05-20T12:55:37+00:00"
         },
         {
             "name": "league/flysystem",
@@ -2088,12 +2030,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/cakephp-email-queue.git",
-                "reference": "7903ab082b113d35b3428a957bdd7859703cc024"
+                "reference": "30c24a0dbebd5a91ce7db9ce3a67db1a0d4711e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/cakephp-email-queue/zipball/7903ab082b113d35b3428a957bdd7859703cc024",
-                "reference": "7903ab082b113d35b3428a957bdd7859703cc024",
+                "url": "https://api.github.com/repos/passbolt/cakephp-email-queue/zipball/30c24a0dbebd5a91ce7db9ce3a67db1a0d4711e3",
+                "reference": "30c24a0dbebd5a91ce7db9ce3a67db1a0d4711e3",
                 "shasum": ""
             },
             "require": {
@@ -2136,7 +2078,7 @@
                 "preview",
                 "queue"
             ],
-            "time": "2025-03-26T08:46:24+00:00"
+            "time": "2025-07-04T12:39:10+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -2855,16 +2797,16 @@
         },
         {
             "name": "psr/simple-cache",
-            "version": "2.0.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/simple-cache.git",
-                "reference": "8707bf3cea6f710bf6ef05491234e3ab06f6432a"
+                "reference": "764e0b3939f5ca87cb904f570ef9be2d78a07865"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/8707bf3cea6f710bf6ef05491234e3ab06f6432a",
-                "reference": "8707bf3cea6f710bf6ef05491234e3ab06f6432a",
+                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/764e0b3939f5ca87cb904f570ef9be2d78a07865",
+                "reference": "764e0b3939f5ca87cb904f570ef9be2d78a07865",
                 "shasum": ""
             },
             "require": {
@@ -2873,7 +2815,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "3.0.x-dev"
                 }
             },
             "autoload": {
@@ -2900,9 +2842,9 @@
                 "simple-cache"
             ],
             "support": {
-                "source": "https://github.com/php-fig/simple-cache/tree/2.0.0"
+                "source": "https://github.com/php-fig/simple-cache/tree/3.0.0"
             },
-            "time": "2021-10-29T13:22:09+00:00"
+            "time": "2021-10-29T13:26:27+00:00"
         },
         {
             "name": "ramsey/collection",
@@ -5550,12 +5492,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-selenium-api",
-                "reference": "b35fa836d4f4711f2457e45197473d68960998ad"
+                "reference": "0d46ae337ba71659191e7625c96ff2f861da44d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/b35fa836d4f4711f2457e45197473d68960998ad",
-                "reference": "b35fa836d4f4711f2457e45197473d68960998ad",
+                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/0d46ae337ba71659191e7625c96ff2f861da44d1",
+                "reference": "0d46ae337ba71659191e7625c96ff2f861da44d1",
                 "shasum": ""
             },
             "require": {
@@ -5600,20 +5542,20 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2025-03-11T06:52:06+00:00"
+            "time": "2025-06-10T09:23:34+00:00"
         },
         {
             "name": "passbolt/passbolt-test-data",
-            "version": "dev-cakephp5",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-test-data",
-                "reference": "75bf182692301efd5f4118f6f29b0b3a8619a41d"
+                "reference": "e0e3771"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-test-data/zipball/75bf182692301efd5f4118f6f29b0b3a8619a41d",
-                "reference": "75bf182692301efd5f4118f6f29b0b3a8619a41d",
+                "url": "https://api.github.com/repos/passbolt/passbolt-test-data/zipball/e0e3771",
+                "reference": "e0e3771",
                 "shasum": ""
             },
             "require": {
@@ -5623,6 +5565,7 @@
             "require-dev": {
                 "phpunit/phpunit": "^10.1.0"
             },
+            "default-branch": true,
             "type": "cakephp-plugin",
             "autoload": {
                 "psr-4": {
@@ -5655,7 +5598,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2025-04-22T09:33:36+00:00"
+            "time": "2025-06-16T15:30:34+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -7883,17 +7826,9 @@
             "time": "2023-10-09T18:13:40+00:00"
         }
     ],
-    "aliases": [
-        {
-            "package": "cakephp/cakephp",
-            "version": "5.0.9999999.9999999-dev",
-            "alias": "5.0.11",
-            "alias_normalized": "5.0.11.0"
-        }
-    ],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "cakephp/cakephp": 20,
         "lorenzo/cakephp-email-queue": 20,
         "bcrowe/cakephp-api-pagination": 20,
         "psy/psysh": 0,

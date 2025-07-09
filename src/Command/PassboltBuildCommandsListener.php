@@ -70,6 +70,7 @@ class PassboltBuildCommandsListener implements EventListenerInterface
     {
         $container
             ->add(PassboltCommand::class)
+            ->addArgument(null)
             ->addArgument($this->passboltCommandCollection);
     }
 }

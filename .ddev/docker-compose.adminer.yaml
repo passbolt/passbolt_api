@@ -1,0 +1,50 @@
+#ddev-generated
+services:
+  adminer:
+    container_name: ddev-${DDEV_SITENAME}-adminer
+    image: ${ADMINER_DOCKER_IMAGE:-adminer:standalone}
+    environment:
+      - ADMINER_DEFAULT_DRIVER=${ADMINER_DEFAULT_DRIVER:-${DDEV_DATABASE_FAMILY:-server}}
+      - ADMINER_DEFAULT_SERVER=${ADMINER_DEFAULT_SERVER:-db}
+      - ADMINER_DEFAULT_DB=${ADMINER_DEFAULT_DB:-db}
+      - ADMINER_DEFAULT_USERNAME=${ADMINER_DEFAULT_USERNAME:-db}
+      - ADMINER_DEFAULT_PASSWORD=${ADMINER_DEFAULT_PASSWORD:-db}
+      - ADMINER_PLUGINS=${ADMINER_PLUGINS:-tables-filter}
+      - ADMINER_DESIGN=${ADMINER_DESIGN:-}
+      - VIRTUAL_HOST=$DDEV_HOSTNAME
+      - HTTP_EXPOSE=9100:8080
+      - HTTPS_EXPOSE=9101:8080
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: $DDEV_APPROOT
+    volumes:
+      - ".:/mnt/ddev_config"
+      - "ddev-global-cache:/mnt/ddev-global-cache"
+    depends_on:
+      - db
+    command: ["php", "-S", "[::]:8080", "-t", "/var/www/html", "ddev-adminer.php"]
+    configs:
+      - source: ddev-adminer.php
+        target: /var/www/html/ddev-adminer.php
+        mode: "0444"
+
+configs:
+  ddev-adminer.php:
+    content: |
+      <?php
+        if (!count($$_GET)) {
+          if ($$_ENV['ADMINER_DEFAULT_DRIVER'] === 'mysql') {
+            $$_ENV['ADMINER_DEFAULT_DRIVER'] = 'server';
+          } else if ($$_ENV['ADMINER_DEFAULT_DRIVER'] === 'postgres') {
+            $$_ENV['ADMINER_DEFAULT_DRIVER'] = 'pgsql';
+          }
+          $$_POST['auth'] = [
+            'driver' => $$_ENV['ADMINER_DEFAULT_DRIVER'],
+            'server' => $$_ENV['ADMINER_DEFAULT_SERVER'],
+            'db' => $$_ENV['ADMINER_DEFAULT_DB'],
+            'username' => $$_ENV['ADMINER_DEFAULT_USERNAME'],
+            'password' => $$_ENV['ADMINER_DEFAULT_PASSWORD'],
+          ];
+        }
+        include './index.php';
+      ?>

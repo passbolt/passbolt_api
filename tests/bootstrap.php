@@ -8,7 +8,7 @@ declare(strict_types=1);
  * unit tests in this file.
  */
 
-use Cake\Cache\Cache;
+use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\ConnectionHelper;
 use Migrations\TestSuite\Migrator;
 
@@ -22,6 +22,10 @@ $_SERVER['PHP_SELF'] = '/';
 // has been written to.
 session_id('cli');
 
-(new ConnectionHelper())->addTestAliases();
+ConnectionHelper::addTestAliases();
+
+/** @var \Cake\Database\Connection $connection */
+$connection = ConnectionManager::get('default');
+$connection->cacheMetadata(false);
+
 (new Migrator())->run();
-Cache::clearAll();
