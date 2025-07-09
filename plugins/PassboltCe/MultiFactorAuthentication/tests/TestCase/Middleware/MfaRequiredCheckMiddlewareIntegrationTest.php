@@ -66,6 +66,10 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         $this->get('/users.json');
         $this->assertRedirect('/mfa/verify/error.json');
 
+        // Required to clear up associations
+        $this->clearPlugins();
+        $this->getTableLocator()->clear();
+
         $this->get('/app/users');
         $this->assertRedirect('mfa/verify/totp?redirect=/app/users');
     }

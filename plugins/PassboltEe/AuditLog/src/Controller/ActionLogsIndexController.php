@@ -63,7 +63,7 @@ class ActionLogsIndexController extends AppController
         $LogsTable = $this->fetchTable('Passbolt/Log.ActionLogs');
         $logs = $LogsTable->index($options);
 
-        $this->paginate($logs);
-        $this->success(__('The operation was successful.'), $logs->all());
+        $logs = $this->paginate($logs);
+        $this->success(__('The operation was successful.'), $logs);
     }
 }

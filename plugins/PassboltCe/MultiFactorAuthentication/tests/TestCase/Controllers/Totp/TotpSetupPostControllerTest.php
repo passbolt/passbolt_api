@@ -232,6 +232,10 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $otp = Factory::loadFromProvisioningUri($uri);
         $this->mockTotpMfaFormInterface(TotpSetupForm::class, $this->makeUac($user));
 
+        // Required to clear up associations
+        $this->clearPlugins();
+        $this->getTableLocator()->clear();
+
         $this->post('/mfa/setup/totp.json?api-version=v2', [
             'otpProvisioningUri' => $uri,
             'totp' => $otp->now(),

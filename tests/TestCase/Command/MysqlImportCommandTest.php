@@ -98,7 +98,7 @@ class MysqlImportCommandTest extends AppTestCase
         $this->assertOutputContains('Error: Something went wrong when importing the SQL file');
 
         // Import with a wrong datasource
-        $this->exec("passbolt mysql_import -file $fileName -dir $dir -d wrong_data_source");
+        $this->exec("passbolt mysql_import --file $fileName --dir $dir -d wrong_data_source");
         $this->assertOutputContains('Error: Something went wrong when importing the SQL file');
     }
 }

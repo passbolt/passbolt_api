@@ -28,7 +28,7 @@ class AppExceptionRenderer extends WebExceptionRenderer
      * If the exception contains an error attribute, set it as controller view variable.
      *
      * @see \App\Controller\ErrorController
-     * @return \Cake\Http\Response The response to be sent.
+     * @return \Psr\Http\Message\ResponseInterface The response to be sent.
      */
     public function render(): ResponseInterface
     {

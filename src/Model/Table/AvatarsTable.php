@@ -25,7 +25,6 @@ use App\View\Helper\AvatarHelper;
 use ArrayObject;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
-use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
@@ -44,7 +43,7 @@ use Throwable;
  * @method \App\Model\Entity\Avatar newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\Avatar[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\Avatar get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
- * @method \App\Model\Entity\Avatar findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Avatar findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @method \App\Model\Entity\Avatar patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Avatar[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \App\Model\Entity\Avatar|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -138,18 +137,14 @@ class AvatarsTable extends Table
      *
      * @param \Cake\Event\Event $event the event
      * @param \App\Model\Entity\Avatar $avatar entity
-     * @return \Cake\Datasource\EntityInterface|bool
+     * @return void
      */
-    public function beforeSave(Event $event, Avatar $avatar): EntityInterface|bool
+    public function beforeSave(Event $event, Avatar $avatar): void
     {
         if (!$this->setData($avatar)) {
             $avatar->setError('data', __('Could not save the data in {0} format.', AvatarHelper::IMAGE_EXTENSION));
             $event->stopPropagation();
-
-            return false;
         }
-
-        return $avatar;
     }
 
     /**

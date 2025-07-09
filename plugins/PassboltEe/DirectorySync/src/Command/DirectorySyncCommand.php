@@ -19,6 +19,8 @@ namespace Passbolt\DirectorySync\Command;
 use App\Command\PassboltCommand;
 use App\Service\Command\ProcessUserService;
 use Cake\Console\Arguments;
+use Cake\Console\CommandCollection;
+use Cake\Console\CommandFactoryInterface;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Routing\Router;
@@ -39,9 +41,12 @@ class DirectorySyncCommand extends PassboltCommand
     /**
      * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
      */
-    public function __construct(ProcessUserService $processUserService)
-    {
-        parent::__construct();
+    public function __construct(
+        ProcessUserService $processUserService,
+        ?CommandFactoryInterface $factory = null,
+        ?CommandCollection $passboltCommandCollection = null
+    ) {
+        parent::__construct($factory, $passboltCommandCollection);
         $this->processUserService = $processUserService;
     }
 

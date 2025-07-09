@@ -85,20 +85,28 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         // Make sure associations are loaded correctly, e.g. without depending on
         // ActionListeners -> model.Initialize, as the callback will not be fired twice
         // and controller actions can be called several times
-        $this->Permissions->belongsTo('Passbolt/Log.PermissionsHistory', [
-            'foreignKey' => 'foreign_key',
-        ]);
-        $this->Resources->belongsTo('Passbolt/Log.EntitiesHistory', [
-            'foreignKey' => 'foreign_key',
-        ]);
+        if (!$this->Permissions->hasAssociation('Passbolt/Log.PermissionsHistory')) {
+            $this->Permissions->belongsTo('Passbolt/Log.PermissionsHistory', [
+                'foreignKey' => 'foreign_key',
+            ]);
+        }
+        if (!$this->Resources->hasAssociation('EntitiesHistory')) {
+            $this->Resources->belongsTo('EntitiesHistory', [
+                'foreignKey' => 'foreign_key',
+                'className' => 'Passbolt/Log.EntitiesHistory',
+            ]);
+        }
+        if (!$this->SecretAccesses->hasAssociation('EntitiesHistory')) {
+            $this->SecretAccesses->belongsTo('EntitiesHistory', [
+                'foreignKey' => 'foreign_key',
+                'className' => 'Passbolt/Log.EntitiesHistory',
+            ]);
+        }
         $this->Secrets->belongsTo('Passbolt/Log.SecretsHistory', [
             'foreignKey' => 'foreign_key',
         ]);
         $this->Secrets->hasMany('Passbolt/Log.SecretAccesses');
 
-        $this->SecretAccesses->belongsTo('Passbolt/Log.EntitiesHistory', [
-            'foreignKey' => 'foreign_key',
-        ]);
         $this->enableFeaturePlugin('JwtAuthentication');
 
         /** @psalm-suppress UndefinedMagicMethod */

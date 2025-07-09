@@ -49,6 +49,10 @@ class UsersIndexContainAccountRecoveryUserSettingsControllerTest extends Account
             $this->assertNull($responseUser->account_recovery_user_setting ?? null);
         }
 
+        // Required to clear up associations
+        $this->clearPlugins();
+        $this->getTableLocator()->clear();
+
         $admin = $this->logInAsAdmin();
         $this->getJson('/users.json?contain[account_recovery_user_setting]=1&contain[foo]=1');
         $this->assertSuccess();

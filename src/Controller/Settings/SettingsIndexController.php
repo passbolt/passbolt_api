@@ -57,7 +57,7 @@ class SettingsIndexController extends AppController
         $this->Users = $this->fetchTable('Users');
         $this->Authentication->allowUnauthenticated(['index']);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

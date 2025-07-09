@@ -49,7 +49,7 @@ class RbacsViewController extends AppController
             'viewForCurrentRole',
         ]);
 
-        return parent::beforeFilter($event);
+        parent::beforeFilter($event);
     }
 
     /**

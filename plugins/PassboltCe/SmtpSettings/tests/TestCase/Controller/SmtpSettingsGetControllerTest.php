@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 use Passbolt\SmtpSettings\SmtpSettingsPlugin;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
@@ -53,6 +54,25 @@ class SmtpSettingsGetControllerTest extends AppIntegrationTestCase
         );
 
         $this->assertSame($expectedData, $retrievedData);
+    }
+
+    public function testSmtpSettingsGetController_Success_EmptyUsernamePassword()
+    {
+        $this->reconfigureTransportFactory([
+            'host' => 'test',
+            'username' => '',
+            'password' => '',
+        ]);
+
+        $this->logInAsAdmin();
+        $this->getJson('/smtp/settings.json');
+
+        $this->assertSuccess();
+        $response = $this->getResponseBodyAsArray();
+        $this->assertSame(SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_ENV, $response['source']);
+        $this->assertSame('test', $response['host']);
+        $this->assertNull($response['username']);
+        $this->assertNull($response['password']);
     }
 
     public function testSmtpSettingsGetController_Validation_Failure()

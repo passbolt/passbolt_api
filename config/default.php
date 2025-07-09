@@ -357,16 +357,14 @@ return [
                         env('PASSBOLT_PLUGINS_SSO_PROVIDER_GOOGLE_ENABLED', true),
                         FILTER_VALIDATE_BOOLEAN
                     ),
-                    // Generic provider is disabled by default
-                    // As SSO provider domain is not known by the client, it is considered less safe
+                    // Generic OAuth2/OIDC provider
                     SsoSetting::PROVIDER_OAUTH2 => filter_var(
-                        // PASSBOLT_PLUGINS_SSO_PROVIDER_OAUHT2_ENABLED env is @deprecated due to typo, kept if for BC. To be removed in v5.0.
-                        env('PASSBOLT_PLUGINS_SSO_PROVIDER_OAUTH2_ENABLED', env('PASSBOLT_PLUGINS_SSO_PROVIDER_OAUHT2_ENABLED', false)),
+                        // PASSBOLT_PLUGINS_SSO_PROVIDER_OAUHT2_ENABLED env is @deprecated due to typo, kept if for BC. To be removed in v6.0.
+                        env('PASSBOLT_PLUGINS_SSO_PROVIDER_OAUTH2_ENABLED', env('PASSBOLT_PLUGINS_SSO_PROVIDER_OAUHT2_ENABLED', true)),
                         FILTER_VALIDATE_BOOLEAN
                     ),
-                    // Microsoft AD FS is disabled by default, because it's still in early stage and requires more rigorous testing
                     SsoSetting::PROVIDER_ADFS => filter_var(
-                        env('PASSBOLT_PLUGINS_SSO_PROVIDER_ADFS_ENABLED', false),
+                        env('PASSBOLT_PLUGINS_SSO_PROVIDER_ADFS_ENABLED', true),
                         FILTER_VALIDATE_BOOLEAN
                     ),
                 ],

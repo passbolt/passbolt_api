@@ -38,7 +38,7 @@ use Closure;
  * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType newEmptyEntity()
  * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])

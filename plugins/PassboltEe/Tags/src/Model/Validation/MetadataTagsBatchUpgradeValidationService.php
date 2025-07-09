@@ -52,6 +52,7 @@ class MetadataTagsBatchUpgradeValidationService extends MetadataBatchUpgradeVali
 
         return $tags->select([
             'Tags.id',
+            'Tags.slug',
             'Tags.metadata',
         ], true);
     }
