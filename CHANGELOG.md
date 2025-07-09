@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.3.1] - 2025-07-09
+### Fixed
+- PB-43748 Users are unable to save a new standalone custom field resource
+
 ## [5.3.0] - 2025-07-09
 ### Added
 - PB-43066 As a developer I can setup my development environment using ddev
