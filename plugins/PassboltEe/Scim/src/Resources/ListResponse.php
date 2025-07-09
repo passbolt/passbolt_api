@@ -80,7 +80,9 @@ class ListResponse
         }
         //@todo tmilos/scim-filter-parser must be used to avoid reimplement all parse logic
         //Only accepting userName eq XXXXX for now
-        $operands = explode('eq', str_replace('"', '', $filter));
+        $formattedFilter = str_replace('+eq+', ' eq ', $filter);
+        $formattedFilter = str_replace('"', '', $formattedFilter);
+        $operands = explode('eq', $formattedFilter);
         if (!isset($operands[0])) {
             throw new ScimException(
                 'The specified filter syntax was invalid',
@@ -104,21 +106,22 @@ class ListResponse
     protected function findExistingEntities(?string $filter = null): Query
     {
         //@todo after implement parse filter this function needs to be refactored
-        $conditions = $this->parseFilter($filter);
+        $parsedFilter = $this->parseFilter($filter);
 
         return TableRegistry::getTableLocator()->get('Users')
             ->find()
             ->contain(['Profiles', 'ScimEntries'])
-            ->matching('ScimEntries', function (Query $q) use ($conditions) {
-                if (empty($conditions)) {
+            ->matching('ScimEntries', function (Query $q) use ($parsedFilter) {
+                $conditions = [];
+                if (isset($parsedFilter['userName'])) {
+                    $conditions['ScimEntries.scim_name'] = (string)$parsedFilter['userName'];
+                }
+                if ($conditions === []) {
                     return $q;
                 }
 
-                return $q->where([
-                    'ScimEntries.scim_name' => (string)$conditions['userName'],
-                ]);
+                return $q->where($conditions);
             });
-        // ->where($conditions);
     }
 
     /**
