@@ -132,6 +132,14 @@ class ResourceTypeFactory extends CakephpBaseFactory
         ]);
     }
 
+    public function v5CustomFieldsStandalone(): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_CUSTOM_FIELD_STANDALONE),
+            'slug' => ResourceType::SLUG_V5_CUSTOM_FIELD_STANDALONE,
+        ]);
+    }
+
     public function deleted(?Date $deleted = null): self
     {
         if (is_null($deleted)) {
