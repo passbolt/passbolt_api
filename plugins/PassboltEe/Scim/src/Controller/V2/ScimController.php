@@ -24,6 +24,7 @@ use Cake\Http\Exception\NotImplementedException;
 use Cake\Log\Log;
 use Cake\Routing\Router;
 use Passbolt\Scim\Exception\ScimException;
+use Passbolt\Scim\Log\ScimLog;
 use Passbolt\Scim\Resources\ListResponse;
 use Passbolt\Scim\Resources\ResourceTypeFactory;
 use Passbolt\Scim\Resources\ResourceTypeInterface;

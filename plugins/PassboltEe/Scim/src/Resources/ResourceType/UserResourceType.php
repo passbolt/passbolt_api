@@ -17,11 +17,13 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Resources\ResourceType;
 
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\EntityInterface;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
@@ -30,6 +32,7 @@ use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Passbolt\Scim\Exception\ConflictException;
 use Passbolt\Scim\Exception\ScimException;
+use Passbolt\Scim\Log\ScimLog;
 use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Utils\UserFormatterHelper;
 
@@ -161,7 +164,7 @@ class UserResourceType extends BaseResourceType
     public function add(): self
     {
         if (!$this->email) {
-            throw new \Exception('The values for the ResourceType fields has not been set for the `add` operation');
+            throw new \Exception('Missing `email` value for UserResource');
         }
         $adminUser = $this->Users->findFirstAdmin();
         $user = $this->checkExistingUser();
@@ -183,12 +186,17 @@ class UserResourceType extends BaseResourceType
         ];
         if ($user === null) {
             $uac = new UserAccessControl(Role::ADMIN, $adminUser->get('id'));
-            $user = $this->Users->register($userData, $uac);
-        }
-        if ($user->hasErrors()) {
-            // @todo: parse validation errors in a user friendly message
-            $message = 'Invalid Values';
-            throw new ConflictException($message, null, null, ScimException::SCIM_TYPE_INVALID_VALUE);
+            try {
+                $user = $this->Users->register($userData, $uac);
+            } catch (ValidationException $exception) {
+                // @todo: parse validation errors in a user friendly message
+                $message = 'Invalid Values: ' . json_encode($exception->getErrors());
+                throw new ConflictException($message, scimType: ScimException::SCIM_TYPE_INVALID_VALUE);
+            } catch (InternalErrorException $exception) {
+                ScimLog::error($exception->getMessage());
+                ScimLog::error($exception->getTraceAsString());
+                throw new ConflictException('Unexpected error', scimType: ScimException::SCIM_TYPE_INVALID_VALUE);
+            }
         }
 
         $entryData['foreign_key'] = $user->id;
@@ -196,7 +204,7 @@ class UserResourceType extends BaseResourceType
         $scimEntry = $this->Users->ScimEntries->buildEntity($entryData);
         if (!$this->Users->ScimEntries->save($scimEntry)) {
             Log::debug(print_r($scimEntry->getErrors(), true));
-            throw new ConflictException('Unable to save entry', null, null, ScimException::SCIM_TYPE_INVALID_VALUE);
+            throw new ConflictException('Unable to save entry', scimType:ScimException::SCIM_TYPE_INVALID_VALUE);
         }
 
         $this->entity = $this->getUserForScim($user->id);
