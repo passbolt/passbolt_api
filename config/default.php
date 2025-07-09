@@ -468,6 +468,7 @@ return [
                     'RecoverComplete' => ['complete'],
                     'SetupComplete' => ['complete'],
                     'TransfersUpdate' => ['updateNoSession'],
+                    'Scim' => ['add'],
                 ]
             ],
             'csp' => env('PASSBOLT_SECURITY_CSP', true),

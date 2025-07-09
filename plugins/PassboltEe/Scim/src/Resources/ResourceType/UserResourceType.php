@@ -212,7 +212,10 @@ class UserResourceType extends BaseResourceType
      */
     protected function getUserForScim(string $userId): User
     {
-        return $this->Users->get($userId, ['contain' => ['Profiles', 'ScimEntries']]);
+        return $this->Users->get(
+            primaryKey: $userId,
+            contain: ['Profiles', 'ScimEntries']
+        );
     }
 
     /**
@@ -319,11 +322,11 @@ class UserResourceType extends BaseResourceType
     {
         $this->id = $entity->get('id');
         $this->entity = $entity;
-        $this->externalId = $entity->get('scim_entry')->get('external_identifier');
+        $this->externalId = $entity->get('scim_entry')?->get('external_identifier');
         $this->email = $entity->get('username');
-        $this->userName = $entity->get('scim_entry')->get('scim_name');
-        $this->firstName = $entity->get('profile')->get('first_name');
-        $this->lastName = $entity->get('profile')->get('last_name');
+        $this->userName = $entity->get('scim_entry')?->get('scim_name');
+        $this->firstName = $entity->get('profile')?->get('first_name');
+        $this->lastName = $entity->get('profile')?->get('last_name');
 
         return $this;
     }
@@ -342,8 +345,8 @@ class UserResourceType extends BaseResourceType
             'externalId' => $this->externalId,
             'meta' => [
                 'resourceType' => 'User',
-                'created' => $scimEntry->created->format('Y-m-d\TH:i:s.v\Z'),
-                'lastModified' => $scimEntry->modified->format('Y-m-d\TH:i:s.v\Z'),
+                'created' => $scimEntry?->created->format('Y-m-d\TH:i:s.v\Z'),
+                'lastModified' => $scimEntry?->modified->format('Y-m-d\TH:i:s.v\Z'),
             ],
             'userName' => $this->userName,
             'name' => [
