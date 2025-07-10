@@ -66,6 +66,7 @@ use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
 use DebugKit\DebugKitPlugin;
 use EmailQueue\Command\SenderCommand;
+use EmailQueue\EmailQueuePlugin;
 use Migrations\MigrationsPlugin;
 use Passbolt\EmailDigest\EmailDigestPlugin;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
@@ -258,9 +259,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     protected function addVendorPlugins()
     {
-        return $this
-            ->addPlugin('EmailQueue')
-            ->addPlugin('BryanCrowe/ApiPagination');
+        return $this->addPlugin(EmailQueuePlugin::class);
     }
 
     /**

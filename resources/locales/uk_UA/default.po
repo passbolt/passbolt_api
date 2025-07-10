@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-06-12 08:34\n"
+"PO-Revision-Date: 2025-06-12 09:58\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Ukrainian\n"
 "MIME-Version: 1.0\n"
@@ -1475,7 +1475,7 @@ msgid "Set debug to false in {0}"
 msgstr "Встановіть debug в false у {0}"
 
 msgid "Full base url is set to {0}"
-msgstr "Повна базова URL-адреса встановлена у {0}"
+msgstr "Повну базову URL-адресу встановлено у {0}"
 
 msgid "Full base url is not set. The application is using: {0}."
 msgstr "Повна базова URL-адреса не встановлена. Застосунок використовує: {0}."
@@ -1553,7 +1553,7 @@ msgid "Run the migration scripts:"
 msgstr "Запустіть скрипти міграції:"
 
 msgid "{0} tables found."
-msgstr "Знайдено таблиці: {0}."
+msgstr "Знайдено таблиць: {0}."
 
 msgid "No table found."
 msgstr "Не знайдено жодної таблиці."
@@ -3722,7 +3722,7 @@ msgid "An additional authentication is required using Duo. You will be redirecte
 msgstr "Потрібна додаткова аутентифікація за допомогою Duo. Вас буде перенаправлено до Duo для перевірки."
 
 msgid "Multi factor authentication"
-msgstr "Двофакторна аутентифікація"
+msgstr "Багатофакторна автентифікація"
 
 msgid "Sorry no multi factor authentication is enabled for this organization."
 msgstr "Вибачте, у цій організації не увімкнено двофакторну аутентифікацію."
