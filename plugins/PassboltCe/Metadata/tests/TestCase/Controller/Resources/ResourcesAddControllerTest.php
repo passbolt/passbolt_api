@@ -23,6 +23,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Test\Lib\Model\EmailQueueTrait;
+use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
@@ -32,6 +33,7 @@ use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
@@ -49,13 +51,35 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         EventManager::instance()->setEventList(new EventList());
     }
 
-    public function testResourcesAddController_Success_SharedKeyType(): void
+    public function v5ResourceTypesSlugProvider()
+    {
+        $resourceTypeSlugs = [];
+        foreach (ResourceType::V5_RESOURCE_TYPE_SLUGS as $v5ResourceTypeSlug) {
+            // simple password string isn't possible in v5
+            if ($v5ResourceTypeSlug === ResourceType::SLUG_V5_PASSWORD_STRING) {
+                continue;
+            }
+
+            $resourceTypeSlugs[] = [$v5ResourceTypeSlug];
+        }
+
+        return $resourceTypeSlugs;
+    }
+
+    /**
+     * @dataProvider v5ResourceTypesSlugProvider
+     * @return void
+     */
+    public function testResourcesAddController_Success_SharedKeyType(string $resourceTypeSlug): void
     {
         MetadataTypesSettingsFactory::make()->v5()->persist();
         $user = UserFactory::make()->user()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
         $v4ResourceTypeId = ResourceTypeFactory::make()->passwordString()->persist()->get('id');
-        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+        $resourceTypeId = ResourceTypeFactory::make([
+            'id' => UuidFactory::uuid('resource-types.id.' . $resourceTypeSlug),
+            'slug' => $resourceTypeSlug,
+        ])->persist()->get('id');
         $metadataKeyId = $metadataKey->get('id');
         $dummyResourceData = $this->getDummyResourcesPostData([
             'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping

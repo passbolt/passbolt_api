@@ -135,6 +135,10 @@ class PublicKeyValidationService
     /**
      * @param string $armoredKey user provided data
      * @param array|null $rules to override default rules
+     * @throws \App\Error\Exception\CustomValidationException If parsing public key fails
+     * @throws \App\Error\Exception\CustomValidationException Validation rules fails
+     * @throws \Cake\Http\Exception\InternalErrorException No public key validation rules
+     * @throws \Cake\Http\Exception\InternalErrorException Unknown key validation rule
      * @return array key information (see OpenPGPBackendInterface::getKeyInfo)
      */
     public static function parseAndValidatePublicKey(string $armoredKey, ?array $rules = null): array

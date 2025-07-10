@@ -20,6 +20,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\Log\Log;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Exception;
@@ -103,6 +104,13 @@ class MetadataKeyCreateService
                 __('The metadata key could not be saved.'),
                 $errors
             );
+        } catch (CustomValidationException $e) { // @phpstan-ignore-line
+            $msg = __('The metadata key could not be saved.');
+            $msg .= ' ' . $e->getMessage();
+
+            Log::error('Validation errors: ' . json_encode($e->getErrors()));
+
+            throw new CustomValidationException($msg, $e->getErrors(), $e->getTable(), $e->getCode(), $e);
         } catch (Exception $e) { // @phpstan-ignore-line
             throw new InternalErrorException(__('Could not save the metadata key, please try again later.'), null, $e);
         }
