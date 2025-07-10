@@ -170,10 +170,13 @@ class UserResourceType extends BaseResourceType
         $user = $this->checkExistingUser();
 
         // @todo: define an excel with the use cases of what to do if not exist, if exist but deleted, etc like DirectorySync?
-
+        $disabled = null;
+        if ($this->formatValue('active')) {
+            $disabled = date('Y-m-d H:i:s');
+        }
         $userData = [
             'username' => $this->formatValue('email'),
-            'deleted' => $this->formatValue('active'),
+            'disabled' => $disabled,
             'profile' => [
                 'first_name' => $this->formatValue('firstName'),
                 'last_name' => $this->formatValue('lastName'),
@@ -362,7 +365,7 @@ class UserResourceType extends BaseResourceType
                 'familyName' => $this->lastName,
                 'givenName' => $this->firstName,
             ],
-            'active' => $this->formatter->active($this->entity->get('deleted'), $this),
+            'active' => $this->formatter->active($this->entity->get('disabled'), $this),
             'emails' => [
                 [
                     'value' => $this->entity->get('username'),
