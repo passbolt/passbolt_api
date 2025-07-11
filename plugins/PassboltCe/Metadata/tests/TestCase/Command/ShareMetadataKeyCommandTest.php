@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Test\TestCase\Command;
 
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
@@ -34,14 +35,6 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
     use ConsoleIntegrationTestTrait;
     use MigrateResourcesTestTrait;
     use GpgMetadataKeysTestTrait;
-
-    /**
-     * @inheritDoc
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
 
     public function testShareMetadataKeyCommand_Help()
     {
@@ -68,6 +61,12 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
         $this->assertOutputContains('No users found');
     }
 
+    /**
+     * `backupStaticProperties` here is required to not pollute `$keycache` state for other test cases in this file.
+     *
+     * @backupStaticProperties enabled
+     * @return void
+     */
     public function testShareMetadataKeyCommand_Success_UserFriendlyMode(): void
     {
         MetadataKeysSettingsFactory::make()->persist();
@@ -121,6 +120,10 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
         }
     }
 
+    /**
+     * @backupStaticProperties enabled
+     * @return void
+     */
     public function testShareMetadataKeyCommand_Success_ZeroKnowledgeMode(): void
     {
         MetadataKeysSettingsFactory::make()->enableZeroTrustKeySharing()->persist();
@@ -134,6 +137,32 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
 
         $this->assertExitError();
         $this->assertOutputContains('Cannot share metadata key when in the zero knowledge key share mode');
+    }
+
+    /**
+     * The admin who created the metadata key is deleted afterwards.
+     *
+     * @backupStaticProperties enabled
+     * @return void
+     */
+    public function testShareMetadataKeyCommand_Success_AdminDeleted(): void
+    {
+        MetadataKeysSettingsFactory::make()->persist();
+        // users
+        $adaKeyInfo = $this->getAdaNoPassphraseKeyInfo();
+        $admin = UserFactory::make()->admin()->active()->with('Gpgkeys', GpgkeyFactory::make()->withKeyInfo($adaKeyInfo)->deleted())->persist();
+        $user = UserFactory::make()->user()->active()->withValidGpgKey()->persist();
+        $userWhoIsMissingKey = UserFactory::make()->user()->active()->withValidGpgKey()->persist();
+        // metadata keys
+        $metadataKey = MetadataKeyFactory::make()->withServerKey()->withCreatorAndModifier($admin)->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withCreatorAndModifier($admin)->withServerPrivateKey($adaKeyInfo)->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUserPrivateKey($user->get('gpgkey'))->persist();
+
+        $this->exec('passbolt metadata share_metadata_key');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains("The metadata key {$metadataKey->get('id')} was shared with user {$userWhoIsMissingKey->get('username')}");
     }
 
     public function testShareMetadataKeyCommand_Error_UnableShareWithOneOrMoreUsers(): void
