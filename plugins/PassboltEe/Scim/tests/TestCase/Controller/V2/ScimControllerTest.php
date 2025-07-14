@@ -17,7 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use Cake\ORM\TableRegistry;
 
 /**
  * ScimControllerTest class
@@ -182,5 +185,79 @@ class ScimControllerTest extends AppIntegrationTestCase
         $this->get($this->getScimEndpoint('ResourceTypes' . DS . 'Group'));
         $this->assertResponseCode(200);
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_RESOURCE_TYPES_GROUP));
+    }
+
+    /**
+     * Test case for POST /Users endpoint
+     *
+     * Scenario: The user does not exist in passbolt and there is no SCIM entry table for that user.
+     */
+    public function testScimControllerUsersPost_Success()
+    {
+        /** @var \App\Model\Entity\Role $role */
+        $role = RoleFactory::make()->user()->persist();
+        UserFactory::make()->admin()->persist();
+
+        /** @var \App\Model\Table\UsersTable $usersTable */
+        $usersTable = $this->fetchTable('Users');
+        /** @var \Passbolt\Scim\Model\Table\ScimEntriesTable $scimEntriesTable */
+        $scimEntriesTable = $this->fetchTable('Scim.ScimEntries');
+
+        $scimName = 'user1@username.com';
+        $externalId = 'scim_user_1';
+        $email = 'user1@test.com';
+        $this->post($this->getScimEndpoint('Users'), [
+            'schemas' => [
+                'urn:ietf:params:scim:schemas:core:2.0:User',
+                'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User',
+            ],
+            'externalId' => $externalId,
+            'userName' => $scimName,
+            'active' => true,
+            'displayName' => 'User 1 Scim',
+            'emails' => [
+                [
+                    'primary' => true,
+                    'type' => 'work',
+                    'value' => $email,
+                ]
+            ],
+            'meta' => [
+                'resourceType' => 'User',
+            ],
+            'name' => [
+                'formatted' => 'User 1 Scim',
+                'familyName' => 'Scim',
+                'givenName' => 'User 1',
+            ],
+        ]);
+        $this->assertResponseCode(201);
+        $this->assertResponseContains('urn:ietf:params:scim:schemas:core:2.0:User');
+        $this->assertResponseContains('"externalId": "' . $externalId . '"');
+        $this->assertResponseContains('"userName": "' . $scimName . '"');
+        $this->assertResponseContains('"value": "' . $email . '"');
+        $this->assertResponseContains('"familyName": "Scim"');
+        $this->assertResponseContains('"givenName": "User 1"');
+
+        /** @var \App\Model\Entity\User|null $existingUser */
+        $existingUser = $usersTable
+            ->find()
+            ->where(['Users.username' => $email])
+            ->first();
+        $this->assertNotNull($existingUser);
+        $this->assertSame($email, $existingUser->username);
+        $this->assertSame($role->id, $existingUser->role_id);
+
+        /** @var \Passbolt\Scim\Model\Entity\ScimEntry|null $existingScimEntry */
+        $existingScimEntry = $scimEntriesTable
+            ->find()
+            ->where(['ScimEntries.scim_name' => $scimName])
+            ->first();
+        $this->assertNotNull($existingScimEntry);
+        $this->assertSame('users', $existingScimEntry->foreign_model);
+        $this->assertSame($existingUser->id, $existingScimEntry->foreign_key);
+        $this->assertSame($scimName, $existingScimEntry->scim_name);
+        $this->assertSame($externalId, $existingScimEntry->external_identifier);
+
     }
 }

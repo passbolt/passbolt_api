@@ -166,6 +166,7 @@ class UserResourceType extends BaseResourceType
         if (!$this->email) {
             throw new \Exception('Missing `email` value for UserResource');
         }
+        // @todo: obtain admin configured in SCIM settings? for logs, etc..
         $adminUser = $this->Users->findFirstAdmin();
         $user = $this->checkExistingUser();
 
