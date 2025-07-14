@@ -21,13 +21,16 @@ use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
 use Cake\Log\Log;
 use OpenPGP;
+use OpenPGP_Message;
 use OpenPGP_PublicKeyPacket;
 use OpenPGP_PublicSubkeyPacket;
 use OpenPGP_SecretKeyPacket;
 use OpenPGP_SecretSubkeyPacket;
 use OpenPGP_SignaturePacket;
 use OpenPGP_SignaturePacket_IssuerPacket;
+use OpenPGP_SignaturePacket_KeyExpirationTimePacket;
 use OpenPGP_SignaturePacket_ReasonforRevocationPacket;
+use OpenPGP_SignaturePacket_SignatureCreationTimePacket;
 use OpenPGP_UserIDPacket;
 
 trait OpenPGPBackendGetKeyInfoTrait
@@ -87,7 +90,7 @@ trait OpenPGPBackendGetKeyInfoTrait
         $results['key_id'] = self::fingerprintToKeyId($results['fingerprint']);
         $results['type'] = $this->getKeyAlgorithm($publicKeyPacket);
         $results['bits'] = $this->getKeySize($publicKeyPacket);
-        $results['expires'] = @$publicKeyPacket->expires($msg); // phpcs:ignore
+        $results['expires'] = $this->getKeyExpiry($publicKeyPacket, $msg);
         $results['key_created'] = $publicKeyPacket->timestamp;
 
         foreach ($msg->packets as $packet) {
@@ -266,5 +269,86 @@ trait OpenPGPBackendGetKeyInfoTrait
         }
 
         return false;
+    }
+
+    /**
+     * The RFC doesn’t say "use the latest self-sign signature expiry packet by creation date" but in practice,
+     * all implementations do.
+     *
+     * OpenPGP PHP uses the first found self-signed signature key expiration time packet to define the overall
+     * key expiry date. This causes compatibility issues.
+     *
+     * Other solutions such as OpenPGP.js or GnuPG evaluate the most recent self-signature (by
+     * signature creation date). While earlier self-signatures are still present, they are ignored, e.g.
+     * only the most recent expiry date is in use.
+     *
+     * @return int|null timestamp
+     */
+    public function getKeyExpiry(OpenPGP_PublicKeyPacket $publicKeyPacket, OpenPGP_Message $message): ?int
+    {
+        $sigs = [];
+
+        foreach ($publicKeyPacket->self_signatures($message) as $signature) {
+            // RFC 4880, 5.2.3.2. Signature Subpacket Types
+            // If a subpacket is not hashed, then the information in it cannot be considered definitive because it is not part of the signature proper.
+            $subPackets = $signature->hashed_subpackets;
+
+            // get creation time of the signature
+            $signatureCreationTimePacket = $this->getSigCreationTimePacket($subPackets);
+            if (!isset($signatureCreationTimePacket)) {
+                continue;
+            }
+            $created = $signatureCreationTimePacket->data;
+
+            // get expiry time if any
+            $expiry = null;
+            $signatureKeyExpiryTimePacket = $this->getSigKeyExpirationTimePacket($subPackets);
+            if (isset($signatureKeyExpiryTimePacket)) {
+                // RFC 4880, 5.2.3.10. Signature Expiration Time
+                // This is the number of seconds after the signature creation time that the signature expires.
+                // If this is not present or has a value of zero, it never expires.
+                if ($signatureKeyExpiryTimePacket->data !== 0) {
+                    $expiry = $created + $signatureKeyExpiryTimePacket->data;
+                }
+            }
+
+            $sigs[$created] = $expiry;
+        }
+
+        if (empty($sigs)) {
+            return null;
+        }
+
+        return $sigs[max(array_keys($sigs))] ?? null;
+    }
+
+    /**
+     * @param array $packets signature hashed subpackets
+     * @return \OpenPGP_SignaturePacket_SignatureCreationTimePacket|null
+     */
+    private function getSigCreationTimePacket(array $packets): ?OpenPGP_SignaturePacket_SignatureCreationTimePacket
+    {
+        foreach ($packets as $packet) {
+            if ($packet instanceof OpenPGP_SignaturePacket_SignatureCreationTimePacket) {
+                return $packet;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array $packets signature hashed subpackets
+     * @return \OpenPGP_SignaturePacket_KeyExpirationTimePacket|null
+     */
+    private function getSigKeyExpirationTimePacket(array $packets): ?OpenPGP_SignaturePacket_KeyExpirationTimePacket
+    {
+        foreach ($packets as $packet) {
+            if ($packet instanceof OpenPGP_SignaturePacket_KeyExpirationTimePacket) {
+                return $packet;
+            }
+        }
+
+        return null;
     }
 }

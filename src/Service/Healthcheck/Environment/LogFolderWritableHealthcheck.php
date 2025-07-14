@@ -69,7 +69,7 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
      */
     public function getSuccessMessage(): string
     {
-        return __('The logs directory and its content are writable.');
+        return __('The logs directory {0} and its content are writable.', LOGS);
     }
 
     /**
@@ -77,7 +77,7 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
      */
     public function getFailureMessage(): string
     {
-        return __('The logs directory and its content are not writable.');
+        return __('The logs directory {0} and its content are not writable.', LOGS);
     }
 
     /**
@@ -88,9 +88,9 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
         return [
             __('Ensure the logs directory and its content are writable by the webserver user.'),
             __('You can try:'),
-            'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . ROOT . DS . 'logs',
-            'sudo chmod 775 $(find ' . ROOT . DS . 'logs -type d)',
-            'sudo chmod 664 $(find ' . ROOT . DS . 'logs -type f)',
+            'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . LOGS,
+            'sudo chmod 775 $(find ' . LOGS . ' -type d)',
+            'sudo chmod 664 $(find ' . LOGS . ' -type f)',
         ];
     }
 
