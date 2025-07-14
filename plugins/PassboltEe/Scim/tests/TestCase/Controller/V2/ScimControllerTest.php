@@ -181,7 +181,6 @@ class ScimControllerTest extends AppIntegrationTestCase
     {
         $this->get($this->getScimEndpoint('ResourceTypes' . DS . 'Group'));
         $this->assertResponseCode(200);
-        //file_put_contents(self::FIXTURE_SCIM_PATH . self::FIXTURE_RESPONSE_RESOURCE_TYPES_GROUP, (string)$this->_response->getBody());
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_RESOURCE_TYPES_GROUP));
     }
 }
