@@ -1,0 +1,44 @@
+{
+    "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig"
+    ],
+    "documentationUri": "https:\/\/help.passbolt.com\/scim\/",
+    "patch": {
+        "supported": true
+    },
+    "bulk": {
+        "supported": false,
+        "maxOperations": 0,
+        "maxPayloadSize": 0
+    },
+    "filter": {
+        "supported": true,
+        "maxResults": 25
+    },
+    "changePassword": {
+        "supported": false
+    },
+    "sort": {
+        "supported": false
+    },
+    "etag": {
+        "supported": false
+    },
+    "authenticationSchemes": [
+        {
+            "name": "OAuth Bearer Token",
+            "description": "Authentication scheme using the OAuth Bearer Token Standard",
+            "specUri": "http:\/\/www.rfc-editor.org\/info\/rfc6750",
+            "documentationUri": "https:\/\/help.passbolt.com\/scim\/authentication",
+            "type": "oauthbearertoken",
+            "primary": true
+        }
+    ],
+    "meta": {
+        "location": "https://passbolt-pro-api.ddev.site/scim/v2/SETTING_ID_PLACEHOLDER\/ServiceProviderConfig",
+        "resourceType": "ServiceProviderConfig",
+        "created": "2023-04-26T00:00Z",
+        "lastModified": "2023-04-26T00:00Z",
+        "version": "1"
+    }
+}

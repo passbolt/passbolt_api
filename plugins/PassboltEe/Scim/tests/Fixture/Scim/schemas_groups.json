@@ -1,0 +1,25 @@
+{
+    "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:Schema"
+    ],
+    "id": "urn:ietf:params:scim:schemas:core:2.0:Group",
+    "name": "Group",
+    "description": "Group",
+    "attributes": [
+        {
+            "name": "displayName",
+            "type": "string",
+            "multiValued": false,
+            "description": "A human-readable name for the Group. REQUIRED.",
+            "required": true,
+            "caseExact": false,
+            "mutability": "readWrite",
+            "returned": "default",
+            "uniqueness": "server"
+        }
+    ],
+    "meta": {
+        "resourceType": "Schema",
+        "location": "https://passbolt-pro-api.ddev.site/scim/v2/SETTING_ID_PLACEHOLDER\/Schemas\/urn:ietf:params:scim:schemas:core:2.0:Group"
+    }
+}
