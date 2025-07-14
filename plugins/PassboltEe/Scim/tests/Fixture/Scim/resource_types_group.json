@@ -2,19 +2,13 @@
     "schemas": [
         "urn:ietf:params:scim:schemas:core:2.0:ResourceType"
     ],
-    "id": "User",
-    "name": "User",
-    "endpoint": "Users",
+    "id": "Group",
+    "name": "Group",
+    "endpoint": "Groups",
     "description": "https:\/\/tools.ietf.org\/html\/rfc7643#section-8.7.1",
-    "schema": "urn:ietf:params:scim:schemas:core:2.0:User",
-    "schemaExtensions": [
-        {
-            "schema": "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User",
-            "required": false
-        }
-    ],
+    "schema": "urn:ietf:params:scim:schemas:core:2.0:Group",
     "meta": {
-        "location": "https://passbolt-pro-api.ddev.site/scim/v2/SETTING_ID_PLACEHOLDER\/ResourceTypes\/User",
+        "location": "https://passbolt-pro-api.ddev.site/scim/v2/SETTING_ID_PLACEHOLDER\/ResourceTypes\/Group",
         "resourceType": "ResourceType"
     }
 }

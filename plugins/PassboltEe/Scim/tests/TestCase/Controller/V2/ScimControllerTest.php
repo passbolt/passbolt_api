@@ -45,12 +45,12 @@ class ScimControllerTest extends AppIntegrationTestCase
     public CONST FIXTURE_RESPONSE_SCHEMAS = 'schemas.json';
 
     /**
-     * Expected response for `/Schemas/Users` endpoint
+     * Expected response for `/Schemas/urn:ietf:params:scim:schemas:core:2.0:User` endpoint
      */
     public CONST FIXTURE_RESPONSE_SCHEMAS_USERS = 'schemas_users.json';
 
     /**
-     * Expected response for `/Schemas/Groups` endpoint
+     * Expected response for `/Schemas/urn:ietf:params:scim:schemas:core:2.0:Group` endpoint
      */
     public CONST FIXTURE_RESPONSE_SCHEMAS_GROUPS = 'schemas_groups.json';
 
@@ -179,8 +179,9 @@ class ScimControllerTest extends AppIntegrationTestCase
      */
     public function testScimControllerResourceTypesGroup_Success()
     {
-        $this->get($this->getScimEndpoint('ResourceTypes' . DS . 'User'));
+        $this->get($this->getScimEndpoint('ResourceTypes' . DS . 'Group'));
         $this->assertResponseCode(200);
+        //file_put_contents(self::FIXTURE_SCIM_PATH . self::FIXTURE_RESPONSE_RESOURCE_TYPES_GROUP, (string)$this->_response->getBody());
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_RESOURCE_TYPES_GROUP));
     }
 }
