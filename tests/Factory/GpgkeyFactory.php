@@ -95,7 +95,7 @@ class GpgkeyFactory extends CakephpBaseFactory
     }
 
     /**
-     * Set the expires field to the past
+     * Sets the modified field to the past
      *
      * @return $this
      */
@@ -148,7 +148,7 @@ class GpgkeyFactory extends CakephpBaseFactory
     public function withKeyInfo(array $keyInfo)
     {
         return $this->patchData([
-            'armored_key' => $keyInfo['armored_key'],
+            'armored_key' => $keyInfo['armored_key'] ?? $keyInfo['public_key'],
             'fingerprint' => $keyInfo['fingerprint'],
         ]);
     }

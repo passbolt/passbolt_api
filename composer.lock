@@ -6596,12 +6596,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-test-data",
-                "reference": "e0e3771"
+                "reference": "be1fe75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-test-data/zipball/e0e3771",
-                "reference": "e0e3771",
+                "url": "https://api.github.com/repos/passbolt/passbolt-test-data/zipball/be1fe75",
+                "reference": "be1fe75",
                 "shasum": ""
             },
             "require": {
@@ -6644,7 +6644,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2025-06-16T15:30:34+00:00"
+            "time": "2025-07-07T14:30:26+00:00"
         },
         {
             "name": "phar-io/manifest",
