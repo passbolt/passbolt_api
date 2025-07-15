@@ -24,6 +24,7 @@ use Cake\Core\PluginApplicationInterface;
 use Passbolt\Sso\Notification\Email\SsoSettingsRedactorPool;
 use Passbolt\Sso\Notification\Email\SsoStage2RedactorPool;
 use Passbolt\Sso\Service\Healthcheck\SslHostVerificationSsoHealthcheck;
+use Passbolt\Sso\Service\Healthcheck\SsoEditEndpointsDisabledHealthcheck;
 
 class SsoPlugin extends BasePlugin
 {
@@ -61,9 +62,11 @@ class SsoPlugin extends BasePlugin
     {
         // SSO Health checks
         $container->add(SslHostVerificationSsoHealthcheck::class);
+        $container->add(SsoEditEndpointsDisabledHealthcheck::class);
         // Add SSO health check services to collector
         $container
             ->extend(HealthcheckServiceCollector::class)
-            ->addMethodCall('addService', [SslHostVerificationSsoHealthcheck::class]);
+            ->addMethodCall('addService', [SslHostVerificationSsoHealthcheck::class])
+            ->addMethodCall('addService', [SsoEditEndpointsDisabledHealthcheck::class]);
     }
 }
