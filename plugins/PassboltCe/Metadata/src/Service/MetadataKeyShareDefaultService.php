@@ -206,7 +206,7 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
             $usersTable = TableRegistry::getTableLocator()->get('Gpgkeys');
             /** @var \App\Model\Entity\Gpgkey $userKey */
             $userKey = $usersTable->find()
-                ->where(['user_id' => $createdBy, 'deleted' => false])
+                ->where(['user_id' => $createdBy])
                 ->orderBy(['created' => 'DESC'])
                 ->firstOrFail();
         } catch (Exception $exception) {

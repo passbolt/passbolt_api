@@ -18,8 +18,10 @@ namespace Passbolt\Sso\Test\TestCase\Controller\Settings;
 
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
+use Cake\Core\Configure;
 use Cake\Validation\Validation;
 use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
+use Passbolt\Sso\Middleware\SsoEndpointsSecurityMiddleware;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Service\Providers\SsoActiveProvidersGetService;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
@@ -198,5 +200,26 @@ class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
         $this->assertEquals((new SsoActiveProvidersGetService())->get(), $body->providers);
         $this->assertEquals(SsoSetting::STATUS_DRAFT, $body->status);
         $this->assertEquals($data['data'], (array)$body->data);
+    }
+
+    public function testSsoSettingsCreateController_Error_EndpointsDisabled(): void
+    {
+        Configure::write(SsoEndpointsSecurityMiddleware::SECURITY_CONFIG_KEY, true);
+        $this->logInAsAdmin();
+        $data = [
+            'provider' => SsoSetting::PROVIDER_ADFS,
+            'data' => [
+                'url' => 'https://sso.passbolt.test',
+                'client_id' => UuidFactory::uuid(),
+                'client_secret' => UuidFactory::uuid(),
+                'openid_configuration_path' => '/.well-known/openid-configuration',
+                'scope' => 'openid email profile',
+                'email_claim' => SsoSetting::ADFS_EMAIL_CLAIM_UPN,
+            ],
+        ];
+
+        $this->postJson('/sso/settings.json', $data);
+
+        $this->assertForbiddenError('SSO settings edit endpoints are disabled');
     }
 }
