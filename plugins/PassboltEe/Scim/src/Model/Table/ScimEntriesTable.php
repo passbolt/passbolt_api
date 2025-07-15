@@ -86,14 +86,14 @@ class ScimEntriesTable extends Table
         $validator
             ->scalar('external_identifier')
             ->maxLength('external_identifier', 256)
-            ->requirePresence('external_identifier', 'create')
-            ->notEmptyString('external_identifier');
+            ->requirePresence('external_identifier', false)
+            ->allowEmptyString('external_identifier');
 
         $validator
             ->scalar('scim_name')
             ->maxLength('scim_name', 256)
-            ->requirePresence('scim_name', 'create')
-            ->notEmptyString('scim_name');
+            ->requirePresence('scim_name', false)
+            ->allowEmptyString('scim_name');
 
         return $validator;
     }

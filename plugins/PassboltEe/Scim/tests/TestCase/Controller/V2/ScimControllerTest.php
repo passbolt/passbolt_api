@@ -20,7 +20,7 @@ namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\ORM\TableRegistry;
+use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
 
 /**
@@ -255,7 +255,7 @@ class ScimControllerTest extends AppIntegrationTestCase
             ->where(['ScimEntries.scim_name' => $scimName])
             ->first();
         $this->assertNotNull($existingScimEntry);
-        $this->assertSame('users', $existingScimEntry->foreign_model);
+        $this->assertSame(ScimEntry::FOREIGN_MODEL_USERS, $existingScimEntry->foreign_model);
         $this->assertSame($existingUser->id, $existingScimEntry->foreign_key);
         $this->assertSame($scimName, $existingScimEntry->scim_name);
         $this->assertSame($externalId, $existingScimEntry->external_identifier);

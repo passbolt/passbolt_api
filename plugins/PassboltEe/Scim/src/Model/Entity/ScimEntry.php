@@ -5,6 +5,7 @@ namespace Passbolt\Scim\Model\Entity;
 
 use App\Model\Entity\User;
 use Cake\ORM\Entity;
+use Passbolt\Scim\Utility\ResourceTypes;
 
 /**
  * ScimEntry Entity
@@ -12,8 +13,8 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string $foreign_key
  * @property string $foreign_model
- * @property string $external_identifier
- * @property string $scim_name
+ * @property string|null $external_identifier
+ * @property string|null $scim_name
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  * @property string $created_by
@@ -26,6 +27,14 @@ class ScimEntry extends Entity
 {
     public const FOREIGN_MODEL_USERS = 'users';
     public const FOREIGN_MODEL_GROUPS = 'groups';
+
+    /**
+     * Map between resource types and foreign models
+     */
+    public const MODEL_MAP = [
+        ResourceTypes::TYPE_USER => self::FOREIGN_MODEL_USERS,
+        ResourceTypes::TYPE_GROUP => self::FOREIGN_MODEL_GROUPS,
+    ];
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
