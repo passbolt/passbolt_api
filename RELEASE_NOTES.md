@@ -1,9 +1,12 @@
-Release song: https://www.youtube.com/watch?v=h7V36waLN0M
+Release song: https//www.youtube.com/watch?v=-GxmblM_jss
 
-This hot-fix resolves a regression introduced in v5.3.0 that blocked the creation of standalone Custom Fields content types. A validation error in the API prevented these resources from being saved. With v5.3.1, the validation logic has been corrected, so users can now create and test Custom Fields content types as intended.
-
-Thank you to everyone in the community who spotted the issue so quickly and helped us verify the fix!
-
-## [5.3.1] - 2025-07-09
+## [5.3.2-test.1] - 2025-07-15
 ### Fixed
-- PB-43748 Users are unable to save a new standalone custom field resource
+- PB-43910 As an administrator installing passbolt on postgres, the default postgres schema should be public
+- PB-43956 Fix OpenPGP_PHP behavior discrepancy for keys with multiple self-signed key signatures with different expiry times
+- PB-43746 A metadata key should be shareable with new users even if the administrator who created the key is soft-deleted
+- PB-37106 As an administrator running healthCheck, I should see the right path to the logs if the directory permissions are not correct
+
+### Maintenance
+- PB-43966 Selenium specific endpoints should be enabled for local testing with ddev
+- PB-43480 Writes stack traces in logs on metadata key validation 500 errors
