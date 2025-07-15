@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Model\Table;
 
+use App\Model\Table\GroupsTable;
+use App\Model\Table\UsersTable;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -44,6 +46,20 @@ class ScimEntriesTable extends Table
         $this->setEntityClass(ScimEntry::class);
 
         $this->addBehavior('Timestamp');
+
+        //@TODO confirm we want this
+        $this->hasOne('Users')
+            ->setDependent(false)
+            ->setClassName(UsersTable::class)
+            ->setBindingKey('foreign_key')
+            ->setForeignKey('id');
+
+        $this->hasOne('Groups')
+            ->setDependent(false)
+            ->setClassName(GroupsTable::class)
+            ->setBindingKey('foreign_key')
+            ->setForeignKey('id');
+
     }
 
     /**

@@ -21,6 +21,7 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\ORM\TableRegistry;
+use Passbolt\Scim\Test\Factory\ScimEntryFactory;
 
 /**
  * ScimControllerTest class
@@ -259,5 +260,49 @@ class ScimControllerTest extends AppIntegrationTestCase
         $this->assertSame($scimName, $existingScimEntry->scim_name);
         $this->assertSame($externalId, $existingScimEntry->external_identifier);
 
+    }
+
+    /**
+     * Test case for POST /Users endpoint
+     *
+     * Scenario: The user does exist in passbolt and there is a SCIM entry table for that user but the IdP sends a post.
+     */
+    public function testScimControllerUsersPost_Conflict()
+    {
+        $scimEntry = ScimEntryFactory::make()->withUser()->persist();
+
+        $scimName = $scimEntry->scim_name;
+        $externalId = $scimEntry->external_identifier;
+        $email = $scimEntry->user->username;
+        $this->post($this->getScimEndpoint('Users'), [
+            'schemas' => [
+                'urn:ietf:params:scim:schemas:core:2.0:User',
+                'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User',
+            ],
+            'externalId' => $externalId,
+            'userName' => $scimName,
+            'active' => true,
+            'displayName' => 'User 1 Scim',
+            'emails' => [
+                [
+                    'primary' => true,
+                    'type' => 'work',
+                    'value' => $email,
+                ]
+            ],
+            'meta' => [
+                'resourceType' => 'User',
+            ],
+            'name' => [
+                'formatted' => 'User 1 Scim',
+                'familyName' => 'Scim',
+                'givenName' => 'User 1',
+            ],
+        ]);
+
+        $this->assertResponseCode(409);
+        $this->assertResponseContains('urn:ietf:params:scim:api:messages:2.0:Error');
+        $this->assertResponseContains('"detail": "A user with the same externalId `' . $externalId . '` already exists"');
+        $this->assertResponseContains('"scimType": "uniqueness"');
     }
 }
