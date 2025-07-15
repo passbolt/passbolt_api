@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+## Description: Runs CS check & static analysis commands
+## Usage: analyze
+## Example: "ddev analyze"
+
+set -eo pipefail
+
+ddev composer stan
+ddev composer psalm
+ddev composer cs-check # give coding style lower priority
