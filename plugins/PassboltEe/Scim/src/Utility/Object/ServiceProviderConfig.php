@@ -39,7 +39,7 @@ class ServiceProviderConfig implements ScimObjectInterface
                 'supported' => true,
             ],
             'bulk' => [
-                'supported' => true,
+                'supported' => false,
                 'maxOperations' => 25,
                 'maxPayloadSize' => 25,
             ],

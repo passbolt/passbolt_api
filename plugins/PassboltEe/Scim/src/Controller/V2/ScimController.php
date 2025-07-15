@@ -21,15 +21,14 @@ use App\Controller\AppController;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\NotImplementedException;
-use Cake\Log\Log;
 use Cake\Routing\Router;
-use Passbolt\Scim\Exception\ScimException;
-use Passbolt\Scim\Log\ScimLog;
-use Passbolt\Scim\Resources\ListResponse;
-use Passbolt\Scim\Resources\ResourceTypeFactory;
-use Passbolt\Scim\Resources\ResourceTypeInterface;
-use Passbolt\Scim\Resources\Schema;
-use Passbolt\Scim\Resources\ServiceProviderConfig;
+use Passbolt\Scim\Utility\Object\ErrorResponse;
+use Passbolt\Scim\Utility\Object\ListResponse;
+use Passbolt\Scim\Utility\Object\ServiceProviderConfig;
+use Passbolt\Scim\Utility\Resources;
+use Passbolt\Scim\Utility\ResourceTypes;
+use Passbolt\Scim\Utility\Schemas;
+use Passbolt\Scim\Utility\ScimObjectInterface;
 
 class ScimController extends AppController
 {
@@ -57,17 +56,34 @@ class ScimController extends AppController
      * SCIM index action
      *
      * @param string $settingId Org Setting Id
-     * @param string $resourceType Resource Type (User, Group)
+     * @param string $resourceType Resource Type (Users, Groups)
      * @return void
      * @throws \Exception
      */
     public function index(string $settingId, string $resourceType): void
     {
         try {
-            $listResponse = new ListResponse([], 1, 0);
-            $listResponse->fetchAllResources($resourceType, $this->getRequest()->getQuery('filter'));
-            $data = $listResponse->toSCIM();
-            $this->processResponse($settingId, $data);
+            $queryParams = $this->getRequest()->getQueryParams();
+            $startIndex = null;
+            if (isset($queryParams['startIndex'])) {
+                $startIndex = (int)$queryParams['startIndex'];
+            }
+            $count = null;
+            if (isset($queryParams['count'])) {
+                $count = (int)$queryParams['count'];
+            }
+            $filter = null;
+            if (isset($queryParams['filter'])) {
+                $filter = (string)$queryParams['filter'];
+            }
+            $listResponse = (new ListResponse())
+                ->fetchResources(
+                    $resourceType,
+                    $startIndex,
+                    $count,
+                    $filter
+                );
+            $this->processResponse($settingId, $listResponse);
         } catch (\Exception $e) {
             $this->processException($settingId, $e);
         }
@@ -77,16 +93,14 @@ class ScimController extends AppController
      * SCIM view action
      *
      * @param string $settingId Org Setting Id
-     * @param string $resourceType Resource Type (User, Group)
+     * @param string $resourceType Resource Type (Users, Groups)
      * @param string $resourceId Resource Id
      * @return void
      */
     public function view(string $settingId, string $resourceType, string $resourceId): void
     {
         try {
-            $resource = ResourceTypeFactory::build($resourceType);
-            $data = $resource->getResource($resourceId)->toSCIM();
-            $this->processResponse($settingId, $data);
+            $this->processResponse($settingId, Resources::build($resourceType)->setFromDatabase($resourceId));
         } catch (\Exception $e) {
             $this->processException($settingId, $e);
         }
@@ -96,18 +110,16 @@ class ScimController extends AppController
      * SCIM add action
      *
      * @param string $settingId Org Setting Id
-     * @param string $resourceType Resource Type (User, Group)
+     * @param string $resourceType Resource Type (Users, Groups)
      * @return void
      */
     public function add(string $settingId, string $resourceType): void
     {
         try {
-            Log::debug($this->getRequest()->getUri()->getPath());
-            /** @var \Passbolt\Scim\Resources\ResourceType\UserResourceType $resource */
-            $resource = ResourceTypeFactory::build($resourceType);
-            $resource->setFromScim($this->getRequest()->getData());
-            $data = $resource->add()->toSCIM();
-            $this->processResponse($settingId, $data, static::STATUS_CREATED);
+            $resource = Resources::build($resourceType)
+                ->setFromScim($this->getRequest()->getData())
+                ->create();
+            $this->processResponse($settingId, $resource, static::STATUS_CREATED);
         } catch (\Exception $e) {
             $this->processException($settingId, $e);
         }
@@ -117,7 +129,7 @@ class ScimController extends AppController
      * SCIM edit action
      *
      * @param string $settingId Org Setting Id
-     * @param string $resourceType Resource Type (User, Group)
+     * @param string $resourceType Resource Type (Users, Groups)
      * @param string $resourceId Resource Id
      * @return void
      */
@@ -131,7 +143,7 @@ class ScimController extends AppController
      *  - DELETE /Users/
      *
      * @param string $settingId Org Setting Id
-     * @param string $resourceType Resource Type (User, Group)
+     * @param string $resourceType Resource Type (Users, Groups)
      * @param string $resourceId Resource Id
      * @return void
      */
@@ -152,17 +164,21 @@ class ScimController extends AppController
      */
     public function schemas(string $settingId, ?string $schemaId = null)
     {
-        if ($schemaId && !isset(Schema::SCHEMA_MAPPING[$schemaId])) {
-            throw new NotFoundException('Invalid Schema');
-        }
-        $schemaName = $schemaId ? Schema::SCHEMA_MAPPING[$schemaId] : 'ALL_SCHEMAS';
-        $schema = constant("\Passbolt\Scim\Resources\Schema::$schemaName");
-        if (!$schemaId) {
-            $listResponse = new ListResponse($schema, 1, count($schema));
-            $schema = $listResponse->toSCIM();
-        }
+        try {
+            if ($schemaId && !Schemas::isValid($schemaId)) {
+                throw new NotFoundException('Invalid Schema');
+            }
 
-        $this->processResponse($settingId, $schema);
+            if ($schemaId) {
+                $responseData = Schemas::build($schemaId);
+            } else {
+                $schemas = Schemas::getAll();
+                $responseData = new ListResponse($schemas, totalResults: count($schemas));
+            }
+            $this->processResponse($settingId, $responseData);
+        } catch (\Exception $e) {
+            $this->processException($settingId, $e);
+        }
     }
 
     /**
@@ -174,21 +190,21 @@ class ScimController extends AppController
      */
     public function resourceTypes(string $settingId, ?string $resourceType = null)
     {
-        if ($resourceType && !isset(ResourceTypeInterface::RESOURCE_TYPE_MAPPING[$resourceType])) {
-            throw new NotFoundException('Invalid Schema');
-        }
+        try {
+            if ($resourceType && !ResourceTypes::isValid($resourceType)) {
+                throw new NotFoundException('Invalid ResourceType');
+            }
 
-        $resourceTypeName = $resourceType ?
-            ResourceTypeInterface::RESOURCE_TYPE_MAPPING[$resourceType] :
-            'ALL_RESOURCE_TYPES';
-        $resourceTypeDefinition = constant(
-            "\Passbolt\Scim\Resources\ResourceTypeInterface::$resourceTypeName"
-        );
-        if (!$resourceType) {
-            $listResponse = new ListResponse($resourceTypeDefinition, 1, count($resourceTypeDefinition));
-            $resourceTypeDefinition = $listResponse->toSCIM();
+            if ($resourceType) {
+                $responseData = ResourceTypes::build($resourceType);
+            } else {
+                $resourceTypes = ResourceTypes::getAll();
+                $responseData = new ListResponse($resourceTypes, totalResults: count($resourceTypes));
+            }
+            $this->processResponse($settingId, $responseData);
+        } catch (\Exception $e) {
+            $this->processException($settingId, $e);
         }
-        $this->processResponse($settingId, $resourceTypeDefinition);
     }
 
     /**
@@ -201,16 +217,7 @@ class ScimController extends AppController
     protected function processException(string $settingId, \Exception $e)
     {
         $status = $e->getCode();
-        $data = [
-            'schemas' => [Schema::ERROR],
-            'status' => $e->getCode(),
-            'detail' => $e->getMessage(),
-        ];
-        if ($e instanceof ScimException) {
-            $data['scimType'] = $e->getScimType();
-        }
-
-        $this->processResponse($settingId, $data, $status);
+        $this->processResponse($settingId, new ErrorResponse($e), $status);
     }
 
     /**
@@ -218,14 +225,14 @@ class ScimController extends AppController
      *  - Replace {scimUrl} placeholder from JSON response
      *
      * @param string $settingId Org Setting Id
-     * @param array $data Response data
+     * @param \Passbolt\Scim\Utility\ScimObjectInterface $data Response data
      * @param int $status Status code
      * @return void
      */
-    protected function processResponse(string $settingId, array $data, int $status = 200)
+    protected function processResponse(string $settingId, ScimObjectInterface $data, int $status = 200)
     {
-        $scimUrl = Router::url('scim/v2/' . $settingId, true);
-        $json = str_replace('{scimUrl}', $scimUrl, json_encode($data, JSON_PRETTY_PRINT));
+        $scimUrl = str_replace('"', '', json_encode(Router::url('scim/v2/' . $settingId, true)));
+        $json = str_replace('{scimUrl}', $scimUrl, json_encode($data->toSCIM(), JSON_PRETTY_PRINT));
         $this->setResponse($this->getResponse()->withStringBody($json)->withStatus($status));
     }
 
@@ -237,6 +244,6 @@ class ScimController extends AppController
      */
     public function serviceProviderConfig(string $settingId)
     {
-        $this->processResponse($settingId, ServiceProviderConfig::CONFIG);
+        $this->processResponse($settingId, new ServiceProviderConfig());
     }
 }

@@ -85,7 +85,7 @@ class ListResponse implements ScimObjectInterface
         ?string $filter = null,
     ): static
     {
-        if (!ResourceTypes::isValid($resourceType)) {
+        if (!Resources::isValid($resourceType)) {
             throw new ScimException(sprintf('The resource type `%s` is not valid', $resourceType));
         }
         if (!isset(ScimEntry::MODEL_MAP[$resourceType])) {
@@ -100,7 +100,7 @@ class ListResponse implements ScimObjectInterface
         }
 
         /** @var \Passbolt\Scim\Model\Table\ScimEntriesTable $scimEntriesTable */
-        $scimEntriesTable = $this->fetchTable('Scim.ScimEntries');
+        $scimEntriesTable = $this->fetchTable('Passbolt/Scim.ScimEntries');
         $conditions = [
             $scimEntriesTable->aliasField('foreign_model') => ScimEntry::MODEL_MAP[$resourceType],
         ];

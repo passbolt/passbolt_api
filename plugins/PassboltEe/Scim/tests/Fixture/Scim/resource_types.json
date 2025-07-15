@@ -1,10 +1,10 @@
 {
-    "totalResults": 2,
-    "itemsPerPage": 2,
-    "startIndex": 1,
     "schemas": [
         "urn:ietf:params:scim:api:messages:2.0:ListResponse"
     ],
+    "itemsPerPage": 25,
+    "startIndex": 1,
+    "totalResults": 2,
     "Resources": [
         {
             "schemas": [
@@ -22,7 +22,7 @@
                 }
             ],
             "meta": {
-                "location": "https://passbolt-pro-api.ddev.site/scim/v2/SETTING_ID_PLACEHOLDER\/ResourceTypes\/User",
+                "location": "https:\/\/passbolt-pro-api.ddev.site\/scim\/v2\/SETTING_ID_PLACEHOLDER\/ResourceTypes\/User",
                 "resourceType": "ResourceType"
             }
         },
@@ -36,7 +36,7 @@
             "description": "https:\/\/tools.ietf.org\/html\/rfc7643#section-8.7.1",
             "schema": "urn:ietf:params:scim:schemas:core:2.0:Group",
             "meta": {
-                "location": "https://passbolt-pro-api.ddev.site/scim/v2/SETTING_ID_PLACEHOLDER\/ResourceTypes\/Group",
+                "location": "https:\/\/passbolt-pro-api.ddev.site\/scim\/v2\/SETTING_ID_PLACEHOLDER\/ResourceTypes\/Group",
                 "resourceType": "ResourceType"
             }
         }

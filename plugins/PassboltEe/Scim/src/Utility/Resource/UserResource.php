@@ -36,7 +36,7 @@ use Passbolt\Scim\Model\Table\ScimEntriesTable;
 use Passbolt\Scim\Utility\Object\Operation;
 use Passbolt\Scim\Utility\Object\PatchOp;
 use Passbolt\Scim\Utility\ResourceInterface;
-use Passbolt\Scim\Utility\ResourceTypes;
+use Passbolt\Scim\Utility\Resources;
 use Passbolt\Scim\Utility\SchemaIdentifier;
 use Passbolt\Scim\Utility\ScimObjectInterface;
 
@@ -126,7 +126,7 @@ class UserResource implements ScimObjectInterface, ResourceInterface
         /* @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
         /* @phpstan-ignore-next-line */
-        $this->ScimEntries = $this->fetchTable('Scim.ScimEntries');
+        $this->ScimEntries = $this->fetchTable('Passbolt/Scim.ScimEntries');
     }
 
     /**
@@ -142,7 +142,7 @@ class UserResource implements ScimObjectInterface, ResourceInterface
      */
     public function getType(): string
     {
-        return ResourceTypes::TYPE_USER;
+        return Resources::USERS;
     }
 
     /**

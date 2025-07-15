@@ -25,14 +25,26 @@ use Passbolt\Scim\Utility\Resource\UserResource;
  */
 class Resources
 {
+    public const USERS = 'Users';
+    public const GROUPS = 'Groups';
+
     /**
      * Type map
      *
      * @var array
      */
     public const MAPPING = [
-        ResourceTypes::TYPE_USER => UserResource::class,
+        self::USERS => UserResource::class,
     ];
+
+    /**
+     * @param string $type
+     * @return bool
+     */
+    public static function isValid(string $type): bool
+    {
+        return array_key_exists($type, self::MAPPING);
+    }
 
     /**
      * Build a Resource given the type

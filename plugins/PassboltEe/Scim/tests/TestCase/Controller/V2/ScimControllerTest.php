@@ -233,6 +233,7 @@ class ScimControllerTest extends AppIntegrationTestCase
             ],
         ]);
         $this->assertResponseCode(201);
+
         $this->assertResponseContains('urn:ietf:params:scim:schemas:core:2.0:User');
         $this->assertResponseContains('"externalId": "' . $externalId . '"');
         $this->assertResponseContains('"userName": "' . $scimName . '"');
@@ -302,7 +303,7 @@ class ScimControllerTest extends AppIntegrationTestCase
 
         $this->assertResponseCode(409);
         $this->assertResponseContains('urn:ietf:params:scim:api:messages:2.0:Error');
-        $this->assertResponseContains('"detail": "A user with the same externalId `' . $externalId . '` already exists"');
+        $this->assertResponseContains('"detail": "The Users resource with userName `' . $scimName . '` already exist with id');
         $this->assertResponseContains('"scimType": "uniqueness"');
     }
 }

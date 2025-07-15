@@ -23,6 +23,15 @@ class Schemas
     ];
 
     /**
+     * @param string $schemaId
+     * @return bool
+     */
+    public static function isValid(string $schemaId): bool
+    {
+        return array_key_exists($schemaId, self::MAPPING);
+    }
+
+    /**
      * Return the list of Schemas objects
      *
      * @return \Passbolt\Scim\Utility\ScimObjectInterface[]

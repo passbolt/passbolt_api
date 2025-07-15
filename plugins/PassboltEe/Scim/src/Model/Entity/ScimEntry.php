@@ -5,7 +5,7 @@ namespace Passbolt\Scim\Model\Entity;
 
 use App\Model\Entity\User;
 use Cake\ORM\Entity;
-use Passbolt\Scim\Utility\ResourceTypes;
+use Passbolt\Scim\Utility\Resources;
 
 /**
  * ScimEntry Entity
@@ -32,8 +32,8 @@ class ScimEntry extends Entity
      * Map between resource types and foreign models
      */
     public const MODEL_MAP = [
-        ResourceTypes::TYPE_USER => self::FOREIGN_MODEL_USERS,
-        ResourceTypes::TYPE_GROUP => self::FOREIGN_MODEL_GROUPS,
+        Resources::USERS => self::FOREIGN_MODEL_USERS,
+        Resources::GROUPS => self::FOREIGN_MODEL_GROUPS,
     ];
 
     /**
