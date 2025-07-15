@@ -557,6 +557,9 @@ return [
                  * - `'/path/to/rootCA.crt'` (string) - Path to custom root CA certificate.
                  */
                 'sslCafile' => env('PASSBOLT_SECURITY_SSO_SSL_CAFILE', null),
+                'settings' => [
+                    'editionDisabled' => filter_var(env('PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED', false), FILTER_VALIDATE_BOOLEAN),
+                ],
             ],
             // Check for domain mismatch where possible
             'checkDomainMismatch' => env('PASSBOLT_CHECK_DOMAIN_MISMATCH', true),

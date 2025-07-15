@@ -16,12 +16,17 @@ declare(strict_types=1);
  */
 use Cake\Core\Configure;
 use Cake\Routing\RouteBuilder;
+use Passbolt\Sso\Middleware\SsoEndpointsSecurityMiddleware;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
 $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
+    $routes->registerMiddleware(
+        SsoEndpointsSecurityMiddleware::class,
+        new SsoEndpointsSecurityMiddleware()
+    );
 
     /**
      * Returns list of enabled providers.
@@ -53,7 +58,8 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
                 'controller' => 'SsoAzureStage1DryRun',
                 'action' => 'stage1DryRun',
             ])
-            ->setMethods(['POST']);
+            ->setMethods(['POST'])
+            ->setMiddleware([SsoEndpointsSecurityMiddleware::class]);
 
         $routes
             ->connect('/azure/redirect', [
@@ -75,7 +81,8 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
                 'controller' => 'SsoGoogleStage1DryRun',
                 'action' => 'stage1DryRun',
             ])
-            ->setMethods(['POST']);
+            ->setMethods(['POST'])
+            ->setMiddleware([SsoEndpointsSecurityMiddleware::class]);
 
         $routes
             ->connect('/google/login', [
@@ -105,7 +112,8 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
                 'controller' => 'SsoOAuth2Stage1DryRun',
                 'action' => 'stage1DryRun',
             ])
-            ->setMethods(['POST']);
+            ->setMethods(['POST'])
+            ->setMiddleware([SsoEndpointsSecurityMiddleware::class]);
 
         $routes
             ->connect('/oauth2/login', [
@@ -135,7 +143,8 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
                 'controller' => 'SsoAdfsStage1DryRun',
                 'action' => 'stage1DryRun',
             ])
-            ->setMethods(['POST']);
+            ->setMethods(['POST'])
+            ->setMiddleware([SsoEndpointsSecurityMiddleware::class]);
 
         $routes
             ->connect('/adfs/login', [
@@ -205,7 +214,8 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
             'controller' => 'SsoSettingsCreate',
             'action' => 'create',
         ])
-        ->setMethods(['POST']);
+        ->setMethods(['POST'])
+        ->setMiddleware([SsoEndpointsSecurityMiddleware::class]);
 
     $routes->connect('/settings/{id}', [
             'prefix' => 'Settings',
@@ -221,7 +231,8 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
             'action' => 'delete',
         ])
         ->setPass(['id'])
-        ->setMethods(['DELETE']);
+        ->setMethods(['DELETE'])
+        ->setMiddleware([SsoEndpointsSecurityMiddleware::class]);
 
     $routes->connect('/settings/{id}', [
             'prefix' => 'Settings',
@@ -229,7 +240,8 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
             'action' => 'activate',
         ])
         ->setPass(['id'])
-        ->setMethods(['POST', 'PUT']);
+        ->setMethods(['POST', 'PUT'])
+        ->setMiddleware([SsoEndpointsSecurityMiddleware::class]);
 
     $routes->connect('/settings/current', [
             'prefix' => 'Settings',
