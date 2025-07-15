@@ -105,6 +105,29 @@ class MetadataPrivateKeyFactory extends CakephpBaseFactory
         return $this->with('Users', $user);
     }
 
+    public function withCreatorAndModifier(?User $user = null)
+    {
+        return $this->withModifier($user)->withCreator($user);
+    }
+
+    public function withModifier(?User $user = null)
+    {
+        if (is_null($user)) {
+            $user = UserFactory::make()->persist();
+        }
+
+        return $this->with('Modifier', $user)->setField('modified_by', $user->get('id'));
+    }
+
+    public function withCreator(?User $user = null)
+    {
+        if (is_null($user)) {
+            $user = UserFactory::make()->persist();
+        }
+
+        return $this->with('Creator', $user)->setField('created_by', $user->get('id'));
+    }
+
     public function withUserPrivateKey(Gpgkey $gpgkey)
     {
         return $this->patchData([
@@ -113,10 +136,20 @@ class MetadataPrivateKeyFactory extends CakephpBaseFactory
         ]);
     }
 
-    public function withServerPrivateKey()
+    public function withServerPrivateKey(?array $keyInfo = null): MetadataPrivateKeyFactory
     {
+        if (!is_null($keyInfo)) {
+            $data = $this->getValidPrivateKeyDataForServer([
+                'fingerprint' => $keyInfo['fingerprint'],
+                'private_key' => $keyInfo['private_key'],
+                'passphrase' => $keyInfo['passphrase'],
+            ]);
+        } else {
+            $data = $this->getValidPrivateKeyDataForServer();
+        }
+
         return $this->patchData([
-            'data' => $this->getValidPrivateKeyDataForServer(),
+            'data' => $data,
             'user_id' => null,
         ]);
     }

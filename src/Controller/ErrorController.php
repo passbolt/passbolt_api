@@ -17,15 +17,12 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Error\Exception\ExceptionWithErrorsDetailInterface;
-use App\Log\Formatter\JsonTraceFormatter;
 use App\Utility\UserAction;
 use App\View\AjaxView;
 use Cake\Controller\Controller;
 use Cake\Event\EventInterface;
-use Cake\Log\Log;
 use Cake\Routing\Router;
 use Cake\View\JsonView;
-use Exception;
 
 /**
  * Error Handling Controller
@@ -79,13 +76,6 @@ class ErrorController extends Controller
             $body = '';
             if ($error instanceof ExceptionWithErrorsDetailInterface) {
                 $body = $error->getErrors();
-            }
-            $is500Exception = ($error instanceof Exception) && ($error->getCode() === 500);
-            if ($is500Exception) {
-                Log::error(
-                    $error->getMessage(),
-                    [JsonTraceFormatter::TRACE => $error->getTraceAsString()]
-                );
             }
             $header = [
                 'id' => UserAction::getInstance()->getUserActionId(),

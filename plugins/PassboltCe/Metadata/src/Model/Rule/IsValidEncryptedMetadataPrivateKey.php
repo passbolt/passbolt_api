@@ -58,6 +58,10 @@ class IsValidEncryptedMetadataPrivateKey
 
         $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
         if (!MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo)) {
+            if (!isset($keyInfo['sub_keys'][0]['key_id'])) {
+                Log::error('Issue found with the user key for user id: ' . $userId . ' (No subkey).');
+            }
+
             return false;
         }
 
