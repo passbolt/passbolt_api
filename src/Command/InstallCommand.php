@@ -41,7 +41,7 @@ use Cake\Core\Exception\CakeException;
 use Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException;
 use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
-use PassboltTestData\Command\InsertCommand;
+use Passbolt\TestData\Command\InsertCommand;
 
 class InstallCommand extends PassboltCommand
 {

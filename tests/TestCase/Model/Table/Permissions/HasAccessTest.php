@@ -22,7 +22,7 @@ use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
-use PassboltTestData\Lib\PermissionMatrix;
+use Passbolt\TestData\Lib\PermissionMatrix;
 
 class HasAccessTest extends AppTestCase
 {
