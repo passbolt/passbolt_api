@@ -41,7 +41,6 @@ class BaseSolutionBootstrapper
         if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
             $app->addPlugin('Passbolt/TestData', ['bootstrap' => true, 'routes' => false]);
             $app->addPlugin('PassboltSeleniumApi', ['bootstrap' => true, 'routes' => true]);
-            $app->addPlugin('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
         }
 
         $this->addFeaturePluginIfEnabled($app, 'JwtAuthentication');

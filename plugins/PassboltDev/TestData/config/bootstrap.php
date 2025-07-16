@@ -13,4 +13,4 @@ if (!defined('PASSBOLT_TEST_DATA_AVATAR_PATH')) {
     define('PASSBOLT_TEST_DATA_AVATAR_PATH', __DIR__ . DS . 'img' . DS . 'avatar');
 }
 
-Configure::load('PassboltTestData.version', 'default', true);
+//Configure::load('PassboltTestData.version', 'default', true);

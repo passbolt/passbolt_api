@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4367827cbedf9ebfcf2b524271d7e623",
+    "content-hash": "afc664b0f0905125e9b10f85559e0663",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5545,62 +5545,6 @@
             "time": "2025-06-10T09:23:34+00:00"
         },
         {
-            "name": "passbolt/passbolt-test-data",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/passbolt/passbolt-test-data",
-                "reference": "e0e3771"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-test-data/zipball/e0e3771",
-                "reference": "e0e3771",
-                "shasum": ""
-            },
-            "require": {
-                "cakephp/cakephp": "^5.0",
-                "ext-json": "*"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^10.1.0"
-            },
-            "default-branch": true,
-            "type": "cakephp-plugin",
-            "autoload": {
-                "psr-4": {
-                    "PassboltTestData\\": "src"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "PassboltTestData\\Test\\": "tests",
-                    "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
-                }
-            },
-            "license": [
-                "AGPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Passbolt Team",
-                    "homepage": "https://www.passbolt.com/credits"
-                }
-            ],
-            "description": "Passbolt data test plugin.",
-            "homepage": "https://www.passbolt.com",
-            "keywords": [
-                "passbolt",
-                "password"
-            ],
-            "support": {
-                "bugs": "https://github.com/passbolt/passbolt/issues",
-                "help": "https://www.passbolt.com/help",
-                "source": "https://github.com/passbolt/passbolt"
-            },
-            "time": "2025-06-16T15:30:34+00:00"
-        },
-        {
             "name": "phar-io/manifest",
             "version": "2.0.4",
             "source": {
@@ -7832,7 +7776,6 @@
         "bcrowe/cakephp-api-pagination": 20,
         "lorenzo/cakephp-email-queue": 20,
         "passbolt/passbolt-selenium-api": 20,
-        "passbolt/passbolt-test-data": 20,
         "psy/psysh": 0
     },
     "prefer-stable": true,

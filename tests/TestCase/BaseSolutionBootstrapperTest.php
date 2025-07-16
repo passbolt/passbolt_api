@@ -78,7 +78,6 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
             'BryanCrowe/ApiPagination',
             'Passbolt/TestData',
             'PassboltSeleniumApi',
-            'PassboltTestData',
             'Passbolt/JwtAuthentication',
             'Passbolt/WebInstaller',
             'Bake',
@@ -99,7 +98,6 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
                 'BryanCrowe/ApiPagination',
                 'Passbolt/TestData',
                 'PassboltSeleniumApi',
-                'PassboltTestData',
             ],
             self::EXPECTED_CE_PLUGINS,
             [
