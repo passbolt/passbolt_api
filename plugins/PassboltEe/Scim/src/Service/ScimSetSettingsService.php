@@ -19,6 +19,7 @@ namespace Passbolt\Scim\Service;
 use App\Error\Exception\FormValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Event\EventDispatcherTrait;
+use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Scim\Form\Settings\ScimSettingsForm;
@@ -49,12 +50,17 @@ class ScimSetSettingsService extends ScimBaseSettingsService
 
     /**
      * @param array $data data in the payload
+     * @param string|null $id ID of the setting to be updated
      * @return array
      * @throws \Exception
      */
-    public function saveSettings(array $data): array
+    public function saveSettings(array $data, string $id = null): array
     {
         $form = new ScimSettingsForm();
+        if ($id) {
+            $data['id'] = $id;
+        }
+
         if (!$form->execute($data)) {
             throw new FormValidationException(
                 __('Could not validate the SCIM settings.'),
@@ -64,10 +70,15 @@ class ScimSetSettingsService extends ScimBaseSettingsService
 
         /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
-        $form->set('secret_token', $this->generateToken());
         $current = $OrganizationSettings->getByProperty(self::SCIM_SETTINGS_PROPERTY_NAME);
-        if ($current) {
-            $form->set('secret_token', Hash::get(json_decode($current->get('value'), true), 'secret_token'));
+        if (!$current && $id) {
+            throw new NotFoundException(__('The SCIM plugin is disabled.'));
+        }
+        if (!$id && $current) {
+            throw new NotFoundException(__('Please delete previous settings before creating again.'));
+        }
+        if ($current && $current->id !== $id) {
+            throw new NotFoundException(__('The uuid in the url doesn\'t match any known setting record.'));
         }
         $value = json_encode($form->getData());
         $setting = $OrganizationSettings->createOrUpdateSetting(

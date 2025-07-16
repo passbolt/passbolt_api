@@ -18,6 +18,7 @@ namespace Passbolt\Scim\Service;
 
 use App\Model\Entity\OrganizationSetting;
 use Cake\Routing\Router;
+use Cake\Utility\Hash;
 use Passbolt\Scim\Form\Settings\ScimSettingsForm;
 
 abstract class ScimBaseSettingsService
@@ -36,13 +37,14 @@ abstract class ScimBaseSettingsService
      */
     protected function getRenderedValue(OrganizationSetting $setting, ScimSettingsForm $form): array
     {
+        $data = json_decode($setting->value, true, 2);
         return array_merge(
-            [
-                'id' => $setting->id,
-            ],
             $form->getData(),
             [
-                'base_api_endpoint' => Router::url('scim/v2/' . $setting->id, true),
+                'id' => $setting->id,
+                'base_api_endpoint' => Router::url('scim/v2/' . Hash::get($data, 'setting_id'), true),
+                'setting_id' => Hash::get($data, 'setting_id'),
+                'scim_user_id' => Hash::get($data, 'scim_user_id'),
                 'created' => $setting->modified,
                 'modified' => $setting->modified,
                 'created_by' => $setting->created_by,

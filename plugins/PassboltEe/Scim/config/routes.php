@@ -23,6 +23,14 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
         ->setMethods(['GET']);
 
     $routes->connect('/settings', ['controller' => 'ScimSetSettings', 'action' => 'setSettings'])
+        ->setMethods(['POST']);
+
+    $routes
+        ->connect(
+            '/settings/{id}',
+            ['controller' => 'ScimSetSettings', 'action' => 'setSettings']
+        )
+        ->setPass(['id'])
         ->setMethods(['POST', 'PUT']);
 
     $routes

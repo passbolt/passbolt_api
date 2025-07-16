@@ -24,15 +24,16 @@ class ScimSetSettingsController extends AppController
     /**
      * SCIM POST/PUT action
      *
+     * @param string|null $id
      * @return void
      * @throws \Exception
      */
-    public function setSettings(): void
+    public function setSettings(string $id = null): void
     {
         $this->User->assertIsAdmin();
 
         $service = new ScimSetSettingsService($this->User->getAccessControl());
-        $settings = $service->saveSettings($this->getRequest()->getData());
+        $settings = $service->saveSettings($this->getRequest()->getData(), $id);
 
         $this->success(__('The operation was successful.'), $settings);
     }
