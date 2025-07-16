@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use App\Utility\UuidFactory;
 use Passbolt\TestData\Lib\DataCommand;
 use Passbolt\TestData\Service\GetGpgkeyPathService;
 use Passbolt\WebInstaller\Utility\Gpg as WebinstallerGpg;
-use PassboltTestData\Command\Base\User;
 
 class GpgkeysDataCommand extends DataCommand
 {
@@ -28,17 +29,17 @@ class GpgkeysDataCommand extends DataCommand
     /**
      * Generate and export a user key.
      *
-     * @param User $user The user entity to generate the key for
+     * @param \PassboltTestData\Command\Base\User $user The user entity to generate the key for
      * @param string $publicKeyPath The public key path
      * @param string $privateKeyPath The private key path
      * @return void
      */
-    public function generateAndExportGpgKeys($user, $publicKeyPath, $privateKeyPath)
+    public function generateAndExportGpgKeys(User $user, string $publicKeyPath, string $privateKeyPath): void
     {
         $gpgSettings = [
             'name' => $user->profile->first_name . ' ' . $user->profile->last_name,
             'email' => $user->username,
-            'comment' => ''
+            'comment' => '',
         ];
         $fingerprint = WebinstallerGpg::generateKey($gpgSettings);
         WebinstallerGpg::exportPublicArmoredKey($fingerprint, $publicKeyPath);
@@ -51,7 +52,7 @@ class GpgkeysDataCommand extends DataCommand
      * @param string $userId uuid
      * @return string ascii armored key
      */
-    protected function _getUserKey($userId)
+    protected function _getUserKey(string $userId): string
     {
         $gpgkeyPath = (new GetGpgkeyPathService())->get($userId);
 
@@ -63,7 +64,7 @@ class GpgkeysDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $usersTable = $this->fetchTable('Users');
         $users = $usersTable->find('all');
@@ -89,7 +90,7 @@ class GpgkeysDataCommand extends DataCommand
                     'key_created' => date('Y-m-d H:i:s', $info['key_created']),
                     'deleted' => 0,
                     'created' => date('Y-m-d H:i:s'),
-                    'modified' => date('Y-m-d H:i:s')
+                    'modified' => date('Y-m-d H:i:s'),
                 ];
             }
         }

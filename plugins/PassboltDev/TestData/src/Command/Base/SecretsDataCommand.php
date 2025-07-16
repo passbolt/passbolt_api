@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,6 +19,7 @@ namespace Passbolt\TestData\Command\Base;
 use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\ORM\Entity;
 use Passbolt\TestData\Lib\DataCommand;
 use Passbolt\TestData\Service\GetGpgkeyPathService;
 
@@ -29,7 +32,7 @@ class SecretsDataCommand extends DataCommand
      *
      * @return array
      */
-    protected function _getFixedPasswords()
+    protected function _getFixedPasswords(): array
     {
         return [
             UuidFactory::uuid('resource.id.apache') => '_upjvh-p@wAHP18D}OmY05M',
@@ -45,7 +48,7 @@ class SecretsDataCommand extends DataCommand
      *
      * @return array
      */
-    protected function _getDummyPasswords()
+    protected function _getDummyPasswords(): array
     {
         return [
             'testpassword',
@@ -77,7 +80,7 @@ class SecretsDataCommand extends DataCommand
      * @param string $resourceId uuid
      * @return array
      */
-    protected function _getPassword($resourceId)
+    protected function _getPassword(string $resourceId): array
     {
         static $passwords = [];
 
@@ -109,7 +112,7 @@ class SecretsDataCommand extends DataCommand
      * @param \Cake\ORM\Entity $user User
      * @return string
      */
-    protected function _encrypt($text, $user): string
+    protected function _encrypt(string $text, Entity $user): string
     {
         // Retrieve the user key file.
         $gpgkeyPath = (new GetGpgkeyPathService())->get($user->id);
@@ -128,7 +131,7 @@ class SecretsDataCommand extends DataCommand
         exec('gpg --import ' . $gpgkeyPath . ' > /dev/null 2>&1');
 
         // Encrypt the text.
-        $command = "echo -n " . escapeshellarg($text) . " | gpg --encrypt -r " . $keyFingerprint . " -a --trust-model always";
+        $command = 'echo -n ' . escapeshellarg($text) . ' | gpg --encrypt -r ' . $keyFingerprint . ' -a --trust-model always';
         exec($command, $output);
 
         // Return the armored message.
@@ -140,7 +143,7 @@ class SecretsDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         if (Configure::read('passbolt.gpg.putenv')) {
             putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
@@ -162,7 +165,7 @@ class SecretsDataCommand extends DataCommand
                     'user_id' => $user->id,
                     'resource_id' => $resource->id,
                     'data' => $armoredPassword,
-                    'created_by' => $user->id
+                    'created_by' => $user->id,
                 ];
             }
         }

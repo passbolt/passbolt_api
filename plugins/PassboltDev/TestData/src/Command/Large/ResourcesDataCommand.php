@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,7 +30,7 @@ class ResourcesDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $resources = [];
         $resources = array_merge($resources, $this->getResourcesScenarioForEachUser());
@@ -59,7 +61,7 @@ class ResourcesDataCommand extends DataCommand
                     'modified_by' => $userId,
                     'created' => date('Y-m-d H:i:s', strtotime('-2 days')),
                     'modified' => date('Y-m-d H:i:s', strtotime('-1 days')),
-                    'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+                    'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
                 ];
             }
         }
@@ -82,7 +84,7 @@ class ResourcesDataCommand extends DataCommand
                 'modified_by' => UuidFactory::uuid('user.id.user_1'),
                 'created' => date('Y-m-d H:i:s', strtotime('-2 days')),
                 'modified' => date('Y-m-d H:i:s', strtotime('-1 days')),
-                'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+                'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
             ];
         }
 

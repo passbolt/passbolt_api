@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,7 +29,7 @@ class ResourceTypesDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         return [
             [
@@ -59,11 +61,11 @@ class ResourceTypesDataCommand extends DataCommand
                     ],
                     'secret' => [
                         'type' => 'string',
-                        'maxLength' => 4096
+                        'maxLength' => 4096,
                     ],
                 ]),
-                'created' => date("Y-m-d H:i:s"),
-                'modified' => date("Y-m-d H:i:s"),
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
             ],
             [
                 'id' => UuidFactory::uuid('resource-types.id.password-and-description'),
@@ -129,8 +131,8 @@ class ResourceTypesDataCommand extends DataCommand
                         ],
                     ],
                 ]),
-                'created' => date("Y-m-d H:i:s"),
-                'modified' => date("Y-m-d H:i:s"),
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
             ],
             [
                 'id' => UuidFactory::uuid('resource-types.id.totp'),
@@ -193,8 +195,8 @@ class ResourceTypesDataCommand extends DataCommand
                         ],
                     ],
                 ]),
-                'created' => date("Y-m-d H:i:s"),
-                'modified' => date("Y-m-d H:i:s"),
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
             ],
             [
                 'id' => UuidFactory::uuid('resource-types.id.password-description-totp'),
@@ -264,8 +266,8 @@ class ResourceTypesDataCommand extends DataCommand
                         ],
                     ],
                 ]),
-                'created' => date("Y-m-d H:i:s"),
-                'modified' => date("Y-m-d H:i:s"),
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
             ],
             [
                 'id' => UuidFactory::uuid('resource-types.id.v5-password-string'),
@@ -273,8 +275,8 @@ class ResourceTypesDataCommand extends DataCommand
                 'name' => 'Simple Password (Deprecated)',
                 'description' => 'The original passbolt resource type, kept for backward compatibility reasons.',
                 'definition' => json_encode([]),
-                'created' => date("Y-m-d H:i:s"),
-                'modified' => date("Y-m-d H:i:s"),
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
             ],
             [
                 'id' => UuidFactory::uuid('resource-types.id.v5-default'),
@@ -282,8 +284,8 @@ class ResourceTypesDataCommand extends DataCommand
                 'name' => 'Default resource type',
                 'description' => 'The new default resource type introduced with v5.',
                 'definition' => json_encode([]),
-                'created' => date("Y-m-d H:i:s"),
-                'modified' => date("Y-m-d H:i:s"),
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
             ],
             [
                 'id' => UuidFactory::uuid('resource-types.id.v5-totp-standalone'),
@@ -291,8 +293,8 @@ class ResourceTypesDataCommand extends DataCommand
                 'name' => 'Standalone TOTP',
                 'description' => 'The new standalone TOTP resource type introduced with v5.',
                 'definition' => json_encode([]),
-                'created' => date("Y-m-d H:i:s"),
-                'modified' => date("Y-m-d H:i:s"),
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
             ],
             [
                 'id' => UuidFactory::uuid('resource-types.id.v5-default-with-totp'),
@@ -300,8 +302,8 @@ class ResourceTypesDataCommand extends DataCommand
                 'name' => 'Default resource type with TOTP',
                 'description' => 'The new default resource type with a TOTP introduced with v5.',
                 'definition' => json_encode([]),
-                'created' => date("Y-m-d H:i:s"),
-                'modified' => date("Y-m-d H:i:s"),
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
             ],
         ];
     }

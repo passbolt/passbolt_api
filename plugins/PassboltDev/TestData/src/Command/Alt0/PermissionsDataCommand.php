@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -24,7 +26,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $permissions = [];
 
@@ -36,7 +38,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.april-ada'),
@@ -46,7 +48,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:05',
-            'modified' => '2017-11-17 12:37:05'
+            'modified' => '2017-11-17 12:37:05',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.april-betty'),
@@ -56,7 +58,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.betty'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:05',
-            'modified' => '2017-11-17 12:37:05'
+            'modified' => '2017-11-17 12:37:05',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.bower-ada'),
@@ -66,7 +68,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:06',
-            'modified' => '2017-11-17 12:37:06'
+            'modified' => '2017-11-17 12:37:06',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.bower-betty'),
@@ -76,7 +78,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.betty'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:07',
-            'modified' => '2017-11-17 12:37:07'
+            'modified' => '2017-11-17 12:37:07',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.bower-dame'),
@@ -86,7 +88,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.dame'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:08',
-            'modified' => '2017-11-17 12:37:08'
+            'modified' => '2017-11-17 12:37:08',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.bower-frances'),
@@ -96,7 +98,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.frances'),
             'type' => Permission::UPDATE,
             'created' => '2017-11-17 12:37:09',
-            'modified' => '2017-11-17 12:37:09'
+            'modified' => '2017-11-17 12:37:09',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.centos-ada'),
@@ -106,7 +108,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:10',
-            'modified' => '2017-11-17 12:37:10'
+            'modified' => '2017-11-17 12:37:10',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.centos-betty'),
@@ -116,7 +118,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.betty'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:11',
-            'modified' => '2017-11-17 12:37:11'
+            'modified' => '2017-11-17 12:37:11',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.canjs-ada'),
@@ -126,7 +128,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:12',
-            'modified' => '2017-11-17 12:37:12'
+            'modified' => '2017-11-17 12:37:12',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.canjs-betty'),
@@ -136,7 +138,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.betty'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:13',
-            'modified' => '2017-11-17 12:37:13'
+            'modified' => '2017-11-17 12:37:13',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.canjs-carol'),
@@ -146,7 +148,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
             'type' => Permission::UPDATE,
             'created' => '2017-11-17 12:37:14',
-            'modified' => '2017-11-17 12:37:14'
+            'modified' => '2017-11-17 12:37:14',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.cakephp-accounting'),
@@ -156,7 +158,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.accounting'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:15',
-            'modified' => '2017-11-17 12:37:15'
+            'modified' => '2017-11-17 12:37:15',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.chai-board'),
@@ -166,7 +168,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.board'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:15',
-            'modified' => '2017-11-17 12:37:15'
+            'modified' => '2017-11-17 12:37:15',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.composer-creative'),
@@ -176,7 +178,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.creative'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:16',
-            'modified' => '2017-11-17 12:37:16'
+            'modified' => '2017-11-17 12:37:16',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.debian-developer'),
@@ -186,7 +188,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.developer'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:17',
-            'modified' => '2017-11-17 12:37:17'
+            'modified' => '2017-11-17 12:37:17',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.docker-ergonom'),
@@ -196,7 +198,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.ergonom'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:18',
-            'modified' => '2017-11-17 12:37:18'
+            'modified' => '2017-11-17 12:37:18',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.docker-freelancer'),
@@ -206,7 +208,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.freelancer'),
             'type' => Permission::UPDATE,
             'created' => '2017-11-17 12:37:19',
-            'modified' => '2017-11-17 12:37:19'
+            'modified' => '2017-11-17 12:37:19',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.enlightenment-accounting'),
@@ -216,7 +218,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.accounting'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:20',
-            'modified' => '2017-11-17 12:37:20'
+            'modified' => '2017-11-17 12:37:20',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.enlightenment-carol'),
@@ -226,7 +228,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:21',
-            'modified' => '2017-11-17 12:37:21'
+            'modified' => '2017-11-17 12:37:21',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.fosdem-board'),
@@ -236,7 +238,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.board'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:22',
-            'modified' => '2017-11-17 12:37:22'
+            'modified' => '2017-11-17 12:37:22',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.fosdem-carol'),
@@ -246,7 +248,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:23',
-            'modified' => '2017-11-17 12:37:23'
+            'modified' => '2017-11-17 12:37:23',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.framasoft-creative'),
@@ -256,7 +258,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.creative'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:24',
-            'modified' => '2017-11-17 12:37:24'
+            'modified' => '2017-11-17 12:37:24',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.framasoft-carol'),
@@ -266,7 +268,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:25',
-            'modified' => '2017-11-17 12:37:25'
+            'modified' => '2017-11-17 12:37:25',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.fsfe-developer'),
@@ -276,7 +278,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.developer'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:26',
-            'modified' => '2017-11-17 12:37:26'
+            'modified' => '2017-11-17 12:37:26',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.fsfe-carol'),
@@ -286,7 +288,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:27',
-            'modified' => '2017-11-17 12:37:27'
+            'modified' => '2017-11-17 12:37:27',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.ftp-ergonom'),
@@ -296,7 +298,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.ergonom'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:28',
-            'modified' => '2017-11-17 12:37:28'
+            'modified' => '2017-11-17 12:37:28',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.ftp-betty'),
@@ -306,7 +308,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.betty'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:29',
-            'modified' => '2017-11-17 12:37:29'
+            'modified' => '2017-11-17 12:37:29',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.grogle-accounting'),
@@ -316,7 +318,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.accounting'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:30',
-            'modified' => '2017-11-17 12:37:30'
+            'modified' => '2017-11-17 12:37:30',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.grogle-carol'),
@@ -326,7 +328,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:31',
-            'modified' => '2017-11-17 12:37:31'
+            'modified' => '2017-11-17 12:37:31',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.grunt-board'),
@@ -336,7 +338,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.board'),
             'type' => Permission::UPDATE,
             'created' => '2017-11-17 12:37:32',
-            'modified' => '2017-11-17 12:37:32'
+            'modified' => '2017-11-17 12:37:32',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.gunt-carol'),
@@ -346,7 +348,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:34',
-            'modified' => '2017-11-17 12:37:34'
+            'modified' => '2017-11-17 12:37:34',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.gnupg-ergonom'),
@@ -356,7 +358,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.ergonom'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:35',
-            'modified' => '2017-11-17 12:37:35'
+            'modified' => '2017-11-17 12:37:35',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.gnupg-accounting'),
@@ -366,7 +368,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.accounting'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:36',
-            'modified' => '2017-11-17 12:37:36'
+            'modified' => '2017-11-17 12:37:36',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.git-ergonom'),
@@ -376,7 +378,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.ergonom'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:37',
-            'modified' => '2017-11-17 12:37:37'
+            'modified' => '2017-11-17 12:37:37',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.git-board'),
@@ -386,7 +388,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.board'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:38',
-            'modified' => '2017-11-17 12:37:38'
+            'modified' => '2017-11-17 12:37:38',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.inkscape-accounting'),
@@ -396,7 +398,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.accounting'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:39',
-            'modified' => '2017-11-17 12:37:39'
+            'modified' => '2017-11-17 12:37:39',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.inskape-creative'),
@@ -406,7 +408,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.creative'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:40',
-            'modified' => '2017-11-17 12:37:40'
+            'modified' => '2017-11-17 12:37:40',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.inkscape-carol'),
@@ -416,7 +418,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
             'type' => Permission::UPDATE,
             'created' => '2017-11-17 12:37:41',
-            'modified' => '2017-11-17 12:37:41'
+            'modified' => '2017-11-17 12:37:41',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.jquery-carol'),
@@ -426,7 +428,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
             'type' => Permission::UPDATE,
             'created' => '2017-11-17 12:37:42',
-            'modified' => '2017-11-17 12:37:42'
+            'modified' => '2017-11-17 12:37:42',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.jquery-ergonom'),
@@ -436,7 +438,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.ergonom'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:43',
-            'modified' => '2017-11-17 12:37:43'
+            'modified' => '2017-11-17 12:37:43',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.jquery-board'),
@@ -446,7 +448,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.board'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:44',
-            'modified' => '2017-11-17 12:37:44'
+            'modified' => '2017-11-17 12:37:44',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.kde-accounting'),
@@ -456,7 +458,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.accounting'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.kde-board'),
@@ -466,7 +468,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.board'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.mailvelope-jean'),
@@ -476,7 +478,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.jean'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.mocha-kathleen'),
@@ -486,7 +488,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.kathleen'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.mocha-lynne'),
@@ -496,7 +498,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.lynne'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.nodejs-marlyn'),
@@ -506,7 +508,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.marlyn'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.nodejs-quality_assurance'),
@@ -516,7 +518,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.quality_assurance'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.openpgpjs-nancy'),
@@ -526,7 +528,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.nancy'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.openpgpjs-leadership_team'),
@@ -536,7 +538,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.leadership_team'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.linux-management'),
@@ -546,7 +548,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.management'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.linux-orna'),
@@ -556,7 +558,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.orna'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.phpunit-thelma'),
@@ -566,7 +568,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.thelma'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.phpunit-network'),
@@ -576,7 +578,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.network'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.qgis-operations'),
@@ -586,7 +588,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.operations'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.qgis-procurement'),
@@ -596,7 +598,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.procurement'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.selenium-human_resource'),
@@ -606,7 +608,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.human_resource'),
             'type' => Permission::OWNER,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.selenium-margaret'),
@@ -616,7 +618,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('user.id.margaret'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
         $permissions[] = [
             'id' => UuidFactory::uuid('permission.id.stealjs-resource_planning'),
@@ -626,7 +628,7 @@ class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\Permissions
             'aro_foreign_key' => UuidFactory::uuid('group.id.resource_planning'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:04',
-            'modified' => '2017-11-17 12:37:04'
+            'modified' => '2017-11-17 12:37:04',
         ];
 
         return $permissions;

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,7 +29,7 @@ class FoldersDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $data = $this->_getData();
         $adminUserId = UuidFactory::uuid('user.id.admin');
@@ -54,83 +56,83 @@ class FoldersDataCommand extends DataCommand
      *
      * @return array
      */
-    public function _getData()
+    public function _getData(): array
     {
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.accounting'),
-            'name' => 'Accounting'
+            'name' => 'Accounting',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.bank'),
-            'name' => 'Bank'
+            'name' => 'Bank',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.blogs'),
-            'name' => 'Blogs'
+            'name' => 'Blogs',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.certificates'),
-            'name' => 'Certificates'
+            'name' => 'Certificates',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.communication'),
-            'name' => 'Communication'
+            'name' => 'Communication',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.continuous-integration'),
-            'name' => 'Continous Integration'
+            'name' => 'Continous Integration',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.credit-cards'),
-            'name' => 'Credit Cards'
+            'name' => 'Credit Cards',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.human-resources'),
-            'name' => 'Human Resources'
+            'name' => 'Human Resources',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.it'),
-            'name' => 'IT'
+            'name' => 'IT',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.licenses'),
-            'name' => 'Licenses'
+            'name' => 'Licenses',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.marketing'),
-            'name' => 'Marketing'
+            'name' => 'Marketing',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.private-ada'),
-            'name' => 'Private'
+            'name' => 'Private',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.private-admin'),
-            'name' => 'Private'
+            'name' => 'Private',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.production'),
-            'name' => 'Production'
+            'name' => 'Production',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.sales'),
-            'name' => 'Sales'
+            'name' => 'Sales',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.social-networks'),
-            'name' => 'Social Networks'
+            'name' => 'Social Networks',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.staging'),
-            'name' => 'Staging'
+            'name' => 'Staging',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.travel'),
-            'name' => 'Travel'
+            'name' => 'Travel',
         ];
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.vat'),
-            'name' => 'VAT'
+            'name' => 'VAT',
         ];
 
         return $folders;

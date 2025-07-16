@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,80 +28,80 @@ class GroupsUsersDataCommand extends DataCommand
      *
      * @return array
      */
-    protected function getGroupsUsersSettings()
+    protected function getGroupsUsersSettings(): array
     {
         return [
             'accounting' => [
                 'managers' => ['frances'],
-                'users' => ['frances', 'grace']
+                'users' => ['frances', 'grace'],
             ],
             'board' => [
                 'managers' => ['hedy'],
-                'users' => ['hedy']
+                'users' => ['hedy'],
             ],
             'creative' => [
                 'managers' => ['irene'],
-                'users' => ['irene']
+                'users' => ['irene'],
             ],
             'developer' => [
                 'managers' => ['irene'],
-                'users' => ['irene']
+                'users' => ['irene'],
             ],
             'ergonom' => [
                 'managers' => ['irene'],
-                'users' => ['irene']
+                'users' => ['irene'],
             ],
             'freelancer' => [
                 'managers' => ['jean'],
-                'users' => ['jean', 'kathleen', 'lynne', 'marlyn', 'nancy']
+                'users' => ['jean', 'kathleen', 'lynne', 'marlyn', 'nancy'],
             ],
             'human_resource' => [
                 'managers' => ['ping', 'thelma'],
-                'users' => ['ping', 'thelma', 'ursula', 'wang']
+                'users' => ['ping', 'thelma', 'ursula', 'wang'],
             ],
             'it_support' => [
                 'managers' => ['ping', 'ursula'],
-                'users' => ['ping', 'thelma', 'ursula', 'wang']
+                'users' => ['ping', 'thelma', 'ursula', 'wang'],
             ],
             'leadership_team' => [
                 'managers' => ['admin'],
-                'users' => ['admin']
+                'users' => ['admin'],
             ],
             'management' => [
                 'managers' => ['admin'],
-                'users' => ['admin']
+                'users' => ['admin'],
             ],
             'marketing' => [
                 'managers' => ['admin'],
-                'users' => ['admin']
+                'users' => ['admin'],
             ],
             'network' => [
                 'managers' => ['admin'],
-                'users' => ['admin']
+                'users' => ['admin'],
             ],
             'operations' => [
                 'managers' => ['admin'],
-                'users' => ['admin']
+                'users' => ['admin'],
             ],
             'procurement' => [
                 'managers' => ['admin'],
-                'users' => ['admin']
+                'users' => ['admin'],
             ],
             'quality_assurance' => [
                 'managers' => ['admin'],
-                'users' => ['admin']
+                'users' => ['admin'],
             ],
             'resource_planning' => [
                 'managers' => ['admin'],
-                'users' => ['admin']
+                'users' => ['admin'],
             ],
             'sales' => [
                 'managers' => ['admin'],
-                'users' => ['admin']
+                'users' => ['admin'],
             ],
             'traffic' => [
                 'managers' => ['admin'],
-                'users' => ['admin']
+                'users' => ['admin'],
             ],
         ];
     }
@@ -109,7 +111,7 @@ class GroupsUsersDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $groupsUsers = [];
         $settings = $this->getGroupsUsersSettings();
@@ -123,7 +125,7 @@ class GroupsUsersDataCommand extends DataCommand
                     'user_id' => UuidFactory::uuid("user.id.$managerAlias"),
                     'is_admin' => 1,
                     'created_by' => UuidFactory::uuid('user.id.admin'),
-                    'modified_by' => UuidFactory::uuid('user.id.admin')
+                    'modified_by' => UuidFactory::uuid('user.id.admin'),
                 ];
             }
             // members
@@ -137,7 +139,7 @@ class GroupsUsersDataCommand extends DataCommand
                     'user_id' => UuidFactory::uuid("user.id.$userAlias"),
                     'is_admin' => 0,
                     'created_by' => UuidFactory::uuid('user.id.admin'),
-                    'modified_by' => UuidFactory::uuid('user.id.admin')
+                    'modified_by' => UuidFactory::uuid('user.id.admin'),
                 ];
             }
         }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,7 +29,7 @@ class FoldersPermissionsDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $permissions = [];
 
@@ -41,7 +43,7 @@ class FoldersPermissionsDataCommand extends DataCommand
                 'aro_foreign_key' => $row['aro_foreign_key'],
                 'type' => $row['type'],
                 'created_by' => $adminUserId,
-                'modified_by' => $adminUserId
+                'modified_by' => $adminUserId,
             ];
         }
 
@@ -56,126 +58,126 @@ class FoldersPermissionsDataCommand extends DataCommand
             'aco_foreign_key' => UuidFactory::uuid('folder.id.accounting'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.bank'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.credit-cards'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.vat'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.communication'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.blogs'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.social-networks'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.human-resources'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.it'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.certificates'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.continuous-integration'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.licenses'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.private-admin'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.production'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.staging'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.marketing'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.sales'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.travel'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 15
+            'type' => 15,
         ];
 
         // Ada
@@ -184,126 +186,126 @@ class FoldersPermissionsDataCommand extends DataCommand
             'aco_foreign_key' => UuidFactory::uuid('folder.id.accounting'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 1
+            'type' => 1,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.bank'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 1
+            'type' => 1,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.credit-cards'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 7
+            'type' => 7,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.vat'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.communication'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.blogs'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 1
+            'type' => 1,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.social-networks'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.human-resources'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.it'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.certificates'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.continuous-integration'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.licenses'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.private-ada'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.production'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.staging'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.marketing'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.sales'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 15
+            'type' => 15,
         ];
         $permissions[] = [
             'aco' => 'Folder',
             'aco_foreign_key' => UuidFactory::uuid('folder.id.travel'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => 15
+            'type' => 15,
         ];
 
         return $permissions;

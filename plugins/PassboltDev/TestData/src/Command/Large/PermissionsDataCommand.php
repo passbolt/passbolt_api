@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,7 +30,7 @@ class PermissionsDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $permissions = [];
         $permissions = array_merge($permissions, $this->getPermissionsScenarioForEachUser());
@@ -58,7 +60,7 @@ class PermissionsDataCommand extends DataCommand
                     'created' => date('Y-m-d H:i:s'),
                     'modified' => date('Y-m-d H:i:s'),
                     'created_by' => $aroId,
-                    'modified_by' => $aroId
+                    'modified_by' => $aroId,
                 ];
             }
         }
@@ -84,7 +86,7 @@ class PermissionsDataCommand extends DataCommand
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
                 'created_by' => $aroId,
-                'modified_by' => $aroId
+                'modified_by' => $aroId,
             ];
         }
 

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,7 +29,7 @@ class XssGroupsDataCommand extends GroupsDataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $exploits = Xss::getExploits();
         $groups = [];
@@ -41,7 +43,7 @@ class XssGroupsDataCommand extends GroupsDataCommand
                 'created' => '2018-01-08 13:39:25',
                 'modified' => '2018-01-08 13:39:25',
                 'created_by' => UuidFactory::uuid('user.id.admin'),
-                'modified_by' => UuidFactory::uuid('user.id.admin')
+                'modified_by' => UuidFactory::uuid('user.id.admin'),
             ];
         }
 

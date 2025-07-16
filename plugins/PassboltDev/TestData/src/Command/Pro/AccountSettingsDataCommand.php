@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,22 +28,23 @@ class AccountSettingsDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $settings[] = [
             'id' => UuidFactory::uuid('account.settings.ping.theme'),
             'user_id' => UuidFactory::uuid('user.id.ping'),
             'property_id' => UuidFactory::uuid('account.settings.property.id.theme'),
             'property' => 'theme',
-            'value' => 'midgar'
+            'value' => 'midgar',
         ];
         $settings[] = [
             'id' => UuidFactory::uuid('account.settings.betty.theme'),
             'user_id' => UuidFactory::uuid('user.id.betty'),
             'property_id' => UuidFactory::uuid('account.settings.property.id.theme'),
             'property' => 'theme',
-            'value' => 'default'
+            'value' => 'default',
         ];
+
         return $settings;
     }
 }

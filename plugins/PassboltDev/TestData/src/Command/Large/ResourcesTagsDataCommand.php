@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,7 +29,7 @@ class ResourcesTagsDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $resourcesTags = [];
         $resourcesTags = array_merge($resourcesTags, $this->getResourcesTagsScenarioForPersonalTags());
@@ -56,7 +58,7 @@ class ResourcesTagsDataCommand extends DataCommand
                         'resource_id' => $resource->id,
                         'tag_id' => $tag->id,
                         'user_id' => $user->id,
-                        'created' => date('Y-m-d H:i:s')
+                        'created' => date('Y-m-d H:i:s'),
                     ];
                 }
             }
@@ -81,7 +83,7 @@ class ResourcesTagsDataCommand extends DataCommand
                     'resource_id' => $resource->id,
                     'tag_id' => $tag->id,
                     'user_id' => null,
-                    'created' => date('Y-m-d H:i:s')
+                    'created' => date('Y-m-d H:i:s'),
                 ];
             }
         }

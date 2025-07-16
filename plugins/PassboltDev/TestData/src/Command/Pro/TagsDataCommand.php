@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,52 +28,52 @@ class TagsDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $tags[] = [
             'id' => UuidFactory::uuid('tag.id.alpha'),
             'slug' => 'alpha',
-            'is_shared' => 0
+            'is_shared' => 0,
         ];
         $tags[] = [
             'id' => UuidFactory::uuid('tag.id.#bravo'),
             'slug' => '#bravo',
-            'is_shared' => 1
+            'is_shared' => 1,
         ];
         $tags[] = [
             'id' => UuidFactory::uuid('tag.id.#charlie'),
             'slug' => '#charlie',
-            'is_shared' => 1
+            'is_shared' => 1,
         ];
         $tags[] = [
             'id' => UuidFactory::uuid('tag.id.#echo'),
             'slug' => '#echo',
-            'is_shared' => 1
+            'is_shared' => 1,
         ];
         $tags[] = [
             'id' => UuidFactory::uuid('tag.id.fox-trot'),
             'slug' => 'fox-trot',
-            'is_shared' => 0
+            'is_shared' => 0,
         ];
         $tags[] = [
             'id' => UuidFactory::uuid('tag.id.firefox'),
             'slug' => 'firefox',
-            'is_shared' => 0
+            'is_shared' => 0,
         ];
         $tags[] = [
             'id' => UuidFactory::uuid('tag.id.#golf'),
             'slug' => '#golf',
-            'is_shared' => 1
+            'is_shared' => 1,
         ];
         $tags[] = [
             'id' => UuidFactory::uuid('tag.id.hotel'),
             'slug' => '#hotel',
-            'is_shared' => 1
+            'is_shared' => 1,
         ];
         $tags[] = [
             'id' => UuidFactory::uuid('tag.id.hindi'),
             'slug' => 'परदेशी-परदेशी',
-            'is_shared' => 0
+            'is_shared' => 0,
         ];
 
         return $tags;

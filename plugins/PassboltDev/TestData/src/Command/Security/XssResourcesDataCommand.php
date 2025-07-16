@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,7 +29,7 @@ class XssResourcesDataCommand extends ResourcesDataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $exploits = Xss::getExploits();
         $resources = [];
@@ -44,7 +46,7 @@ class XssResourcesDataCommand extends ResourcesDataCommand
                 'modified_by' => UuidFactory::uuid('user.id.xss' . count($resources)),
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
-                'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+                'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
             ];
         }
 

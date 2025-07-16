@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,7 +28,7 @@ class ResourcesTagsDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $resourcesTags = [];
 
@@ -35,7 +37,7 @@ class ResourcesTagsDataCommand extends DataCommand
             'resource_id' => UuidFactory::uuid('resource.id.apache'),
             'tag_id' => UuidFactory::uuid('tag.id.#charlie'),
             'user_id' => null,
-            'created' => '2016-02-20 11:58:30'
+            'created' => '2016-02-20 11:58:30',
         ];
 
         $resourcesTags[] = [
@@ -43,14 +45,14 @@ class ResourcesTagsDataCommand extends DataCommand
             'resource_id' => UuidFactory::uuid('resource.id.apache'),
             'tag_id' => UuidFactory::uuid('tag.id.#golf'),
             'user_id' => null,
-            'created' => '2016-02-20 11:58:30'
+            'created' => '2016-02-20 11:58:30',
         ];
 
         $resourcesTags[] = [
             'id' => UuidFactory::uuid(),
             'resource_id' => UuidFactory::uuid('resource.id.gnupg'),
             'tag_id' => UuidFactory::uuid('tag.id.#echo'),
-            'created' => '2016-02-20 11:58:30'
+            'created' => '2016-02-20 11:58:30',
         ];
 
         $resourcesTags[] = [
@@ -58,7 +60,7 @@ class ResourcesTagsDataCommand extends DataCommand
             'resource_id' => UuidFactory::uuid('resource.id.cakephp'),
             'tag_id' => UuidFactory::uuid('tag.id.hotel'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'created' => '2016-02-20 11:58:30'
+            'created' => '2016-02-20 11:58:30',
         ];
 
         $resourcesTags[] = [
@@ -66,7 +68,7 @@ class ResourcesTagsDataCommand extends DataCommand
             'resource_id' => UuidFactory::uuid('resource.id.cakephp'),
             'tag_id' => UuidFactory::uuid('tag.id.hindi'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'created' => '2016-02-20 11:58:30'
+            'created' => '2016-02-20 11:58:30',
         ];
 
         $resourcesTags[] = [
@@ -74,7 +76,7 @@ class ResourcesTagsDataCommand extends DataCommand
             'resource_id' => UuidFactory::uuid('resource.id.ftp'),
             'tag_id' => UuidFactory::uuid('tag.id.alpha'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'created' => '2016-02-20 11:58:30'
+            'created' => '2016-02-20 11:58:30',
         ];
 
         $resourcesTags[] = [
@@ -82,7 +84,7 @@ class ResourcesTagsDataCommand extends DataCommand
             'resource_id' => UuidFactory::uuid('resource.id.git'),
             'tag_id' => UuidFactory::uuid('tag.id.alpha'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'created' => '2016-02-20 11:58:30'
+            'created' => '2016-02-20 11:58:30',
         ];
 
         $resourcesTags[] = [
@@ -90,7 +92,7 @@ class ResourcesTagsDataCommand extends DataCommand
             'resource_id' => UuidFactory::uuid('resource.id.grogle'),
             'tag_id' => UuidFactory::uuid('tag.id.alpha'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'created' => '2016-02-20 11:58:30'
+            'created' => '2016-02-20 11:58:30',
         ];
 
         $resourcesTags[] = [
@@ -98,7 +100,7 @@ class ResourcesTagsDataCommand extends DataCommand
             'resource_id' => UuidFactory::uuid('resource.id.grogle'),
             'tag_id' => UuidFactory::uuid('tag.id.firefox'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'created' => '2016-02-20 11:58:30'
+            'created' => '2016-02-20 11:58:30',
         ];
 
         $resourcesTags[] = [
@@ -106,7 +108,7 @@ class ResourcesTagsDataCommand extends DataCommand
             'resource_id' => UuidFactory::uuid('resource.id.grogle'),
             'tag_id' => UuidFactory::uuid('tag.id.fox-trot'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'created' => '2016-02-20 11:58:30'
+            'created' => '2016-02-20 11:58:30',
         ];
 
         $resourcesTags[] = [
@@ -114,7 +116,7 @@ class ResourcesTagsDataCommand extends DataCommand
             'resource_id' => UuidFactory::uuid('resource.id.grogle'),
             'tag_id' => UuidFactory::uuid('tag.id.hotel'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'created' => '2016-02-20 11:58:30'
+            'created' => '2016-02-20 11:58:30',
         ];
 
         return $resourcesTags;

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,8 +22,7 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\Helper;
 use Cake\Core\Configure;
-use Cake\ORM\Table;
-use Cake\Shell\Helper\ProgressHelper;
+use DateTime;
 use Exception;
 use Passbolt\TestData\Lib\SaveStrategy\SaveEntity;
 use Passbolt\TestData\Lib\SaveStrategy\SaveMany;
@@ -32,30 +33,33 @@ use Passbolt\TestData\Lib\SaveStrategy\SaveSqlInfile;
  */
 abstract class DataCommand extends PassboltCommand
 {
-
     /**
      * The entity name the data task target.
+     *
      * @var null
      */
-    public $entityName = null;
+    public null $entityName = null;
 
     /**
      * The entity model
-     * @var Table
+     *
+     * @var \Passbolt\TestData\Lib\Table
      */
-    public $Table = null;
+    public Table $Table = null;
 
     /**
      * Truncate data.
-     * @var boolean
+     *
+     * @var bool
      */
-    protected $_truncate = true;
+    protected bool $_truncate = true;
 
     /**
      * Console IO
-     * @var ConsoleIo
+     *
+     * @var \Cake\Console\ConsoleIo
      */
-    public $io;
+    public ConsoleIo $io;
 
     /**
      * @inheritDoc
@@ -89,8 +93,8 @@ abstract class DataCommand extends PassboltCommand
             // old fashion way (can be useful for debugging)
             // return $this->saveOneByOne();
             $endTime = time();
-            $dtF = new \DateTime("@$startTime");
-            $dtT = new \DateTime("@$endTime");
+            $dtF = new DateTime("@$startTime");
+            $dtT = new DateTime("@$endTime");
             $diff = $dtF->diff($dtT)->format('%im %ss');
             $io->out('Data for entity "' . $this->entityName . '" inserted (' . count($data) . ') in ' . $diff);
         } catch (Exception $e) {
@@ -105,10 +109,11 @@ abstract class DataCommand extends PassboltCommand
 
     /**
      * Display the progress bar
+     *
      * @param int $total Number total of tasks
-     * @return ProgressHelper
+     * @return \Passbolt\TestData\Lib\ProgressHelper
      */
-    public function displayProgressBar($total): ?Helper
+    public function displayProgressBar(int $total): ?Helper
     {
         $progress = null;
 
@@ -130,7 +135,7 @@ abstract class DataCommand extends PassboltCommand
      * @param {array} $data The data to save
      * @return void
      */
-    public function save(array $data = [])
+    public function save(array $data = []): void
     {
         $saveStrategy = Configure::read('PassboltTestData.saveStrategy');
         switch ($saveStrategy) {

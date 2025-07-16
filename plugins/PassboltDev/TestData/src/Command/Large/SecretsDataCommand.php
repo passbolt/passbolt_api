@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,6 +21,7 @@ use App\Utility\UuidFactory;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Core\Configure;
+use Cake\ORM\Entity;
 use Passbolt\TestData\Lib\DataCommand;
 use Passbolt\TestData\Service\GetGpgkeyPathService;
 
@@ -51,7 +54,7 @@ class SecretsDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         if (Configure::read('passbolt.gpg.putenv')) {
             putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
@@ -89,7 +92,7 @@ class SecretsDataCommand extends DataCommand
      * @param \Cake\ORM\Entity $user User
      * @return array
      */
-    protected function _encrypt($text, $user)
+    protected function _encrypt(string $text, Entity $user): array
     {
         static $keyImported = [];
         static $encrypted = [];
@@ -106,7 +109,7 @@ class SecretsDataCommand extends DataCommand
 
         // Encrypt the text.
         if (!isset($encrypted[$keyFingerprint][$text])) {
-            $command = "echo -n " . escapeshellarg($text) . " | gpg --encrypt -r " . $keyFingerprint . " -a --trust-model always";
+            $command = 'echo -n ' . escapeshellarg($text) . ' | gpg --encrypt -r ' . $keyFingerprint . ' -a --trust-model always';
             exec($command, $output);
 
             // Return the armored message.

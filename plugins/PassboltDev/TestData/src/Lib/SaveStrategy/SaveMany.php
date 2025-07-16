@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -22,14 +24,14 @@ class SaveMany
     /**
      * The shell the strategy is executing on.
      *
-     * @var DataCommand
+     * @var \Passbolt\TestData\Lib\DataCommand
      */
-    private $shell;
+    private DataCommand $shell;
 
     /**
      * Constructor
      *
-     * @param DataCommand $shell The console the strategy is executing by.
+     * @param \Passbolt\TestData\Lib\DataCommand $shell The console the strategy is executing by.
      */
     public function __construct(DataCommand $shell)
     {
@@ -48,7 +50,7 @@ class SaveMany
         $chunks = array_chunk($data, $chunkSize);
         $total = count($chunks);
 
-        $this->shell->io->out("Inserting \"" . $this->shell->entityName);
+        $this->shell->io->out('Inserting "' . $this->shell->entityName);
         $progress = $this->shell->displayProgressBar($total);
         foreach ($chunks as $i => $chunk) {
             $this->saveEntities($chunk);

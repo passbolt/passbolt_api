@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,7 +30,7 @@ class UsersDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $users[] = [
             'id' => UuidFactory::uuid('user.id.admin'),
@@ -39,7 +41,7 @@ class UsersDataCommand extends DataCommand
             'created' => date('Y-m-d H:i:s'),
             'modified' => date('Y-m-d H:i:s'),
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.anonymous'),
@@ -50,7 +52,7 @@ class UsersDataCommand extends DataCommand
             'created' => date('Y-m-d H:i:s'),
             'modified' => date('Y-m-d H:i:s'),
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $max = Configure::read('PassboltTestData.scenarios.large.install.count.users');
         for ($i = 0; $i < $max; $i++) {
@@ -63,7 +65,7 @@ class UsersDataCommand extends DataCommand
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
                 'created_by' => UuidFactory::uuid('user.id.admin'),
-                'modified_by' => UuidFactory::uuid('user.id.admin')
+                'modified_by' => UuidFactory::uuid('user.id.admin'),
             ];
         }
 

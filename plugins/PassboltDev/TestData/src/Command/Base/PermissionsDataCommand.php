@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,7 +29,7 @@ class PermissionsDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $permissions = [];
         $permissions = array_merge($permissions, $this->getUsersResourcesPermissions());
@@ -41,7 +43,7 @@ class PermissionsDataCommand extends DataCommand
      *
      * @return array
      */
-    private function getUsersResourcesPermissions()
+    private function getUsersResourcesPermissions(): array
     {
         $permissions = [];
         $permissionsMatrix = PermissionMatrix::getUsersResourcesPermissions();
@@ -60,7 +62,7 @@ class PermissionsDataCommand extends DataCommand
                     'aro_foreign_key' => $aroId,
                     'type' => $expectedPermissionType,
                     'created_by' => UuidFactory::uuid('user.id.admin'),
-                    'modified_by' => UuidFactory::uuid('user.id.admin')
+                    'modified_by' => UuidFactory::uuid('user.id.admin'),
                 ];
             }
         }
@@ -73,7 +75,7 @@ class PermissionsDataCommand extends DataCommand
      *
      * @return array
      */
-    private function getGroupsResourcesPermissions()
+    private function getGroupsResourcesPermissions(): array
     {
         $permissions = [];
         $permissionsMatrix = PermissionMatrix::getGroupsResourcesPermissions();
@@ -92,7 +94,7 @@ class PermissionsDataCommand extends DataCommand
                     'aro_foreign_key' => $aroId,
                     'type' => $expectedPermissionType,
                     'created_by' => UuidFactory::uuid('user.id.admin'),
-                    'modified_by' => UuidFactory::uuid('user.id.admin')
+                    'modified_by' => UuidFactory::uuid('user.id.admin'),
                 ];
             }
         }

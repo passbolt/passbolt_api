@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,7 +29,7 @@ class XssCommentsDataCommand extends CommentsDataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $comments = [];
         $exploits = array_values(Xss::getExploits());

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,7 +21,7 @@ class GroupsUsersDataCommand extends \Passbolt\TestData\Command\Base\GroupsUsers
     public $fixtureName = 'GroupsUsers';
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @return array
      */
     protected function getGroupsUsersSettings()
@@ -27,63 +29,63 @@ class GroupsUsersDataCommand extends \Passbolt\TestData\Command\Base\GroupsUsers
         return [
             'accounting' => [
                 'managers' => ['ada'],
-                'users' => ['ada', 'betty']
+                'users' => ['ada', 'betty'],
             ],
             'board' => [
                 'managers' => ['ada', 'betty'],
-                'users' => ['ada', 'betty']
+                'users' => ['ada', 'betty'],
             ],
             'creative' => [
                 'managers' => ['ada'],
-                'users' => ['ada']
+                'users' => ['ada'],
             ],
             'developer' => [
                 'managers' => ['ada', 'betty'],
-                'users' => ['ada', 'betty']
+                'users' => ['ada', 'betty'],
             ],
             'ergonom' => [
                 'managers' => ['dame'],
-                'users' => ['dame']
+                'users' => ['dame'],
             ],
             'freelancer' => [
                 'managers' => ['edith'],
-                'users' => ['edith', 'frances', 'grace']
+                'users' => ['edith', 'frances', 'grace'],
             ],
             'human_resource' => [
                 'managers' => ['yvonne'],
-                'users' => ['yvonne', 'joan']
+                'users' => ['yvonne', 'joan'],
             ],
             'leadership_team' => [
                 'managers' => ['nancy'],
-                'users' => ['nancy']
+                'users' => ['nancy'],
             ],
             'management' => [
                 'managers' => ['orna'],
-                'users' => ['orna', 'ping']
+                'users' => ['orna', 'ping'],
             ],
             'marketing' => [
                 'managers' => ['ada'],
-                'users' => ['ada']
+                'users' => ['ada'],
             ],
             'network' => [
                 'managers' => ['ursula'],
-                'users' => ['ursula']
+                'users' => ['ursula'],
             ],
             'operations' => [
                 'managers' => ['wang'],
-                'users' => ['wang']
+                'users' => ['wang'],
             ],
             'procurement' => [
                 'managers' => ['wang'],
-                'users' => ['wang']
+                'users' => ['wang'],
             ],
             'quality_assurance' => [
                 'managers' => ['hedy'],
-                'users' => ['hedy']
+                'users' => ['hedy'],
             ],
             'resource_planning' => [
                 'managers' => ['adele'],
-                'users' => ['adele']
+                'users' => ['adele'],
             ],
         ];
     }

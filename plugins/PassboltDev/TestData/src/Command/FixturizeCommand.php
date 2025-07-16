@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -60,9 +62,10 @@ class FixturizeCommand extends PassboltCommand
 
     /**
      * Init database
+     *
      * @return void
      */
-    protected function initDatabase()
+    protected function initDatabase(): void
     {
         $this->executeCommand(DropTablesCommand::class);
         $this->executeCommand(MigrationsMigrateCommand::class);
@@ -70,26 +73,28 @@ class FixturizeCommand extends PassboltCommand
 
     /**
      * Insert the task data
+     *
      * @param \Passbolt\TestData\Lib\DataCommand $command Command
      * @return void
      */
-    protected function insertTask(DataCommand $command)
+    protected function insertTask(DataCommand $command): void
     {
-        if (method_exists($command, "beforeExecute")) {
+        if (method_exists($command, 'beforeExecute')) {
             $command->beforeExecute();
         }
         $this->executeCommand($command);
-        if (method_exists($command, "afterExecute")) {
+        if (method_exists($command, 'afterExecute')) {
             $command->afterExecute();
         }
     }
 
     /**
      * Fixturize the task data
+     *
      * @param \Passbolt\TestData\Lib\DataCommand $command Command
      * @return void
      */
-    protected function fixturizeTask(DataCommand $command, ConsoleIo $io)
+    protected function fixturizeTask(DataCommand $command, ConsoleIo $io): void
     {
         $Model = $this->fetchTable($command->entityName);
         $tableName = $Model->getTable();
@@ -113,7 +118,7 @@ class FixturizeCommand extends PassboltCommand
 
         // Move Adapt the fixture to take care of the namespace
         $content = file_get_contents($destFixturePath . DS . $fixtureFileName);
-        $content = preg_replace("/(namespace App.Test.Fixture)/", "$1\\$taskNamespace", $content);
+        $content = preg_replace('/(namespace App.Test.Fixture)/', "$1\\$taskNamespace", $content);
         file_put_contents($destFixturePath . DS . $fixtureFileName, $content);
     }
 
@@ -134,7 +139,7 @@ class FixturizeCommand extends PassboltCommand
     /**
      * Get the folder the fixture will be written in for a given command.
      *
-     * @param DataCommand $command task
+     * @param \Passbolt\TestData\Lib\DataCommand $command task
      * @return string
      */
     protected function getTaskNamespace(DataCommand $command): string

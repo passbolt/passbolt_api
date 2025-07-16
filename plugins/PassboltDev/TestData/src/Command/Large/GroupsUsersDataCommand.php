@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,7 +29,7 @@ class GroupsUsersDataCommand extends DataCommand
      *
      * @return array
      */
-    protected function getGroupsUsersSettings()
+    protected function getGroupsUsersSettings(): array
     {
         $usersTable = $this->fetchTable('Users');
         // all users in one group
@@ -46,7 +48,7 @@ class GroupsUsersDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $groupsUsers = [];
         $settings = $this->getGroupsUsersSettings();
@@ -62,7 +64,7 @@ class GroupsUsersDataCommand extends DataCommand
                     'created' => date('Y-m-d H:i:s'),
                     'modified' => date('Y-m-d H:i:s'),
                     'created_by' => UuidFactory::uuid('user.id.admin'),
-                    'modified_by' => UuidFactory::uuid('user.id.admin')
+                    'modified_by' => UuidFactory::uuid('user.id.admin'),
                 ];
             }
             // members
@@ -78,7 +80,7 @@ class GroupsUsersDataCommand extends DataCommand
                     'created' => date('Y-m-d H:i:s'),
                     'modified' => date('Y-m-d H:i:s'),
                     'created_by' => UuidFactory::uuid('user.id.admin'),
-                    'modified_by' => UuidFactory::uuid('user.id.admin')
+                    'modified_by' => UuidFactory::uuid('user.id.admin'),
                 ];
             }
         }

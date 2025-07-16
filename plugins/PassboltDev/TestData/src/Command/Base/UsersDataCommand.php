@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,7 +28,7 @@ class UsersDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $users[] = [
             'id' => UuidFactory::uuid('user.id.admin'),
@@ -35,7 +37,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.anonymous'),
@@ -44,7 +46,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.ada'),
@@ -55,7 +57,7 @@ class UsersDataCommand extends DataCommand
             'created' => date('Y-m-d H:i:s', strtotime('-2 months')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 months')),
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.adele'),
@@ -66,7 +68,7 @@ class UsersDataCommand extends DataCommand
             'created' => date('Y-m-d H:i:s', strtotime('-2 months')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 months')),
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.betty'),
@@ -76,7 +78,7 @@ class UsersDataCommand extends DataCommand
             'deleted' => 0,
             'created' => date('Y-m-d H:i:s', strtotime('-2 weeks')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 weeks')),
-            'created_by' => UuidFactory::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.carol'),
@@ -87,7 +89,7 @@ class UsersDataCommand extends DataCommand
             'created' => date('Y-m-d H:i:s', strtotime('-2 days')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 days')),
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.dame'),
@@ -98,7 +100,7 @@ class UsersDataCommand extends DataCommand
             'created' => date('Y-m-d H:i:s', strtotime('-2 hours')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 hours')),
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.edith'),
@@ -110,7 +112,7 @@ class UsersDataCommand extends DataCommand
             'created' => date('Y-m-d H:i:s', strtotime('-2 minutes')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 minutes')),
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.frances'),
@@ -119,7 +121,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.grace'),
@@ -128,7 +130,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.hedy'),
@@ -137,7 +139,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.irene'),
@@ -146,7 +148,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.jean'),
@@ -155,7 +157,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.joan'),
@@ -164,7 +166,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.kathleen'),
@@ -173,7 +175,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.lynne'),
@@ -182,7 +184,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.margaret'),
@@ -191,7 +193,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.marlyn'),
@@ -200,7 +202,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.nancy'),
@@ -209,7 +211,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.orna'),
@@ -218,7 +220,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.ping'),
@@ -227,7 +229,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.ruth'),
@@ -236,7 +238,7 @@ class UsersDataCommand extends DataCommand
             'active' => 0,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.sofia'),
@@ -245,7 +247,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 1,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.thelma'),
@@ -254,7 +256,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.ursula'),
@@ -263,7 +265,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.wang'),
@@ -272,7 +274,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $users[] = [
             'id' => UuidFactory::uuid('user.id.yvonne'),
@@ -281,7 +283,7 @@ class UsersDataCommand extends DataCommand
             'active' => 1,
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
 
         return $users;

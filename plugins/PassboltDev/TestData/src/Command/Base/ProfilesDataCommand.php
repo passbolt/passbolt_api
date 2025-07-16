@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,7 +28,7 @@ class ProfilesDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.admin'),
@@ -35,7 +37,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1970-01-01',
             'title' => 'Mr',
             'first_name' => 'Admin',
-            'last_name' => 'User'
+            'last_name' => 'User',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.anonymous'),
@@ -44,7 +46,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1980-12-10',
             'title' => 'Mr',
             'first_name' => 'Anonymous',
-            'last_name' => 'User'
+            'last_name' => 'User',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.adele'),
@@ -53,7 +55,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1920-12-21',
             'title' => 'Ms',
             'first_name' => 'Adele',
-            'last_name' => 'Goldstine'
+            'last_name' => 'Goldstine',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.ada'),
@@ -62,7 +64,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1815-12-10',
             'title' => 'Ms',
             'first_name' => 'Ada',
-            'last_name' => 'Lovelace'
+            'last_name' => 'Lovelace',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.betty'),
@@ -71,7 +73,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1917-03-07',
             'title' => 'Ms',
             'first_name' => 'Betty',
-            'last_name' => 'Holberton'
+            'last_name' => 'Holberton',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.carol'),
@@ -80,7 +82,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1955-01-01',
             'title' => 'Ms',
             'first_name' => 'Carol',
-            'last_name' => 'Shaw'
+            'last_name' => 'Shaw',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.dame'),
@@ -89,7 +91,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1933-09-16',
             'title' => 'Ms',
             'first_name' => 'Dame Steve',
-            'last_name' => 'Shirley'
+            'last_name' => 'Shirley',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.edith'),
@@ -98,7 +100,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1983-10-29',
             'title' => 'Ms',
             'first_name' => 'Edith',
-            'last_name' => 'Clarke'
+            'last_name' => 'Clarke',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.frances'),
@@ -107,7 +109,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1932-08-04',
             'title' => 'Ms',
             'first_name' => 'Frances',
-            'last_name' => 'Allen'
+            'last_name' => 'Allen',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.grace'),
@@ -116,7 +118,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1906-12-09',
             'title' => 'Ms',
             'first_name' => 'Grace',
-            'last_name' => 'Hopper'
+            'last_name' => 'Hopper',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.hedy'),
@@ -125,7 +127,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1980-12-14',
             'title' => 'Ms',
             'first_name' => 'Hedy',
-            'last_name' => 'Lamarr'
+            'last_name' => 'Lamarr',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.irene'),
@@ -134,7 +136,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1980-12-14',
             'title' => 'Ms',
             'first_name' => 'Irene',
-            'last_name' => 'Greif'
+            'last_name' => 'Greif',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.jean'),
@@ -143,7 +145,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1924-12-27',
             'title' => 'Ms',
             'first_name' => 'Jean',
-            'last_name' => 'Bartik'
+            'last_name' => 'Bartik',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.joan'),
@@ -152,7 +154,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1917-06-29',
             'title' => 'Ms',
             'first_name' => 'Joan',
-            'last_name' => 'Clarke'
+            'last_name' => 'Clarke',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.kathleen'),
@@ -161,7 +163,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1921-02-12',
             'title' => 'Ms',
             'first_name' => 'Kathleen',
-            'last_name' => 'Antonelli'
+            'last_name' => 'Antonelli',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.lynne'),
@@ -170,7 +172,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1961-06-30',
             'title' => 'Ms',
             'first_name' => 'Lynne',
-            'last_name' => 'Jolitz'
+            'last_name' => 'Jolitz',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.margaret'),
@@ -179,7 +181,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1936-08-17',
             'title' => 'Ms',
             'first_name' => 'Margaret',
-            'last_name' => 'Hamilton'
+            'last_name' => 'Hamilton',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.marlyn'),
@@ -188,7 +190,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1922-01-01',
             'title' => 'Ms',
             'first_name' => 'Marlyn',
-            'last_name' => 'Wescoff'
+            'last_name' => 'Wescoff',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.nancy'),
@@ -197,7 +199,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1986-07-14',
             'title' => 'Ms',
             'first_name' => 'Nancy',
-            'last_name' => 'Leveson'
+            'last_name' => 'Leveson',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.orna'),
@@ -206,7 +208,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1949-12-19',
             'title' => 'Ms',
             'first_name' => 'Orna',
-            'last_name' => 'Berry'
+            'last_name' => 'Berry',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.ping'),
@@ -215,7 +217,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1958-12-01',
             'title' => 'Ms',
             'first_name' => 'Ping',
-            'last_name' => 'Fu'
+            'last_name' => 'Fu',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.ruth'),
@@ -224,7 +226,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1924-01-01',
             'title' => 'Ms',
             'first_name' => 'Ruth',
-            'last_name' => 'Teitelbaum'
+            'last_name' => 'Teitelbaum',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.sofia'),
@@ -233,7 +235,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1850-02-10',
             'title' => 'Ms',
             'first_name' => 'Sofia',
-            'last_name' => 'Kovalevskaya'
+            'last_name' => 'Kovalevskaya',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.thelma'),
@@ -242,7 +244,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1924-02-21',
             'title' => 'Ms',
             'first_name' => 'Thelma',
-            'last_name' => 'Estrin'
+            'last_name' => 'Estrin',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.ursula'),
@@ -251,7 +253,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1924-02-21',
             'title' => 'Ms',
             'first_name' => 'Ursula',
-            'last_name' => 'Martin'
+            'last_name' => 'Martin',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.wang'),
@@ -260,7 +262,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1966-01-01',
             'title' => 'Ms',
             'first_name' => 'Wang',
-            'last_name' => 'Xiaoyun'
+            'last_name' => 'Xiaoyun',
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.yvonne'),
@@ -269,7 +271,7 @@ class ProfilesDataCommand extends DataCommand
             'date_of_birth' => '1923-12-29',
             'title' => 'Ms',
             'first_name' => 'Yvonne',
-            'last_name' => 'Choquet-Bruhat'
+            'last_name' => 'Choquet-Bruhat',
         ];
 
         return $profiles;

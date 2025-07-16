@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,14 +28,14 @@ class RolesDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $roles[] = [
             'id' => UuidFactory::uuid('role.id.anonymous'),
             'name' => 'guest',
             'description' => 'Non logged in user',
             'created' => '2012-07-04 13:39:25',
-            'modified' => '2012-07-04 13:39:25'
+            'modified' => '2012-07-04 13:39:25',
         ];
         $roles[] = [
             'id' => UuidFactory::uuid('role.id.user'),

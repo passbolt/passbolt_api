@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,7 +28,7 @@ class ResourcesDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.apache'),
@@ -39,7 +41,7 @@ class ResourcesDataCommand extends DataCommand
             'modified_by' => UuidFactory::uuid('user.id.ada'),
             'created' => date('Y-m-d H:i:s', strtotime('-2 days')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 days')),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.april'),
@@ -50,7 +52,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.betty'),
             'modified_by' => UuidFactory::uuid('user.id.betty'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.bower'),
@@ -63,7 +65,7 @@ class ResourcesDataCommand extends DataCommand
             'modified_by' => UuidFactory::uuid('user.id.carol'),
             'created' => date('Y-m-d H:i:s', strtotime('-2 years')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 years')),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.cakephp'),
@@ -76,7 +78,7 @@ class ResourcesDataCommand extends DataCommand
             'modified_by' => UuidFactory::uuid('user.id.ada'),
             'created' => date('Y-m-d H:i:s', strtotime('-2 hours')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 hours')),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.canjs'),
@@ -89,7 +91,7 @@ class ResourcesDataCommand extends DataCommand
             'modified_by' => UuidFactory::uuid('user.id.edith'),
             'created' => date('Y-m-d H:i:s', strtotime('-2 weeks')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 weeks')),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.centos'),
@@ -102,7 +104,7 @@ class ResourcesDataCommand extends DataCommand
             'modified_by' => UuidFactory::uuid('user.id.dame'),
             'created' => date('Y-m-d H:i:s', strtotime('-2 months')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 months')),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.chai'),
@@ -113,7 +115,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.betty'),
             'modified_by' => UuidFactory::uuid('user.id.betty'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.composer'),
@@ -126,7 +128,7 @@ class ResourcesDataCommand extends DataCommand
             'modified_by' => UuidFactory::uuid('user.id.carol'),
             'created' => date('Y-m-d H:i:s', strtotime('-2 minutes')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 minutes')),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.debian'),
@@ -137,7 +139,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.dame'),
             'modified_by' => UuidFactory::uuid('user.id.dame'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.docker'),
@@ -148,7 +150,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.edith'),
             'modified_by' => UuidFactory::uuid('user.id.edith'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.enlightenment'),
@@ -159,7 +161,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.ada'),
             'modified_by' => UuidFactory::uuid('user.id.ada'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.fosdem'),
@@ -170,7 +172,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.betty'),
             'modified_by' => UuidFactory::uuid('user.id.betty'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.framasoft'),
@@ -181,7 +183,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.carol'),
             'modified_by' => UuidFactory::uuid('user.id.carol'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.fsfe'),
@@ -192,7 +194,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.dame'),
             'modified_by' => UuidFactory::uuid('user.id.dame'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.ftp'),
@@ -203,7 +205,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.edith'),
             'modified_by' => UuidFactory::uuid('user.id.edith'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.git'),
@@ -214,7 +216,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.dame'),
             'modified_by' => UuidFactory::uuid('user.id.dame'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.gnupg'),
@@ -225,7 +227,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.carol'),
             'modified_by' => UuidFactory::uuid('user.id.carol'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.grogle'),
@@ -236,7 +238,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.ada'),
             'modified_by' => UuidFactory::uuid('user.id.ada'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.grunt'),
@@ -247,7 +249,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.betty'),
             'modified_by' => UuidFactory::uuid('user.id.betty'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.inkscape'),
@@ -258,7 +260,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.edith'),
             'modified_by' => UuidFactory::uuid('user.id.edith'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.jquery'),
@@ -269,7 +271,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 1,
             'created_by' => UuidFactory::uuid('user.id.dame'),
             'modified_by' => UuidFactory::uuid('user.id.dame'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.kde'),
@@ -280,7 +282,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.betty'),
             'modified_by' => UuidFactory::uuid('user.id.betty'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.linux'),
@@ -291,7 +293,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.hedy'),
             'modified_by' => UuidFactory::uuid('user.id.hedy'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.mailvelope'),
@@ -302,7 +304,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.jean'),
             'modified_by' => UuidFactory::uuid('user.id.jean'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.mocha'),
@@ -313,7 +315,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.kathleen'),
             'modified_by' => UuidFactory::uuid('user.id.kathleen'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.nodejs'),
@@ -324,7 +326,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.marlyn'),
             'modified_by' => UuidFactory::uuid('user.id.marlyn'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.openpgpjs'),
@@ -335,7 +337,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.nancy'),
             'modified_by' => UuidFactory::uuid('user.id.nancy'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.phpunit'),
@@ -346,7 +348,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.ursula'),
             'modified_by' => UuidFactory::uuid('user.id.ursula'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.qgis'),
@@ -357,7 +359,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.wang'),
             'modified_by' => UuidFactory::uuid('user.id.wang'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.selenium'),
@@ -368,7 +370,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.yvonne'),
             'modified_by' => UuidFactory::uuid('user.id.yvonne'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.stealjs'),
@@ -379,7 +381,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.adele'),
             'modified_by' => UuidFactory::uuid('user.id.adele'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.virtualbox'),
@@ -390,7 +392,7 @@ class ResourcesDataCommand extends DataCommand
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.adele'),
             'modified_by' => UuidFactory::uuid('user.id.adele'),
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
         ];
 
         return $resources;

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,7 +28,7 @@ class XssGroupsUsersDataCommand extends GroupsUsersDataCommand
      *
      * @return array
      */
-    protected function getGroupsUsersSettings()
+    protected function getGroupsUsersSettings(): array
     {
         $exploits = Xss::getExploits();
         $settings = [];

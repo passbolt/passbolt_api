@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,7 +29,7 @@ class FavoritesDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $favorites = [];
 
@@ -45,7 +47,7 @@ class FavoritesDataCommand extends DataCommand
                     'user_id' => $user->id,
                     'foreign_key' => $resource->id,
                     'foreign_model' => 'Resource',
-                    'created' => date('Y-m-d H:i:s')
+                    'created' => date('Y-m-d H:i:s'),
                 ];
             }
             $end = time();

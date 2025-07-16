@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,7 +16,6 @@
  */
 namespace Passbolt\TestData\Lib\SaveStrategy;
 
-use Cake\Console\Shell;
 use Cake\Datasource\ConnectionManager;
 use Cake\Utility\Hash;
 use Passbolt\TestData\Lib\DataCommand;
@@ -24,21 +25,21 @@ class SaveSqlInfile
     /**
      * The shell the strategy is executing on.
      *
-     * @var DataCommand
+     * @var \Passbolt\TestData\Lib\DataCommand
      */
-    private $shell;
+    private DataCommand $shell;
 
     /**
      * The database connection
      *
      * @var Object
      */
-    private $connection;
+    private object $connection;
 
     /**
      * Constructor
      *
-     * @param DataCommand $shell The console the strategy is executing by.
+     * @param \Passbolt\TestData\Lib\DataCommand $shell The console the strategy is executing by.
      */
     public function __construct(DataCommand $shell)
     {
@@ -70,7 +71,7 @@ class SaveSqlInfile
                     $row .= $entity[$column];
                 }
             }
-            $row .= "__ENDOFLINE__";
+            $row .= '__ENDOFLINE__';
             $fileContent .= $row;
             unset($entity);
         }

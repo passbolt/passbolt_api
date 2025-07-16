@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,16 +29,16 @@ class GroupsDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $groups[] = [
-            'id' => UuidFactory::uuid("group.id.all_users"),
-            'name' => "All users",
+            'id' => UuidFactory::uuid('group.id.all_users'),
+            'name' => 'All users',
             'deleted' => 0,
             'created' => date('Y-m-d H:i:s'),
             'modified' => date('Y-m-d H:i:s'),
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
 
         $max = Configure::read('PassboltTestData.scenarios.large.install.count.groups');
@@ -48,7 +50,7 @@ class GroupsDataCommand extends DataCommand
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
                 'created_by' => UuidFactory::uuid('user.id.admin'),
-                'modified_by' => UuidFactory::uuid('user.id.admin')
+                'modified_by' => UuidFactory::uuid('user.id.admin'),
             ];
         }
 

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,6 +21,8 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
+use DateTime;
+use Exception;
 
 /**
  * Dummy data installer.
@@ -42,7 +46,7 @@ class InsertCommand extends PassboltCommand
             ->addArgument('scenario', [
                 'help' => 'The scenario to play.',
                 'required' => true,
-                'choices' => array_keys(Configure::read('PassboltTestData.scenarios'))
+                'choices' => array_keys(Configure::read('PassboltTestData.scenarios')),
             ]);
 
         return $parser;
@@ -68,14 +72,14 @@ class InsertCommand extends PassboltCommand
                 $command = new $command();
                 $options = [];
                 $options['connection'] = $args->getOption('connection') ?? 'default';
-                if (method_exists($command, "beforeExecute")) {
+                if (method_exists($command, 'beforeExecute')) {
                     $command->beforeExecute();
                 }
                 $this->executeCommand($command, $this->formatOptions($args, $options));
-                if (method_exists($command, "afterExecute")) {
+                if (method_exists($command, 'afterExecute')) {
                     $command->afterExecute();
                 }
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $message = __('Could not load command {0}, skipping.', get_class($command));
                 $message .= ' ';
                 $message .= __('Reason: {0}', $exception->getMessage());
@@ -85,8 +89,8 @@ class InsertCommand extends PassboltCommand
         }
 
         $endTime = time();
-        $dtF = new \DateTime("@$startTime");
-        $dtT = new \DateTime("@$endTime");
+        $dtF = new DateTime("@$startTime");
+        $dtT = new DateTime("@$endTime");
         $diff = $dtF->diff($dtT)->format('%im %ss');
         $io->success('<success>' . __('Data inserted successfully in ' . $diff) . '</success>');
 
@@ -95,10 +99,11 @@ class InsertCommand extends PassboltCommand
 
     /**
      * Get the tasks to execute.
+     *
      * @param string $scenario Scenario.
      * @return array
      */
-    protected function getShellTasks(string $scenario)
+    protected function getShellTasks(string $scenario): array
     {
         $scenarios = Configure::read('PassboltTestData.scenarios');
         $scenario = $scenarios[$scenario];

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,31 +28,31 @@ class FavoritesDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $favorites[] = [
             'id' => UuidFactory::uuid('favorite.id.ada-apache'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
             'foreign_key' => UuidFactory::uuid('resource.id.apache'),
-            'foreign_model' => 'Resource'
+            'foreign_model' => 'Resource',
         ];
         $favorites[] = [
             'id' => UuidFactory::uuid('favorite.id.dame-apache'),
             'user_id' => UuidFactory::uuid('user.id.dame'),
             'foreign_key' => UuidFactory::uuid('resource.id.apache'),
-            'foreign_model' => 'Resource'
+            'foreign_model' => 'Resource',
         ];
         $favorites[] = [
             'id' => UuidFactory::uuid('favorite.id.dame-april'),
             'user_id' => UuidFactory::uuid('user.id.dame'),
             'foreign_key' => UuidFactory::uuid('resource.id.april'),
-            'foreign_model' => 'Resource'
+            'foreign_model' => 'Resource',
         ];
         $favorites[] = [
             'id' => UuidFactory::uuid('favorite.id.lynne-cakephp'),
             'user_id' => UuidFactory::uuid('user.id.lynne'),
             'foreign_key' => UuidFactory::uuid('resource.id.cakephp'),
-            'foreign_model' => 'Resource'
+            'foreign_model' => 'Resource',
         ];
 
         return $favorites;

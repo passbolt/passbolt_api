@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,7 +29,7 @@ class XssGpgkeysDataCommand extends GpgkeysDataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $usersTask = new XssUsersDataCommand();
         $users = $usersTask->getData();
@@ -50,7 +52,7 @@ class XssGpgkeysDataCommand extends GpgkeysDataCommand
                 'key_created' => date('Y-m-d H:i:s', $info['key_created']),
                 'deleted' => false,
                 'created' => date('Y-m-d H:i:s'),
-                'modified' => date('Y-m-d H:i:s')
+                'modified' => date('Y-m-d H:i:s'),
             ];
         }
 

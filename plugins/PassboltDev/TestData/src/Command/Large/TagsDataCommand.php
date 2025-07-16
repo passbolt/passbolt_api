@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,7 +30,7 @@ class TagsDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $tags = [];
         $tags = array_merge($tags, $this->getTagsScenarioForPersonalTags());
@@ -49,7 +51,7 @@ class TagsDataCommand extends DataCommand
                 $tags[] = [
                     'id' => UuidFactory::uuid("tag.id.personal-$i-{$user->id}"),
                     'slug' => "{$user->username} $i",
-                    'is_shared' => 0
+                    'is_shared' => 0,
                 ];
             }
         }
@@ -66,7 +68,7 @@ class TagsDataCommand extends DataCommand
             $tags[] = [
                 'id' => UuidFactory::uuid("tag.id.shared-$i"),
                 'slug' => "#Shared tag $i",
-                'is_shared' => 1
+                'is_shared' => 1,
             ];
         }
 

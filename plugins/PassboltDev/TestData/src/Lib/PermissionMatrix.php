@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,8 +22,7 @@ use App\Utility\UuidFactory;
 
 class PermissionMatrix
 {
-
-    private static $mapPermissionTypes = [
+    private static array $mapPermissionTypes = [
         '' => 0,
         'R' => Permission::READ,
         'U' => Permission::UPDATE,
@@ -72,7 +73,7 @@ class PermissionMatrix
      * @param string $orientation Return the permissions sorted by
      * @return array
      */
-    public static function getCalculatedUsersResourcesPermissions($orientation = 'resource')
+    public static function getCalculatedUsersResourcesPermissions(string $orientation = 'resource'): array
     {
         $csvPath = __DIR__ . '/../../data/calculated_users_resources_permissions.csv';
         $return = self::_loadCsv($csvPath, $orientation);
@@ -86,7 +87,7 @@ class PermissionMatrix
      * @param string $orientation resource|user
      * @return array
      */
-    public static function getUsersResourcesPermissions($orientation = 'resource')
+    public static function getUsersResourcesPermissions(string $orientation = 'resource'): array
     {
         $csvPath = __DIR__ . '/../../data/users_resources_permissions.csv';
 
@@ -95,10 +96,11 @@ class PermissionMatrix
 
     /**
      * Get the direct users access for a given resource.
+     *
      * @param string $resourceId uuid
      * @return array|null
      */
-    public static function getUsersResourcePermissions($resourceId)
+    public static function getUsersResourcePermissions(string $resourceId): ?array
     {
         $matrix = self::getUsersResourcesPermissions();
         $resourceAlias = array_reduce(array_keys($matrix), function ($carry, $item) use ($resourceId) {
@@ -122,7 +124,7 @@ class PermissionMatrix
      * @param string $orientation resource|user
      * @return array
      */
-    public static function getGroupsResourcesPermissions($orientation = 'resource')
+    public static function getGroupsResourcesPermissions(string $orientation = 'resource'): array
     {
         $csvPath = __DIR__ . '/../../data/groups_resources_permissions.csv';
 
@@ -135,7 +137,7 @@ class PermissionMatrix
      * @param string $resourceId uuod
      * @return array|null
      */
-    public static function getGroupsResourcePermissions($resourceId)
+    public static function getGroupsResourcePermissions(string $resourceId): ?array
     {
         $matrix = self::getGroupsResourcesPermissions();
         $resourceAlias = array_reduce(array_keys($matrix), function ($carry, $item) use ($resourceId) {
@@ -160,7 +162,7 @@ class PermissionMatrix
      * @param string $orientation resource|user
      * @return array
      */
-    private static function _loadCsv($file, $orientation = 'resource')
+    private static function _loadCsv(string $file, string $orientation = 'resource'): array
     {
         $matrix = [];
         foreach (file($file) as $chunks) {

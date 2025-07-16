@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,7 +28,7 @@ class GroupsDataCommand extends DataCommand
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.accounting'),
@@ -35,7 +37,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.board'),
@@ -44,7 +46,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.creative'),
@@ -53,7 +55,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.developer'),
@@ -62,7 +64,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.ergonom'),
@@ -71,7 +73,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.freelancer'),
@@ -80,7 +82,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.human_resource'),
@@ -89,7 +91,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.it_support'),
@@ -98,7 +100,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.leadership_team'),
@@ -107,7 +109,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.management'),
@@ -116,7 +118,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.marketing'),
@@ -125,7 +127,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.network'),
@@ -134,7 +136,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.operations'),
@@ -143,7 +145,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.procurement'),
@@ -152,7 +154,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.quality_assurance'),
@@ -161,7 +163,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.resource_planning'),
@@ -170,7 +172,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.sales'),
@@ -179,7 +181,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.traffic'),
@@ -188,7 +190,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.deleted'),
@@ -197,7 +199,7 @@ class GroupsDataCommand extends DataCommand
             'created' => '2016-02-02 18:59:05',
             'modified' => '2016-02-02 18:59:05',
             'created_by' => UuidFactory::uuid('user.id.admin'),
-            'modified_by' => UuidFactory::uuid('user.id.admin')
+            'modified_by' => UuidFactory::uuid('user.id.admin'),
         ];
 
         return $groups;

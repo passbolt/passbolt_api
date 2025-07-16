@@ -12,6 +12,34 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+use Passbolt\TestData\Command\Base\AvatarsDataCommand;
+use Passbolt\TestData\Command\Base\CommentsDataCommand;
+use Passbolt\TestData\Command\Base\EmailQueueDataCommand;
+use Passbolt\TestData\Command\Base\FavoritesDataCommand;
+use Passbolt\TestData\Command\Base\FoldersDataCommand;
+use Passbolt\TestData\Command\Base\FoldersPermissionsDataCommand;
+use Passbolt\TestData\Command\Base\FoldersRelationsDataCommand;
+use Passbolt\TestData\Command\Base\GpgkeysDataCommand;
+use Passbolt\TestData\Command\Base\GroupsDataCommand;
+use Passbolt\TestData\Command\Base\GroupsUsersDataCommand;
+use Passbolt\TestData\Command\Base\PermissionsDataCommand;
+use Passbolt\TestData\Command\Base\ProfilesDataCommand;
+use Passbolt\TestData\Command\Base\ResourcesDataCommand;
+use Passbolt\TestData\Command\Base\ResourceTypesDataCommand;
+use Passbolt\TestData\Command\Base\RolesDataCommand;
+use Passbolt\TestData\Command\Base\SecretsDataCommand;
+use Passbolt\TestData\Command\Base\UsersDataCommand as BaseUsersDataCommand;
+use Passbolt\TestData\Command\Pro\AccountSettingsDataCommand;
+use Passbolt\TestData\Command\Pro\ResourcesTagsDataCommand;
+use Passbolt\TestData\Command\Pro\TagsDataCommand;
+use Passbolt\TestData\Command\Security\XssCommentsDataCommand;
+use Passbolt\TestData\Command\Security\XssGroupsDataCommand;
+use Passbolt\TestData\Command\Security\XssGroupsUsersDataCommand;
+use Passbolt\TestData\Command\Security\XssPermissionsDataCommand;
+use Passbolt\TestData\Command\Security\XssProfilesDataCommand;
+use Passbolt\TestData\Command\Security\XssResourcesDataCommand;
+use Passbolt\TestData\Command\Security\XssUsersDataCommand;
+use Passbolt\TestData\Command\Large\UsersDataCommand as LargeUsersDataCommand;
 
 return [
     'passbolt' => [
@@ -35,81 +63,81 @@ return [
             'default' => [
                 'install' => [
                     'shellTasks' => [
-                        \Passbolt\TestData\Command\Base\RolesDataCommand::class,
-                        \Passbolt\TestData\Command\Base\ResourceTypesDataCommand::class,
-                        \Passbolt\TestData\Command\Base\UsersDataCommand::class,
-                        \Passbolt\TestData\Command\Security\XssUsersDataCommand::class,
-                        \Passbolt\TestData\Command\Base\ProfilesDataCommand::class,
-                        \Passbolt\TestData\Command\Security\XssProfilesDataCommand::class,
-                        \Passbolt\TestData\Command\Base\AvatarsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\GpgkeysDataCommand::class,
-                        \Passbolt\TestData\Command\Base\GroupsDataCommand::class,
-                        \Passbolt\TestData\Command\Security\XssGroupsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\GroupsUsersDataCommand::class,
-                        \Passbolt\TestData\Command\Security\XssGroupsUsersDataCommand::class,
-                        \Passbolt\TestData\Command\Base\ResourcesDataCommand::class,
-                        \Passbolt\TestData\Command\Security\XssResourcesDataCommand::class,
-                        \Passbolt\TestData\Command\Base\PermissionsDataCommand::class,
-                        \Passbolt\TestData\Command\Security\XssPermissionsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\FavoritesDataCommand::class,
-                        \Passbolt\TestData\Command\Base\CommentsDataCommand::class,
-                        \Passbolt\TestData\Command\Security\XssCommentsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\SecretsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\EmailQueueDataCommand::class,
-                        \Passbolt\TestData\Command\Pro\AccountSettingsDataCommand::class,
-                        \Passbolt\TestData\Command\Pro\TagsDataCommand::class,
-                        \Passbolt\TestData\Command\Pro\ResourcesTagsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\FoldersPermissionsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\FoldersDataCommand::class,
-                        \Passbolt\TestData\Command\Base\FoldersRelationsDataCommand::class,
-                    ]
+                        RolesDataCommand::class,
+                        ResourceTypesDataCommand::class,
+                        BaseUsersDataCommand::class,
+                        XssUsersDataCommand::class,
+                        ProfilesDataCommand::class,
+                        XssProfilesDataCommand::class,
+                        AvatarsDataCommand::class,
+                        GpgkeysDataCommand::class,
+                        GroupsDataCommand::class,
+                        XssGroupsDataCommand::class,
+                        GroupsUsersDataCommand::class,
+                        XssGroupsUsersDataCommand::class,
+                        ResourcesDataCommand::class,
+                        XssResourcesDataCommand::class,
+                        PermissionsDataCommand::class,
+                        XssPermissionsDataCommand::class,
+                        FavoritesDataCommand::class,
+                        CommentsDataCommand::class,
+                        XssCommentsDataCommand::class,
+                        SecretsDataCommand::class,
+                        EmailQueueDataCommand::class,
+                        AccountSettingsDataCommand::class,
+                        TagsDataCommand::class,
+                        ResourcesTagsDataCommand::class,
+                        FoldersPermissionsDataCommand::class,
+                        FoldersDataCommand::class,
+                        FoldersRelationsDataCommand::class,
+                    ],
                 ],
                 'fixturize' => [
                     'shellTasks' => [
-                        \Passbolt\TestData\Command\Base\RolesDataCommand::class,
-                        \Passbolt\TestData\Command\Base\UsersDataCommand::class,
-                        \Passbolt\TestData\Command\Base\ProfilesDataCommand::class,
-                        \Passbolt\TestData\Command\Base\AvatarsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\GpgkeysDataCommand::class,
-                        \Passbolt\TestData\Command\Base\GroupsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\GroupsUsersDataCommand::class,
-                        \Passbolt\TestData\Command\Base\ResourcesDataCommand::class,
-                        \Passbolt\TestData\Command\Base\PermissionsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\FavoritesDataCommand::class,
-                        \Passbolt\TestData\Command\Base\CommentsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\SecretsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\EmailQueueDataCommand::class,
-                    ]
-                ]
+                        RolesDataCommand::class,
+                        UsersDataCommand::class,
+                        ProfilesDataCommand::class,
+                        AvatarsDataCommand::class,
+                        GpgkeysDataCommand::class,
+                        GroupsDataCommand::class,
+                        GroupsUsersDataCommand::class,
+                        ResourcesDataCommand::class,
+                        PermissionsDataCommand::class,
+                        FavoritesDataCommand::class,
+                        CommentsDataCommand::class,
+                        SecretsDataCommand::class,
+                        EmailQueueDataCommand::class,
+                    ],
+                ],
             ],
             'alt0' => [
                 'install' => [
                     'shellTasks' => [
-                        \Passbolt\TestData\Command\Base\ResourceTypesDataCommand::class,
-                        \Passbolt\TestData\Command\Base\GroupsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\UsersDataCommand::class,
-                        \Passbolt\TestData\Command\Base\ProfilesDataCommand::class,
-                        \Passbolt\TestData\Command\Base\GpgkeysDataCommand::class,
-                        \Passbolt\TestData\Command\Base\RolesDataCommand::class,
+                        ResourceTypesDataCommand::class,
+                        GroupsDataCommand::class,
+                        UsersDataCommand::class,
+                        ProfilesDataCommand::class,
+                        GpgkeysDataCommand::class,
+                        RolesDataCommand::class,
                         \Passbolt\TestData\Command\Alt0\GroupsUsersDataCommand::class,
                         \Passbolt\TestData\Command\Alt0\PermissionsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\ResourcesDataCommand::class,
+                        ResourcesDataCommand::class,
                         \Passbolt\TestData\Command\Alt0\SecretsDataCommand::class,
-                    ]
+                    ],
                 ],
                 'fixturize' => [
                     'shellTasks' => [
-                        \Passbolt\TestData\Command\Base\GroupsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\UsersDataCommand::class,
-                        \Passbolt\TestData\Command\Base\ProfilesDataCommand::class,
-                        \Passbolt\TestData\Command\Base\GpgkeysDataCommand::class,
-                        \Passbolt\TestData\Command\Base\RolesDataCommand::class,
+                        GroupsDataCommand::class,
+                        UsersDataCommand::class,
+                        ProfilesDataCommand::class,
+                        GpgkeysDataCommand::class,
+                        RolesDataCommand::class,
                         \Passbolt\TestData\Command\Alt0\GroupsUsersDataCommand::class,
                         \Passbolt\TestData\Command\Alt0\PermissionsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\ResourcesDataCommand::class,
+                        ResourcesDataCommand::class,
                         \Passbolt\TestData\Command\Alt0\SecretsDataCommand::class,
-                    ]
-                ]
+                    ],
+                ],
             ],
             'large' => [
                 'install' => [
@@ -120,15 +148,15 @@ return [
                         'resources_for_group_all_users' => 500,
                         'resources_foreach_user' => 50,
                         'tags_personal' => 1,
-                        'tags_shared' => 2
+                        'tags_shared' => 2,
                     ],
                     'shellTasks' => [
-                        \Passbolt\TestData\Command\Base\ResourceTypesDataCommand::class,
-                        \Passbolt\TestData\Command\Base\RolesDataCommand::class,
-                        \Passbolt\TestData\Command\Large\UsersDataCommand::class,
+                        ResourceTypesDataCommand::class,
+                        RolesDataCommand::class,
+                        LargeUsersDataCommand::class,
                         \Passbolt\TestData\Command\Large\ProfilesDataCommand::class,
-                        \Passbolt\TestData\Command\Base\AvatarsDataCommand::class,
-                        \Passbolt\TestData\Command\Base\GpgkeysDataCommand::class,
+                        AvatarsDataCommand::class,
+                        GpgkeysDataCommand::class,
                         \Passbolt\TestData\Command\Large\GroupsDataCommand::class,
                         \Passbolt\TestData\Command\Large\GroupsUsersDataCommand::class,
                         \Passbolt\TestData\Command\Large\ResourcesDataCommand::class,
@@ -138,9 +166,9 @@ return [
                         \Passbolt\TestData\Command\Large\SecretsDataCommand::class,
                         \Passbolt\TestData\Command\Large\TagsDataCommand::class,
                         \Passbolt\TestData\Command\Large\ResourcesTagsDataCommand::class,
-                    ]
-                ]
-            ]
-        ]
-    ]
+                    ],
+                ],
+            ],
+        ],
+    ],
 ];

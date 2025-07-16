@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -22,14 +24,14 @@ class SaveEntity
     /**
      * The shell the strategy is executing on.
      *
-     * @var DataCommand
+     * @var \Passbolt\TestData\Lib\DataCommand
      */
-    private $shell;
+    private DataCommand $shell;
 
     /**
      * Constructor
      *
-     * @param DataCommand $shell The console the strategy is executing by.
+     * @param \Passbolt\TestData\Lib\DataCommand $shell The console the strategy is executing by.
      */
     public function __construct(DataCommand $shell)
     {
@@ -63,10 +65,10 @@ class SaveEntity
      * Insert an entity.
      *
      * @param array $data The entity data
-     * @throws Exception if the entity can not be validated or saved
+     * @throws \Exception if the entity can not be validated or saved
      * @return void
      */
-    public function saveEntity(array $data = [])
+    public function saveEntity(array $data = []): void
     {
         $entity = $this->shell->Table->newEmptyEntity();
         $entity->setAccess('*', true);
