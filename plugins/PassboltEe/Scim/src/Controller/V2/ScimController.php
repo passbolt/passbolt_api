@@ -24,6 +24,7 @@ use Cake\Http\Exception\NotImplementedException;
 use Cake\Routing\Router;
 use Passbolt\Scim\Utility\Object\ErrorResponse;
 use Passbolt\Scim\Utility\Object\ListResponse;
+use Passbolt\Scim\Utility\Object\PatchOp;
 use Passbolt\Scim\Utility\Object\ServiceProviderConfig;
 use Passbolt\Scim\Utility\Resources;
 use Passbolt\Scim\Utility\ResourceTypes;
@@ -33,6 +34,8 @@ use Passbolt\Scim\Utility\ScimObjectInterface;
 class ScimController extends AppController
 {
     public const STATUS_CREATED = 201;
+    public const STATUS_EDITED = 200;
+    public const STATUS_DELETED = 204;
     public const STATUS_BAD_REQUEST = 400;
 
     /**
@@ -135,7 +138,17 @@ class ScimController extends AppController
      */
     public function edit(string $settingId, string $resourceType, string $resourceId): void
     {
-        throw new NotImplementedException('Missing SCIM action');
+        try {
+            $patchOperation = (new PatchOp())->setFromScim($this->getRequest()->getData());
+            $userResource = Resources::build($resourceType)
+                ->setFromDatabase($resourceId)
+                ->applyPatchOperation($patchOperation)
+                ->update();
+
+            $this->processResponse($settingId, $userResource, static::STATUS_EDITED);
+        } catch (\Exception $e) {
+            $this->processException($settingId, $e);
+        }
     }
 
     /**
@@ -149,7 +162,14 @@ class ScimController extends AppController
      */
     public function delete(string $settingId, string $resourceType, string $resourceId): void
     {
-        throw new NotImplementedException('Missing SCIM action');
+        try {
+            Resources::build($resourceType)
+                ->setFromDatabase($resourceId)
+                ->delete();
+            $this->processResponse($settingId, [], static::STATUS_DELETED);
+        } catch (\Exception $e) {
+            $this->processException($settingId, $e);
+        }
     }
 
     /**
@@ -225,14 +245,17 @@ class ScimController extends AppController
      *  - Replace {scimUrl} placeholder from JSON response
      *
      * @param string $settingId Org Setting Id
-     * @param \Passbolt\Scim\Utility\ScimObjectInterface $data Response data
+     * @param \Passbolt\Scim\Utility\ScimObjectInterface|array $data Response data
      * @param int $status Status code
      * @return void
      */
-    protected function processResponse(string $settingId, ScimObjectInterface $data, int $status = 200)
+    protected function processResponse(string $settingId, ScimObjectInterface|array $data, int $status = 200)
     {
+        if ($data instanceof ScimObjectInterface) {
+            $data = $data->toSCIM();
+        }
         $scimUrl = str_replace('"', '', json_encode(Router::url('scim/v2/' . $settingId, true)));
-        $json = str_replace('{scimUrl}', $scimUrl, json_encode($data->toSCIM(), JSON_PRETTY_PRINT));
+        $json = str_replace('{scimUrl}', $scimUrl, json_encode($data, JSON_PRETTY_PRINT));
         $this->setResponse($this->getResponse()->withStringBody($json)->withStatus($status));
     }
 
