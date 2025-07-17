@@ -630,9 +630,9 @@ trait UsersFindersTrait
             UuidFactory::uuid('AuthLogin.loginPost'),
             UuidFactory::uuid('JwtLogin.loginPost'),
         ];
-        $subQuery = $this->ActionLogs->find();
-        $subQuery
-            ->select(['last_logged_in' => $subQuery->func()->max(new IdentifierExpression('ActionLogs.created'))])
+        $actionLogsSubQuery = $this->ActionLogs->find();
+        $actionLogsSubQuery
+            ->select(['action_logs_last_logged_in' => $actionLogsSubQuery->func()->max(new IdentifierExpression('ActionLogs.created'))])
             ->where([
                  'ActionLogs.action_id IN' => $loginActionIds,
                  'ActionLogs.status' => 1,
@@ -640,10 +640,13 @@ trait UsersFindersTrait
             ])
             ->limit(1);
 
-        $selectTypeMap = $query->getSelectTypeMap();
-        $selectTypeMap->addDefaults(['virtual_last_logged_in' => 'datetime']);
+        $userLastLoginExpression = $query->expr()->case()
+            ->when($query->expr()->isNotNull($this->aliasField('last_logged_in')))
+            ->then($query->newExpr(new IdentifierExpression($this->aliasField('last_logged_in'))))
+            ->else($actionLogsSubQuery);
 
-        $query->selectAlso(['virtual_last_logged_in' => $subQuery]);
+        // TODO: once the data in the action logs has been migrated to the last_logged_in field, remove the line below
+        $query->selectAlso(['Users__last_logged_in' => $userLastLoginExpression]);
 
         return $query;
     }
