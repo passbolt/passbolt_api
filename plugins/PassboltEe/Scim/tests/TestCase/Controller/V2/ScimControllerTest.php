@@ -59,6 +59,11 @@ class ScimControllerTest extends AppIntegrationTestCase
     public CONST FIXTURE_RESPONSE_SCHEMAS_GROUPS = 'schemas_groups.json';
 
     /**
+     * Expected response for `/Schemas/<schemaId>` endpoint with invalid id
+     */
+    public CONST FIXTURE_RESPONSE_SCHEMAS_NOT_FOUND = 'schemas_not_found.json';
+
+    /**
      * Expected response for `/ResourceTypes` endpoint
      */
     public CONST FIXTURE_RESPONSE_RESOURCE_TYPES = 'resource_types.json';
@@ -156,6 +161,16 @@ class ScimControllerTest extends AppIntegrationTestCase
         $this->get($this->getScimEndpoint('Schemas' . DS . 'urn:ietf:params:scim:schemas:core:2.0:Group'));
         $this->assertResponseCode(200);
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_SCHEMAS_GROUPS));
+    }
+
+    /**
+     * Test case
+     */
+    public function testScimControllerSchemasGroups_NotFound()
+    {
+        $this->get($this->getScimEndpoint('Schemas' . DS . 'InvalidSchema'));
+        $this->assertResponseCode(404);
+        $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_SCHEMAS_NOT_FOUND));
     }
 
     /**

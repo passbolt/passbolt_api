@@ -186,7 +186,7 @@ class ScimController extends AppController
     {
         try {
             if ($schemaId && !Schemas::isValid($schemaId)) {
-                throw new NotFoundException('Invalid Schema');
+                throw new NotFoundException(sprintf('The schema `%s` is invalid or not supported', $schemaId));
             }
 
             if ($schemaId) {
