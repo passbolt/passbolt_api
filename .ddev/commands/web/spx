@@ -1,0 +1,44 @@
+#!/bin/bash
+
+## #ddev-generated
+## Description: Enable or disable spx
+## Usage: spx on|off|enable|disable|true|false|toggle|status
+## Example: "ddev spx" (default is "on"), "ddev spx off", "ddev spx on", "ddev spx toggle", "ddev spx status"
+## ExecRaw: false
+## Flags: []
+## AutocompleteTerms: ["on","off","enable","disable","toggle","status"]
+
+if [ $# -eq 0 ]; then
+  enable_spx
+  exit
+fi
+
+case $1 in
+on | true | enable)
+  enable_spx
+  ;;
+off | false | disable)
+  disable_spx
+  ;;
+toggle)
+  status=$(php -m | grep 'spx')
+  if [ "${status}" = "spx" ]; then
+    disable_spx
+  else
+    enable_spx
+  fi
+  ;;
+status)
+  status=$(php -m | grep 'spx')
+  if [ "${status}" = "spx" ]; then
+    result="spx is enabled"
+  else
+    result="spx is disabled"
+  fi
+  echo $result
+  ;;
+*)
+  echo "Invalid argument: $1"
+  ;;
+esac
+
