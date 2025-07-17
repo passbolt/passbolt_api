@@ -12,10 +12,10 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.6.0
+ * @since         5.3.0
  */
 
-namespace Passbolt\Sso\Test\TestCase\Controller\Adfs;
+namespace Passbolt\Sso\Test\TestCase\Controller\OAuth2;
 
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
@@ -25,27 +25,26 @@ use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
 use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
 
 /**
- * @see \Passbolt\Sso\Controller\Adfs\SsoAdfsStage1DryRunController
+ * @see \Passbolt\Sso\Controller\OAuth2\SsoOAuth2Stage1DryRunController
  */
-class SsoAdfsStage1DryRunControllerTest extends SsoIntegrationTestCase
+class SsoOAuth2Stage1DryRunControllerTest extends SsoIntegrationTestCase
 {
     /**
-     * 200 returns a URL for ADFS provider
+     * 200 returns a URL for Oauth2/OIDC provider
      */
-    public function testSsoAdfsStage1DryRunController_Success(): void
+    public function testSsoOAuth2Stage1DryRunController_Success(): void
     {
-        // Requires mocking ADFS service or working ADFS instance
         $this->markTestIncomplete();
     }
 
     /**
      * 401 user is not logged in
      */
-    public function testSsoAdfsStage1DryRunController_ErrorNotLoggedIn(): void
+    public function testSsoOAuth2Stage1DryRunController_ErrorNotLoggedIn(): void
     {
-        $ssoSetting = SsoSettingsFactory::make()->adfs()->draft()->persist();
+        $ssoSetting = SsoSettingsFactory::make()->oauth2()->draft()->persist();
 
-        $this->postJson('/sso/adfs/login/dry-run.json', ['sso_settings_id' => $ssoSetting->get('id')]);
+        $this->postJson('/sso/oauth2/login/dry-run.json', ['sso_settings_id' => $ssoSetting->get('id')]);
 
         $this->assertError(401);
     }
@@ -53,13 +52,13 @@ class SsoAdfsStage1DryRunControllerTest extends SsoIntegrationTestCase
     /**
      * 403 user is not an admin
      */
-    public function testSsoAdfsStage1DryRunController_ErrorNotAdmin(): void
+    public function testSsoOAuth2Stage1DryRunController_ErrorNotAdmin(): void
     {
         $user = UserFactory::make()->user()->persist();
-        $settings = SsoSettingsFactory::make()->adfs()->draft()->persist();
+        $settings = SsoSettingsFactory::make()->oauth2()->draft()->persist();
         $this->logInAs($user);
 
-        $this->postJson('/sso/adfs/login/dry-run.json', ['sso_settings_id' => $settings->get('id')]);
+        $this->postJson('/sso/oauth2/login/dry-run.json', ['sso_settings_id' => $settings->get('id')]);
 
         $this->assertError(403);
     }
@@ -67,12 +66,12 @@ class SsoAdfsStage1DryRunControllerTest extends SsoIntegrationTestCase
     /**
      * 400 missing settings
      */
-    public function testSsoAdfsStage1DryRunController_ErrorSettingsMissing(): void
+    public function testSsoOAuth2Stage1DryRunController_ErrorSettingsMissing(): void
     {
         $admin = UserFactory::make()->admin()->persist();
         $this->logInAs($admin);
 
-        $this->postJson('/sso/adfs/login/dry-run.json', []);
+        $this->postJson('/sso/oauth2/login/dry-run.json', []);
 
         $this->assertError(400);
     }
@@ -80,13 +79,13 @@ class SsoAdfsStage1DryRunControllerTest extends SsoIntegrationTestCase
     /**
      * 400 null settings
      */
-    public function testSsoAdfsStage1DryRunController_ErrorNullSettings(): void
+    public function testSsoOAuth2Stage1DryRunController_ErrorNullSettings(): void
     {
         $admin = UserFactory::make()->admin()->persist();
-        SsoSettingsFactory::make()->adfs()->draft()->persist();
+        SsoSettingsFactory::make()->oauth2()->draft()->persist();
         $this->logInAs($admin);
 
-        $this->postJson('/sso/adfs/login/dry-run.json', ['sso_settings_id' => null]);
+        $this->postJson('/sso/oauth2/login/dry-run.json', ['sso_settings_id' => null]);
 
         $this->assertError(400);
     }
@@ -94,12 +93,12 @@ class SsoAdfsStage1DryRunControllerTest extends SsoIntegrationTestCase
     /**
      * 400 Invalid settings id
      */
-    public function testSsoAdfsStage1DryRunController_ErrorSettingsInvalid(): void
+    public function testSsoOAuth2Stage1DryRunController_ErrorSettingsInvalid(): void
     {
         $admin = UserFactory::make()->admin()->persist();
         $this->logInAs($admin);
 
-        $this->postJson('/sso/adfs/login/dry-run.json', ['sso_settings_id' => 'nope']);
+        $this->postJson('/sso/oauth2/login/dry-run.json', ['sso_settings_id' => 'nope']);
 
         $this->assertError(400);
     }
@@ -107,12 +106,12 @@ class SsoAdfsStage1DryRunControllerTest extends SsoIntegrationTestCase
     /**
      * 404 settings not found
      */
-    public function testSsoAdfsStage1DryRunController_ErrorSettingsNotFound(): void
+    public function testSsoOAuth2Stage1DryRunController_ErrorSettingsNotFound(): void
     {
         $admin = UserFactory::make()->admin()->persist();
         $this->logInAs($admin);
 
-        $this->postJson('/sso/adfs/login/dry-run.json', ['sso_settings_id' => UuidFactory::uuid()]);
+        $this->postJson('/sso/oauth2/login/dry-run.json', ['sso_settings_id' => UuidFactory::uuid()]);
 
         $this->assertError(404);
     }
@@ -120,13 +119,13 @@ class SsoAdfsStage1DryRunControllerTest extends SsoIntegrationTestCase
     /**
      * 404 settings not found - not in draft state
      */
-    public function testSsoAdfsStage1DryRunController_ErrorSettingsNotDraft(): void
+    public function testSsoOAuth2Stage1DryRunController_ErrorSettingsNotDraft(): void
     {
         $admin = UserFactory::make()->admin()->persist();
-        $settings = SsoSettingsFactory::make()->adfs()->active()->persist();
+        $settings = SsoSettingsFactory::make()->oauth2()->active()->persist();
         $this->logInAs($admin);
 
-        $this->postJson('/sso/adfs/login/dry-run.json', ['sso_settings_id' => $settings->get('id')]);
+        $this->postJson('/sso/oauth2/login/dry-run.json', ['sso_settings_id' => $settings->get('id')]);
 
         $this->assertError(404);
     }
@@ -136,12 +135,12 @@ class SsoAdfsStage1DryRunControllerTest extends SsoIntegrationTestCase
      *
      * @return void
      */
-    public function testSsoAdfsStage1DryRunController_Error_EndpointsDisabled(): void
+    public function testSsoOAuth2Stage1DryRunController_Error_EndpointsDisabled(): void
     {
         Configure::write(SsoEndpointsSecurityMiddleware::SECURITY_CONFIG_KEY, true);
-        $ssoSetting = SsoSettingsFactory::make()->adfs()->draft()->persist();
+        $ssoSetting = SsoSettingsFactory::make()->oauth2()->draft()->persist();
 
-        $this->postJson('/sso/adfs/login/dry-run.json', ['sso_settings_id' => $ssoSetting->get('id')]);
+        $this->postJson('/sso/oauth2/login/dry-run.json', ['sso_settings_id' => $ssoSetting->get('id')]);
 
         $this->assertForbiddenError('SSO settings edit endpoints are disabled');
     }

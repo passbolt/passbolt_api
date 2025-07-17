@@ -12,16 +12,19 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.7.0
+ * @since         5.3.2
  */
 
-namespace App\Service\Healthcheck\Environment;
+namespace Passbolt\Sso\Service\Healthcheck;
 
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use Cake\Core\Configure;
+use Passbolt\Ee\Service\Healthcheck\EeHealthcheckServiceCollector;
+use Passbolt\Sso\Middleware\SsoEndpointsSecurityMiddleware;
 
-class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class SsoEditEndpointsDisabledHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -35,7 +38,7 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = is_writable(LOGS);
+        $this->status = Configure::read(SsoEndpointsSecurityMiddleware::SECURITY_CONFIG_KEY, false);
 
         return $this;
     }
@@ -45,7 +48,7 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
      */
     public function domain(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
+        return EeHealthcheckServiceCollector::DOMAIN_SSO;
     }
 
     /**
@@ -61,7 +64,7 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
      */
     public function level(): string
     {
-        return HealthcheckServiceCollector::LEVEL_ERROR;
+        return HealthcheckServiceCollector::LEVEL_WARNING;
     }
 
     /**
@@ -69,7 +72,7 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
      */
     public function getSuccessMessage(): string
     {
-        return __('The logs directory {0} and its content are writable.', LOGS);
+        return __('The endpoints for updating the SSO configurations are disabled.');
     }
 
     /**
@@ -77,7 +80,7 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
      */
     public function getFailureMessage(): string
     {
-        return __('The logs directory {0} and its content are not writable.', LOGS);
+        return __('The endpoints for updating the SSO configurations are enabled.');
     }
 
     /**
@@ -86,11 +89,13 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
     public function getHelpMessage(): array|string|null
     {
         return [
-            __('Ensure the logs directory and its content are writable by the webserver user.'),
-            __('You can try:'),
-            'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . LOGS,
-            'sudo chmod 775 $(find ' . LOGS . ' -type d)',
-            'sudo chmod 664 $(find ' . LOGS . ' -type f)',
+            __('It is recommended to disable endpoints for updating the SSO configurations.'),
+            __('Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true.'),
+            __(
+                'Or set {0} to true in {1}.',
+                SsoEndpointsSecurityMiddleware::SECURITY_CONFIG_KEY,
+                CONFIG . 'passbolt.php'
+            ),
         ];
     }
 
@@ -101,7 +106,7 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
      */
     public function cliOption(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
+        return EeHealthcheckServiceCollector::DOMAIN_SSO;
     }
 
     /**
@@ -109,6 +114,6 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
      */
     public function getLegacyArrayKey(): string
     {
-        return 'logWritable';
+        return 'settingsEditEndpointsDisabled';
     }
 }

@@ -25,7 +25,7 @@
     "jquery": "^3.5.1",
     "lockfile-lint": "^4.14.1",
     "openpgp": "^5.11.3",
-    "passbolt-styleguide": "^5.3.1"
+    "passbolt-styleguide": "^5.3.2"
   },
   "scripts": {
     "lint": "npm run lint:lockfile",
