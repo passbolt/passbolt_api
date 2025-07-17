@@ -186,7 +186,7 @@ class ScimController extends AppController
     {
         try {
             if ($schemaId && !Schemas::isValid($schemaId)) {
-                throw new NotFoundException(sprintf('The schema `%s` is invalid or not supported', $schemaId));
+                throw new NotFoundException(sprintf('The Schema `%s` is invalid or not supported', $schemaId));
             }
 
             if ($schemaId) {
@@ -212,7 +212,7 @@ class ScimController extends AppController
     {
         try {
             if ($resourceType && !ResourceTypes::isValid($resourceType)) {
-                throw new NotFoundException('Invalid ResourceType');
+                throw new NotFoundException(sprintf('The ResourceType `%s` is invalid or not supported', $resourceType));
             }
 
             if ($resourceType) {

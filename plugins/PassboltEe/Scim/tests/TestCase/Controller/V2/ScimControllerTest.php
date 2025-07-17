@@ -79,6 +79,11 @@ class ScimControllerTest extends AppIntegrationTestCase
     public CONST FIXTURE_RESPONSE_RESOURCE_TYPES_GROUP = 'resource_types_group.json';
 
     /**
+     * Expected response for `/ResourceTypes/InvalidResource` endpoint
+     */
+    public CONST FIXTURE_RESPONSE_RESOURCE_TYPES_NOT_FOUND = 'resource_types_not_found.json';
+
+    /**
      * Setting ID for the scim endpoint
      *
      * @var string
@@ -201,6 +206,16 @@ class ScimControllerTest extends AppIntegrationTestCase
         $this->get($this->getScimEndpoint('ResourceTypes' . DS . 'Group'));
         $this->assertResponseCode(200);
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_RESOURCE_TYPES_GROUP));
+    }
+
+    /**
+     * Test case
+     */
+    public function testScimControllerResourceTypesGroup_NotFound()
+    {
+        $this->get($this->getScimEndpoint('ResourceTypes' . DS . 'InvalidResource'));
+        $this->assertResponseCode(404);
+        $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_RESOURCE_TYPES_NOT_FOUND));
     }
 
     /**
