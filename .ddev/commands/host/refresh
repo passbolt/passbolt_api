@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+## Description: Run this command after changing the branch to get up-to-date state
+## Usage: refresh
+## Example: "ddev refresh"
+
+set -eo pipefail
+
+ddev composer install --no-interaction
+ddev cake migrations migrate
+ddev cake cache clear_all

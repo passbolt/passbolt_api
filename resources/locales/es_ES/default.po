@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-05-21 12:13\n"
+"PO-Revision-Date: 2025-07-16 10:55\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -1082,7 +1082,7 @@ msgid "You have been requested to add members to {0}"
 msgstr "Se le ha solicitado añadir miembros a {0}"
 
 msgid "{0} removed you from the group {1}"
-msgstr "{0} te ha eliminado del grupo {1}"
+msgstr "{0} le ha eliminado del grupo {1}"
 
 msgid "{0} updated your membership in the group {1}"
 msgstr "{0} ha actualizado su membresía en el grupo {1}"
@@ -1094,7 +1094,7 @@ msgid "You just completed the account recovery process!"
 msgstr "¡Acabas de completar el proceso de recuperación de cuenta!"
 
 msgid "Your account recovery, {0}!"
-msgstr "¡Su cuenta se recupera, {0}!"
+msgstr "¡Su recuperación de cuenta, {0}!"
 
 msgid "You added the password {0}"
 msgstr "Se ha añadido la contraseña {0}"
@@ -5021,7 +5021,7 @@ msgid "Welcome back!"
 msgstr "¡Bienvenido de nuevo!"
 
 msgid "You just requested to recover your passbolt account on this device."
-msgstr "Se ha solicitado recuperar tu cuenta de passbolt en este dispositivo."
+msgstr "Ha solicitado recuperar su cuenta de Passbolt en este dispositivo."
 
 msgid "Make sure you have a backup of your secret key handy."
 msgstr "Asegúrese de tener una copia de seguridad de su clave secreta a mano."
@@ -5069,7 +5069,7 @@ msgid "You have been requested to add members to a group."
 msgstr "Se le ha solicitado añadir miembros a un grupo."
 
 msgid "{0} requested you to add members to a group"
-msgstr "{0} te ha solicitado agregar miembros a un grupo"
+msgstr "{0} le ha solicitado agregar miembros a un grupo"
 
 msgid "Group: {0}"
 msgstr "Grupo: {0}"
@@ -5105,7 +5105,7 @@ msgid "And as group manager you are also authorized to edit the members of the g
 msgstr "Y como administrador de grupo también está autorizado a editar los miembros del grupo."
 
 msgid "You are no longer a member of this group."
-msgstr "Ya no eres miembro de este grupo."
+msgstr "Ya no es miembro de este grupo."
 
 msgid "You are no longer authorized to access the passwords shared with this group."
 msgstr "Ya no tiene autorización para acceder a las contraseñas compartidas con este grupo."
@@ -5114,7 +5114,7 @@ msgid "Please contact {0} or another group manager if this is a mistake."
 msgstr "Póngase en contacto con {0} u otro administrador de grupo si se trata de un error."
 
 msgid "You are now a group manager of this group."
-msgstr "Ahora eres un administrador de grupo de este grupo."
+msgstr "Ahora es un administrador de grupo de este grupo."
 
 msgid "As group manager you are now authorized to edit the members of this group."
 msgstr "Como administrador de grupo ahora está autorizado a editar los miembros de este grupo."
@@ -5123,7 +5123,7 @@ msgid "As member of the group you still have access to all the passwords that ar
 msgstr "Como miembro del grupo todavía tiene acceso a todas las contraseñas que se comparten con este grupo."
 
 msgid "You are no longer a group manager of this group."
-msgstr "Ya no eres un administrador de grupo de este grupo."
+msgstr "Ya no es un administrador de grupo de este grupo."
 
 msgid "You are no longer authorized to edit the members of this group."
 msgstr "Ya no tiene autorización para editar los miembros de este grupo."
