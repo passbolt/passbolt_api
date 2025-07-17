@@ -647,6 +647,8 @@ trait UsersFindersTrait
 
         // TODO: once the data in the action logs has been migrated to the last_logged_in field, remove the line below
         $query->selectAlso(['Users__last_logged_in' => $userLastLoginExpression]);
+        $selectTypeMap = $query->getSelectTypeMap();
+        $selectTypeMap->addDefaults(['Users__last_logged_in' => 'datetime']);
 
         return $query;
     }
