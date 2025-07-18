@@ -165,16 +165,18 @@ class PermissionMatrix
     private static function _loadCsv(string $file, string $orientation = 'resource'): array
     {
         $matrix = [];
+        $csv = [];
         foreach (file($file) as $chunks) {
             $csv[] = str_getcsv($chunks, separator: ',', enclosure: '"', escape: '');
         }
 
         // Extract the csv header
+        /** @var list<string> $header */
         $header = array_shift($csv);
         $header = array_slice($header, 1);
 
         // Build the matrix.
-        foreach ($csv as $key => $value) {
+        foreach ($csv as $value) {
             $row = array_slice($value, 1);
             $row = array_map(function ($p) {
                 return self::$mapPermissionTypes[$p];

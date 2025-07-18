@@ -22,7 +22,7 @@ use Passbolt\TestData\Command\Base\PermissionsDataCommand;
 
 class XssPermissionsDataCommand extends PermissionsDataCommand
 {
-    protected $_truncate = false;
+    protected bool $_truncate = false;
 
     /**
      * Get the permissions data
@@ -33,6 +33,7 @@ class XssPermissionsDataCommand extends PermissionsDataCommand
     {
         $resourcesTask = new XssResourcesDataCommand();
         $resources = $resourcesTask->getData();
+        $permissions = [];
 
         // All the Xss resources as accessible by all the Xss users
         $usersTask = new XssUsersDataCommand();

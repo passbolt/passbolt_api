@@ -22,7 +22,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class ResourceTypesDataCommand extends DataCommand
 {
-    public $entityName = 'ResourceTypes';
+    public string $entityName = 'ResourceTypes';
 
     /**
      * Get the roles data

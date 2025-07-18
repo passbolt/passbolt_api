@@ -21,7 +21,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class RolesDataCommand extends DataCommand
 {
-    public $entityName = 'Roles';
+    public string $entityName = 'Roles';
 
     /**
      * Get the roles data

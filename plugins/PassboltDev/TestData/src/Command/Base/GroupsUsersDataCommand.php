@@ -21,7 +21,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class GroupsUsersDataCommand extends DataCommand
 {
-    public $entityName = 'GroupsUsers';
+    public string $entityName = 'GroupsUsers';
 
     /**
      * Get groups users settings

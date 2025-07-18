@@ -22,7 +22,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class GroupsUsersDataCommand extends DataCommand
 {
-    public $entityName = 'GroupsUsers';
+    public string $entityName = 'GroupsUsers';
 
     /**
      * Get groups users settings
@@ -31,10 +31,8 @@ class GroupsUsersDataCommand extends DataCommand
      */
     protected function getGroupsUsersSettings(): array
     {
-        $usersTable = $this->fetchTable('Users');
         // all users in one group
         $data['all_users']['managers'] = ['admin'];
-        $users = $usersTable->find()->where(['deleted' => 0, 'active' => 1])->all();
         $max = Configure::read('PassboltTestData.scenarios.large.install.count.users');
         for ($i = 0; $i < $max; $i++) {
             $data['all_users']['users'][] = "user_$i";

@@ -23,7 +23,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class ResourcesDataCommand extends DataCommand
 {
-    public $entityName = 'Resources';
+    public string $entityName = 'Resources';
 
     /**
      * Get the resources data
@@ -39,17 +39,23 @@ class ResourcesDataCommand extends DataCommand
         return $resources;
     }
 
-    public function getResourcesScenarioForEachUser()
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public function getResourcesScenarioForEachUser(): array
     {
+        /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = $this->fetchTable('Users');
 
         // Resources by person
         $max = Configure::read('PassboltTestData.scenarios.large.install.count.resources_foreach_user');
         $users = $usersTable->findIndex(Role::USER);
+        $resources = [];
         foreach ($users as $user) {
             for ($i = 0; $i < $max; $i++) {
-                $userId = $user->id;
-                $username = $user->username;
+                $userId = $user->get('id');
+                $username = $user->get('username');
                 $resources[] = [
                     'id' => UuidFactory::uuid("resource.id.resource_{$i}_for_each_user_{$userId}"),
                     'name' => "Resource for $username $i",
@@ -69,9 +75,14 @@ class ResourcesDataCommand extends DataCommand
         return $resources;
     }
 
-    public function getResourcesScenarioForGroupAllUsers()
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public function getResourcesScenarioForGroupAllUsers(): array
     {
         $max = Configure::read('PassboltTestData.scenarios.large.install.count.resources_for_group_all_users');
+        $resources = [];
         for ($i = 0; $i < $max; $i++) {
             $resources[] = [
                 'id' => UuidFactory::uuid("resource.id.resource_{$i}_group_all_users"),

@@ -21,7 +21,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class ProfilesDataCommand extends DataCommand
 {
-    public $entityName = 'Profiles';
+    public string $entityName = 'Profiles';
 
     /**
      * Get the profile data

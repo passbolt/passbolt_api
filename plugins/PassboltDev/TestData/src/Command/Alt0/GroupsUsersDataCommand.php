@@ -16,15 +16,16 @@ declare(strict_types=1);
  */
 namespace Passbolt\TestData\Command\Alt0;
 
-class GroupsUsersDataCommand extends \Passbolt\TestData\Command\Base\GroupsUsersDataCommand
+use Passbolt\TestData\Command\Base\GroupsUsersDataCommand as BaseGroupsUsersDataCommand;
+
+class GroupsUsersDataCommand extends BaseGroupsUsersDataCommand
 {
-    public $fixtureName = 'GroupsUsers';
+    public string $fixtureName = 'GroupsUsers';
 
     /**
      * @inheritDoc
-     * @return array
      */
-    protected function getGroupsUsersSettings()
+    protected function getGroupsUsersSettings(): array
     {
         return [
             'accounting' => [

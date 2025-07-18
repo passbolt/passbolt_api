@@ -50,7 +50,7 @@ class SaveEntity
             try {
                 $this->saveEntity($row);
             } catch (Exception $e) {
-                $this->shell->io->err(sprintf('Data "%s" from "%s" could not be inserted', $row[array_keys($row)[0]]['id'], $this->shell->entityName));
+                $this->shell->io->err(sprintf('Data "%s" from "%s" could not be inserted', $row['id'], $this->shell->entityName)); //phpcs:ignore
                 $this->shell->io->err(print_r($row, true));
                 $this->shell->io->warning($e->getMessage());
 
@@ -72,7 +72,7 @@ class SaveEntity
     {
         $entity = $this->shell->Table->newEmptyEntity();
         $entity->setAccess('*', true);
-        $entity->set($data);
+        $entity->patch($data);
 
         $errors = $entity->getErrors();
         if ($errors) {

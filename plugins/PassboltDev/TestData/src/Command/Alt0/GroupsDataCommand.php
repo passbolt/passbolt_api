@@ -21,7 +21,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class GroupsDataCommand extends DataCommand
 {
-    public $entityName = 'Groups';
+    public string $entityName = 'Groups';
 
     /**
      * Get the groups data

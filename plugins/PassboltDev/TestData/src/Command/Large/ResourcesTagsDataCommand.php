@@ -22,7 +22,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class ResourcesTagsDataCommand extends DataCommand
 {
-    public $entityName = 'ResourcesTags';
+    public string $entityName = 'ResourcesTags';
 
     /**
      * Get the resources tags data
@@ -38,26 +38,32 @@ class ResourcesTagsDataCommand extends DataCommand
         return $resourcesTags;
     }
 
-    public function getResourcesTagsScenarioForPersonalTags()
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public function getResourcesTagsScenarioForPersonalTags(): array
     {
         $resourcesTags = [];
 
+        /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = $this->fetchTable('Users');
+        /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = $this->fetchTable('Resources');
         $tagsTable = $this->fetchTable('Tags');
 
         $users = $usersTable->findIndex(Role::USER);
         foreach ($users as $user) {
-            $tags = $tagsTable->find()->where(['slug LIKE' => "{$user->username}%"])->all();
+            $tags = $tagsTable->find()->where(['slug LIKE' => "{$user->get('username')}%"])->all();
             $options['order']['Resources.modified'] = true;
-            $resources = $resourcesTable->findIndex($user->id, $options);
+            $resources = $resourcesTable->findIndex($user->get('id'), $options);
             foreach ($resources as $resource) {
                 foreach ($tags as $tag) {
                     $resourcesTags[] = [
-                        'id' => UuidFactory::uuid('resource_tag.id.' . $resource->id . '-' . $user->id . '-' . $tag->id),
-                        'resource_id' => $resource->id,
-                        'tag_id' => $tag->id,
-                        'user_id' => $user->id,
+                        'id' => UuidFactory::uuid('resource_tag.id.' . $resource->get('id') . '-' . $user->get('id') . '-' . $tag->get('id')), //phpcs:ignore
+                        'resource_id' => $resource->get('id'),
+                        'tag_id' => $tag->get('id'),
+                        'user_id' => $user->get('id'),
                         'created' => date('Y-m-d H:i:s'),
                     ];
                 }
@@ -67,7 +73,11 @@ class ResourcesTagsDataCommand extends DataCommand
         return $resourcesTags;
     }
 
-    public function getResourcesTagsScenarioForSharedTags()
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public function getResourcesTagsScenarioForSharedTags(): array
     {
         $resourcesTags = [];
 

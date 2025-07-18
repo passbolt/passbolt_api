@@ -22,7 +22,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class FoldersRelationsDataCommand extends DataCommand
 {
-    public $entityName = 'FoldersRelations';
+    public string $entityName = 'FoldersRelations';
 
     /**
      * Get the groups users association data

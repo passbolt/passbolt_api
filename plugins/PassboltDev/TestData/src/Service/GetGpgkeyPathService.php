@@ -39,9 +39,15 @@ class GetGpgkeyPathService
             ->first();
         $prefix = $user->username;
         $uprefix = explode('@', $prefix);
+        /**
+         * @psalm-suppress UndefinedConstant
+         */
         $keyFileName = PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . $uprefix[0] . '_public.key';
 
         if (!file_exists($keyFileName)) {
+            /**
+             * @psalm-suppress UndefinedConstant
+             */
             $keyFileName = PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'passbolt_dummy_key.asc';
             // Generate a new key.
             // This code can be useful when we need to generate keys.

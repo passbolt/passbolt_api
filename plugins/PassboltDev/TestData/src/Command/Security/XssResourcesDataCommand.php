@@ -22,7 +22,7 @@ use Passbolt\TestData\Lib\Security\Xss;
 
 class XssResourcesDataCommand extends ResourcesDataCommand
 {
-    protected $_truncate = false;
+    protected bool $_truncate = false;
 
     /**
      * Get the resource data
@@ -34,7 +34,7 @@ class XssResourcesDataCommand extends ResourcesDataCommand
         $exploits = Xss::getExploits();
         $resources = [];
 
-        foreach ($exploits as $rule => $exploit) {
+        foreach ($exploits as $exploit) {
             $resources[] = [
                 'id' => UuidFactory::uuid('resource.id.xss' . count($resources)),
                 'name' => substr($exploit, 0, 64),

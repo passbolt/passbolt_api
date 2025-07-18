@@ -46,7 +46,7 @@ class FixturizeCommand extends PassboltCommand
     {
         parent::execute($args, $io);
 
-        $commands = Configure::read('PassboltTestData.scenarios.' . $args->getArgument('scenario') . '.fixturize.shellTasks');
+        $commands = Configure::read('PassboltTestData.scenarios.' . $args->getArgument('scenario') . '.fixturize.shellTasks'); //phpcs:ignore
 
         if (!is_null($commands)) {
             $this->initDatabase();

@@ -22,7 +22,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class CommentsDataCommand extends DataCommand
 {
-    public $entityName = 'Comments';
+    public string $entityName = 'Comments';
 
     /**
      * Get the comments data
@@ -33,25 +33,27 @@ class CommentsDataCommand extends DataCommand
     {
         $comments = [];
 
+        /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = $this->fetchTable('Users');
+        /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = $this->fetchTable('Resources');
 
         $users = $usersTable->findIndex(Role::USER);
         foreach ($users as $user) {
             $options['order']['Resources.modified'] = true;
-            $resources = $resourcesTable->findIndex($user->id, $options);
+            $resources = $resourcesTable->findIndex($user->get('id'), $options);
             foreach ($resources as $resource) {
                 $comments[] = [
                     'id' => UuidFactory::uuid(),
                     'parent_id' => null,
-                    'user_id' => $user->id,
-                    'foreign_key' => $resource->id,
+                    'user_id' => $user->get('id'),
+                    'foreign_key' => $resource->get('id'),
                     'foreign_model' => 'Resource',
-                    'content' => 'Comment on ' . $resource->name . ' from ' . $user->username,
+                    'content' => 'Comment on ' . $resource->get('name') . ' from ' . $user->get('username'),
                     'created' => '2018-12-10 13:39:25',
                     'modified' => '2018-12-10 13:39:25',
-                    'created_by' => $user->id,
-                    'modified_by' => $user->id,
+                    'created_by' => $user->get('id'),
+                    'modified_by' => $user->get('id'),
                 ];
             }
         }

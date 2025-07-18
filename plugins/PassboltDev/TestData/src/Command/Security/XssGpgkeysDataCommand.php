@@ -22,7 +22,7 @@ use Passbolt\TestData\Command\Base\GpgkeysDataCommand;
 
 class XssGpgkeysDataCommand extends GpgkeysDataCommand
 {
-    protected $_truncate = false;
+    protected bool $_truncate = false;
 
     /**
      * Return the Gpgkeys data
@@ -33,7 +33,7 @@ class XssGpgkeysDataCommand extends GpgkeysDataCommand
     {
         $usersTask = new XssUsersDataCommand();
         $users = $usersTask->getData();
-        OpenPGPBackendFactory::get();
+        $Gpg = OpenPGPBackendFactory::get();
         $keys = [];
 
         foreach ($users as $user) {
