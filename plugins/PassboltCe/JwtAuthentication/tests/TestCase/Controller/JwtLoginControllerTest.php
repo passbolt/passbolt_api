@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Test\TestCase\Controller;
 
+use App\Event\UpdateUserLastLoggedInListener;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\GpgkeyFactory;
@@ -100,6 +101,12 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertSame($verifyToken, $challenge->verify_token);
         $this->assertSame(1, AuthenticationTokenFactory::find()->where(['token' => $challenge->refresh_token, 'user_id' => $user->id])->all()->count());
         $this->assertSame(1, AuthenticationTokenFactory::find()->where(['token' => $challenge->verify_token, 'user_id' => $user->id])->all()->count());
+
+        // Check user login success event triggered
+        $this->assertEventFired(UpdateUserLastLoggedInListener::EVENT_USER_LOGIN_SUCCESS);
+        // Disable hydration to temporarily disable last_logged_in virtual field accessor
+        $updatedUser = UserFactory::find()->where(['id' => $user->id])->disableHydration()->firstOrFail();
+        $this->assertNotNull($updatedUser['last_logged_in']);
 
         // Assert login action log
         $this->assertOneActionLog();
