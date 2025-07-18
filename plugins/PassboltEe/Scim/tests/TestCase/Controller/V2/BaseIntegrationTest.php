@@ -1,0 +1,89 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         3.6.0
+ */
+
+namespace Passbolt\Scim\Test\TestCase\Controller\V2;
+
+use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\Scim\Test\Utility\ScimTestPostDataTrait;
+use Passbolt\Scim\Test\Utility\ScimTestUsersTrait;
+
+/**
+ * BaseIntegrationTest class
+ */
+abstract class BaseIntegrationTest extends AppIntegrationTestCase
+{
+    use ScimTestPostDataTrait;
+    use ScimTestUsersTrait;
+
+    /**
+     * Placeholder for setting id value to replace in expected SCIM responses
+     */
+    public const PLACEHOLDER_SETTING_ID = 'PLACEHOLDER_SETTING_ID';
+
+    /**
+     * Path to fixture files for SCIM responses
+     */
+    public const FIXTURE_SCIM_PATH = PLUGINS . 'PassboltEe' . DS . 'Scim' . DS . 'tests' . DS . 'Fixture' . DS . 'Scim' . DS;
+
+    /**
+     * Setting ID for the scim endpoint
+     *
+     * @var string
+     */
+    protected string $settingId = '';
+
+    /**
+     * @inheritDoc
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin('Scim');
+        // @todo: Generate a valid settingId when SCIM auth is fixed
+        $this->settingId = '123456789';
+    }
+
+    /**
+     * @param string $action
+     * @return string
+     */
+    protected function getScimEndpoint(string $action): string
+    {
+        return '/scim/v2/' . $this->settingId . '/' . $action;
+    }
+
+    /**
+     * @param string $text
+     * @return string
+     */
+    protected function replaceSettingIdString(string $text): string
+    {
+        return str_replace(self::PLACEHOLDER_SETTING_ID, $this->settingId, $text);
+    }
+
+    /**
+     * Return the content of a scim fixture response, replacing the setting id placeholder if needed
+     * Note: trim is done to remove possible end of file break line in the fixture file
+     *
+     * @param string $filename
+     * @return string
+     */
+    protected function getScimFixtureData(string $filename): string
+    {
+        return trim($this->replaceSettingIdString(file_get_contents(self::FIXTURE_SCIM_PATH . $filename)));
+    }
+}

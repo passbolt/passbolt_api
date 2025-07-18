@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Utility;
 
+use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 
 /**
@@ -11,6 +12,7 @@ use Cake\Routing\Router;
 class ScimTools
 {
     public const API_URL_PLACEHOLDER = '{scimUrl}';
+    public const API_FORMAT_DATETIME = 'Y-m-d\TH:i:s.v\Z';
 
     /**
      * @param string $json
@@ -20,5 +22,14 @@ class ScimTools
     public static function replacePlaceholders(string $json, string $settingId): string
     {
         return str_replace('{scimUrl}', Router::url('scim/v2/' . $settingId, true), $json);
+    }
+
+    /**
+     * @param \Cake\I18n\DateTime $dateTime
+     * @return string
+     */
+    public static function formatDateTimeToScim(DateTime $dateTime): string
+    {
+        return $dateTime->format(self::API_FORMAT_DATETIME);
     }
 }

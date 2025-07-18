@@ -3,5 +3,5 @@
         "urn:ietf:params:scim:api:messages:2.0:Error"
     ],
     "status": 404,
-    "detail": "The schema `InvalidSchema` is invalid or not supported"
+    "detail": "The Schema `InvalidSchema` is invalid or not supported"
 }

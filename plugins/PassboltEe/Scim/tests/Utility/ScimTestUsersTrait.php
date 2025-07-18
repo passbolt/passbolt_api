@@ -17,15 +17,28 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\Utility;
 
+use App\Model\Entity\User;
 use Cake\I18n\DateTime;
+use Cake\ORM\TableRegistry;
 use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
+use Passbolt\Scim\Utility\ScimTools;
 
 /**
  * Trait with utility function for testing scim users operations
  */
 trait ScimTestUsersTrait
 {
+    public const DATETIME_TEST_NOW = '2025-07-18 12:00:00';
+
+    /**
+     * @return void
+     */
+    protected function setTestNow(): void
+    {
+        DateTime::setTestNow(self::DATETIME_TEST_NOW);
+    }
+
     /**
      * @param string $text
      * @param \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry
@@ -34,7 +47,10 @@ trait ScimTestUsersTrait
      */
     public function replaceUserPlaceholders(string $text, ScimEntry $scimEntry, int $userIndex): string
     {
-        return str_replace('PLACEHOLDER_USER_ID_' . $userIndex, $scimEntry->foreign_key, $text);
+        $text = str_replace('PLACEHOLDER_SCIM_ENTRY_CREATED_' . $userIndex, ScimTools::formatDateTimeToScim($scimEntry->created), $text);
+        $text = str_replace('PLACEHOLDER_SCIM_ENTRY_MODIFIED_' . $userIndex, ScimTools::formatDateTimeToScim($scimEntry->modified), $text);
+
+        return str_replace('PLACEHOLDER_USER_ID_' . $userIndex, $scimEntry->user?->id, $text);
     }
 
     /**
@@ -81,5 +97,44 @@ trait ScimTestUsersTrait
                 'last_name' => 'Scim',
             ],
         ])->persist();
+    }
+
+    /**
+     * @param string $username
+     * @return \App\Model\Entity\User|null
+     */
+    public function getUserByUsername(string $username): ?User
+    {
+        /** @var \App\Model\Table\UsersTable $usersTable */
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
+        /** @var \App\Model\Entity\User|null $user */
+        $user = $usersTable
+            ->find()
+            ->contain(['Profiles'])
+            ->where([$usersTable->aliasField('username') => $username])
+            ->first();
+
+        return $user;
+    }
+
+    /**
+     * @param string $scimName
+     * @param bool $addUser
+     * @return \Passbolt\Scim\Model\Entity\ScimEntry|null
+     */
+    public function getScimEntryByName(string $scimName, bool $addUser = false): ?ScimEntry
+    {
+        /** @var \Passbolt\Scim\Model\Table\ScimEntriesTable $scimEntriesTable */
+        $scimEntriesTable = TableRegistry::getTableLocator()->get('Passbolt/Scim.ScimEntries');
+        $query = $scimEntriesTable
+            ->find()
+            ->where([$scimEntriesTable->aliasField('scim_name') => $scimName]);
+        if ($addUser) {
+            $query->contain(['Users.Profiles']);
+        }
+        /** @var \Passbolt\Scim\Model\Entity\ScimEntry|null $scimEntry */
+        $scimEntry = $query->first();
+
+        return $scimEntry;
     }
 }

@@ -19,29 +19,13 @@ namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
-use App\Test\Lib\AppIntegrationTestCase;
-use Cake\I18n\DateTime;
-use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
-use Passbolt\Scim\Test\Utility\ScimTestUsersTrait;
 
 /**
  * ScimControllerTest class
  */
-class ScimControllerTest extends AppIntegrationTestCase
+class ScimControllerTest extends BaseIntegrationTest
 {
-    use ScimTestUsersTrait;
-
-    /**
-     * Placeholder for setting id value to replace in expected SCIM responses
-     */
-    public const PLACEHOLDER_SETTING_ID = 'PLACEHOLDER_SETTING_ID';
-
-    /**
-     * Path to fixture files for SCIM responses
-     */
-    public const FIXTURE_SCIM_PATH = PLUGINS . 'PassboltEe' . DS . 'Scim' . DS . 'tests' . DS . 'Fixture' . DS . 'Scim' . DS;
-
     /**
      * Expected response for `/ServiceProviderConfig` endpoint
      */
@@ -98,54 +82,19 @@ class ScimControllerTest extends AppIntegrationTestCase
     public CONST FIXTURE_RESPONSE_USERS_LIST_MATCH = 'Users' . DS . 'users_list_response_filter_match.json';
 
     /**
-     * Expected response for `/Users` endpoint with matching filter
+     * Expected response for `/Users` endpoint withNO  matching filter
      */
     public CONST FIXTURE_RESPONSE_USERS_LIST_NO_MATCH = 'Users' . DS . 'users_list_response_filter_no_match.json';
 
     /**
-     * Setting ID for the scim endpoint
-     *
-     * @var string
+     * Expected response for POST `/Users` endpoint
      */
-    protected string $settingId = '';
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->enableFeaturePlugin('Scim');
-        // @todo: Generate a valid settingId when SCIM auth is fixed
-        $this->settingId = '123456789';
-    }
+    public CONST FIXTURE_RESPONSE_USERS_ADD_SUCCESS = 'Users' . DS . 'users_add_success.json';
 
     /**
-     * @param string $action
-     * @return string
+     * Expected response for POST `/Users` endpoint for an existing user
      */
-    protected function getScimEndpoint(string $action): string
-    {
-        return '/scim/v2/' . $this->settingId . '/' . $action;
-    }
-
-    /**
-     * @param string $text
-     * @return string
-     */
-    protected function replaceSettingIdString(string $text): string
-    {
-        return str_replace(self::PLACEHOLDER_SETTING_ID, $this->settingId, $text);
-    }
-
-    /**
-     * Return the content of a scim fixture response, replacing the setting id placeholder if needed
-     * Note: trim is done to remove possible end of file break line in the fixture file
-     *
-     * @param string $filename
-     * @return string
-     */
-    protected function getScimFixtureData(string $filename): string
-    {
-        return trim($this->replaceSettingIdString(file_get_contents(self::FIXTURE_SCIM_PATH . $filename)));
-    }
+    public CONST FIXTURE_RESPONSE_USERS_ADD_CONFLICT_EXIST = 'Users' . DS . 'users_add_conflict_exist.json';
 
     /**
      * Test case
@@ -247,7 +196,7 @@ class ScimControllerTest extends AppIntegrationTestCase
      */
     public function testScimControllerUsersList(string $endpoint, string $expectedResponseFile)
     {
-        DateTime::setTestNow('2025-07-18 12:00:00');
+        $this->setTestNow();
         $scimEntry1 = $this->createScimUser1();
         $scimEntry2 = $this->createScimUser2();
 
@@ -284,121 +233,41 @@ class ScimControllerTest extends AppIntegrationTestCase
     }
 
     /**
-     * Test case for POST /Users endpoint
-     *
-     * Scenario: The user does not exist in passbolt and there is no SCIM entry table for that user.
+     * Test case for success POST /Users endpoint
      */
     public function testScimControllerUsersPost_Success()
     {
+        $this->setTestNow();
+
         /** @var \App\Model\Entity\Role $role */
-        $role = RoleFactory::make()->user()->persist();
+        RoleFactory::make()->user()->persist();
+        // @todo: make this user the one selected in the scim settings for logs
         UserFactory::make()->admin()->persist();
 
-        /** @var \App\Model\Table\UsersTable $usersTable */
-        $usersTable = $this->fetchTable('Users');
-        /** @var \Passbolt\Scim\Model\Table\ScimEntriesTable $scimEntriesTable */
-        $scimEntriesTable = $this->fetchTable('Scim.ScimEntries');
-
         $scimName = 'user1@username.com';
-        $externalId = 'scim_user_1';
-        $email = 'user1@test.com';
-        $this->post($this->getScimEndpoint('Users'), [
-            'schemas' => [
-                'urn:ietf:params:scim:schemas:core:2.0:User',
-                'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User',
-            ],
-            'externalId' => $externalId,
-            'userName' => $scimName,
-            'active' => true,
-            'displayName' => 'User 1 Scim',
-            'emails' => [
-                [
-                    'primary' => true,
-                    'type' => 'work',
-                    'value' => $email,
-                ]
-            ],
-            'meta' => [
-                'resourceType' => 'User',
-            ],
-            'name' => [
-                'formatted' => 'User 1 Scim',
-                'familyName' => 'Scim',
-                'givenName' => 'User 1',
-            ],
-        ]);
+        $this->post($this->getScimEndpoint('Users'), $this->getUserPostData($scimName));
         $this->assertResponseCode(201);
 
-        $this->assertResponseContains('urn:ietf:params:scim:schemas:core:2.0:User');
-        $this->assertResponseContains('"externalId": "' . $externalId . '"');
-        $this->assertResponseContains('"userName": "' . $scimName . '"');
-        $this->assertResponseContains('"value": "' . $email . '"');
-        $this->assertResponseContains('"familyName": "Scim"');
-        $this->assertResponseContains('"givenName": "User 1"');
-
-        /** @var \App\Model\Entity\User|null $existingUser */
-        $existingUser = $usersTable
-            ->find()
-            ->where(['Users.username' => $email])
-            ->first();
-        $this->assertNotNull($existingUser);
-        $this->assertSame($email, $existingUser->username);
-        $this->assertSame($role->id, $existingUser->role_id);
-
-        /** @var \Passbolt\Scim\Model\Entity\ScimEntry|null $existingScimEntry */
-        $existingScimEntry = $scimEntriesTable
-            ->find()
-            ->where(['ScimEntries.scim_name' => $scimName])
-            ->first();
-        $this->assertNotNull($existingScimEntry);
-        $this->assertSame(ScimEntry::FOREIGN_MODEL_USERS, $existingScimEntry->foreign_model);
-        $this->assertSame($existingUser->id, $existingScimEntry->foreign_key);
-        $this->assertSame($scimName, $existingScimEntry->scim_name);
-        $this->assertSame($externalId, $existingScimEntry->external_identifier);
-
+        $scimEntry = $this->getScimEntryByName($scimName, addUser: true);
+        $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_ADD_SUCCESS);
+        $expectedResponse = $this->replaceUserPlaceholders($expectedResponse, $scimEntry, 1);
+        $this->assertResponseEquals($expectedResponse);
     }
 
     /**
-     * Test case for POST /Users endpoint
-     *
-     * Scenario: The user does exist in passbolt and there is a SCIM entry table for that user but the IdP sends a post.
+     * Test case for POST /Users endpoint with exist conflict
      */
-    public function testScimControllerUsersPost_Conflict()
+    public function testScimControllerUsersPost_ConflictExist()
     {
-        $scimEntry = ScimEntryFactory::make()->withUser()->persist();
+        $scimName = 'user1@username.com';
+        $email = 'user1@email.com';
+        $scimEntry = ScimEntryFactory::make(['scim_name' => $scimName])->withUser(['username' => $email])->persist();
 
-        $scimName = $scimEntry->scim_name;
-        $externalId = $scimEntry->external_identifier;
-        $email = $scimEntry->user->username;
-        $this->post($this->getScimEndpoint('Users'), [
-            'schemas' => [
-                'urn:ietf:params:scim:schemas:core:2.0:User',
-                'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User',
-            ],
-            'externalId' => $externalId,
-            'userName' => $scimName,
-            'active' => true,
-            'displayName' => 'User 1 Scim',
-            'emails' => [
-                [
-                    'primary' => true,
-                    'type' => 'work',
-                    'value' => $email,
-                ]
-            ],
-            'meta' => [
-                'resourceType' => 'User',
-            ],
-            'name' => [
-                'formatted' => 'User 1 Scim',
-                'familyName' => 'Scim',
-                'givenName' => 'User 1',
-            ],
-        ]);
-
+        $this->post($this->getScimEndpoint('Users'), $this->getUserPostData($scimName, email: $email));
         $this->assertResponseCode(409);
-        $this->assertResponseContains('urn:ietf:params:scim:api:messages:2.0:Error');
-        $this->assertResponseContains('"detail": "The Users resource with userName `' . $scimName . '` already exist with id');
-        $this->assertResponseContains('"scimType": "uniqueness"');
+
+        $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_ADD_CONFLICT_EXIST);
+        $expectedResponse = $this->replaceUserPlaceholders($expectedResponse, $scimEntry, 1);
+        $this->assertResponseEquals($expectedResponse);
     }
 }

@@ -39,6 +39,7 @@ use Passbolt\Scim\Utility\ResourceInterface;
 use Passbolt\Scim\Utility\Resources;
 use Passbolt\Scim\Utility\SchemaIdentifier;
 use Passbolt\Scim\Utility\ScimObjectInterface;
+use Passbolt\Scim\Utility\ScimTools;
 
 /**
  * UserResource class
@@ -264,6 +265,11 @@ class UserResource implements ScimObjectInterface, ResourceInterface
                 scimType: ScimException::SCIM_TYPE_UNIQUENESS,
             );
         }
+
+        $profileData = [
+            'first_name' => $this->firstName,
+            'last_name' => $this->lastName,
+        ];
         if (!$user) {
             // @todo: obtain admin configured in SCIM settings? for logs, etc..
             $adminUser = $this->Users->findFirstAdmin();
@@ -276,10 +282,7 @@ class UserResource implements ScimObjectInterface, ResourceInterface
                 $user = $this->Users->register([
                     'username' => $this->email,
                     'disabled' => $disabled,
-                    'profile' => [
-                        'first_name' => $this->firstName,
-                        'last_name' => $this->lastName,
-                    ],
+                    'profile' => $profileData,
                 ], $uac);
             } catch (ValidationException $exception) {
                 // @todo: parse validation errors in a user friendly message
@@ -289,6 +292,20 @@ class UserResource implements ScimObjectInterface, ResourceInterface
                 ScimLog::error($exception->getMessage());
                 ScimLog::error($exception->getTraceAsString());
                 throw new ConflictException('Unexpected error', scimType: ScimException::SCIM_TYPE_INVALID_VALUE);
+            }
+        } else {
+            // Update profile if user exit but entry dont
+            $profile = $user->profile;
+            $this->Users->Profiles->patchEntity($profile, $profileData, [
+                'accessibleFields' => [
+                    'first_name' => true,
+                    'last_name' => true,
+                ]
+            ]);
+            if (!$this->Users->Profiles->save($profile)) {
+                // @todo: parse validation errors in a user friendly message
+                $message = 'Invalid Values: ' . json_encode($profile->getErrors());
+                throw new ConflictException($message, scimType: ScimException::SCIM_TYPE_INVALID_VALUE);
             }
         }
 
@@ -398,8 +415,8 @@ class UserResource implements ScimObjectInterface, ResourceInterface
             'externalId' => $this->externalId,
             'meta' => [
                 'resourceType' => 'User',
-                'created' => $this->userEntity->scim_entry->created->format('Y-m-d\TH:i:s.v\Z'),
-                'lastModified' => $this->userEntity->scim_entry->modified->format('Y-m-d\TH:i:s.v\Z'),
+                'created' => ScimTools::formatDateTimeToScim($this->userEntity->scim_entry->created),
+                'lastModified' => ScimTools::formatDateTimeToScim($this->userEntity->scim_entry->modified),
             ],
             'userName' => $this->userName,
             'active' => (bool)$this->active,
