@@ -38,7 +38,7 @@ abstract class ScimBaseSettingsService
     protected function getRenderedValue(OrganizationSetting $setting, ScimSettingsForm $form): array
     {
         $data = json_decode($setting->value, true, 2);
-        return array_merge(
+        $renderedValue = array_merge(
             $form->getData(),
             [
                 'id' => $setting->id,
@@ -51,5 +51,9 @@ abstract class ScimBaseSettingsService
                 'modified_by' => $setting->modified_by,
             ]
         );
+
+        unset($renderedValue['secret_token']);
+
+        return $renderedValue;
     }
 }

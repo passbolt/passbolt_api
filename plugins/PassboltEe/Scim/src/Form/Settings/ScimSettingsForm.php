@@ -82,6 +82,39 @@ class ScimSettingsForm extends Form
                 }
             ]);
 
+        return $validator;
+    }
+
+    /**
+     * Update validation to ensure setting_id is not passed
+     *
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
+     */
+    public function validationUpdate(Validator $validator): Validator
+    {
+        $validator = $this->validationDefault($validator);
+
+        $validator
+            ->add('setting_id', 'ensureEmpty', [
+                'rule' => function ($value, array $context) {
+                    return __('The Setting ID cannot be passed on update.');
+                }
+            ]);
+
+        return $validator;
+    }
+
+    /**
+     * Extended validation to include checking for setting_id duplicates on creation
+     *
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
+     */
+    public function validationExtended(Validator $validator): Validator
+    {
+        $validator = $this->validationDefault($validator);
+
         $validator
             ->notEmptyString('setting_id', __('The ID for the SCIM settings should not be empty.'))
             ->uuid('setting_id', __('The ID for the SCIM settings should be a valid UUID.'))
@@ -93,23 +126,15 @@ class ScimSettingsForm extends Form
                         $OrganizationSettings->aliasField('property') => ScimBaseSettingsService::SCIM_SETTINGS_PROPERTY_NAME,
                         $query->newExpr()->like($OrganizationSettings->aliasField('value'), "%$value%")
                     ];
+                    $result = $query->where($where)->all();
 
-                    $id = Hash::get($context, 'data.id');
-
-                    if ($id) {
-                        $where[] = $query->newExpr()->notEq($OrganizationSettings->aliasField('id'), $id);
-                    }
-
-                    $current = $query->where($where)->first();
-
-                    if (!$current) {
+                    if ($result->count() === 0) {
                         return true;
                     }
 
                     return __('The ID for the SCIM settings is already in use.');
                 }
             ]);
-
 
         return $validator;
     }
@@ -131,7 +156,6 @@ class ScimSettingsForm extends Form
     protected function sanitizeData(array $data): array
     {
         return [
-            'id' => $data['id'] ?? null,
             'setting_id' => $data['setting_id'] ?? null,
             'secret_token' => $data['secret_token'] ?? null,
             'scim_user_id' => $data['scim_user_id'] ?? null,

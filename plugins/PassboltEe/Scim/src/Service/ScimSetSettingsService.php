@@ -61,7 +61,10 @@ class ScimSetSettingsService extends ScimBaseSettingsService
             $data['id'] = $id;
         }
 
-        if (!$form->execute($data)) {
+        // Using this approach to avoid checking for setting_id duplicates on update
+        $validate = $id ? 'update' : 'extended';
+
+        if (!$form->execute($data, ['validate' => $validate])) {
             throw new FormValidationException(
                 __('Could not validate the SCIM settings.'),
                 $form
@@ -80,6 +83,12 @@ class ScimSetSettingsService extends ScimBaseSettingsService
         if ($current && $current->id !== $id) {
             throw new NotFoundException(__('The uuid in the url doesn\'t match any known setting record.'));
         }
+
+        if ($current) {
+            $currentValue = json_decode($current->value, true);
+            $form->set('setting_id', Hash::get($currentValue, 'setting_id'));
+        }
+
         $value = json_encode($form->getData());
         $setting = $OrganizationSettings->createOrUpdateSetting(
             self::SCIM_SETTINGS_PROPERTY_NAME,
@@ -102,7 +111,7 @@ class ScimSetSettingsService extends ScimBaseSettingsService
      * @return string
      * @throws \Exception
      */
-    public function generateToken(): string
+    public static function generateToken(): string
     {
         $prefix = self::SCIM_SECRET_TOKEN_PREFIX;
         $token = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(random_bytes(3600)));

@@ -99,7 +99,7 @@ class ScimSettingsCommand extends PassboltCommand
                 $io->success('Settings have been deleted successfully.');
             } else {
                 $service = new ScimSetSettingsService($uac);
-                $settings = $service->saveSettings(['scim_user_id' => $user->id . 'das', 'setting_id' => UuidFactory::uuid(), 'secret_token' => $service->generateToken()], $id);
+                $settings = $service->saveSettings(['scim_user_id' => $user->id . 'das', 'setting_id' => UuidFactory::uuid(), 'secret_token' => ScimSetSettingsService::generateToken()], $id);
                 $io->success('Settings were successfully generated/updated. Please check them');
                 $io->out(json_encode($settings));
             }
