@@ -48,14 +48,4 @@ class MetadataTypesSettingsAssertServiceTest extends AppTestCaseV5
     {
         $this->markTestIncomplete();
     }
-
-    /**
-     * Error: v5 default selected but metadata key does not exist or is not available to all
-     *
-     * @return void
-     */
-    public function testMetadataTypesSettingsAssertService_ErrorRules_DefaultCryptoNoBueno(): void
-    {
-        $this->markTestIncomplete();
-    }
 }

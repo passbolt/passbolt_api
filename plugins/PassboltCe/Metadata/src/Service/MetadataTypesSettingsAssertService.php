@@ -16,18 +16,24 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Service;
 
+use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\FormValidationException;
+use Cake\Database\Expression\QueryExpression;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\Form\MetadataTypesSettingsForm;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 
 class MetadataTypesSettingsAssertService
 {
+    use LocatorAwareTrait;
+
     /**
      * Validates the setting and return them
      *
      * @param array $data untrusted input
      * @return \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto dto
      * @throws \App\Error\Exception\FormValidationException if the data does not validate
+     * @throws \App\Error\Exception\CustomValidationException if not active metadata key is found in DB and v5 is enabled
      */
     public function assert(array $data): MetadataTypesSettingsDto
     {
@@ -40,8 +46,35 @@ class MetadataTypesSettingsAssertService
 
         // TODO "Build rules"
         // Admin select a default resource version but all resource types are deleted for this version
-        // Admin selects v5 but metadata keys do not exist or are not available to all
 
         return $dto;
+    }
+
+    /**
+     * @param \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto $dto DTO
+     * @return void
+     * @throws \App\Error\Exception\CustomValidationException if no active metadata key is found in DB and v5 is enabled
+     */
+    public function assertThatAnActiveMetadataKeyExistsWhenV5IsEnabled(MetadataTypesSettingsDto $dto): void
+    {
+        if (!$dto->isV5Enabled()) {
+            return;
+        }
+
+        $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
+
+        $activeMetadataKey = $metadataKeysTable->find()
+            ->where(function (QueryExpression $exp) {
+                return $exp->isNull('deleted');
+            })
+            ->where(function (QueryExpression $exp) {
+                return $exp->isNull('expired');
+            })->first();
+
+        if (!$activeMetadataKey) {
+            $msg = __('Unable to save the metadata settings.') . ' ' .
+                __('An active metadata key could not be found, create a key first.');
+            throw new CustomValidationException($msg);
+        }
     }
 }

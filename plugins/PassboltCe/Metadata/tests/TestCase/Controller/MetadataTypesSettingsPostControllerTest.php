@@ -24,6 +24,7 @@ use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Core\Configure;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
 /**
@@ -58,6 +59,8 @@ class MetadataTypesSettingsPostControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataTypesSettingsPostController_Success_v5(): void
     {
+        // Create an active metadata key
+        MetadataKeyFactory::make()->persist();
         [$loggedInUser, $otherAdmin] = UserFactory::make(2)->admin()->persist();
         // Create a disabled admin and a user to test emails
         UserFactory::make()->admin()->disabled()->persist();

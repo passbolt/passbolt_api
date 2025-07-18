@@ -108,6 +108,10 @@ class UpdateMetadataTypesSettingsCommand extends PassboltCommand
             ->addOption(MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE, [
                 'required' => false,
                 'help' => __('Set allow downgrade of V5 items to V4 setting.'),
+            ])
+            ->addOption(MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE, [
+                'required' => false,
+                'help' => __('Set allow upgrade of V4 items to V5 setting.'),
             ]);
 
         return $parser;
@@ -200,6 +204,7 @@ class UpdateMetadataTypesSettingsCommand extends PassboltCommand
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS,
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS,
             MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE,
+            MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE,
         ];
 
         $data = [];
