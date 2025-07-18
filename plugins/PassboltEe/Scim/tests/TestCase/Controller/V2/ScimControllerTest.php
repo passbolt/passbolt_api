@@ -20,18 +20,22 @@ namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use Cake\I18n\DateTime;
 use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
+use Passbolt\Scim\Test\Utility\ScimTestUsersTrait;
 
 /**
  * ScimControllerTest class
  */
 class ScimControllerTest extends AppIntegrationTestCase
 {
+    use ScimTestUsersTrait;
+
     /**
      * Placeholder for setting id value to replace in expected SCIM responses
      */
-    public const SETTING_ID_PLACEHOLDER = 'SETTING_ID_PLACEHOLDER';
+    public const PLACEHOLDER_SETTING_ID = 'PLACEHOLDER_SETTING_ID';
 
     /**
      * Path to fixture files for SCIM responses
@@ -84,6 +88,21 @@ class ScimControllerTest extends AppIntegrationTestCase
     public CONST FIXTURE_RESPONSE_RESOURCE_TYPES_NOT_FOUND = 'resource_types_not_found.json';
 
     /**
+     * Expected response for `/Users` endpoint with no filter
+     */
+    public CONST FIXTURE_RESPONSE_USERS_LIST = 'Users' . DS . 'users_list_response.json';
+
+    /**
+     * Expected response for `/Users` endpoint with matching filter
+     */
+    public CONST FIXTURE_RESPONSE_USERS_LIST_MATCH = 'Users' . DS . 'users_list_response_filter_match.json';
+
+    /**
+     * Expected response for `/Users` endpoint with matching filter
+     */
+    public CONST FIXTURE_RESPONSE_USERS_LIST_NO_MATCH = 'Users' . DS . 'users_list_response_filter_no_match.json';
+
+    /**
      * Setting ID for the scim endpoint
      *
      * @var string
@@ -113,7 +132,7 @@ class ScimControllerTest extends AppIntegrationTestCase
      */
     protected function replaceSettingIdString(string $text): string
     {
-        return str_replace(self::SETTING_ID_PLACEHOLDER, $this->settingId, $text);
+        return str_replace(self::PLACEHOLDER_SETTING_ID, $this->settingId, $text);
     }
 
     /**
@@ -216,6 +235,52 @@ class ScimControllerTest extends AppIntegrationTestCase
         $this->get($this->getScimEndpoint('ResourceTypes' . DS . 'InvalidResource'));
         $this->assertResponseCode(404);
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_RESOURCE_TYPES_NOT_FOUND));
+    }
+
+    /**
+     * Test case
+     *
+     * @param string $endpoint
+     * @param string $expectedResponseFile
+     * @return void
+     * @dataProvider providerRestScimControllerUsersList
+     */
+    public function testScimControllerUsersList(string $endpoint, string $expectedResponseFile)
+    {
+        DateTime::setTestNow('2025-07-18 12:00:00');
+        $scimEntry1 = $this->createScimUser1();
+        $scimEntry2 = $this->createScimUser2();
+
+        $expectedResponse = $this->getScimFixtureData($expectedResponseFile);
+        $expectedResponse = $this->replaceUserPlaceholders($expectedResponse, $scimEntry1, 1);
+        $expectedResponse = $this->replaceUserPlaceholders($expectedResponse, $scimEntry2, 2);
+
+        $this->get($this->getScimEndpoint($endpoint));
+        $this->assertResponseCode(200);
+        $this->assertResponseEquals($expectedResponse);
+    }
+
+    /**
+     * Provider for testScimControllerUsersList
+     *
+     * @return array[]
+     */
+    public static function providerRestScimControllerUsersList(): array
+    {
+        return [
+            'no-filter' => [
+                'endpoint' => 'Users',
+                'expectedResponseFile' => self::FIXTURE_RESPONSE_USERS_LIST,
+            ],
+            'no-match-filter' => [
+                'endpoint' => 'Users?filter=userName+eq+%22user-not-exist%40username.com%22',
+                'expectedResponseFile' => self::FIXTURE_RESPONSE_USERS_LIST_NO_MATCH,
+            ],
+            'match-filter' => [
+                'endpoint' => 'Users?filter=userName+eq+%22user1%40username.com%22',
+                'expectedResponseFile' => self::FIXTURE_RESPONSE_USERS_LIST_MATCH,
+            ],
+        ];
     }
 
     /**

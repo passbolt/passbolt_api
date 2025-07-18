@@ -8,7 +8,7 @@
     "description": "https:\/\/tools.ietf.org\/html\/rfc7643#section-8.7.1",
     "schema": "urn:ietf:params:scim:schemas:core:2.0:Group",
     "meta": {
-        "location": "https:\/\/passbolt-pro-api.ddev.site\/scim\/v2\/SETTING_ID_PLACEHOLDER\/ResourceTypes\/Group",
+        "location": "https:\/\/passbolt-pro-api.ddev.site\/scim\/v2\/PLACEHOLDER_SETTING_ID\/ResourceTypes\/Group",
         "resourceType": "ResourceType"
     }
 }

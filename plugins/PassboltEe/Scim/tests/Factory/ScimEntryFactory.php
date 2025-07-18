@@ -64,15 +64,15 @@ class ScimEntryFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param UserFactory|null $userFactory user factory
-     * @return ScimEntryFactory
+     * @param \App\Test\Factory\UserFactory|array|null $user
+     * @return \Passbolt\Scim\Test\Factory\ScimEntryFactory
      */
-    public function withUser(?UserFactory $userFactory = null): ScimEntryFactory
+    public function withUser(UserFactory|array|null $user = null): ScimEntryFactory
     {
-        if (!isset($userFactory)) {
-            $userFactory = UserFactory::make()->user();
+        if (!isset($user)) {
+            $user = UserFactory::make()->user();
         }
-        $this->with('Users', $userFactory);
+        $this->with('Users', $user);
 
         return $this->setField('foreign_model', ScimEntry::FOREIGN_MODEL_USERS);
     }

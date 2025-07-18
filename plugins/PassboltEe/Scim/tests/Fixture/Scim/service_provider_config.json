@@ -35,7 +35,7 @@
         }
     ],
     "meta": {
-        "location": "https:\/\/passbolt-pro-api.ddev.site\/scim\/v2\/SETTING_ID_PLACEHOLDER\/ServiceProviderConfig",
+        "location": "https:\/\/passbolt-pro-api.ddev.site\/scim\/v2\/PLACEHOLDER_SETTING_ID\/ServiceProviderConfig",
         "resourceType": "ServiceProviderConfig",
         "created": "2023-04-26T00:00Z",
         "lastModified": "2023-04-26T00:00Z",
