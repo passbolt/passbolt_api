@@ -11,12 +11,12 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         5.3.0
+ * @since         5.4.0
  */
 
 use Migrations\AbstractMigration;
 
-class V530AddLastLoggedInToUsers extends AbstractMigration
+class V540AddLastLoggedInToUsers extends AbstractMigration
 {
     /**
      * Change Method.

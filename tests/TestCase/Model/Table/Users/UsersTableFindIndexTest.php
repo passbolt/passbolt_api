@@ -58,7 +58,8 @@ class UsersTableFindIndexTest extends TestCase
     }
 
     /**
-     * Last logged in should be returning calculated results value from action logs and not from the actual field value.
+     * Last logged in value is calculated result value from action logs if `users.last_logged_in` field value is null.
+     * Otherwise, it should return `users.last_logged_in` field value.
      *
      * @covers \App\Model\Traits\Users\UsersFindersTrait
      * @return void
@@ -79,7 +80,7 @@ class UsersTableFindIndexTest extends TestCase
             ->loginAction()
             ->userId($admin->id)
             ->persist();
-        $actionLogLatest = ActionLogFactory::make(['created' => DateTime::now()])
+        ActionLogFactory::make(['created' => DateTime::now()])
             ->loginAction()
             ->userId($admin->id)
             ->persist();
@@ -91,7 +92,7 @@ class UsersTableFindIndexTest extends TestCase
         foreach ($result->all()->toArray() as $user) {
             if ($user->id === $admin->id) {
                 $this->assertNotNull($user->last_logged_in);
-                $this->assertSame($actionLogLatest->get('created')->toIso8601String(), $user->last_logged_in->toIso8601String());
+                $this->assertSame($admin->get('last_logged_in')->toIso8601String(), $user->last_logged_in->toIso8601String());
                 break;
             }
         }
@@ -101,17 +102,21 @@ class UsersTableFindIndexTest extends TestCase
      * @covers \App\Model\Traits\Users\UsersFindersTrait
      * @return void
      */
-    public function testUsersTableFindIndex_LastLoggedInWithoutContain(): void
+    public function testUsersTableFindIndex_LastLoggedInWithoutContainReturnsValue(): void
     {
         RoleFactory::make()->guest()->persist();
         $ada = UserFactory::make()->admin()->active()->persist();
-        UserFactory::make(['last_logged_in' => DateTime::now()])->user()->active()->persist();
+        $betty = UserFactory::make(['last_logged_in' => DateTime::now()])->user()->active()->persist();
 
         $result = $this->Users->findIndex($ada->role->name);
 
         /** @var \App\Model\Entity\User $user */
         foreach ($result->all()->toArray() as $user) {
-            $this->assertNull($user->last_logged_in);
+            if ($user['id'] === $betty->id) {
+                $this->assertNotNull($user->last_logged_in);
+            } else {
+                $this->assertNull($user->last_logged_in);
+            }
         }
     }
 }

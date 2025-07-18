@@ -46,6 +46,7 @@ class UsersIndexController extends AppController
             'Users.created',
             'Users.modified',
             'Users.last_logged_in',
+            'Users__last_logged_in',
         ],
         'order' => [
             'Users.username' => 'asc', // Default sorted field
@@ -117,7 +118,7 @@ class UsersIndexController extends AppController
             );
         }
 
-        $this->updateSortableFieldsWithUsers__last_logged_in();
+        $this->mapUsersLastLoggedInSortableFieldKey();
         $this->paginate($users);
         $this->success(__('The operation was successful.'), $users);
     }
@@ -151,12 +152,10 @@ class UsersIndexController extends AppController
      * @return void
      * @see \App\Model\Traits\Users\UsersFindersTrait::findlastLoggedIn()
      */
-    private function updateSortableFieldsWithUsers__last_logged_in(): void
+    private function mapUsersLastLoggedInSortableFieldKey(): void
     {
-        $sortableFieldsParam = array_merge($this->getPaginateValue('sortableFields'), ['Users__last_logged_in']);
-        $this->setPaginateValue('sortableFields', $sortableFieldsParam);
         $orderParam = $this->getPaginateValue('order');
-        if (isset($orderParam['Users.last_logged_in'])) {
+        if (!empty($orderParam['Users.last_logged_in'])) {
             $orderParam['Users__last_logged_in'] = $orderParam['Users.last_logged_in'];
             unset($orderParam['Users.last_logged_in']);
         }
