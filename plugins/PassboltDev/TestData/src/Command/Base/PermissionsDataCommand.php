@@ -22,7 +22,7 @@ use Passbolt\TestData\Lib\PermissionMatrix;
 
 class PermissionsDataCommand extends DataCommand
 {
-    public $entityName = 'Permissions';
+    public string $entityName = 'Permissions';
 
     /**
      * Get the permissions data

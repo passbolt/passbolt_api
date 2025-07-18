@@ -21,7 +21,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class AccountSettingsDataCommand extends DataCommand
 {
-    public $entityName = 'AccountSettings';
+    public string $entityName = 'AccountSettings';
 
     /**
      * Get the tags data

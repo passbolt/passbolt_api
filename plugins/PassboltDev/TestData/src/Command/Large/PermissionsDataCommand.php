@@ -23,7 +23,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class PermissionsDataCommand extends DataCommand
 {
-    public $entityName = 'Permissions';
+    public string $entityName = 'Permissions';
 
     /**
      * Get the permissions data
@@ -39,8 +39,13 @@ class PermissionsDataCommand extends DataCommand
         return $permissions;
     }
 
-    private function getPermissionsScenarioForEachUser()
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    private function getPermissionsScenarioForEachUser(): array
     {
+        /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = $this->fetchTable('Users');
         $permissions = [];
 
@@ -48,7 +53,7 @@ class PermissionsDataCommand extends DataCommand
         $users = $usersTable->findIndex(Role::USER);
         foreach ($users as $user) {
             for ($i = 0; $i < $max; $i++) {
-                $aroId = $user->id;
+                $aroId = $user->get('id');
                 $acoId = UuidFactory::uuid("resource.id.resource_{$i}_for_each_user_{$aroId}");
                 $permissions[] = [
                     'id' => UuidFactory::uuid("permission.id.$acoId-$aroId"),
@@ -68,7 +73,11 @@ class PermissionsDataCommand extends DataCommand
         return $permissions;
     }
 
-    private function getPermissionsScenarioForGroupAllUsers()
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    private function getPermissionsScenarioForGroupAllUsers(): array
     {
         $permissions = [];
 

@@ -22,7 +22,7 @@ use Passbolt\TestData\Lib\Security\Xss;
 
 class XssGroupsDataCommand extends GroupsDataCommand
 {
-    protected $_truncate = false;
+    protected bool $_truncate = false;
 
     /**
      * Get the groups data
@@ -34,7 +34,7 @@ class XssGroupsDataCommand extends GroupsDataCommand
         $exploits = Xss::getExploits();
         $groups = [];
 
-        foreach ($exploits as $rule => $exploit) {
+        foreach ($exploits as $exploit) {
             $groupAlias = 'xss' . count($groups);
             $groups[] = [
                 'id' => UuidFactory::uuid("group.id.$groupAlias"),

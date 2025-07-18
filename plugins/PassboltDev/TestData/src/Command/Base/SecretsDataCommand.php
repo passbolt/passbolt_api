@@ -25,7 +25,7 @@ use Passbolt\TestData\Service\GetGpgkeyPathService;
 
 class SecretsDataCommand extends DataCommand
 {
-    public $entityName = 'Secrets';
+    public string $entityName = 'Secrets';
 
     /**
      * Get a set of fixed passwords
@@ -78,9 +78,9 @@ class SecretsDataCommand extends DataCommand
      * Get password for a given resource
      *
      * @param string $resourceId uuid
-     * @return array
+     * @return string
      */
-    protected function _getPassword(string $resourceId): array
+    protected function _getPassword(string $resourceId): string
     {
         static $passwords = [];
 
@@ -115,7 +115,7 @@ class SecretsDataCommand extends DataCommand
     protected function _encrypt(string $text, Entity $user): string
     {
         // Retrieve the user key file.
-        $gpgkeyPath = (new GetGpgkeyPathService())->get($user->id);
+        $gpgkeyPath = (new GetGpgkeyPathService())->get($user->get('id'));
 
         // Retrieve the key info.
         // As a default key can be shared among user, the encryption will require the key fingerprint.
@@ -123,7 +123,7 @@ class SecretsDataCommand extends DataCommand
         // by avoiding any gpg extra parsing.
         $gpgkeysTable = $this->fetchTable('Gpgkeys');
         $gpgkey = $gpgkeysTable->find('all')
-            ->where(['user_id' => $user->id])
+            ->where(['user_id' => $user->get('id')])
             ->first();
         $keyFingerprint = $gpgkey['fingerprint'];
 
@@ -131,7 +131,7 @@ class SecretsDataCommand extends DataCommand
         exec('gpg --import ' . $gpgkeyPath . ' > /dev/null 2>&1');
 
         // Encrypt the text.
-        $command = 'echo -n ' . escapeshellarg($text) . ' | gpg --encrypt -r ' . $keyFingerprint . ' -a --trust-model always';
+        $command = 'echo -n ' . escapeshellarg($text) . ' | gpg --encrypt -r ' . $keyFingerprint . ' -a --trust-model always'; //phpcs:ignore
         exec($command, $output);
 
         // Return the armored message.
@@ -151,21 +151,24 @@ class SecretsDataCommand extends DataCommand
 
         $secrets = [];
 
+        /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = $this->fetchTable('Users');
+        /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = $this->fetchTable('Resources');
 
         $users = $usersTable->findIndex(Role::USER);
         foreach ($users as $user) {
-            $resources = $resourcesTable->findIndex($user->id);
+            $resources = $resourcesTable->findIndex($user->get('id'));
             foreach ($resources as $resource) {
-                $password = $this->_getPassword($resource->id);
+                $password = $this->_getPassword($resource->get('id'));
+                /** @var \Cake\ORM\Entity $user */
                 $armoredPassword = $this->_encrypt($password, $user);
                 $secrets[] = [
-                    'id' => UuidFactory::uuid("secret.id.{$resource->id}-{$user->id}"),
-                    'user_id' => $user->id,
-                    'resource_id' => $resource->id,
+                    'id' => UuidFactory::uuid("secret.id.{$resource->get('id')}-{$user->get('id')}"),
+                    'user_id' => $user->get('id'),
+                    'resource_id' => $resource->get('id'),
                     'data' => $armoredPassword,
-                    'created_by' => $user->id,
+                    'created_by' => $user->get('id'),
                 ];
             }
         }

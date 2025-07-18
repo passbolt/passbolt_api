@@ -20,39 +20,18 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Passbolt\TestData\Lib\DataCommand;
 use Passbolt\TestData\Service\GetGpgkeyPathService;
-use Passbolt\WebInstaller\Utility\Gpg as WebinstallerGpg;
 
 class GpgkeysDataCommand extends DataCommand
 {
-    public $entityName = 'Gpgkeys';
-
-    /**
-     * Generate and export a user key.
-     *
-     * @param \PassboltTestData\Command\Base\User $user The user entity to generate the key for
-     * @param string $publicKeyPath The public key path
-     * @param string $privateKeyPath The private key path
-     * @return void
-     */
-    public function generateAndExportGpgKeys(User $user, string $publicKeyPath, string $privateKeyPath): void
-    {
-        $gpgSettings = [
-            'name' => $user->profile->first_name . ' ' . $user->profile->last_name,
-            'email' => $user->username,
-            'comment' => '',
-        ];
-        $fingerprint = WebinstallerGpg::generateKey($gpgSettings);
-        WebinstallerGpg::exportPublicArmoredKey($fingerprint, $publicKeyPath);
-        WebinstallerGpg::exportPrivateArmoredKey($fingerprint, $privateKeyPath, $user->username);
-    }
+    public string $entityName = 'Gpgkeys';
 
     /**
      * Get the public key of a user.
      *
      * @param string $userId uuid
-     * @return string ascii armored key
+     * @return string|false ascii armored key
      */
-    protected function _getUserKey(string $userId): string
+    protected function _getUserKey(string $userId): false|string
     {
         $gpgkeyPath = (new GetGpgkeyPathService())->get($userId);
 
@@ -74,12 +53,12 @@ class GpgkeysDataCommand extends DataCommand
         $skip = [UuidFactory::uuid('user.id.ruth')];
 
         foreach ($users as $user) {
-            if (!in_array($user->id, $skip)) {
-                $keyRaw = $this->_getUserKey($user->id);
+            if (!in_array($user->get('id'), $skip)) {
+                $keyRaw = $this->_getUserKey($user->get('id'));
                 $info = $Gpg->getKeyInfo($keyRaw);
                 $keys[] = [
-                    'id' => UuidFactory::uuid('gpgkey.id.' . $user->id),
-                    'user_id' => $user->id,
+                    'id' => UuidFactory::uuid('gpgkey.id.' . $user->get('id')),
+                    'user_id' => $user->get('id'),
                     'armored_key' => $keyRaw,
                     'bits' => $info['bits'],
                     'uid' => $info['uid'],

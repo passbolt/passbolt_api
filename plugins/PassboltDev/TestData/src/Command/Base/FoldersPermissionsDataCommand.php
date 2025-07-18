@@ -21,8 +21,8 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class FoldersPermissionsDataCommand extends DataCommand
 {
-    protected $_truncate = false;
-    public $entityName = 'Permissions';
+    protected bool $_truncate = false;
+    public string $entityName = 'Permissions';
 
     /**
      * Get the permissions data
@@ -50,7 +50,11 @@ class FoldersPermissionsDataCommand extends DataCommand
         return $permissions;
     }
 
-    private function _getData()
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    private function _getData(): array
     {
         // Admin
         $permissions[] = [

@@ -55,7 +55,7 @@ class SaveSqlInfile
      */
     public function save(array $data): void
     {
-        $table = $this->shell->Table->table();
+        $table = $this->shell->Table->getTable();
         $columns = $this->getTableColumnNames();
         $fileContent = '';
 
@@ -78,7 +78,7 @@ class SaveSqlInfile
 
         $path = TMP . 'tests' . DS . 'passbolt_test_data' . DS . "passbolt_test_data_$table.sql";
         file_put_contents($path, $fileContent);
-        $sql = "LOAD DATA INFILE '$path' INTO TABLE $table FIELDS TERMINATED BY '|' LINES TERMINATED BY '__ENDOFLINE__';";
+        $sql = "LOAD DATA INFILE '$path' INTO TABLE $table FIELDS TERMINATED BY '|' LINES TERMINATED BY '__ENDOFLINE__';"; //phpcs:ignore
         $this->connection->execute($sql);
         $sql = "OPTIMIZE TABLE $table;";
         $this->connection->execute($sql);
@@ -91,7 +91,7 @@ class SaveSqlInfile
      */
     private function getTableColumnNames(): array
     {
-        $table = $this->shell->Table->table();
+        $table = $this->shell->Table->getTable();
         $sql = "SHOW columns FROM $table;";
         $result = $this->connection->execute($sql)->fetchAll();
 

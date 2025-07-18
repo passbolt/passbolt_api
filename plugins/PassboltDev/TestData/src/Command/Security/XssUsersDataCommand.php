@@ -22,7 +22,7 @@ use Passbolt\TestData\Lib\Security\Xss;
 
 class XssUsersDataCommand extends UsersDataCommand
 {
-    protected $_truncate = false;
+    protected bool $_truncate = false;
 
     /**
      * Get the users data
@@ -34,7 +34,7 @@ class XssUsersDataCommand extends UsersDataCommand
         $exploits = Xss::getExploits();
         $users = [];
 
-        foreach ($exploits as $rule => $exploit) {
+        foreach ($exploits as $ignored) {
             $userAlias = 'xss' . count($users);
             $users[] = [
                 'id' => UuidFactory::uuid("user.id.$userAlias"),

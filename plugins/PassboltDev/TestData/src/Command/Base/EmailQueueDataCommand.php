@@ -20,7 +20,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class EmailQueueDataCommand extends DataCommand
 {
-    public $entityName = 'EmailQueue';
+    public string $entityName = 'EmailQueue';
 
     /**
      * Get the roles data

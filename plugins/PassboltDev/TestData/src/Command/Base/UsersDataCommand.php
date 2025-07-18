@@ -21,7 +21,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class UsersDataCommand extends DataCommand
 {
-    public $entityName = 'Users';
+    public string $entityName = 'Users';
 
     /**
      * Get user data

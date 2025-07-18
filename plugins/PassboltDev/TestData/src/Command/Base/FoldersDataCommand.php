@@ -22,7 +22,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class FoldersDataCommand extends DataCommand
 {
-    public $entityName = 'Folders';
+    public string $entityName = 'Folders';
 
     /**
      * Get the tags data
@@ -56,7 +56,7 @@ class FoldersDataCommand extends DataCommand
      *
      * @return array
      */
-    public function _getData(): array
+    private function _getData(): array
     {
         $folders[] = [
             'id' => UuidFactory::uuid('folder.id.accounting'),

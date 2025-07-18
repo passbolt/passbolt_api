@@ -18,10 +18,11 @@ declare(strict_types=1);
 namespace Passbolt\TestData\Lib;
 
 use App\Command\PassboltCommand;
+use Cake\Command\Helper\ProgressHelper;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
-use Cake\Console\Helper;
 use Cake\Core\Configure;
+use Cake\ORM\Table;
 use DateTime;
 use Exception;
 use Passbolt\TestData\Lib\SaveStrategy\SaveEntity;
@@ -35,17 +36,15 @@ abstract class DataCommand extends PassboltCommand
 {
     /**
      * The entity name the data task target.
-     *
-     * @var null
      */
-    public null $entityName = null;
+    public string $entityName;
 
     /**
      * The entity model
      *
-     * @var \Passbolt\TestData\Lib\Table
+     * @var \Cake\ORM\Table
      */
-    public Table $Table = null;
+    public ?Table $Table = null;
 
     /**
      * Truncate data.
@@ -69,9 +68,6 @@ abstract class DataCommand extends PassboltCommand
         parent::execute($args, $io);
 
         $startTime = time();
-        if (is_null($this->entityName)) {
-            throw new Exception('Entity name not defined');
-        }
 
         $this->Table = $this->fetchTable($this->entityName);
 
@@ -101,23 +97,24 @@ abstract class DataCommand extends PassboltCommand
             $io->err(sprintf('Data for %s cannot be imported', $this->entityName));
             $io->warning($e->getMessage());
 
-            return false;
+            return static::CODE_ERROR;
         }
 
-        return true;
+        return static::CODE_SUCCESS;
     }
 
     /**
      * Display the progress bar
      *
      * @param int $total Number total of tasks
-     * @return \Passbolt\TestData\Lib\ProgressHelper
+     * @return \Cake\Command\Helper\ProgressHelper
      */
-    public function displayProgressBar(int $total): ?Helper
+    public function displayProgressBar(int $total): ?ProgressHelper
     {
         $progress = null;
 
         if ($total > 1) {
+            /** @var \Cake\Command\Helper\ProgressHelper $progress */
             $progress = $this->io->helper('Progress');
             $progress->init([
                 'total' => $total,
@@ -132,7 +129,7 @@ abstract class DataCommand extends PassboltCommand
     /**
      * Save data.
      *
-     * @param {array} $data The data to save
+     * @param array $data The data to save
      * @return void
      */
     public function save(array $data = []): void
@@ -153,4 +150,9 @@ abstract class DataCommand extends PassboltCommand
 
         $strategy->save($data);
     }
+
+    /**
+     * @return array
+     */
+    abstract public function getData(): array;
 }

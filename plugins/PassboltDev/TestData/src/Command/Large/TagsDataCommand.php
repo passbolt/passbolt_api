@@ -23,7 +23,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class TagsDataCommand extends DataCommand
 {
-    public $entityName = 'Tags';
+    public string $entityName = 'Tags';
 
     /**
      * Get the tags data
@@ -39,9 +39,14 @@ class TagsDataCommand extends DataCommand
         return $tags;
     }
 
-    public function getTagsScenarioForPersonalTags()
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public function getTagsScenarioForPersonalTags(): array
     {
         $tags = [];
+        /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = $this->fetchTable('Users');
 
         $max = Configure::read('PassboltTestData.scenarios.large.install.count.tags_personal');
@@ -49,8 +54,8 @@ class TagsDataCommand extends DataCommand
         foreach ($users as $user) {
             for ($i = 0; $i < $max; $i++) {
                 $tags[] = [
-                    'id' => UuidFactory::uuid("tag.id.personal-$i-{$user->id}"),
-                    'slug' => "{$user->username} $i",
+                    'id' => UuidFactory::uuid("tag.id.personal-$i-{$user->get('id')}"),
+                    'slug' => "{$user->get('username')} $i",
                     'is_shared' => 0,
                 ];
             }
@@ -59,7 +64,11 @@ class TagsDataCommand extends DataCommand
         return $tags;
     }
 
-    public function getTagsScenarioForSharedTags()
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public function getTagsScenarioForSharedTags(): array
     {
         $tags = [];
 

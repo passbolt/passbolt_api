@@ -27,8 +27,8 @@ use Passbolt\TestData\Service\GetGpgkeyPathService;
 
 class SecretsDataCommand extends DataCommand
 {
-    public $entityName = 'Secrets';
-    protected $gpgkeys = [];
+    public string $entityName = 'Secrets';
+    protected array $gpgkeys = [];
 
     /**
      * @inheritDoc
@@ -62,20 +62,23 @@ class SecretsDataCommand extends DataCommand
 
         $secrets = [];
 
+        /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = $this->fetchTable('Users');
+        /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = $this->fetchTable('Resources');
 
         $users = $usersTable->findIndex(Role::USER);
         foreach ($users as $user) {
-            $resources = $resourcesTable->findIndex($user->id);
+            $resources = $resourcesTable->findIndex($user->get('id'));
             foreach ($resources as $resource) {
+                /** @var \Cake\ORM\Entity $user */
                 $armoredPassword = $this->_encrypt('dummy password', $user);
                 $secrets[] = [
-                    'id' => UuidFactory::uuid("secret.id.{$resource->id}-{$user->id}"),
-                    'user_id' => $user->id,
-                    'resource_id' => $resource->id,
+                    'id' => UuidFactory::uuid("secret.id.{$resource->get('id')}-{$user->get('id')}"),
+                    'user_id' => $user->get('id'),
+                    'resource_id' => $resource->get('id'),
                     'data' => $armoredPassword,
-                    'created_by' => $user->id,
+                    'created_by' => $user->get('id'),
                     'created' => date('Y-m-d H:i:s'),
                     'modified' => date('Y-m-d H:i:s'),
                 ];
@@ -90,18 +93,18 @@ class SecretsDataCommand extends DataCommand
      *
      * @param string $text password
      * @param \Cake\ORM\Entity $user User
-     * @return array
+     * @return string
      */
-    protected function _encrypt(string $text, Entity $user): array
+    protected function _encrypt(string $text, Entity $user): string
     {
         static $keyImported = [];
         static $encrypted = [];
-        $keyFingerprint = $this->gpgkeys[$user->id];
+        $keyFingerprint = $this->gpgkeys[$user->get('id')];
 
         // Import the user public key.
         if (!isset($keyImported[$keyFingerprint])) {
             // Retrieve the user key file.
-            $gpgkeyPath = (new GetGpgkeyPathService())->get($user->id);
+            $gpgkeyPath = (new GetGpgkeyPathService())->get($user->get('id'));
 
             exec('gpg --import ' . $gpgkeyPath . ' > /dev/null 2>&1');
             $keyImported[$keyFingerprint] = true;
@@ -109,7 +112,7 @@ class SecretsDataCommand extends DataCommand
 
         // Encrypt the text.
         if (!isset($encrypted[$keyFingerprint][$text])) {
-            $command = 'echo -n ' . escapeshellarg($text) . ' | gpg --encrypt -r ' . $keyFingerprint . ' -a --trust-model always';
+            $command = 'echo -n ' . escapeshellarg($text) . ' | gpg --encrypt -r ' . $keyFingerprint . ' -a --trust-model always'; //phpcs:ignore
             exec($command, $output);
 
             // Return the armored message.

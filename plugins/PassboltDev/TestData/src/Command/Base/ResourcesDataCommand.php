@@ -21,7 +21,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class ResourcesDataCommand extends DataCommand
 {
-    public $entityName = 'Resources';
+    public string $entityName = 'Resources';
 
     /**
      * Get the resource data
@@ -85,7 +85,7 @@ class ResourcesDataCommand extends DataCommand
             'name' => 'Canjs',
             'username' => 'yeswecan',
             'uri' => 'canjs.com',
-            'description' => 'CanJS is a JavaScript library that makes developing complex applications simple and fast.',
+            'description' => 'CanJS is a JavaScript library that makes developing complex applications simple and fast.', //phpcs:ignore
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.edith'),
             'modified_by' => UuidFactory::uuid('user.id.edith'),
@@ -98,7 +98,7 @@ class ResourcesDataCommand extends DataCommand
             'name' => 'centos',
             'username' => 'root',
             'uri' => 'centos.org',
-            'description' => 'The CentOS Linux distribution is a platform derived from Red Hat Enterprise Linux (RHEL).',
+            'description' => 'The CentOS Linux distribution is a platform derived from Red Hat Enterprise Linux (RHEL).', //phpcs:ignore
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.dame'),
             'modified_by' => UuidFactory::uuid('user.id.dame'),
@@ -223,7 +223,7 @@ class ResourcesDataCommand extends DataCommand
             'name' => 'Gnupg',
             'username' => 'gpg',
             'uri' => 'gnupg.org',
-            'description' => 'GnuPG is a complete and free implementation of the OpenPGP standard as defined by RFC4880',
+            'description' => 'GnuPG is a complete and free implementation of the OpenPGP standard as defined by RFC4880', //phpcs:ignore
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.carol'),
             'modified_by' => UuidFactory::uuid('user.id.carol'),
@@ -267,7 +267,7 @@ class ResourcesDataCommand extends DataCommand
             'name' => 'Jquery',
             'username' => 'jquery',
             'uri' => 'jquery.com',
-            'description' => 'jQuery is a cross-platform JavaScript library designed to simplify the client-side scripting of HTML.',
+            'description' => 'jQuery is a cross-platform JavaScript library designed to simplify the client-side scripting of HTML.', //phpcs:ignore
             'deleted' => 1,
             'created_by' => UuidFactory::uuid('user.id.dame'),
             'modified_by' => UuidFactory::uuid('user.id.dame'),
@@ -289,7 +289,7 @@ class ResourcesDataCommand extends DataCommand
             'name' => 'Linux',
             'username' => 'linus',
             'uri' => 'kernel.org',
-            'description' => 'The Linux kernel is an open-source monolithic Unix-like computer operating system kernel.',
+            'description' => 'The Linux kernel is an open-source monolithic Unix-like computer operating system kernel.', //phpcs:ignore
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.hedy'),
             'modified_by' => UuidFactory::uuid('user.id.hedy'),
@@ -300,7 +300,7 @@ class ResourcesDataCommand extends DataCommand
             'name' => 'Mailvelope',
             'username' => 'thomas',
             'uri' => 'mailvelope.com',
-            'description' => 'Mailvelope is a browser extension that enables the exchange of encrypted emails following the OpenPGP encryption standard.',
+            'description' => 'Mailvelope is a browser extension that enables the exchange of encrypted emails following the OpenPGP encryption standard.', //phpcs:ignore
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.jean'),
             'modified_by' => UuidFactory::uuid('user.id.jean'),
@@ -311,7 +311,7 @@ class ResourcesDataCommand extends DataCommand
             'name' => 'Mocha',
             'username' => 'svp',
             'uri' => 'mochajs.org',
-            'description' => 'Mocha is a feature-rich JavaScript test framework running on Node.js and in the browser, making asynchronous testing simple and fun.',
+            'description' => 'Mocha is a feature-rich JavaScript test framework running on Node.js and in the browser, making asynchronous testing simple and fun.', //phpcs:ignore
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.kathleen'),
             'modified_by' => UuidFactory::uuid('user.id.kathleen'),
@@ -333,7 +333,7 @@ class ResourcesDataCommand extends DataCommand
             'name' => 'OpenGPGJS',
             'username' => 'openpgpjs',
             'uri' => 'openpgpjs.org/',
-            'description' => 'This project aims to provide an Open Source OpenPGP library in JavaScript so it can be used on virtually every device.',
+            'description' => 'This project aims to provide an Open Source OpenPGP library in JavaScript so it can be used on virtually every device.', //phpcs:ignore
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.nancy'),
             'modified_by' => UuidFactory::uuid('user.id.nancy'),
@@ -355,7 +355,7 @@ class ResourcesDataCommand extends DataCommand
             'name' => 'QGIS',
             'username' => 'qgis',
             'uri' => 'phpunit.de',
-            'description' => 'QGIS is a free and open-source cross-platform desktop geographic information system (GIS) application that supports viewing, editing, and analysis of geospatial data.',
+            'description' => 'QGIS is a free and open-source cross-platform desktop geographic information system (GIS) application that supports viewing, editing, and analysis of geospatial data.', //phpcs:ignore
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.wang'),
             'modified_by' => UuidFactory::uuid('user.id.wang'),
@@ -388,7 +388,7 @@ class ResourcesDataCommand extends DataCommand
             'name' => 'Virtualbox',
             'username' => 'virtualbox',
             'uri' => 'virtualbox.org',
-            'description' => 'VirtualBox is a powerful x86 and AMD64/Intel64 virtualization product for enterprise as well as home use.',
+            'description' => 'VirtualBox is a powerful x86 and AMD64/Intel64 virtualization product for enterprise as well as home use.', //phpcs:ignore
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.adele'),
             'modified_by' => UuidFactory::uuid('user.id.adele'),

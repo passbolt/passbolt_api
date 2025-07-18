@@ -21,7 +21,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class FavoritesDataCommand extends DataCommand
 {
-    public $entityName = 'Favorites';
+    public string $entityName = 'Favorites';
 
     /**
      * Get the favorites data

@@ -22,7 +22,7 @@ use Passbolt\TestData\Lib\Security\Xss;
 
 class XssCommentsDataCommand extends CommentsDataCommand
 {
-    protected $_truncate = false;
+    protected bool $_truncate = false;
 
     /**
      * Get the comments data
@@ -39,7 +39,7 @@ class XssCommentsDataCommand extends CommentsDataCommand
         $users = $usersTask->getData();
 
         // Add a comment to each resource for each user.
-        foreach ($resources as $i => $resource) {
+        foreach ($resources as $resource) {
             foreach ($users as $j => $user) {
                 $comments[] = [
                     'id' => UuidFactory::uuid("comment.id.{$resource['id']}-{$j}"),

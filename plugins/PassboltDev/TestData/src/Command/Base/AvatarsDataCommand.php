@@ -22,7 +22,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class AvatarsDataCommand extends DataCommand
 {
-    public $entityName = 'Avatars';
+    public string $entityName = 'Avatars';
 
     /**
      * @inheritDoc
@@ -31,38 +31,46 @@ class AvatarsDataCommand extends DataCommand
     {
         return $io->out(__('Will not perform anything for the moment as Avatars are highly optional.'));
 
-        $avatarsTable = $this->fetchTable('Avatars');
-        $usersTable = $this->fetchTable('Users');
+//        $avatarsTable = $this->fetchTable('Avatars');
+//        $usersTable = $this->fetchTable('Users');
+//
+//        $users = $usersTable->find()
+//            ->contain('Profiles')
+//            ->all();
+//        $count = 0;
+//        foreach ($users as $user) {
+//            $matches = [];
+//            preg_match('/^(.*)@(.*)$/', $user->username, $matches);
+//            $userAvatarFileName = $matches[1] . '.png';
+//            $userAvatarFullPath = PASSBOLT_TEST_DATA_AVATAR_PATH . DS . $userAvatarFileName;
+//            if (file_exists($userAvatarFullPath)) {
+//                $data = [
+//                    'file' => [
+//                        'tmp_name' => $userAvatarFullPath,
+//                        'error' => 0,
+//                        'type' => 'image/png',
+//                        'name' => strtolower($user->profile->first_name) . '.png',
+//                    ],
+//                    'user_id' => $user->id,
+//                    'foreign_key' => $user->profile->id,
+//                ];
+//
+//                $entity = $avatarsTable->newEntity($data, ['validate' => false]);
+//                $avatar = $avatarsTable->save($entity, ['checkRules' => false]);
+//                if (!$avatar) {
+//                    $io->out('Error inserting data for entity "' . $this->entityName);
+//                } else {
+//                    $count++;
+//                }
+//            }
+//        }
+    }
 
-        $users = $usersTable->find()
-            ->contain('Profiles')
-            ->all();
-        $count = 0;
-        foreach ($users as $user) {
-            $matches = [];
-            preg_match('/^(.*)@(.*)$/', $user->username, $matches);
-            $userAvatarFileName = $matches[1] . '.png';
-            $userAvatarFullPath = PASSBOLT_TEST_DATA_AVATAR_PATH . DS . $userAvatarFileName;
-            if (file_exists($userAvatarFullPath)) {
-                $data = [
-                    'file' => [
-                        'tmp_name' => $userAvatarFullPath,
-                        'error' => 0,
-                        'type' => 'image/png',
-                        'name' => strtolower($user->profile->first_name) . '.png',
-                    ],
-                    'user_id' => $user->id,
-                    'foreign_key' => $user->profile->id,
-                ];
-
-                $entity = $avatarsTable->newEntity($data, ['validate' => false]);
-                $avatar = $avatarsTable->save($entity, ['checkRules' => false]);
-                if (!$avatar) {
-                    $io->out('Error inserting data for entity "' . $this->entityName);
-                } else {
-                    $count++;
-                }
-            }
-        }
+    /**
+     * @return array
+     */
+    public function getData(): array
+    {
+        return [];
     }
 }

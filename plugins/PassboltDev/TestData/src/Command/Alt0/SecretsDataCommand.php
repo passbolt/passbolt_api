@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\TestData\Command\Alt0;
 
-class SecretsDataCommand extends \Passbolt\TestData\Command\Base\SecretsDataCommand
+use Passbolt\TestData\Command\Base\SecretsDataCommand as BaseSecretsDataCommand;
+
+class SecretsDataCommand extends BaseSecretsDataCommand
 {
 }

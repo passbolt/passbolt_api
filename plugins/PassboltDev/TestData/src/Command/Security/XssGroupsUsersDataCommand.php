@@ -21,7 +21,7 @@ use Passbolt\TestData\Lib\Security\Xss;
 
 class XssGroupsUsersDataCommand extends GroupsUsersDataCommand
 {
-    protected $_truncate = false;
+    protected bool $_truncate = false;
 
     /**
      * Get groups users settings
@@ -33,10 +33,10 @@ class XssGroupsUsersDataCommand extends GroupsUsersDataCommand
         $exploits = Xss::getExploits();
         $settings = [];
 
-        foreach ($exploits as $groupRule => $GroupExploit) {
+        foreach ($exploits as $ignored) {
             $groupAlias = 'xss' . count($settings);
             $i = 0;
-            foreach ($exploits as $userRule => $userExploit) {
+            foreach ($exploits as $ignored) {
                 $userAlias = "xss$i";
                 $settings[$groupAlias]['managers'][] = $userAlias;
                 $settings[$groupAlias]['users'][] = $userAlias;

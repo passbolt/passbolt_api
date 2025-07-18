@@ -22,8 +22,8 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class UsersDataCommand extends DataCommand
 {
-    public $entityName = 'Users';
-    public $fixtureName = 'LargeUsers';
+    public string $entityName = 'Users';
+    public string $fixtureName = 'LargeUsers';
 
     /**
      * Get user data

@@ -22,7 +22,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class FavoritesDataCommand extends DataCommand
 {
-    public $entityName = 'Favorites';
+    public string $entityName = 'Favorites';
 
     /**
      * Get the favorites data
@@ -33,24 +33,24 @@ class FavoritesDataCommand extends DataCommand
     {
         $favorites = [];
 
+        /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = $this->fetchTable('Users');
+        /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = $this->fetchTable('Resources');
 
         $users = $usersTable->findIndex(Role::USER);
         foreach ($users as $user) {
-            $start = time();
             $options['order']['Resources.modified'] = true;
-            $resources = $resourcesTable->findIndex($user->id, $options);
+            $resources = $resourcesTable->findIndex($user->get('id'), $options);
             foreach ($resources as $resource) {
                 $favorites[] = [
-                    'id' => UuidFactory::uuid('favorite.id.' . $resource->id . '-' . $user->id),
-                    'user_id' => $user->id,
-                    'foreign_key' => $resource->id,
+                    'id' => UuidFactory::uuid('favorite.id.' . $resource->get('id') . '-' . $user->get('id')),
+                    'user_id' => $user->get('id'),
+                    'foreign_key' => $resource->get('id'),
                     'foreign_model' => 'Resource',
                     'created' => date('Y-m-d H:i:s'),
                 ];
             }
-            $end = time();
             unset($resources);
         }
 

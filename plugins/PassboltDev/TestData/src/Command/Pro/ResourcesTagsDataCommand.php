@@ -21,7 +21,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class ResourcesTagsDataCommand extends DataCommand
 {
-    public $entityName = 'ResourcesTags';
+    public string $entityName = 'ResourcesTags';
 
     /**
      * Get the resources tags data

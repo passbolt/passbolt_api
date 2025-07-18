@@ -21,7 +21,7 @@ use Passbolt\TestData\Lib\DataCommand;
 
 class CommentsDataCommand extends DataCommand
 {
-    public $entityName = 'Comments';
+    public string $entityName = 'Comments';
 
     /**
      * Get the comments data

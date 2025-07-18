@@ -18,8 +18,9 @@ namespace Passbolt\TestData\Command\Alt0;
 
 use App\Model\Entity\Permission;
 use App\Utility\UuidFactory;
+use Passbolt\TestData\Command\Base\PermissionsDataCommand as BasePermissionsDataCommand;
 
-class PermissionsDataCommand extends \Passbolt\TestData\Command\Base\PermissionsDataCommand
+class PermissionsDataCommand extends BasePermissionsDataCommand
 {
     /**
      * Get the permissions data
