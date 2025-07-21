@@ -181,17 +181,6 @@
       <code><![CDATA[$this->gpg]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="plugins/PassboltCe/JwtAuthentication/src/Notification/Email/Redactor/JwtAuthenticationAttackEmailRedactor.php">
-    <InvalidArgument>
-      <code><![CDATA[$admin]]></code>
-    </InvalidArgument>
-    <InvalidPropertyFetch>
-      <code><![CDATA[$admin->locale]]></code>
-    </InvalidPropertyFetch>
-    <NoInterfaceProperties>
-      <code><![CDATA[$admin->locale]]></code>
-    </NoInterfaceProperties>
-  </file>
   <file src="plugins/PassboltCe/JwtAuthentication/tests/Factory/RefreshTokenAuthenticationTokenFactory.php">
     <MethodSignatureMismatch>
       <code><![CDATA[RefreshTokenAuthenticationTokenFactory]]></code>
@@ -225,18 +214,6 @@
     <UndefinedInterfaceMethod>
       <code><![CDATA[$this->_responseJsonBody->keys]]></code>
     </UndefinedInterfaceMethod>
-  </file>
-  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Controller/JwtLoginControllerTest.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$user->authentication_tokens]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->username]]></code>
-    </InvalidPropertyFetch>
   </file>
   <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Controller/JwtLogoutControllerTest.php">
     <InvalidPropertyFetch>
