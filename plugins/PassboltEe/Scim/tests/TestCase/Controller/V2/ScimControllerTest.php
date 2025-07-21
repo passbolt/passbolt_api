@@ -97,6 +97,16 @@ class ScimControllerTest extends BaseIntegrationTest
     public CONST FIXTURE_RESPONSE_USERS_ADD_CONFLICT_EXIST = 'Users' . DS . 'users_add_conflict_exist.json';
 
     /**
+     * Expected response for POST `/Users/<user_id>` endpoint with existing user
+     */
+    public CONST FIXTURE_RESPONSE_USERS_VIEW_SUCCESS = 'Users' . DS . 'users_view_success.json';
+
+    /**
+     * Expected response for POST `/Users/<user_id>` endpoint with NOT existing user
+     */
+    public CONST FIXTURE_RESPONSE_USERS_VIEW_NOT_FOUND = 'Users' . DS . 'users_view_not_found.json';
+
+    /**
      * Test case
      */
     public function testScimControllerServiceProviderConfig_Success()
@@ -192,9 +202,9 @@ class ScimControllerTest extends BaseIntegrationTest
      * @param string $endpoint
      * @param string $expectedResponseFile
      * @return void
-     * @dataProvider providerRestScimControllerUsersList
+     * @dataProvider providerRestScimControllerUsersIndex
      */
-    public function testScimControllerUsersList(string $endpoint, string $expectedResponseFile)
+    public function testScimControllerUsersIndex(string $endpoint, string $expectedResponseFile)
     {
         $this->setTestNow();
         $scimEntry1 = $this->createScimUser1();
@@ -210,11 +220,11 @@ class ScimControllerTest extends BaseIntegrationTest
     }
 
     /**
-     * Provider for testScimControllerUsersList
+     * Provider for testScimControllerUsersIndex
      *
      * @return array[]
      */
-    public static function providerRestScimControllerUsersList(): array
+    public static function providerRestScimControllerUsersIndex(): array
     {
         return [
             'no-filter' => [
@@ -235,7 +245,7 @@ class ScimControllerTest extends BaseIntegrationTest
     /**
      * Test case for success POST /Users endpoint
      */
-    public function testScimControllerUsersPost_Success()
+    public function testScimControllerUsersAdd_Success()
     {
         $this->setTestNow();
 
@@ -257,7 +267,7 @@ class ScimControllerTest extends BaseIntegrationTest
     /**
      * Test case for POST /Users endpoint with exist conflict
      */
-    public function testScimControllerUsersPost_ConflictExist()
+    public function testScimControllerUsersAdd_ConflictExist()
     {
         $scimName = 'user1@username.com';
         $email = 'user1@email.com';
@@ -268,6 +278,34 @@ class ScimControllerTest extends BaseIntegrationTest
 
         $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_ADD_CONFLICT_EXIST);
         $expectedResponse = $this->replaceUserPlaceholders($expectedResponse, $scimEntry, 1);
+        $this->assertResponseEquals($expectedResponse);
+    }
+
+    /**
+     * Test case for POST /Users/<user_id> endpoint with existing user
+     */
+    public function testScimControllerUsersView_Success()
+    {
+        $this->setTestNow();
+        $scimEntry = $this->createScimUser1();
+        $this->get($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key));
+        $this->assertResponseCode(200);
+
+        $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_VIEW_SUCCESS);
+        $expectedResponse = $this->replaceUserPlaceholders($expectedResponse, $scimEntry, 1);
+        $this->assertResponseEquals($expectedResponse);
+    }
+
+    /**
+     * Test case for POST /Users/<user_id> endpoint with NOT existing user
+     */
+    public function testScimControllerUsersView_NotFound()
+    {
+        $this->setTestNow();
+        $this->get($this->getScimEndpoint('Users' . DS . 'not-existing-id'));
+        $this->assertResponseCode(404);
+
+        $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_VIEW_NOT_FOUND);
         $this->assertResponseEquals($expectedResponse);
     }
 }

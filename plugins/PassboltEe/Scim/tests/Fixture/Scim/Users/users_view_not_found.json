@@ -1,0 +1,7 @@
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:Error"
+    ],
+    "status": 404,
+    "detail": "The Users resource with id `not-existing-id` was not found"
+}
