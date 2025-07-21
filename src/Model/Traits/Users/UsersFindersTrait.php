@@ -264,6 +264,12 @@ trait UsersFindersTrait
         if (isset($options['contain']['groups_users']) && $options['contain']['groups_users']) {
             $query->contain('GroupsUsers');
         }
+        if (isset($options['contain']['last_logged_in']) && $options['contain']['last_logged_in']) {
+            $query->find('lastLoggedIn');
+        }
+        if (isset($options['contain']['scim_entry']) && $options['contain']['scim_entry']) {
+            $query->contain('ScimEntries');
+        }
 
         // Filter out guests and deleted users
         $query->where([
@@ -321,11 +327,12 @@ trait UsersFindersTrait
      *
      * @param string $userId uuid
      * @param string $roleName role name
+     * @param array|null $options options
      * @return \Cake\ORM\Query\SelectQuery
      * @throws \Exception
      * @throws \InvalidArgumentException if the role name or user id are not valid
      */
-    public function findView(string $userId, string $roleName): SelectQuery
+    public function findView(string $userId, string $roleName, array|null $options = []): SelectQuery
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
@@ -335,7 +342,7 @@ trait UsersFindersTrait
         }
 
         // Same rule than index apply with a specific id requested
-        return $this->findIndex($roleName)->where(['Users.id' => $userId]);
+        return $this->findIndex($roleName, $options)->where(['Users.id' => $userId]);
     }
 
     /**
