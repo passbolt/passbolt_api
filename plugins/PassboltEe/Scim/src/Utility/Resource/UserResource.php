@@ -216,9 +216,10 @@ class UserResource implements ScimObjectInterface, ResourceInterface
      * Find existing User entity
      *
      * @param array $conditions
+     * @param bool $includeDeleted
      * @return \App\Model\Entity\User|null
      */
-    protected function findExistingUserEntity(array $conditions = []): ?User
+    protected function findExistingUserEntity(array $conditions = [], bool $includeDeleted = false): ?User
     {
         if ($conditions === []) {
             if (!$this->email) {
@@ -226,9 +227,13 @@ class UserResource implements ScimObjectInterface, ResourceInterface
             }
 
             $conditions = [
-                'Users.username' => $this->email,
+                $this->Users->aliasField('username') => $this->email,
             ];
         }
+        if (!$includeDeleted) {
+            $conditions[$this->Users->aliasField('deleted')] = false;
+        }
+
         /** @var \App\Model\Entity\User|null $user */
         $user = $this->Users
             ->find()
