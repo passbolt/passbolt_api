@@ -54,10 +54,22 @@ class UsersViewController extends AppController
             }
         }
 
+        $whitelist = [];
+
+        if ($this->User->isAdmin()) {
+            $whitelist = [
+                'contain' => [
+                    'scim_entry'
+                ],
+            ];
+        }
+
+        $options = $this->QueryString->get($whitelist);
+
         // Retrieve the user
         /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = $this->fetchTable('Users');
-        $query = $usersTable->findView($id, $this->User->role());
+        $query = $usersTable->findView($id, $this->User->role(), $options);
 
         // Trigger an event to filter data, decorate results, add contain, etc.
         $event = TableFindIndexBefore::create(
