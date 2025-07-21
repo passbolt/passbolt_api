@@ -105,4 +105,12 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
         $this->postJson("/share/folder/{$folder->get('id')}.json?api-version=2");
         $this->assertForbiddenError('You are not allowed to update the permissions of this folder.');
     }
+
+    public function testFoldersShareError_NotJson()
+    {
+        $this->logInAsUser();
+        $folderId = UuidFactory::uuid();
+        $this->put("/share/folder/{$folderId}");
+        $this->assertResponseCode(404);
+    }
 }

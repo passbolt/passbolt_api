@@ -484,4 +484,11 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $this->assertObjectHasAttribute('profile', $user);
         $this->assertProfileAttributes($user->profile);
     }
+
+    public function testFoldersIndexError_NotJson()
+    {
+        $this->logInAsUser();
+        $this->get('/folders');
+        $this->assertResponseCode(404);
+    }
 }

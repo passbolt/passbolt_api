@@ -173,4 +173,12 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         $this->assertObjectHasAttribute('profile', $user);
         $this->assertProfileAttributes($user->profile);
     }
+
+    public function testFoldersViewError_NotJson()
+    {
+        $this->logInAsUser();
+        $folderId = UuidFactory::uuid();
+        $this->get("/folders/{$folderId}");
+        $this->assertResponseCode(404);
+    }
 }
