@@ -35,6 +35,8 @@ class FoldersDeleteController extends AppController
      */
     public function delete(string $id)
     {
+        $this->assertJson();
+
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The folder id is not valid.'));
         }
