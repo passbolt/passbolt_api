@@ -22,6 +22,9 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Utility\Hash;
 
+/**
+ * @covers \App\Controller\Users\UsersIndexController
+ */
 class UsersIndexControllerTest extends AppIntegrationTestCase
 {
     public function testUsersIndexController_Success_AsAdmin(): void

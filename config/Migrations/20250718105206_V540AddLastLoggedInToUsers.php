@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -10,28 +11,30 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.4.0
+ * @since         5.4.0
  */
-// @codingStandardsIgnoreStart
-use Cake\Log\Log;
-use Migrations\AbstractMigration;
-use Passbolt\EmailDigest\Service\ConvertEmailVariablesToJsonService;
 
-class V331ConvertEmailVariablesToJson extends AbstractMigration
+use Migrations\AbstractMigration;
+
+class V540AddLastLoggedInToUsers extends AbstractMigration
 {
     /**
-     * Converts the template variables emails in the queue from serialized format
-     * to JSON.
+     * Change Method.
      *
+     * More information on this method is available here:
+     * https://book.cakephp.org/migrations/5/en/migrations.html#the-change-method
      * @return void
      */
-    public function up(): void
+    public function change(): void
     {
-        try {
-            (new ConvertEmailVariablesToJsonService())->convert();
-        } catch (Throwable $e) {
-            Log::error('There was an error in V331ConvertEmailVariablesToJson');
-            Log::error($e->getMessage());
-        }
+        $this
+            ->table('users')
+            ->addColumn('last_logged_in', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+                'after' => 'disabled'
+            ])
+            ->save();
     }
 }
