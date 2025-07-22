@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Utility\Schema;
 
 use Passbolt\Scim\Utility\SchemaIdentifier;
+use Passbolt\Scim\Utility\ScimConstants;
 use Passbolt\Scim\Utility\ScimObjectInterface;
 
 /**
@@ -47,7 +48,7 @@ class GroupSchema implements ScimObjectInterface
                     'description' => 'A human-readable name for the Group. REQUIRED.',
                     'required' => true,
                     'caseExact' => false,
-                    'mutability' => 'readWrite',
+                    'mutability' => ScimConstants::ATTRIBUTE_MUTABILITY_READ_WRITE,
                     'returned' => 'default',
                     'uniqueness' => 'server',
                 ],

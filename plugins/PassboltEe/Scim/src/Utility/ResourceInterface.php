@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Utility;
 
+use Passbolt\Scim\Utility\Object\Operation;
 use Passbolt\Scim\Utility\Object\PatchOp;
 
 /**
@@ -64,12 +65,12 @@ interface ResourceInterface
     public function create(): static;
 
     /**
-     * Update the resource information in the database
+     * Apply a single patch operation to the object
      *
+     * @param \Passbolt\Scim\Utility\Object\Operation $operation
      * @return $this
-     * @throws \Passbolt\Scim\Exception\ScimException
      */
-    public function update(): static;
+    public function applyOperation(Operation $operation): static;
 
     /**
      * Delete the resource information in the database
@@ -78,12 +79,4 @@ interface ResourceInterface
      * @throws \Passbolt\Scim\Exception\ScimException
      */
     public function delete(): static;
-
-    /**
-     * Apply the path operations to the object
-     *
-     * @param \Passbolt\Scim\Utility\Object\PatchOp $patchOperation
-     * @return $this
-     */
-    public function applyPatchOperation(PatchOp $patchOperation): static;
 }

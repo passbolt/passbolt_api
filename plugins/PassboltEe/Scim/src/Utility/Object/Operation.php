@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Utility\Object;
 
+use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Utility\ScimObjectInterface;
 use Tmilos\ScimFilterParser\Mode;
 use Tmilos\ScimFilterParser\Parser;
@@ -31,7 +32,7 @@ class Operation implements ScimObjectInterface
      */
     public const TYPE_ADD = 'add';
     public const TYPE_REPLACE = 'replace';
-    public const TYPE_DELETE = 'delete';
+    public const TYPE_REMOVE = 'remove';
 
     /**
      * Operation type
@@ -70,7 +71,7 @@ class Operation implements ScimObjectInterface
      */
     public function __construct(?string $operationType = null, ?string $path = null, mixed $value = null)
     {
-        $this->operationType = $operationType;
+        $this->setType($operationType);
         $this->path = $path;
         $this->setPathData($this->path);
         $this->value = $value;
@@ -99,7 +100,7 @@ class Operation implements ScimObjectInterface
      */
     public function setFromScim(array $data): static
     {
-        $this->operationType = $data['op'] ?? null;
+        $this->setType($data['op'] ?? null);
         $this->path = $data['path'] ?? null;
         $this->setPathData($this->path);
         $this->value = $data['value'] ?? null;
@@ -127,6 +128,26 @@ class Operation implements ScimObjectInterface
     public function getType(): ?string
     {
         return $this->operationType;
+    }
+
+    /**
+     * @param string|null $operationType
+     * @return $this
+     */
+    protected function setType(?string $operationType): static
+    {
+        if ($operationType === null) {
+            $this->operationType = null;
+
+            return $this;
+        }
+        $operationType = strtolower($operationType);
+        if (!self::isValidType($operationType)) {
+            throw new ScimException(sprintf('The operation type `%s` is not supported or invalid', $operationType));
+        }
+        $this->operationType = $operationType;
+
+        return $this;
     }
 
     /**
@@ -189,5 +210,18 @@ class Operation implements ScimObjectInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param string $type
+     * @return bool
+     */
+    public static function isValidType(string $type): bool
+    {
+        return in_array($type, [
+            self::TYPE_ADD,
+            self::TYPE_REPLACE,
+            self::TYPE_REMOVE,
+        ]);
     }
 }

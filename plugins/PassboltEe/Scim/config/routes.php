@@ -13,6 +13,8 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.1.0
  */
+
+use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
@@ -93,6 +95,6 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
             ->setPass(['settingId', 'resourceType', 'id'])
             ->setMethods(['DELETE']);
 
-        $routes->fallbacks(\Cake\Routing\Route\DashedRoute::class);
+        $routes->fallbacks(DashedRoute::class);
     });
 });

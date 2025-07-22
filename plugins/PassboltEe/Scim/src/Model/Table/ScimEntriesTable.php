@@ -111,12 +111,40 @@ class ScimEntriesTable extends Table
             'errorField' => 'foreign_key',
             'message' => __('An entry for the same related entity already exists'),
         ]);
-        $rules->add($rules->isUnique(['scim_name', 'foreign_model']), [
+        $rules->add([$this, 'isUniqueScimName'], 'uniqueScimName', [
             'errorField' => 'scim_name',
-            'message' => __('An entry with the same `scim_name` and ResourceType already exist'),
+            'message' => __('An entry with the same `scim_name` and ResourceType already exist.'),
         ]);
 
         return $rules;
+    }
+
+    /**
+     * Assert that the scim_name is unique among all non-deleted users
+     *
+     * @param \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry entity being saved
+     * @return bool
+     * @throws \Cake\Http\Exception\InternalErrorException if the scim_name field is not accessible
+     */
+    public function isUniqueScimName(ScimEntry $scimEntry): bool
+    {
+        if (!$scimEntry->isNew() && !$scimEntry->isDirty('scim_name')) {
+            return true;
+        }
+        if (is_null($scimEntry->scim_name)) {
+            return true;
+        }
+        $conditions = [
+            $this->aliasField('scim_name') => $scimEntry->scim_name,
+            $this->aliasField('foreign_model') => $scimEntry->foreign_model,
+            $this->aliasField('deleted') . ' IS NULL',
+        ];
+        if ($scimEntry->id) {
+            $conditions[$this->aliasField('id') . ' !='] = $scimEntry->id;
+        }
+        $exist = $this->find()->where($conditions)->all()->count() > 0;
+
+        return $exist === false;
     }
 
     /**

@@ -26,53 +26,66 @@ use Passbolt\Scim\Utility\ScimObjectInterface;
 class ServiceProviderConfig implements ScimObjectInterface
 {
     /**
+     * @var array
+     */
+    protected array $data = [
+        'schemas' => [
+            SchemaIdentifier::CORE_SERVICE_PROVIDER_CONFIG,
+        ],
+        'documentationUri' => 'https://help.passbolt.com/scim/',
+        'patch' => [
+            'supported' => true,
+        ],
+        'bulk' => [
+            'supported' => false,
+            'maxOperations' => 25,
+            'maxPayloadSize' => 25,
+        ],
+        'filter' => [
+            'supported' => true,
+            'maxResults' => 25,
+        ],
+        'changePassword' => [
+            'supported' => false,
+        ],
+        'sort' => [
+            'supported' => false,
+        ],
+        'etag' => [
+            'supported' => false,
+        ],
+        'authenticationSchemes' => [
+            [
+                'name' => 'OAuth Bearer Token',
+                'description' => 'Authentication scheme using the OAuth Bearer Token Standard',
+                'specUri' => 'http://www.rfc-editor.org/info/rfc6750',
+                'documentationUri' => 'https://help.passbolt.com/scim/authentication',
+                'type' => 'oauthbearertoken',
+                'primary' => true,
+            ],
+        ],
+        'meta' => [
+            'location' => '{scimUrl}/ServiceProviderConfig',
+            'resourceType' => 'ServiceProviderConfig',
+            'created' => '2023-04-26T00:00Z',
+            'lastModified' => '2023-04-26T00:00Z',
+            'version' => '1',
+        ],
+    ];
+
+    /**
      * @inheritDoc
      */
     public function toSCIM(): array
     {
-        return [
-            'schemas' => [
-                SchemaIdentifier::CORE_SERVICE_PROVIDER_CONFIG,
-            ],
-            'documentationUri' => 'https://help.passbolt.com/scim/',
-            'patch' => [
-                'supported' => true,
-            ],
-            'bulk' => [
-                'supported' => false,
-                'maxOperations' => 25,
-                'maxPayloadSize' => 25,
-            ],
-            'filter' => [
-                'supported' => true,
-                'maxResults' => 25,
-            ],
-            'changePassword' => [
-                'supported' => false,
-            ],
-            'sort' => [
-                'supported' => false,
-            ],
-            'etag' => [
-                'supported' => false,
-            ],
-            'authenticationSchemes' => [
-                [
-                    'name' => 'OAuth Bearer Token',
-                    'description' => 'Authentication scheme using the OAuth Bearer Token Standard',
-                    'specUri' => 'http://www.rfc-editor.org/info/rfc6750',
-                    'documentationUri' => 'https://help.passbolt.com/scim/authentication',
-                    'type' => 'oauthbearertoken',
-                    'primary' => true,
-                ],
-            ],
-            'meta' => [
-                'location' => '{scimUrl}/ServiceProviderConfig',
-                'resourceType' => 'ServiceProviderConfig',
-                'created' => '2023-04-26T00:00Z',
-                'lastModified' => '2023-04-26T00:00Z',
-                'version' => '1',
-            ],
-        ];
+        return $this->data;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPatchSupported(): bool
+    {
+        return $this->data['patch']['supported'];
     }
 }

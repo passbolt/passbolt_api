@@ -31,6 +31,9 @@ trait ScimTestUsersTrait
 {
     public const DATETIME_TEST_NOW = '2025-07-18 12:00:00';
 
+    public const USER_1_SCIM_NAME = 'user1@username.com';
+    public const USER_1_EMAIL = 'user1@email.com';
+
     /**
      * @return void
      */
@@ -62,11 +65,11 @@ trait ScimTestUsersTrait
     {
         return ScimEntryFactory::make([
             'external_identifier' => '4d36b536-42ba-4a65-9299-c4461222b47f',
-            'scim_name' => 'user1@username.com',
+            'scim_name' => self::USER_1_SCIM_NAME,
             'created' => DateTime::now(),
             'modified' => DateTime::now(),
         ])->withUser([
-            'username' => 'user1@email.com',
+            'username' => self::USER_1_EMAIL,
             'created' => DateTime::now(),
             'modified' => DateTime::now(),
             'profile' => [
@@ -101,9 +104,10 @@ trait ScimTestUsersTrait
 
     /**
      * @param string $username
+     * @param bool $isDeleted
      * @return \App\Model\Entity\User|null
      */
-    public function getUserByUsername(string $username): ?User
+    public function getUserByUsername(string $username, bool $isDeleted = false): ?User
     {
         /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = TableRegistry::getTableLocator()->get('Users');
@@ -111,7 +115,10 @@ trait ScimTestUsersTrait
         $user = $usersTable
             ->find()
             ->contain(['Profiles'])
-            ->where([$usersTable->aliasField('username') => $username])
+            ->where([
+                $usersTable->aliasField('username') => $username,
+                $usersTable->aliasField('deleted') => $isDeleted,
+            ])
             ->first();
 
         return $user;

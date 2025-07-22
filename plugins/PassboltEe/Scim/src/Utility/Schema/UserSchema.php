@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Utility\Schema;
 
 use Passbolt\Scim\Utility\SchemaIdentifier;
+use Passbolt\Scim\Utility\ScimConstants;
 use Passbolt\Scim\Utility\ScimObjectInterface;
 
 /**
@@ -26,149 +27,152 @@ use Passbolt\Scim\Utility\ScimObjectInterface;
 class UserSchema implements ScimObjectInterface
 {
     /**
+     * @var array
+     */
+    protected array $data = [
+        'schemas' => [
+            SchemaIdentifier::CORE_SCHEMA,
+        ],
+        'id' => SchemaIdentifier::CORE_USER,
+        'name' => 'User',
+        'description' => 'User Schema',
+        'attributes' => [
+            [
+                'name' => 'userName',
+                'type' => 'string',
+                'multiValued' => false,
+                'description' => 'Unique identifier for the User, typically used by the user to directly authenticate' .
+                    ' to the service provider. Each User MUST include a non-empty userName value.  This identifier' .
+                    ' MUST be unique across the service provider\'s entire set of Users. REQUIRED.',
+                'required' => true,
+                'caseExact' => false,
+                'mutability' => ScimConstants::ATTRIBUTE_MUTABILITY_READ_WRITE,
+                'returned' => 'default',
+                'uniqueness' => 'server',
+            ],
+            [
+                'name' => 'name',
+                'description' => 'The components of the user\'s real name. Providers MAY return just the full name as' .
+                    ' a single string in the formatted sub-attribute, or they MAY return just the individual' .
+                    ' component attributes using the other sub-attributes, or they MAY return both. If both' .
+                    ' variants are returned, they SHOULD be describing the same name, with the formatted name' .
+                    ' indicating how the component attributes should be combined.',
+                'type' => 'complex',
+                'multiValued' => false,
+                'mutability' => ScimConstants::ATTRIBUTE_MUTABILITY_READ_WRITE,
+                'required' => false,
+                'returned' => 'default',
+                'uniqueness' => 'none',
+                'subAttributes' => [
+                    [
+                        'name' => 'formatted',
+                        'description' => 'The full name, including all middle names, titles, and suffixes as' .
+                            ' appropriate, formatted for display.',
+                        'type' => 'string',
+                        'caseExact' => false,
+                        'multiValued' => false,
+                        'mutability' => ScimConstants::ATTRIBUTE_MUTABILITY_READ_WRITE,
+                        'required' => false,
+                        'returned' => 'default',
+                        'uniqueness' => 'none',
+                    ],
+                    [
+                        'name' => 'familyName',
+                        'description' => 'The family name of the User, or last name in most Western languages.',
+                        'type' => 'string',
+                        'caseExact' => false,
+                        'multiValued' => false,
+                        'mutability' => ScimConstants::ATTRIBUTE_MUTABILITY_READ_WRITE,
+                        'required' => false,
+                        'returned' => 'default',
+                        'uniqueness' => 'none',
+                    ],
+                    [
+                        'name' => 'givenName',
+                        'description' => 'The given name of the User, or first name in most Western languages.',
+                        'type' => 'string',
+                        'caseExact' => false,
+                        'multiValued' => false,
+                        'mutability' => ScimConstants::ATTRIBUTE_MUTABILITY_READ_WRITE,
+                        'required' => false,
+                        'returned' => 'default',
+                        'uniqueness' => 'none',
+                    ],
+                ],
+            ],
+            [
+                'name' => 'active',
+                'description' => 'A Boolean value indicating the User\'s administrative status.',
+                'type' => 'boolean',
+                'multiValued' => false,
+                'mutability' => ScimConstants::ATTRIBUTE_MUTABILITY_READ_WRITE,
+                'required' => false,
+                'returned' => 'default',
+                'uniqueness' => 'none',
+            ],
+            [
+                'name' => 'emails',
+                'description' => 'Email addresses for the user. The value SHOULD be canonicalized by the service' .
+                    ' provider.',
+                'type' => 'complex',
+                'multiValued' => true,
+                'mutability' => ScimConstants::ATTRIBUTE_MUTABILITY_IMMUTABLE,
+                'required' => false,
+                'returned' => 'default',
+                'uniqueness' => 'none',
+                'subAttributes' => [
+                    [
+                        'name' => 'value',
+                        'description' => 'Email addresses for the user. The value SHOULD be canonicalized by the' .
+                            ' service provider.',
+                        'type' => 'string',
+                        'caseExact' => false,
+                        'multiValued' => false,
+                        'mutability' => ScimConstants::ATTRIBUTE_MUTABILITY_IMMUTABLE,
+                        'required' => true,
+                        'returned' => 'default',
+                        'uniqueness' => 'none',
+                    ],
+                    [
+                        'name' => 'type',
+                        'description' => 'A label indicating the attribute\'s function.',
+                        'type' => 'string',
+                        'canonicalValues' => [
+                            'work',
+                        ],
+                        'caseExact' => false,
+                        'multiValued' => false,
+                        'mutability' => ScimConstants::ATTRIBUTE_MUTABILITY_READ_WRITE,
+                        'required' => false,
+                        'returned' => 'default',
+                        'uniqueness' => 'none',
+                    ],
+                    [
+                        'name' => 'primary',
+                        'description' => 'A Boolean value indicating the \'primary\' or preferred attribute value' .
+                            ' for this attribute, e.g., the preferred mailing address or primary email address.' .
+                            ' The primary attribute value \'true\' MUST appear no more than once.',
+                        'type' => 'boolean',
+                        'multiValued' => false,
+                        'mutability' => ScimConstants::ATTRIBUTE_MUTABILITY_READ_WRITE,
+                        'required' => false,
+                        'returned' => 'default',
+                        'uniqueness' => 'none',
+                    ],
+                ],
+            ],
+        ],
+        'meta' => [
+            'resourceType' => 'Schema',
+            'location' => '{scimUrl}/Schemas/' . SchemaIdentifier::CORE_USER,
+        ],
+    ];
+
+    /**
      * @inheritDoc
      */
     public function toSCIM(): array
     {
-        $schemaIdentifier = SchemaIdentifier::CORE_USER;
-
-        return [
-            'schemas' => [
-                SchemaIdentifier::CORE_SCHEMA,
-            ],
-            'id' => $schemaIdentifier,
-            'name' => 'User',
-            'description' => 'User Schema',
-            'attributes' => [
-                [
-                    'name' => 'userName',
-                    'type' => 'string',
-                    'multiValued' => false,
-                    'description' => 'Unique identifier for the User, typically used by the user to directly authenticate' .
-                        ' to the service provider. Each User MUST include a non-empty userName value.  This identifier' .
-                        ' MUST be unique across the service provider\'s entire set of Users. REQUIRED.',
-                    'required' => true,
-                    'caseExact' => false,
-                    'mutability' => 'readWrite',
-                    'returned' => 'default',
-                    'uniqueness' => 'server',
-                ],
-                [
-                    'name' => 'name',
-                    'description' => 'The components of the user\'s real name. Providers MAY return just the full name as' .
-                        ' a single string in the formatted sub-attribute, or they MAY return just the individual' .
-                        ' component attributes using the other sub-attributes, or they MAY return both. If both' .
-                        ' variants are returned, they SHOULD be describing the same name, with the formatted name' .
-                        ' indicating how the component attributes should be combined.',
-                    'type' => 'complex',
-                    'multiValued' => false,
-                    'mutability' => 'readWrite',
-                    'required' => false,
-                    'returned' => 'default',
-                    'uniqueness' => 'none',
-                    'subAttributes' => [
-                        [
-                            'name' => 'formatted',
-                            'description' => 'The full name, including all middle names, titles, and suffixes as' .
-                                ' appropriate, formatted for display.',
-                            'type' => 'string',
-                            'caseExact' => false,
-                            'multiValued' => false,
-                            'mutability' => 'readWrite',
-                            'required' => false,
-                            'returned' => 'default',
-                            'uniqueness' => 'none',
-                        ],
-                        [
-                            'name' => 'familyName',
-                            'description' => 'The family name of the User, or last name in most Western languages.',
-                            'type' => 'string',
-                            'caseExact' => false,
-                            'multiValued' => false,
-                            'mutability' => 'readWrite',
-                            'required' => false,
-                            'returned' => 'default',
-                            'uniqueness' => 'none',
-                        ],
-                        [
-                            'name' => 'givenName',
-                            'description' => 'The given name of the User, or first name in most Western languages.',
-                            'type' => 'string',
-                            'caseExact' => false,
-                            'multiValued' => false,
-                            'mutability' => 'readWrite',
-                            'required' => false,
-                            'returned' => 'default',
-                            'uniqueness' => 'none',
-                        ],
-                    ],
-                ],
-                [
-                    'name' => 'active',
-                    'description' => 'A Boolean value indicating the User\'s administrative status.',
-                    'type' => 'boolean',
-                    'multiValued' => false,
-                    'mutability' => 'readWrite',
-                    'required' => false,
-                    'returned' => 'default',
-                    'uniqueness' => 'none',
-                ],
-                [
-                    'name' => 'emails',
-                    'description' => 'Email addresses for the user. The value SHOULD be canonicalized by the service' .
-                        ' provider.',
-                    'type' => 'complex',
-                    'multiValued' => true,
-                    'mutability' => 'immutable',
-                    'required' => false,
-                    'returned' => 'default',
-                    'uniqueness' => 'none',
-                    'subAttributes' => [
-                        [
-                            'name' => 'value',
-                            'description' => 'Email addresses for the user. The value SHOULD be canonicalized by the' .
-                                ' service provider.',
-                            'type' => 'string',
-                            'caseExact' => false,
-                            'multiValued' => false,
-                            'mutability' => 'immutable',
-                            'required' => true,
-                            'returned' => 'default',
-                            'uniqueness' => 'none',
-                        ],
-                        [
-                            'name' => 'type',
-                            'description' => 'A label indicating the attribute\'s function.',
-                            'type' => 'string',
-                            'canonicalValues' => [
-                                'work',
-                            ],
-                            'caseExact' => false,
-                            'multiValued' => false,
-                            'mutability' => 'readWrite',
-                            'required' => false,
-                            'returned' => 'default',
-                            'uniqueness' => 'none',
-                        ],
-                        [
-                            'name' => 'primary',
-                            'description' => 'A Boolean value indicating the \'primary\' or preferred attribute value' .
-                                ' for this attribute, e.g., the preferred mailing address or primary email address.' .
-                                ' The primary attribute value \'true\' MUST appear no more than once.',
-                            'type' => 'boolean',
-                            'multiValued' => false,
-                            'mutability' => 'readWrite',
-                            'required' => false,
-                            'returned' => 'default',
-                            'uniqueness' => 'none',
-                        ],
-                    ],
-                ],
-            ],
-            'meta' => [
-                'resourceType' => 'Schema',
-                'location' => '{scimUrl}/Schemas/' . $schemaIdentifier,
-            ],
-        ];
+        return $this->data;
     }
 }

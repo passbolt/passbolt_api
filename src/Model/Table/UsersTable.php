@@ -518,6 +518,12 @@ class UsersTable extends Table
         // Mark gpg ke as deleted
         $this->Gpgkeys->updateAll(['deleted' => true], ['user_id' => $user->id]);
 
+        // Mark scim_entry as deleted
+        $this->ScimEntries->updateAll(['deleted' => date('Y-m-d H:s:i')], [
+            'foreign_key' => $user->id,
+            'foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
+        ]);
+
         // Delete all tags
         if (Configure::read('passbolt.plugins.tags.enabled')) {
             $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');

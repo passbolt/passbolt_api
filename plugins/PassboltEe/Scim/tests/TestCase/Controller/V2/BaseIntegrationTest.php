@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Passbolt\Scim\Test\Utility\ScimTestPostDataTrait;
+use Passbolt\Scim\Test\Utility\ScimTestRequestBodyDataTrait;
 use Passbolt\Scim\Test\Utility\ScimTestUsersTrait;
 
 /**
@@ -26,7 +26,7 @@ use Passbolt\Scim\Test\Utility\ScimTestUsersTrait;
  */
 abstract class BaseIntegrationTest extends AppIntegrationTestCase
 {
-    use ScimTestPostDataTrait;
+    use ScimTestRequestBodyDataTrait;
     use ScimTestUsersTrait;
 
     /**

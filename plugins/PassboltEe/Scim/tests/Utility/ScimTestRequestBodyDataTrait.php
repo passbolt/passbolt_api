@@ -20,12 +20,13 @@ namespace Passbolt\Scim\Test\Utility;
 /**
  * Trait with utility function for testing scim users operations
  */
-trait ScimTestPostDataTrait
+trait ScimTestRequestBodyDataTrait
 {
     /**
      * @param string $scimName
      * @param string $externalId
      * @param string $email
+     * @param string $firstName
      * @return array
      */
     protected function getUserPostData(
@@ -58,6 +59,27 @@ trait ScimTestPostDataTrait
                 'familyName' => 'Scim',
                 'givenName' => $firstName,
             ],
+        ];
+    }
+
+    /**
+     * Example of operation:
+     *  [
+     *      'op' => 'Replace',
+     *      'path' => 'name.givenName',
+     *      'value' => 'Replaced givenName',
+     *  ]
+     *
+     * @param array $operations array of operations
+     * @return array
+     */
+    protected function getPatchOpData(array $operations = []): array
+    {
+        return [
+            'schemas' => [
+                'urn:ietf:params:scim:api:messages:2.0:PatchOp',
+            ],
+            'Operations' => $operations,
         ];
     }
 }

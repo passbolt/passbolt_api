@@ -49,7 +49,7 @@ class ScimController extends AppController
         parent::beforeFilter($event);
         /** @todo change this to use token instead. Only unauthenticated should be /Schemas, /ServiceProviderConfig and /ResourceTypes */
         $this->Authentication->allowUnauthenticated(
-            ['add', 'view','index', 'schemas', 'serviceProviderConfig', 'resourceTypes']
+            ['add', 'view', 'index', 'edit', 'delete', 'schemas', 'serviceProviderConfig', 'resourceTypes']
         );
         $this->disableAutoRender();
         $this->setResponse($this->getResponse()->withType('application/scim+json'));
@@ -139,11 +139,11 @@ class ScimController extends AppController
     public function edit(string $settingId, string $resourceType, string $resourceId): void
     {
         try {
-            $patchOperation = (new PatchOp())->setFromScim($this->getRequest()->getData());
-            $userResource = Resources::build($resourceType)
-                ->setFromDatabase($resourceId)
-                ->applyPatchOperation($patchOperation)
-                ->update();
+            $patchOp = (new PatchOp())->setFromScim($this->getRequest()->getData());
+            $userResource = Resources::build($resourceType)->setFromDatabase($resourceId);
+            foreach ($patchOp->getOperations() as $operation) {
+                $userResource->applyOperation($operation);
+            }
 
             $this->processResponse($settingId, $userResource, static::STATUS_EDITED);
         } catch (\Exception $e) {

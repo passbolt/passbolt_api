@@ -254,7 +254,7 @@ class ScimControllerTest extends BaseIntegrationTest
         // @todo: make this user the one selected in the scim settings for logs
         UserFactory::make()->admin()->persist();
 
-        $scimName = 'user1@username.com';
+        $scimName = self::USER_1_SCIM_NAME;
         $this->post($this->getScimEndpoint('Users'), $this->getUserPostData($scimName));
         $this->assertResponseCode(201);
 
@@ -269,8 +269,8 @@ class ScimControllerTest extends BaseIntegrationTest
      */
     public function testScimControllerUsersAdd_ConflictExist()
     {
-        $scimName = 'user1@username.com';
-        $email = 'user1@email.com';
+        $scimName = self::USER_1_SCIM_NAME;
+        $email = self::USER_1_EMAIL;
         $scimEntry = ScimEntryFactory::make(['scim_name' => $scimName])->withUser(['username' => $email])->persist();
 
         $this->post($this->getScimEndpoint('Users'), $this->getUserPostData($scimName, email: $email));
@@ -282,7 +282,7 @@ class ScimControllerTest extends BaseIntegrationTest
     }
 
     /**
-     * Test case for POST /Users/<user_id> endpoint with existing user
+     * Test case for GET /Users/<user_id> endpoint with existing user
      */
     public function testScimControllerUsersView_Success()
     {
@@ -297,12 +297,55 @@ class ScimControllerTest extends BaseIntegrationTest
     }
 
     /**
-     * Test case for POST /Users/<user_id> endpoint with NOT existing user
+     * Test case for GET /Users/<user_id> endpoint with NOT existing user
      */
     public function testScimControllerUsersView_NotFound()
     {
         $this->setTestNow();
         $this->get($this->getScimEndpoint('Users' . DS . 'not-existing-id'));
+        $this->assertResponseCode(404);
+
+        $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_VIEW_NOT_FOUND);
+        $this->assertResponseEquals($expectedResponse);
+    }
+
+    /**
+     * Test case for success PATCH /Users/<user_id> endpoint
+     */
+    public function testScimControllerUsersEdit_Success()
+    {
+        $this->setTestNow();
+        $scimEntry = $this->createScimUser1();
+        $this->assertSame('User 1', $scimEntry->user->profile->first_name);
+        $this->assertSame('Scim', $scimEntry->user->profile->last_name);
+
+        $this->patch($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key), $this->getPatchOpData([
+            [
+                'op' => 'Replace',
+                'path' => 'name.givenName',
+                'value' => 'First name replaced',
+            ],
+            [
+                'op' => 'Add',
+                'path' => 'name.familyName',
+                'value' => 'Last name added',
+            ],
+        ]));
+        $this->assertResponseCode(200);
+
+        $scimEntry = $this->getScimEntryByName(self::USER_1_SCIM_NAME, addUser: true);
+        $this->assertSame('First name replaced', $scimEntry->user->profile->first_name);
+        // Last name did not change because `Add` operation do not change not empty values
+        $this->assertSame('Scim', $scimEntry->user->profile->last_name);
+    }
+
+    /**
+     * Test case for PATCH /Users/<user_id> endpoint with NOT existing user
+     */
+    public function testScimControllerUsersEdit_NotFound()
+    {
+        $this->setTestNow();
+        $this->patch($this->getScimEndpoint('Users' . DS . 'not-existing-id'));
         $this->assertResponseCode(404);
 
         $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_VIEW_NOT_FOUND);

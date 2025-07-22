@@ -22,7 +22,6 @@ use App\Model\Entity\User;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use Passbolt\Scim\Model\Entity\ScimEntry;
-use Passbolt\Scim\Test\Factory\ScimEntryFactory;
 
 /**
  * IntegrationUsersTest class
@@ -70,8 +69,8 @@ class IntegrationUsersTest extends BaseIntegrationTest
     public function testCreate_UserAndEntryDontExistInPassbolt()
     {
         $this->setTestNow();
-        $scimName = 'user1@username.com';
-        $userEmail = 'user1@email.com';
+        $scimName = self::USER_1_SCIM_NAME;
+        $userEmail = self::USER_1_EMAIL;
 
         $existingEntry = $this->getScimEntryByName($scimName);
         $this->assertNull($existingEntry);
@@ -124,8 +123,8 @@ class IntegrationUsersTest extends BaseIntegrationTest
     public function testCreate_UserExistAndEntryDontExistInPassbolt()
     {
         $this->setTestNow();
-        $scimName = 'user1@username.com';
-        $userEmail = 'user1@email.com';
+        $scimName = self::USER_1_SCIM_NAME;
+        $userEmail = self::USER_1_EMAIL;
         UserFactory::make(['username' => $userEmail])->persist();
 
         $existingEntry = $this->getScimEntryByName($scimName);
@@ -161,8 +160,6 @@ class IntegrationUsersTest extends BaseIntegrationTest
         $this->assertSame($updatedUser->profile->first_name, $firstNameModified);
     }
 
-
-
     /**
      * Test: The user is created, then deleted in Passbolt, then created in Azure
      *
@@ -180,19 +177,91 @@ class IntegrationUsersTest extends BaseIntegrationTest
         $usersTable = $this->fetchTable('Users');
 
         $this->setTestNow();
-        $userEmail = 'user1@email.com';
+        $scimName = self::USER_1_SCIM_NAME;
+        $userEmail = self::USER_1_EMAIL;
         UserFactory::make(['username' => $userEmail])->persist();
 
         $existingUser = $this->getUserByUsername($userEmail);
         $this->assertNotNull($existingUser);
         $this->assertFalse($existingUser->deleted);
-
         $usersTable->softDelete($existingUser);
-        $existingUser = $this->getUserByUsername($userEmail);
-        $this->assertNotNull($existingUser);
-        $this->assertTrue($existingUser->deleted);
 
-        // @todo: check where is the logic to recover a deleted user
-        $this->markTestIncomplete('Need logic to revert back the user from deleted');
+        // Check if the user exists
+        $this->get($this->getScimEndpoint('Users?filter=userName+eq+%22' . urlencode($scimName) . '%22'));
+        $this->assertResponseCode(200);
+        $this->assertResponseContains('urn:ietf:params:scim:api:messages:2.0:ListResponse');
+        $this->assertResponseContains('"totalResults": 0');
+
+        // create the user
+        $this->post($this->getScimEndpoint('Users'), $this->getUserPostData($scimName, email: $userEmail));
+        $this->assertResponseCode(201);
+        $this->assertResponseContains('urn:ietf:params:scim:schemas:core:2.0:User');
+        $this->assertResponseContains('"userName": "' . $scimName . '"');
+        $this->assertResponseContains('"value": "' . $userEmail . '"');
+
+        $newEntry = $this->getScimEntryByName($scimName);
+        $this->assertNotNull($newEntry);
+        $newUser = $this->getUserByUsername($userEmail);
+        $this->assertNotNull($newUser);
+        $this->assertFalse($newUser->deleted);
+        $deletedUser = $this->getUserByUsername($userEmail, isDeleted: true);
+        $this->assertNotNull($deletedUser);
+        $this->assertTrue($deletedUser->deleted);
+        $this->assertSame($deletedUser->id, $existingUser->id);
+        $this->assertNotSame($newUser->id, $deletedUser->id);
+
+        $this->assertSame($newEntry->scim_name, $scimName);
+        $this->assertSame($newEntry->foreign_model, ScimEntry::FOREIGN_MODEL_USERS);
+        $this->assertSame($newEntry->foreign_key, $newUser->id);
+        $this->assertSame($newUser->username, $userEmail);
+        $this->assertSame($newUser->username, $existingUser->username);
+    }
+
+    /**
+     * Test: The user exists in passbolt and was created by SCIM, and the name was updated in Azure
+     *
+     * Scenario:
+     * ----------
+     * Scenario: a classic update, for example the name is updated in Azure.
+     * ---------
+     * If the user was created in passbolt via SCIM,
+     * Azure will send a GET request with the user ID and Passbolt returns the user information
+     * and then a PATCH request is sent to update the attributes that have changed.
+     * Passbolt updates the name and returns the updated User Resource.
+     */
+    public function testEdit_UserExistAndEntryExistInPassbolt_UpdateName()
+    {
+        $this->setTestNow();
+        $scimName = self::USER_1_SCIM_NAME;
+        $userEmail = self::USER_1_EMAIL;
+        $scimEntry = $this->createScimUser1();
+        $this->assertSame($scimEntry->scim_name, $scimName);
+        $this->assertSame($scimEntry->user->username, $userEmail);
+        $this->assertSame($scimEntry->user->profile->first_name, 'User 1');
+
+        // Check if the user exists
+        $this->get($this->getScimEndpoint('Users?filter=userName+eq+%22' . urlencode($scimName) . '%22'));
+        $this->assertResponseCode(200);
+        $this->assertResponseContains('urn:ietf:params:scim:api:messages:2.0:ListResponse');
+        $this->assertResponseContains('"totalResults": 1');
+        $this->assertResponseContains('"userName": "' . $scimName . '"');
+
+        // Update user
+        $this->patch($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key), $this->getPatchOpData([
+            [
+                'op' => 'Replace',
+                'path' => 'name.givenName',
+                'value' => 'First name updated',
+            ],
+        ]));
+        $this->assertResponseCode(200);
+        $this->assertResponseContains('urn:ietf:params:scim:schemas:core:2.0:User');
+        $this->assertResponseContains('"userName": "' . $scimName . '"');
+        $this->assertResponseContains('"givenName": "First name updated"');
+
+        $scimEntry = $this->getScimEntryByName($scimName, addUser: true);
+        $this->assertSame($scimEntry->scim_name, $scimName);
+        $this->assertSame($scimEntry->user->username, $userEmail);
+        $this->assertSame('First name updated', $scimEntry->user->profile->first_name);
     }
 }

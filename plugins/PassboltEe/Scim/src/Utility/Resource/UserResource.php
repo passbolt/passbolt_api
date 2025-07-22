@@ -28,16 +28,20 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Passbolt\Scim\Exception\ConflictException;
+use Passbolt\Scim\Exception\NotSupportedException;
+use Passbolt\Scim\Exception\PreconditionFailedException;
 use Passbolt\Scim\Exception\ResourceNotFoundException;
 use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Log\ScimLog;
 use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Model\Table\ScimEntriesTable;
 use Passbolt\Scim\Utility\Object\Operation;
-use Passbolt\Scim\Utility\Object\PatchOp;
+use Passbolt\Scim\Utility\Object\ServiceProviderConfig;
 use Passbolt\Scim\Utility\ResourceInterface;
 use Passbolt\Scim\Utility\Resources;
 use Passbolt\Scim\Utility\SchemaIdentifier;
+use Passbolt\Scim\Utility\Schemas;
+use Passbolt\Scim\Utility\ScimConstants;
 use Passbolt\Scim\Utility\ScimObjectInterface;
 use Passbolt\Scim\Utility\ScimTools;
 
@@ -216,10 +220,9 @@ class UserResource implements ScimObjectInterface, ResourceInterface
      * Find existing User entity
      *
      * @param array $conditions
-     * @param bool $includeDeleted
      * @return \App\Model\Entity\User|null
      */
-    protected function findExistingUserEntity(array $conditions = [], bool $includeDeleted = false): ?User
+    protected function findExistingUserEntity(array $conditions = []): ?User
     {
         if ($conditions === []) {
             if (!$this->email) {
@@ -230,9 +233,7 @@ class UserResource implements ScimObjectInterface, ResourceInterface
                 $this->Users->aliasField('username') => $this->email,
             ];
         }
-        if (!$includeDeleted) {
-            $conditions[$this->Users->aliasField('deleted')] = false;
-        }
+        $conditions[$this->Users->aliasField('deleted')] = false;
 
         /** @var \App\Model\Entity\User|null $user */
         $user = $this->Users
@@ -338,51 +339,187 @@ class UserResource implements ScimObjectInterface, ResourceInterface
     }
 
     /**
-     * @inheritDoc
+     * @return array
+     * @throws \Exception
      */
-    public function update(): static
+    protected function getNameAttributeSchema(): array
     {
-        // @todo: is this function  needed if we make patch operations atomic?
-        if (!$this->id) {
-            throw new ScimException(
-                sprintf('The values of the %s resource has not been set for the `update` operation', $this->getType())
-            );
+        $userSchema = Schemas::build(SchemaIdentifier::CORE_USER)->toSCIM();
+
+        return Hash::extract($userSchema, 'attributes.{n}[name=name]')[0] ?? [];
+    }
+
+    /**
+     * @param \Passbolt\Scim\Utility\Object\Operation $operation
+     * @return string
+     * @throws \Exception
+     */
+    protected function getAttributeMutability(Operation $operation): string
+    {
+        $userSchema = Schemas::build(SchemaIdentifier::CORE_USER)->toSCIM();
+        switch ($operation->getAttribute()) {
+            case 'name.givenName':
+            case 'name.familyName':
+                [$attributeName, $subAttributeName] = explode('.', $operation->getAttribute());
+                $nameAttribute = Hash::extract($userSchema, "attributes.{n}[name=$attributeName]")[0] ?? [];
+                $attribute = Hash::extract($nameAttribute, "subAttributes.{n}[name=$subAttributeName]");
+                $mutability = $attribute[0]['mutability'] ?? null;
+                break;
+            case 'active':
+                $attribute = Hash::extract($userSchema, "attributes.{n}[name=active]");
+                $mutability = $attribute[0]['mutability'] ?? null;
+                break;
+            case 'emails':
+                $emailsAttribute = Hash::extract($userSchema, "attributes.{n}[name=emails]")[0] ?? [];
+                $attribute = Hash::extract($emailsAttribute, "subAttributes.{n}[name=value]");
+                $mutability = $attribute[0]['mutability'] ?? null;
+                break;
+            default:
+                // set no used attributes as read only
+                $mutability = ScimConstants::ATTRIBUTE_MUTABILITY_READ_ONLY;
+        }
+        if (!ScimConstants::isValidAttributeMutability((string)$mutability)) {
+            throw new ScimException(sprintf('The mutability `%s` is invalid or not supported', $mutability));
         }
 
-        throw new ScimException('Not Implemented yet');
-
-        return $this;
+        return $mutability;
     }
 
     /**
      * @inheritDoc
+     * @throws \Exception
      */
-    public function applyPatchOperation(PatchOp $patchOperation): static
+    public function applyOperation(Operation $operation): static
     {
-        // @todo: this need to be updated to be atomic?
-        foreach ($patchOperation->getOperations() as $operation) {
-            switch (strtolower($operation->getType())) {
-                case Operation::TYPE_REPLACE:
-                    switch ($operation->getAttribute()) {
-                        case 'active':
-                            $this->active = in_array($operation->getValue(), ['true','True']);
-                            break;
-                        case 'emails':
-                            throw new ScimException('The email can not be changed');
-                        default:
-                            // ignore attributes that will not be updated
-                    }
-                    break;
-                case Operation::TYPE_DELETE:
-                case Operation::TYPE_ADD:
-                throw new ScimException('Not implemented yet');
-                    break;
-                default:
-                    throw new ScimException(
-                        sprintf('The operation %s is invalid or not implemented yet', $operation->getType())
-                    );
-            }
+        $serviceConfig = new ServiceProviderConfig();
+        if (!$serviceConfig->isPatchSupported()) {
+            throw new NotSupportedException('The PATCH operation is not supported');
         }
+        if (!$this->userEntity) {
+            throw new ScimException('The database user must be set to apply an operation');
+        }
+
+        $mutability = $this->getAttributeMutability($operation);
+        // @todo: should we throw error or just ignore?
+        if ($mutability === ScimConstants::ATTRIBUTE_MUTABILITY_READ_ONLY) {
+            throw new ConflictException(sprintf(
+                'Unable to apply operation `%` for the attribute `%s` with mutability `%s`',
+                $operation->getType(),
+                $operation->getAttribute(),
+                $mutability,
+            ));
+        }
+        if ($mutability === ScimConstants::ATTRIBUTE_MUTABILITY_IMMUTABLE &&
+            $operation->getType() !== Operation::TYPE_ADD
+        ) {
+            throw new ConflictException(sprintf(
+                'Unable to apply operation `%` for the attribute `%s` with mutability `%s`',
+                $operation->getType(),
+                $operation->getAttribute(),
+                $mutability,
+            ));
+        }
+
+        $patchData = [];
+        switch ($operation->getType()) {
+            case Operation::TYPE_ADD:
+                switch ($operation->getAttribute()) {
+                    case 'name.givenName':
+                        if (empty($this->firstName)) {
+                            $patchData['profile']['first_name'] = $operation->getValue();
+                        }
+                        break;
+                    case 'name.familyName':
+                        if (empty($this->lastName)) {
+                            $patchData['profile']['last_name'] = $operation->getValue();
+                        }
+                        break;
+                    case 'active':
+                        if ($this->active === null) {
+                            $disabled = null;
+                            if (!in_array($operation->getValue(), ['true','True'])) {
+                                $disabled = date('Y-m-d H:i:s');
+                            }
+                            $patchData['disabled'] = $disabled;
+                        }
+                        break;
+                    case 'emails':
+                        if (empty($this->email)) {
+                            $subAttribute = $operation->getSubAttribute();
+                            if ($subAttribute === 'value' && $operation->getComparisonExpression() === 'type eq work') {
+                                $this->email = $operation->getValue();
+                            }
+                        }
+                    default:
+                        // ignore attributes not used in this application
+                }
+                break;
+            case Operation::TYPE_REPLACE:
+                switch ($operation->getAttribute()) {
+                    case 'name.givenName':
+                        $patchData['profile']['first_name'] = $operation->getValue();
+                        break;
+                    case 'name.familyName':
+                        $patchData['profile']['last_name'] = $operation->getValue();
+                        break;
+                    case 'active':
+                        $disabled = null;
+                        if (!in_array($operation->getValue(), ['true','True'])) {
+                            $disabled = date('Y-m-d H:i:s');
+                        }
+                        $patchData['disabled'] = $disabled;
+                        break;
+                    case 'emails':
+                        throw new PreconditionFailedException('The email can not be changed');
+                    default:
+                        // ignore attributes not used in this application
+                }
+                break;
+            case Operation::TYPE_REMOVE:
+                switch ($operation->getAttribute()) {
+                    case 'name.givenName':
+                        $patchData['profile']['first_name'] = '';
+                        break;
+                    case 'name.familyName':
+                        $patchData['profile']['last_name'] = '';
+                        break;
+                    case 'active':
+                        $patchData['disabled'] = date('Y-m-d H:i:s');
+                        break;
+                    case 'emails':
+                        throw new PreconditionFailedException('The email can not be changed');
+                    default:
+                        // ignore attributes not used in this application
+                }
+                break;
+            default:
+                throw new NotSupportedException(
+                    sprintf('The operation type `%s` is not supported or invalid', $operation->getType())
+                );
+        }
+
+        $this->Users->patchEntity($this->userEntity, $patchData, [
+            'accessibleFields' => [
+                'disabled' => true,
+            ],
+            'associated' => [
+                'Profiles' => [
+                    'validate' => 'register',
+                    'accessibleFields' => [
+                        'first_name' => true,
+                        'last_name' => true,
+                    ],
+                ],
+            ],
+        ]);
+        if (!$this->Users->save($this->userEntity)) {
+            ScimLog::error('Unable to apply a SCIM patch operation');
+            ScimLog::error(print_r($operation, return: true));
+            ScimLog::error(print_r($this->userEntity, return: true));
+
+            throw new PreconditionFailedException('Unexpected error when trying to apply the pathc operation int he database');
+        }
+        $this->setFromDatabase($this->userEntity->id);
 
         return $this;
     }
