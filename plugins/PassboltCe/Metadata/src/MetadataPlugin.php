@@ -101,13 +101,16 @@ class MetadataPlugin extends BasePlugin
         if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
             $commands->add('passbolt metadata generate_dummy_metadata_key', GenerateDummyMetadataKeyCommand::class);
             $commands->add('passbolt metadata insert_dummy_data', InsertDummyDataCommand::class);
+            $commands->add(
+                'passbolt metadata update_metadata_types_settings',
+                UpdateMetadataTypesSettingsCommand::class
+            );
+            $commands->add('passbolt metadata share_metadata_key', ShareMetadataKeyCommand::class);
+            // Migration commands
+            $commands->add('passbolt metadata migrate_resources', MigrateResourcesCommand::class);
+            $commands->add('passbolt metadata migrate_folders', MigrateFoldersCommand::class);
+            $commands->add('passbolt metadata migrate_all_items', MigrateAllItemsCommand::class);
         }
-        $commands->add('passbolt metadata update_metadata_types_settings', UpdateMetadataTypesSettingsCommand::class);
-        $commands->add('passbolt metadata share_metadata_key', ShareMetadataKeyCommand::class);
-        // Migration commands
-        $commands->add('passbolt metadata migrate_resources', MigrateResourcesCommand::class);
-        $commands->add('passbolt metadata migrate_folders', MigrateFoldersCommand::class);
-        $commands->add('passbolt metadata migrate_all_items', MigrateAllItemsCommand::class);
 
         return $commands;
     }
