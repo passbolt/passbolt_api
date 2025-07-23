@@ -14,10 +14,17 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.1.0
  */
-namespace App\Middleware;
+namespace Passbolt\Scim\Middleware;
 
-use Cake\Utility\Text;
-use Passbolt\Scim\Log\ScimLog;
+use App\Middleware\ContainerAwareMiddlewareTrait;
+use App\Utility\Application\FeaturePluginAwareTrait;
+use Authentication\AuthenticationServiceInterface;
+use Authentication\Middleware\AuthenticationMiddleware;
+use Cake\Core\Configure;
+use Cake\Core\ContainerInterface;
+use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
+use Passbolt\JwtAuthentication\Service\Middleware\JwtRequestDetectionService;
+use Passbolt\Scim\Authenticator\ScimAuthenticationService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -28,6 +35,8 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class ScimMiddleware implements MiddlewareInterface
 {
+    use ContainerAwareMiddlewareTrait;
+    use FeaturePluginAwareTrait;
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Psr\Http\Server\RequestHandlerInterface $handler The handler.
@@ -37,23 +46,22 @@ class ScimMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        $isEnabled = true; // @todo: add configuration to enable/disable api logs
-        $controller = $request->getAttribute('params')['controller'] ?? '';
-        $isScim = strtolower($controller) === 'scim';
-        $requestId = Text::uuid();
-        if ($isEnabled && $isScim) {
-            ScimLog::info(sprintf('`%s` Request uri (%s): %s', $requestId, $request->getEnv('REQUEST_METHOD'), $request->getUri()));
-            if ($request->is(['post', 'put', 'patch'])) {
-                ScimLog::info(sprintf("`%s` Request body: \n%s", $requestId, json_encode($request->getParsedBody())));
-            }
+        /** @var \Cake\Http\ServerRequest $request */
+        if ($this->isFeaturePluginEnabled('Scim') &&
+            $request->getParam('plugin') === 'Passbolt/Scim') {
+            Configure::write('Scim.settingId', $request->getParam('settingId'));
+            $this->services($this->getContainer($request));
+            $this->disableFeaturePlugin('JwtAuthentication');
+
         }
 
-        /** @var \Cake\Http\Response $response */
-        $response = $handler->handle($request);
-        if ($isEnabled && $isScim) {
-            ScimLog::info(sprintf("`%s` Response body: \n%s", $requestId, $response->getBody()));
-        }
+        return $handler->handle($request);
+    }
 
-        return $response;
+    public function services(ContainerInterface $container): void
+    {
+        $container
+            ->extend(AuthenticationServiceInterface::class)
+            ->setConcrete(ScimAuthenticationService::class);
     }
 }

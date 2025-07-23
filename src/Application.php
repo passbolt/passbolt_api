@@ -28,7 +28,6 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\HttpProxyMiddleware;
-use App\Middleware\ScimMiddleware;
 use App\Middleware\SessionAuthPreventDeletedOrDisabledUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SslForceMiddleware;
@@ -130,7 +129,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
                 return null;
             }))
-            ->add(new ScimMiddleware())
             ->add(SessionAuthPreventDeletedOrDisabledUsersMiddleware::class)
             ->insertAfter(
                 SessionAuthPreventDeletedOrDisabledUsersMiddleware::class,

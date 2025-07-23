@@ -20,6 +20,7 @@ use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Utility\Security;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\DirectorySync\Utility\Alias;
@@ -56,7 +57,7 @@ class ScimSettingsForm extends Form
             ->notEmptyString('secret_token', __('The secret token should not be empty.'))
             ->add('secret_token', 'correctFormat', [
                 'rule' => function ($value, array $context) {
-                    if (is_string($value) && str_starts_with($value, ScimSetSettingsService::SCIM_SECRET_TOKEN_PREFIX) && strlen($value) >= 39) {
+                    if (is_string($value) && str_starts_with($value, ScimSetSettingsService::SCIM_SECRET_TOKEN_PREFIX) && strlen($value) >= 46) {
                         return true;
                     }
 
@@ -147,6 +148,17 @@ class ScimSettingsForm extends Form
         $sanitizedData = $this->sanitizeData($data);
 
         return parent::execute($sanitizedData, $options);
+    }
+
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public function _execute(array $data): bool
+    {
+        $this->_data['secret_token'] = Security::hash($data['secret_token'], 'sha256');
+
+        return true;
     }
 
     /**

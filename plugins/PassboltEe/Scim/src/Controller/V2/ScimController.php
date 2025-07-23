@@ -47,9 +47,8 @@ class ScimController extends AppController
     public function beforeFilter(EventInterface $event)
     {
         parent::beforeFilter($event);
-        /** @todo change this to use token instead. Only unauthenticated should be /Schemas, /ServiceProviderConfig and /ResourceTypes */
         $this->Authentication->allowUnauthenticated(
-            ['add', 'view', 'index', 'edit', 'delete', 'schemas', 'serviceProviderConfig', 'resourceTypes']
+            ['schemas', 'serviceProviderConfig', 'resourceTypes']
         );
         $this->disableAutoRender();
         $this->setResponse($this->getResponse()->withType('application/scim+json'));

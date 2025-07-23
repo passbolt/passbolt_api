@@ -214,6 +214,7 @@ class ScimControllerTest extends BaseIntegrationTest
         $expectedResponse = $this->replaceUserPlaceholders($expectedResponse, $scimEntry1, 1);
         $expectedResponse = $this->replaceUserPlaceholders($expectedResponse, $scimEntry2, 2);
 
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint($endpoint));
         $this->assertResponseCode(200);
         $this->assertResponseEquals($expectedResponse);
@@ -255,6 +256,7 @@ class ScimControllerTest extends BaseIntegrationTest
         UserFactory::make()->admin()->persist();
 
         $scimName = self::USER_1_SCIM_NAME;
+        $this->configScimAuth();
         $this->post($this->getScimEndpoint('Users'), $this->getUserPostData($scimName));
         $this->assertResponseCode(201);
 
@@ -273,6 +275,7 @@ class ScimControllerTest extends BaseIntegrationTest
         $email = self::USER_1_EMAIL;
         $scimEntry = ScimEntryFactory::make(['scim_name' => $scimName])->withUser(['username' => $email])->persist();
 
+        $this->configScimAuth();
         $this->post($this->getScimEndpoint('Users'), $this->getUserPostData($scimName, email: $email));
         $this->assertResponseCode(409);
 
@@ -288,6 +291,7 @@ class ScimControllerTest extends BaseIntegrationTest
     {
         $this->setTestNow();
         $scimEntry = $this->createScimUser1();
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key));
         $this->assertResponseCode(200);
 
@@ -302,6 +306,7 @@ class ScimControllerTest extends BaseIntegrationTest
     public function testScimControllerUsersView_NotFound()
     {
         $this->setTestNow();
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('Users' . DS . 'not-existing-id'));
         $this->assertResponseCode(404);
 
@@ -319,6 +324,7 @@ class ScimControllerTest extends BaseIntegrationTest
         $this->assertSame('User 1', $scimEntry->user->profile->first_name);
         $this->assertSame('Scim', $scimEntry->user->profile->last_name);
 
+        $this->configScimAuth();
         $this->patch($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key), $this->getPatchOpData([
             [
                 'op' => 'Replace',
@@ -345,6 +351,7 @@ class ScimControllerTest extends BaseIntegrationTest
     public function testScimControllerUsersEdit_NotFound()
     {
         $this->setTestNow();
+        $this->configScimAuth();
         $this->patch($this->getScimEndpoint('Users' . DS . 'not-existing-id'));
         $this->assertResponseCode(404);
 

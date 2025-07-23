@@ -12,6 +12,7 @@ use App\Utility\UuidFactory;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Cake\Utility\Security;
 use Passbolt\Scim\Service\ScimDeleteSettingsService;
 use Passbolt\Scim\Service\ScimSetSettingsService;
 
@@ -99,8 +100,14 @@ class ScimSettingsCommand extends PassboltCommand
                 $io->success('Settings have been deleted successfully.');
             } else {
                 $service = new ScimSetSettingsService($uac);
-                $settings = $service->saveSettings(['scim_user_id' => $user->id . 'das', 'setting_id' => UuidFactory::uuid(), 'secret_token' => ScimSetSettingsService::generateToken()], $id);
-                $io->success('Settings were successfully generated/updated. Please check them');
+                $secretToken = ScimSetSettingsService::generateToken();
+                $settings = $service->saveSettings([
+                    'scim_user_id' => $user->id,
+                    'setting_id' => UuidFactory::uuid(),
+                    'secret_token' => $secretToken
+                ], $id);
+                $settings['secret_token'] = $secretToken;
+                $io->success('Settings were successfully generated. Please check them');
                 $io->out(json_encode($settings));
             }
         } catch (FormValidationException $fve) {

@@ -116,6 +116,6 @@ class ScimSetSettingsService extends ScimBaseSettingsService
         $prefix = self::SCIM_SECRET_TOKEN_PREFIX;
         $token = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(random_bytes(3600)));
 
-        return $prefix . substr($token, mt_rand(0, strlen($token) - 36), 36);
+        return $prefix . substr($token, mt_rand(0, strlen($token) - 43), 43);
     }
 }

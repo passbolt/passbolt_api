@@ -17,8 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
+use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Passbolt\Scim\Test\Utility\ScimTestRequestBodyDataTrait;
+use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
 use Passbolt\Scim\Test\Utility\ScimTestUsersTrait;
 
 /**
@@ -53,8 +55,12 @@ abstract class BaseIntegrationTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->enableFeaturePlugin('Scim');
-        // @todo: Generate a valid settingId when SCIM auth is fixed
-        $this->settingId = '123456789';
+
+        RoleFactory::make()->guest()->persist();
+        RoleFactory::make()->admin()->persist();
+        ScimOrgSettingFactory::make()->default()->persist();
+        $this->settingId = ScimOrgSettingFactory::SCIM_TEST_SETTING_ID;
+
     }
 
     /**
@@ -85,5 +91,14 @@ abstract class BaseIntegrationTest extends AppIntegrationTestCase
     protected function getScimFixtureData(string $filename): string
     {
         return trim($this->replaceSettingIdString(file_get_contents(self::FIXTURE_SCIM_PATH . $filename)));
+    }
+
+    protected function configScimAuth(): void
+    {
+        $this->configRequest([
+            'headers' => [
+                'Authorization' => 'Bearer ' . ScimOrgSettingFactory::SCIM_TEST_SECRET_TOKEN,
+            ],
+        ]);
     }
 }
