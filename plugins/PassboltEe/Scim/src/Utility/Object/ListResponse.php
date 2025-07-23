@@ -144,7 +144,10 @@ class ListResponse implements ScimObjectInterface
             ->where($conditions)
             ->offset($this->startIndex - 1)
             ->limit($this->itemsPerPage)
-            ->orderByAsc($scimEntriesTable->aliasField('created'))
+            ->orderBy([
+                $scimEntriesTable->aliasField('created') => 'ASC',
+                $scimEntriesTable->aliasField('scim_name') => 'ASC',
+            ])
             ->toArray();
         foreach ($scimResources as $scimResource) {
             $this->resources[] = Resources::build($resourceType)->setFromDatabase($scimResource->foreign_key);

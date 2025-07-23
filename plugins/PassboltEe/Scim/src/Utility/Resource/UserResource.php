@@ -18,14 +18,12 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Utility\Resource;
 
 use App\Error\Exception\ValidationException;
-use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Passbolt\Scim\Exception\ConflictException;
 use Passbolt\Scim\Exception\NotSupportedException;
@@ -284,9 +282,11 @@ class UserResource implements ResourceInterface
             'last_name' => $this->lastName,
         ];
         if (!$user) {
-            // @todo: obtain admin configured in SCIM settings? for logs, etc..
-            $adminUser = $this->Users->findFirstAdmin();
-            $uac = new UserAccessControl(Role::ADMIN, $adminUser->get('id'));
+            $scimUser = ScimTools::getScimSettingsSelectedUser();
+            if (!$scimUser) {
+                throw new ConflictException('Missing or invalid SCIM user in configuration settings');
+            }
+            $uac = new UserAccessControl($scimUser->role->name, $scimUser->id);
             try {
                 $disabled = null;
                 if (!$this->active) {
@@ -538,10 +538,22 @@ class UserResource implements ResourceInterface
      */
     public function delete(): static
     {
-        if (!$this->id) {
+        if (!$this->userEntity) {
             throw new ScimException(
                 sprintf('The values of the %s resource has not been set for the `delete` operation', $this->getType())
             );
+        }
+
+        try {
+            if (!$this->Users->softDelete($this->userEntity)) {
+                throw new ConflictException('The User resource could not be deleted due to validation failure');
+            }
+        } catch (\Exception $e) {
+            ScimLog::error(sprintf('Unable to delete the user with id `%s`', $this->userEntity->id));
+            ScimLog::error($e->getMessage());
+            ScimLog::error($e->getTraceAsString());
+
+            throw new ConflictException('Unexpected error when trying to delete the user.');
         }
 
         return $this;

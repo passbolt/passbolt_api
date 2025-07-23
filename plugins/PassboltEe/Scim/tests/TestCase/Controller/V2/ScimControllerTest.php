@@ -18,8 +18,8 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
 use App\Test\Factory\RoleFactory;
-use App\Test\Factory\UserFactory;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
+use Passbolt\Scim\Test\Utility\BaseIntegrationTest;
 
 /**
  * ScimControllerTest class
@@ -249,11 +249,7 @@ class ScimControllerTest extends BaseIntegrationTest
     public function testScimControllerUsersAdd_Success()
     {
         $this->setTestNow();
-
-        /** @var \App\Model\Entity\Role $role */
         RoleFactory::make()->user()->persist();
-        // @todo: make this user the one selected in the scim settings for logs
-        UserFactory::make()->admin()->persist();
 
         $scimName = self::USER_1_SCIM_NAME;
         $this->configScimAuth();
@@ -357,5 +353,23 @@ class ScimControllerTest extends BaseIntegrationTest
 
         $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_VIEW_NOT_FOUND);
         $this->assertResponseEquals($expectedResponse);
+    }
+
+    /**
+     * Test case for success DELETE /Users/<user_id> endpoint
+     */
+    public function testScimControllerUsersDelete_Success()
+    {
+        $this->setTestNow();
+        $scimEntry = $this->createScimUser1();
+        $this->assertSame(self::USER_1_SCIM_NAME, $scimEntry->scim_name);
+        $this->assertFalse($scimEntry->user->deleted);
+
+        $this->configScimAuth();
+        $this->delete($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key));
+        $this->assertResponseCode(204);
+
+        $scimEntry = $this->getScimEntryByName(self::USER_1_SCIM_NAME, addUser: true);
+        $this->asserttrue($scimEntry->user->deleted);
     }
 }

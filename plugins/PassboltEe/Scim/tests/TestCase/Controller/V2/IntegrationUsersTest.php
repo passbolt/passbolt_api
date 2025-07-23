@@ -22,6 +22,7 @@ use App\Model\Entity\User;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use Passbolt\Scim\Model\Entity\ScimEntry;
+use Passbolt\Scim\Test\Utility\BaseIntegrationTest;
 
 /**
  * IntegrationUsersTest class
@@ -142,8 +143,8 @@ class IntegrationUsersTest extends BaseIntegrationTest
         $this->assertResponseContains('"totalResults": 0');
 
         // create the user
-        $firstNameModified = $existingUser->profile->first_name . ' - modified';
         $this->configScimAuth();
+        $firstNameModified = $existingUser->profile->first_name . ' - modified';
         $this->post($this->getScimEndpoint('Users'), $this->getUserPostData($scimName, email: $userEmail, firstName: $firstNameModified));
         $this->assertResponseCode(201);
         $this->assertResponseContains('urn:ietf:params:scim:schemas:core:2.0:User');
@@ -247,10 +248,9 @@ class IntegrationUsersTest extends BaseIntegrationTest
 
         // Check if the user exists
         $this->configScimAuth();
-        $this->get($this->getScimEndpoint('Users?filter=userName+eq+%22' . urlencode($scimName) . '%22'));
+        $this->get($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key));
         $this->assertResponseCode(200);
-        $this->assertResponseContains('urn:ietf:params:scim:api:messages:2.0:ListResponse');
-        $this->assertResponseContains('"totalResults": 1');
+        $this->assertResponseContains('urn:ietf:params:scim:schemas:core:2.0:User');
         $this->assertResponseContains('"userName": "' . $scimName . '"');
 
         // Update user
@@ -271,5 +271,43 @@ class IntegrationUsersTest extends BaseIntegrationTest
         $this->assertSame($scimEntry->scim_name, $scimName);
         $this->assertSame($scimEntry->user->username, $userEmail);
         $this->assertSame('First name updated', $scimEntry->user->profile->first_name);
+    }
+
+    /**
+     * Test: The user does not exist in Passbolt
+     *
+     * Scenario:
+     * ----------
+     * a user was sync’ with Azure and deleted by admin directly in passbolt instead of Azure and is then deleted in Azure.
+     * ---------
+     * In this scenario passbolt will reply with a 404 to Azure, and Azure will not send a DELETE request.
+     *  If it can ignore that request, act like the user was properly deleted even if that was already done
+     *  and return a successful delete response.
+     */
+    public function testDelete_UserAlreadyDeletedInPassbolt()
+    {
+        /** @var \App\Model\Table\UsersTable $usersTable */
+        $usersTable = $this->fetchTable('Users');
+
+        $this->setTestNow();
+        $scimName = self::USER_1_SCIM_NAME;
+        $scimEntry = $this->createScimUser1();
+        $this->assertSame($scimEntry->scim_name, $scimName);
+        $this->assertFalse($scimEntry->user->deleted);
+        $usersTable->softDelete($scimEntry->user);
+        $scimEntry = $this->getScimEntryByName($scimName, addUser: true);
+
+        // Check if the user exists
+        $this->configScimAuth();
+        $this->get($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key));
+        $this->assertResponseCode(404);
+        $this->assertResponseContains('urn:ietf:params:scim:api:messages:2.0:Error');
+        $this->assertResponseContains('The Users resource with id `' . $scimEntry->foreign_key . '` was not found');
+
+        // try to Delete user anyway
+        $this->configScimAuth();
+        $this->delete($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key));
+        $this->assertResponseCode(404);
+
     }
 }

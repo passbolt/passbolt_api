@@ -15,13 +15,11 @@ declare(strict_types=1);
  * @since         3.6.0
  */
 
-namespace Passbolt\Scim\Test\TestCase\Controller\V2;
+namespace Passbolt\Scim\Test\Utility;
 
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
-use Passbolt\Scim\Test\Utility\ScimTestRequestBodyDataTrait;
-use Passbolt\Scim\Test\Utility\ScimTestUsersTrait;
 
 /**
  * BaseIntegrationTest class
@@ -42,11 +40,18 @@ abstract class BaseIntegrationTest extends AppIntegrationTestCase
     public const FIXTURE_SCIM_PATH = PLUGINS . 'PassboltEe' . DS . 'Scim' . DS . 'tests' . DS . 'Fixture' . DS . 'Scim' . DS;
 
     /**
-     * Setting ID for the scim endpoint
+     * Setting ID for the SCIM endpoint
      *
      * @var string
      */
     protected string $settingId = '';
+
+    /**
+     * Scim user id for the SCIM operations logs
+     *
+     * @var string|null
+     */
+    protected ?string $scimUserId = '';
 
     /**
      * @inheritDoc
@@ -58,8 +63,10 @@ abstract class BaseIntegrationTest extends AppIntegrationTestCase
 
         RoleFactory::make()->guest()->persist();
         RoleFactory::make()->admin()->persist();
-        ScimOrgSettingFactory::make()->default()->persist();
-        $this->settingId = ScimOrgSettingFactory::SCIM_TEST_SETTING_ID;
+        $scimOrgSetting = ScimOrgSettingFactory::make()->default()->persist();
+        $settingsData = json_decode($scimOrgSetting->value, associative: true);
+        $this->settingId = $settingsData['setting_id'] ?? '';
+        $this->scimUserId = $settingsData['scim_user_id'] ?? '';
     }
 
     /**
