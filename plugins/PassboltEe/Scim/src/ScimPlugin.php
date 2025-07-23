@@ -18,20 +18,13 @@ declare(strict_types=1);
 namespace Passbolt\Scim;
 
 use App\Service\Healthcheck\HealthcheckServiceCollector;
-use Authentication\AuthenticationServiceInterface;
-use Authentication\AuthenticationServiceProviderInterface;
-use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\RoutingMiddleware;
-use Passbolt\JwtAuthentication\Middleware\JwtAuthDetectionMiddleware;
-use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
-use Passbolt\Scim\Authenticator\ScimAuthenticationService;
 use Passbolt\Scim\Middleware\ScimMiddleware;
 use Passbolt\Scim\Service\Healthcheck\ScimHealthcheckService;
-use Psr\Http\Message\ServerRequestInterface;
 
 class ScimPlugin extends BasePlugin
 {
@@ -62,6 +55,10 @@ class ScimPlugin extends BasePlugin
             ->addMethodCall('addService', [ScimHealthcheckService::class]);
     }
 
+    /**
+     * @param \Cake\Http\MiddlewareQueue $middlewareQueue
+     * @return \Cake\Http\MiddlewareQueue
+     */
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         $middlewareQueue

@@ -9,13 +9,14 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Utility\Security;
 use Passbolt\Scim\ScimPlugin;
 use Passbolt\Scim\Service\ScimSetSettingsService;
 use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
+use Throwable;
 
 /**
  * Passbolt\Scim\Controller\ScimSetSettingsController Test Case
- *
  */
 class ScimSetSettingsControllerTest extends AppIntegrationTestCase
 {
@@ -42,8 +43,9 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $this->disableFeaturePlugin(ScimPlugin::class);
 
         try {
-            $this->postJson("/scim/setting.json");
-        } catch (\Throwable $t) {}
+            $this->postJson('/scim/setting.json');
+        } catch (Throwable $t) {
+        }
 
         $this->assertResponseCode(404);
     }
@@ -57,7 +59,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
     {
         $this->logInAsUser();
 
-        $this->postJson("/scim/settings.json");
+        $this->postJson('/scim/settings.json');
 
         $this->assertResponseCode(403);
     }
@@ -69,7 +71,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      */
     public function testSetSettings_Create_Error_Unauthenticated()
     {
-        $this->postJson("/scim/settings.json");
+        $this->postJson('/scim/settings.json');
 
         $this->assertResponseCode(401);
     }
@@ -79,7 +81,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      *
      * @return void
      */
-    public function  testSetSettings_Create_SettingsAlreadySet()
+    public function testSetSettings_Create_SettingsAlreadySet()
     {
         $this->setUpUpdate();
         $this->logInAsAdmin();
@@ -87,18 +89,18 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $data = [
             'setting_id' => UuidFactory::uuid(),
             'scim_user_id' => UserFactory::make()->admin()->persist()->id,
-            'secret_token' => ScimSetSettingsService::generateToken()
+            'secret_token' => ScimSetSettingsService::generateToken(),
         ];
-        $this->postJson("/scim/settings.json", $data);
+        $this->postJson('/scim/settings.json', $data);
 
         $this->assertResponseCode(404);
         $this->assertSame('Please delete previous settings before creating again.', $this->_responseJsonHeader->message);
         $this->assertSame('error', $this->_responseJsonHeader->status);
     }
 
-
     /**
      * Data provider for create settings (POST)
+     *
      * @return array[]
      * @throws \Exception
      */
@@ -112,7 +114,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
                 'scim_user_id' => $data[0][0]['scim_user_id'] ,
             ],
             'setting_id.ensureEmpty',
-            'The Setting ID cannot be passed on update.'
+            'The Setting ID cannot be passed on update.',
         ];
 
         return $data;
@@ -138,59 +140,61 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
                     'scim_user_id' => $scimUserIdActive,
                 ],
                 'secret_token._empty',
-                'The secret token should not be empty.'
+                'The secret token should not be empty.',
             ],
             //Wrong format secret token
             [
                 [
                     'scim_user_id' => $scimUserIdActive,
-                    'secret_token' => 'WRONG_TOKEN'
+                    'secret_token' => 'WRONG_TOKEN',
                 ],
                 'secret_token.correctFormat',
-                'The secret token format is incorrect.'
+                'The secret token format is incorrect.',
             ],
             //Wrong UUID for user
             [
                 [
                     'scim_user_id' => 'WRONG_UUID',
-                    'secret_token' => $secretToken
+                    'secret_token' => $secretToken,
                 ],
                 'scim_user_id.uuid',
-                'The identifier of the default user should be a valid UUID.'
+                'The identifier of the default user should be a valid UUID.',
             ],
             //Not active user
             [
                 [
                     'scim_user_id' => $scimUserIdNotActive,
-                    'secret_token' => $secretToken
+                    'secret_token' => $secretToken,
                 ],
                 'scim_user_id.activeAndEnabled',
-                'The user is not active, disabled or does not exist.'
+                'The user is not active, disabled or does not exist.',
             ],
             //Disabled user
             [
                 [
                     'scim_user_id' => $scimUserIdDisabled,
-                    'secret_token' => $secretToken
+                    'secret_token' => $secretToken,
                 ],
                 'scim_user_id.activeAndEnabled',
-                'The user is not active, disabled or does not exist.'
+                'The user is not active, disabled or does not exist.',
             ],
             //Non-existing user
             [
                 [
                     'scim_user_id' => UuidFactory::uuid(),
-                    'secret_token' => $secretToken
+                    'secret_token' => $secretToken,
                 ],
                 'scim_user_id.activeAndEnabled',
-                'The user is not active, disabled or does not exist.'
-            ]
+                'The user is not active, disabled or does not exist.',
+            ],
         ];
 
         return $data;
     }
+
     /**
      * Data provider for create settings (POST)
+     *
      * @return array[]
      * @throws \Exception
      */
@@ -211,7 +215,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
                 'scim_user_id' => $data[0][0]['scim_user_id'] ,
             ],
             'setting_id._empty',
-            'The ID for the SCIM settings should not be empty.'
+            'The ID for the SCIM settings should not be empty.',
         ];
 
         //Wrong UUID for setting_id
@@ -221,7 +225,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
                 'scim_user_id' => $data[0][0]['scim_user_id'] ,
             ],
             'setting_id.uuid',
-            'The ID for the SCIM settings should be a valid UUID.'
+            'The ID for the SCIM settings should be a valid UUID.',
         ];
 
         //Duplicated setting_id
@@ -231,7 +235,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
                 'scim_user_id' => $data[0][0]['scim_user_id'] ,
             ],
             'setting_id.notInUse',
-            'The ID for the SCIM settings is already in use.'
+            'The ID for the SCIM settings is already in use.',
         ];
 
         return $data;
@@ -243,7 +247,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      * @dataProvider createDataProvider
      * @return void
      */
-    public function  testSetSettings_Create_Validation($data, $key, $message)
+    public function testSetSettings_Create_Validation($data, $key, $message)
     {
         $this->logInAsAdmin();
 
@@ -251,7 +255,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
             $this->setUpUpdate();
         }
 
-        $this->postJson("/scim/settings.json", $data);
+        $this->postJson('/scim/settings.json', $data);
 
         $response = json_decode(json_encode($this->_responseJsonBody), true);
 
@@ -267,16 +271,16 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      *
      * @return void
      */
-    public function  testSetSettings_Create_Success()
+    public function testSetSettings_Create_Success()
     {
         $this->logInAsAdmin();
 
         $data = [
             'setting_id' => UuidFactory::uuid(),
             'scim_user_id' => UserFactory::make()->admin()->persist()->id,
-            'secret_token' => ScimSetSettingsService::generateToken()
+            'secret_token' => ScimSetSettingsService::generateToken(),
         ];
-        $this->postJson("/scim/settings.json", $data);
+        $this->postJson('/scim/settings.json', $data);
 
         $response = $this->_responseJsonBody;
 
@@ -290,7 +294,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $this->current = TableRegistry::getTableLocator()->get('OrganizationSettings')->find()->first();
         $values = json_decode($this->current->value, true);
 
-        $this->assertSame($data['secret_token'], $values['secret_token']);
+        $this->assertSame(Security::hash($data['secret_token'], 'sha256'), $values['secret_token']);
     }
 
     /**
@@ -305,7 +309,8 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
 
         try {
             $this->putJson("/scim/settings/{$this->current->id}.json");
-        } catch (\Throwable $t) {}
+        } catch (Throwable $t) {
+        }
 
         $this->assertResponseCode(404);
     }
@@ -343,7 +348,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      *
      * @return void
      */
-    public function  testSetSettings_Update_WrongUUID()
+    public function testSetSettings_Update_WrongUUID()
     {
         $this->setUpUpdate();
         $this->logInAsAdmin();
@@ -352,7 +357,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
 
         $data = [
             'scim_user_id' => UserFactory::make()->admin()->persist()->id,
-            'secret_token' => ScimSetSettingsService::generateToken()
+            'secret_token' => ScimSetSettingsService::generateToken(),
         ];
 
         $this->putJson("/scim/settings/{$wrongUuid}.json", $data);
@@ -363,15 +368,15 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
     /**
      * Test setSettings method: update operation validation errors
      *
-     * @dataProvider createDataProvider
+     * @dataProvider updateDataProvider
      * @return void
      */
-    public function  testSetSettings_Update_Validation($data, $key, $message)
+    public function testSetSettings_Update_Validation($data, $key, $message)
     {
+        $this->setUpUpdate();
         $this->logInAsAdmin();
 
-
-        $this->postJson("/scim/settings.json", $data);
+        $this->postJson("/scim/settings/{$this->current->id}.json", $data);
 
         $response = json_decode(json_encode($this->_responseJsonBody), true);
 
@@ -387,14 +392,14 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      *
      * @return void
      */
-    public function  testSetSettings_Update_Success()
+    public function testSetSettings_Update_Success()
     {
         $this->setUpUpdate();
         $this->logInAsAdmin();
 
         $data = [
             'scim_user_id' => UserFactory::make()->admin()->persist()->id,
-            'secret_token' => ScimSetSettingsService::generateToken()
+            'secret_token' => ScimSetSettingsService::generateToken(),
         ];
         $this->putJson("/scim/settings/{$this->current->id}.json", $data);
 
@@ -411,6 +416,6 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $this->current = TableRegistry::getTableLocator()->get('OrganizationSettings')->find()->first();
         $newValues = json_decode($this->current->value, true);
 
-        $this->assertSame($data['secret_token'], $newValues['secret_token']);
+        $this->assertSame(Security::hash($data['secret_token'], 'sha256'), $newValues['secret_token']);
     }
 }

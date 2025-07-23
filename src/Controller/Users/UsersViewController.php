@@ -59,7 +59,7 @@ class UsersViewController extends AppController
         if ($this->User->isAdmin()) {
             $whitelist = [
                 'contain' => [
-                    'scim_entry'
+                    'scim_entry',
                 ],
             ];
         }

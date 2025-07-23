@@ -20,8 +20,8 @@ namespace Passbolt\Scim\Controller\V2;
 use App\Controller\AppController;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\NotFoundException;
-use Cake\Http\Exception\NotImplementedException;
 use Cake\Routing\Router;
+use Exception;
 use Passbolt\Scim\Utility\Object\ErrorResponse;
 use Passbolt\Scim\Utility\Object\ListResponse;
 use Passbolt\Scim\Utility\Object\PatchOp;
@@ -86,7 +86,7 @@ class ScimController extends AppController
                     $filter
                 );
             $this->processResponse($settingId, $listResponse);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->processException($settingId, $e);
         }
     }
@@ -103,7 +103,7 @@ class ScimController extends AppController
     {
         try {
             $this->processResponse($settingId, Resources::build($resourceType)->setFromDatabase($resourceId));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->processException($settingId, $e);
         }
     }
@@ -122,7 +122,7 @@ class ScimController extends AppController
                 ->setFromScim($this->getRequest()->getData())
                 ->create();
             $this->processResponse($settingId, $resource, static::STATUS_CREATED);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->processException($settingId, $e);
         }
     }
@@ -145,7 +145,7 @@ class ScimController extends AppController
             }
 
             $this->processResponse($settingId, $userResource, static::STATUS_EDITED);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->processException($settingId, $e);
         }
     }
@@ -166,7 +166,7 @@ class ScimController extends AppController
                 ->setFromDatabase($resourceId)
                 ->delete();
             $this->processResponse($settingId, [], static::STATUS_DELETED);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->processException($settingId, $e);
         }
     }
@@ -195,7 +195,7 @@ class ScimController extends AppController
                 $responseData = new ListResponse($schemas, totalResults: count($schemas));
             }
             $this->processResponse($settingId, $responseData);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->processException($settingId, $e);
         }
     }
@@ -211,7 +211,9 @@ class ScimController extends AppController
     {
         try {
             if ($resourceType && !ResourceTypes::isValid($resourceType)) {
-                throw new NotFoundException(sprintf('The ResourceType `%s` is invalid or not supported', $resourceType));
+                throw new NotFoundException(
+                    sprintf('The ResourceType `%s` is invalid or not supported', $resourceType)
+                );
             }
 
             if ($resourceType) {
@@ -221,7 +223,7 @@ class ScimController extends AppController
                 $responseData = new ListResponse($resourceTypes, totalResults: count($resourceTypes));
             }
             $this->processResponse($settingId, $responseData);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->processException($settingId, $e);
         }
     }
@@ -233,7 +235,7 @@ class ScimController extends AppController
      * @param \Exception $e Exception
      * @return void
      */
-    protected function processException(string $settingId, \Exception $e)
+    protected function processException(string $settingId, Exception $e)
     {
         $status = $e->getCode();
         $this->processResponse($settingId, new ErrorResponse($e), $status);

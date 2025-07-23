@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Model\Entity;
 
-use App\Model\Entity\User;
 use Cake\ORM\Entity;
 use Passbolt\Scim\Utility\Resources;
 
@@ -21,8 +20,8 @@ use Passbolt\Scim\Utility\Resources;
  * @property string $created_by
  * @property string $modified_by
  *
- * @property User|null $user
- * @property User|null $group
+ * @property \App\Model\Entity\User|null $user
+ * @property \Passbolt\Scim\Model\Entity\User|null $group
  */
 class ScimEntry extends Entity
 {

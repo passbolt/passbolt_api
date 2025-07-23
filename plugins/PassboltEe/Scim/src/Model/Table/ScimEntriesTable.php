@@ -59,7 +59,6 @@ class ScimEntriesTable extends Table
             ->setClassName(GroupsTable::class)
             ->setBindingKey('foreign_key')
             ->setForeignKey('id');
-
     }
 
     /**

@@ -332,7 +332,7 @@ trait UsersFindersTrait
      * @throws \Exception
      * @throws \InvalidArgumentException if the role name or user id are not valid
      */
-    public function findView(string $userId, string $roleName, array|null $options = []): SelectQuery
+    public function findView(string $userId, string $roleName, ?array $options = []): SelectQuery
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');

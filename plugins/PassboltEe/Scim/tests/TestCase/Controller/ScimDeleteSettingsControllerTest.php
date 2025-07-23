@@ -9,13 +9,13 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\Scim\ScimPlugin;
 use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
+use Throwable;
 
 /**
  * Passbolt\Scim\Controller\ScimDeleteSettingsController Test Case
  */
 class ScimDeleteSettingsControllerTest extends AppIntegrationTestCase
 {
-
     protected OrganizationSetting $current;
 
     public function setUp(): void
@@ -37,7 +37,8 @@ class ScimDeleteSettingsControllerTest extends AppIntegrationTestCase
 
         try {
             $this->deleteJson("/scim/settings/{$this->current->id}.json");
-        } catch (\Throwable $t) {}
+        } catch (Throwable $t) {
+        }
 
         $this->assertResponseCode(404);
     }
@@ -73,7 +74,7 @@ class ScimDeleteSettingsControllerTest extends AppIntegrationTestCase
      *
      * @return void
      */
-    public function  testDeleteSettings_WrongUUID()
+    public function testDeleteSettings_WrongUUID()
     {
         $this->logInAsAdmin();
 
@@ -89,7 +90,7 @@ class ScimDeleteSettingsControllerTest extends AppIntegrationTestCase
      *
      * @return void
      */
-    public function  testDeleteSettings_Success()
+    public function testDeleteSettings_Success()
     {
         $this->logInAsAdmin();
 

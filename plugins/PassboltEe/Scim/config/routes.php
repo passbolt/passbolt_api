@@ -18,7 +18,7 @@ use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
-$routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
 
     $routes->connect('/settings', ['controller' => 'ScimGetSettings', 'action' => 'getSettings'])
@@ -43,7 +43,7 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
         ->setPass(['id'])
         ->setMethods(['DELETE']);
 
-    $routes->prefix('V2', function (RouteBuilder $routes) {
+    $routes->prefix('V2', function (RouteBuilder $routes): void {
         $routes->connect('/{settingId}/Schemas', ['controller' => 'Scim', 'action' => 'schemas'])
             ->setPass(['settingId'])
             ->setMethods(['GET']);

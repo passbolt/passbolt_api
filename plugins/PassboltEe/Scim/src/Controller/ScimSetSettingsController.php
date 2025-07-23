@@ -28,7 +28,7 @@ class ScimSetSettingsController extends AppController
      * @return void
      * @throws \Exception
      */
-    public function setSettings(string $id = null): void
+    public function setSettings(?string $id = null): void
     {
         $this->User->assertIsAdmin();
 

@@ -19,17 +19,13 @@ namespace Passbolt\Scim\Form\Settings;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 use Cake\Utility\Security;
-use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\Scim\Service\ScimBaseSettingsService;
 use Passbolt\Scim\Service\ScimSetSettingsService;
 
 class ScimSettingsForm extends Form
 {
-
     /**
      * Database configuration schema.
      *
@@ -57,12 +53,18 @@ class ScimSettingsForm extends Form
             ->notEmptyString('secret_token', __('The secret token should not be empty.'))
             ->add('secret_token', 'correctFormat', [
                 'rule' => function ($value, array $context) {
-                    if (is_string($value) && str_starts_with($value, ScimSetSettingsService::SCIM_SECRET_TOKEN_PREFIX) && strlen($value) >= 46) {
-                        return true;
-                    }
-
-                    return __('The secret token format is incorrect.');
-                }
+                    return is_string($value) && (
+                        (str_starts_with(
+                            $value,
+                            ScimSetSettingsService::SCIM_SECRET_TOKEN_PREFIX
+                        ) && strlen($value) >= 46
+                        ) ||
+                        preg_match(
+                            '/^[a-fA-F0-9]{64}$/m',
+                            $value
+                        )
+                    ) ? true : __('The secret token format is incorrect.');
+                },
             ]);
 
         $validator
@@ -80,7 +82,7 @@ class ScimSettingsForm extends Form
                     }
 
                     return __('The user is not active, disabled or does not exist.');
-                }
+                },
             ]);
 
         return $validator;
@@ -97,10 +99,11 @@ class ScimSettingsForm extends Form
         $validator = $this->validationDefault($validator);
 
         $validator
+            ->allowEmptyString('setting_id')
             ->add('setting_id', 'ensureEmpty', [
                 'rule' => function ($value, array $context) {
                     return __('The Setting ID cannot be passed on update.');
-                }
+                },
             ]);
 
         return $validator;
@@ -124,8 +127,9 @@ class ScimSettingsForm extends Form
                     $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
                     $query = $OrganizationSettings->find();
                     $where = [
-                        $OrganizationSettings->aliasField('property') => ScimBaseSettingsService::SCIM_SETTINGS_PROPERTY_NAME,
-                        $query->newExpr()->like($OrganizationSettings->aliasField('value'), "%$value%")
+                        $OrganizationSettings
+                            ->aliasField('property') => ScimBaseSettingsService::SCIM_SETTINGS_PROPERTY_NAME,
+                        $query->newExpr()->like($OrganizationSettings->aliasField('value'), "%$value%"),
                     ];
                     $result = $query->where($where)->all();
 
@@ -134,7 +138,7 @@ class ScimSettingsForm extends Form
                     }
 
                     return __('The ID for the SCIM settings is already in use.');
-                }
+                },
             ]);
 
         return $validator;
@@ -154,7 +158,7 @@ class ScimSettingsForm extends Form
      * @param array $data
      * @return bool
      */
-    public function _execute(array $data): bool
+    protected function _execute(array $data): bool
     {
         $this->_data['secret_token'] = Security::hash($data['secret_token'], 'sha256');
 

@@ -78,12 +78,14 @@ class IntegrationUsersTest extends BaseIntegrationTest
         $this->assertNull($existingUser);
 
         // Check if the user exists
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('Users?filter=userName+eq+%22' . urlencode($scimName) . '%22'));
         $this->assertResponseCode(200);
         $this->assertResponseContains('urn:ietf:params:scim:api:messages:2.0:ListResponse');
         $this->assertResponseContains('"totalResults": 0');
 
         // create the user
+        $this->configScimAuth();
         $this->post($this->getScimEndpoint('Users'), $this->getUserPostData($scimName, email: $userEmail));
         $this->assertResponseCode(201);
         $this->assertResponseContains('urn:ietf:params:scim:schemas:core:2.0:User');
@@ -133,6 +135,7 @@ class IntegrationUsersTest extends BaseIntegrationTest
         $this->assertNotNull($existingUser);
 
         // Check if the user exists
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('Users?filter=userName+eq+%22' . urlencode($scimName) . '%22'));
         $this->assertResponseCode(200);
         $this->assertResponseContains('urn:ietf:params:scim:api:messages:2.0:ListResponse');
@@ -140,6 +143,7 @@ class IntegrationUsersTest extends BaseIntegrationTest
 
         // create the user
         $firstNameModified = $existingUser->profile->first_name . ' - modified';
+        $this->configScimAuth();
         $this->post($this->getScimEndpoint('Users'), $this->getUserPostData($scimName, email: $userEmail, firstName: $firstNameModified));
         $this->assertResponseCode(201);
         $this->assertResponseContains('urn:ietf:params:scim:schemas:core:2.0:User');
@@ -187,12 +191,14 @@ class IntegrationUsersTest extends BaseIntegrationTest
         $usersTable->softDelete($existingUser);
 
         // Check if the user exists
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('Users?filter=userName+eq+%22' . urlencode($scimName) . '%22'));
         $this->assertResponseCode(200);
         $this->assertResponseContains('urn:ietf:params:scim:api:messages:2.0:ListResponse');
         $this->assertResponseContains('"totalResults": 0');
 
         // create the user
+        $this->configScimAuth();
         $this->post($this->getScimEndpoint('Users'), $this->getUserPostData($scimName, email: $userEmail));
         $this->assertResponseCode(201);
         $this->assertResponseContains('urn:ietf:params:scim:schemas:core:2.0:User');
@@ -240,6 +246,7 @@ class IntegrationUsersTest extends BaseIntegrationTest
         $this->assertSame($scimEntry->user->profile->first_name, 'User 1');
 
         // Check if the user exists
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('Users?filter=userName+eq+%22' . urlencode($scimName) . '%22'));
         $this->assertResponseCode(200);
         $this->assertResponseContains('urn:ietf:params:scim:api:messages:2.0:ListResponse');
@@ -247,6 +254,7 @@ class IntegrationUsersTest extends BaseIntegrationTest
         $this->assertResponseContains('"userName": "' . $scimName . '"');
 
         // Update user
+        $this->configScimAuth();
         $this->patch($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key), $this->getPatchOpData([
             [
                 'op' => 'Replace',

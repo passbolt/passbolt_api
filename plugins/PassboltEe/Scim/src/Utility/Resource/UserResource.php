@@ -202,7 +202,9 @@ class UserResource implements ScimObjectInterface, ResourceInterface
         /** @var \App\Model\Entity\User|null $user */
         $this->userEntity = $this->findExistingUserEntity([$this->Users->aliasField('id') => $internalId]);
         if (!$this->userEntity) {
-            throw new ResourceNotFoundException(sprintf('The %s resource with id `%s` was not found', $this->getType(), $internalId));
+            throw new ResourceNotFoundException(
+                sprintf('The %s resource with id `%s` was not found', $this->getType(), $internalId)
+            );
         }
 
         $this->id = $this->userEntity->id;
@@ -247,8 +249,6 @@ class UserResource implements ScimObjectInterface, ResourceInterface
 
     /**
      * @inheritDoc
-     * @throws \Passbolt\Scim\Exception\ConflictException
-     * @throws \Exception
      */
     public function create(): static
     {
@@ -260,14 +260,24 @@ class UserResource implements ScimObjectInterface, ResourceInterface
         }
         if ($this->id) {
             throw new ConflictException(
-                sprintf('The %s resource with userName `%s` already exist with id `%s`', $this->getType(), $this->userName, $this->id),
+                sprintf(
+                    'The %s resource with userName `%s` already exist with id `%s`',
+                    $this->getType(),
+                    $this->userName,
+                    $this->id
+                ),
                 scimType: ScimException::SCIM_TYPE_UNIQUENESS,
             );
         }
         $user = $this->findExistingUserEntity();
         if (!empty($user->scim_entry)) {
             throw new ConflictException(
-                sprintf('The %s resource with userName `%s` already exist with id `%s`', $this->getType(), $this->userName, $user->id),
+                sprintf(
+                    'The %s resource with userName `%s` already exist with id `%s`',
+                    $this->getType(),
+                    $this->userName,
+                    $user->id
+                ),
                 scimType: ScimException::SCIM_TYPE_UNIQUENESS,
             );
         }
@@ -306,7 +316,7 @@ class UserResource implements ScimObjectInterface, ResourceInterface
                 'accessibleFields' => [
                     'first_name' => true,
                     'last_name' => true,
-                ]
+                ],
             ]);
             if (!$this->Users->Profiles->save($profile)) {
                 // @todo: parse validation errors in a user friendly message
@@ -330,7 +340,6 @@ class UserResource implements ScimObjectInterface, ResourceInterface
                 'An unexpected error occurred while creating the user in the database',
                 scimType:ScimException::SCIM_TYPE_INVALID_VALUE,
             );
-
         }
 
         $this->setFromDatabase($user->id);
@@ -366,12 +375,12 @@ class UserResource implements ScimObjectInterface, ResourceInterface
                 $mutability = $attribute[0]['mutability'] ?? null;
                 break;
             case 'active':
-                $attribute = Hash::extract($userSchema, "attributes.{n}[name=active]");
+                $attribute = Hash::extract($userSchema, 'attributes.{n}[name=active]');
                 $mutability = $attribute[0]['mutability'] ?? null;
                 break;
             case 'emails':
-                $emailsAttribute = Hash::extract($userSchema, "attributes.{n}[name=emails]")[0] ?? [];
-                $attribute = Hash::extract($emailsAttribute, "subAttributes.{n}[name=value]");
+                $emailsAttribute = Hash::extract($userSchema, 'attributes.{n}[name=emails]')[0] ?? [];
+                $attribute = Hash::extract($emailsAttribute, 'subAttributes.{n}[name=value]');
                 $mutability = $attribute[0]['mutability'] ?? null;
                 break;
             default:
@@ -387,7 +396,6 @@ class UserResource implements ScimObjectInterface, ResourceInterface
 
     /**
      * @inheritDoc
-     * @throws \Exception
      */
     public function applyOperation(Operation $operation): static
     {
@@ -409,7 +417,8 @@ class UserResource implements ScimObjectInterface, ResourceInterface
                 $mutability,
             ));
         }
-        if ($mutability === ScimConstants::ATTRIBUTE_MUTABILITY_IMMUTABLE &&
+        if (
+            $mutability === ScimConstants::ATTRIBUTE_MUTABILITY_IMMUTABLE &&
             $operation->getType() !== Operation::TYPE_ADD
         ) {
             throw new ConflictException(sprintf(
@@ -450,6 +459,7 @@ class UserResource implements ScimObjectInterface, ResourceInterface
                                 $this->email = $operation->getValue();
                             }
                         }
+                        break;
                     default:
                         // ignore attributes not used in this application
                 }
@@ -517,7 +527,9 @@ class UserResource implements ScimObjectInterface, ResourceInterface
             ScimLog::error(print_r($operation, return: true));
             ScimLog::error(print_r($this->userEntity, return: true));
 
-            throw new PreconditionFailedException('Unexpected error when trying to apply the pathc operation int he database');
+            throw new PreconditionFailedException(
+                'Unexpected error when trying to apply the patch operation in the database'
+            );
         }
         $this->setFromDatabase($this->userEntity->id);
 
@@ -535,8 +547,6 @@ class UserResource implements ScimObjectInterface, ResourceInterface
             );
         }
 
-        throw new ScimException('Not Implemented yet');
-
         return $this;
     }
 
@@ -546,7 +556,12 @@ class UserResource implements ScimObjectInterface, ResourceInterface
     public function toSCIM(): array
     {
         if (!$this->id) {
-            throw new ScimException(sprintf('The values of the %s resource has not been set for the `toSCIM` operation', $this->getType()));
+            throw new ScimException(
+                sprintf(
+                    'The values of the %s resource has not been set for the `toSCIM` operation',
+                    $this->getType()
+                )
+            );
         }
 
         return [

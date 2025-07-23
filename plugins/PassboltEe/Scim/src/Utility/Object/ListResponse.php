@@ -18,10 +18,10 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Utility\Object;
 
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Exception;
 use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Utility\Resources;
-use Passbolt\Scim\Utility\ResourceTypes;
 use Passbolt\Scim\Utility\SchemaIdentifier;
 use Passbolt\Scim\Utility\ScimObjectInterface;
 
@@ -45,8 +45,7 @@ class ListResponse implements ScimObjectInterface
         protected int $startIndex = 1,
         protected int $itemsPerPage = 25,
         protected int $totalResults = 0
-    )
-    {
+    ) {
     }
 
     /**
@@ -83,13 +82,12 @@ class ListResponse implements ScimObjectInterface
         ?int $startIndex = null,
         ?int $count = null,
         ?string $filter = null,
-    ): static
-    {
+    ) {
         if (!Resources::isValid($resourceType)) {
             throw new ScimException(sprintf('The resource type `%s` is not valid', $resourceType));
         }
         if (!isset(ScimEntry::MODEL_MAP[$resourceType])) {
-            throw new \Exception(sprintf('The resource type `%s` has not map for scim entry model', $resourceType));
+            throw new Exception(sprintf('The resource type `%s` has not map for scim entry model', $resourceType));
         }
 
         if ($startIndex !== null && $startIndex > 0) {
@@ -119,7 +117,9 @@ class ListResponse implements ScimObjectInterface
                             $conditions[$scimEntriesTable->aliasField('scim_name')] = $value;
                             break;
                         default:
-                            throw new ScimException(sprintf('The filter for attribute `%s` is not supported yet', $attribute));
+                            throw new ScimException(
+                                sprintf('The filter for attribute `%s` is not supported yet', $attribute)
+                            );
                     }
                     break;
                 default:
@@ -138,7 +138,7 @@ class ListResponse implements ScimObjectInterface
             return $this;
         }
 
-        /** @var \Passbolt\Scim\Model\Entity\ScimEntry[] $scimResources */
+        /** @var array<\Passbolt\Scim\Model\Entity\ScimEntry> $scimResources */
         $scimResources = $scimEntriesTable
             ->find()
             ->where($conditions)

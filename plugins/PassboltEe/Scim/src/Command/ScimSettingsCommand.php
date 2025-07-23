@@ -12,9 +12,9 @@ use App\Utility\UuidFactory;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
-use Cake\Utility\Security;
 use Passbolt\Scim\Service\ScimDeleteSettingsService;
 use Passbolt\Scim\Service\ScimSetSettingsService;
+use Throwable;
 
 /**
  * Settings command.
@@ -76,8 +76,8 @@ class ScimSettingsCommand extends PassboltCommand
     /**
      * Implement this method with your command's logic.
      *
-     * @param Arguments $args The command arguments.
-     * @param ConsoleIo $io The console io
+     * @param \Cake\Console\Arguments $args The command arguments.
+     * @param \Cake\Console\ConsoleIo $io The console io
      * @return int|null The exit code or null for success
      */
     public function execute(Arguments $args, ConsoleIo $io): ?int
@@ -104,7 +104,7 @@ class ScimSettingsCommand extends PassboltCommand
                 $settings = $service->saveSettings([
                     'scim_user_id' => $user->id,
                     'setting_id' => UuidFactory::uuid(),
-                    'secret_token' => $secretToken
+                    'secret_token' => $secretToken,
                 ], $id);
                 $settings['secret_token'] = $secretToken;
                 $io->success('Settings were successfully generated. Please check them');
@@ -114,7 +114,7 @@ class ScimSettingsCommand extends PassboltCommand
             $this->error($fve->getCode() . ':' . json_encode($fve->getErrors()), $io);
 
             return $this->errorCode();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->error($e->getCode() . ':' . $e->getMessage(), $io);
 
             return $this->errorCode();

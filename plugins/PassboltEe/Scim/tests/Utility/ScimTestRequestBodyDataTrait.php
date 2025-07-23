@@ -34,8 +34,7 @@ trait ScimTestRequestBodyDataTrait
         string $externalId = '4d36b536-42ba-4a65-9299-c4461222b47f',
         string $email = 'user1@email.com',
         string $firstName = 'User 1',
-    ): array
-    {
+    ): array {
         return [
             'schemas' => [
                 'urn:ietf:params:scim:schemas:core:2.0:User',
@@ -49,7 +48,7 @@ trait ScimTestRequestBodyDataTrait
                     'primary' => true,
                     'type' => 'work',
                     'value' => $email,
-                ]
+                ],
             ],
             'meta' => [
                 'resourceType' => 'User',

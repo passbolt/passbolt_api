@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Utility;
 
+use Exception;
 use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Utility\ResourceType\GroupResourceType;
 use Passbolt\Scim\Utility\ResourceType\UserResourceType;
@@ -51,7 +52,7 @@ class ResourceTypes
     /**
      * Return the list of ResourceType objects
      *
-     * @return \Passbolt\Scim\Utility\ScimObjectInterface[]
+     * @return array<\Passbolt\Scim\Utility\ScimObjectInterface>
      * @throws \Passbolt\Scim\Exception\ScimException
      * @throws \Exception
      */
@@ -82,7 +83,7 @@ class ResourceTypes
 
         $resourceType = new $class();
         if (!$resourceType instanceof ScimObjectInterface) {
-            throw new \Exception(sprintf('Invalid mapped class for ResourceType id %s', $name));
+            throw new Exception(sprintf('Invalid mapped class for ResourceType id %s', $name));
         }
 
         return $resourceType;

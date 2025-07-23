@@ -28,7 +28,7 @@ class PatchOp implements ScimObjectInterface
     /**
      * Error exception
      *
-     * @var \Passbolt\Scim\Utility\Object\Operation[]
+     * @var array<\Passbolt\Scim\Utility\Object\Operation>
      */
     protected array $operations = [];
 
@@ -38,7 +38,7 @@ class PatchOp implements ScimObjectInterface
      * @param array $data Data from SCIM
      * @return $this
      */
-    public function setFromScim(array $data): static
+    public function setFromScim(array $data)
     {
         $this->operations = [];
         $operations = $data['Operations'] ?? [];
@@ -68,7 +68,7 @@ class PatchOp implements ScimObjectInterface
     /**
      * Return the list of operations
      *
-     * @return \Passbolt\Scim\Utility\Object\Operation[]
+     * @return array<\Passbolt\Scim\Utility\Object\Operation>
      */
     public function getOperations(): array
     {

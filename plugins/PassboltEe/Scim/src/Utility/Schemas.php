@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Utility;
 
+use Exception;
 use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Utility\Schema\GroupSchema;
 use Passbolt\Scim\Utility\Schema\UserSchema;
@@ -34,7 +35,7 @@ class Schemas
     /**
      * Return the list of Schemas objects
      *
-     * @return \Passbolt\Scim\Utility\ScimObjectInterface[]
+     * @return array<\Passbolt\Scim\Utility\ScimObjectInterface>
      * @throws \Passbolt\Scim\Exception\ScimException
      * @throws \Exception
      */
@@ -65,7 +66,7 @@ class Schemas
 
         $schema = new $schemaClass();
         if (!$schema instanceof ScimObjectInterface) {
-            throw new \Exception(sprintf('Invalid mapped class for schema id %s', $schemaId));
+            throw new Exception(sprintf('Invalid mapped class for schema id %s', $schemaId));
         }
 
         return $schema;

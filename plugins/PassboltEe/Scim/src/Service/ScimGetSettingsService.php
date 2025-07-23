@@ -48,7 +48,7 @@ class ScimGetSettingsService extends ScimBaseSettingsService
         }
         $form = new ScimSettingsForm();
 
-        if (!$form->execute($value)) {
+        if (!$form->execute($value, ['newRecord' => false])) {
             $validationException = new FormValidationException(
                 __('Could not validate the SCIM settings found in database.'),
                 $form
@@ -61,7 +61,7 @@ class ScimGetSettingsService extends ScimBaseSettingsService
     }
 
     /**
-     * @return null[]
+     * @return array<null>
      */
     protected function getDefaultSettings(): array
     {

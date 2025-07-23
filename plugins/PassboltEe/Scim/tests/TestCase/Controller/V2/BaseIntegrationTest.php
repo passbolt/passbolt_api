@@ -19,8 +19,8 @@ namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use Passbolt\Scim\Test\Utility\ScimTestRequestBodyDataTrait;
 use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
+use Passbolt\Scim\Test\Utility\ScimTestRequestBodyDataTrait;
 use Passbolt\Scim\Test\Utility\ScimTestUsersTrait;
 
 /**
@@ -60,7 +60,6 @@ abstract class BaseIntegrationTest extends AppIntegrationTestCase
         RoleFactory::make()->admin()->persist();
         ScimOrgSettingFactory::make()->default()->persist();
         $this->settingId = ScimOrgSettingFactory::SCIM_TEST_SETTING_ID;
-
     }
 
     /**

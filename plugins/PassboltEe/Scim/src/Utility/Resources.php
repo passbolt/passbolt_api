@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Utility;
 
+use Exception;
 use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Utility\Resource\UserResource;
 
@@ -62,7 +63,7 @@ class Resources
 
         $resource = new $class();
         if (!$resource instanceof ResourceInterface) {
-            throw new \Exception(sprintf('Invalid mapped class for Resource `%s`', $type));
+            throw new Exception(sprintf('Invalid mapped class for Resource `%s`', $type));
         }
 
         return $resource;

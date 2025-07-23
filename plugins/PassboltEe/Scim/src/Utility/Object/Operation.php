@@ -96,9 +96,9 @@ class Operation implements ScimObjectInterface
      * Set the data from the SCIM request data array
      *
      * @param array $data Data from SCIM
-     * @return $this
+     * @return self
      */
-    public function setFromScim(array $data): static
+    public function setFromScim(array $data): self
     {
         $this->setType($data['op'] ?? null);
         $this->path = $data['path'] ?? null;
@@ -134,7 +134,7 @@ class Operation implements ScimObjectInterface
      * @param string|null $operationType
      * @return $this
      */
-    protected function setType(?string $operationType): static
+    protected function setType(?string $operationType)
     {
         if ($operationType === null) {
             $this->operationType = null;

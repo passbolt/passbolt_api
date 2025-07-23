@@ -48,9 +48,9 @@ class ScimHealthcheckService implements HealthcheckServiceInterface, Healthcheck
      *
      * @return $this
      */
-    public function check(): HealthcheckServiceInterface
+    public function check()
     {
-        $this->status =  $this->isScimPluginEnabled();
+        $this->status = $this->isScimPluginEnabled();
 
         return $this;
     }

@@ -17,8 +17,6 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Identifier\Resolver;
 
 use App\Model\Entity\Role;
-use App\Model\Table\OrganizationSettingsTable;
-use App\Model\Table\UsersTable;
 use ArrayAccess;
 use Authentication\Identifier\Resolver\ResolverInterface;
 use Cake\Core\Configure;
@@ -34,10 +32,11 @@ class ScimResolver implements ResolverInterface
      */
     public function find(array $conditions, string $type = self::TYPE_AND): ArrayAccess|array|null
     {
-        /** @var OrganizationSettingsTable $table */
+        /** @var \App\Model\Table\OrganizationSettingsTable $table */
         $OrganizationSettings = $this->getTableLocator()->get('OrganizationSettings');
 
-        $scimOrganizationSetting = $OrganizationSettings->getByProperty(ScimBaseSettingsService::SCIM_SETTINGS_PROPERTY_NAME);
+        $scimOrganizationSetting = $OrganizationSettings
+            ->getByProperty(ScimBaseSettingsService::SCIM_SETTINGS_PROPERTY_NAME);
 
         if (!$scimOrganizationSetting) {
             return null;
@@ -49,15 +48,16 @@ class ScimResolver implements ResolverInterface
             return null;
         }
 
-        if (is_array($scimConfig) &&
+        if (
+            is_array($scimConfig) &&
             $conditions['secret_token'] === $scimConfig['secret_token'] &&
             !empty($scimConfig['scim_user_id'])
         ) {
-            /** @var UsersTable $Users */
+            /** @var \App\Model\Table\UsersTable $Users */
             $Users = $this->getTableLocator()->get('Users');
 
             return $Users->findIndex(Role::GUEST)->where([
-                $Users->aliasField('id') => $scimConfig['scim_user_id']
+                $Users->aliasField('id') => $scimConfig['scim_user_id'],
             ])->first();
         }
 

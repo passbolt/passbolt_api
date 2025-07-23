@@ -6,13 +6,12 @@ namespace Passbolt\Scim\Test\TestCase\Controller;
 use App\Model\Entity\OrganizationSetting;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\Scim\ScimPlugin;
 use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
+use Throwable;
 
 /**
  * Passbolt\Scim\Controller\ScimGetSettingsController Test Case
- *
  */
 class ScimGetSettingsControllerTest extends AppIntegrationTestCase
 {
@@ -36,8 +35,9 @@ class ScimGetSettingsControllerTest extends AppIntegrationTestCase
         $this->disableFeaturePlugin(ScimPlugin::class);
 
         try {
-            $this->getJson("/scim/settings.json");
-        } catch (\Throwable $t) {}
+            $this->getJson('/scim/settings.json');
+        } catch (Throwable $t) {
+        }
 
         $this->assertResponseCode(404);
     }
@@ -47,11 +47,11 @@ class ScimGetSettingsControllerTest extends AppIntegrationTestCase
      *
      * @return void
      */
-    public function testDeleteSettings_Error_GuestForbidden(): void
+    public function testGetSettings_Error_GuestForbidden(): void
     {
         $this->logInAsUser();
 
-        $this->getJson("/scim/settings.json");
+        $this->getJson('/scim/settings.json');
 
         $this->assertResponseCode(403);
     }
@@ -61,9 +61,9 @@ class ScimGetSettingsControllerTest extends AppIntegrationTestCase
      *
      * @return void
      */
-    public function testDeleteSettings_Error_Unauthenticated()
+    public function testGetSettings_Error_Unauthenticated()
     {
-        $this->getJson("/scim/settings.json");
+        $this->getJson('/scim/settings.json');
 
         $this->assertResponseCode(401);
     }
@@ -77,7 +77,7 @@ class ScimGetSettingsControllerTest extends AppIntegrationTestCase
     {
         $this->logInAsAdmin();
 
-        $this->getJson("/scim/settings.json");
+        $this->getJson('/scim/settings.json');
 
         $response = $this->_responseJsonBody;
 
@@ -85,7 +85,7 @@ class ScimGetSettingsControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
         $this->assertSame($data['setting_id'], $response->setting_id);
         $this->assertSame($data['scim_user_id'], $response->scim_user_id);
-        $this->assertEmpty($response->secret_token);
+        $this->assertEmpty($response->secret_token ?? null);
         $this->assertObjectHasAttribute('id', $response);
     }
 }

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Exception;
 
 use Cake\Http\Exception\HttpException;
+use Throwable;
 
 /**
  * Exception raised when a validation rule is not satisfied in a Form.
@@ -46,7 +47,7 @@ class ScimException extends HttpException
     public function __construct(
         string $message = '',
         ?int $code = null,
-        ?\Throwable $previous = null,
+        ?Throwable $previous = null,
         ?string $scimType = null
     ) {
         $this->scimType = $scimType;

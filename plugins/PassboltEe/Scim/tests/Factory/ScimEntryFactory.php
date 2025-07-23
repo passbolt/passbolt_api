@@ -65,7 +65,7 @@ class ScimEntryFactory extends CakephpBaseFactory
 
     /**
      * @param \App\Test\Factory\UserFactory|array|null $user
-     * @return \Passbolt\Scim\Test\Factory\ScimEntryFactory
+     * @return self
      */
     public function withUser(UserFactory|array|null $user = null): ScimEntryFactory
     {

@@ -5,7 +5,6 @@ namespace Passbolt\Scim\Test\TestCase\Command;
 
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
-use Passbolt\Scim\Command\GenerateScimSettingsCommand;
 
 /**
  * Passbolt\Scim\Command\GenerateSettingsCommand Test Case

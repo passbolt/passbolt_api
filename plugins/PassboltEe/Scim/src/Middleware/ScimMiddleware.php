@@ -19,11 +19,8 @@ namespace Passbolt\Scim\Middleware;
 use App\Middleware\ContainerAwareMiddlewareTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Authentication\AuthenticationServiceInterface;
-use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
-use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
-use Passbolt\JwtAuthentication\Service\Middleware\JwtRequestDetectionService;
 use Passbolt\Scim\Authenticator\ScimAuthenticationService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -37,6 +34,7 @@ class ScimMiddleware implements MiddlewareInterface
 {
     use ContainerAwareMiddlewareTrait;
     use FeaturePluginAwareTrait;
+
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Psr\Http\Server\RequestHandlerInterface $handler The handler.
@@ -47,17 +45,23 @@ class ScimMiddleware implements MiddlewareInterface
         RequestHandlerInterface $handler
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
-        if ($this->isFeaturePluginEnabled('Scim') &&
-            $request->getParam('plugin') === 'Passbolt/Scim') {
+        if (
+            $this->isFeaturePluginEnabled('Scim') &&
+            $request->getParam('plugin') === 'Passbolt/Scim' &&
+            $request->getParam('controller') === 'Scim'
+        ) {
             Configure::write('Scim.settingId', $request->getParam('settingId'));
             $this->services($this->getContainer($request));
             $this->disableFeaturePlugin('JwtAuthentication');
-
         }
 
         return $handler->handle($request);
     }
 
+    /**
+     * @param \Cake\Core\ContainerInterface $container
+     * @return void
+     */
     public function services(ContainerInterface $container): void
     {
         $container

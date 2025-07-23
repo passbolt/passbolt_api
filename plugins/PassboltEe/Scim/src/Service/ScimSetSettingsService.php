@@ -54,7 +54,7 @@ class ScimSetSettingsService extends ScimBaseSettingsService
      * @return array
      * @throws \Exception
      */
-    public function saveSettings(array $data, string $id = null): array
+    public function saveSettings(array $data, ?string $id = null): array
     {
         $form = new ScimSettingsForm();
         if ($id) {

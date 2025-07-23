@@ -5,23 +5,19 @@ namespace Passbolt\Scim\Authenticator;
 
 use Authentication\AuthenticationService;
 use Authentication\Authenticator\ResultInterface;
-use Cake\Error\Debugger;
-use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
-use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ScimAuthenticationService extends AuthenticationService
 {
-
     /**
-     * @param ServerRequestInterface $request
-     * @return ResultInterface
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @return \Authentication\Authenticator\ResultInterface
      */
     public function authenticate(ServerRequestInterface $request): ResultInterface
     {
         $this->loadAuthenticator('Authentication.Token', [
             'header' => 'Authorization',
-            'tokenPrefix' => 'Bearer'
+            'tokenPrefix' => 'Bearer',
         ]);
 
         $this->loadIdentifier('Authentication.Token', [
