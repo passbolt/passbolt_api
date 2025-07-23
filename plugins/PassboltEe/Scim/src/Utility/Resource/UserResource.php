@@ -48,19 +48,19 @@ use Passbolt\Scim\Utility\ScimTools;
 /**
  * UserResource class
  */
-class UserResource implements ScimObjectInterface, ResourceInterface
+class UserResource implements ResourceInterface
 {
     use LocatorAwareTrait;
 
     /**
-     * @var \App\Model\Table\UsersTable|\Cake\ORM\Table
+     * @var \App\Model\Table\UsersTable
      */
-    protected UsersTable|Table $Users;
+    protected UsersTable $Users;
 
     /**
-     * @var \Passbolt\Scim\Model\Table\ScimEntriesTable|\Cake\ORM\Table
+     * @var \Passbolt\Scim\Model\Table\ScimEntriesTable
      */
-    protected ScimEntriesTable|Table $ScimEntries;
+    protected ScimEntriesTable $ScimEntries;
 
     /**
      * @var \App\Model\Entity\User|null
@@ -128,9 +128,7 @@ class UserResource implements ScimObjectInterface, ResourceInterface
      */
     public function __construct()
     {
-        /* @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
-        /* @phpstan-ignore-next-line */
         $this->ScimEntries = $this->fetchTable('Passbolt/Scim.ScimEntries');
     }
 
@@ -199,7 +197,6 @@ class UserResource implements ScimObjectInterface, ResourceInterface
      */
     public function setFromDatabase(string|int $internalId): self
     {
-        /** @var \App\Model\Entity\User|null $user */
         $this->userEntity = $this->findExistingUserEntity([$this->Users->aliasField('id') => $internalId]);
         if (!$this->userEntity) {
             throw new ResourceNotFoundException(
@@ -325,7 +322,7 @@ class UserResource implements ScimObjectInterface, ResourceInterface
             }
         }
 
-        /** @var \Passbolt\Scim\Model\Entity\ScimEntry $newResourceEntity */
+        /** @var \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry */
         $scimEntry = $this->ScimEntries->buildEntity([
             'scim_name' => $this->userName,
             'external_identifier' => $this->externalId,
@@ -411,7 +408,7 @@ class UserResource implements ScimObjectInterface, ResourceInterface
         // @todo: should we throw error or just ignore?
         if ($mutability === ScimConstants::ATTRIBUTE_MUTABILITY_READ_ONLY) {
             throw new ConflictException(sprintf(
-                'Unable to apply operation `%` for the attribute `%s` with mutability `%s`',
+                'Unable to apply operation `%s` for the attribute `%s` with mutability `%s`',
                 $operation->getType(),
                 $operation->getAttribute(),
                 $mutability,
@@ -422,7 +419,7 @@ class UserResource implements ScimObjectInterface, ResourceInterface
             $operation->getType() !== Operation::TYPE_ADD
         ) {
             throw new ConflictException(sprintf(
-                'Unable to apply operation `%` for the attribute `%s` with mutability `%s`',
+                'Unable to apply operation `%s` for the attribute `%s` with mutability `%s`',
                 $operation->getType(),
                 $operation->getAttribute(),
                 $mutability,

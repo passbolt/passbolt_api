@@ -22,7 +22,7 @@ use Passbolt\Scim\Utility\Object\Operation;
 /**
  * Interface that define the common methods for SCIM resource objects
  */
-interface ResourceInterface
+interface ResourceInterface extends ScimObjectInterface
 {
     /**
      * Return the resource id

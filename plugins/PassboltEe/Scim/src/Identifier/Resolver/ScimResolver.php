@@ -32,7 +32,7 @@ class ScimResolver implements ResolverInterface
      */
     public function find(array $conditions, string $type = self::TYPE_AND): ArrayAccess|array|null
     {
-        /** @var \App\Model\Table\OrganizationSettingsTable $table */
+        /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = $this->getTableLocator()->get('OrganizationSettings');
 
         $scimOrganizationSetting = $OrganizationSettings

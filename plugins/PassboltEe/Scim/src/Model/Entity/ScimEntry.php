@@ -14,7 +14,7 @@ use Passbolt\Scim\Utility\Resources;
  * @property string $foreign_model
  * @property string|null $external_identifier
  * @property string|null $scim_name
- * @property \Cake\I18n\FrozenTime null $deleted
+ * @property \Cake\I18n\FrozenTime|null $deleted
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  * @property string $created_by
