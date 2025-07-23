@@ -30,7 +30,16 @@ class FindViewForeignCommentsTest extends AppTestCase
 
     public $Comments;
 
-    public array $fixtures = ['app.Base/Resources', 'app.Base/Users', 'app.Base/Profiles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Comments'];
+    public array $fixtures = [
+        'app.Base/ResourceTypes',
+        'app.Base/Resources',
+        'app.Base/Users',
+        'app.Base/Profiles',
+        'app.Base/Groups',
+        'app.Base/GroupsUsers',
+        'app.Base/Permissions',
+        'app.Base/Comments',
+    ];
 
     public function setUp(): void
     {
