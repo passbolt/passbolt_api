@@ -311,6 +311,11 @@ class ResourcesTable extends Table
         $rules->add($rules->existsIn('resource_type_id', 'ResourceTypes'), 'resource_type_exists', [
             'message' => __('The resource type does not exist.'),
         ]);
+        $rules->add(new IsNotSoftDeletedRule(), 'resource_type_is_not_soft_deleted', [
+            'table' => 'Passbolt/ResourceTypes.ResourceTypes',
+            'errorField' => 'resource_type_id',
+            'message' => __('The resource type should not be deleted.'),
+        ]);
 
         // Create rules.
         $rules->addCreate([$this, 'isOwnerPermissionProvidedRule'], 'owner_permission_provided', [
@@ -375,12 +380,6 @@ class ResourcesTable extends Table
         $rules->addCreate(new IsNotV5PasswordStringType(), 'isNotV5PasswordStringType', [
             'errorField' => 'resource_type_id',
             'message' => __('It is not allowed to create v5-password-string resource types.'),
-        ]);
-
-        $rules->add(new IsNotSoftDeletedRule(), 'resource_type_is_not_soft_deleted', [
-            'table' => 'Passbolt/ResourceTypes.ResourceTypes',
-            'errorField' => 'resource_type_id',
-            'message' => __('The resource type should not be deleted.'),
         ]);
 
         $rules->add(new IsValidEncryptedMetadataRule(), 'isValidEncryptedResourceMetadata', [
