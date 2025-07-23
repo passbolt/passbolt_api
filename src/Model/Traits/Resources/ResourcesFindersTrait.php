@@ -171,8 +171,15 @@ trait ResourcesFindersTrait
 
         // If contains Resource type.
         if (isset($options['contain']['resource-type'])) {
-            $query->contain('ResourceTypes')
+            $query
+                ->contain('ResourceTypes', function (SelectQuery $q) {
+                    return $q->where([$q->expr()->isNull('ResourceTypes.deleted')]);
+                })
                 ->formatResults(ResourceTypesTable::resultFormatter(true));
+        } else {
+            $query->innerJoinWith('ResourceTypes', function ($q) {
+                return $q->where([$q->expr()->isNull('ResourceTypes.deleted')]);
+            });
         }
 
         // Handle the sorting of modified for compatibility with the
@@ -216,10 +223,9 @@ trait ResourcesFindersTrait
             throw new InvalidArgumentException('The parameter resourceId should be a valid UUID.');
         }
 
-        $query = $this->findIndex($userId, $options)
+        return $this
+            ->findIndex($userId, $options)
             ->where(['Resources.id' => $resourceId]);
-
-        return $query;
     }
 
     /**

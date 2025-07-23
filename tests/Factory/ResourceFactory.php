@@ -27,6 +27,7 @@ use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * ResourceFactory
@@ -67,11 +68,13 @@ class ResourceFactory extends CakephpBaseFactory
                 'description' => $faker->text(10),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
-                'resource_type_id' => UuidFactory::uuid5('resource-types.id.password-and-description'),
+                'resource_type_id' => UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_PASSWORD_AND_DESCRIPTION),
                 'created' => Chronos::now()->subDays($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDays($faker->randomNumber(4)),
             ];
         });
+
+        $this->with('ResourceTypes', ResourceTypeFactory::make()->passwordAndDescription());
     }
 
     /**
@@ -174,7 +177,7 @@ class ResourceFactory extends CakephpBaseFactory
             $this->with('MetadataKeys');
         }
 
-        return $this->patchData(array_merge([
+        $data = array_merge([
             // Set V5 fields (not null and valid)
             'metadata' => $v5Fields['metadata'] ?? 'foo-bar', // todo set proper encrypted resource metadata
             'metadata_key_type' => $type,
@@ -183,8 +186,8 @@ class ResourceFactory extends CakephpBaseFactory
             'username' => null,
             'uri' => null,
             'description' => null,
-            // set valid v5 resource type
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT),
-        ], $v5Fields));
+        ], $v5Fields);
+
+        return $this->patchData($data)->with('ResourceTypes', ResourceTypeFactory::make()->v5Default());
     }
 }

@@ -53,7 +53,6 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
             ->passwordString()
             ->with('Resources', ResourceFactory::make()->deleted())
             ->persist();
-        ResourceTypeFactory::make()->passwordAndDescription()->persist();
         $resourceTypeId = $resourceType->id;
 
         $sut = new ResourceTypesDeleteService();
@@ -145,13 +144,12 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
         $admin = UserFactory::make()->admin()->persist();
         $uac = new UserAccessControl(Role::ADMIN, $admin->id);
 
-        /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $resourceType */
-        $resourceType = ResourceTypeFactory::make()->passwordString()->persist();
         ResourceTypeFactory::make()->passwordAndDescription()->persist();
-        $resourceTypeId = $resourceType->id;
-        ResourceFactory::make()
-            ->patchData(['resource_type_id' => $resourceTypeId])
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->with('ResourceTypes', ResourceTypeFactory::make()->passwordString())
             ->persist();
+        $resourceTypeId = $resource->resource_type->id;
 
         $sut = new ResourceTypesDeleteService();
         $this->expectException(BadRequestException::class);

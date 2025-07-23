@@ -74,17 +74,15 @@ class ResourceTypesDeleteControllerTest extends AppIntegrationTestCaseV5
     public function testResourceTypesDeleteController_ErrorSomeResourcesExists(): void
     {
         MetadataTypesSettingsFactory::make()->v4()->persist();
-
-        /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $resourceType */
-        $resourceType = ResourceTypeFactory::make()->passwordString()->persist();
         ResourceTypeFactory::make()->passwordAndDescription()->persist();
-        $resourceTypeId = $resourceType->id;
-        ResourceFactory::make()
-            ->patchData(['resource_type_id' => $resourceTypeId])
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->with('ResourceTypes', ResourceTypeFactory::make()->passwordString())
             ->persist();
+        $resourceTypeId = $resource->resource_type->id;
 
         $this->logInAsAdmin();
-        $this->deleteJson("/resource-types/$resourceTypeId.json");
+        $this->deleteJson("/resource-types/{$resourceTypeId}.json");
 
         $this->assertResponseContains('resources of this type still exist');
         $this->assertError(400);
