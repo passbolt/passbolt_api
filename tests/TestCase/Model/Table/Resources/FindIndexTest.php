@@ -38,7 +38,16 @@ class FindIndexTest extends AppTestCase
      * @var ResourcesTable
      */
     public $Resources;
-    public array $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions'];
+    public array $fixtures = [
+        'app.Base/Users',
+        'app.Base/Groups',
+        'app.Base/GroupsUsers',
+        'app.Base/ResourceTypes',
+        'app.Base/Resources',
+        'app.Base/Secrets',
+        'app.Base/Favorites',
+        'app.Base/Permissions',
+    ];
 
     public function setUp(): void
     {
