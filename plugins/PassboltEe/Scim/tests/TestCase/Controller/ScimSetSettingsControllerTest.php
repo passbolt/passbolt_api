@@ -86,7 +86,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $this->setUpUpdate();
         $this->logInAsAdmin();
 
-        /** @var User $user */
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
 
         $data = [
@@ -131,11 +131,11 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      */
     protected static function generateData(): array
     {
-        /** @var User $userActive */
+        /** @var \App\Model\Entity\User $userActive */
         $userActive = UserFactory::make()->active()->persist();
-        /** @var User $userNotActive */
+        /** @var \App\Model\Entity\User $userNotActive */
         $userNotActive = UserFactory::make()->admin()->persist();
-        /** @var User $userDisabled */
+        /** @var \App\Model\Entity\User $userDisabled */
         $userDisabled = UserFactory::make()->disabled()->persist();
 
         $scimUserIdActive = $userActive->id;
@@ -285,7 +285,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
     {
         $this->logInAsAdmin();
 
-        /** @var User $user */
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
 
         $data = [
@@ -368,7 +368,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
 
         $wrongUuid = UuidFactory::uuid();
 
-        /** @var User $user */
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
 
         $data = [
@@ -413,7 +413,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $this->setUpUpdate();
         $this->logInAsAdmin();
 
-        /** @var User $user */
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
 
         $data = [

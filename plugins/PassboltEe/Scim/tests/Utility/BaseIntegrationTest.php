@@ -63,7 +63,7 @@ abstract class BaseIntegrationTest extends AppIntegrationTestCase
 
         RoleFactory::make()->guest()->persist();
         RoleFactory::make()->admin()->persist();
-        /** @var OrganizationSetting $scimOrgSetting */
+        /** @var \App\Model\Entity\OrganizationSetting $scimOrgSetting */
         $scimOrgSetting = ScimOrgSettingFactory::make()->default()->persist();
         $settingsData = json_decode($scimOrgSetting->value, associative: true);
         $this->settingId = $settingsData['setting_id'] ?? '';
