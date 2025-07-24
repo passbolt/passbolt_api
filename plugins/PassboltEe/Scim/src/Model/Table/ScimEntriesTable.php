@@ -5,6 +5,7 @@ namespace Passbolt\Scim\Model\Table;
 
 use App\Model\Table\GroupsTable;
 use App\Model\Table\UsersTable;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -15,17 +16,17 @@ use Passbolt\Scim\Model\Entity\ScimEntry;
  *
  * @method \Passbolt\Scim\Model\Entity\ScimEntry newEmptyEntity()
  * @method \Passbolt\Scim\Model\Entity\ScimEntry newEntity(array $data, array $options = [])
- * @method \Passbolt\Scim\Model\Entity\ScimEntry[] newEntities(array $data, array $options = [])
- * @method \Passbolt\Scim\Model\Entity\ScimEntry get($primaryKey, $options = [])
- * @method \Passbolt\Scim\Model\Entity\ScimEntry findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method array<\Passbolt\Scim\Model\Entity\ScimEntry> newEntities(array $data, array $options = [])
+ * @method \Passbolt\Scim\Model\Entity\ScimEntry get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
+ * @method \Passbolt\Scim\Model\Entity\ScimEntry findOrCreate(SelectQuery|callable|array $search, callable|array|null $callback = null, array $options = [])
  * @method \Passbolt\Scim\Model\Entity\ScimEntry patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \Passbolt\Scim\Model\Entity\ScimEntry[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \Passbolt\Scim\Model\Entity\ScimEntry|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Scim\Model\Entity\ScimEntry saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Scim\Model\Entity\ScimEntry[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\Scim\Model\Entity\ScimEntry[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\Scim\Model\Entity\ScimEntry[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\Scim\Model\Entity\ScimEntry[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method array<\Passbolt\Scim\Model\Entity\ScimEntry> patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Scim\Model\Entity\ScimEntry|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method \Passbolt\Scim\Model\Entity\ScimEntry saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method iterable<\Passbolt\Scim\Model\Entity\ScimEntry>|false saveMany(iterable $entities, array $options = [])
+ * @method iterable<\Passbolt\Scim\Model\Entity\ScimEntry> saveManyOrFail(iterable $entities, array $options = [])
+ * @method iterable<\Passbolt\Scim\Model\Entity\ScimEntry>|false deleteMany(iterable $entities, array $options = [])
+ * @method iterable<\Passbolt\Scim\Model\Entity\ScimEntry> deleteManyOrFail(iterable $entities, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class ScimEntriesTable extends Table

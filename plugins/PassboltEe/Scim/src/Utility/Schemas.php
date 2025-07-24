@@ -64,11 +64,6 @@ class Schemas
             throw new ScimException(__('Invalid Schema'));
         }
 
-        $schema = new $schemaClass();
-        if (!$schema instanceof ScimObjectInterface) {
-            throw new Exception(sprintf('Invalid mapped class for schema id %s', $schemaId));
-        }
-
-        return $schema;
+        return new $schemaClass();
     }
 }

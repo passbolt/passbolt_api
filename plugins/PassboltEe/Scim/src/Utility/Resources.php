@@ -61,11 +61,6 @@ class Resources
             throw new ScimException(sprintf('Invalid Resource type `%s`', $type));
         }
 
-        $resource = new $class();
-        if (!$resource instanceof ResourceInterface) {
-            throw new Exception(sprintf('Invalid mapped class for Resource `%s`', $type));
-        }
-
-        return $resource;
+        return new $class();
     }
 }

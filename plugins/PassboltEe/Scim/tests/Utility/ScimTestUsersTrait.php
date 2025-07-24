@@ -59,9 +59,9 @@ trait ScimTestUsersTrait
     /**
      * Create the SCIM test user 1
      *
-     * @return \Passbolt\Scim\Model\Entity\ScimEntry
+     * @return \Passbolt\Scim\Model\Entity\ScimEntry|iterable<\Passbolt\Scim\Model\Entity\ScimEntry>
      */
-    public function createScimUser1(): ScimEntry
+    public function createScimUser1(): ScimEntry|iterable
     {
         return ScimEntryFactory::make([
             'external_identifier' => '4d36b536-42ba-4a65-9299-c4461222b47f',
@@ -82,9 +82,9 @@ trait ScimTestUsersTrait
     /**
      * Create the SCIM test user 2
      *
-     * @return \Passbolt\Scim\Model\Entity\ScimEntry
+     * @return \Passbolt\Scim\Model\Entity\ScimEntry|iterable<\Passbolt\Scim\Model\Entity\ScimEntry>
      */
-    public function createScimUser2(): ScimEntry
+    public function createScimUser2(): ScimEntry|iterable
     {
         return ScimEntryFactory::make([
             'external_identifier' => 'db8d7e50-0718-4556-bb49-92f43af1b6d4',

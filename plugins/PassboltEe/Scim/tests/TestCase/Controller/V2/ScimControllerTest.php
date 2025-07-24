@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
 use App\Test\Factory\RoleFactory;
+use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
 use Passbolt\Scim\Test\Utility\BaseIntegrationTest;
 
@@ -207,7 +208,9 @@ class ScimControllerTest extends BaseIntegrationTest
     public function testScimControllerUsersIndex(string $endpoint, string $expectedResponseFile)
     {
         $this->setTestNow();
+        /** @var ScimEntry $scimEntry1 */
         $scimEntry1 = $this->createScimUser1();
+        /** @var ScimEntry $scimEntry2 */
         $scimEntry2 = $this->createScimUser2();
 
         $expectedResponse = $this->getScimFixtureData($expectedResponseFile);
@@ -286,6 +289,7 @@ class ScimControllerTest extends BaseIntegrationTest
     public function testScimControllerUsersView_Success()
     {
         $this->setTestNow();
+        /** @var ScimEntry $scimEntry */
         $scimEntry = $this->createScimUser1();
         $this->configScimAuth();
         $this->get($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key));
@@ -316,6 +320,7 @@ class ScimControllerTest extends BaseIntegrationTest
     public function testScimControllerUsersEdit_Success()
     {
         $this->setTestNow();
+        /** @var ScimEntry $scimEntry */
         $scimEntry = $this->createScimUser1();
         $this->assertSame('User 1', $scimEntry->user->profile->first_name);
         $this->assertSame('Scim', $scimEntry->user->profile->last_name);
@@ -361,6 +366,7 @@ class ScimControllerTest extends BaseIntegrationTest
     public function testScimControllerUsersDelete_Success()
     {
         $this->setTestNow();
+        /** @var ScimEntry $scimEntry */
         $scimEntry = $this->createScimUser1();
         $this->assertSame(self::USER_1_SCIM_NAME, $scimEntry->scim_name);
         $this->assertFalse($scimEntry->user->deleted);

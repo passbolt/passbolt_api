@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Test\TestCase\Controller;
 
 use App\Model\Entity\OrganizationSetting;
+use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
@@ -86,9 +87,12 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $this->setUpUpdate();
         $this->logInAsAdmin();
 
+        /** @var User $user */
+        $user = UserFactory::make()->admin()->persist();
+
         $data = [
             'setting_id' => UuidFactory::uuid(),
-            'scim_user_id' => UserFactory::make()->admin()->persist()->id,
+            'scim_user_id' => $user->id,
             'secret_token' => ScimSetSettingsService::generateToken(),
         ];
         $this->postJson('/scim/settings.json', $data);
@@ -128,10 +132,17 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      */
     protected static function generateData(): array
     {
-        $scimUserIdActive = UserFactory::make()->active()->persist()->id;
+        /** @var User $userActive */
+        $userActive = UserFactory::make()->active()->persist();
+        /** @var User $userNotActive */
+        $userNotActive = UserFactory::make()->admin()->persist();
+        /** @var User $userDisabled */
+        $userDisabled = UserFactory::make()->disabled()->persist();
+
+        $scimUserIdActive = $userActive->id;
         $secretToken = Hash::get(ScimOrgSettingFactory::make()->getDefaultValue(), 'secret_token');
-        $scimUserIdNotActive = UserFactory::make()->admin()->persist()->id;
-        $scimUserIdDisabled = UserFactory::make()->disabled()->persist()->id;
+        $scimUserIdNotActive = $userNotActive->id;
+        $scimUserIdDisabled = $userDisabled->id;
 
         $data = [
             //Empty secret token
@@ -275,9 +286,12 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
     {
         $this->logInAsAdmin();
 
+        /** @var User $user */
+        $user = UserFactory::make()->admin()->persist();
+
         $data = [
             'setting_id' => UuidFactory::uuid(),
-            'scim_user_id' => UserFactory::make()->admin()->persist()->id,
+            'scim_user_id' => $user->id,
             'secret_token' => ScimSetSettingsService::generateToken(),
         ];
         $this->postJson('/scim/settings.json', $data);
@@ -355,8 +369,11 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
 
         $wrongUuid = UuidFactory::uuid();
 
+        /** @var User $user */
+        $user = UserFactory::make()->admin()->persist();
+
         $data = [
-            'scim_user_id' => UserFactory::make()->admin()->persist()->id,
+            'scim_user_id' => $user->id,
             'secret_token' => ScimSetSettingsService::generateToken(),
         ];
 
@@ -397,8 +414,11 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $this->setUpUpdate();
         $this->logInAsAdmin();
 
+        /** @var User $user */
+        $user = UserFactory::make()->admin()->persist();
+
         $data = [
-            'scim_user_id' => UserFactory::make()->admin()->persist()->id,
+            'scim_user_id' => $user->id,
             'secret_token' => ScimSetSettingsService::generateToken(),
         ];
         $this->putJson("/scim/settings/{$this->current->id}.json", $data);

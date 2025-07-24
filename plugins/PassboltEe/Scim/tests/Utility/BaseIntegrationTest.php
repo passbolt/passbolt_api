@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\Utility;
 
+use App\Model\Entity\OrganizationSetting;
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
@@ -63,6 +64,7 @@ abstract class BaseIntegrationTest extends AppIntegrationTestCase
 
         RoleFactory::make()->guest()->persist();
         RoleFactory::make()->admin()->persist();
+        /** @var OrganizationSetting $scimOrgSetting */
         $scimOrgSetting = ScimOrgSettingFactory::make()->default()->persist();
         $settingsData = json_decode($scimOrgSetting->value, associative: true);
         $this->settingId = $settingsData['setting_id'] ?? '';

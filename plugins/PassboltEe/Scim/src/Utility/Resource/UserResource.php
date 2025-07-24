@@ -357,10 +357,10 @@ class UserResource implements ResourceInterface
 
     /**
      * @param \Passbolt\Scim\Utility\Object\Operation $operation
-     * @return string
+     * @return string|null
      * @throws \Exception
      */
-    protected function getAttributeMutability(Operation $operation): string
+    protected function getAttributeMutability(Operation $operation): string|null
     {
         $userSchema = Schemas::build(SchemaIdentifier::CORE_USER)->toSCIM();
         switch ($operation->getAttribute()) {

@@ -143,7 +143,7 @@ class ScimController extends AppController
             foreach ($patchOp->getOperations() as $operation) {
                 $userResource->applyOperation($operation);
             }
-            
+
             $this->processResponse($settingId, $userResource, static::STATUS_EDITED);
         } catch (Exception $e) {
             $this->processException($settingId, $e);

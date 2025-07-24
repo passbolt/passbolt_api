@@ -241,6 +241,7 @@ class IntegrationUsersTest extends BaseIntegrationTest
         $this->setTestNow();
         $scimName = self::USER_1_SCIM_NAME;
         $userEmail = self::USER_1_EMAIL;
+        /** @var ScimEntry $scimEntry */
         $scimEntry = $this->createScimUser1();
         $this->assertSame($scimEntry->scim_name, $scimName);
         $this->assertSame($scimEntry->user->username, $userEmail);
@@ -291,6 +292,7 @@ class IntegrationUsersTest extends BaseIntegrationTest
 
         $this->setTestNow();
         $scimName = self::USER_1_SCIM_NAME;
+        /** @var ScimEntry $scimEntry */
         $scimEntry = $this->createScimUser1();
         $this->assertSame($scimEntry->scim_name, $scimName);
         $this->assertFalse($scimEntry->user->deleted);
