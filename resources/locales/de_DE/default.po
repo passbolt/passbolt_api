@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-05-21 11:09\n"
+"PO-Revision-Date: 2025-07-24 09:11\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -905,7 +905,7 @@ msgid "The metadata key is marked as expired."
 msgstr "Der Metadaten-Schlüssel wurde als abgelaufen markiert."
 
 msgid "The shared metadata key should be unique."
-msgstr ""
+msgstr "Der gemeinsame Metadaten-Schlüssel muss einzigartig sein."
 
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Es ist nicht erlaubt, Ressourcentypen vom Typ v5-password-string zu erstellen."
@@ -1106,7 +1106,7 @@ msgid "{0} deleted the password {1}"
 msgstr "{0} hat das Passwort {1} gelöscht"
 
 msgid "{0} deleted a password"
-msgstr ""
+msgstr "{0} hat ein Passwort gelöscht"
 
 msgid "You edited a resource"
 msgstr "Sie haben eine Ressource bearbeitet"
@@ -2354,7 +2354,7 @@ msgid "The metadata key does not exist."
 msgstr "Der Metadaten-Schlüssel existiert nicht."
 
 msgid "The folder metadata provided cannot be decrypted."
-msgstr ""
+msgstr "Der bereitgestellte Metadaten-Ordner kann nicht entschlüsselt werden."
 
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Ein Ordner vom Typ \"persönlich\" kann nicht mit anderen Benutzern oder einer Gruppe geteilt werden."
@@ -2591,7 +2591,7 @@ msgid "Security warning!"
 msgstr "Sicherheitswarnung!"
 
 msgid "An unknown user attempted to identify as {0}."
-msgstr ""
+msgstr "Ein unbekannter Benutzer hat versucht, sich als {0} zu identifizieren."
 
 msgid "This is a potential security issue."
 msgstr "Dies ist ein potenzieller Sicherheitsproblem."
@@ -2600,7 +2600,7 @@ msgid "Please investigate!"
 msgstr "Bitte untersuchen Sie!"
 
 msgid "An unknown user attempted to steal your login data."
-msgstr ""
+msgstr "Ein unbekannter Benutzer hat versucht, Ihre Anmeldedaten zu stehlen."
 
 msgid "Please get in touch with one of your administrators."
 msgstr "Bitte kontaktieren Sie einen Ihrer Administratoren."
@@ -3221,7 +3221,7 @@ msgid "The provided modified by does not match."
 msgstr "Der angegebene 'modified by' stimmt nicht überein."
 
 msgid "The folder metadata key data could not be updated."
-msgstr ""
+msgstr "Die Schlüsseldaten der Ordner-Metadaten konnten nicht aktualisiert werden."
 
 msgid "The resource metadata key data could not be updated."
 msgstr "Die Metadaten-Schlüsseldaten der Ressource konnten nicht aktualisiert werden."
@@ -3296,7 +3296,7 @@ msgid "You have created a new password."
 msgstr "Sie haben ein neues Passwort erstellt."
 
 msgid "{0} deleted a password."
-msgstr ""
+msgstr "{0} hat ein Passwort gelöscht."
 
 msgid "Log in passbolt"
 msgstr "Bei Passbolt eInloggen"
