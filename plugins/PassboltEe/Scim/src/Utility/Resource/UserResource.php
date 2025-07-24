@@ -381,8 +381,9 @@ class UserResource implements ResourceInterface
                 $mutability = $attribute[0]['mutability'] ?? null;
                 break;
             default:
-                // set no used attributes as read only
-                $mutability = ScimConstants::ATTRIBUTE_MUTABILITY_READ_ONLY;
+                // set no used attributes as ATTRIBUTE_MUTABILITY_READ_WRITE to not trigger an error
+                // this attributes will not be processed further int he process
+                $mutability = ScimConstants::ATTRIBUTE_MUTABILITY_READ_WRITE;
         }
         if (!ScimConstants::isValidAttributeMutability((string)$mutability)) {
             throw new ScimException(sprintf('The mutability `%s` is invalid or not supported', $mutability));
@@ -405,7 +406,6 @@ class UserResource implements ResourceInterface
         }
 
         $mutability = $this->getAttributeMutability($operation);
-        // @todo: should we throw error or just ignore?
         if ($mutability === ScimConstants::ATTRIBUTE_MUTABILITY_READ_ONLY) {
             throw new ConflictException(sprintf(
                 'Unable to apply operation `%s` for the attribute `%s` with mutability `%s`',
@@ -503,6 +503,10 @@ class UserResource implements ResourceInterface
                 throw new NotSupportedException(
                     sprintf('The operation type `%s` is not supported or invalid', $operation->getType())
                 );
+        }
+        // skip when processing an attribute not used in this application
+        if ($patchData === []) {
+            return $this;
         }
 
         $this->Users->patchEntity($this->userEntity, $patchData, [
