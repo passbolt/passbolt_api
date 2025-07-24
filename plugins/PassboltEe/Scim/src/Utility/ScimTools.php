@@ -40,7 +40,7 @@ class ScimTools
     /**
      * @return \App\Model\Entity\OrganizationSetting|null
      */
-    public static function getScimOrgSettings(): OrganizationSetting|null
+    public static function getScimOrgSettings(): ?OrganizationSetting
     {
         /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
@@ -51,7 +51,7 @@ class ScimTools
     /**
      * @return \App\Model\Entity\User|null
      */
-    public static function getScimSettingsSelectedUser(): User|null
+    public static function getScimSettingsSelectedUser(): ?User
     {
         $organizationSetting = self::getScimOrgSettings();
         if (!$organizationSetting) {

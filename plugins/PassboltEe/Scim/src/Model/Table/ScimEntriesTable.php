@@ -5,7 +5,6 @@ namespace Passbolt\Scim\Model\Table;
 
 use App\Model\Table\GroupsTable;
 use App\Model\Table\UsersTable;
-use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -18,7 +17,7 @@ use Passbolt\Scim\Model\Entity\ScimEntry;
  * @method \Passbolt\Scim\Model\Entity\ScimEntry newEntity(array $data, array $options = [])
  * @method array<\Passbolt\Scim\Model\Entity\ScimEntry> newEntities(array $data, array $options = [])
  * @method \Passbolt\Scim\Model\Entity\ScimEntry get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
- * @method \Passbolt\Scim\Model\Entity\ScimEntry findOrCreate(SelectQuery|callable|array $search, callable|array|null $callback = null, array $options = [])
+ * @method \Passbolt\Scim\Model\Entity\ScimEntry findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, callable|array|null $callback = null, array $options = [])
  * @method \Passbolt\Scim\Model\Entity\ScimEntry patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method array<\Passbolt\Scim\Model\Entity\ScimEntry> patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\Scim\Model\Entity\ScimEntry|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])

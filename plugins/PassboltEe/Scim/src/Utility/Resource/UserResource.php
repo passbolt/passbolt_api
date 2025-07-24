@@ -25,6 +25,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
+use Exception;
 use Passbolt\Scim\Exception\ConflictException;
 use Passbolt\Scim\Exception\NotSupportedException;
 use Passbolt\Scim\Exception\PreconditionFailedException;
@@ -40,7 +41,6 @@ use Passbolt\Scim\Utility\Resources;
 use Passbolt\Scim\Utility\SchemaIdentifier;
 use Passbolt\Scim\Utility\Schemas;
 use Passbolt\Scim\Utility\ScimConstants;
-use Passbolt\Scim\Utility\ScimObjectInterface;
 use Passbolt\Scim\Utility\ScimTools;
 
 /**
@@ -360,7 +360,7 @@ class UserResource implements ResourceInterface
      * @return string|null
      * @throws \Exception
      */
-    protected function getAttributeMutability(Operation $operation): string|null
+    protected function getAttributeMutability(Operation $operation): ?string
     {
         $userSchema = Schemas::build(SchemaIdentifier::CORE_USER)->toSCIM();
         switch ($operation->getAttribute()) {
@@ -548,7 +548,7 @@ class UserResource implements ResourceInterface
             if (!$this->Users->softDelete($this->userEntity)) {
                 throw new ConflictException('The User resource could not be deleted due to validation failure');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             ScimLog::error(sprintf('Unable to delete the user with id `%s`', $this->userEntity->id));
             ScimLog::error($e->getMessage());
             ScimLog::error($e->getTraceAsString());

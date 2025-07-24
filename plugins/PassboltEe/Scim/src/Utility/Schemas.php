@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Utility;
 
-use Exception;
 use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Utility\Schema\GroupSchema;
 use Passbolt\Scim\Utility\Schema\UserSchema;

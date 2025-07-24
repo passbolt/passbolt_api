@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
 use App\Test\Factory\RoleFactory;
-use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
 use Passbolt\Scim\Test\Utility\BaseIntegrationTest;
 

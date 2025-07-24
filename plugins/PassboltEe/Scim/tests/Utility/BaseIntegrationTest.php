@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\Utility;
 
-use App\Model\Entity\OrganizationSetting;
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;

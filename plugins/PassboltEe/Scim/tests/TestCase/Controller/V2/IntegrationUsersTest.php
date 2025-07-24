@@ -310,6 +310,5 @@ class IntegrationUsersTest extends BaseIntegrationTest
         $this->configScimAuth();
         $this->delete($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key));
         $this->assertResponseCode(404);
-
     }
 }
