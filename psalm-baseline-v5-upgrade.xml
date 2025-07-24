@@ -400,6 +400,11 @@
       <code><![CDATA[\Passbolt\Log\Model\Entity\SecretAccess|\Passbolt\Log\Model\Entity\SecretAccess[] persist()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
+  <file src="plugins/PassboltEe/Scim/tests/Factory/ScimOrgSettingFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[ScimOrgSettingFactory]]></code>
+    </MethodSignatureMismatch>
+  </file>
   <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Resources/ResourcesControllerLogTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
