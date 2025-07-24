@@ -21,6 +21,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Core\Configure;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class MetadataResourcesViewControllerTest extends AppIntegrationTestCaseV5
 {
@@ -59,5 +60,19 @@ class MetadataResourcesViewControllerTest extends AppIntegrationTestCaseV5
         $response = $this->_responseJsonBody;
         $this->assertObjectNotHasAttributes(MetadataResourceDto::V5_META_PROPS, $response);
         $this->assertObjectHasAttributes(MetadataResourceDto::V4_META_PROPS, $response);
+    }
+
+    public function testResourcesViewController_Error_V5ResourceWithDeletedResourceType(): void
+    {
+        $user = $this->logInAsUser();
+        $resourceV5 = ResourceFactory::make()
+            ->withPermissionsFor([$user])
+            ->v5Fields()
+            ->with('ResourceTypes', ResourceTypeFactory::make()->v5CustomFieldsStandalone()->deleted())
+            ->persist();
+
+        $this->getJson("/resources/{$resourceV5->get('id')}.json");
+
+        $this->assertNotFoundError('The resource does not exist');
     }
 }
