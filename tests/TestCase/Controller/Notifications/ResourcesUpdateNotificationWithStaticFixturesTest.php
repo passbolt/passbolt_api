@@ -28,9 +28,17 @@ class ResourcesUpdateNotificationWithStaticFixturesTest extends AppIntegrationTe
     use EmailQueueTrait;
 
     public array $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Gpgkeys',
-        'app.Base/Favorites', 'app.Base/Profiles', 'app.Base/Roles',
-        'app.Base/GroupsUsers', 'app.Base/Permissions',
+        'app.Base/Users',
+        'app.Base/Groups',
+        'app.Base/ResourceTypes',
+        'app.Base/Resources',
+        'app.Base/Secrets',
+        'app.Base/Gpgkeys',
+        'app.Base/Favorites',
+        'app.Base/Profiles',
+        'app.Base/Roles',
+        'app.Base/GroupsUsers',
+        'app.Base/Permissions',
     ];
 
     public function setUp(): void

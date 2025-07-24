@@ -17,10 +17,13 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Controller;
 
 use App\Controller\AppController;
+use App\Event\UpdateUserLastLoggedInListener;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
 use Authentication\Authenticator\Result;
+use Cake\Event\Event;
 use Cake\Event\EventInterface;
+use Cake\Event\EventManager;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
@@ -35,6 +38,8 @@ class JwtLoginController extends AppController
         $this->Authentication->allowUnauthenticated([
             'loginPost',
         ]);
+
+        EventManager::instance()->on(new UpdateUserLastLoggedInListener());
 
         parent::beforeFilter($event);
     }
@@ -56,6 +61,10 @@ class JwtLoginController extends AppController
             $user = $result->getData()['user'];
             $uac = new UserAccessControl($user['role']['name'], $user['id']);
             UserAction::getInstance()->setUserAccessControl($uac);
+
+            $event = new Event(UpdateUserLastLoggedInListener::EVENT_USER_LOGIN_SUCCESS, $this, ['user' => $user]);
+            $this->getEventManager()->dispatch($event);
+
             $this->success(__('The authentication was a success.'), compact('challenge'));
         } else {
             $message = __('The authentication failed.') . ' ';

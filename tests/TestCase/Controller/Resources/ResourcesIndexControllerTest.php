@@ -27,6 +27,7 @@ use App\Test\Lib\Model\FavoritesModelTrait;
 use Cake\I18n\DateTime;
 use Cake\Utility\Hash;
 use Passbolt\Folders\FoldersPlugin;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class ResourcesIndexControllerTest extends AppIntegrationTestCase
 {
@@ -205,6 +206,41 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $resourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
         $this->assertContains($resourceAId, $resourcesIds);
         $this->assertContains($resourceBId, $resourcesIds);
+    }
+
+    public function testResourcesIndexController_Success_ResourcesWithResourceTypesDeletedAreNotReturned(): void
+    {
+        $user = $this->logInAsUser();
+        ResourceFactory::make(1)->withPermissionsFor([$user], Permission::READ)->persist();
+        ResourceFactory::make(1)->withPermissionsFor([$user], Permission::UPDATE)->persist();
+        ResourceFactory::make(1)->withPermissionsFor([$user])->persist();
+        // Resources with resource type deleted
+        $resourcesShouldNotReturned = ResourceFactory::make(2)
+            ->with('ResourceTypes', ResourceTypeFactory::make()->standaloneTotp()->deleted())
+            ->withPermissionsFor([$user])
+            ->persist();
+
+        $this->getJson('/resources.json');
+
+        $this->assertSuccess();
+        $response = $this->getResponseBodyAsArray();
+        $this->assertCount(3, $response);
+        $responseIds = Hash::extract($response, '{n}.id');
+        $this->assertTrue(!in_array($resourcesShouldNotReturned[0]->id, $responseIds));
+        $this->assertTrue(!in_array($resourcesShouldNotReturned[1]->id, $responseIds));
+        // Assert that the created date is in the right format
+        $format = "yyyy-MM-dd'T'HH':'mm':'ssxxx";
+        $created = $response[0]['created'];
+        $createdParsed = DateTime::parse($response[0]['created'])->i18nFormat($format);
+        $this->assertSame($createdParsed, $created, "The created date $created is not in $format format");
+        // Expected fields.
+        $this->assertResourceAttributes($this->_responseJsonBody[0]);
+        // Not expected fields.
+        $this->assertObjectNotHasAttribute('secrets', $this->_responseJsonBody[0]);
+        $this->assertObjectNotHasAttribute('creator', $this->_responseJsonBody[0]);
+        $this->assertObjectNotHasAttribute('modifier', $this->_responseJsonBody[0]);
+        $this->assertObjectNotHasAttribute('favorite', $this->_responseJsonBody[0]);
+        $this->assertSame(3, $this->_responseJsonHeader->pagination->count);
     }
 
     public function testResourcesIndexController_Error_NotAuthenticated_WithFactories(): void

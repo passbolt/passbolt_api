@@ -1,0 +1,12 @@
+name: spx
+repository: fullfatthings/ddev-spx
+version: v0.0.2
+install_date: "2025-07-17T12:47:58+05:30"
+project_files:
+    - web-build/pre.Dockerfile.spx
+    - web-build/enable_spx
+    - web-build/disable_spx
+    - commands/web/spx
+    - php/99-spx.ini
+global_files: []
+removal_actions: []

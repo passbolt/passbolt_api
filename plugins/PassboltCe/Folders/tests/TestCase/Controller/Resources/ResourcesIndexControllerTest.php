@@ -43,8 +43,15 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
     use PermissionsModelTrait;
 
     public array $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers',
-        'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Permissions',
+        'app.Base/Users',
+        'app.Base/Profiles',
+        'app.Base/Roles',
+        'app.Base/Groups',
+        'app.Base/GroupsUsers',
+        'app.Base/ResourceTypes',
+        'app.Base/Resources',
+        'app.Base/Favorites',
+        'app.Base/Permissions',
     ];
 
     /**

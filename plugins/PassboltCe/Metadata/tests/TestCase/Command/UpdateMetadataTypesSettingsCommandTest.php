@@ -21,6 +21,7 @@ use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
@@ -52,6 +53,8 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
 
     public function testUpdateMetadataTypesSettingsCommand_Success_UpgradeResourcesToV5(): void
     {
+        // Create an active metadata key
+        MetadataKeyFactory::make()->persist();
         $user = UserFactory::make()->active()->persist();
         MetadataTypesSettingsFactory::make()->v4()->persist();
 
@@ -76,6 +79,8 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
 
     public function testUpdateMetadataTypesSettingsCommand_Success_UpgradeFoldersToV5(): void
     {
+        // Create an active metadata key
+        MetadataKeyFactory::make()->persist();
         $user = UserFactory::make()->active()->persist();
         /** @var \App\Model\Entity\OrganizationSetting $metadataSettings */
         $metadataSettings = MetadataTypesSettingsFactory::make()->v4()->persist();
@@ -112,6 +117,8 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
 
     public function testUpdateMetadataTypesSettingsCommand_Success_UpgradeTagsToV5(): void
     {
+        // Create an active metadata key
+        MetadataKeyFactory::make()->persist();
         $user = UserFactory::make()->active()->persist();
         MetadataTypesSettingsFactory::make()->v4()->persist();
 
@@ -136,6 +143,8 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
 
     public function testUpdateMetadataTypesSettingsCommand_Success_SettingsCreated(): void
     {
+        // Create an active metadata key
+        MetadataKeyFactory::make()->persist();
         $user = UserFactory::make()->active()->persist();
 
         $optionsArray = [
@@ -168,8 +177,15 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
 
         $optionsArray = [
             sprintf('--%s=%s', MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES, MetadataTypesSettingsDto::V4),
+            sprintf('--%s=%s', MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE, MetadataTypesSettingsDto::V4),
+            sprintf('--%s=%s', MetadataTypesSettingsDto::DEFAULT_TAG_TYPE, MetadataTypesSettingsDto::V4),
+            sprintf('--%s=%s', MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE, MetadataTypesSettingsDto::V4),
             sprintf('--%s=%s', MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES, '1'),
             sprintf('--%s=%s', MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES, '0'),
+            sprintf('--%s=%s', MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS, '0'),
+            sprintf('--%s=%s', MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS, '0'),
+            sprintf('--%s=%s', MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS, '0'),
+            sprintf('--%s=%s', MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE, '0'),
         ];
         $optionsArray[] = sprintf('--username=%s', $user->get('username'));
         $options = implode(' ', $optionsArray);

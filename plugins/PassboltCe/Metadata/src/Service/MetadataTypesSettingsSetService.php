@@ -38,12 +38,15 @@ class MetadataTypesSettingsSetService
      * @throws \App\Error\Exception\CustomValidationException When there are validation errors.
      * @throws \Cake\Http\Exception\InternalErrorException|\Exception When unable to save the entity.
      * @throws \App\Error\Exception\FormValidationException if the data does not validate
+     * @throws \App\Error\Exception\CustomValidationException if no active metadata key is found in DB and v5 is enabled
      */
     public function saveSettings(UserAccessControl $uac, array $data): MetadataTypesSettingsDto
     {
         $uac->assertIsAdmin();
 
-        $dto = (new MetadataTypesSettingsAssertService())->assert($data);
+        $metadataKeyValidationService = new MetadataTypesSettingsAssertService();
+        $dto = $metadataKeyValidationService->assert($data);
+        $metadataKeyValidationService->assertThatAnActiveMetadataKeyExistsWhenV5IsEnabled($dto);
 
         /** @var \App\Model\Table\OrganizationSettingsTable $orgSettingsTable */
         $orgSettingsTable = $this->fetchTable('OrganizationSettings');

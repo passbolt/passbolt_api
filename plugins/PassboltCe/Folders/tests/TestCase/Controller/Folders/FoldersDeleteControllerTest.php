@@ -19,6 +19,7 @@ namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Table\PermissionsTable;
 use App\Test\Factory\UserFactory;
+use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
@@ -130,5 +131,13 @@ class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
         $folderId = FolderFactory::make()->persist()->get('id');
         $this->deleteJson("/folders/{$folderId}.json?api-version=2");
         $this->assertAuthenticationError();
+    }
+
+    public function testFoldersDeleteError_NotJson()
+    {
+        $this->logInAsUser();
+        $folderId = UuidFactory::uuid();
+        $this->delete("/folders/{$folderId}");
+        $this->assertResponseCode(404);
     }
 }

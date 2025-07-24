@@ -39,6 +39,8 @@ class FoldersUpdateController extends AppController
      */
     public function update(string $id)
     {
+        $this->assertJson();
+
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The folder id is not valid.'));
         }
