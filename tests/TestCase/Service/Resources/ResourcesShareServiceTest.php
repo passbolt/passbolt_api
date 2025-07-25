@@ -33,6 +33,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * \App\Test\TestCase\Service\Resources\ResourcesShareServiceTest Test Case
@@ -345,6 +346,27 @@ hcciUFw5
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('The resource does not exist.');
         $this->service->share($uac, $resourceId, $data);
+    }
+
+    public function testResourceShareService_Error_ResourceTypeDeleted(): void
+    {
+        $user = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($user);
+        $resourceId = ResourceFactory::make()
+            ->with('ResourceTypes', ResourceTypeFactory::make()->standaloneTotp()->deleted())
+            ->persist()
+            ->id;
+
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('The resource types associated to this resource does not exist.');
+
+        $this->service->share($uac, $resourceId, [
+            [
+                'aro' => 'User',
+                'aro_foreign_key' => $user->id,
+                'type' => Permission::OWNER,
+            ],
+        ]);
     }
 
     /* SHARE DRY RUN */
