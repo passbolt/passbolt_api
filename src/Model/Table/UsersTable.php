@@ -24,6 +24,7 @@ use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
+use App\Model\Rule\User\IsAdminOrUserRoleIdRule;
 use App\Model\Traits\Users\UsersFindersTrait;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\UserAccessControl;
@@ -236,9 +237,8 @@ class UsersTable extends Table
             'errorField' => 'username',
             'message' => __('The username is already in use.'),
         ]);
-        $rules->add($rules->existsIn(['role_id'], 'Roles'), 'validRole', [
-            'message' => __('The role identifier does not exist.'),
-        ]);
+
+        $rules->add(new IsAdminOrUserRoleIdRule(), 'validRole', ['errorField' => 'role_id']);
 
         // Delete rules
         $msg = __('The user should not be sole owner of shared content, transfer the ownership to other users.');

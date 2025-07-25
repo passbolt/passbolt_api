@@ -199,7 +199,26 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testUsersAddController_Errror_RequestDataApiUserExist(): void
+    public function testUsersAddController_Error_Role_ID_Is_Guest(): void
+    {
+        $guest = RoleFactory::make()->guest()->persist();
+        RoleFactory::make()->user()->persist();
+        UserFactory::make()->admin()->persist();
+        $data = [
+            'username' => 'john@passbolt.com',
+            'role_id' => $guest->get('id'),
+            'profile' => [
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+            ],
+        ];
+        $this->logInAsAdmin();
+        $this->postJson('/users.json', $data);
+        $this->assertBadRequestError('Could not validate user data.');
+        $this->assertResponseContains('The user role ID must be one of the admin or user roles.');
+    }
+
+    public function testUsersAddController_Error_RequestDataApiUserExist(): void
     {
         RoleFactory::make()->guest()->persist();
         $user = RoleFactory::make()->user()->persist();
