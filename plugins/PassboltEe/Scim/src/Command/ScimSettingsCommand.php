@@ -108,7 +108,7 @@ class ScimSettingsCommand extends PassboltCommand
                 ], $id);
                 $settings['secret_token'] = $secretToken;
                 $io->success('Settings were successfully generated. Please check them');
-                $io->out(json_encode($settings));
+                $io->out(print_r($settings, return: true));
             }
         } catch (FormValidationException $fve) {
             $this->error($fve->getCode() . ':' . json_encode($fve->getErrors()), $io);
