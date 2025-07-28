@@ -57,6 +57,7 @@ class LocaleServiceTest extends TestCase
             'sv-SE',
             'sl-SI',
             'uk-UA',
+            'cs-CZ',
         ], LocaleService::getSystemLocales());
     }
 
