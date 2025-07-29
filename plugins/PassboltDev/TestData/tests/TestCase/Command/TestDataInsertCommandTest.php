@@ -100,7 +100,7 @@ class TestDataInsertCommandTest extends TestCase
         // 32 of Permissions are Folders Permissions
 
         // Roles
-        $this->assertEquals(4, RoleFactory::count());
+        $this->assertEquals(3, RoleFactory::count());
 
         // Secrets
         $this->assertEquals(506, SecretFactory::count());
@@ -154,7 +154,7 @@ class TestDataInsertCommandTest extends TestCase
         $this->assertEquals(60, PermissionFactory::count());
 
         // Roles
-        $this->assertEquals(4, RoleFactory::count());
+        $this->assertEquals(3, RoleFactory::count());
 
         // Secrets
         $this->assertEquals(68, SecretFactory::count());
@@ -202,7 +202,7 @@ class TestDataInsertCommandTest extends TestCase
         $this->assertEquals(3050, PermissionFactory::count());
 
         // Roles
-        $this->assertEquals(4, RoleFactory::count());
+        $this->assertEquals(3, RoleFactory::count());
 
         // Secrets
         $this->assertEquals(28050, SecretFactory::count());

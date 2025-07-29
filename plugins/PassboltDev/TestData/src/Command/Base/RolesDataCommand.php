@@ -31,7 +31,7 @@ class RolesDataCommand extends DataCommand
     public function getData(): array
     {
         $roles[] = [
-            'id' => UuidFactory::uuid('role.id.anonymous'),
+            'id' => UuidFactory::uuid('role.id.guest'),
             'name' => 'guest',
             'description' => 'Non logged in user',
             'created' => '2012-07-04 13:39:25',
@@ -48,13 +48,6 @@ class RolesDataCommand extends DataCommand
             'id' => UuidFactory::uuid('role.id.admin'),
             'name' => 'admin',
             'description' => 'Organization administrator',
-            'created' => '2012-07-04 13:39:25',
-            'modified' => '2012-07-04 13:39:25',
-        ];
-        $roles[] = [
-            'id' => UuidFactory::uuid('role.id.root'),
-            'name' => 'root',
-            'description' => 'Super Administrator',
             'created' => '2012-07-04 13:39:25',
             'modified' => '2012-07-04 13:39:25',
         ];
