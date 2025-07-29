@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7def6e5a4bbcdc8f1a4463b1e2bec586",
+    "content-hash": "767a0bc9e92dc821bb90c360fefb6814",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5492,12 +5492,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-selenium-api",
-                "reference": "0d46ae337ba71659191e7625c96ff2f861da44d1"
+                "reference": "861bc4fe19b5ed58e50dd9a9c52909c997f2934a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/0d46ae337ba71659191e7625c96ff2f861da44d1",
-                "reference": "0d46ae337ba71659191e7625c96ff2f861da44d1",
+                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/861bc4fe19b5ed58e50dd9a9c52909c997f2934a",
+                "reference": "861bc4fe19b5ed58e50dd9a9c52909c997f2934a",
                 "shasum": ""
             },
             "require": {
@@ -5542,7 +5542,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2025-06-10T09:23:34+00:00"
+            "time": "2025-07-29T06:27:38+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -7773,10 +7773,10 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "lorenzo/cakephp-email-queue": 20,
         "bcrowe/cakephp-api-pagination": 20,
-        "psy/psysh": 0,
-        "passbolt/passbolt-selenium-api": 20
+        "lorenzo/cakephp-email-queue": 20,
+        "passbolt/passbolt-selenium-api": 20,
+        "psy/psysh": 0
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -7791,7 +7791,7 @@
         "ext-pdo": "*",
         "ext-curl": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.2"
     },
