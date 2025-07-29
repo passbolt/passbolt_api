@@ -1,0 +1,295 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"POT-Creation-Date: 2020-11-11 13:56+0100\n"
+"PO-Revision-Date: 2025-07-28 17:26\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Czech\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
+"X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"X-Crowdin-Project-ID: 2\n"
+"X-Crowdin-Language: cs\n"
+"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/cake.po\n"
+"X-Crowdin-File-ID: 338\n"
+"Language: cs_CZ\n"
+
+#: Error/error400.php:36
+#: Error/error500.php:40
+msgid "Error"
+msgstr "Chyba"
+
+#: Error/error400.php:37
+msgid "The requested address {0} was not found on this server."
+msgstr "Požadovaná adresa {0} nebyla na tomto serveru nalezena."
+
+#: Error/error500.php:38
+msgid "An Internal Error Has Occurred"
+msgstr "Došlo k vnitřní chybě"
+
+#: Controller/Component/AuthComponent.php:462
+msgid "You are not authorized to access that location."
+msgstr "Nemáte oprávnění k přístupu k tomuto umístění."
+
+#: Error/ExceptionRenderer.php:304
+msgid "Not Found"
+msgstr "Nenalezeno"
+
+#: Error/ExceptionRenderer.php:306
+msgid "An Internal Error Has Occurred."
+msgstr "Došlo k vnitřní chybě."
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:286
+msgid "Missing or incorrect CSRF cookie type."
+msgstr "Chybějící nebo nesprávný typ CSRF cookie."
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:290
+msgid "Missing or invalid CSRF cookie."
+msgstr "Chybějící nebo neplatná CSRF cookie."
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:311
+msgid "CSRF token from either the request body or request headers did not match or is missing."
+msgstr "CSRF token buď z těla nebo hlavičky požadavku se neshoduje nebo chybí."
+
+#: Http/Response.php:1490
+msgid "The requested file contains `..` and will not be read."
+msgstr "Požadovaný soubor obsahuje `..` a nebude přečten."
+
+#: Http/Response.php:1498
+msgid "The requested file was not found"
+msgstr "Požadovaný soubor nebyl nalezen"
+
+#: I18n/Number.php:116
+msgid "{0,number,#,###.##} KB"
+msgstr "{0,number,#,###.##} KB"
+
+#: I18n/Number.php:118
+msgid "{0,number,#,###.##} MB"
+msgstr "{0,number,#,###.##} MB"
+
+#: I18n/Number.php:120
+msgid "{0,number,#,###.##} GB"
+msgstr "{0,number,#,###.##} GB"
+
+#: I18n/Number.php:122
+msgid "{0,number,#,###.##} TB"
+msgstr "{0,number,#,###.##} TB"
+
+#: I18n/Number.php:114
+msgid "{0,number,integer} Byte"
+msgid_plural "{0,number,integer} Bytes"
+msgstr[0] "{0,number,integer} byte"
+msgstr[1] "{0,number,integer} bytů"
+msgstr[2] "{0,number,integer} bytů"
+msgstr[3] "{0,number,integer} bytů"
+
+#: I18n/RelativeTimeFormatter.php:86
+msgid "{0} from now"
+msgstr "Od teď {0}"
+
+#: I18n/RelativeTimeFormatter.php:86
+msgid "{0} ago"
+msgstr "před {0}"
+
+#: I18n/RelativeTimeFormatter.php:89
+msgid "{0} after"
+msgstr "{0} po"
+
+#: I18n/RelativeTimeFormatter.php:89
+msgid "{0} before"
+msgstr "{0} před"
+
+#: I18n/RelativeTimeFormatter.php:120
+msgid "just now"
+msgstr "právě teď"
+
+#: I18n/RelativeTimeFormatter.php:157
+msgid "about a second ago"
+msgstr "přibližně před sekundou"
+
+#: I18n/RelativeTimeFormatter.php:158
+msgid "about a minute ago"
+msgstr "přibližně před minutou"
+
+#: I18n/RelativeTimeFormatter.php:159
+msgid "about an hour ago"
+msgstr "přibližně před hodinou"
+
+#: I18n/RelativeTimeFormatter.php:160
+#: I18n/RelativeTimeFormatter.php:370
+msgid "about a day ago"
+msgstr "přibližně před dnem"
+
+#: I18n/RelativeTimeFormatter.php:161
+#: I18n/RelativeTimeFormatter.php:371
+msgid "about a week ago"
+msgstr "přibližně před týdnem"
+
+#: I18n/RelativeTimeFormatter.php:162
+#: I18n/RelativeTimeFormatter.php:372
+msgid "about a month ago"
+msgstr "přibližně před měsícem"
+
+#: I18n/RelativeTimeFormatter.php:163
+#: I18n/RelativeTimeFormatter.php:373
+msgid "about a year ago"
+msgstr "přibližně před rokem"
+
+#: I18n/RelativeTimeFormatter.php:174
+msgid "in about a second"
+msgstr "přibližně za sekundu"
+
+#: I18n/RelativeTimeFormatter.php:175
+msgid "in about a minute"
+msgstr "přibližně za minutu"
+
+#: I18n/RelativeTimeFormatter.php:176
+msgid "in about an hour"
+msgstr "přibližně za hodinu"
+
+#: I18n/RelativeTimeFormatter.php:177
+#: I18n/RelativeTimeFormatter.php:384
+msgid "in about a day"
+msgstr "přibližně za den"
+
+#: I18n/RelativeTimeFormatter.php:178
+#: I18n/RelativeTimeFormatter.php:385
+msgid "in about a week"
+msgstr "přibližně za týden"
+
+#: I18n/RelativeTimeFormatter.php:179
+#: I18n/RelativeTimeFormatter.php:386
+msgid "in about a month"
+msgstr "přibližně za měsíc"
+
+#: I18n/RelativeTimeFormatter.php:180
+#: I18n/RelativeTimeFormatter.php:387
+msgid "in about a year"
+msgstr "přibližně za rok"
+
+#: I18n/RelativeTimeFormatter.php:342
+msgid "today"
+msgstr "dnes"
+
+#: I18n/RelativeTimeFormatter.php:409
+msgid "%s ago"
+msgstr "před %s"
+
+#: I18n/RelativeTimeFormatter.php:410
+msgid "on %s"
+msgstr "na %s"
+
+#: I18n/RelativeTimeFormatter.php:53
+#: I18n/RelativeTimeFormatter.php:132
+#: I18n/RelativeTimeFormatter.php:354
+msgid "{0} year"
+msgid_plural "{0} years"
+msgstr[0] "{0} rok"
+msgstr[1] "{0} let"
+msgstr[2] "{0} let"
+msgstr[3] "{0} roků"
+
+#: I18n/RelativeTimeFormatter.php:57
+#: I18n/RelativeTimeFormatter.php:135
+#: I18n/RelativeTimeFormatter.php:357
+msgid "{0} month"
+msgid_plural "{0} months"
+msgstr[0] "{0} měsíc"
+msgstr[1] "{0} měsíce"
+msgstr[2] "{0} měsíců"
+msgstr[3] "{0} měsíců"
+
+#: I18n/RelativeTimeFormatter.php:63
+#: I18n/RelativeTimeFormatter.php:138
+#: I18n/RelativeTimeFormatter.php:360
+msgid "{0} week"
+msgid_plural "{0} weeks"
+msgstr[0] "{0} týden"
+msgstr[1] "{0} týdny"
+msgstr[2] "{0} týdnů"
+msgstr[3] "{0} týdnů"
+
+#: I18n/RelativeTimeFormatter.php:65
+#: I18n/RelativeTimeFormatter.php:141
+#: I18n/RelativeTimeFormatter.php:363
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0} den"
+msgstr[1] "{0} dny"
+msgstr[2] "{0} dní"
+msgstr[3] "{0} dnů"
+
+#: I18n/RelativeTimeFormatter.php:70
+#: I18n/RelativeTimeFormatter.php:144
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0} hodin"
+msgstr[1] "{0} hodin"
+msgstr[2] "{0} hodin"
+msgstr[3] "{0} hodin"
+
+#: I18n/RelativeTimeFormatter.php:74
+#: I18n/RelativeTimeFormatter.php:147
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0} minuta"
+msgstr[1] "{0} minut"
+msgstr[2] "{0} minut"
+msgstr[3] "{0} minut"
+
+#: I18n/RelativeTimeFormatter.php:78
+#: I18n/RelativeTimeFormatter.php:150
+msgid "{0} second"
+msgid_plural "{0} seconds"
+msgstr[0] "{0} sekunda"
+msgstr[1] "{0} sekund"
+msgstr[2] "{0} sekund"
+msgstr[3] "{0} sekund"
+
+#: ORM/RulesChecker.php:55
+msgid "This value is already in use"
+msgstr "Tato hodnota je již používána"
+
+#: ORM/RulesChecker.php:102
+msgid "This value does not exist"
+msgstr "Tato hodnota neexistuje"
+
+#: ORM/RulesChecker.php:224
+msgid "Cannot modify row: a constraint for the `{0}` association fails."
+msgstr "Řádek nelze upravit: vazba pro asociaci `{0}` se nezdařila."
+
+#: ORM/RulesChecker.php:262
+msgid "The count does not match {0}{1}"
+msgstr "Počet se neshoduje s {0}{1}"
+
+#: Utility/Text.php:915
+msgid "and"
+msgstr "a"
+
+#: Validation/Validator.php:2500
+msgid "This field is required"
+msgstr "Toto pole je povinné"
+
+#: Validation/Validator.php:2520
+#: View/Form/ArrayContext.php:249
+msgid "This field cannot be left empty"
+msgstr "Toto pole nemůže být prázdné"
+
+#: Validation/Validator.php:2672
+msgid "The provided value is invalid"
+msgstr "Zadaná hodnota je neplatná"
+
+#: View/Helper/FormHelper.php:981
+msgid "Edit {0}"
+msgstr "Upravit {0}"
+
+#: View/Helper/FormHelper.php:983
+msgid "New {0}"
+msgstr "Nový {0}"
+
+#: View/Helper/FormHelper.php:1890
+msgid "Submit"
+msgstr "Odeslat"
+
