@@ -143,7 +143,8 @@ class ScimControllerTest extends BaseIntegrationTest
     {
         $this->get($this->getScimEndpoint('Schemas' . DS . 'urn:ietf:params:scim:schemas:core:2.0:Group'));
         $this->assertResponseCode(200);
-        $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_SCHEMAS_GROUPS));
+        //$this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_SCHEMAS_GROUPS));
+        $this->assertSame($this->getScimFixtureData(self::FIXTURE_RESPONSE_SCHEMAS_GROUPS), (string)$this->_response->getBody());
     }
 
     /**
