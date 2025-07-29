@@ -195,7 +195,10 @@ class UserResource implements ResourceInterface
      */
     public function setFromDatabase(string|int $internalId): self
     {
-        $this->userEntity = $this->findExistingUserEntity([$this->Users->aliasField('id') => $internalId], findDeleted: true);
+        $this->userEntity = $this->findExistingUserEntity(
+            [$this->Users->aliasField('id') => $internalId],
+            findDeleted: true
+        );
         if (!$this->userEntity) {
             throw new ResourceNotFoundException(
                 sprintf('The %s resource with id `%s` was not found', $this->getType(), $internalId)

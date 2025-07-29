@@ -14,7 +14,7 @@
         }
     ],
     "meta": {
-        "location": "https:\/\/passbolt-pro-api.ddev.site\/scim\/v2\/PLACEHOLDER_SETTING_ID\/ResourceTypes\/User",
+        "location": "PLACEHOLDER_API_URLscim\/v2\/PLACEHOLDER_SETTING_ID\/ResourceTypes\/User",
         "resourceType": "ResourceType"
     }
 }

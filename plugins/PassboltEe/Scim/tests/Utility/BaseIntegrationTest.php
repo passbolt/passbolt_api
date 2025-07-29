@@ -19,6 +19,7 @@ namespace Passbolt\Scim\Test\Utility;
 
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use Cake\Routing\Router;
 use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
 
 /**
@@ -33,6 +34,11 @@ abstract class BaseIntegrationTest extends AppIntegrationTestCase
      * Placeholder for setting id value to replace in expected SCIM responses
      */
     public const PLACEHOLDER_SETTING_ID = 'PLACEHOLDER_SETTING_ID';
+
+    /**
+     * Placeholder for setting id value to replace in expected SCIM responses
+     */
+    public const PLACEHOLDER_API_URL = 'PLACEHOLDER_API_URL';
 
     /**
      * Path to fixture files for SCIM responses
@@ -85,6 +91,8 @@ abstract class BaseIntegrationTest extends AppIntegrationTestCase
      */
     protected function replaceSettingIdString(string $text): string
     {
+        $text = str_replace(self::PLACEHOLDER_API_URL, str_replace('"', '', json_encode(Router::url('/', full:  true))), $text);
+
         return str_replace(self::PLACEHOLDER_SETTING_ID, $this->settingId, $text);
     }
 

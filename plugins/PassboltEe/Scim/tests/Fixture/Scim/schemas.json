@@ -130,7 +130,7 @@
             ],
             "meta": {
                 "resourceType": "Schema",
-                "location": "https:\/\/passbolt-pro-api.ddev.site\/scim\/v2\/PLACEHOLDER_SETTING_ID\/Schemas\/urn:ietf:params:scim:schemas:core:2.0:User"
+                "location": "PLACEHOLDER_API_URLscim\/v2\/PLACEHOLDER_SETTING_ID\/Schemas\/urn:ietf:params:scim:schemas:core:2.0:User"
             }
         },
         {
@@ -155,7 +155,7 @@
             ],
             "meta": {
                 "resourceType": "Schema",
-                "location": "https:\/\/passbolt-pro-api.ddev.site\/scim\/v2\/PLACEHOLDER_SETTING_ID\/Schemas\/urn:ietf:params:scim:schemas:core:2.0:Group"
+                "location": "PLACEHOLDER_API_URLscim\/v2\/PLACEHOLDER_SETTING_ID\/Schemas\/urn:ietf:params:scim:schemas:core:2.0:Group"
             }
         }
     ]
