@@ -195,10 +195,15 @@ class UserResource implements ResourceInterface
      */
     public function setFromDatabase(string|int $internalId): self
     {
-        $this->userEntity = $this->findExistingUserEntity([$this->Users->aliasField('id') => $internalId]);
+        $this->userEntity = $this->findExistingUserEntity([$this->Users->aliasField('id') => $internalId], findDeleted: true);
         if (!$this->userEntity) {
             throw new ResourceNotFoundException(
                 sprintf('The %s resource with id `%s` was not found', $this->getType(), $internalId)
+            );
+        }
+        if ($this->userEntity->deleted) {
+            throw new PreconditionFailedException(
+                sprintf('The %s resource with id `%s` is already deleted', $this->getType(), $internalId)
             );
         }
 
@@ -217,9 +222,10 @@ class UserResource implements ResourceInterface
      * Find existing User entity
      *
      * @param array $conditions
+     * @param bool $findDeleted
      * @return \App\Model\Entity\User|null
      */
-    protected function findExistingUserEntity(array $conditions = []): ?User
+    protected function findExistingUserEntity(array $conditions = [], bool $findDeleted = false): ?User
     {
         if ($conditions === []) {
             if (!$this->email) {
@@ -230,7 +236,9 @@ class UserResource implements ResourceInterface
                 $this->Users->aliasField('username') => $this->email,
             ];
         }
-        $conditions[$this->Users->aliasField('deleted')] = false;
+        if (!$findDeleted) {
+            $conditions[$this->Users->aliasField('deleted')] = false;
+        }
 
         /** @var \App\Model\Entity\User|null $user */
         $user = $this->Users

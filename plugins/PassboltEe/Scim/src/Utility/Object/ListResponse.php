@@ -101,6 +101,7 @@ class ListResponse implements ScimObjectInterface
         $scimEntriesTable = $this->fetchTable('Passbolt/Scim.ScimEntries');
         $conditions = [
             $scimEntriesTable->aliasField('foreign_model') => ScimEntry::MODEL_MAP[$resourceType],
+            $scimEntriesTable->aliasField('deleted') . ' IS NULL',
         ];
         if ($filter !== null) {
             //@todo: tmilos/scim-filter-parser should be used if more filters are needed
