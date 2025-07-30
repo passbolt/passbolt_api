@@ -36,7 +36,7 @@ class FixturizeCommand extends PassboltCommand
      */
     public static function getCommandDescription(): string
     {
-        return __('Fixturize a dummy scenario.');
+        return __('The fixturize command is not supported.');
     }
 
     /**
@@ -45,19 +45,20 @@ class FixturizeCommand extends PassboltCommand
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
         parent::execute($args, $io);
+        $io->abort('The fixturize command is not supported.');
 
-        $commands = Configure::read('PassboltTestData.scenarios.' . $args->getArgument('scenario') . '.fixturize.shellTasks'); //phpcs:ignore
-
-        if (!is_null($commands)) {
-            $this->initDatabase();
-            foreach ($commands as $command) {
-                $command = new $command();
-                $this->insertTask($command);
-                $this->fixturizeTask($command, $io);
-            }
-        }
-
-        return self::CODE_SUCCESS;
+//        $commands = Configure::read('PassboltTestData.scenarios.' . $args->getArgument('scenario') . '.fixturize.shellTasks'); //phpcs:ignore
+//
+//        if (!is_null($commands)) {
+//            $this->initDatabase();
+//            foreach ($commands as $command) {
+//                $command = new $command();
+//                $this->insertTask($command);
+//                $this->fixturizeTask($command, $io);
+//            }
+//        }
+//
+//        return self::CODE_SUCCESS;
     }
 
     /**
