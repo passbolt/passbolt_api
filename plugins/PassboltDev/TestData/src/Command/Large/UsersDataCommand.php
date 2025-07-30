@@ -46,7 +46,7 @@ class UsersDataCommand extends DataCommand
         $users[] = [
             'id' => UuidFactory::uuid('user.id.anonymous'),
             'username' => 'anonymous@passbolt.com',
-            'role_id' => UuidFactory::uuid('role.id.anonymous'),
+            'role_id' => UuidFactory::uuid('role.id.guest'),
             'active' => 1,
             'deleted' => 0,
             'created' => date('Y-m-d H:i:s'),

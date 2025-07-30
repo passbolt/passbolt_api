@@ -13,6 +13,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+
 use Passbolt\TestData\Command\Alt0\GroupsUsersDataCommand as Alt0GroupsUsersDataCommand;
 use Passbolt\TestData\Command\Alt0\PermissionsDataCommand as Alt0PermissionsDataCommand;
 use Passbolt\TestData\Command\Alt0\SecretsDataCommand as Alt0SecretsDataCommand;
@@ -54,12 +55,63 @@ use Passbolt\TestData\Command\Security\XssPermissionsDataCommand;
 use Passbolt\TestData\Command\Security\XssProfilesDataCommand;
 use Passbolt\TestData\Command\Security\XssResourcesDataCommand;
 use Passbolt\TestData\Command\Security\XssUsersDataCommand;
+use Passbolt\TestData\Scenario\Default\TestDataDefaultResourceTypesScenario;
+use Passbolt\TestData\Scenario\Default\TestDataDefaultRolesScenario;
+use Passbolt\TestData\Scenario\Demo\TestDataDemoCommentsScenario;
+use Passbolt\TestData\Scenario\Demo\TestDataDemoFavoritesScenario;
+use Passbolt\TestData\Scenario\Demo\TestDataDemoFoldersPermissionsScenario;
+use Passbolt\TestData\Scenario\Demo\TestDataDemoFoldersRelationsScenario;
+use Passbolt\TestData\Scenario\Demo\TestDataDemoFoldersScenario;
+use Passbolt\TestData\Scenario\Demo\TestDataDemoGpgKeysScenario;
+use Passbolt\TestData\Scenario\Demo\TestDataDemoGroupsScenario;
+use Passbolt\TestData\Scenario\Demo\TestDataDemoGroupsUsersScenario;
+use Passbolt\TestData\Scenario\Demo\TestDataDemoPermissionScenario;
+use Passbolt\TestData\Scenario\Demo\TestDataDemoResourcesScenario;
+use Passbolt\TestData\Scenario\Demo\TestDataDemoSecretsScenario;
+use Passbolt\TestData\Scenario\Demo\TestDataDemoUsersScenario;
+use Passbolt\TestData\Scenario\Security\TestDataSecurityXssCommentsScenario;
+use Passbolt\TestData\Scenario\Security\TestDataSecurityXssGroupsScenario;
+use Passbolt\TestData\Scenario\Security\TestDataSecurityXssGroupsUsersScenario;
+use Passbolt\TestData\Scenario\Security\TestDataSecurityXssPermissionsScenario;
+use Passbolt\TestData\Scenario\Security\TestDataSecurityXssResourcesScenario;
+use Passbolt\TestData\Scenario\Security\TestDataSecurityXssUsersScenario;
 
 return [
     'passbolt' => [
         'plugins' => [
             'testData' => [
                 'version' => '1.0.0',
+            ],
+        ],
+    ],
+    'PassboltDevTestData' => [
+        'saveStrategy' => 'default',
+        'scenarios' => [
+            'default' => [
+                'install' => [
+                    'shellTasks' => [
+                        TestDataDefaultRolesScenario::class,
+                        TestDataDefaultResourceTypesScenario::class,
+                        TestDataDemoUsersScenario::class,
+                        TestDataSecurityXssUsersScenario::class,
+                        TestDataDemoGpgKeysScenario::class,
+                        TestDataDemoGroupsScenario::class,
+                        TestDataSecurityXssGroupsScenario::class,
+                        TestDataDemoGroupsUsersScenario::class,
+                        TestDataSecurityXssGroupsUsersScenario::class,
+                        TestDataDemoResourcesScenario::class,
+                        TestDataSecurityXssResourcesScenario::class,
+                        TestDataDemoPermissionScenario::class,
+                        TestDataSecurityXssPermissionsScenario::class,
+                        TestDataDemoFavoritesScenario::class,
+                        TestDataDemoCommentsScenario::class,
+                        TestDataSecurityXssCommentsScenario::class,
+                        TestDataDemoSecretsScenario::class,
+                        TestDataDemoFoldersPermissionsScenario::class,
+                        TestDataDemoFoldersScenario::class,
+                        TestDataDemoFoldersRelationsScenario::class,
+                    ],
+                ],
             ],
         ],
     ],

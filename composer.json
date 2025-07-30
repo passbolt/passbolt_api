@@ -105,7 +105,6 @@
         "psr-4": {
             "App\\": "src",
             "Passbolt\\AccountRecovery\\": "./plugins/PassboltEe/AccountRecovery/src",
-            "Passbolt\\TestData\\": "./plugins/PassboltDev/TestData/src",
             "Passbolt\\AccountSettings\\": "./plugins/PassboltCe/AccountSettings/src",
             "Passbolt\\DirectorySync\\": "./plugins/PassboltEe/DirectorySync/src",
             "Passbolt\\MfaPolicies\\": "./plugins/PassboltEe/MfaPolicies/src",
@@ -149,6 +148,7 @@
             "App\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
             "Passbolt\\AccountRecovery\\Test\\": "./plugins/PassboltEe/AccountRecovery/tests",
+            "Passbolt\\TestData\\": "./plugins/PassboltDev/TestData/src",
             "Passbolt\\TestData\\Test\\": "./plugins/PassboltDev/TestData/tests",
             "Passbolt\\AccountSettings\\Test\\": "./plugins/PassboltCe/AccountSettings/tests",
             "Passbolt\\DirectorySync\\Test\\": "./plugins/PassboltEe/DirectorySync/tests",
