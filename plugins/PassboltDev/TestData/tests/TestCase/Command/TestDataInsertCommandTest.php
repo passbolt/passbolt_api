@@ -29,6 +29,7 @@ use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
@@ -39,16 +40,7 @@ use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 class TestDataInsertCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
-
-    /**
-     * setUp methods
-     *
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
+    use TruncateDirtyTables;
 
     /**
      * Basic help test
@@ -94,7 +86,7 @@ class TestDataInsertCommandTest extends TestCase
         // Resources
         $this->assertEquals(50, ResourceFactory::count());
         // Resources Types
-        $this->assertEquals(8, ResourceTypeFactory::count());
+        $this->assertEquals(9, ResourceTypeFactory::count());
         // Permissions
         $this->assertEquals(861, PermissionFactory::count());
         // 32 of Permissions are Folders Permissions
@@ -149,7 +141,7 @@ class TestDataInsertCommandTest extends TestCase
         // Resources
         $this->assertEquals(32, ResourceFactory::count());
         // Resources Types
-        $this->assertEquals(8, ResourceTypeFactory::count());
+        $this->assertEquals(9, ResourceTypeFactory::count());
         // Permissions
         $this->assertEquals(60, PermissionFactory::count());
 
@@ -197,7 +189,7 @@ class TestDataInsertCommandTest extends TestCase
         // Resources
         $this->assertEquals(3050, ResourceFactory::count());
         // Resources Types
-        $this->assertEquals(8, ResourceTypeFactory::count());
+        $this->assertEquals(9, ResourceTypeFactory::count());
         // Permissions
         $this->assertEquals(3050, PermissionFactory::count());
 
