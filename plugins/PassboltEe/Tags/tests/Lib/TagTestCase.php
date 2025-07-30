@@ -18,6 +18,7 @@ namespace Passbolt\Tags\Test\Lib;
 
 use App\Test\Lib\AppTestCase;
 use CakephpFixtureFactories\ORM\FactoryTableRegistry;
+use Passbolt\ResourceTypes\ResourceTypesPlugin;
 
 abstract class TagTestCase extends AppTestCase
 {
@@ -37,6 +38,7 @@ abstract class TagTestCase extends AppTestCase
         FactoryTableRegistry::getTableLocator()->clear();
         parent::setUp();
         $this->enableFeaturePlugin('Tags');
+        $this->enableFeaturePlugin(ResourceTypesPlugin::class);
         $this->loadPlugins(['Passbolt/Tags' => []]);
     }
 }

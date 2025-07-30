@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
@@ -28,6 +29,7 @@ use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 class PassboltCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use PassboltCommandTestTrait;
     use TruncateDirtyTables;
 
     /**
@@ -52,5 +54,24 @@ class PassboltCommandTest extends AppTestCase
         $this->assertOutputContains('The Passbolt CLI');
         $this->assertOutputContains('console.');
         $this->assertOutputContains('cake passbolt');
+    }
+
+    public function testPassboltCommand_As_Root(): void
+    {
+        $this->mockProcessUserService('root');
+        $this->exec('passbolt healthcheck');
+        $this->assertExitError();
+        $this->assertOutputContains('Passbolt commands cannot be executed as root.');
+        $this->assertOutputContains('The command should be executed with the same user as your web server. By instance:');
+        $this->assertOutputContains('su -s /bin/bash -c "' . ROOT . '/bin/cake passbolt healthcheck" HTTP_USER');
+    }
+
+    public function testPassboltCommand_As_Unknown_Webserver_User(): void
+    {
+        $this->mockProcessUserService('foo');
+        $this->exec('passbolt healthcheck --database');
+        $this->assertExitSuccess();
+        $this->assertOutputContains('The command should be executed with the same user as your web server. By instance:');
+        $this->assertOutputContains('su -s /bin/bash -c "' . ROOT . '/bin/cake passbolt healthcheck" HTTP_USER');
     }
 }

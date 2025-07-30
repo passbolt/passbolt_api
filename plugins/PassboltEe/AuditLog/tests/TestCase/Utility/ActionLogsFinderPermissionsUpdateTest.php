@@ -39,6 +39,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         'app.Base/Users',
         'app.Base/Profiles',
         'app.Base/Resources',
+        'app.Base/ResourceTypes',
         'app.Base/Permissions',
     ];
 

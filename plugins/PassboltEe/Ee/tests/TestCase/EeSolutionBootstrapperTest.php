@@ -40,7 +40,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
 
     public const EXPECTED_EE_PLUGINS = [
         'PassboltSeleniumApi',
-        'PassboltTestData',
+        'Passbolt/TestData',
         'Passbolt/Ee',
         'Passbolt/Subscription',
         'Passbolt/JwtAuthentication',
@@ -108,7 +108,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
             'Authentication',
             'EmailQueue',
             'PassboltSeleniumApi',
-            'PassboltTestData',
+            'Passbolt/TestData',
             'Passbolt/Ee',
             'Passbolt/Subscription',
             'Passbolt/JwtAuthentication',

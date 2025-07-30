@@ -1,0 +1,16 @@
+#ddev-generated
+
+RUN (apt-get update || true) && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confold" --no-install-recommends --no-install-suggests build-essential make autoconf libc-dev pkg-config php-pear php${DDEV_PHP_VERSION}-dev zlib1g-dev
+
+RUN mkdir -p /tmp/php-spx && \
+  cd /tmp/php-spx && \
+  git clone -b release/latest https://github.com/NoiseByNorthwest/php-spx.git . && \
+  phpize && \
+  ./configure && \
+  make && \
+  make install
+
+RUN echo "extension=spx.so" > /etc/php/$DDEV_PHP_VERSION/mods-available/spx.ini
+
+ADD enable_spx disable_spx /usr/local/bin/
+
