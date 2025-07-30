@@ -27,6 +27,7 @@ use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
 use Passbolt\Folders\Test\Factory\ResourceFactory;
@@ -34,6 +35,7 @@ use Passbolt\Folders\Test\Factory\ResourceFactory;
 class TestDataFixturizeCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp methods

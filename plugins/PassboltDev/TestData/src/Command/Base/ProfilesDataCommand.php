@@ -90,7 +90,7 @@ class ProfilesDataCommand extends DataCommand
             'gender' => 'f',
             'date_of_birth' => '1933-09-16',
             'title' => 'Ms',
-            'first_name' => 'Dame Steve',
+            'first_name' => 'Steve',
             'last_name' => 'Shirley',
         ];
         $profiles[] = [
