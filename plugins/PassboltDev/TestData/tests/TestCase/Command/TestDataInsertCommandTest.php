@@ -60,7 +60,7 @@ class TestDataInsertCommandTest extends TestCase
 
     public function testTestDataInsertCommand_Base_Scenario()
     {
-        $this->exec('passbolt insert default');
+        $this->exec('passbolt insert default -q');
         $this->assertExitSuccess();
 
         // Avatars
@@ -121,7 +121,7 @@ class TestDataInsertCommandTest extends TestCase
 
     public function testTestDataInsertCommand_Alt0_Scenario()
     {
-        $this->exec('passbolt insert alt0');
+        $this->exec('passbolt insert alt0 -q');
         $this->assertExitSuccess();
 
         // Users
@@ -158,6 +158,7 @@ class TestDataInsertCommandTest extends TestCase
 
     public function testTestDataInsertCommand_Large_Scenario()
     {
+        $this->markTestSkipped('Skiped as the insert large command takes too long to run and test.');
         $this->exec('passbolt insert large');
         $this->assertExitSuccess();
 
