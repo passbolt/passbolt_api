@@ -44,7 +44,7 @@ class InsertWithFactoriesCommand extends PassboltCommand
         $parser
             ->addOption('truncate', [
                 'help' => 'Truncates all tables apart from roles and resource_types.',
-                'default' => 'false',
+                'default' => false,
                 'boolean' => true,
             ])
             ->addArgument('scenario', [
@@ -77,7 +77,7 @@ class InsertWithFactoriesCommand extends PassboltCommand
         try {
             $this->getScenarioClass($args)->load();
         } catch (Exception $e) {
-            $io->error('There is already dummy data in the DB, try with the --truncate option.');
+            $this->error(__('There is already dummy data in the DB, try with the --truncate option.'), $io);
             $io->error($e->getMessage());
             $this->abort();
         }
