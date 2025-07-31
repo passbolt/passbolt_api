@@ -26,6 +26,7 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * @uses \Passbolt\Metadata\Controller\RotateKey\MetadataRotateKeyResourcesIndexController
@@ -49,6 +50,17 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
             'metadata_key_id' => $expiredMetadataKey->id,
             'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
         ])->persist();
+        // Resources with a deleted resource type should not be returned
+        ResourceFactory::make()
+            ->v5Fields(true, [
+                'metadata_key_id' => $expiredMetadataKey->id,
+                'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
+            ])
+            ->with(
+                'ResourceTypes',
+                ResourceTypeFactory::make()->deleted()
+            )
+            ->persist();
         // resources shouldn't be returned
         ResourceFactory::make()->persist(); // v4
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();

@@ -456,6 +456,9 @@ trait ResourcesFindersTrait
                 $query->newExpr()->isNotNull('Resources.metadata'),
                 $query->newExpr()->isNotNull('Resources.metadata_key_id'),
             ])
+            ->innerJoinWith('ResourceTypes', function (Query $q) {
+                return $q->whereNull('ResourceTypes.deleted');
+            })
             ->innerJoin(['MetadataKeys' => 'metadata_keys'], [
                 'MetadataKeys.id' => new IdentifierExpression('Resources.metadata_key_id'),
                 $query->newExpr()->isNotNull('MetadataKeys.expired'),
