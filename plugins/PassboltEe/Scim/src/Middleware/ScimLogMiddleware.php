@@ -49,9 +49,22 @@ class ScimLogMiddleware implements MiddlewareInterface
         );
         $requestId = Text::uuid();
         if ($isScimApiAndEnabled) {
-            ScimLog::info(sprintf('`%s` Request uri (%s): %s', $requestId, $request->getEnv('REQUEST_METHOD'), $request->getUri()));
+            ScimLog::info(
+                sprintf(
+                    '`%s` Request uri (%s): %s',
+                    $requestId,
+                    $request->getEnv('REQUEST_METHOD'),
+                    $request->getUri()
+                )
+            );
             if ($request->is(['post', 'put', 'patch'])) {
-                ScimLog::info(sprintf("`%s` Request body: \n%s", $requestId, print_r($request->getParsedBody(), return: true)));
+                ScimLog::info(
+                    sprintf(
+                        "`%s` Request body: \n%s",
+                        $requestId,
+                        print_r($request->getParsedBody(), return: true)
+                    )
+                );
             }
         }
 

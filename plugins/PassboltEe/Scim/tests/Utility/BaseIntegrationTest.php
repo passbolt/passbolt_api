@@ -92,7 +92,11 @@ abstract class BaseIntegrationTest extends AppIntegrationTestCase
      */
     protected function replaceSettingIdString(string $text): string
     {
-        $text = str_replace(self::PLACEHOLDER_API_URL, str_replace('"', '', json_encode(Router::url('/', full:  true))), $text);
+        $text = str_replace(
+            self::PLACEHOLDER_API_URL,
+            str_replace('"', '', json_encode(Router::url('/', full: true))),
+            $text
+        );
 
         return str_replace(self::PLACEHOLDER_SETTING_ID, $this->settingId, $text);
     }

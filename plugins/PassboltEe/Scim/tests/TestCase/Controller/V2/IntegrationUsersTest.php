@@ -17,9 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
-use App\Model\Entity\Role;
-use App\Model\Entity\User;
-use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
@@ -394,9 +391,9 @@ class IntegrationUsersTest extends BaseIntegrationTest
                 'value' => [
                     [
                         'primary' => true,
-                        'value' => "modified@email.com",
-                        'type' => "work"
-                    ]
+                        'value' => 'modified@email.com',
+                        'type' => 'work',
+                    ],
                 ],
             ],
         ]));
@@ -529,6 +526,7 @@ class IntegrationUsersTest extends BaseIntegrationTest
         $this->setTestNow();
         $scimName = self::USER_1_SCIM_NAME;
         $userEmail = self::USER_1_EMAIL;
+        /** @var \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry */
         $scimEntry = $this->createScimUser1();
         $this->assertSame($scimEntry->scim_name, $scimName);
         $this->assertSame($scimEntry->user->username, $userEmail);

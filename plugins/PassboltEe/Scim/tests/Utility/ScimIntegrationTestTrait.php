@@ -17,8 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\Utility;
 
-use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
-
 /**
  * Trait with utility function for testing scim users operations
  *

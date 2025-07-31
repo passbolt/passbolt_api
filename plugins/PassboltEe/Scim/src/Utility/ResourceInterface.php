@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Utility;
 
-use Passbolt\Scim\Utility\Object\Operation;
 use Passbolt\Scim\Utility\Object\PatchRequest;
 
 /**

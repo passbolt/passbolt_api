@@ -32,7 +32,6 @@ use Exception;
 use Passbolt\Scim\Exception\BadRequest;
 use Passbolt\Scim\Exception\ConflictException;
 use Passbolt\Scim\Exception\NotSupportedException;
-use Passbolt\Scim\Exception\PreconditionFailedException;
 use Passbolt\Scim\Exception\ResourceNotFoundException;
 use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Log\ScimLog;
@@ -419,7 +418,8 @@ class UserResource implements ResourceInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
      * @throws \Exception
      */
     public function update(PatchRequest $patchRequest): static
@@ -431,7 +431,6 @@ class UserResource implements ResourceInterface
         if (!$this->userEntity) {
             throw new ScimException('The database user must be set to apply an operation');
         }
-
 
         $userPatchData = [];
         $scimEntryPatchData = [];
@@ -492,7 +491,10 @@ class UserResource implements ResourceInterface
                         case 'emails':
                             if (empty($this->email)) {
                                 $subAttribute = $operation->getSubAttribute();
-                                if ($subAttribute === 'value' && $operation->getComparisonExpression() === 'type eq work') {
+                                if (
+                                    $subAttribute === 'value' &&
+                                    $operation->getComparisonExpression() === 'type eq work'
+                                ) {
                                     $this->email = $operation->getValue();
                                 }
                             }
@@ -568,8 +570,8 @@ class UserResource implements ResourceInterface
         $this->Users
             ->getConnection()
             ->transactional(function () use ($userPatchData, $scimEntryPatchData, $patchRequest) {
-            if ($userPatchData) {
-                $this->Users->patchEntity($this->userEntity, $userPatchData, [
+                if ($userPatchData) {
+                    $this->Users->patchEntity($this->userEntity, $userPatchData, [
                     'accessibleFields' => [
                         'disabled' => true,
                     ],
@@ -582,47 +584,47 @@ class UserResource implements ResourceInterface
                             ],
                         ],
                     ],
-                ]);
-                if (!$this->Users->save($this->userEntity, ['atomic' => false])) {
-                    ScimLog::error('Unable to update the user from a PATCH request');
-                    ScimLog::error(print_r($patchRequest, return: true));
-                    ScimLog::error(print_r($this->userEntity, return: true));
+                    ]);
+                    if (!$this->Users->save($this->userEntity, ['atomic' => false])) {
+                        ScimLog::error('Unable to update the user from a PATCH request');
+                        ScimLog::error(print_r($patchRequest, return: true));
+                        ScimLog::error(print_r($this->userEntity, return: true));
 
-                    throw new ConflictException(
-                        $this->getValidationErrorMessage($this->userEntity),
-                        scimType: ScimException::SCIM_TYPE_INVALID_VALUE
-                    );
+                        throw new ConflictException(
+                            $this->getValidationErrorMessage($this->userEntity),
+                            scimType: ScimException::SCIM_TYPE_INVALID_VALUE
+                        );
+                    }
                 }
-            }
-            if ($scimEntryPatchData) {
-                $scimEntry = $this->userEntity->scim_entry ?? null;
-                if (!$scimEntry) {
-                    $scimEntry = $this->Users->ScimEntries->newEmptyEntity();
-                    $scimEntryPatchData['foreign_model'] = ScimEntry::FOREIGN_MODEL_USERS;
-                    $scimEntryPatchData['foreign_key'] = $this->userEntity->id;
-                }
-                $this->Users->ScimEntries->patchEntity($scimEntry, $scimEntryPatchData, [
+                if ($scimEntryPatchData) {
+                    $scimEntry = $this->userEntity->scim_entry ?? null;
+                    if (!$scimEntry) {
+                        $scimEntry = $this->Users->ScimEntries->newEmptyEntity();
+                        $scimEntryPatchData['foreign_model'] = ScimEntry::FOREIGN_MODEL_USERS;
+                        $scimEntryPatchData['foreign_key'] = $this->userEntity->id;
+                    }
+                    $this->Users->ScimEntries->patchEntity($scimEntry, $scimEntryPatchData, [
                     'accessibleFields' => [
                         'foreign_key' => true,
                         'foreign_model' => true,
                         'external_identifier' => true,
                         'scim_name' => true,
                     ],
-                ]);
-                if (!$this->Users->ScimEntries->save($scimEntry, ['atomic' => false])) {
-                    ScimLog::error('Unable to update the scim entry from a PATCH request');
-                    ScimLog::error(print_r($patchRequest, return: true));
-                    ScimLog::error(print_r($scimEntry, return: true));
+                    ]);
+                    if (!$this->Users->ScimEntries->save($scimEntry, ['atomic' => false])) {
+                        ScimLog::error('Unable to update the scim entry from a PATCH request');
+                        ScimLog::error(print_r($patchRequest, return: true));
+                        ScimLog::error(print_r($scimEntry, return: true));
 
-                    throw new ConflictException(
-                        $this->getValidationErrorMessage($scimEntry),
-                        scimType: ScimException::SCIM_TYPE_INVALID_VALUE
-                    );
+                        throw new ConflictException(
+                            $this->getValidationErrorMessage($scimEntry),
+                            scimType: ScimException::SCIM_TYPE_INVALID_VALUE
+                        );
+                    }
                 }
-            }
 
-            return true;
-        });
+                return true;
+            });
 
         // Set the object properties with the updated information
         $this->setFromDatabase($this->userEntity->id);
@@ -663,7 +665,7 @@ class UserResource implements ResourceInterface
         ];
         $validationErrors = [];
         foreach ($fieldErrors as $fieldName => $errors) {
-            foreach ($errors as $errorName => $errorMessage) {
+            foreach ($errors as $errorMessage) {
                 // this is not an error, it is an associated field errors
                 if (is_array($errorMessage)) {
                     $validationErrors = array_merge($validationErrors, $this->getValidationErrors($errors));
@@ -693,7 +695,10 @@ class UserResource implements ResourceInterface
     {
         if (!$this->userEntity) {
             throw new ScimException(
-                sprintf('The values of the %s resource has not been set for the `delete` operation', $this->getType())
+                sprintf(
+                    'The values of the %s resource has not been set for the `delete` operation',
+                    $this->getType()
+                )
             );
         }
 
@@ -703,7 +708,9 @@ class UserResource implements ResourceInterface
             if (!$result || $errors !== []) {
                 if (isset($errors['id']['soleOwnerOfSharedContent'])) {
                     // @todo: send email
-                    throw new ConflictException('The user cannot be deleted because its the sole owner of shared content');
+                    throw new ConflictException(
+                        'The user cannot be deleted because its the sole owner of shared content'
+                    );
                 }
                 throw new ConflictException('The User resource could not be deleted due to validation failure');
             }

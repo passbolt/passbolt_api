@@ -36,7 +36,6 @@ class PatchRequest implements ScimObjectInterface
      * Set the data from the SCIM request data array
      *
      * @param array $data Data from SCIM
-     * @return $this
      */
     public function setFromScim(array $data): static
     {
