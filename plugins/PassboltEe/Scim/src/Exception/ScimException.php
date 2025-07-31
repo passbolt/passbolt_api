@@ -29,6 +29,8 @@ class ScimException extends HttpException
 
     public const SCIM_TYPE_INVALID_FILTER = 'invalidFilter';
 
+    public const SCIM_TYPE_MUTABILITY = 'mutability';
+
     /**
      * Scim error type
      *

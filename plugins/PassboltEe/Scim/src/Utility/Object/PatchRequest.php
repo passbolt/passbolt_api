@@ -21,9 +21,9 @@ use Passbolt\Scim\Utility\SchemaIdentifier;
 use Passbolt\Scim\Utility\ScimObjectInterface;
 
 /**
- * PatchOp class
+ * PatchRequest class
  */
-class PatchOp implements ScimObjectInterface
+class PatchRequest implements ScimObjectInterface
 {
     /**
      * Error exception
@@ -38,7 +38,7 @@ class PatchOp implements ScimObjectInterface
      * @param array $data Data from SCIM
      * @return $this
      */
-    public function setFromScim(array $data)
+    public function setFromScim(array $data): static
     {
         $this->operations = [];
         $operations = $data['Operations'] ?? [];

@@ -24,7 +24,7 @@ use Cake\Routing\Router;
 use Exception;
 use Passbolt\Scim\Utility\Object\ErrorResponse;
 use Passbolt\Scim\Utility\Object\ListResponse;
-use Passbolt\Scim\Utility\Object\PatchOp;
+use Passbolt\Scim\Utility\Object\PatchRequest;
 use Passbolt\Scim\Utility\Object\ServiceProviderConfig;
 use Passbolt\Scim\Utility\Resources;
 use Passbolt\Scim\Utility\ResourceTypes;
@@ -138,12 +138,9 @@ class ScimController extends AppController
     public function edit(string $settingId, string $resourceType, string $resourceId): void
     {
         try {
-            $patchOp = (new PatchOp())->setFromScim($this->getRequest()->getData());
+            $patchRequest = (new PatchRequest())->setFromScim($this->getRequest()->getData());
             $userResource = Resources::build($resourceType)->setFromDatabase($resourceId);
-            foreach ($patchOp->getOperations() as $operation) {
-                $userResource->applyOperation($operation);
-            }
-
+            $userResource->update($patchRequest);
             $this->processResponse($settingId, $userResource, static::STATUS_EDITED);
         } catch (Exception $e) {
             $this->processException($settingId, $e);

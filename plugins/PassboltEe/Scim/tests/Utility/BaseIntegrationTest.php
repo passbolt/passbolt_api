@@ -68,6 +68,7 @@ abstract class BaseIntegrationTest extends AppIntegrationTestCase
         $this->enableFeaturePlugin('Scim');
 
         RoleFactory::make()->guest()->persist();
+        RoleFactory::make()->user()->persist();
         RoleFactory::make()->admin()->persist();
         /** @var \App\Model\Entity\OrganizationSetting $scimOrgSetting */
         $scimOrgSetting = ScimOrgSettingFactory::make()->default()->persist();

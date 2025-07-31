@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Utility;
 
 use Passbolt\Scim\Utility\Object\Operation;
+use Passbolt\Scim\Utility\Object\PatchRequest;
 
 /**
  * Interface that define the common methods for SCIM resource objects
@@ -64,12 +65,12 @@ interface ResourceInterface extends ScimObjectInterface
     public function create(): static;
 
     /**
-     * Apply a single patch operation to the object
+     * Update the resource from a Patch request
      *
-     * @param \Passbolt\Scim\Utility\Object\Operation $operation
+     * @param \Passbolt\Scim\Utility\Object\PatchRequest $patchRequest
      * @return $this
      */
-    public function applyOperation(Operation $operation): static;
+    public function update(PatchRequest $patchRequest): static;
 
     /**
      * Delete the resource information in the database
