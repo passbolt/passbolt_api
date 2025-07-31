@@ -522,9 +522,13 @@ trait ResourcesFindersTrait
      */
     public function findV4(Query $query): Query
     {
-        return $query->where([
-            'Resources.deleted' => false,
-            $query->newExpr()->isNull('Resources.metadata'),
-        ]);
+        return $query
+            ->where([
+                'Resources.deleted' => false,
+                $query->newExpr()->isNull('Resources.metadata'),
+            ])
+            ->innerJoinWith('ResourceTypes', function (Query $q) {
+                return $q->whereNull('ResourceTypes.deleted');
+            });
     }
 }
