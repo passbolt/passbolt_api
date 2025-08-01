@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace App\Test\Lib\Utility;
 
-use Cake\Chronos\Chronos;
+use Cake\I18n\DateTime;
 use Cake\Utility\Hash;
 
 trait PaginationTestTrait
@@ -44,7 +44,7 @@ trait PaginationTestTrait
     {
         $data = [];
         foreach ($this->getRandomArray($n) as $randomValue) {
-            $data[] = [$field => Chronos::now()->subMonths($randomValue)];
+            $data[] = [$field => DateTime::now()->subMonths($randomValue)];
         }
 
         return $data;

@@ -46,7 +46,6 @@ class UsersIndexController extends AppController
             'Users.created',
             'Users.modified',
             'Users.last_logged_in',
-            'Users__last_logged_in',
         ],
         'order' => [
             'Users.username' => 'asc', // Default sorted field
@@ -118,7 +117,6 @@ class UsersIndexController extends AppController
             );
         }
 
-        $this->mapUsersLastLoggedInSortableFieldKey();
         $this->paginate($users);
         $this->success(__('The operation was successful.'), $users);
     }
@@ -141,24 +139,5 @@ class UsersIndexController extends AppController
                 throw new ForbiddenException(__('This operation is not allowed for this user.'));
             }
         }
-    }
-
-    /**
-     * The last_logged_in_field is being calculated mixing the last_logged_in field
-     * and the last login found in the logs. This forces to alias last_logged_in to Users__last_logged_in.
-     *
-     * The sortable fields thus need to be updated in pagination.
-     *
-     * @return void
-     * @see \App\Model\Traits\Users\UsersFindersTrait::findlastLoggedIn()
-     */
-    private function mapUsersLastLoggedInSortableFieldKey(): void
-    {
-        $orderParam = $this->getPaginateValue('order');
-        if (!empty($orderParam['Users.last_logged_in'])) {
-            $orderParam['Users__last_logged_in'] = $orderParam['Users.last_logged_in'];
-            unset($orderParam['Users.last_logged_in']);
-        }
-        $this->setPaginateValue('order', $orderParam);
     }
 }

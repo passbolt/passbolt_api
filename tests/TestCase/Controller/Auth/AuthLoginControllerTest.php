@@ -377,6 +377,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
             ->user()
             ->active()
+            ->lastLoggedIn()
             ->persist();
 
         $this->postJson('/auth/login.json', [
