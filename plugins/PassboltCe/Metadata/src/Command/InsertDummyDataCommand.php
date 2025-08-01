@@ -16,6 +16,9 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Command;
 
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Core\Configure;
 use Passbolt\TestData\Command\Base\FoldersDataCommand;
 use Passbolt\TestData\Command\Base\FoldersPermissionsDataCommand;
 use Passbolt\TestData\Command\Base\FoldersRelationsDataCommand;
@@ -56,5 +59,20 @@ class InsertDummyDataCommand extends InsertCommand
         }
 
         return parent::getShellTasks($scenario);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function execute(Arguments $args, ConsoleIo $io): ?int
+    {
+        if (!Configure::read('debug') || !Configure::read('passbolt.selenium.active')) {
+            $io->out('This command is to be used for testing and development purpose only.');
+            $io->out('Please enable DEBUG and PASSBOLT_SELENIUM_ACTIVE flags.');
+
+            return $this->errorCode();
+        }
+
+        return parent::execute($args, $io);
     }
 }
