@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
-use App\Test\Factory\RoleFactory;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
 use Passbolt\Scim\Test\Utility\BaseIntegrationTest;
 
@@ -251,8 +250,6 @@ class ScimControllerTest extends BaseIntegrationTest
     public function testScimControllerUsersAdd_Success()
     {
         $this->setTestNow();
-        RoleFactory::make()->user()->persist();
-
         $scimName = self::USER_1_SCIM_NAME;
         $this->configScimAuth();
         $this->post($this->getScimEndpoint('Users'), $this->getUserPostData($scimName));
@@ -374,7 +371,7 @@ class ScimControllerTest extends BaseIntegrationTest
         $this->delete($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key));
         $this->assertResponseCode(204);
 
-        $scimEntry = $this->getScimEntryByName(self::USER_1_SCIM_NAME, addUser: true);
-        $this->asserttrue($scimEntry->user->deleted);
+        $scimEntry = $this->getScimEntryByName(self::USER_1_SCIM_NAME, addUser: true, isDeleted: true);
+        $this->assertTrue($scimEntry->user->deleted);
     }
 }
