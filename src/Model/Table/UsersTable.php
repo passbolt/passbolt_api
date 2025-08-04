@@ -596,4 +596,35 @@ class UsersTable extends Table
 
         return $entitiesChanges;
     }
+
+    /**
+     * Add a cleanup tasks to remove duplicated inactive users with the same usernames
+     * This can happen under some rare conditions with some race conditions or manual DB edits
+     *
+     * @param bool|null $dryRun
+     * @return int
+     */
+    public function cleanupInactiveUsersWithDuplicatedUsername(?bool $dryRun = false): int
+    {
+        $duplicatedUsers = $this->listDuplicateUsernames()->toArray();
+        if (empty($duplicatedUsers)) {
+            return 0;
+        }
+
+        $toDeletedIds = $this->find()
+            ->select('id')
+            ->where(['id IN' => array_keys($duplicatedUsers), 'active' => false])
+            ->all()
+            ->extract('id')
+            ->toArray();
+        if (empty($toDeletedIds)) {
+            return 0;
+        }
+
+        if ($dryRun) {
+            return count($toDeletedIds);
+        }
+
+        return $this->updateAll(['deleted' => true], ['id IN' => $toDeletedIds, 'active' => false]);
+    }
 }
