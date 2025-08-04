@@ -60,6 +60,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/Log',
         'Passbolt/Folders',
         'Passbolt/PasswordPolicies',
+        'Passbolt/UserKeyPolicies',
     ];
 
     public function testBaseSolutionBootstrapper_Application_Bootstrap(): void
