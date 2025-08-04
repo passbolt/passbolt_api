@@ -18,21 +18,35 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Users;
 
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppTestCase;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\TestCase;
 
-class UsersTableCleanupTest extends TestCase
+/**
+ * @covers \App\Model\Table\UsersTable
+ */
+class UsersTableCleanupTest extends AppTestCase
 {
     /**
      * @var \App\Model\Table\UsersTable
      */
     public $Users;
 
+    /**
+     * @inheritDoc
+     */
     public function setUp(): void
     {
         parent::setUp();
         $this->Users = TableRegistry::getTableLocator()->get('Users');
-        $this->Users->deleteAll(['1' => '1']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function tearDown(): void
+    {
+        unset($this->Users);
+        parent::tearDown();
     }
 
     public function testUsersTableCleanupInactiveUsersWithDuplicatedUsername(): void
