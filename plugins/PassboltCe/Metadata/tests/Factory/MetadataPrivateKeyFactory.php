@@ -20,6 +20,7 @@ use App\Model\Entity\Gpgkey;
 use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
 use Cake\Chronos\Chronos;
+use CakephpFixtureFactories\Factory\BaseFactory;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
@@ -75,10 +76,10 @@ class MetadataPrivateKeyFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param MetadataKey|null $metadataKey Metadata key entity.
+     * @param MetadataKey|BaseFactory|null $metadataKey Metadata key entity.
      * @return $this
      */
-    public function withMetadataKey(?MetadataKey $metadataKey = null)
+    public function withMetadataKey(MetadataKey|BaseFactory|null $metadataKey = null)
     {
         if (is_null($metadataKey)) {
             if (is_null($this->getEntity()->get('user_id'))) {
