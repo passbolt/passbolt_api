@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.10.0
+ * @since         5.4.0
  */
 
 namespace Passbolt\Metadata\Service\Healthcheck;
@@ -21,16 +21,17 @@ use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query\SelectQuery;
-use Exception;
 use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 use PDOException;
 
-class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+/**
+ * No active metadata key when encrypted metadata is enabled
+ */
+class NoActiveMetadataKeyHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     use LocatorAwareTrait;
     use OpenPGPCommonServerOperationsTrait;
@@ -60,48 +61,25 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
         }
 
         try {
-            $metadataPrivateKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys');
-            /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $serverMetadataPrivateKey */
-            $serverMetadataPrivateKey = $metadataPrivateKeysTable
-                ->find()
-                ->contain('MetadataKeys')
-                ->innerJoinWith('MetadataKeys', function (SelectQuery $q) {
-                    $expr = $q->newExpr()->isNull('MetadataKeys.deleted');
+            $this->fetchTable('Passbolt/Metadata.MetadataKeys')
+                ->find('active')
+                ->innerJoinWith('MetadataPrivateKeys', function (SelectQuery $q) {
+                    $expr = $q->newExpr()->isNull('MetadataPrivateKeys.user_id');
 
                     return $q->where([$expr]);
                 })
-                ->where(['MetadataPrivateKeys.user_id IS' => null])
-                ->orderBy(['MetadataPrivateKeys.created' => 'DESC'])
+                ->orderBy(['MetadataKeys.created' => 'DESC'])
                 ->firstOrFail();
+
+            $this->status = true;
         } catch (PDOException | RecordNotFoundException $exception) {
-            $this->errorMessage = __('No server metadata private key found.');
+            $this->errorMessage = __('No active metadata key found.');
             if (Configure::read('debug')) {
                 $this->errorMessage .= ' ' . $exception->getMessage();
             }
 
             // No metadata private key found
             return $this;
-        }
-
-        // Try to decrypt it
-        try {
-            $openpgp = OpenPGPBackendFactory::get();
-            $openpgp->clearKeys();
-            $openpgp = $this->setDecryptKeyWithServerKey($openpgp);
-            if ($serverMetadataPrivateKey->metadata_key->modified_by === null) {
-                $this->setVerifyKeyWithServerKey($openpgp);
-                $openpgp->decrypt($serverMetadataPrivateKey->data, true);
-            } else {
-                // TODO verify with user key
-                $openpgp->decrypt($serverMetadataPrivateKey->data, false);
-            }
-
-            // mark as succeed if able to decrypt
-            $this->status = true;
-        } catch (Exception $exception) {
-            // failure
-            $this->errorMessage = __('Unable to decrypt the metadata private key data.') . ' ';
-            $this->errorMessage .= $exception->getMessage();
         }
 
         return $this;
@@ -136,7 +114,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
      */
     public function getSuccessMessage(): string
     {
-        return __('The server is able to decrypt the metadata private key.');
+        return __('Active metadata key found or not required.');
     }
 
     /**
@@ -144,9 +122,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
      */
     public function getFailureMessage(): string
     {
-        if (is_null($this->errorMessage)) {
-            $this->errorMessage = __('Unable to decrypt the metadata private key.');
-        }
+        $this->errorMessage = $this->errorMessage ?? __('No active metadata key found.');
 
         return $this->errorMessage;
     }
@@ -174,6 +150,6 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
      */
     public function getLegacyArrayKey(): string
     {
-        return 'canDecryptMetadataPrivateKey';
+        return 'noActiveMetadataKey';
     }
 }

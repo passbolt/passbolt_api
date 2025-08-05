@@ -44,6 +44,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
             ->active()
             ->persist();
         // create expired metadata key
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         ResourceFactory::make(29)->v5Fields(true, [
@@ -63,6 +64,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
             ->persist();
         // resources shouldn't be returned
         ResourceFactory::make()->persist(); // v4
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $activeMetadataKey */
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         ResourceFactory::make()->v5Fields(true, [
@@ -104,6 +106,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
             ->active()
             ->persist();
         // create expired metadata key
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         ResourceFactory::make(8)->v5Fields(true, [
@@ -158,6 +161,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
             ->active()
             ->persist();
         // create expired metadata key
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         ResourceFactory::make($no)->v5Fields(true, [
