@@ -56,11 +56,11 @@ class SubscriptionImportCommandTest extends AppTestCase
     /**
      * Basic help test
      */
-    public function testSubscriptionCheckCommandHelp()
+    public function testSubscriptionImportCommandHelp()
     {
         $this->exec('passbolt subscription_import -h');
         $this->assertExitSuccess();
-        $this->assertOutputContains('Import a subscription key file.');
+        $this->assertOutputContains('Import a subscription key');
         $this->assertOutputContains('cake passbolt subscription_import');
     }
 
@@ -82,7 +82,7 @@ class SubscriptionImportCommandTest extends AppTestCase
         $this->restoreExistingKeyBackup();
 
         $this->assertExitSuccess();
-        $this->assertOutputContains('has been successfully imported in the database.');
+        $this->assertOutputContains('successfully imported in the database.');
         $this->assertInstanceOf(Subscription::class, $this->Subscriptions->getOrFail());
     }
 
@@ -95,7 +95,7 @@ class SubscriptionImportCommandTest extends AppTestCase
         $file = $this->getValidSubscriptionFileName();
         $this->exec('passbolt subscription_import -f ' . $file);
         $this->assertExitSuccess();
-        $this->assertOutputContains("The subscription key {$file} has been successfully imported in the database.");
+        $this->assertOutputContains('successfully imported in the database.');
 
         $this->assertInstanceOf(Subscription::class, $this->Subscriptions->getOrFail());
     }
@@ -111,7 +111,7 @@ class SubscriptionImportCommandTest extends AppTestCase
         $file = $this->getValidSubscriptionFileName();
         $this->exec('passbolt subscription_import -f ' . $file);
         $this->assertExitSuccess();
-        $this->assertOutputContains("The subscription key {$file} has been successfully imported in the database.");
+        $this->assertOutputContains('successfully imported in the database.');
 
         $this->assertInstanceOf(Subscription::class, $this->Subscriptions->getOrFail());
     }
@@ -119,7 +119,7 @@ class SubscriptionImportCommandTest extends AppTestCase
     /**
      * Basic test on non valid subscription file
      */
-    public function testSubscriptionCheckCommand_Success_On_Non_Valid_Subscription_File()
+    public function testSubscriptionImportCommand_Error_On_Non_Valid_Subscription_File()
     {
         UserFactory::make()->admin()->persist();
         $file = $this->getExpiredSubscriptionFileName();
@@ -134,13 +134,56 @@ class SubscriptionImportCommandTest extends AppTestCase
     /**
      * Basic test on non existing subscription file
      */
-    public function testSubscriptionCheckCommand_Success_On_Non_Existent_Subscription_File()
+    public function testSubscriptionImportCommand_Error_On_Non_Existent_Subscription_File()
     {
         UserFactory::make()->admin()->persist();
         $file = 'blah';
         $this->exec('passbolt subscription_import -f ' . $file);
         $this->assertExitError();
         $this->assertOutputContains("The file {$file} could not be found.");
+
+        $this->expectException(SubscriptionRecordNotFoundException::class);
+        $this->Subscriptions->getOrFail();
+    }
+
+    /**
+     * Basic test on expired subscription
+     */
+    public function testSubscriptionImportCommand_Success_On_Valid_Subscription_Text()
+    {
+        UserFactory::make()->admin()->persist();
+        $text = $this->getValidSubscriptionKey();
+        $this->exec('passbolt subscription_import -t ' . $text);
+        $this->assertExitSuccess();
+        $this->assertOutputContains('successfully imported');
+
+        $this->assertInstanceOf(Subscription::class, $this->Subscriptions->getOrFail());
+    }
+
+    /**
+     * Basic test on expired subscription
+     */
+    public function testSubscriptionImportCommand_Error_On_Non_Valid_Subscription_Text()
+    {
+        UserFactory::make()->admin()->persist();
+        $text = $this->getExpiredSubscriptionKey();
+        $this->exec('passbolt subscription_import -t ' . $text);
+        $this->assertExitError();
+        $this->assertOutputContains('The subscription is expired.');
+
+        $this->expectException(SubscriptionRecordNotFoundException::class);
+        $this->Subscriptions->getOrFail();
+    }
+
+    /**
+     * Basic test on invalid subscription
+     */
+    public function testSubscriptionImportCommand_Error_On_Non_Existent_Subscription_Text()
+    {
+        UserFactory::make()->admin()->persist();
+        $text = '🔥';
+        $this->exec('passbolt subscription_import -t ' . $text);
+        $this->assertExitError();
 
         $this->expectException(SubscriptionRecordNotFoundException::class);
         $this->Subscriptions->getOrFail();

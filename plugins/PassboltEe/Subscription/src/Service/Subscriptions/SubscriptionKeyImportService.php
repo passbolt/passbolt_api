@@ -40,10 +40,29 @@ class SubscriptionKeyImportService
      * @return \Passbolt\Subscription\Model\Dto\SubscriptionKeyDto
      * @throws \Passbolt\Subscription\Error\Exception\Subscriptions\SubscriptionException if the submitted file or the contained subscription is not valid
      */
-    public function import(string $fileName): SubscriptionKeyDto
+    public function importFromFile(string $fileName): SubscriptionKeyDto
     {
-        $this->validateFile($fileName);
+        if (!file_exists($fileName)) {
+            throw new SubscriptionException(__('The file {0} could not be found.', $fileName));
+        }
+        if (!is_readable($fileName)) {
+            throw new SubscriptionException(__('The file {0} could not be read.', $fileName));
+        }
+        $subscription = file_get_contents($fileName);
+        if (!$subscription) {
+            throw new SubscriptionException(__('The file {0} could not be read.', $fileName));
+        }
 
+        return $this->import($subscription);
+    }
+
+    /**
+     * @param string|null $subscription subscription to import
+     * @return \Passbolt\Subscription\Model\Dto\SubscriptionKeyDto
+     * @throws \Passbolt\Subscription\Error\Exception\Subscriptions\SubscriptionException if the submitted file or the contained subscription is not valid
+     */
+    public function import(?string $subscription): SubscriptionKeyDto
+    {
         /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = $this->fetchTable('Users');
         $firstAdmin = $usersTable->findFirstAdmin();
@@ -54,21 +73,6 @@ class SubscriptionKeyImportService
         $saveService = new SubscriptionKeySaveService();
         $uac = new UserAccessControl(Role::ADMIN, $firstAdmin->id);
 
-        return $saveService->save(file_get_contents($fileName), $uac);
-    }
-
-    /**
-     * @param string $fileName File to validate
-     * @return void
-     * @throws \Passbolt\Subscription\Error\Exception\Subscriptions\SubscriptionException if the file is not readable or not found.
-     */
-    private function validateFile(string $fileName): void
-    {
-        if (!file_exists($fileName)) {
-            throw new SubscriptionException(__('The file {0} could not be found.', $fileName));
-        }
-        if (!is_readable($fileName)) {
-            throw new SubscriptionException(__('The file {0} could not be read.', $fileName));
-        }
+        return $saveService->save($subscription, $uac);
     }
 }
