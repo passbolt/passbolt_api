@@ -39,6 +39,7 @@ use Passbolt\Metadata\Event\MissingMetadataKeyIdsContainListener;
 use Passbolt\Metadata\Event\SetupCompleteListener;
 use Passbolt\Metadata\Notification\Email\Redactor\MetadataEmailRedactorPool;
 use Passbolt\Metadata\Service\Healthcheck\NoActiveMetadataKeyHealthcheck;
+use Passbolt\Metadata\Service\Healthcheck\ServeMissingAccessToMetadataKeyHealthcheck;
 use Passbolt\Metadata\Service\Healthcheck\ServerCanDecryptMetadataPrivateKeyHealthcheck;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4FoldersToV5Service;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4ResourcesToV5Service;
@@ -88,11 +89,13 @@ class MetadataPlugin extends BasePlugin
     {
         $container->add(ServerCanDecryptMetadataPrivateKeyHealthcheck::class);
         $container->add(NoActiveMetadataKeyHealthcheck::class);
+        $container->add(ServeMissingAccessToMetadataKeyHealthcheck::class);
 
         $container
             ->extend(HealthcheckServiceCollector::class)
             ->addMethodCall('addService', [ServerCanDecryptMetadataPrivateKeyHealthcheck::class])
-            ->addMethodCall('addService', [NoActiveMetadataKeyHealthcheck::class]);
+            ->addMethodCall('addService', [NoActiveMetadataKeyHealthcheck::class])
+            ->addMethodCall('addService', [ServeMissingAccessToMetadataKeyHealthcheck::class]);
     }
 
     /**

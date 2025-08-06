@@ -220,6 +220,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
             'metadata' => [
                 'canDecryptMetadataPrivateKey' => true,
                 'noActiveMetadataKey' => true,
+                'isServerHasAccessToMetadataKey' => true,
             ],
         ];
         $this->assertArrayEqualsCanonicalizing($expectedResponse, $result);
