@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.1.0
+ * @since         5.5.0
  */
 
 namespace Passbolt\Scim\Utility\Resource;
@@ -40,17 +40,17 @@ use Passbolt\Scim\Model\Table\ScimEntriesTable;
 use Passbolt\Scim\Utility\Object\Operation;
 use Passbolt\Scim\Utility\Object\PatchRequest;
 use Passbolt\Scim\Utility\Object\ServiceProviderConfig;
-use Passbolt\Scim\Utility\ResourceInterface;
-use Passbolt\Scim\Utility\Resources;
 use Passbolt\Scim\Utility\SchemaIdentifier;
 use Passbolt\Scim\Utility\Schemas;
 use Passbolt\Scim\Utility\ScimConstants;
+use Passbolt\Scim\Utility\ScimResourceInterface;
+use Passbolt\Scim\Utility\ScimResources;
 use Passbolt\Scim\Utility\ScimTools;
 
 /**
  * UserResource class
  */
-class UserResource implements ResourceInterface
+class UserScimResource implements ScimResourceInterface
 {
     use LocatorAwareTrait;
 
@@ -147,7 +147,7 @@ class UserResource implements ResourceInterface
      */
     public function getType(): string
     {
-        return Resources::USERS;
+        return ScimResources::USERS;
     }
 
     /**

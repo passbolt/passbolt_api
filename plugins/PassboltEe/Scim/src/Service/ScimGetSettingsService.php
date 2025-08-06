@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.1.0
+ * @since         5.5.0
  */
 namespace Passbolt\Scim\Service;
 
@@ -23,6 +23,23 @@ use Passbolt\Scim\Form\Settings\ScimSettingsForm;
 
 class ScimGetSettingsService extends ScimBaseSettingsService
 {
+    /**
+     * Read the SCIM settings in the DB and return the decrypted the values
+     *
+     * @return array
+     */
+    public function getSettingsDecryptedValue(): array
+    {
+        /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
+        $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
+        $settings = $OrganizationSettings->getByProperty(self::SCIM_SETTINGS_PROPERTY_NAME);
+        if (is_null($settings)) {
+            return $this->getDefaultSettings();
+        }
+
+        return $this->decryptSettings($settings);
+    }
+
     /**
      * Read the SCIM settings in the DB
      * If not found, the default settings are returned
@@ -39,13 +56,7 @@ class ScimGetSettingsService extends ScimBaseSettingsService
         if (is_null($settings)) {
             return $this->getDefaultSettings();
         }
-
-        $value = json_decode($settings->get('value'), true);
-        if (is_null($value)) {
-            throw new InternalErrorException(
-                __('Could not parse the SCIM settings found in database.')
-            );
-        }
+        $value = $this->decryptSettings($settings);
         $form = new ScimSettingsForm();
 
         if (!$form->execute($value, ['newRecord' => false])) {
@@ -58,13 +69,5 @@ class ScimGetSettingsService extends ScimBaseSettingsService
         }
 
         return $this->getRenderedValue($settings, $form);
-    }
-
-    /**
-     * @return array<null>
-     */
-    protected function getDefaultSettings(): array
-    {
-        return [];
     }
 }

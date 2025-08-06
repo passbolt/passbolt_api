@@ -12,12 +12,13 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.1.0
+ * @since         5.5.0
  */
 
 namespace Passbolt\Scim\Middleware;
 
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Core\Configure;
 use Cake\Utility\Text;
 use Passbolt\Scim\Log\ScimLog;
 use Psr\Http\Message\ResponseInterface;
@@ -43,6 +44,7 @@ class ScimLogMiddleware implements MiddlewareInterface
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
         $isScimApiAndEnabled = (
+            Configure::read('passbolt.plugins.scim.logScimRequests', false) &&
             $this->isFeaturePluginEnabled('Scim') &&
             $request->getParam('plugin') === 'Passbolt/Scim' &&
             $request->getParam('controller') === 'Scim'

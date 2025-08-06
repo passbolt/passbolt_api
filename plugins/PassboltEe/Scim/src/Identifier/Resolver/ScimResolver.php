@@ -22,6 +22,7 @@ use Authentication\Identifier\Resolver\ResolverInterface;
 use Cake\Core\Configure;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Scim\Service\ScimBaseSettingsService;
+use Passbolt\Scim\Service\ScimGetSettingsService;
 
 class ScimResolver implements ResolverInterface
 {
@@ -42,14 +43,13 @@ class ScimResolver implements ResolverInterface
             return null;
         }
 
-        $scimConfig = json_decode($scimOrganizationSetting->value, true);
+        $scimConfig = (new ScimGetSettingsService())->getSettingsDecryptedValue();
         if ($scimConfig['setting_id'] !== Configure::read('Scim.settingId')) {
             //TODO Check if we want to notify admin if a wrong setting is passed
             return null;
         }
 
         if (
-            is_array($scimConfig) &&
             $conditions['secret_token'] === $scimConfig['secret_token'] &&
             !empty($scimConfig['scim_user_id'])
         ) {

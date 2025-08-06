@@ -12,22 +12,29 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.1.0
+ * @since         5.5.0
  */
 
 namespace Passbolt\Scim;
 
+use App\Service\Command\GetUserCommandService;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
+use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
+use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Passbolt\Scim\Command\ScimSettingsCommand;
 use Passbolt\Scim\Middleware\ScimLogMiddleware;
 use Passbolt\Scim\Middleware\ScimMiddleware;
 use Passbolt\Scim\Service\Healthcheck\ScimHealthcheckService;
 
+/**
+ * ScimPlugin class
+ */
 class ScimPlugin extends BasePlugin
 {
     /**
@@ -55,6 +62,9 @@ class ScimPlugin extends BasePlugin
         $container
             ->extend(HealthcheckServiceCollector::class)
             ->addMethodCall('addService', [ScimHealthcheckService::class]);
+
+        $container->add(ScimSettingsCommand::class)
+            ->addArgument(GetUserCommandService::class);
     }
 
     /**
@@ -68,5 +78,17 @@ class ScimPlugin extends BasePlugin
             ->insertAfter(BodyParserMiddleware::class, ScimLogMiddleware::class);
 
         return parent::middleware($middlewareQueue);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function console(CommandCollection $commands): CommandCollection
+    {
+        if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
+            $commands->add('passbolt scim_settings', ScimSettingsCommand::class);
+        }
+
+        return $commands;
     }
 }

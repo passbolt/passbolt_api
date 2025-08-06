@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Test\TestCase\Controller;
 
 use App\Model\Entity\OrganizationSetting;
+use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -20,6 +22,8 @@ use Throwable;
  */
 class ScimSetSettingsControllerTest extends AppIntegrationTestCase
 {
+    use OpenPGPCommonServerOperationsTrait;
+
     protected OrganizationSetting $current;
 
     public function setUp(): void
@@ -238,24 +242,18 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
             'The ID for the SCIM settings should be a valid UUID.',
         ];
 
-        //Duplicated setting_id
-        $data[] = [
-            [
-                'setting_id' => '818b3361-e1a5-40cd-b423-775f1bd35c17',
-                'scim_user_id' => $data[0][0]['scim_user_id'] ,
-            ],
-            'setting_id.notInUse',
-            'The ID for the SCIM settings is already in use.',
-        ];
-
         return $data;
     }
 
     /**
      * Test setSettings method: create operation validation errors
      *
-     * @dataProvider createDataProvider
+     * @param $data
+     * @param $key
+     * @param $message
      * @return void
+     * @throws \Exception
+     * @dataProvider createDataProvider
      */
     public function testSetSettings_Create_Validation($data, $key, $message)
     {
@@ -305,7 +303,9 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
 
         //Check if secret token was correctly set
         $this->current = TableRegistry::getTableLocator()->get('OrganizationSettings')->find()->first();
-        $values = json_decode($this->current->value, true);
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $values = json_decode($gpg->decrypt($this->current->value), associative: true);
 
         $this->assertSame(Security::hash($data['secret_token'], 'sha256'), $values['secret_token']);
     }
@@ -424,7 +424,9 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
 
         $response = $this->_responseJsonBody;
 
-        $previousValues = json_decode($this->current->value, true);
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $previousValues = json_decode($gpg->decrypt($this->current->value), associative: true);
         $this->assertSuccess();
         $this->assertSame($previousValues['setting_id'], $response->setting_id);
         $this->assertSame($data['scim_user_id'], $response->scim_user_id);
@@ -433,7 +435,9 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
 
         //Check if secret token was correctly updated
         $this->current = TableRegistry::getTableLocator()->get('OrganizationSettings')->find()->first();
-        $newValues = json_decode($this->current->value, true);
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $newValues = json_decode($gpg->decrypt($this->current->value), associative: true);
 
         $this->assertSame(Security::hash($data['secret_token'], 'sha256'), $newValues['secret_token']);
     }

@@ -21,7 +21,6 @@ use Cake\Form\Schema;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Security;
 use Cake\Validation\Validator;
-use Passbolt\Scim\Service\ScimBaseSettingsService;
 use Passbolt\Scim\Service\ScimSetSettingsService;
 
 class ScimSettingsForm extends Form
@@ -110,7 +109,7 @@ class ScimSettingsForm extends Form
     }
 
     /**
-     * Extended validation to include checking for setting_id duplicates on creation
+     * Extended validation for setting id
      *
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
@@ -121,25 +120,7 @@ class ScimSettingsForm extends Form
 
         $validator
             ->notEmptyString('setting_id', __('The ID for the SCIM settings should not be empty.'))
-            ->uuid('setting_id', __('The ID for the SCIM settings should be a valid UUID.'))
-            ->add('setting_id', 'notInUse', [
-                'rule' => function ($value, array $context) {
-                    $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
-                    $query = $OrganizationSettings->find();
-                    $where = [
-                        $OrganizationSettings
-                            ->aliasField('property') => ScimBaseSettingsService::SCIM_SETTINGS_PROPERTY_NAME,
-                        $query->newExpr()->like($OrganizationSettings->aliasField('value'), "%$value%"),
-                    ];
-                    $result = $query->where($where)->all();
-
-                    if ($result->count() === 0) {
-                        return true;
-                    }
-
-                    return __('The ID for the SCIM settings is already in use.');
-                },
-            ]);
+            ->uuid('setting_id', __('The ID for the SCIM settings should be a valid UUID.'));
 
         return $validator;
     }

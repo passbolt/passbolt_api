@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Test\TestCase\Controller;
 
 use App\Model\Entity\OrganizationSetting;
+use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\Scim\ScimPlugin;
 use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
@@ -15,6 +17,8 @@ use Throwable;
  */
 class ScimGetSettingsControllerTest extends AppIntegrationTestCase
 {
+    use OpenPGPCommonServerOperationsTrait;
+
     protected OrganizationSetting $current;
 
     public function setUp(): void
@@ -80,8 +84,9 @@ class ScimGetSettingsControllerTest extends AppIntegrationTestCase
         $this->getJson('/scim/settings.json');
 
         $response = $this->_responseJsonBody;
-
-        $data = json_decode($this->current->value, true);
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $data = json_decode($gpg->decrypt($this->current->value), associative: true);
         $this->assertSuccess();
         $this->assertSame($data['setting_id'], $response->setting_id);
         $this->assertSame($data['scim_user_id'], $response->scim_user_id);

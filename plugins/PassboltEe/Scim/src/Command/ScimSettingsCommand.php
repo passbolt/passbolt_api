@@ -6,12 +6,13 @@ namespace Passbolt\Scim\Command;
 use App\Command\PassboltCommand;
 use App\Error\Exception\FormValidationException;
 use App\Model\Entity\Role;
-use App\Model\Entity\User;
+use App\Service\Command\GetUserCommandService;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Cake\Core\Configure;
 use Passbolt\Scim\Service\ScimDeleteSettingsService;
 use Passbolt\Scim\Service\ScimSetSettingsService;
 use Throwable;
@@ -21,6 +22,15 @@ use Throwable;
  */
 class ScimSettingsCommand extends PassboltCommand
 {
+    /**
+     * @param \App\Service\Command\GetUserCommandService $getUserCommandService
+     */
+    public function __construct(
+        protected GetUserCommandService $getUserCommandService,
+    ) {
+        parent::__construct();
+    }
+
     /**
      * Hook method for defining this command's option parser.
      *
@@ -54,26 +64,6 @@ class ScimSettingsCommand extends PassboltCommand
     }
 
     /**
-     * @param \Cake\Console\Arguments $args Arguments.
-     * @return \App\Model\Entity\User|null Return user entity if user is found, null otherwise.
-     */
-    private function getUser(Arguments $args): ?User
-    {
-        $username = $args->getOption('username');
-        /** @var \App\Model\Table\UsersTable $usersTable */
-        $usersTable = $this->fetchTable('Users');
-
-        /** @var \App\Model\Entity\User|null $user */
-        $user = $usersTable
-            ->findByUsername($username)
-            ->find('activeNotDeleted')
-            ->find('notDisabled')
-            ->first();
-
-        return $user;
-    }
-
-    /**
      * Implement this method with your command's logic.
      *
      * @param \Cake\Console\Arguments $args The command arguments.
@@ -83,16 +73,16 @@ class ScimSettingsCommand extends PassboltCommand
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
         parent::execute($args, $io);
+        if (!Configure::read('debug') || !Configure::read('passbolt.selenium.active')) {
+            $io->out('Please enable DEBUG and PASSBOLT_SELENIUM_ACTIVE flags.');
 
-        $user = $this->getUser($args);
-        $id = $args->getOption('id');
-        $delete = $args->getOption('delete');
-        if (is_null($user)) {
-            $io->abort(__('The user does not exist or is not active or is disabled.'));
+            return $this->errorCode();
         }
 
+        $user = $this->getUserCommandService->getUser($args);
+        $id = $args->getOption('id');
+        $delete = $args->getOption('delete');
         $uac = new UserAccessControl(Role::ADMIN, $user->id, $user->username);
-
         try {
             if ($delete) {
                 $service = new ScimDeleteSettingsService();

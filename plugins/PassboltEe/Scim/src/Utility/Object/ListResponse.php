@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.1.0
+ * @since         5.5.0
  */
 
 namespace Passbolt\Scim\Utility\Object;
@@ -21,9 +21,9 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Exception;
 use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Model\Entity\ScimEntry;
-use Passbolt\Scim\Utility\Resources;
 use Passbolt\Scim\Utility\SchemaIdentifier;
 use Passbolt\Scim\Utility\ScimObjectInterface;
+use Passbolt\Scim\Utility\ScimResources;
 
 /**
  * ListResponse class
@@ -83,7 +83,7 @@ class ListResponse implements ScimObjectInterface
         ?int $count = null,
         ?string $filter = null,
     ) {
-        if (!Resources::isValid($resourceType)) {
+        if (!ScimResources::isValid($resourceType)) {
             throw new ScimException(sprintf('The resource type `%s` is not valid', $resourceType));
         }
         if (!isset(ScimEntry::MODEL_MAP[$resourceType])) {
@@ -151,7 +151,7 @@ class ListResponse implements ScimObjectInterface
             ])
             ->toArray();
         foreach ($scimResources as $scimResource) {
-            $this->resources[] = Resources::build($resourceType)->setFromDatabase($scimResource->foreign_key);
+            $this->resources[] = ScimResources::build($resourceType)->setFromDatabase($scimResource->foreign_key);
         }
 
         return $this;

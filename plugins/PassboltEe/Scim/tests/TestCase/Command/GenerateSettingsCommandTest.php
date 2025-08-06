@@ -3,15 +3,15 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\TestCase\Command;
 
+use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
 
 /**
  * Passbolt\Scim\Command\GenerateSettingsCommand Test Case
  *
  * @uses \Passbolt\Scim\Command\GenerateScimSettingsCommand
  */
-class GenerateSettingsCommandTest extends TestCase
+class GenerateSettingsCommandTest extends AppIntegrationTestCase
 {
     use ConsoleIntegrationTestTrait;
 

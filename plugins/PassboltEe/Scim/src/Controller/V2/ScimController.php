@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.1.0
+ * @since         5.5.0
  */
 
 namespace Passbolt\Scim\Controller\V2;
@@ -26,10 +26,11 @@ use Passbolt\Scim\Utility\Object\ErrorResponse;
 use Passbolt\Scim\Utility\Object\ListResponse;
 use Passbolt\Scim\Utility\Object\PatchRequest;
 use Passbolt\Scim\Utility\Object\ServiceProviderConfig;
-use Passbolt\Scim\Utility\Resources;
-use Passbolt\Scim\Utility\ResourceTypes;
 use Passbolt\Scim\Utility\Schemas;
+use Passbolt\Scim\Utility\ScimConstants;
 use Passbolt\Scim\Utility\ScimObjectInterface;
+use Passbolt\Scim\Utility\ScimResources;
+use Passbolt\Scim\Utility\ScimResourceTypes;
 
 class ScimController extends AppController
 {
@@ -47,11 +48,8 @@ class ScimController extends AppController
     public function beforeFilter(EventInterface $event)
     {
         parent::beforeFilter($event);
-        $this->Authentication->allowUnauthenticated(
-            ['schemas', 'serviceProviderConfig', 'resourceTypes']
-        );
         $this->disableAutoRender();
-        $this->setResponse($this->getResponse()->withType('application/scim+json'));
+        $this->setResponse($this->getResponse()->withType(ScimConstants::CONTENT_TYPE));
     }
 
     /**
@@ -102,7 +100,7 @@ class ScimController extends AppController
     public function view(string $settingId, string $resourceType, string $resourceId): void
     {
         try {
-            $this->processResponse($settingId, Resources::build($resourceType)->setFromDatabase($resourceId));
+            $this->processResponse($settingId, ScimResources::build($resourceType)->setFromDatabase($resourceId));
         } catch (Exception $e) {
             $this->processException($settingId, $e);
         }
@@ -115,10 +113,10 @@ class ScimController extends AppController
      * @param string $resourceType Resource Type (Users, Groups)
      * @return void
      */
-    public function add(string $settingId, string $resourceType): void
+    public function create(string $settingId, string $resourceType): void
     {
         try {
-            $resource = Resources::build($resourceType)
+            $resource = ScimResources::build($resourceType)
                 ->setFromScim($this->getRequest()->getData())
                 ->create();
             $this->processResponse($settingId, $resource, static::STATUS_CREATED);
@@ -135,11 +133,11 @@ class ScimController extends AppController
      * @param string $resourceId Resource Id
      * @return void
      */
-    public function edit(string $settingId, string $resourceType, string $resourceId): void
+    public function update(string $settingId, string $resourceType, string $resourceId): void
     {
         try {
             $patchRequest = (new PatchRequest())->setFromScim($this->getRequest()->getData());
-            $userResource = Resources::build($resourceType)->setFromDatabase($resourceId);
+            $userResource = ScimResources::build($resourceType)->setFromDatabase($resourceId);
             $userResource->update($patchRequest);
             $this->processResponse($settingId, $userResource, static::STATUS_EDITED);
         } catch (Exception $e) {
@@ -159,7 +157,7 @@ class ScimController extends AppController
     public function delete(string $settingId, string $resourceType, string $resourceId): void
     {
         try {
-            Resources::build($resourceType)
+            ScimResources::build($resourceType)
                 ->setFromDatabase($resourceId)
                 ->delete();
             $this->processResponse($settingId, [], static::STATUS_DELETED);
@@ -178,7 +176,7 @@ class ScimController extends AppController
      * @param string|null $schemaId Schema Id
      * @return void
      */
-    public function schemas(string $settingId, ?string $schemaId = null)
+    public function schemas(string $settingId, ?string $schemaId = null): void
     {
         try {
             if ($schemaId && !Schemas::isValid($schemaId)) {
@@ -204,19 +202,19 @@ class ScimController extends AppController
      * @param string|null $resourceType Resource Type (User, Group)
      * @return void
      */
-    public function resourceTypes(string $settingId, ?string $resourceType = null)
+    public function resourceTypes(string $settingId, ?string $resourceType = null): void
     {
         try {
-            if ($resourceType && !ResourceTypes::isValid($resourceType)) {
+            if ($resourceType && !ScimResourceTypes::isValid($resourceType)) {
                 throw new NotFoundException(
                     sprintf('The ResourceType `%s` is invalid or not supported', $resourceType)
                 );
             }
 
             if ($resourceType) {
-                $responseData = ResourceTypes::build($resourceType);
+                $responseData = ScimResourceTypes::build($resourceType);
             } else {
-                $resourceTypes = ResourceTypes::getAll();
+                $resourceTypes = ScimResourceTypes::getAll();
                 $responseData = new ListResponse($resourceTypes, totalResults: count($resourceTypes));
             }
             $this->processResponse($settingId, $responseData);
@@ -232,7 +230,7 @@ class ScimController extends AppController
      * @param \Exception $e Exception
      * @return void
      */
-    protected function processException(string $settingId, Exception $e)
+    protected function processException(string $settingId, Exception $e): void
     {
         $status = $e->getCode();
         $this->processResponse($settingId, new ErrorResponse($e), $status);
@@ -247,7 +245,7 @@ class ScimController extends AppController
      * @param int $status Status code
      * @return void
      */
-    protected function processResponse(string $settingId, ScimObjectInterface|array $data, int $status = 200)
+    protected function processResponse(string $settingId, ScimObjectInterface|array $data, int $status = 200): void
     {
         if ($data instanceof ScimObjectInterface) {
             $data = $data->toSCIM();
@@ -263,7 +261,7 @@ class ScimController extends AppController
      * @param string $settingId Org Setting Id
      * @return void
      */
-    public function serviceProviderConfig(string $settingId)
+    public function serviceProviderConfig(string $settingId): void
     {
         $this->processResponse($settingId, new ServiceProviderConfig());
     }

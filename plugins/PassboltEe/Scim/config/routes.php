@@ -11,7 +11,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.1.0
+ * @since         5.5.0
  */
 
 use Cake\Routing\Route\DashedRoute;
@@ -79,7 +79,7 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
             ->setPass(['settingId', 'resourceType'])
             ->setMethods(['GET']);
 
-        $routes->connect('/{settingId}/{resourceType}', ['controller' => 'Scim', 'action' => 'add'])
+        $routes->connect('/{settingId}/{resourceType}', ['controller' => 'Scim', 'action' => 'create'])
             ->setPass(['settingId', 'resourceType'])
             ->setMethods(['POST']);
 
@@ -87,7 +87,7 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
             ->setPass(['settingId', 'resourceType', 'id'])
             ->setMethods(['GET']);
 
-        $routes->connect('/{settingId}/{resourceType}/{id}', ['controller' => 'Scim', 'action' => 'edit'])
+        $routes->connect('/{settingId}/{resourceType}/{id}', ['controller' => 'Scim', 'action' => 'update'])
             ->setPass(['settingId', 'resourceType', 'id'])
             ->setMethods(['PATCH']);
 

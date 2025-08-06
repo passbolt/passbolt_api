@@ -12,18 +12,18 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.1.0
+ * @since         5.5.0
  */
 
 namespace Passbolt\Scim\Utility;
 
 use Passbolt\Scim\Exception\ScimException;
-use Passbolt\Scim\Utility\Resource\UserResource;
+use Passbolt\Scim\Utility\Resource\UserScimResource;
 
 /**
  * Resources class
  */
-class Resources
+class ScimResources
 {
     public const USERS = 'Users';
     public const GROUPS = 'Groups';
@@ -34,7 +34,7 @@ class Resources
      * @var array
      */
     public const MAPPING = [
-        self::USERS => UserResource::class,
+        self::USERS => UserScimResource::class,
     ];
 
     /**
@@ -50,10 +50,10 @@ class Resources
      * Build a Resource given the type
      *
      * @param string $type
-     * @return \Passbolt\Scim\Utility\ResourceInterface
+     * @return \Passbolt\Scim\Utility\ScimResourceInterface
      * @throws \Exception
      */
-    public static function build(string $type): ResourceInterface
+    public static function build(string $type): ScimResourceInterface
     {
         $class = self::MAPPING[$type] ?? null;
         if (!$class) {

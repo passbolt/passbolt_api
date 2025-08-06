@@ -12,19 +12,19 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.1.0
+ * @since         5.5.0
  */
 
 namespace Passbolt\Scim\Utility;
 
 use Passbolt\Scim\Exception\ScimException;
-use Passbolt\Scim\Utility\ResourceType\GroupResourceType;
-use Passbolt\Scim\Utility\ResourceType\UserResourceType;
+use Passbolt\Scim\Utility\ResourceType\GroupScimResourceType;
+use Passbolt\Scim\Utility\ResourceType\UserScimResourceType;
 
 /**
  * ResourceTypes class
  */
-class ResourceTypes
+class ScimResourceTypes
 {
     public const TYPE_USER = 'User';
     public const TYPE_GROUP = 'Group';
@@ -35,8 +35,8 @@ class ResourceTypes
      * @var array
      */
     public const MAPPING = [
-        self::TYPE_USER => UserResourceType::class,
-        self::TYPE_GROUP => GroupResourceType::class,
+        self::TYPE_USER => UserScimResourceType::class,
+        self::TYPE_GROUP => GroupScimResourceType::class,
     ];
 
     /**

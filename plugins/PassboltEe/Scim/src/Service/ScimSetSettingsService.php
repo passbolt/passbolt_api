@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.1.0
+ * @since         5.5.0
  */
 namespace Passbolt\Scim\Service;
 
@@ -85,11 +85,11 @@ class ScimSetSettingsService extends ScimBaseSettingsService
         }
 
         if ($current) {
-            $currentValue = json_decode($current->value, true);
+            $currentValue = $this->decryptSettings($current);
             $form->set('setting_id', Hash::get($currentValue, 'setting_id'));
         }
 
-        $value = json_encode($form->getData());
+        $value = $this->encryptSettings($form->getData());
         $setting = $OrganizationSettings->createOrUpdateSetting(
             self::SCIM_SETTINGS_PROPERTY_NAME,
             $value,

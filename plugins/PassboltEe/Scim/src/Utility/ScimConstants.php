@@ -8,6 +8,8 @@ namespace Passbolt\Scim\Utility;
  */
 class ScimConstants
 {
+    public const CONTENT_TYPE = 'application/scim+json';
+
     public const ATTRIBUTE_MUTABILITY_READ_ONLY = 'readOnly';
     public const ATTRIBUTE_MUTABILITY_READ_WRITE = 'readWrite';
     public const ATTRIBUTE_MUTABILITY_IMMUTABLE = 'immutable';

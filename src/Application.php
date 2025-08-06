@@ -69,6 +69,7 @@ use EmailQueue\Command\SenderCommand;
 use EmailQueue\EmailQueuePlugin;
 use Migrations\MigrationsPlugin;
 use Passbolt\EmailDigest\EmailDigestPlugin;
+use Passbolt\Scim\Utility\ScimConstants;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -118,17 +119,21 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->insertAfter(RoutingMiddleware::class, ApiVersionMiddleware::class)
             ->insertAfter(RoutingMiddleware::class, UuidParserMiddleware::class)
             ->add(new SessionPreventExtensionMiddleware())
-            ->add((new BodyParserMiddleware())->addParser(['application/scim+json'], function ($body, $request = null) {
-                if ($body === '') {
-                    return [];
-                }
-                $decoded = json_decode($body, true);
-                if (json_last_error() === JSON_ERROR_NONE) {
-                    return (array)$decoded;
-                }
+            ->add((new BodyParserMiddleware())
+                ->addParser(
+                    [ScimConstants::CONTENT_TYPE],
+                    function ($body, $request = null) {
+                        if ($body === '') {
+                            return [];
+                        }
+                        $decoded = json_decode($body, true);
+                        if (json_last_error() === JSON_ERROR_NONE) {
+                            return (array)$decoded;
+                        }
 
-                return null;
-            }))
+                        return null;
+                    }
+                ))
             ->add(SessionAuthPreventDeletedOrDisabledUsersMiddleware::class)
             ->insertAfter(
                 SessionAuthPreventDeletedOrDisabledUsersMiddleware::class,

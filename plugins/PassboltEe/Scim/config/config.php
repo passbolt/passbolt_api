@@ -11,7 +11,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.1.0
+ * @since         5.5.0
  */
 
 return [
@@ -20,9 +20,7 @@ return [
             'scim' => [
                 'version' => '1.0.0',
                 'enabled' => true,
-                'settingsVisibility' => [
-                    'whiteListPublic' => ['enabled'],
-                ],
+                'logScimRequests' => filter_var(env('PASSBOLT_PLUGINS_SCIM_LOG_SCIM_REQUESTS', false), FILTER_VALIDATE_BOOLEAN), // phpcs:ignore
             ],
         ],
     ],

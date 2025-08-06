@@ -20,6 +20,7 @@ namespace Passbolt\Scim\Test\Utility;
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Routing\Router;
+use Passbolt\Scim\Service\ScimGetSettingsService;
 use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
 
 /**
@@ -71,8 +72,8 @@ abstract class BaseIntegrationTest extends AppIntegrationTestCase
         RoleFactory::make()->user()->persist();
         RoleFactory::make()->admin()->persist();
         /** @var \App\Model\Entity\OrganizationSetting $scimOrgSetting */
-        $scimOrgSetting = ScimOrgSettingFactory::make()->default()->persist();
-        $settingsData = json_decode($scimOrgSetting->value, associative: true);
+        ScimOrgSettingFactory::make()->default()->persist();
+        $settingsData = (new ScimGetSettingsService())->getSettingsDecryptedValue();
         $this->settingId = $settingsData['setting_id'] ?? '';
         $this->scimUserId = $settingsData['scim_user_id'] ?? '';
     }

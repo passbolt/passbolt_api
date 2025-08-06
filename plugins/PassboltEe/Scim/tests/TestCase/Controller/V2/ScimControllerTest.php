@@ -110,6 +110,7 @@ class ScimControllerTest extends BaseIntegrationTest
      */
     public function testScimControllerServiceProviderConfig_Success()
     {
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('ServiceProviderConfig'));
         $this->assertResponseCode(200);
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_SERVICE_PROVIDER_CONFIG));
@@ -120,6 +121,7 @@ class ScimControllerTest extends BaseIntegrationTest
      */
     public function testScimControllerSchemas_Success()
     {
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('Schemas'));
         $this->assertResponseCode(200);
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_SCHEMAS));
@@ -130,6 +132,7 @@ class ScimControllerTest extends BaseIntegrationTest
      */
     public function testScimControllerSchemasUsers_Success()
     {
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('Schemas' . DS . 'urn:ietf:params:scim:schemas:core:2.0:User'));
         $this->assertResponseCode(200);
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_SCHEMAS_USERS));
@@ -140,6 +143,7 @@ class ScimControllerTest extends BaseIntegrationTest
      */
     public function testScimControllerSchemasGroups_Success()
     {
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('Schemas' . DS . 'urn:ietf:params:scim:schemas:core:2.0:Group'));
         $this->assertResponseCode(200);
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_SCHEMAS_GROUPS));
@@ -150,6 +154,7 @@ class ScimControllerTest extends BaseIntegrationTest
      */
     public function testScimControllerSchemasGroups_NotFound()
     {
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('Schemas' . DS . 'InvalidSchema'));
         $this->assertResponseCode(404);
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_SCHEMAS_NOT_FOUND));
@@ -160,6 +165,7 @@ class ScimControllerTest extends BaseIntegrationTest
      */
     public function testScimControllerResourceTypes_Success()
     {
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('ResourceTypes'));
         $this->assertResponseCode(200);
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_RESOURCE_TYPES));
@@ -170,6 +176,7 @@ class ScimControllerTest extends BaseIntegrationTest
      */
     public function testScimControllerResourceTypesUser_Success()
     {
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('ResourceTypes' . DS . 'User'));
         $this->assertResponseCode(200);
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_RESOURCE_TYPES_USER));
@@ -180,6 +187,7 @@ class ScimControllerTest extends BaseIntegrationTest
      */
     public function testScimControllerResourceTypesGroup_Success()
     {
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('ResourceTypes' . DS . 'Group'));
         $this->assertResponseCode(200);
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_RESOURCE_TYPES_GROUP));
@@ -190,6 +198,7 @@ class ScimControllerTest extends BaseIntegrationTest
      */
     public function testScimControllerResourceTypesGroup_NotFound()
     {
+        $this->configScimAuth();
         $this->get($this->getScimEndpoint('ResourceTypes' . DS . 'InvalidResource'));
         $this->assertResponseCode(404);
         $this->assertResponseEquals($this->getScimFixtureData(self::FIXTURE_RESPONSE_RESOURCE_TYPES_NOT_FOUND));

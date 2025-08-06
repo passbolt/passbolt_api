@@ -17,17 +17,21 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Test\Factory;
 
 use App\Model\Entity\OrganizationSetting;
+use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\Utility\Security;
 use Passbolt\Scim\Service\ScimBaseSettingsService;
 
 /**
- * DirectoryOrgSettingFactory
+ * ScimOrgSettingFactory
  */
 class ScimOrgSettingFactory extends OrganizationSettingFactory
 {
+    use OpenPGPCommonServerOperationsTrait;
+
     public const SCIM_TEST_SETTING_ID = '818b3361-e1a5-40cd-b423-775f1bd35c17';
     public const SCIM_TEST_SECRET_TOKEN = 'pb_TEST_TOKEN_FOR_SCIM_INTEGRATION_IN_PASSBOLT';
 
@@ -50,7 +54,10 @@ class ScimOrgSettingFactory extends OrganizationSettingFactory
      */
     public function default()
     {
-        return $this->value($this->getDefaultValue());
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setEncryptKeyWithServerKey($gpg);
+
+        return $this->setField('value', $gpg->encrypt(json_encode($this->getDefaultValue())));
     }
 
     public function getDefaultValue(): array
