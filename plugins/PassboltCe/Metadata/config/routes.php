@@ -161,4 +161,11 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
     $routes
         ->connect('/setup/settings', ['prefix' => 'Setup', 'controller' => 'MetadataSettingsSetup', 'action' => 'get'])
         ->setMethods(['GET']);
+
+    /**
+     * Existing instances getting started
+     */
+    $routes
+        ->connect('/settings/getting-started', ['controller' => 'MetadataSettingsGetStarted', 'action' => 'get'])
+        ->setMethods(['GET']);
 });
