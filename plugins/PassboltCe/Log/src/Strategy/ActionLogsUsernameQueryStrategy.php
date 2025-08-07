@@ -263,7 +263,7 @@ class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
             $context .= ' and removed permissions for:';
             foreach ($removedPermissions as $perm) {
                 if ($perm->aro === 'User') {
-                    $user = $usersTable->get($perm->aro_foreign_key, ['contain' => ['Profiles']]);
+                    $user = $usersTable->get($perm->aro_foreign_key, contain: ['Profiles']);
                     $context .= ' ' . $user->username . ' (' . $user->profile->first_name . ' ';
                     $context .= $user->profile->last_name . ') ' . $permissionTypes[$perm->type];
                 } elseif ($perm->aro === 'Group') {
@@ -278,7 +278,7 @@ class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
             $context .= ' and updated permissions for:';
             foreach ($changedPermissions as $perm) {
                 if ($perm->aro === 'User') {
-                    $user = $usersTable->get($perm->aro_foreign_key, ['contain' => ['Profiles']]);
+                    $user = $usersTable->get($perm->aro_foreign_key, contain: ['Profiles']);
                     $context .= ' ' . $user->username . ' (' . $user->profile->first_name . ' ';
                     $context .= $user->profile->last_name . ') ' . $permissionTypes[$perm->type];
                 } elseif ($perm->aro === 'Group') {

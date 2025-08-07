@@ -28,7 +28,7 @@ class SettingsIndexControllerTest extends AppIntegrationTestCaseV5
         $this->getJson('/settings.json');
         $this->assertTrue($this->_responseJsonBody->passbolt->plugins->metadata->enabled);
         $this->assertSame('1.0.0', $this->_responseJsonBody->passbolt->plugins->metadata->version);
-        $this->assertTrue($this->_responseJsonBody->passbolt->plugins->metadata->isInBeta);
+        $this->assertFalse($this->_responseJsonBody->passbolt->plugins->metadata->isInBeta);
         $this->assertFalse($this->_responseJsonBody->passbolt->plugins->metadata->autoSetupClientSide);
     }
 
@@ -49,7 +49,7 @@ class SettingsIndexControllerTest extends AppIntegrationTestCaseV5
         Configure::write('passbolt.plugins.metadata.autoSetupClientSide', true);
         $this->logInAsUser();
         $this->getJson('/settings.json');
-        $this->assertTrue($this->_responseJsonBody->passbolt->plugins->metadata->isInBeta);
+        $this->assertFalse($this->_responseJsonBody->passbolt->plugins->metadata->isInBeta);
         $this->assertTrue($this->_responseJsonBody->passbolt->plugins->metadata->autoSetupClientSide);
     }
 

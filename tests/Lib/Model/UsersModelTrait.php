@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib\Model;
 
+use App\Test\Factory\RoleFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
@@ -30,10 +31,11 @@ trait UsersModelTrait
      */
     public static function getDummyUser($data = [])
     {
+        $roleId = RoleFactory::make()->user()->persist()->get('id');
         $entityContent = [
             'name' => UuidFactory::uuid('user.id.dummy'),
             'username' => 'dummy@passbolt.com',
-            'role_id' => UuidFactory::uuid('role.id.user'),
+            'role_id' => $roleId,
             'deleted' => false,
             'active' => false,
             'profile' => [
@@ -56,9 +58,10 @@ trait UsersModelTrait
      */
     public static function getUserUpdateData(array $override = [])
     {
+        $roleId = RoleFactory::make()->admin()->persist()->get('id');
         $updateData = [
             'username' => 'user@domain.com',
-            'role_id' => UuidFactory::uuid('role.id.admin'),
+            'role_id' => $roleId,
             'deleted' => true,
             'active' => false,
             'profile' => [

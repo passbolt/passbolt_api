@@ -98,7 +98,7 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
                 'disabled' => $expectedCreator->get('disabled'),
                 'created' => $expectedCreator->get('created')->toIso8601String(),
                 'modified' => $expectedCreator->get('modified')->toIso8601String(),
-                'last_logged_in' => null,
+                'last_logged_in' => $expectedCreator->get('last_logged_in')->toIso8601String(),
             ],
             [
                 'id' => $creator['id'],

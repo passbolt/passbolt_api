@@ -35,7 +35,7 @@ class V530AddCustomFieldStandaloneResourceType extends AbstractMigration
                 'slug' => ResourceType::SLUG_V5_CUSTOM_FIELD_STANDALONE,
                 'name' => 'Standalone custom fields',
                 'description' => 'A resource with standalone custom fields.',
-                'definition' => \Passbolt\ResourceTypes\Model\Definition\SlugDefinition::customFields(),
+                'definition' => \Passbolt\ResourceTypes\Model\Definition\SlugDefinition::v5CustomFields(),
                 'created' => (new DateTime())->toDateTimeString(),
                 'modified' => (new DateTime())->toDateTimeString(),
             ]

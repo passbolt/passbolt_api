@@ -93,7 +93,7 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 
         // Get the users that can access this resource
         $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
-        /** @var array<\App\Model\Entity\User> $users */
+        /** @var \Cake\ORM\Query\SelectQuery $users */
         $users = $this->usersTable->findIndex(Role::USER, $options)
             ->find('locale')
             ->find('notDisabled');
@@ -106,6 +106,7 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
         }
 
         // Send emails to everybody that can see the resource
+        /** @var \App\Model\Entity\User $user */
         foreach ($users as $user) {
             $emailCollection->addEmail(
                 $this->createUpdateEmail(
@@ -161,6 +162,7 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
         $data = [
             'body' => [
                 'user' => $owner,
+                'recipient' => $recipient,
                 'resource' => $resource,
                 'armoredSecret' => $armoredSecret,
                 'showUsername' => $this->getConfig('show.username'),

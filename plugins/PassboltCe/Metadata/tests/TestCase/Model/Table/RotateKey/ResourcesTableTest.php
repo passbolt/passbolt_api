@@ -71,6 +71,7 @@ class ResourcesTableTest extends AppTestCaseV5
             ->active()
             ->persist();
         // create expired metadata key
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($user->get('gpgkey'))->persist();
         ResourceFactory::make()->withPermissionsFor([$user])->deleted()->v5Fields(true, [

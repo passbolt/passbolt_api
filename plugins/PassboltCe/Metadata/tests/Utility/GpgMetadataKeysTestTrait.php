@@ -321,20 +321,25 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
     /**
      * @return array
      */
-    public function getValidPrivateKeyCleartext(): array
+    public function getValidPrivateKeyCleartext(array $override = []): array
     {
         $key = $this->getMetadataKeyInfo();
 
-        return [
+        return array_merge([
             'object_type' => 'PASSBOLT_METADATA_PRIVATE_KEY',
             'domain' => Router::url('/', true),
             'armored_key' => $key['private_key'],
             'fingerprint' => $key['fingerprint'],
             'passphrase' => $key['passphrase'],
-        ];
+        ], $override);
     }
 
-    public function getValidPrivateKeyDataForServer(?array $keyInfo = null): string
+    /**
+     * @param array|null $keyInfo Key information to use. I.e. for signing, etc.
+     * @param string|null $privateKeyCleartextData Private key data to set into encrypted message.
+     * @return string
+     */
+    public function getValidPrivateKeyDataForServer(?array $keyInfo = null, ?string $privateKeyCleartextData = null): string
     {
         $serverFingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
         $signerPrivateKey = null;
@@ -355,7 +360,8 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
             $gpg->importServerKeyInKeyring();
             $gpg->setEncryptKeyFromFingerprint($serverFingerprint);
             $gpg->setSignKeyFromFingerprint($signerFingerprint, $signerPassphrase);
-            static::$keycache[$signerFingerprint] = $gpg->encryptSign($this->getValidPrivateKeyCleartextJson());
+            $clearTextData = $privateKeyCleartextData ?? $this->getValidPrivateKeyCleartextJson();
+            static::$keycache[$signerFingerprint] = $gpg->encryptSign($clearTextData);
             $gpg->clearKeys();
         }
 
