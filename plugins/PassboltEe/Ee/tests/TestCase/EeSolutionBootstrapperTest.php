@@ -76,6 +76,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/PasswordPoliciesUpdate',
         'Passbolt/UserPassphrasePolicies',
         'Passbolt/PasswordExpiryPolicies',
+        'Passbolt/UserKeyPolicies',
     ];
 
     public function testEeSolutionBootstrapper_Application_Bootstrap(): void

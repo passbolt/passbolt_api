@@ -550,6 +550,16 @@ class ResourcesTable extends Table
             return false;
         }
 
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = $this->loadInto($resource, ['ResourceTypes']);
+        if (empty($resource->resource_type) || !is_null($resource->resource_type->deleted)) {
+            $resource->setError('resource_type_id', [
+                'resource_type_not_exists' => __('The resource type for this resource does not exist.'),
+            ]);
+
+            return false;
+        }
+
         // Patch the entity.
         $data = [
             'deleted' => true,

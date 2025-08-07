@@ -34,7 +34,7 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
         // ---
         // A (Ada:O)
         RoleFactory::make()->guest()->persist();
-        $userA = UserFactory::make()->persist();
+        $userA = UserFactory::make()->user()->persist();
         $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
 
         $this->logInAsAdmin();
@@ -54,7 +54,7 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
         // A (Ada:O, Betty:R)
         // B (Ada:O)
         RoleFactory::make()->guest()->persist();
-        [$userA, $userB] = UserFactory::make(2)->persist();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
         $folderA = FolderFactory::make()
             ->withPermissionsFor([$userA])
             ->withPermissionsFor([$userB], Permission::READ)

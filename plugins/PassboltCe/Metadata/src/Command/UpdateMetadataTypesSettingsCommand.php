@@ -24,6 +24,7 @@ use App\Utility\UserAccessControl;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Cake\Core\Configure;
 use Exception;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Service\MetadataTypesSettingsAssertService;
@@ -123,6 +124,13 @@ class UpdateMetadataTypesSettingsCommand extends PassboltCommand
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
         parent::execute($args, $io);
+
+        if (!Configure::read('debug') || !Configure::read('passbolt.selenium.active')) {
+            $io->out('This command is to be used for testing and development purpose only.');
+            $io->out('Please enable DEBUG and PASSBOLT_SELENIUM_ACTIVE flags.');
+
+            return $this->errorCode();
+        }
 
         $user = $this->getUser($args);
         if (is_null($user)) {

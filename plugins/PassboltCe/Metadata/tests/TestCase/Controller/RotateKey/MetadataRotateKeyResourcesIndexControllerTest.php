@@ -26,6 +26,7 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * @uses \Passbolt\Metadata\Controller\RotateKey\MetadataRotateKeyResourcesIndexController
@@ -43,14 +44,27 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
             ->active()
             ->persist();
         // create expired metadata key
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         ResourceFactory::make(29)->v5Fields(true, [
             'metadata_key_id' => $expiredMetadataKey->id,
             'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
         ])->persist();
+        // Resources with a deleted resource type should not be returned
+        ResourceFactory::make()
+            ->v5Fields(true, [
+                'metadata_key_id' => $expiredMetadataKey->id,
+                'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
+            ])
+            ->with(
+                'ResourceTypes',
+                ResourceTypeFactory::make()->deleted()
+            )
+            ->persist();
         // resources shouldn't be returned
         ResourceFactory::make()->persist(); // v4
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $activeMetadataKey */
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         ResourceFactory::make()->v5Fields(true, [
@@ -92,6 +106,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
             ->active()
             ->persist();
         // create expired metadata key
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         ResourceFactory::make(8)->v5Fields(true, [
@@ -146,6 +161,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
             ->active()
             ->persist();
         // create expired metadata key
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         ResourceFactory::make($no)->v5Fields(true, [

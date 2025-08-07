@@ -65,7 +65,7 @@ class UserLogsControllerTest extends LogIntegrationTestCase
             ->persist();
 
         // Create the entity histories that the finder should retrieve
-        $user = UserFactory::make()->persist();
+        $user = UserFactory::make()->user()->lastLoggedIn()->persist();
         EntitiesHistoryFactory::make(5)->users()
             ->with('ActionLogs', ActionLogFactory::make()->with('Users')->error())
             ->with('Users', $user)
@@ -92,11 +92,11 @@ class UserLogsControllerTest extends LogIntegrationTestCase
                 'id' => $user->get('id'),
                 'role_id' => $user->role_id,
                 'username' => $user->username,
+                'last_logged_in' => null,
                 'profile' => [
                     'first_name' => $user->profile->first_name,
                     'last_name' => $user->profile->last_name,
                 ],
-                'last_logged_in' => null,
             ]];
             $this->assertSame($expectedData, $actionLog['data']);
             $this->assertNotNull($actionLog['creator']);

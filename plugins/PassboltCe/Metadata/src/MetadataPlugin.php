@@ -38,7 +38,10 @@ use Passbolt\Metadata\Event\MetadataUserDeleteSuccessListener;
 use Passbolt\Metadata\Event\MissingMetadataKeyIdsContainListener;
 use Passbolt\Metadata\Event\SetupCompleteListener;
 use Passbolt\Metadata\Notification\Email\Redactor\MetadataEmailRedactorPool;
+use Passbolt\Metadata\Service\Healthcheck\NoActiveMetadataKeyHealthcheck;
+use Passbolt\Metadata\Service\Healthcheck\ServeMissingAccessToMetadataKeyHealthcheck;
 use Passbolt\Metadata\Service\Healthcheck\ServerCanDecryptMetadataPrivateKeyHealthcheck;
+use Passbolt\Metadata\Service\Healthcheck\ServerPrivateMetadataKeyValidateHealthcheck;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4FoldersToV5Service;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4ResourcesToV5Service;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4ToV5ServiceCollector;
@@ -52,7 +55,7 @@ class MetadataPlugin extends BasePlugin
     {
         parent::bootstrap($app);
         // The configuration isInBeta is written here, as it cannot be overwritten by users.
-        Configure::write('passbolt.plugins.metadata.isInBeta', true);
+        Configure::write('passbolt.plugins.metadata.isInBeta', false);
         $this->attachListeners(EventManager::instance());
         // Add migrator services
         MigrateAllV4ToV5ServiceCollector::add([
@@ -86,10 +89,16 @@ class MetadataPlugin extends BasePlugin
     public function services(ContainerInterface $container): void
     {
         $container->add(ServerCanDecryptMetadataPrivateKeyHealthcheck::class);
+        $container->add(NoActiveMetadataKeyHealthcheck::class);
+        $container->add(ServeMissingAccessToMetadataKeyHealthcheck::class);
+        $container->add(ServerPrivateMetadataKeyValidateHealthcheck::class);
 
         $container
             ->extend(HealthcheckServiceCollector::class)
-            ->addMethodCall('addService', [ServerCanDecryptMetadataPrivateKeyHealthcheck::class]);
+            ->addMethodCall('addService', [ServerCanDecryptMetadataPrivateKeyHealthcheck::class])
+            ->addMethodCall('addService', [NoActiveMetadataKeyHealthcheck::class])
+            ->addMethodCall('addService', [ServeMissingAccessToMetadataKeyHealthcheck::class])
+            ->addMethodCall('addService', [ServerPrivateMetadataKeyValidateHealthcheck::class]);
     }
 
     /**
@@ -101,13 +110,16 @@ class MetadataPlugin extends BasePlugin
         if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
             $commands->add('passbolt metadata generate_dummy_metadata_key', GenerateDummyMetadataKeyCommand::class);
             $commands->add('passbolt metadata insert_dummy_data', InsertDummyDataCommand::class);
+            $commands->add(
+                'passbolt metadata update_metadata_types_settings',
+                UpdateMetadataTypesSettingsCommand::class
+            );
+            $commands->add('passbolt metadata share_metadata_key', ShareMetadataKeyCommand::class);
+            // Migration commands
+            $commands->add('passbolt metadata migrate_resources', MigrateResourcesCommand::class);
+            $commands->add('passbolt metadata migrate_folders', MigrateFoldersCommand::class);
+            $commands->add('passbolt metadata migrate_all_items', MigrateAllItemsCommand::class);
         }
-        $commands->add('passbolt metadata update_metadata_types_settings', UpdateMetadataTypesSettingsCommand::class);
-        $commands->add('passbolt metadata share_metadata_key', ShareMetadataKeyCommand::class);
-        // Migration commands
-        $commands->add('passbolt metadata migrate_resources', MigrateResourcesCommand::class);
-        $commands->add('passbolt metadata migrate_folders', MigrateFoldersCommand::class);
-        $commands->add('passbolt metadata migrate_all_items', MigrateAllItemsCommand::class);
 
         return $commands;
     }

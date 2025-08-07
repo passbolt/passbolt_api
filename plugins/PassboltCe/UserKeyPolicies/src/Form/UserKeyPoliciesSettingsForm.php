@@ -50,7 +50,7 @@ class UserKeyPoliciesSettingsForm extends Form
      * @var array
      */
     public const ALLOWED_KEY_SIZES = [
-        UserKeyPoliciesSettingsDto::DEFAULT_KEY_SIZE,
+        UserKeyPoliciesSettingsDto::KEY_SIZE_3072,
         UserKeyPoliciesSettingsDto::KEY_SIZE_4096,
     ];
 

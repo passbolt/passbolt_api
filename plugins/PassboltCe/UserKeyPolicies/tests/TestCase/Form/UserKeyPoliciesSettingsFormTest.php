@@ -78,10 +78,15 @@ class UserKeyPoliciesSettingsFormTest extends AppTestCase
             'inList' => self::getInListTestCases(UserKeyPoliciesSettingsForm::ALLOWED_KEY_SIZES),
         ];
 
+        $settings = $this->getDummyUserKeyPoliciesSettings([
+            'preferred_key_type' => UserKeyPoliciesSettingsDto::KEY_TYPE_RSA,
+            'preferred_key_size' => UserKeyPoliciesSettingsDto::KEY_SIZE_3072,
+            'preferred_key_curve' => null,
+        ]);
         $this->assertFormFieldFormatValidation(
             UserKeyPoliciesSettingsForm::class,
             'preferred_key_size',
-            $this->getDummyUserKeyPoliciesSettings(),
+            $settings,
             $testCases
         );
     }
@@ -111,6 +116,7 @@ class UserKeyPoliciesSettingsFormTest extends AppTestCase
     {
         $data = $this->getDummyUserKeyPoliciesSettings([
             'preferred_key_type' => UserKeyPoliciesSettingsDto::KEY_TYPE_RSA,
+            'preferred_key_size' => UserKeyPoliciesSettingsDto::KEY_SIZE_3072,
             'preferred_key_curve' => null,
         ]);
         $result = $this->form->validate($data);

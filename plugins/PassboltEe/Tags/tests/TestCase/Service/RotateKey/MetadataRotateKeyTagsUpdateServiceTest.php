@@ -72,6 +72,7 @@ class MetadataRotateKeyTagsUpdateServiceTest extends AppTestCaseV5
             ->persist();
         // create metadata keys
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         $metadata = json_encode(MetadataTagDto::fromArray(['slug' => 'marketing'])->getClearTextMetadata());
@@ -207,6 +208,7 @@ class MetadataRotateKeyTagsUpdateServiceTest extends AppTestCaseV5
             ->admin()
             ->active()
             ->persist();
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         $metadata = json_encode(MetadataTagDto::fromArray(['slug' => 'marketing'])->getClearTextMetadata());

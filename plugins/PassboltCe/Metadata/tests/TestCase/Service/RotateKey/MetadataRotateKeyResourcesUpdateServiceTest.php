@@ -146,6 +146,51 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         $this->assertSame($uac->getId(), $updatedResource2->get('modified_by'));
     }
 
+    public function testMetadataRotateKeyResourcesUpdateService_Resource_With_Deleted_ResourceType(): void
+    {
+        // create metadata keys
+        $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
+        $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
+        $expiredResourceWithDeletedResourceType = ResourceFactory::make()
+            ->with(
+                'ResourceTypes',
+                ResourceTypeFactory::make()->deleted()
+            )
+            ->patchData([
+                'metadata_key_id' => $expiredMetadataKey->get('id'),
+                'metadata' => 'foo',
+                'metadata_key_type' => 'shared_key',
+                // Set V4 fields to null
+                'name' => null,
+                'username' => null,
+                'uri' => null,
+                'description' => null,
+            ])->persist();
+
+        $uac = $this->mockAdminAccessControl();
+        $metadataForR1 = $this->encryptForMetadataKey(json_encode([]));
+        $data = [
+            [
+                'id' => $expiredResourceWithDeletedResourceType->get('id'),
+                'metadata_key_id' => $activeMetadataKey->get('id'),
+                'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
+                'metadata' => $metadataForR1,
+                'modified' => $expiredResourceWithDeletedResourceType->get('modified')->format('Y-m-d H:i:s'),
+                'modified_by' => $expiredResourceWithDeletedResourceType->get('modified_by'),
+            ],
+        ];
+        try {
+            $this->service->updateMany($uac, $data);
+            $this->fail('An exception should have been thrown.');
+        } catch (CustomValidationException $e) {
+            $this->assertSame($e->getErrors(), [[
+                'resource_type_id' => [
+                    'resource_type_is_not_soft_deleted' => 'The resource type should not be deleted.',
+                ],
+            ]]);
+        }
+    }
+
     public function testMetadataRotateKeyResourcesUpdateService_Error_EmptyData(): void
     {
         $uac = $this->mockAdminAccessControl();

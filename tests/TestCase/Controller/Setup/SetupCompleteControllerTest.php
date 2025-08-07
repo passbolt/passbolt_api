@@ -106,7 +106,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $t = AuthenticationTokenFactory::make()
             ->active()
             ->type(AuthenticationToken::TYPE_REGISTER)
-            ->with('Users', UserFactory::make()->inactive())
+            ->with('Users', UserFactory::make()->user()->inactive())
             ->persist();
         $user = $t->user;
         $url = '/setup/complete/' . $user->id . '.json';
@@ -165,7 +165,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $t = AuthenticationTokenFactory::make()
             ->active()
             ->type(AuthenticationToken::TYPE_REGISTER)
-            ->with('Users', UserFactory::make()->inactive())
+            ->with('Users', UserFactory::make()->user()->inactive())
             ->persist();
         $user = $t->user;
         $url = '/setup/complete/' . $user->id . '.json';
