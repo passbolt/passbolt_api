@@ -30,7 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 /**
  * ScimMiddleware class
  */
-class ScimMiddleware implements MiddlewareInterface
+class ScimAuthMiddleware implements MiddlewareInterface
 {
     use ContainerAwareMiddlewareTrait;
     use FeaturePluginAwareTrait;

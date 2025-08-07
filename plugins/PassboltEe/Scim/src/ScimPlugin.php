@@ -28,8 +28,8 @@ use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Passbolt\Scim\Command\ScimSettingsCommand;
+use Passbolt\Scim\Middleware\ScimAuthMiddleware;
 use Passbolt\Scim\Middleware\ScimLogMiddleware;
-use Passbolt\Scim\Middleware\ScimMiddleware;
 use Passbolt\Scim\Service\Healthcheck\ScimHealthcheckService;
 
 /**
@@ -74,7 +74,7 @@ class ScimPlugin extends BasePlugin
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         $middlewareQueue
-            ->insertAfter(RoutingMiddleware::class, ScimMiddleware::class)
+            ->insertAfter(RoutingMiddleware::class, ScimAuthMiddleware::class)
             ->insertAfter(BodyParserMiddleware::class, ScimLogMiddleware::class);
 
         return parent::middleware($middlewareQueue);

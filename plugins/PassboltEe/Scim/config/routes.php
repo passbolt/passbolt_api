@@ -16,16 +16,20 @@
 
 use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\RouteBuilder;
+use Passbolt\Scim\Middleware\ScimSettingsSecurityMiddleware;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
+    $routes->registerMiddleware(ScimSettingsSecurityMiddleware::class, new ScimSettingsSecurityMiddleware());
 
     $routes->connect('/settings', ['controller' => 'ScimGetSettings', 'action' => 'getSettings'])
-        ->setMethods(['GET']);
+        ->setMethods(['GET'])
+        ->setMiddleware([ScimSettingsSecurityMiddleware::class]);
 
     $routes->connect('/settings', ['controller' => 'ScimSetSettings', 'action' => 'setSettings'])
-        ->setMethods(['POST']);
+        ->setMethods(['POST'])
+        ->setMiddleware([ScimSettingsSecurityMiddleware::class]);
 
     $routes
         ->connect(
@@ -33,7 +37,8 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
             ['controller' => 'ScimSetSettings', 'action' => 'setSettings']
         )
         ->setPass(['id'])
-        ->setMethods(['POST', 'PUT']);
+        ->setMethods(['POST', 'PUT'])
+        ->setMiddleware([ScimSettingsSecurityMiddleware::class]);
 
     $routes
         ->connect(
@@ -41,7 +46,8 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
             ['controller' => 'ScimDeleteSettings', 'action' => 'deleteSettings']
         )
         ->setPass(['id'])
-        ->setMethods(['DELETE']);
+        ->setMethods(['DELETE'])
+        ->setMiddleware([ScimSettingsSecurityMiddleware::class]);
 
     $routes->prefix('V2', function (RouteBuilder $routes): void {
         $routes->connect('/{settingId}/Schemas', ['controller' => 'Scim', 'action' => 'schemas'])
