@@ -22,7 +22,6 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
-use Passbolt\Log\Test\Factory\ActionLogFactory;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTestTrait;
 
 class FindLastLoggedInTest extends AppTestCase
@@ -51,53 +50,31 @@ class FindLastLoggedInTest extends AppTestCase
         parent::tearDown();
     }
 
-    public function testFindLastLoggedIn()
+    /**
+     * @dataProvider findLastLoggedInValuesProvider
+     * @param DateTime|null $value Last logged in value.
+     * @return void
+     */
+    public function testFindLastLoggedIn(?DateTime $value): void
     {
-        $user = UserFactory::make()->user()->active()->persist();
+        $user = UserFactory::make()->user()->active()->lastLoggedIn($value)->persist();
         $userId = $user->get('id');
-        $actionLogOld = ActionLogFactory::make(['created' => DateTime::now()->subMinutes(1)])
-            ->loginAction()
-            ->userId($userId)
-            ->persist();
-        $actionLogLatest = ActionLogFactory::make(['created' => DateTime::now()])
-            ->loginAction()
-            ->userId($userId)
-            ->persist();
 
         $result = $this->usersTable->findById($userId)->find('lastLoggedIn')->first();
 
         $this->assertObjectHasAttribute('last_logged_in', $result);
-        $this->assertGreaterThan($actionLogOld->get('created'), $result->get('last_logged_in'));
-        $this->assertSame($actionLogLatest->get('created')->i18nFormat(), $result->get('last_logged_in')->i18nFormat());
+        if (is_null($value)) {
+            $this->assertNull($result->get('last_logged_in'));
+        } else {
+            $this->assertSame($value->toIso8601String(), $result->get('last_logged_in')->toIso8601String());
+        }
     }
 
-    public function testFindLastLoggedIn_JwtAuth()
+    public static function findLastLoggedInValuesProvider(): array
     {
-        $user = UserFactory::make()->user()->active()->persist();
-        $userId = $user->get('id');
-        // auth login logs
-        ActionLogFactory::make(['created' => DateTime::now()->subMonths(2)])
-            ->loginAction()
-            ->userId($userId)
-            ->persist();
-        ActionLogFactory::make(['created' => DateTime::now()->subDays(2)])
-            ->loginAction()
-            ->userId($userId)
-            ->persist();
-        // jwt login logs
-        $actionLogJwtOld = ActionLogFactory::make(['created' => DateTime::now()->subHours(2)])
-            ->setActionId('JwtLogin.loginPost')
-            ->userId($userId)
-            ->persist();
-        $actionLogJwtLatest = ActionLogFactory::make(['created' => DateTime::now()->subMinutes(1)])
-            ->setActionId('JwtLogin.loginPost')
-            ->userId($userId)
-            ->persist();
-
-        $result = $this->usersTable->findById($userId)->find('lastLoggedIn')->first();
-
-        $this->assertObjectHasAttribute('last_logged_in', $result);
-        $this->assertGreaterThan($actionLogJwtOld->get('created'), $result->get('last_logged_in'));
-        $this->assertSame($actionLogJwtLatest->get('created')->i18nFormat(), $result->get('last_logged_in')->i18nFormat());
+        return [
+            [null],
+            [DateTime::now()->subMonths(1)],
+        ];
     }
 }

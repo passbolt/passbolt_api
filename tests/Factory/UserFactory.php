@@ -21,7 +21,6 @@ use App\Model\Entity\User;
 use App\Test\Factory\Traits\FactoryDeletedTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\Chronos\Chronos;
 use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
@@ -65,8 +64,9 @@ class UserFactory extends CakephpBaseFactory
                 'role_id' => $faker->uuid(),
                 'active' => true,
                 'deleted' => false,
-                'created' => Chronos::now()->subDays($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDays($faker->randomNumber(4)),
+                'last_logged_in' => DateTime::now()->subDays($faker->randomNumber(4)),
+                'created' => DateTime::now()->subDays($faker->randomNumber(4)),
+                'modified' => DateTime::now()->subDays($faker->randomNumber(4)),
             ];
         });
 
@@ -145,6 +145,15 @@ class UserFactory extends CakephpBaseFactory
     public function created(DateTime $created)
     {
         return $this->setField('created', $created);
+    }
+
+    /**
+     * @param DateTime|null $value Value to set.
+     * @return $this
+     */
+    public function lastLoggedIn(?DateTime $value = null)
+    {
+        return $this->setField('last_logged_in', $value);
     }
 
     /**

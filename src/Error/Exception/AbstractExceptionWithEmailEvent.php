@@ -60,7 +60,7 @@ abstract class AbstractExceptionWithEmailEvent extends BadRequestException
     /**
      * Dispatch the exception's event.
      * The name of the event is the fully qualified exception class.
-     * Register these events in a EmailRedactorPool, e.g. in JwtAuthenticationAttackEmailRedactor
+     * Register these events in a EmailRedactorPool
      *
      * @return void
      */

@@ -23,7 +23,11 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Passbolt\Folders\FoldersPlugin;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
+/**
+ * @covers \App\Controller\Resources\ResourcesDeleteController
+ */
 class ResourcesDeleteControllerTest extends AppIntegrationTestCase
 {
     public function setUp(): void
@@ -79,6 +83,19 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
         $resourceId = UuidFactory::uuid();
         $this->deleteJson("/resources/$resourceId.json");
         $this->assertAuthenticationError();
+    }
+
+    public function testResourcesDeleteController_Error_ResourceTypeDeleted(): void
+    {
+        $user = $this->logInAsUser();
+        $resourceId = ResourceFactory::make()
+            ->withPermissionsFor([$user])
+            ->with('ResourceTypes', ResourceTypeFactory::make()->passwordAndDescription()->deleted())
+            ->persist()
+            ->id;
+        $this->deleteJson("/resources/{$resourceId}.json");
+        $this->assertError(400, 'Could not delete the resource.');
+        $this->assertArrayHasKey('resource_type_not_exists', $this->getResponseBodyAsArray()['resource_type_id']);
     }
 
     /**

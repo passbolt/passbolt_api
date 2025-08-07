@@ -19,12 +19,9 @@ namespace Passbolt\JwtAuthentication\Test\TestCase\Controller;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
-use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Faker\Factory;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase;
 
@@ -33,7 +30,6 @@ use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase
  */
 class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
 {
-    use EmailQueueTrait;
     use GpgAdaSetupTrait;
     use LocatorAwareTrait;
 
@@ -82,7 +78,6 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->cookie(RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE, UuidFactory::uuid());
         $this->postJson('/auth/jwt/refresh.json');
         $this->assertBadRequestError('No active refresh token matching the request could be found.');
-        $this->assertEmailQueueCount(0);
     }
 
     public function dataProviderWithAndWithoutAccessToken(): array
@@ -201,40 +196,8 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->cookie(RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE, $oldRefreshToken);
 
         $this->enableCsrfToken();
-        // The IP and user agent should be displayed in the emails
-        $userIp = Factory::create()->ipv4();
-        $userAgent = Factory::create()->userAgent();
-        $this->mockUserIp($userIp);
-        $this->mockUserAgent($userAgent);
         $this->postJson('/auth/jwt/refresh.json');
         $this->assertBadRequestError('Expired refresh token provided.');
-        $this->assertEmailQueueCount($nAdmins);
-        $this->assertEmailIsInQueue([
-            'email' => $user->username,
-            'subject' => 'Authentication security alert',
-            'template' => 'Passbolt/JwtAuthentication.User/jwt_attack',
-        ]);
-        $this->assertEmailInBatchContains([
-            'An unknown user attempted to steal your login data.',
-            $userIp,
-            $userAgent,
-        ], $user->username);
-        foreach ($admins as $i => $admin) {
-            if ($i === 0) {
-                $this->assertEmailInBatchContains('Please get in touch with one of your administrators.');
-                continue;
-            }
-            $this->assertEmailIsInQueue([
-                'email' => $admin->username,
-                'subject' => 'Authentication security alert',
-                'template' => 'Passbolt/JwtAuthentication.Admin/jwt_attack',
-            ]);
-            $this->assertEmailInBatchContains([
-                'This is a potential security issue. Please investigate!',
-                $userIp,
-                $userAgent,
-            ], $i);
-        }
     }
 
     public function testAuthRefreshTokenControllerWithExpiredPayload()
@@ -242,7 +205,6 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         UserFactory::make(3)->admin()->persist();
         $admins = $this->Users->findAdmins()->toArray();
         $user = $admins[0];
-        $nAdmins = count($admins);
 
         $userId = $user->id;
         $oldRefreshToken = AuthenticationTokenFactory::make()
@@ -253,39 +215,11 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
             ->persist()
             ->token;
 
-        // The IP and user agent should not be displayed in the emails
-        $userIp = Factory::create()->ipv4();
-        $userAgent = Factory::create()->userAgent();
-        Configure::write('passbolt.security.userIp', false);
-        Configure::write('passbolt.security.userAgent', false);
-        $this->mockUserIp($userIp);
-        $this->mockUserAgent($userAgent);
         $this->postJson('/auth/jwt/refresh.json', [
             'user_id' => $userId,
             'refresh_token' => $oldRefreshToken,
         ]);
         $this->assertBadRequestError('Expired refresh token provided.');
-
-        $this->assertEmailQueueCount($nAdmins);
-        $this->assertEmailIsInQueue([
-            'email' => $user->username,
-            'subject' => 'Authentication security alert',
-            'template' => 'Passbolt/JwtAuthentication.User/jwt_attack',
-        ]);
-        foreach ($admins as $i => $admin) {
-            $this->assertEmailInBatchNotContains([
-                $userIp,
-                $userAgent,
-            ], $admin->username);
-            if ($i === 0) {
-                continue;
-            }
-            $this->assertEmailIsInQueue([
-                'email' => $admin->username,
-                'subject' => 'Authentication security alert',
-                'template' => 'Passbolt/JwtAuthentication.Admin/jwt_attack',
-            ]);
-        }
     }
 
     public function testAuthRefreshTokenControllerWithConsumedCookie()
@@ -312,21 +246,5 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->enableCsrfToken();
         $this->postJson('/auth/jwt/refresh.json');
         $this->assertBadRequestError('The refresh token provided was already used.');
-        $this->assertEmailQueueCount($nAdmins);
-        $this->assertEmailIsInQueue([
-            'email' => $user->username,
-            'subject' => 'Authentication security alert',
-            'template' => 'Passbolt/JwtAuthentication.User/jwt_attack',
-        ]);
-        foreach ($admins as $i => $admin) {
-            if ($i === 0) {
-                continue;
-            }
-            $this->assertEmailIsInQueue([
-                'email' => $admin->username,
-                'subject' => 'Authentication security alert',
-                'template' => 'Passbolt/JwtAuthentication.Admin/jwt_attack',
-            ]);
-        }
     }
 }

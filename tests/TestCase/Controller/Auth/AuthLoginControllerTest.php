@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Auth;
 
+use App\Event\UpdateUserLastLoggedInListener;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\GpgkeyFactory;
@@ -25,6 +26,9 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\Log\LogPlugin;
@@ -55,6 +59,8 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         RoleFactory::make()->user()->persist();
         RoleFactory::make()->guest()->persist();
         $this->gpgSetup(); // add ada's keys
+        // Enable event tracking, required to test events.
+        EventManager::instance()->setEventList(new EventList());
     }
 
     /**
@@ -371,6 +377,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
             ->user()
             ->active()
+            ->lastLoggedIn()
             ->persist();
 
         $this->postJson('/auth/login.json', [
@@ -412,6 +419,9 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $AuthToken = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $isValid = $AuthToken->isValid($uuid, $user->id);
         $this->assertTrue($isValid, 'There should a valid auth token');
+        // Make sure last logged in is not updated in stage1
+        $user = UserFactory::get($user->id);
+        $this->assertNull($user->last_logged_in);
 
         // Send it back!
         $this->postJson('/auth/login.json', [
@@ -438,6 +448,12 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         // Authentication token should be disabled at that stage
         $isValid = $AuthToken->isValid($uuid, $user->id);
         $this->assertFalse($isValid, 'There should not be a valid auth token');
+
+        // Check user success event is triggered and last logged in is populated
+        $this->assertEventFired(UpdateUserLastLoggedInListener::EVENT_USER_LOGIN_SUCCESS);
+        // Disable hydration to temporarily disable last_logged_in virtual field accessor
+        $updatedUser = UserFactory::find()->where(['id' => $user->id])->disableHydration()->firstOrFail();
+        $this->assertNotNull($updatedUser['last_logged_in']);
     }
 
     public function testAuthLoginController_Stage2_Success(): void
@@ -452,6 +468,9 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
             ->active()
             ->persist();
         $token = 'gpgauthv1.3.0|36|' . $authenticationToken->get('token') . '|gpgauthv1.3.0';
+        // Fixate time to assert last logged in time
+        $lastLoggedIn = DateTime::now();
+        DateTime::setTestNow($lastLoggedIn);
 
         $this->postJson('/auth/login.json', [
             'data' => [
@@ -466,6 +485,12 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $headers = $this->getHeaders();
         $this->assertSame('true', $headers['X-GPGAuth-Authenticated']);
         $this->assertSame('complete', $headers['X-GPGAuth-Progress']);
+        // Check last logged in is updated
+        // Disable hydration to temporarily disable last_logged_in virtual field accessor
+        $updatedUser = UserFactory::find()->where(['id' => $user->id])->disableHydration()->firstOrFail();
+        $this->assertEquals($lastLoggedIn->toIso8601String(), $updatedUser['last_logged_in']->toIso8601String());
+        // Reset date time object state
+        DateTime::setTestNow();
     }
 
     public function invalidUserTokenProvider(): array

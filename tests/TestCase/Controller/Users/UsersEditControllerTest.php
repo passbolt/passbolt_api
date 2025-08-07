@@ -107,6 +107,22 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         $this->assertEquals(Role::ADMIN, $this->_responseJsonBody->role->name);
     }
 
+    public function testUsersEditController_Error_GuestRoleEdit(): void
+    {
+        // The guest role is created in the setup
+        $guestRole = RoleFactory::firstOrFail();
+        $admin = UserFactory::make()->admin()->persist();
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($admin);
+        $data = [
+            'id' => $user->id,
+            'role_id' => $guestRole->id,
+        ];
+        $this->postJson('/users/' . $user->id . '.json', $data);
+        $this->assertBadRequestError('Could not validate user data.');
+        $this->assertResponseContains('The user role ID must be one of the admin or user roles.');
+    }
+
     public function testUsersEditController_Error_MissingCsrfToken(): void
     {
         $this->disableCsrfToken();

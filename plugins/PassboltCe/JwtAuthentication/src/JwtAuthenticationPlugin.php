@@ -34,7 +34,6 @@ use Passbolt\JwtAuthentication\Middleware\JwtAuthDetectionMiddleware;
 use Passbolt\JwtAuthentication\Middleware\JwtCsrfDetectionMiddleware;
 use Passbolt\JwtAuthentication\Middleware\JwtDestroySessionMiddleware;
 use Passbolt\JwtAuthentication\Middleware\JwtRouteFilterMiddleware;
-use Passbolt\JwtAuthentication\Notification\Email\Redactor\JwtAuthenticationEmailRedactorPool;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 use Passbolt\JwtAuthentication\Service\Healthcheck\DirectoryNotWritableJwtHealthcheck;
 use Passbolt\JwtAuthentication\Service\Healthcheck\ValidKeyPairJwtHealthcheck;
@@ -74,7 +73,6 @@ class JwtAuthenticationPlugin extends BasePlugin
     public function registerListeners(PluginApplicationInterface $app): void
     {
         $app->getEventManager()
-            ->on(new JwtAuthenticationEmailRedactorPool())
             ->on(new LogAuthenticationWithNonValidJwtAccessToken())
             ->on(new RemoveSessionCookiesOnJwt())
             ->on(new RemoveCsrfCookieOnJwt())

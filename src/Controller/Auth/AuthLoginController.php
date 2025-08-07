@@ -17,12 +17,15 @@ declare(strict_types=1);
 namespace App\Controller\Auth;
 
 use App\Controller\AppController;
+use App\Event\UpdateUserLastLoggedInListener;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
 use Authentication\Authenticator\Result;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Event\EventInterface;
+use Cake\Event\EventManager;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 
@@ -37,6 +40,8 @@ class AuthLoginController extends AppController
             'loginGet',
             'loginPost',
         ]);
+
+        EventManager::instance()->on(new UpdateUserLastLoggedInListener());
 
         parent::beforeFilter($event);
     }
@@ -83,6 +88,10 @@ class AuthLoginController extends AppController
             $user = $data['user'];
             $uac = new UserAccessControl($user['role']['name'], $user['id']);
             UserAction::getInstance()->setUserAccessControl($uac);
+
+            $event = new Event(UpdateUserLastLoggedInListener::EVENT_USER_LOGIN_SUCCESS, $this, ['user' => $user]);
+            $this->getEventManager()->dispatch($event);
+
             $this->success(__('You are successfully logged in.'), $user);
         } else {
             $errors = $result->getErrors();
