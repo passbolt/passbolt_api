@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.4.0-test.2] - 2025-08-07
+### Fixed
+- PB-44578 Align metadata setup settings entry point variable name with client
+
 ## [5.4.0-test.1] - 2025-08-07
 ### Added
 - PB-43713 Translate the application in Czech
