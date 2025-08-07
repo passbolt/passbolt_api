@@ -34,7 +34,7 @@ class EeSolutionBootstrapper extends BaseSolutionBootstrapper
     {
         if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
             $app->addPlugin('PassboltSeleniumApi', ['bootstrap' => true, 'routes' => true]);
-            $app->addPlugin('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
+            $app->addPlugin('Passbolt/TestData', ['bootstrap' => true, 'routes' => false]);
         }
 
         $app->addPlugin('Passbolt/Ee', ['bootstrap' => true]);

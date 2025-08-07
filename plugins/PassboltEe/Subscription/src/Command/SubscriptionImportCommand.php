@@ -34,7 +34,7 @@ class SubscriptionImportCommand extends PassboltCommand
      */
     public static function getCommandDescription(): string
     {
-        return __('Import a subscription key file.');
+        return __('Import a subscription key using file or text.');
     }
 
     /**
@@ -49,6 +49,11 @@ class SubscriptionImportCommand extends PassboltCommand
             'help' => __('Path to subscription key file.'),
             'default' => SubscriptionKeyGetService::SUBSCRIPTION_FILE,
         ]);
+        $parser->addOption('text', [
+            'short' => 't',
+            'help' => __('Subscription key text (Base 64).'),
+            'default' => '',
+        ]);
 
         return $parser;
     }
@@ -59,18 +64,28 @@ class SubscriptionImportCommand extends PassboltCommand
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
         parent::execute($args, $io);
-
-        $file = $args->getOption('file');
         $importService = new SubscriptionKeyImportService();
 
         try {
-            $importService->import($file);
+            if ($args->getOption('text')) {
+                $text = $args->getOption('text');
+                if (!is_string($text)) {
+                    throw new SubscriptionException(__('The subscription key text is not valid.'));
+                }
+                $importService->import($text);
+            } else {
+                $file = $args->getOption('file');
+                if (empty($file) || !is_string($file)) {
+                    throw new SubscriptionException(__('The subscription key file is invalid.'));
+                }
+                $importService->importFromFile($file);
+            }
         } catch (SubscriptionException $e) {
             $this->error($e->getMessage(), $io);
             $this->abort();
         }
 
-        $this->success("The subscription key {$file} has been successfully imported in the database.", $io);
+        $this->success(__('The subscription key was successfully imported in the database.'), $io);
 
         return $this->successCode();
     }

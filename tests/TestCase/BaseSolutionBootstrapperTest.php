@@ -60,6 +60,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/Log',
         'Passbolt/Folders',
         'Passbolt/PasswordPolicies',
+        'Passbolt/UserKeyPolicies',
     ];
 
     public function testBaseSolutionBootstrapper_Application_Bootstrap(): void
@@ -75,8 +76,8 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
             'Migrations',
             'Authentication',
             'EmailQueue',
+            'Passbolt/TestData',
             'PassboltSeleniumApi',
-            'PassboltTestData',
             'Passbolt/JwtAuthentication',
             'Passbolt/WebInstaller',
             'Bake',
@@ -94,8 +95,8 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
                 'Migrations',
                 'Authentication',
                 'EmailQueue',
+                'Passbolt/TestData',
                 'PassboltSeleniumApi',
-                'PassboltTestData',
             ],
             self::EXPECTED_CE_PLUGINS,
             [

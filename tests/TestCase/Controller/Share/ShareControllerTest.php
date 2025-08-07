@@ -29,8 +29,17 @@ use Cake\Utility\Hash;
 class ShareControllerTest extends AppIntegrationTestCase
 {
     public array $fixtures = [
-        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups',
-        'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets', 'app.Base/Favorites',
+        'app.Base/Users',
+        'app.Base/Gpgkeys',
+        'app.Base/Profiles',
+        'app.Base/Roles',
+        'app.Base/Groups',
+        'app.Base/GroupsUsers',
+        'app.Base/ResourceTypes',
+        'app.Base/Resources',
+        'app.Base/Permissions',
+        'app.Base/Secrets',
+        'app.Base/Favorites',
     ];
 
     /**

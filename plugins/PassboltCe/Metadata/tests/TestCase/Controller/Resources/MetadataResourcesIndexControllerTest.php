@@ -22,6 +22,8 @@ use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Core\Configure;
 use Cake\I18n\DateTime;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class MetadataResourcesIndexControllerTest extends AppIntegrationTestCaseV5
 {
@@ -110,6 +112,58 @@ class MetadataResourcesIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertSuccess();
         $response = json_decode(json_encode($this->_responseJsonBody), true);
         $this->assertCount(2, $response);
+    }
+
+    public function testMetadataResourcesIndexController_Success_ResourceTypeDeleted(): void
+    {
+        $user = $this->logInAsUser();
+        ResourceFactory::make(2)
+            ->withPermissionsFor([$user])
+            ->setField('modified', DateTime::yesterday())
+            ->persist();
+        ResourceFactory::make(2)
+            ->withPermissionsFor([$user])
+            ->v5Fields()
+            ->setField('modified', DateTime::now())
+            ->persist();
+        ResourceFactory::make(3)
+            ->withPermissionsFor([$user])
+            ->v5Fields()
+            ->setField('modified', DateTime::now())
+            ->with('ResourceTypes', ResourceTypeFactory::make()->standaloneTotp()->deleted())
+            ->persist();
+
+        $this->getJson('/resources.json?sort=Resources.modified&direction=asc');
+        $this->assertSuccess();
+
+        $this->assertCount(4, $this->getResponseBodyAsArray());
+    }
+
+    public function testMetadataResourcesIndexController_Success_ResourceTypeDeletedWithFilter(): void
+    {
+        $user = $this->logInAsUser();
+        ResourceFactory::make(2)
+            ->withPermissionsFor([$user])
+            ->v5Fields()
+            ->setField('modified', DateTime::now())
+            ->persist();
+        ResourceFactory::make(3)
+            ->withPermissionsFor([$user])
+            ->v5Fields()
+            ->setField('modified', DateTime::now())
+            ->with('ResourceTypes', ResourceTypeFactory::make()->standaloneTotp()->deleted())
+            ->persist();
+
+        $this->getJson('/resources.json?contain[resource-type]=1');
+        $this->assertSuccess();
+
+        $response = $this->getResponseBodyAsArray();
+        $this->assertCount(2, $response);
+        foreach ($response as $item) {
+            $this->assertArrayHasKey('resource_type', $item);
+            $this->assertNotEmpty($item['resource_type']);
+            $this->assertSame(ResourceType::SLUG_V5_DEFAULT, $item['resource_type']['slug']);
+        }
     }
 
     public function testMetadataResourcesIndexController_Metadata_Enabled_Filter_MetadataKeyType_Invalid_Value(): void

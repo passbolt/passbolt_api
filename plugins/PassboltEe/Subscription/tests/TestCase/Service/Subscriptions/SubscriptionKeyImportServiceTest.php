@@ -53,6 +53,34 @@ class SubscriptionKeyImportServiceTest extends TestCase
     }
 
     /**
+     * Import a valid subscription key
+     */
+    public function testSubscriptionKeyImportServiceImportValidKey(): void
+    {
+        UserFactory::make()->admin()->persist();
+        $subscriptionKey = $this->getValidSubscriptionKey();
+
+        $this->service->import($subscriptionKey);
+
+        $this->assertInstanceOf(
+            Subscription::class,
+            $this->Subscriptions->getOrFail()
+        );
+    }
+
+    /**
+     * Import an invalid subscription key
+     */
+    public function testSubscriptionKeyImportServiceImportInvalidKey(): void
+    {
+        UserFactory::make()->admin()->persist();
+        $subscriptionKey = $this->getExpiredSubscriptionKey();
+
+        $this->expectException(SubscriptionException::class);
+        $this->service->import($subscriptionKey);
+    }
+
+    /**
      * Import a valid subscription file
      */
     public function testSubscriptionKeyImportServiceImportValidFilename(): void
@@ -60,7 +88,7 @@ class SubscriptionKeyImportServiceTest extends TestCase
         UserFactory::make()->admin()->persist();
         $filename = $this->getValidSubscriptionFileName();
 
-        $this->service->import($filename);
+        $this->service->importFromFile($filename);
 
         $this->assertInstanceOf(
             Subscription::class,
@@ -78,7 +106,7 @@ class SubscriptionKeyImportServiceTest extends TestCase
 
         $this->expectException(SubscriptionException::class);
 
-        $this->service->import($filename);
+        $this->service->importFromFile($filename);
 
         $this->assertSame(
             0,

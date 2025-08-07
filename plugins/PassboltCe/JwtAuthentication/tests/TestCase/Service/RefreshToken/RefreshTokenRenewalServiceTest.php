@@ -91,7 +91,7 @@ class RefreshTokenRenewalServiceTest extends TestCase
         // This is O.K. to renew once
         $service->renewToken(new ServerRequest(), $authToken, 'Bar');
 
-        // This is not O.K. to renew again, should throw an exception and should send an Email to both user and admin
+        // This is not O.K. to renew again, should throw an exception
         $this->expectException(ConsumedRefreshTokenAccessException::class);
         $this->expectExceptionMessage('The refresh token provided was already used.');
         $service->renewToken(new ServerRequest(), $authToken, '');

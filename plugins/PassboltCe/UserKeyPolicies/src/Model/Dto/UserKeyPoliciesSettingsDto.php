@@ -58,14 +58,21 @@ class UserKeyPoliciesSettingsDto
      *
      * @var string
      */
-    public const DEFAULT_KEY_TYPE = self::KEY_TYPE_RSA;
+    public const DEFAULT_KEY_TYPE = self::KEY_TYPE_CURVE;
 
     /**
-     * Default key size (should be used with RSA - which is default).
+     * Default key size (null for ECC).
      *
-     * @var int
+     * @var int|null
      */
-    public const DEFAULT_KEY_SIZE = self::KEY_SIZE_3072;
+    public const DEFAULT_KEY_SIZE = null;
+
+    /**
+     * Default key curve (should be used with ECC - which is default).
+     *
+     * @var string|null
+     */
+    public const DEFAULT_KEY_CURVE = self::KEY_CURVE_ED25519_LEGACY;
 
     /**
      * Key size: 3072
@@ -215,8 +222,8 @@ class UserKeyPoliciesSettingsDto
     {
         return self::createFromArray(array_merge([
             'preferred_key_type' => self::DEFAULT_KEY_TYPE,
-            'preferred_key_size' => self::DEFAULT_KEY_SIZE,
-            'preferred_key_curve' => null, // null for RSA, curve25519_legacy+ed25519_legacy for CURVE
+            'preferred_key_size' => self::DEFAULT_KEY_SIZE, // null for ECC
+            'preferred_key_curve' => self::DEFAULT_KEY_CURVE,
             'source' => self::SOURCE_DEFAULT,
         ], $data));
     }

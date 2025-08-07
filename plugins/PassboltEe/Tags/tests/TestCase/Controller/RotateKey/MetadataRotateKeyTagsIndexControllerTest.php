@@ -51,6 +51,7 @@ class MetadataRotateKeyTagsIndexControllerTest extends AppIntegrationTestCaseV5
             ->active()
             ->persist();
         // create expired metadata key
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         $metadata = json_encode(MetadataTagDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
@@ -60,6 +61,7 @@ class MetadataRotateKeyTagsIndexControllerTest extends AppIntegrationTestCaseV5
         // Tag shouldn't be returned
         TagFactory::make(2)->persist(); // v4
         // Tag with active metadata key
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $activeMetadataKey */
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         $metadata = json_encode(MetadataTagDto::fromArray(['name' => 'active'])->getClearTextMetadata());
@@ -100,6 +102,7 @@ class MetadataRotateKeyTagsIndexControllerTest extends AppIntegrationTestCaseV5
             ->active()
             ->persist();
         // create expired metadata key
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         $metadata = json_encode(MetadataTagDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
@@ -154,6 +157,7 @@ class MetadataRotateKeyTagsIndexControllerTest extends AppIntegrationTestCaseV5
             ->active()
             ->persist();
         // create expired metadata key
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         $metadata = json_encode(MetadataTagDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
