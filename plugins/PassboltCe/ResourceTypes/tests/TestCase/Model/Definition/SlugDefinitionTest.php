@@ -15,11 +15,14 @@ declare(strict_types=1);
  * @since         5.4.0
  */
 
-namespace Passbolt\ResourceTypes\Test\Unit\Model\Definition;
+namespace Passbolt\ResourceTypes\Test\TestCase\Model\Definition;
 
 use Passbolt\ResourceTypes\Model\Definition\SlugDefinition;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \Passbolt\ResourceTypes\Model\Definition\SlugDefinition
+ */
 class SlugDefinitionTest extends TestCase
 {
     public function testPasswordString(): void
