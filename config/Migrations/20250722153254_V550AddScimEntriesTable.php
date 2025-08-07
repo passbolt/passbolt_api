@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-use Migrations\AbstractMigration;
+use Migrations\BaseMigration;
 
-class V410AddScimIdentifiersFields extends AbstractMigration
+class V410AddDeletedFieldToScrimEntries extends BaseMigration
 {
     /**
      * Change Method.
      *
      * More information on this method is available here:
-     * https://book.cakephp.org/phinx/0/en/migrations.html#the-change-method
+     * https://book.cakephp.org/migrations/4/en/migrations.html#the-change-method
      * @return void
      */
-    public function change()
+    public function change(): void
     {
         $this
             ->table('scim_entries', [
@@ -42,16 +42,22 @@ class V410AddScimIdentifiersFields extends AbstractMigration
             ->addColumn('external_identifier', 'string', [
                 'default' => null,
                 'limit' => 256,
-                'null' => false,
+                'null' => true,
                 'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci',
             ])
             ->addColumn('scim_name', 'string', [
                 'default' => null,
                 'limit' => 256,
-                'null' => false,
+                'null' => true,
                 'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci',
+            ])
+            ->addColumn('deleted', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+                'after' => 'scim_name',
             ])
             ->addColumn('created', 'datetime', [
                 'default' => null,
@@ -66,6 +72,7 @@ class V410AddScimIdentifiersFields extends AbstractMigration
             ->addIndex(['foreign_model'])
             ->addIndex(['foreign_key'])
             ->addIndex(['external_identifier'])
+            ->addIndex(['created'])
             ->create();
     }
 }
