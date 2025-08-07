@@ -20,7 +20,7 @@ class MetadataSettingsSetupDto
 {
     private bool $enableForNewInstances;
 
-    public const ENABLE_FOR_NEW_INSTANCES = 'enable_encrypted_metadata_on_first_admin_account_activation';
+    public const ENABLE_FOR_NEW_INSTANCES = 'enable_encrypted_metadata_on_install';
 
     /**
      * @param bool $enableForNewInstances Value to set into DTO.
