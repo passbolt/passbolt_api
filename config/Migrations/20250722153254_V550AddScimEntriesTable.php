@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Migrations\BaseMigration;
 
-class V410AddDeletedFieldToScrimEntries extends BaseMigration
+class V550AddScimEntriesTable extends BaseMigration
 {
     /**
      * Change Method.
