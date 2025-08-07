@@ -55,7 +55,7 @@ class MetadataPlugin extends BasePlugin
     {
         parent::bootstrap($app);
         // The configuration isInBeta is written here, as it cannot be overwritten by users.
-        Configure::write('passbolt.plugins.metadata.isInBeta', true);
+        Configure::write('passbolt.plugins.metadata.isInBeta', false);
         $this->attachListeners(EventManager::instance());
         // Add migrator services
         MigrateAllV4ToV5ServiceCollector::add([
