@@ -17,17 +17,18 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Users;
 
+use App\Model\Table\UsersTable;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 class UsersTableDisableUserTest extends TestCase
 {
-    /**
-     * @var \App\Model\Table\UsersTable
-     */
-    public $Users;
+    use TruncateDirtyTables;
+
+    public UsersTable $Users;
 
     public function setUp(): void
     {
@@ -39,6 +40,7 @@ class UsersTableDisableUserTest extends TestCase
     {
         return [
             [date('Y-m-d\TH:i:sP')],
+            [true],
         ];
     }
 

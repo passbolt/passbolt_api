@@ -264,9 +264,6 @@ trait UsersFindersTrait
         if (isset($options['contain']['groups_users']) && $options['contain']['groups_users']) {
             $query->contain('GroupsUsers');
         }
-        if (isset($options['contain']['last_logged_in']) && $options['contain']['last_logged_in']) {
-            $query->find('lastLoggedIn');
-        }
 
         // Filter out guests and deleted users
         $query->where([
@@ -620,6 +617,7 @@ trait UsersFindersTrait
     /**
      * Retrieve users' last logged in date.
      *
+     * @deprecated only used for populating old data. With v5.4, the field in users table is used.
      * @param \Cake\ORM\Query\SelectQuery $query query
      * @return \Cake\ORM\Query\SelectQuery
      */
@@ -643,15 +641,9 @@ trait UsersFindersTrait
             ])
             ->limit(1);
 
-        $userLastLoginExpression = $query->expr()->case()
-            ->when($query->expr()->isNotNull($this->aliasField('last_logged_in')))
-            ->then($query->newExpr(new IdentifierExpression($this->aliasField('last_logged_in'))))
-            ->else($actionLogsSubQuery);
-
-        // TODO: once the data in the action logs has been migrated to the last_logged_in field, remove the lines below
-        $query->selectAlso(['Users__last_logged_in' => $userLastLoginExpression]);
+        $query->selectAlso(['action_logs_last_logged_in' => $actionLogsSubQuery]);
         $selectTypeMap = $query->getSelectTypeMap();
-        $selectTypeMap->addDefaults(['Users__last_logged_in' => 'datetime']);
+        $selectTypeMap->addDefaults(['action_logs_last_logged_in' => 'datetime']);
 
         return $query;
     }

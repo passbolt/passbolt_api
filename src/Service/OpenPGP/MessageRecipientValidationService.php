@@ -31,19 +31,19 @@ class MessageRecipientValidationService
      */
     public static function isMessageForRecipient(array $messageInfo, array $keyInfo): bool
     {
-        if (!isset($keyInfo['sub_keys'][0]['key_id'])) {
-            throw new CustomValidationException(__('Could not validate sub key data.'), [
-                'subKeyIdRequired' => __('Public key sub key id could not be found.'),
-            ]);
-        }
         if (!isset($messageInfo['recipients'][0])) {
             throw new CustomValidationException(__('Could not validate message data.'), [
                 'recipientRequired' => __('Recipient information could not be found.'),
             ]);
         }
 
+        // PB-43936 OpenPGP key without subkey, then the message must for main key id.
+        if (empty($keyInfo['sub_keys'])) {
+            return isset($keyInfo['key_id']) && in_array($keyInfo['key_id'], $messageInfo['recipients']);
+        }
+
         foreach ($keyInfo['sub_keys'] as $subKey) {
-            if (in_array($subKey['key_id'], $messageInfo['recipients'])) {
+            if (isset($subKey['key_id']) && in_array($subKey['key_id'], $messageInfo['recipients'])) {
                 return true;
             }
         }

@@ -105,8 +105,8 @@ class UsersTableFindIndexTest extends TestCase
     public function testUsersTableFindIndex_LastLoggedInWithoutContainReturnsValue(): void
     {
         RoleFactory::make()->guest()->persist();
-        $ada = UserFactory::make()->admin()->active()->persist();
-        $betty = UserFactory::make(['last_logged_in' => DateTime::now()])->user()->active()->persist();
+        $ada = UserFactory::make()->admin()->active()->lastLoggedIn()->persist();
+        $betty = UserFactory::make()->user()->active()->lastLoggedIn(DateTime::now())->persist();
 
         $result = $this->Users->findIndex($ada->role->name);
 
