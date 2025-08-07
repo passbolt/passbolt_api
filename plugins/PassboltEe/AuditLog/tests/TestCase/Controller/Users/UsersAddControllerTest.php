@@ -74,11 +74,11 @@ class UsersAddControllerTest extends LogIntegrationTestCase
             'id' => $user->get('id'),
             'role_id' => $adminRoleId,
             'username' => $username,
+            'last_logged_in' => null,
             'profile' => [
                 'first_name' => $firstName,
                 'last_name' => $lastName,
             ],
-            'last_logged_in' => null,
         ]];
         $this->assertSame($expected, $data);
         $this->assertSame($admin->id, $creator['id']);

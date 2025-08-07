@@ -46,7 +46,7 @@ class UserActionLogsFinder extends BaseActionLogsFinder
         $query
             ->contain('EntitiesHistory.Users', function (Query $q) {
                 return $q
-                    ->select(['Users.id', 'Users.role_id', 'Users.username'])
+                    ->select(['Users.id', 'Users.role_id', 'Users.username', 'Users.last_logged_in'])
                     ->contain('Profiles', function (Query $q) {
                         return $q->select([
                             'Profiles.first_name',

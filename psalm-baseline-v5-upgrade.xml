@@ -1200,13 +1200,6 @@
       <code><![CDATA[$user->username]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltEe/AuditLog/tests/TestCase/Controller/Users/UsersEditControllerTest.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->profile]]></code>
-      <code><![CDATA[$user->username]]></code>
-    </InvalidPropertyFetch>
-  </file>
   <file src="plugins/PassboltEe/AuditLog/tests/TestCase/Controller/Users/UsersRecoverControllerTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
