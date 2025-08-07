@@ -86,6 +86,7 @@ class MetadataUpgradeTagsPostControllerTest extends AppIntegrationTestCaseV5
     public function testMetadataUpgradeTagsPostController_MetadataKey_Expired(): void
     {
         // create metadata key
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()
             ->withMetadataKey($expiredMetadataKey)
