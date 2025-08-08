@@ -6,6 +6,6 @@ Removing the beta label means that every new instance starts with encrypted meta
 
 For existing instances, the activation process has been simplified: administrators can decide with a single click whether their organisation is ready or would prefer to postpone the launch. Once enabled, the instance immediately supports the new resource types and their extended capabilities. Because the change may disrupt external integrations, existing content is not migrated automatically, migration remains the responsibility of content owners or administrators. It can be performed item-by-item by users in the main workspace or organisation-wide with the resource-metadata administration migration tool.
 
-## [5.4.0-test.2] - 2025-08-07
+## [5.4.0-test.3] - 2025-08-08
 ### Fixed
-- PB-44578 Align metadata setup settings entry point variable name with client
+- PB-44573 Ensure standalone custom fields is resource type is updated irrespective of instance being installed for the first time with v5.3.0 or v5.3.1
