@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-06-30 08:07\n"
+"POT-Creation-Date: 2025-08-07 13:12+0000\n"
+"PO-Revision-Date: 2025-08-08 13:25\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -396,6 +396,9 @@ msgstr "{0} 구성은 올바른 비어 있지 않은 문자열이어야 합니�
 
 msgid "Invalid expiry time {0}."
 msgstr "만료 시간 {0} 이(가) 잘못되었습니다."
+
+msgid "The user role ID must be one of the admin or user roles."
+msgstr "사용자 역할 ID는 관리자 또는 사용자 역할 중 하나여야 합니다."
 
 msgid "The identifier should not be empty."
 msgstr "식별자는 비워둘 수 없습니다."
@@ -880,6 +883,9 @@ msgstr "메타데이터 키 유형은 다음 중 하나여야 합니다: {0}."
 msgid "The resource type does not exist."
 msgstr "리소스 유형이 존재하지 않습니다."
 
+msgid "The resource type should not be deleted."
+msgstr "리소스 유형은 비워둘 수 없습니다."
+
 msgid "The permissions should contain the owner permission."
 msgstr "권한은 소유주의 권한을 포함해야 합니다."
 
@@ -910,9 +916,6 @@ msgstr "공유 메타데이터 키는 고유해야 합니다."
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "v5-비밀번호-문자열 리소스 유형은 만들 수 없습니다."
 
-msgid "The resource type should not be deleted."
-msgstr "리소스 유형은 비워둘 수 없습니다."
-
 msgid "The resource metadata provided can not be decrypted."
 msgstr "제공된 리소스 메타데이터를 복호화할 수 없습니다."
 
@@ -927,6 +930,9 @@ msgstr "리소스를 임시로 삭제해서는 안 됩니다."
 
 msgid "The user cannot delete this resource."
 msgstr "사용자는 이 리소스를 삭제할 수 없습니다."
+
+msgid "The resource type for this resource does not exist."
+msgstr "이 리소스에 대한 리소스 유형이 존재하지 않습니다."
 
 msgid "The name should be a valid ASCII string."
 msgstr "이름은 유효한 ASCII 문자열이어야 합니다."
@@ -987,9 +993,6 @@ msgstr "사용자이름 길이는 최대 {0} 자여야 합니다."
 
 msgid "The username is already in use."
 msgstr "사용자이름이 이미 사용 중입니다."
-
-msgid "The role identifier does not exist."
-msgstr "역할 식별자가 존재하지 않습니다."
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "사용자가 공유 콘텐츠의 단독 소유자가 되어서는 안 되며, 소유권을 다른 사용자에게 이전하세요."
@@ -1462,8 +1465,14 @@ msgstr "캐시가 작동 중입니다."
 msgid "Cache is NOT working."
 msgstr "캐시가 작동 중이지 않습니다."
 
+msgid "Deprecated `_cake_core_` cache configuration found."
+msgstr "더 이상 사용되지 않는 `_cake_core_` 캐시 구성이 발견되었습니다."
+
 msgid "Check the settings in {0}"
 msgstr "{0} 의 설정을 확인하세요."
+
+msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
+msgstr "{0} 구성 파일에서 `_cake_core_`를 `_cake_translations_`로 바꾸세요."
 
 msgid "Debug mode is off."
 msgstr "디버그 모드가 꺼져 있습니다."
@@ -1591,11 +1600,11 @@ msgstr "패스볼트를 사용하려면 intl 확장을 활성화해야 합니다
 msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "https://secure.php.net/manual/en/book.intl.php 를 참조하세요."
 
-msgid "The logs directory and its content are writable."
-msgstr "로그 디렉터리와 해당 콘텐츠는 쓰기 가능합니다."
+msgid "The logs directory {0} and its content are writable."
+msgstr "{0} 로그 디렉터리와 그 안의 파일들이 쓰기 가능합니다."
 
-msgid "The logs directory and its content are not writable."
-msgstr "로그 디렉터리와 해당 콘텐츠는 쓰기 가능지 않습니다."
+msgid "The logs directory {0} and its content are not writable."
+msgstr "{0} 로그 디렉터리와 그 안의 파일들이 쓰기가 불가능합니다."
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
 msgstr "웹 서버 사용자가 로그 디렉터리와 해당 내용을 쓸 수 있는지 확인하세요."
@@ -1903,12 +1912,6 @@ msgstr "키링이 정의되지 않았습니다."
 msgid "The keyring directory is not accessible by the current user: {0}"
 msgstr "현재 사용자가 키링 디렉토리에 액세스할 수 없습니다: {0}"
 
-msgid "Could not validate sub key data."
-msgstr "하위 키 데이터를 검사할 수 없습니다."
-
-msgid "Public key sub key id could not be found."
-msgstr "공개 키 하위 키 Id를 찾을 수 없습니다."
-
 msgid "Could not validate message data."
 msgstr "메시지 데이터를 검사할 수 없습니다."
 
@@ -2008,6 +2011,12 @@ msgstr "{0} 권한에 대한 검증이 실패되었습니다. {1}"
 msgid "Validation success for permission {0}"
 msgstr "{0} 권한에 대한 유효성 검증 성공"
 
+msgid "The permissions data must be an array."
+msgstr "권한 데이터는 배열이어야 합니다."
+
+msgid "The permissions data array keys must be integers."
+msgstr "권한 데이터 배열 키는 정수여야 합니다."
+
 msgid "Could not validate permissions data."
 msgstr "권한 데이터를 검사할 수 없습니다."
 
@@ -2031,6 +2040,9 @@ msgstr "{0} 리소스에 대한 검증이 실패되었습니다. {1}"
 
 msgid "Validation success for resource {0}"
 msgstr "{0} 리소스에 대한 유효성 검증 성공"
+
+msgid "The resource types associated to this resource does not exist."
+msgstr "이 리소스에 연결된 리소스 유형이 존재하지 않습니다."
 
 msgid "You are not allowed to update this resource."
 msgstr "이 리소스를 수정할 수 있는 권한이 없습니다."
@@ -2446,7 +2458,7 @@ msgstr "폴더를 삭제했습니다"
 msgid "{0} deleted a folder"
 msgstr "{0} 이(가) 폴더를 삭제함"
 
-msgid "log in passbolt"
+msgid "Log in passbolt"
 msgstr "패스볼트 로그인"
 
 msgid "{0} shared a folder with you"
@@ -2586,24 +2598,6 @@ msgstr "사용자 ID형식이 잘못되었습니다."
 
 msgid "Verify token has been already used in the past."
 msgstr "확인 토큰이 과거에 이미 사용되었습니다."
-
-msgid "Security warning!"
-msgstr "보안 경고!"
-
-msgid "An unknown user attempted to identify as {0}."
-msgstr "알 수 없는 사용자가 {0}으로 식별하려고 시도했습니다."
-
-msgid "This is a potential security issue."
-msgstr "잠재적인 보안 문제입니다."
-
-msgid "Please investigate!"
-msgstr "조사해주세요!"
-
-msgid "An unknown user attempted to steal your login data."
-msgstr "알 수 없는 사용자가 로그인 정보를 탈취하려고 시도했습니다."
-
-msgid "Please get in touch with one of your administrators."
-msgstr "관리자 중 한명에게 연락하세요."
 
 msgid "This is not a valid locale."
 msgstr "올바르지 않은 로케일입니다."
@@ -2995,6 +2989,24 @@ msgstr "{0} 이(가) 새로운 메타데이터 키를 수정했습니다"
 msgid "You edited the metadata settings"
 msgstr "메타데이터 설정을 수정했습니다"
 
+msgid "No active metadata key found."
+msgstr "활성 메타데이터 키를 찾을 수 없습니다."
+
+msgid "Active metadata key found or not required."
+msgstr "활성 메타데이터 키가 발견되었거나 필요하지 않습니다."
+
+msgid "The server has access to the metadata keys or does not require access to it."
+msgstr "서버가 메타데이터 키에 접근할 수 있거나 접근할 필요가 없습니다."
+
+msgid "The server does not have access to metadata key."
+msgstr "서버가 메타데이터 키에 접근할 수 없습니다."
+
+msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
+msgstr "영지식 모드가 꺼져 있으면 서버는 메타데이터 키에 액세스할 수 있어야 합니다."
+
+msgid "Without having access, the server won't be able to share the metadata private key with the users."
+msgstr "접근 권한이 없으면 서버는 메타데이터 개인 키를 사용자와 공유할 수 없습니다."
+
 msgid "No server metadata private key found."
 msgstr "서버 메타데이터 개인 키를 찾을 수 없습니다."
 
@@ -3006,6 +3018,24 @@ msgstr "서버가 메타데이터 개인 키를 복호화할 수 있습니다."
 
 msgid "Unable to decrypt the metadata private key."
 msgstr "메타데이터 개인 키를 복호화할 수 없습니다."
+
+msgid "Unable to decrypt the metadata private key (id: {0}) data."
+msgstr "메타데이터 개인 키(Id: {0}) 데이터를 해독할 수 없습니다."
+
+msgid "The metadata private key (id: {0}) cleartext data should be in JSON format."
+msgstr "메타데이터 개인 키(id: {0})의 평문 데이터는 JSON 형식이어야 합니다."
+
+msgid "The metadata private key (id: {0}) cleartext data should not be empty."
+msgstr "메타데이터 개인 키(Id: {0})의 평문 데이터는 비어 있을 수 없습니다."
+
+msgid "Unable to validate metadata private key (id: {0}) cleartext data."
+msgstr "메타데이터 개인 키(Id: {0})의 평문 데이터의 유효성을 검사할 수 없습니다."
+
+msgid "The server metadata private key is valid."
+msgstr "서버 메타데이터 개인 키가 유효합니다."
+
+msgid "The server metadata private key is not valid."
+msgstr "서버 메타데이터 개인 키가 유효하지 않습니다."
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "메타데이터 키가 없거나 삭제되었습니다."
@@ -3135,6 +3165,12 @@ msgstr "메타데이터 세션 키 데이터가 변경되었습니다."
 
 msgid "Could not save the metadata session keys, please try again later."
 msgstr "메타데이터 세션 키를 저장할 수 없습니다, 나중에 재시도 하세요."
+
+msgid "Unable to save the metadata settings."
+msgstr "메타데이터 설정을 저장할 수 없습니다."
+
+msgid "An active metadata key could not be found, create a key first."
+msgstr "활성 메타데이터 키를 찾을 수 없습니다. 먼저 키를 생성하세요."
 
 msgid "Could not prepare private key for server key."
 msgstr "서버 키에 대한 개인 키를 준비할 수 없습니다."
@@ -3298,9 +3334,6 @@ msgstr "새 비밀번호를 생성했습니다."
 msgid "{0} deleted a password."
 msgstr "{0} 에 의해 비밀번호가 삭제됨."
 
-msgid "Log in passbolt"
-msgstr "패스볼트 로그인"
-
 msgid "{0} shared a resource with you"
 msgstr "{0} 이(가) 당신과 리소스를 공유함"
 
@@ -3309,6 +3342,9 @@ msgstr "{0} 이(가) 당신과 리소스를 공유함."
 
 msgid "You have edited a resource."
 msgstr "리소스가 수정됨."
+
+msgid "{0} have edited a resource."
+msgstr "{0} 에 의해 리소스가 수정됨."
 
 msgid "Information about the transfer is required."
 msgstr "전송에 대한 정보가 필요합니다."
@@ -3832,6 +3868,12 @@ msgstr "{0} 이(가) 여러 비밀번호를 만료된 것으로 표시했습니�
 msgid "Some of your passwords expired"
 msgstr "비밀번호 중 일부가 만료되었습니다"
 
+msgid "You have passwords requiring your attention"
+msgstr "주의가 필요한 비밀번호가 있습니다"
+
+msgid "Some of your passwords are expiring today."
+msgstr "일부 비밀번호가 오늘 만료됩니다."
+
 msgid "{0} marked the password {1} as expired"
 msgstr "{0} 이(가) {1} 비밀번호를 만료된 것으로 표시했습니다"
 
@@ -3846,6 +3888,9 @@ msgstr "{0} 이(가) 비밀번호 만료 설정을 수정했습니다."
 
 msgid "The send password expire setting should be a boolean."
 msgstr "비밀번호 만료 보내기 설정은 참 또는 거짓이어야 합니다."
+
+msgid "Password expiry is not activated."
+msgstr "비밀번호 만료가 활성화되지 않았습니다."
 
 msgid "The password expiry setting does not exist."
 msgstr "비밀번호 만료 설정이 없습니다."
@@ -4446,6 +4491,60 @@ msgstr "'passbolt.plugins.smtpSettings.security' 구성 값이 잘못되었습�
 
 msgid "Errors: "
 msgstr "오류: "
+
+msgid "Could not retrieve the user key policies."
+msgstr "사용자 키 정책을 검색할 수 없습니다."
+
+msgid "Conflicting authentication parameters, provide user_id/token only when the user is not already signed in."
+msgstr "인증 매개변수가 충돌합니다. 사용자가 아직 로그인하지 않은 경우에만 user_id/token을 제공합니다."
+
+msgid "You are not authorized to access this location."
+msgstr "이 위치에 접근할 권한이 없습니다."
+
+msgid "Sign-in to passbolt, or provide a valid user ID and authentication token."
+msgstr "패스볼트에 로그인하거나 유효한 사용자 ID와 인증 토큰을 제공하세요."
+
+msgid "The user ID must be a valid UUID."
+msgstr "사용자 ID는 올바른 UUID여야 합니다."
+
+msgid "The authentication token must be a valid UUID."
+msgstr "인증 토큰은 올바른 UUID여야 합니다."
+
+msgid "Unable to authenticate the guest user with the provided credentials."
+msgstr "제공된 자격 증명으로 게스트 사용자를 인증할 수 없습니다."
+
+msgid "No registration authentication token found for the given user."
+msgstr "해당 사용자에 대한 등록 인증 토큰을 찾을 수 없습니다."
+
+msgid "The registration authentication token is expired."
+msgstr "등록 인증 토큰이 만료되었습니다."
+
+msgid "The preferred key type is required."
+msgstr "선호하는 키 유형이 필요합니다."
+
+msgid "The preferred key type should not be empty."
+msgstr "선호하는 키 유형은 비워둘 수 없습니다."
+
+msgid "The preferred key type should be one of the following: {0}."
+msgstr "선호하는 키 유형은 다음 중 하나여야 합니다: {0}."
+
+msgid "The preferred key type and size combination does not match."
+msgstr "선호하는 키 유형과 크기 조합이 일치하지 않습니다."
+
+msgid "The preferred key type and curve combination does not match."
+msgstr "선호하는 키 유형과 곡선 조합이 일치하지 않습니다."
+
+msgid "The preferred key size is required."
+msgstr "선호하는 키 크기가 필요합니다."
+
+msgid "The preferred key size should be one of the following: {0}."
+msgstr "선호하는 키 크기는 다음 중 하나여야 합니다: {0}."
+
+msgid "The preferred key curve is required."
+msgstr "선호하는 키 곡선이 필요합니다."
+
+msgid "The preferred key curve should be one of the following: {0}."
+msgstr "선호하는 키 곡선은 다음 중 하나여야 합니다: {0}."
 
 msgid "The data entered are not correct"
 msgstr "입력한 데이터가 올바르지 않습니다"
@@ -5140,6 +5239,9 @@ msgstr "패스볼트로 이동"
 msgid "{0} deleted {1} groups you were a member of."
 msgstr "{0} 이(가) 사용자가 속한 {1} 개 그룹을 삭제했습니다."
 
+msgid "log in passbolt"
+msgstr "패스볼트 로그인"
+
 msgid "Username: {0}"
 msgstr "사용자이름: {0}"
 
@@ -5176,7 +5278,7 @@ msgstr "{0} {1} 에서 이 사용자를 초대했습니다."
 msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
 msgstr "이 사용자는 공유 리소스 메타데이터에 대한 암호화 키가 누락되었습니다. 로그인한 후 사용자 작업 공간으로 이동하여 키를 수동으로 공유해 주세요."
 
-msgid "view users"
+msgid "View users"
 msgstr "사용자 보기"
 
 msgid "This email is an automatic notification sent by"
