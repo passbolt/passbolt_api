@@ -30,6 +30,7 @@ class ScimSetSettingsController extends AppController
      */
     public function setSettings(?string $id = null): void
     {
+        $this->assertJson();
         $this->User->assertIsAdmin();
 
         $service = new ScimSetSettingsService($this->User->getAccessControl());

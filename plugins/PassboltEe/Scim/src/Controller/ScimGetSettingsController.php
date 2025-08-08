@@ -29,6 +29,7 @@ class ScimGetSettingsController extends AppController
      */
     public function getSettings(): void
     {
+        $this->assertJson();
         $this->User->assertIsAdmin();
 
         $settings = (new ScimGetSettingsService())->getSettings();

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -13,6 +12,13 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         5.5.0
  */
-use Cake\Core\Configure;
 
+use Cake\Core\Configure;
+use Cake\Utility\Hash;
+
+// Merge config
+$mainConfig = Configure::read('passbolt.plugins.scim');
 Configure::load('Passbolt/Scim.config', 'default', true);
+$pluginConfig = Configure::read('passbolt.plugins.scim');
+$newConfig = Hash::merge($pluginConfig, $mainConfig);
+Configure::write('passbolt.plugins.scim', $newConfig);

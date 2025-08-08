@@ -31,6 +31,7 @@ class ScimDeleteSettingsController extends AppController
      */
     public function deleteSettings(?string $id): void
     {
+        $this->assertJson();
         $this->User->assertIsAdmin();
 
         // Check request sanity
