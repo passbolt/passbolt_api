@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-05-21 10:32+0000\n"
-"PO-Revision-Date: 2025-05-21 11:11\n"
+"POT-Creation-Date: 2025-08-07 13:34+0000\n"
+"PO-Revision-Date: 2025-08-08 13:25\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -396,6 +396,9 @@ msgstr "La configurazione `{0}` deve essere una stringa valida e non vuota."
 
 msgid "Invalid expiry time {0}."
 msgstr "Scadenza {0} non valida."
+
+msgid "The user role ID must be one of the admin or user roles."
+msgstr ""
 
 msgid "The identifier should not be empty."
 msgstr "L'identificatore non deve essere vuoto."
@@ -880,6 +883,9 @@ msgstr "Il tipo di chiave metadati dovrebbe essere uno dei seguenti: {0}."
 msgid "The resource type does not exist."
 msgstr "Il tipo di risorsa non esiste."
 
+msgid "The resource type should not be deleted."
+msgstr "Il tipo di risorsa non dovrebbe essere eliminato."
+
 msgid "The permissions should contain the owner permission."
 msgstr "I permessi devono contenere il permesso del proprietario."
 
@@ -910,9 +916,6 @@ msgstr ""
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Non è consentito creare tipi di risorse v5-password-string."
 
-msgid "The resource type should not be deleted."
-msgstr "Il tipo di risorsa non dovrebbe essere eliminato."
-
 msgid "The resource metadata provided can not be decrypted."
 msgstr "I metadati della risorsa fornita non possono essere decriptati."
 
@@ -927,6 +930,9 @@ msgstr "La risorsa non deve essere già stata eliminata temporaneamente."
 
 msgid "The user cannot delete this resource."
 msgstr "L'utente non può eliminare questa risorsa."
+
+msgid "The resource type for this resource does not exist."
+msgstr ""
 
 msgid "The name should be a valid ASCII string."
 msgstr "Il nome deve essere una stringa ASCII valida."
@@ -987,9 +993,6 @@ msgstr "Il nome utente deve avere una lunghezza massima di 255 caratteri."
 
 msgid "The username is already in use."
 msgstr "Nome utente già in uso."
-
-msgid "The role identifier does not exist."
-msgstr "L'identificatore di ruolo non esiste."
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "L'utente non deve essere l'unico proprietario di contenuti condivisi, trasferire la proprietà ad altri utenti."
@@ -1468,8 +1471,14 @@ msgstr "La cache funziona."
 msgid "Cache is NOT working."
 msgstr "La cache NON sta funzionando."
 
+msgid "Deprecated `_cake_core_` cache configuration found."
+msgstr ""
+
 msgid "Check the settings in {0}"
 msgstr "Verifica le impostazioni in {0}"
+
+msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
+msgstr ""
 
 msgid "Debug mode is off."
 msgstr "La modalità debug è disattivata."
@@ -1597,11 +1606,11 @@ msgstr "Devi abilitare l'estensione intl per usare Passbolt."
 msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "Consulta: https://secure.php.net/manual/en/book.intl.php"
 
-msgid "The logs directory and its content are writable."
-msgstr "La directory dei log e il suo contenuto sono scrivibili."
+msgid "The logs directory {0} and its content are writable."
+msgstr ""
 
-msgid "The logs directory and its content are not writable."
-msgstr "La directory dei log e il suo contenuto non sono scrivibili."
+msgid "The logs directory {0} and its content are not writable."
+msgstr ""
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
 msgstr "Assicurati che la directory logs e il suo contenuto siano scrivibili dall'utente del webserver."
@@ -1909,12 +1918,6 @@ msgstr "Il keyring non è definito."
 msgid "The keyring directory is not accessible by the current user: {0}"
 msgstr "La directory del keyring non è accessibile dall'utente corrente: {0}"
 
-msgid "Could not validate sub key data."
-msgstr "Impossibile convalidare i dati della sottochiave."
-
-msgid "Public key sub key id could not be found."
-msgstr "Impossibile trovare l'id della sottochiave della chiave pubblica."
-
 msgid "Could not validate message data."
 msgstr "Impossibile convalidare i dati del messaggio."
 
@@ -2014,6 +2017,12 @@ msgstr "Validazione del permesso {0} fallita. {1}"
 msgid "Validation success for permission {0}"
 msgstr "Validazione del permesso {0} riuscita"
 
+msgid "The permissions data must be an array."
+msgstr ""
+
+msgid "The permissions data array keys must be integers."
+msgstr ""
+
 msgid "Could not validate permissions data."
 msgstr "Impossibile validare i dati dei permessi."
 
@@ -2037,6 +2046,9 @@ msgstr "Validazione della risorsa {0} fallita. {1}"
 
 msgid "Validation success for resource {0}"
 msgstr "Validazione della risorsa {0} riuscita"
+
+msgid "The resource types associated to this resource does not exist."
+msgstr ""
 
 msgid "You are not allowed to update this resource."
 msgstr "Non ti è consentito aggiornare questa risorsa."
@@ -2452,7 +2464,7 @@ msgstr "Hai eliminato una cartella"
 msgid "{0} deleted a folder"
 msgstr "{0} ha eliminato una cartella"
 
-msgid "log in passbolt"
+msgid "Log in passbolt"
 msgstr "Accedi a passbolt"
 
 msgid "{0} shared a folder with you"
@@ -2592,24 +2604,6 @@ msgstr "Formato ID utente non valido."
 
 msgid "Verify token has been already used in the past."
 msgstr "Questo token di sicurezza è già stato usato in passato."
-
-msgid "Security warning!"
-msgstr "Avviso di sicurezza!"
-
-msgid "An unknown user attempted to identify as {0}."
-msgstr ""
-
-msgid "This is a potential security issue."
-msgstr "Si tratta di un potenziale problema di sicurezza."
-
-msgid "Please investigate!"
-msgstr "Si prega di indagare!"
-
-msgid "An unknown user attempted to steal your login data."
-msgstr ""
-
-msgid "Please get in touch with one of your administrators."
-msgstr "Si prega di contattare uno degli amministratori."
 
 msgid "This is not a valid locale."
 msgstr "Questa non è una lingua valida."
@@ -3001,6 +2995,24 @@ msgstr "{0} ha modificato le impostazioni dei metadati"
 msgid "You edited the metadata settings"
 msgstr "Hai modificato le impostazioni dei metadati"
 
+msgid "No active metadata key found."
+msgstr ""
+
+msgid "Active metadata key found or not required."
+msgstr ""
+
+msgid "The server has access to the metadata keys or does not require access to it."
+msgstr ""
+
+msgid "The server does not have access to metadata key."
+msgstr ""
+
+msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
+msgstr ""
+
+msgid "Without having access, the server won't be able to share the metadata private key with the users."
+msgstr ""
+
 msgid "No server metadata private key found."
 msgstr "Nessuna chiave privata di metadati del server trovata."
 
@@ -3012,6 +3024,24 @@ msgstr "Il server è in grado di decrittografare la chiave privata di metadati."
 
 msgid "Unable to decrypt the metadata private key."
 msgstr "Impossibile decrittografare la chiave privata di metadati."
+
+msgid "Unable to decrypt the metadata private key (id: {0}) data."
+msgstr ""
+
+msgid "The metadata private key (id: {0}) cleartext data should be in JSON format."
+msgstr ""
+
+msgid "The metadata private key (id: {0}) cleartext data should not be empty."
+msgstr ""
+
+msgid "Unable to validate metadata private key (id: {0}) cleartext data."
+msgstr ""
+
+msgid "The server metadata private key is valid."
+msgstr ""
+
+msgid "The server metadata private key is not valid."
+msgstr ""
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "La chiave di metadati non esiste o è stata eliminata."
@@ -3141,6 +3171,12 @@ msgstr "I dati della chiave di sessione dei metadati sono cambiati."
 
 msgid "Could not save the metadata session keys, please try again later."
 msgstr "Impossibile salvare le chiavi di sessione dei metadati, riprova più tardi."
+
+msgid "Unable to save the metadata settings."
+msgstr ""
+
+msgid "An active metadata key could not be found, create a key first."
+msgstr ""
 
 msgid "Could not prepare private key for server key."
 msgstr "Impossibile preparare la chiave privata per la chiave del server."
@@ -3304,9 +3340,6 @@ msgstr "Hai creato una nuova password."
 msgid "{0} deleted a password."
 msgstr ""
 
-msgid "Log in passbolt"
-msgstr "Accedi a passbolt"
-
 msgid "{0} shared a resource with you"
 msgstr "{0} ha condiviso una risorsa con te"
 
@@ -3315,6 +3348,9 @@ msgstr "{0} ha condiviso una risorsa con te."
 
 msgid "You have edited a resource."
 msgstr "Hai modificato una risorsa."
+
+msgid "{0} have edited a resource."
+msgstr ""
 
 msgid "Information about the transfer is required."
 msgstr "Sono richieste informazioni sul trasferimento."
@@ -3838,6 +3874,12 @@ msgstr "{0} ha contrassegnato diverse password come scadute"
 msgid "Some of your passwords expired"
 msgstr "Alcune delle tue password sono scadute"
 
+msgid "You have passwords requiring your attention"
+msgstr "Hai password che richiedono la tua attenzione"
+
+msgid "Some of your passwords are expiring today."
+msgstr ""
+
 msgid "{0} marked the password {1} as expired"
 msgstr "{0} ha contrassegnato la password {1} come scaduta"
 
@@ -3852,6 +3894,9 @@ msgstr "{0} ha modificato le impostazioni di scadenza della password"
 
 msgid "The send password expire setting should be a boolean."
 msgstr "Il parametro per l’invio della scadenza della password deve essere un booleano."
+
+msgid "Password expiry is not activated."
+msgstr "La scadenza della password non è attivata."
 
 msgid "The password expiry setting does not exist."
 msgstr "L'impostazione di scadenza della password non esiste."
@@ -4452,6 +4497,60 @@ msgstr "Valori di configurazione non validi in `passbolt.plugins.smtpSettings.se
 
 msgid "Errors: "
 msgstr "Errori: "
+
+msgid "Could not retrieve the user key policies."
+msgstr ""
+
+msgid "Conflicting authentication parameters, provide user_id/token only when the user is not already signed in."
+msgstr ""
+
+msgid "You are not authorized to access this location."
+msgstr ""
+
+msgid "Sign-in to passbolt, or provide a valid user ID and authentication token."
+msgstr ""
+
+msgid "The user ID must be a valid UUID."
+msgstr ""
+
+msgid "The authentication token must be a valid UUID."
+msgstr ""
+
+msgid "Unable to authenticate the guest user with the provided credentials."
+msgstr ""
+
+msgid "No registration authentication token found for the given user."
+msgstr ""
+
+msgid "The registration authentication token is expired."
+msgstr ""
+
+msgid "The preferred key type is required."
+msgstr ""
+
+msgid "The preferred key type should not be empty."
+msgstr ""
+
+msgid "The preferred key type should be one of the following: {0}."
+msgstr ""
+
+msgid "The preferred key type and size combination does not match."
+msgstr ""
+
+msgid "The preferred key type and curve combination does not match."
+msgstr ""
+
+msgid "The preferred key size is required."
+msgstr ""
+
+msgid "The preferred key size should be one of the following: {0}."
+msgstr ""
+
+msgid "The preferred key curve is required."
+msgstr ""
+
+msgid "The preferred key curve should be one of the following: {0}."
+msgstr ""
 
 msgid "The data entered are not correct"
 msgstr "I dati inseriti non sono corretti"
@@ -5932,12 +6031,6 @@ msgstr "Criterio: {0}"
 msgid "Remember me for a month: {0}"
 msgstr "Ricordami per un mese: {0}"
 
-msgid "view it in passbolt"
-msgstr "visualizza in Passbolt"
-
-msgid "You have passwords requiring your attention"
-msgstr "Hai password che richiedono la tua attenzione"
-
 msgid "Some of your passwords are expired."
 msgstr "Alcune delle tue password sono scadute."
 
@@ -5949,9 +6042,6 @@ msgstr "Alcune delle tue password sono scadute o scadranno tra {0} giorni."
 
 msgid "The send password about to expire setting should be a boolean."
 msgstr "L'impostazione per l'invio della password in scadenza deve essere un booleano."
-
-msgid "Password expiry is not activated."
-msgstr "La scadenza della password non è attivata."
 
 msgid "Password expiry email notifications are disabled."
 msgstr "Le notifiche email per la scadenza della password sono disattivate."
@@ -5988,6 +6078,9 @@ msgstr "Le impostazioni dei criteri della password sono state aggiornate da {0}.
 
 msgid "you"
 msgstr "tu"
+
+msgid "view it in passbolt"
+msgstr "visualizza in Passbolt"
 
 msgid "SsoRecover plugin is disabled."
 msgstr "Il plugin SsoRecover è disattivato."
@@ -6154,6 +6247,9 @@ msgstr "Lo scope deve esseree una stringa valida."
 msgid "The scope is too large."
 msgstr "Lo scope è troppo grande."
 
+msgid "SSO settings edit endpoints are disabled."
+msgstr ""
+
 msgid "The user is not active."
 msgstr "L'utente non è attivo."
 
@@ -6270,6 +6366,18 @@ msgstr "Per risolvere, puoi impostare la variabile d'ambiente PASSBOLT_SECURITY_
 
 msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
 msgstr "Oppure imposta passbolt.security.sso.sslVerify su true in {0}."
+
+msgid "The endpoints for updating the SSO configurations are disabled."
+msgstr ""
+
+msgid "The endpoints for updating the SSO configurations are enabled."
+msgstr ""
+
+msgid "It is recommended to disable endpoints for updating the SSO configurations."
+msgstr ""
+
+msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
+msgstr ""
 
 msgid "The user is missing for the SSO state."
 msgstr "Manca l'utente per lo stato SSO."
@@ -6460,6 +6568,9 @@ msgstr "Il provider SSO {0} è stato testato e attivato con successo da {1}. "
 msgid "All users can now use Single Sign-on to perform authentication."
 msgstr "Da questo momento tutti gli utenti possono utilizzare il Single Sign-On per eseguire l'autenticazione."
 
+msgid "Viewq  it in passbolt"
+msgstr ""
+
 msgid "The SSO setting has been deleted by {0}."
 msgstr "L'impostazione SSO è stata eliminata da {0}."
 
@@ -6628,14 +6739,14 @@ msgstr "ti invitiamo a contattarci a <info>sales@passbolt.com</info>"
 msgid "Only administrators can view the subscription details."
 msgstr "Solo gli amministratori possono vedere i dettagli dell'abbonamento."
 
-msgid "No active admins were found."
-msgstr "Nessun amministratore attivo trovato."
-
 msgid "The file {0} could not be found."
 msgstr "Impossibile trovare il file {0}."
 
 msgid "The file {0} could not be read."
 msgstr "Impossibile leggere il file {0}."
+
+msgid "No active admins were found."
+msgstr "Nessun amministratore attivo trovato."
 
 msgid "Only administrators can update the subscription details."
 msgstr "Solo gli amministratori possono aggiornare i dettagli dell'abbonamento."
@@ -7018,6 +7129,9 @@ msgstr "vai a passbolt"
 msgid "{0} deleted {1} groups you were a member of."
 msgstr "{0} ha eliminato {1} gruppi di cui eri membro."
 
+msgid "log in passbolt"
+msgstr "Accedi a passbolt"
+
 msgid "Username: {0}"
 msgstr "Username: {0}"
 
@@ -7054,8 +7168,8 @@ msgstr "Questo utente è stato invitato da {0} {1}."
 msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
 msgstr "A questo utente manca la chiave di crittografia per i metadati della risorsa condivisa. Accedi e vai allo spazio di lavoro utente per condividere manualmente la chiave con lui."
 
-msgid "view users"
-msgstr "visualizza utenti"
+msgid "View users"
+msgstr ""
 
 msgid "This email is an automatic notification sent by"
 msgstr "Questa email è una notifica automatica inviata da"
