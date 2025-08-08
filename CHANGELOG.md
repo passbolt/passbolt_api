@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.4.0-test.3] - 2025-08-08
+### Fixed
+- PB-44573 Ensure standalone custom fields is resource type is updated irrespective of instance being installed for the first time with v5.3.0 or v5.3.1
+
 ## [5.4.0-test.2] - 2025-08-07
 ### Fixed
 - PB-44578 Align metadata setup settings entry point variable name with client
