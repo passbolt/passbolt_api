@@ -14,6 +14,7 @@ declare(strict_types=1);
  * @since         5.4.0
  */
 
+use App\Utility\UuidFactory;
 use Migrations\AbstractMigration;
 use Passbolt\ResourceTypes\Model\Definition\SlugDefinition;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
@@ -55,8 +56,14 @@ class V540UpdateV5ResourceTypesDefinitions extends AbstractMigration
         // Update v5 standalone custom fields definition.
         $this->getUpdateBuilder()
             ->update('resource_types')
-            ->set('definition', SlugDefinition::v5CustomFields())
-            ->where(['slug' => ResourceType::SLUG_V5_CUSTOM_FIELD_STANDALONE])
+            ->set([
+                'definition' => SlugDefinition::v5CustomFields(),
+                // The slug has changed between v5.3.0 & v5.3.1 and no additional migration was added.
+                // It's safer to update it to ensure only one slug is in use.
+                'slug' => ResourceType::SLUG_V5_CUSTOM_FIELD_STANDALONE,
+            ])
+            // The slug has changed between v5.3.0 & v5.3.1, it's safer to use the id to filter.
+            ->where(['id' => UuidFactory::uuid('resource-types.id.v5-custom-fields')])
             ->execute();
     }
 }
