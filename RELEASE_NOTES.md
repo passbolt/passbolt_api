@@ -1,14 +1,24 @@
 Release song: https://www.youtube.com/watch?v=kymdKYtkJbQ
 
-Passbolt is thrilled to announce that the v5.4.0 API Release Candidate is officially available for testing.
+Passbolt 5.4.0 ships with encrypted metadata and the accompanying new resource types promoted to stable. These capabilities have been battle-tested for months, and the most remaining edge cases have been smoothed out so they can now be enabled for everyone.
 
-This version ships with encrypted metadata and the accompanying new resource types promoted to stable. These capabilities have been battle-tested for months, and the most remaining edge cases have been smoothed out so they can now be enabled for everyone. In addition, it also improves performance for large organisations that manage substantial numbers of users or resources and support for Czech language.
+Removing the beta label means that every new instance starts with encrypted metadata activated by default. As a result, features introduced in previous releases, such as icons, multiple URIs and custom fields, are available from day one without any action from end-users.
 
-Head to GitHub and dive in! Make sure to follow the steps [here](https://community.passbolt.com/t/passbolt-beta-testing-how-to/7894). As always, your feedback is invaluable, give it a try and report any issues you come across.
+For existing instances, the activation process has been simplified: administrators can decide with a single click whether their organisation is ready or would prefer to postpone the launch. Once enabled, the instance immediately supports the new resource types and their extended capabilities.
 
-Enjoy the testing journey! ❤️
+Because the change may disrupt external integrations, existing content is not migrated automatically, migration remains the responsibility of content owners or administrators. It can be performed item-by-item by users in the main workspace or organisation-wide with the resource-metadata administration migration tool.
 
-## [5.4.0-rc.1] - 2025-08-11
+Revisiting resource capabilities was also an opportunity to increase the maximum size of secret notes to 50 000 characters, leaving ample room for full certificate chains, keys of any flavour or any long text you need to keep encrypted.
+
+This release further improves cryptographic performance by introducing elliptic-curve keys (Curve25519/Ed25519) for new users. These keys provide security comparable to RSA-3072 while significantly reducing processing time and payload size.
+
+Performance has been tuned for large organisations that manage substantial numbers of users or resources. Among other improvements: Users' workspace now opens more quickly, and deleting multiple resources generates fewer I/O operations.
+
+Czech joins the list of supported languages, allowing native speakers to use Passbolt entirely in their own words, vítejte!
+
+Many thanks to everyone who reported issues and tested encrypted metadata over the past months. Your feedback made this release possible and brings these new features to all users today.
+
+## [5.4.0] - 2025-08-12
 ### Added
 - PB-43713 Translate the application in Czech
 - PB-44285 Add endpoint to help clients enable E2EE by default for new instances
