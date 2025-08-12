@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-05-21 11:09\n"
+"POT-Creation-Date: 2025-08-07 13:12+0000\n"
+"PO-Revision-Date: 2025-08-08 13:25\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian\n"
 "MIME-Version: 1.0\n"
@@ -396,6 +396,9 @@ msgstr "Configurația `{0}` trebuie să fie un șir valid și ne-gol."
 
 msgid "Invalid expiry time {0}."
 msgstr "Timp de expirare invalid {0}."
+
+msgid "The user role ID must be one of the admin or user roles."
+msgstr ""
 
 msgid "The identifier should not be empty."
 msgstr "Identificatorul nu trebuie să fie gol."
@@ -880,6 +883,9 @@ msgstr "Tipul cheii de metadate ar trebui să fie unul dintre următoarele: {0}.
 msgid "The resource type does not exist."
 msgstr "Tipul de resursă nu există."
 
+msgid "The resource type should not be deleted."
+msgstr "Tipul resursei nu ar trebui să fie șters."
+
 msgid "The permissions should contain the owner permission."
 msgstr "Permisiunile trebuie să conțină permisiunea proprietarului."
 
@@ -910,9 +916,6 @@ msgstr ""
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Crearea de resurse de tip v5-password-string nu este permisă."
 
-msgid "The resource type should not be deleted."
-msgstr "Tipul resursei nu ar trebui să fie șters."
-
 msgid "The resource metadata provided can not be decrypted."
 msgstr "Metadatele furnizate pentru resursă nu pot fi decriptate."
 
@@ -927,6 +930,9 @@ msgstr "Resursa nu ar trebui să fie deja ștearsă."
 
 msgid "The user cannot delete this resource."
 msgstr "Utilizatorul nu poate șterge această resursă."
+
+msgid "The resource type for this resource does not exist."
+msgstr ""
 
 msgid "The name should be a valid ASCII string."
 msgstr "Numele trebuie să fie un şir ASCII valid."
@@ -987,9 +993,6 @@ msgstr "Lungimea numelui de utilizator trebuie să fie de maximum 255 de caracte
 
 msgid "The username is already in use."
 msgstr "Numele de utilizator este deja folosit."
-
-msgid "The role identifier does not exist."
-msgstr "Identificatorul de rol nu există."
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "Utilizatorul nu trebuie să fie singurul proprietar al conținutului partajat, transferă proprietatea și către alți utilizatori."
@@ -1462,8 +1465,14 @@ msgstr "Cache-ul funcționează."
 msgid "Cache is NOT working."
 msgstr "Cache-ul NU funcționează."
 
+msgid "Deprecated `_cake_core_` cache configuration found."
+msgstr ""
+
 msgid "Check the settings in {0}"
 msgstr "Verificați setările în {0}"
+
+msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
+msgstr ""
 
 msgid "Debug mode is off."
 msgstr "Modul debug este dezactivat."
@@ -1591,11 +1600,11 @@ msgstr "Trebuie să activați extensia intl pentru a utiliza Passbolt."
 msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "Vedeți: https://secure.php.net/manual/en/book.intl.php"
 
-msgid "The logs directory and its content are writable."
-msgstr "Directorul logs și conținutul acestuia permit scrierea."
+msgid "The logs directory {0} and its content are writable."
+msgstr ""
 
-msgid "The logs directory and its content are not writable."
-msgstr "Directorul logs și conținutul acestuia nu permit scrierea."
+msgid "The logs directory {0} and its content are not writable."
+msgstr ""
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
 msgstr "Asigurați-vă că directorul logs și conținutul său sunt accesibile pentru scriere de către utilizatorul webserverului."
@@ -1903,12 +1912,6 @@ msgstr "Keyring-ul nu este definit."
 msgid "The keyring directory is not accessible by the current user: {0}"
 msgstr "Directorul keyring nu este accesibil de către utilizatorul curent: {0}"
 
-msgid "Could not validate sub key data."
-msgstr "Nu s-au putut valida datele sub-cheii."
-
-msgid "Public key sub key id could not be found."
-msgstr "Id-ul sub-cheii publice nu a putut fi găsit."
-
 msgid "Could not validate message data."
 msgstr "Nu s-au putut valida datele mesajului."
 
@@ -2008,6 +2011,12 @@ msgstr "Validarea a eșuat pentru permisiunea {0}. {1}"
 msgid "Validation success for permission {0}"
 msgstr "Validare reușită pentru permisiunea {0}"
 
+msgid "The permissions data must be an array."
+msgstr ""
+
+msgid "The permissions data array keys must be integers."
+msgstr ""
+
 msgid "Could not validate permissions data."
 msgstr "Nu s-au putut valida datele permisiunilor."
 
@@ -2031,6 +2040,9 @@ msgstr "Validare eșuată pentru resursa {0}. {1}"
 
 msgid "Validation success for resource {0}"
 msgstr "Validare reușită pentru resursa {0}"
+
+msgid "The resource types associated to this resource does not exist."
+msgstr ""
 
 msgid "You are not allowed to update this resource."
 msgstr "Nu ai permisiunea de a actualiza această resursă."
@@ -2446,8 +2458,8 @@ msgstr "Ați șters un folder"
 msgid "{0} deleted a folder"
 msgstr "{0} a șters un folder"
 
-msgid "log in passbolt"
-msgstr "accesează Passbolt"
+msgid "Log in passbolt"
+msgstr "Accesează Passbolt"
 
 msgid "{0} shared a folder with you"
 msgstr "{0} a partajat un folder cu tine"
@@ -2586,24 +2598,6 @@ msgstr "Format invalid pentru Id-ul utilizatorului."
 
 msgid "Verify token has been already used in the past."
 msgstr "Token-ul de verificare a fost deja folosit în trecut."
-
-msgid "Security warning!"
-msgstr "Avertisment de securitate!"
-
-msgid "An unknown user attempted to identify as {0}."
-msgstr ""
-
-msgid "This is a potential security issue."
-msgstr "Aceasta este o posibilă problemă de securitate."
-
-msgid "Please investigate!"
-msgstr "Vă rugăm să investigați!"
-
-msgid "An unknown user attempted to steal your login data."
-msgstr ""
-
-msgid "Please get in touch with one of your administrators."
-msgstr "Vă rugăm să luați legătura cu unul dintre administratorii dumneavoastră."
 
 msgid "This is not a valid locale."
 msgstr "Acesta nu este un locale valid."
@@ -2995,6 +2989,24 @@ msgstr "{0} a editat setările de metadata"
 msgid "You edited the metadata settings"
 msgstr "Ați editat setările de metadata"
 
+msgid "No active metadata key found."
+msgstr ""
+
+msgid "Active metadata key found or not required."
+msgstr ""
+
+msgid "The server has access to the metadata keys or does not require access to it."
+msgstr ""
+
+msgid "The server does not have access to metadata key."
+msgstr ""
+
+msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
+msgstr ""
+
+msgid "Without having access, the server won't be able to share the metadata private key with the users."
+msgstr ""
+
 msgid "No server metadata private key found."
 msgstr "Nu s-a găsit nicio cheie privată de metadata a serverului."
 
@@ -3006,6 +3018,24 @@ msgstr "Serverul poate decripta cheia privată de metadata."
 
 msgid "Unable to decrypt the metadata private key."
 msgstr "Imposibil de decriptat cheia privată de metadata."
+
+msgid "Unable to decrypt the metadata private key (id: {0}) data."
+msgstr ""
+
+msgid "The metadata private key (id: {0}) cleartext data should be in JSON format."
+msgstr ""
+
+msgid "The metadata private key (id: {0}) cleartext data should not be empty."
+msgstr ""
+
+msgid "Unable to validate metadata private key (id: {0}) cleartext data."
+msgstr ""
+
+msgid "The server metadata private key is valid."
+msgstr ""
+
+msgid "The server metadata private key is not valid."
+msgstr ""
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "Cheia de metadata nu există sau a fost ștearsă."
@@ -3135,6 +3165,12 @@ msgstr "Datele cheii de sesiune de metadata s-au schimbat."
 
 msgid "Could not save the metadata session keys, please try again later."
 msgstr "Cheile de sesiune de metadata nu au putut fi salvate, vă rugăm să încercați mai târziu."
+
+msgid "Unable to save the metadata settings."
+msgstr ""
+
+msgid "An active metadata key could not be found, create a key first."
+msgstr ""
 
 msgid "Could not prepare private key for server key."
 msgstr "Nu s-a putut pregăti cheia privată pentru cheia serverului."
@@ -3298,9 +3334,6 @@ msgstr "Ați creat o nouă parolă."
 msgid "{0} deleted a password."
 msgstr ""
 
-msgid "Log in passbolt"
-msgstr "Accesează Passbolt"
-
 msgid "{0} shared a resource with you"
 msgstr "{0} a partajat o resursă cu dvs"
 
@@ -3309,6 +3342,9 @@ msgstr "{0} a partajat o resursă cu dvs."
 
 msgid "You have edited a resource."
 msgstr "Ați editat o resursă."
+
+msgid "{0} have edited a resource."
+msgstr ""
 
 msgid "Information about the transfer is required."
 msgstr "Sunt necesare informații cu privire la transfer."
@@ -3832,6 +3868,12 @@ msgstr "{0} a marcat mai multe parole ca fiind expirate"
 msgid "Some of your passwords expired"
 msgstr "Unele dintre parolele dvs. au expirat"
 
+msgid "You have passwords requiring your attention"
+msgstr "Aveți parole care necesită atenția dvs"
+
+msgid "Some of your passwords are expiring today."
+msgstr ""
+
 msgid "{0} marked the password {1} as expired"
 msgstr "{0} a marcat parola {1} ca fiind expirată"
 
@@ -3846,6 +3888,9 @@ msgstr "{0} a modificat setările de expirare a parolei"
 
 msgid "The send password expire setting should be a boolean."
 msgstr "Setarea de trimitere pentru expirarea parolei ar trebui să fie booleană."
+
+msgid "Password expiry is not activated."
+msgstr "Expirarea parolei nu este activată."
 
 msgid "The password expiry setting does not exist."
 msgstr "Setarea de expirare a parolei nu există."
@@ -4446,6 +4491,60 @@ msgstr "Valori de configurare invalide pentru `passbolt.plugins.smtpSettings.sec
 
 msgid "Errors: "
 msgstr "Erori: "
+
+msgid "Could not retrieve the user key policies."
+msgstr ""
+
+msgid "Conflicting authentication parameters, provide user_id/token only when the user is not already signed in."
+msgstr ""
+
+msgid "You are not authorized to access this location."
+msgstr ""
+
+msgid "Sign-in to passbolt, or provide a valid user ID and authentication token."
+msgstr ""
+
+msgid "The user ID must be a valid UUID."
+msgstr ""
+
+msgid "The authentication token must be a valid UUID."
+msgstr ""
+
+msgid "Unable to authenticate the guest user with the provided credentials."
+msgstr ""
+
+msgid "No registration authentication token found for the given user."
+msgstr ""
+
+msgid "The registration authentication token is expired."
+msgstr ""
+
+msgid "The preferred key type is required."
+msgstr ""
+
+msgid "The preferred key type should not be empty."
+msgstr ""
+
+msgid "The preferred key type should be one of the following: {0}."
+msgstr ""
+
+msgid "The preferred key type and size combination does not match."
+msgstr ""
+
+msgid "The preferred key type and curve combination does not match."
+msgstr ""
+
+msgid "The preferred key size is required."
+msgstr ""
+
+msgid "The preferred key size should be one of the following: {0}."
+msgstr ""
+
+msgid "The preferred key curve is required."
+msgstr ""
+
+msgid "The preferred key curve should be one of the following: {0}."
+msgstr ""
 
 msgid "The data entered are not correct"
 msgstr "Datele introduse nu sunt corecte"
@@ -5140,6 +5239,9 @@ msgstr "accesează Passbolt"
 msgid "{0} deleted {1} groups you were a member of."
 msgstr "{0} a șters {1} grupuri din care erai membru."
 
+msgid "log in passbolt"
+msgstr "accesează Passbolt"
+
 msgid "Username: {0}"
 msgstr "Nume utilizator: {0}"
 
@@ -5176,8 +5278,8 @@ msgstr "Acest utilizator {0} a fost invitat de către {1}."
 msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
 msgstr "Îi lipsește cheii acestui utilizator cheia de criptare pentru metadata resursei partajate. Vă rugăm să vă autentificați, să accesați spațiul de lucru al utilizatorului și să partajați manual cheia cu acesta."
 
-msgid "view users"
-msgstr "vizualizează utilizatorii"
+msgid "View users"
+msgstr ""
 
 msgid "This email is an automatic notification sent by"
 msgstr "Acest e-mail este o notificare automată trimisă de către"

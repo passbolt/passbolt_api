@@ -19,8 +19,8 @@ namespace App\Test\TestCase\Service\Resources;
 
 use App\Service\Resources\ResourcesCleanDescriptionOnPasswordAndDescriptionTypeService;
 use App\Test\Factory\ResourceFactory;
-use App\Utility\UuidFactory;
 use Cake\TestSuite\TestCase;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * Part of the logic of this test is handled in the ResourcesAddControllerTest.
@@ -36,12 +36,11 @@ class ResourcesCleanDescriptionOnPasswordAndDescriptionTypeServiceTest extends T
         $description = 'Foo';
         ResourceFactory::make($nResourcesToClean)
             ->setField('description', $description)
-            ->setField('resource_type_id', UuidFactory::uuid('resource-types.id.password-and-description'))
             ->persist();
 
         ResourceFactory::make(2)
             ->setField('description', 'Bar')
-            ->setField('resource_type_id', UuidFactory::uuid('bar'))
+            ->with('ResourceTypes', ResourceTypeFactory::make()->standaloneTotp())
             ->persist();
 
         (new ResourcesCleanDescriptionOnPasswordAndDescriptionTypeService())->clean();

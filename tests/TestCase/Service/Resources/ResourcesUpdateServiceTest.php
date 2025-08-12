@@ -29,6 +29,7 @@ use App\Test\Lib\Model\SecretsModelTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
@@ -43,7 +44,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
     use SecretsModelTrait;
 
     /**
-     * @var ResourcesTable
+     * @var \App\Model\Table\ResourcesTable
      */
     private $resourcesTable;
 
@@ -236,6 +237,28 @@ class ResourcesUpdateServiceTest extends AppTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (NotFoundException $e) {
             $this->assertEquals('The resource does not exist.', $e->getMessage());
+        }
+    }
+
+    public function testUpdateResources_Error_ResourceTypeDeleted(): void
+    {
+        $user = UserFactory::make()->persist();
+        $r1 = ResourceFactory::make()
+            ->with('ResourceTypes', ResourceTypeFactory::make()->passwordAndDescription()->deleted())
+            ->withPermissionsFor([$user])
+            ->persist();
+
+        try {
+            $this->service->update($this->makeUac($user), $r1->id, new MetadataResourceDto([
+                'name' => 'R1 name updated',
+                'username' => 'R1 username updated',
+                'uri' => 'https://r1-updated.com',
+                'description' => 'R1 description updated',
+            ]));
+        } catch (Exception $e) {
+            $this->assertInstanceOf(ValidationException::class, $e);
+            $this->assertArrayHasKey('resource_type_id', $e->getErrors());
+            $this->assertArrayHasKey('resource_type_is_not_soft_deleted', $e->getErrors()['resource_type_id']);
         }
     }
 }

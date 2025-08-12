@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-06-12 12:18\n"
+"POT-Creation-Date: 2025-08-07 13:12+0000\n"
+"PO-Revision-Date: 2025-08-08 13:25\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -396,6 +396,9 @@ msgstr "Nastavitev \"{0}\" mora biti veljaven neprazen niz."
 
 msgid "Invalid expiry time {0}."
 msgstr "Neveljaven čas poteka {0}."
+
+msgid "The user role ID must be one of the admin or user roles."
+msgstr ""
 
 msgid "The identifier should not be empty."
 msgstr "Identifikator ne sme biti prazen."
@@ -880,6 +883,9 @@ msgstr "Tip ključa metapodatkov mora biti eden izmed naslednjih: {0}."
 msgid "The resource type does not exist."
 msgstr "Tip vira ne obstaja."
 
+msgid "The resource type should not be deleted."
+msgstr "Tip vira ne sme biti izbrisan."
+
 msgid "The permissions should contain the owner permission."
 msgstr "Dovoljenja morajo vsebovati dovoljenje lastnika."
 
@@ -910,9 +916,6 @@ msgstr "Ključ metapodatkov v skupni rabi mora biti edinstven."
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Ustvarjanje tipov vira v5-password-string ni dovoljeno."
 
-msgid "The resource type should not be deleted."
-msgstr "Tip vira ne sme biti izbrisan."
-
 msgid "The resource metadata provided can not be decrypted."
 msgstr "Podanih metapodatkov vira ni mogoče dešifrirati."
 
@@ -927,6 +930,9 @@ msgstr "Vir ne sme biti že mehko izbrisan."
 
 msgid "The user cannot delete this resource."
 msgstr "Uporabnik ne more izbrisati tega vira."
+
+msgid "The resource type for this resource does not exist."
+msgstr ""
 
 msgid "The name should be a valid ASCII string."
 msgstr "Ime mora biti veljaven niz ASCII."
@@ -987,9 +993,6 @@ msgstr "Dolžina uporabniškega imena naj bo največ 255 znakov."
 
 msgid "The username is already in use."
 msgstr "Uporabniško ime je že v uporabi."
-
-msgid "The role identifier does not exist."
-msgstr "Identifikator vloge ne obstaja."
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "Uporabnik ne sme biti edini lastnik skupne vsebine, prenesite lastništvo na druge uporabnike."
@@ -1462,8 +1465,14 @@ msgstr "Predpomnilnik deluje."
 msgid "Cache is NOT working."
 msgstr "Predpomnilnik ne deluje."
 
+msgid "Deprecated `_cake_core_` cache configuration found."
+msgstr ""
+
 msgid "Check the settings in {0}"
 msgstr "Preverite nastavitve v {0}"
+
+msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
+msgstr ""
 
 msgid "Debug mode is off."
 msgstr "Načun za razhroščevanje je izklopljen."
@@ -1591,11 +1600,11 @@ msgstr "Omogočiti morate razširitev intl za uporabo Passbolt."
 msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "Glej: https://secure.php.net/manual/en/book.intl.php"
 
-msgid "The logs directory and its content are writable."
-msgstr "Imenik logs in njegova vsebina sta zapisljiva."
+msgid "The logs directory {0} and its content are writable."
+msgstr ""
 
-msgid "The logs directory and its content are not writable."
-msgstr "Imenik logs in njegova vsebina nista zapisljiva."
+msgid "The logs directory {0} and its content are not writable."
+msgstr ""
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
 msgstr "Prepričajte se, da je imenik z dnevniki in njegova vsebina zapisljiva za uporabnika spletnika."
@@ -1903,12 +1912,6 @@ msgstr "Obroč s ključi ni definiran."
 msgid "The keyring directory is not accessible by the current user: {0}"
 msgstr "Imenik obroča s ključi ni dostopen trenutnemu uporabniku: {0}"
 
-msgid "Could not validate sub key data."
-msgstr "Ni bilo mogoče potrditi podatkov podključa."
-
-msgid "Public key sub key id could not be found."
-msgstr "ID podključa javnega ključa ni bilo mogoče najti."
-
 msgid "Could not validate message data."
 msgstr "Ni bilo mogoče potrditi podatkov sporočila."
 
@@ -2008,6 +2011,12 @@ msgstr "Preverjanje za dovoljenje {0} ni uspelo. {1}"
 msgid "Validation success for permission {0}"
 msgstr "Preverjanje za dovoljenje {0} je bilo uspešno"
 
+msgid "The permissions data must be an array."
+msgstr ""
+
+msgid "The permissions data array keys must be integers."
+msgstr ""
+
 msgid "Could not validate permissions data."
 msgstr "Podatke dovoljenj ni bilo mogoče preveriti."
 
@@ -2031,6 +2040,9 @@ msgstr "Preverjanje za vir {0} ni uspelo. {1}"
 
 msgid "Validation success for resource {0}"
 msgstr "Preverjanje za vir {0} je bilo uspešno"
+
+msgid "The resource types associated to this resource does not exist."
+msgstr ""
 
 msgid "You are not allowed to update this resource."
 msgstr "Ni vam dovoljeno posodobiti ta vir."
@@ -2446,8 +2458,8 @@ msgstr "Izbrišli ste mapo"
 msgid "{0} deleted a folder"
 msgstr "{0} je izbrisal mapo"
 
-msgid "log in passbolt"
-msgstr "prijavite se v passbolt"
+msgid "Log in passbolt"
+msgstr "Prijavi se v passbolt"
 
 msgid "{0} shared a folder with you"
 msgstr "{0} je z vami delil mapo"
@@ -2586,24 +2598,6 @@ msgstr "Neveljaven format uporabniškega ID-ja."
 
 msgid "Verify token has been already used in the past."
 msgstr "Žeton za preverjanje je že bil uporabljen."
-
-msgid "Security warning!"
-msgstr "Varnostno opozorilo!"
-
-msgid "An unknown user attempted to identify as {0}."
-msgstr "Neznani uporabnik se je poskušal identificirati kot {0}."
-
-msgid "This is a potential security issue."
-msgstr "To je mogoče varnostno tveganje."
-
-msgid "Please investigate!"
-msgstr "Prosimo, raziščite!"
-
-msgid "An unknown user attempted to steal your login data."
-msgstr "Neznani uporabnik je poskušal ukrasti vaše prijavne podatke."
-
-msgid "Please get in touch with one of your administrators."
-msgstr "Prosimo, stori kontakt z enim izmed vaših administratorjev."
 
 msgid "This is not a valid locale."
 msgstr "To ni veljavna lokalnost."
@@ -2995,6 +2989,24 @@ msgstr "{0} je uredil nastavitve metapodatkov"
 msgid "You edited the metadata settings"
 msgstr "Uredili ste nastavitve metapodatkov"
 
+msgid "No active metadata key found."
+msgstr ""
+
+msgid "Active metadata key found or not required."
+msgstr ""
+
+msgid "The server has access to the metadata keys or does not require access to it."
+msgstr ""
+
+msgid "The server does not have access to metadata key."
+msgstr ""
+
+msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
+msgstr ""
+
+msgid "Without having access, the server won't be able to share the metadata private key with the users."
+msgstr ""
+
 msgid "No server metadata private key found."
 msgstr "Ni bilo najdenega zasebnega ključa strežniških metapodatkov."
 
@@ -3006,6 +3018,24 @@ msgstr "Strežnik lahko dešifrira zasebni ključ metapodatkov."
 
 msgid "Unable to decrypt the metadata private key."
 msgstr "Ni mogoče dešifrirati zasebnega ključa metapodatkov."
+
+msgid "Unable to decrypt the metadata private key (id: {0}) data."
+msgstr ""
+
+msgid "The metadata private key (id: {0}) cleartext data should be in JSON format."
+msgstr ""
+
+msgid "The metadata private key (id: {0}) cleartext data should not be empty."
+msgstr ""
+
+msgid "Unable to validate metadata private key (id: {0}) cleartext data."
+msgstr ""
+
+msgid "The server metadata private key is valid."
+msgstr ""
+
+msgid "The server metadata private key is not valid."
+msgstr ""
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "Ključ metapodatkov ne obstaja ali je bil izbrisan."
@@ -3135,6 +3165,12 @@ msgstr "Podatki sejnega ključa metapodatkov so se spremenili."
 
 msgid "Could not save the metadata session keys, please try again later."
 msgstr "Sejnih ključev metapodatkov ni bilo mogoče shraniti, prosimo, poskusite znova pozneje."
+
+msgid "Unable to save the metadata settings."
+msgstr ""
+
+msgid "An active metadata key could not be found, create a key first."
+msgstr ""
 
 msgid "Could not prepare private key for server key."
 msgstr "Ni bilo mogoče pripraviti zasebnega ključa za strežniški ključ."
@@ -3298,9 +3334,6 @@ msgstr "Ustvarili ste novo geslo."
 msgid "{0} deleted a password."
 msgstr "{0} je izbrisal geslo."
 
-msgid "Log in passbolt"
-msgstr "Prijavi se v passbolt"
-
 msgid "{0} shared a resource with you"
 msgstr "{0} je z vami delil vir"
 
@@ -3309,6 +3342,9 @@ msgstr "{0} je z vami delil vir."
 
 msgid "You have edited a resource."
 msgstr "Uredili ste vir."
+
+msgid "{0} have edited a resource."
+msgstr ""
 
 msgid "Information about the transfer is required."
 msgstr "Potrebne so informacije o prenosu."
@@ -3832,6 +3868,12 @@ msgstr "{0} je označil več gesel kot poteklih"
 msgid "Some of your passwords expired"
 msgstr "Nekatera vaša gesla so potekla"
 
+msgid "You have passwords requiring your attention"
+msgstr "Imate gesla, ki zahtevajo vašo pozornost"
+
+msgid "Some of your passwords are expiring today."
+msgstr ""
+
 msgid "{0} marked the password {1} as expired"
 msgstr "{0} je geslo {1} označil kot poteklo"
 
@@ -3846,6 +3888,9 @@ msgstr "{0} je uredil nastavitve poteka gesel"
 
 msgid "The send password expire setting should be a boolean."
 msgstr "Nastavitev \"pošlji potek gesla\" mora biti logičnega tipa."
+
+msgid "Password expiry is not activated."
+msgstr "Potek gesel ni aktiviran."
 
 msgid "The password expiry setting does not exist."
 msgstr "Nastavitev poteka gesel ne obstaja."
@@ -4446,6 +4491,60 @@ msgstr "Neveljavne vrednosti nastavitev `passbolt.plugins.smtpSettings.security`
 
 msgid "Errors: "
 msgstr "Napake:"
+
+msgid "Could not retrieve the user key policies."
+msgstr ""
+
+msgid "Conflicting authentication parameters, provide user_id/token only when the user is not already signed in."
+msgstr ""
+
+msgid "You are not authorized to access this location."
+msgstr ""
+
+msgid "Sign-in to passbolt, or provide a valid user ID and authentication token."
+msgstr ""
+
+msgid "The user ID must be a valid UUID."
+msgstr ""
+
+msgid "The authentication token must be a valid UUID."
+msgstr ""
+
+msgid "Unable to authenticate the guest user with the provided credentials."
+msgstr ""
+
+msgid "No registration authentication token found for the given user."
+msgstr ""
+
+msgid "The registration authentication token is expired."
+msgstr ""
+
+msgid "The preferred key type is required."
+msgstr ""
+
+msgid "The preferred key type should not be empty."
+msgstr ""
+
+msgid "The preferred key type should be one of the following: {0}."
+msgstr ""
+
+msgid "The preferred key type and size combination does not match."
+msgstr ""
+
+msgid "The preferred key type and curve combination does not match."
+msgstr ""
+
+msgid "The preferred key size is required."
+msgstr ""
+
+msgid "The preferred key size should be one of the following: {0}."
+msgstr ""
+
+msgid "The preferred key curve is required."
+msgstr ""
+
+msgid "The preferred key curve should be one of the following: {0}."
+msgstr ""
 
 msgid "The data entered are not correct"
 msgstr "Vnešeni podatki niso pravilni"
@@ -5140,6 +5239,9 @@ msgstr "pojdi na passbolt"
 msgid "{0} deleted {1} groups you were a member of."
 msgstr "{0} je izbrisal {1} skupine, katere član ste bili."
 
+msgid "log in passbolt"
+msgstr "prijavite se v passbolt"
+
 msgid "Username: {0}"
 msgstr "Uporabniško ime: {0}"
 
@@ -5176,8 +5278,8 @@ msgstr "Tega uporabnika je povabil {0} {1}."
 msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
 msgstr "Uporabniku manjka šifrirni ključ za deljene metapodatke vira. Prosimo, prijavite se in pojdite v uporabniški delovni prostor ter ročno delite ključ z njim."
 
-msgid "view users"
-msgstr "poglej uporabnike"
+msgid "View users"
+msgstr ""
 
 msgid "This email is an automatic notification sent by"
 msgstr "To je avtomatsko sporočilo, ki ga je poslal"

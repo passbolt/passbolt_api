@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-05-21 11:09\n"
+"POT-Creation-Date: 2025-08-07 13:12+0000\n"
+"PO-Revision-Date: 2025-08-08 13:25\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -396,6 +396,9 @@ msgstr "`{0}` の設定は有効な空でない文字列でなければなりま
 
 msgid "Invalid expiry time {0}."
 msgstr "有効期限 {0} が無効です。"
+
+msgid "The user role ID must be one of the admin or user roles."
+msgstr ""
 
 msgid "The identifier should not be empty."
 msgstr "識別子は空にしないでください。"
@@ -880,6 +883,9 @@ msgstr "メタデータのキータイプは次のいずれかでなければな
 msgid "The resource type does not exist."
 msgstr "リソース型が存在しません。"
 
+msgid "The resource type should not be deleted."
+msgstr "リソースタイプを削除できません。"
+
 msgid "The permissions should contain the owner permission."
 msgstr "パーミッションには所有者のパーミッションを含める必要があります。"
 
@@ -910,9 +916,6 @@ msgstr ""
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "V5-password-string リソースタイプの作成は許可されていません。"
 
-msgid "The resource type should not be deleted."
-msgstr "リソースタイプを削除できません。"
-
 msgid "The resource metadata provided can not be decrypted."
 msgstr "提供されたリソースメタデータを復号できませんでした。"
 
@@ -927,6 +930,9 @@ msgstr "そのリソースはまだソフトデリート（論理削除）され
 
 msgid "The user cannot delete this resource."
 msgstr "そのユーザーはこのリソースを削除できません。"
+
+msgid "The resource type for this resource does not exist."
+msgstr ""
 
 msgid "The name should be a valid ASCII string."
 msgstr "名前は有効な ASCII 文字列でなければなりません。"
@@ -987,9 +993,6 @@ msgstr "ユーザー名の長さは255文字以内である必要があります
 
 msgid "The username is already in use."
 msgstr "このユーザー名はすでに使用されています。"
-
-msgid "The role identifier does not exist."
-msgstr "ロール識別子が存在しません。"
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "そのユーザーは、共有コンテンツの単独所有者ではありません。他のユーザーに所有権を譲渡する必要があります。"
@@ -1462,8 +1465,14 @@ msgstr "キャッシュは動作しています。"
 msgid "Cache is NOT working."
 msgstr "キャッシュは動作していません。"
 
+msgid "Deprecated `_cake_core_` cache configuration found."
+msgstr ""
+
 msgid "Check the settings in {0}"
 msgstr "{0} の設定を確認してください"
+
+msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
+msgstr ""
 
 msgid "Debug mode is off."
 msgstr "デバッグモードはオフです。"
@@ -1591,11 +1600,11 @@ msgstr "パスボルトを使用するには intl 拡張機能を有効にする
 msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "参照: https://secure.php.net/manual/en/book.intl.php"
 
-msgid "The logs directory and its content are writable."
-msgstr "ログディレクトリとその内容に書き込み可能です。"
+msgid "The logs directory {0} and its content are writable."
+msgstr ""
 
-msgid "The logs directory and its content are not writable."
-msgstr "ログディレクトリとその内容に書き込みできません。"
+msgid "The logs directory {0} and its content are not writable."
+msgstr ""
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
 msgstr "ログディレクトリとその内容がウェブサーバーユーザーによって書き込み可能であることを確認してください。"
@@ -1903,12 +1912,6 @@ msgstr "キーリングが定義されていません。"
 msgid "The keyring directory is not accessible by the current user: {0}"
 msgstr "キーリングディレクトリは現在のユーザーがアクセスできません: {0}"
 
-msgid "Could not validate sub key data."
-msgstr "サブキーのデータを検証できませんでした。"
-
-msgid "Public key sub key id could not be found."
-msgstr "公開鍵のサブキーIDが見つかりませんでした。"
-
 msgid "Could not validate message data."
 msgstr "メッセージデータを検証できませんでした。"
 
@@ -2008,6 +2011,12 @@ msgstr "パーミッション {0} の検証に失敗しました。 {1}"
 msgid "Validation success for permission {0}"
 msgstr "パーミッション {0} の検証に成功しました"
 
+msgid "The permissions data must be an array."
+msgstr ""
+
+msgid "The permissions data array keys must be integers."
+msgstr ""
+
 msgid "Could not validate permissions data."
 msgstr "パーミッションデータを検証できませんでした。"
 
@@ -2031,6 +2040,9 @@ msgstr "リソース {0} の検証に失敗しました。 {1}"
 
 msgid "Validation success for resource {0}"
 msgstr "リソース {0} の検証に成功しました"
+
+msgid "The resource types associated to this resource does not exist."
+msgstr ""
 
 msgid "You are not allowed to update this resource."
 msgstr "このリソースを更新することはできません。"
@@ -2446,7 +2458,7 @@ msgstr "フォルダを削除しました"
 msgid "{0} deleted a folder"
 msgstr "{0} さんがフォルダを削除しました"
 
-msgid "log in passbolt"
+msgid "Log in passbolt"
 msgstr "パスボルトにログイン"
 
 msgid "{0} shared a folder with you"
@@ -2586,24 +2598,6 @@ msgstr "ユーザーIDの形式が無効です。"
 
 msgid "Verify token has been already used in the past."
 msgstr "検証トークンは過去にすでに使用されています。"
-
-msgid "Security warning!"
-msgstr "セキュリティ警告！"
-
-msgid "An unknown user attempted to identify as {0}."
-msgstr ""
-
-msgid "This is a potential security issue."
-msgstr "これは潜在的なセキュリティ上の問題です。"
-
-msgid "Please investigate!"
-msgstr "調査してください！"
-
-msgid "An unknown user attempted to steal your login data."
-msgstr ""
-
-msgid "Please get in touch with one of your administrators."
-msgstr "管理者に連絡してください。"
 
 msgid "This is not a valid locale."
 msgstr "これは有効なロケールではありません。"
@@ -2995,6 +2989,24 @@ msgstr "{0} がメタデータ設定を編集しました"
 msgid "You edited the metadata settings"
 msgstr "メタデータ設定を編集しました"
 
+msgid "No active metadata key found."
+msgstr ""
+
+msgid "Active metadata key found or not required."
+msgstr ""
+
+msgid "The server has access to the metadata keys or does not require access to it."
+msgstr ""
+
+msgid "The server does not have access to metadata key."
+msgstr ""
+
+msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
+msgstr ""
+
+msgid "Without having access, the server won't be able to share the metadata private key with the users."
+msgstr ""
+
 msgid "No server metadata private key found."
 msgstr "サーバのメタデータ秘密鍵が見つかりません。"
 
@@ -3006,6 +3018,24 @@ msgstr "サーバはメタデータ秘密鍵を復号できます。"
 
 msgid "Unable to decrypt the metadata private key."
 msgstr "メタデータ秘密鍵を復号できません。"
+
+msgid "Unable to decrypt the metadata private key (id: {0}) data."
+msgstr ""
+
+msgid "The metadata private key (id: {0}) cleartext data should be in JSON format."
+msgstr ""
+
+msgid "The metadata private key (id: {0}) cleartext data should not be empty."
+msgstr ""
+
+msgid "Unable to validate metadata private key (id: {0}) cleartext data."
+msgstr ""
+
+msgid "The server metadata private key is valid."
+msgstr ""
+
+msgid "The server metadata private key is not valid."
+msgstr ""
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "メタデータ鍵が存在しないか、削除されています。"
@@ -3135,6 +3165,12 @@ msgstr "メタデータセッション鍵のデータが変更されました。
 
 msgid "Could not save the metadata session keys, please try again later."
 msgstr "メタデータセッション鍵を保存できませんでした。後でもう一度試してください。"
+
+msgid "Unable to save the metadata settings."
+msgstr ""
+
+msgid "An active metadata key could not be found, create a key first."
+msgstr ""
 
 msgid "Could not prepare private key for server key."
 msgstr "サーバ鍵用の秘密鍵を準備できませんでした。"
@@ -3298,9 +3334,6 @@ msgstr "新しいパスワードを作成しました。"
 msgid "{0} deleted a password."
 msgstr ""
 
-msgid "Log in passbolt"
-msgstr "パスボルトにログイン"
-
 msgid "{0} shared a resource with you"
 msgstr "{0} さんがリソースを共有しました"
 
@@ -3309,6 +3342,9 @@ msgstr "{0} さんがリソースを共有しました。"
 
 msgid "You have edited a resource."
 msgstr "リソースを編集しました。"
+
+msgid "{0} have edited a resource."
+msgstr ""
 
 msgid "Information about the transfer is required."
 msgstr "転送に関する情報が必要です。"
@@ -3832,6 +3868,12 @@ msgstr "{0} さんが複数のパスワードを期限切れとしてマーク�
 msgid "Some of your passwords expired"
 msgstr "あなたのパスワードの一部が期限切れになりました"
 
+msgid "You have passwords requiring your attention"
+msgstr "あなたの対応が必要なパスワードがあります"
+
+msgid "Some of your passwords are expiring today."
+msgstr ""
+
 msgid "{0} marked the password {1} as expired"
 msgstr "{0} さんがパスワード {1} を期限切れとしてマークしました"
 
@@ -3846,6 +3888,9 @@ msgstr "{0} さんがパスワード有効期限の設定を編集しました"
 
 msgid "The send password expire setting should be a boolean."
 msgstr "パスワード期限切れ通知の設定はブール値である必要があります。"
+
+msgid "Password expiry is not activated."
+msgstr "パスワードの有効期限は有効化されていません。"
 
 msgid "The password expiry setting does not exist."
 msgstr "パスワード有効期限の設定が存在しません。"
@@ -4446,6 +4491,60 @@ msgstr "無効な `passbolt.plugins.smtpSettings.security` 設定値です。"
 
 msgid "Errors: "
 msgstr "エラー: "
+
+msgid "Could not retrieve the user key policies."
+msgstr ""
+
+msgid "Conflicting authentication parameters, provide user_id/token only when the user is not already signed in."
+msgstr ""
+
+msgid "You are not authorized to access this location."
+msgstr ""
+
+msgid "Sign-in to passbolt, or provide a valid user ID and authentication token."
+msgstr ""
+
+msgid "The user ID must be a valid UUID."
+msgstr ""
+
+msgid "The authentication token must be a valid UUID."
+msgstr ""
+
+msgid "Unable to authenticate the guest user with the provided credentials."
+msgstr ""
+
+msgid "No registration authentication token found for the given user."
+msgstr ""
+
+msgid "The registration authentication token is expired."
+msgstr ""
+
+msgid "The preferred key type is required."
+msgstr ""
+
+msgid "The preferred key type should not be empty."
+msgstr ""
+
+msgid "The preferred key type should be one of the following: {0}."
+msgstr ""
+
+msgid "The preferred key type and size combination does not match."
+msgstr ""
+
+msgid "The preferred key type and curve combination does not match."
+msgstr ""
+
+msgid "The preferred key size is required."
+msgstr ""
+
+msgid "The preferred key size should be one of the following: {0}."
+msgstr ""
+
+msgid "The preferred key curve is required."
+msgstr ""
+
+msgid "The preferred key curve should be one of the following: {0}."
+msgstr ""
 
 msgid "The data entered are not correct"
 msgstr "入力されたデータが正しくありません"
@@ -5140,6 +5239,9 @@ msgstr "パスボルトに行く"
 msgid "{0} deleted {1} groups you were a member of."
 msgstr "{0}さんが、あなたがメンバーだった {1}個のグループを削除しました。"
 
+msgid "log in passbolt"
+msgstr "パスボルトにログイン"
+
 msgid "Username: {0}"
 msgstr "ユーザー名: {0}"
 
@@ -5176,8 +5278,8 @@ msgstr "このユーザーは {0} {1} に招待されました。"
 msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
 msgstr "このユーザーには共有リソースメタデータを復号する鍵がありません。ログインしてユーザーのワークスペースに移動し、手動で鍵を共有してください。"
 
-msgid "view users"
-msgstr "ユーザーを表示"
+msgid "View users"
+msgstr ""
 
 msgid "This email is an automatic notification sent by"
 msgstr "このメールは自動通知として送信されています"

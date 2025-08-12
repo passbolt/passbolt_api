@@ -23,6 +23,7 @@ if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
 $user = $body['user'];
+$recipient = $body['recipient'];
 $resource = $body['resource'];
 $armoredSecret = $body['armoredSecret'];
 $showSecret = $body['showSecret'];
@@ -36,7 +37,11 @@ echo $this->element('Email/module/avatar',[
     ])
 ]);
 
-$text = __('You have edited a resource.') . '<br/>';
+if ($user['id'] === $recipient['id']) {
+    $text = __('You have edited a resource.') . '<br/>';
+} else {
+    $text = __('{0} have edited a resource.', Purifier::clean($user['profile']['first_name'])) . '<br/>';
+}
 
 echo $this->element('Email/module/text', [
     'text' => $text,

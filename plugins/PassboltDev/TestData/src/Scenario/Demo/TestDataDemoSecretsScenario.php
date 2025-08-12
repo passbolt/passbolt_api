@@ -1,0 +1,24 @@
+<?php
+declare(strict_types=1);
+
+namespace Passbolt\TestData\Scenario\Demo;
+
+use App\Test\Factory\SecretFactory;
+use CakephpFixtureFactories\Scenario\FixtureScenarioInterface;
+use Passbolt\TestData\Command\Base\SecretsDataCommand;
+
+class TestDataDemoSecretsScenario implements FixtureScenarioInterface
+{
+    /**
+     * @param mixed ...$args
+     * @return array
+     */
+    public function load(mixed ...$args): array
+    {
+        $data = (new SecretsDataCommand())->getData();
+        /** @var array $secrets */
+        $secrets = SecretFactory::make($data)->persist();
+
+        return $secrets;
+    }
+}

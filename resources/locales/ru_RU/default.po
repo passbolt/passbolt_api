@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-05-21 10:34+0000\n"
-"PO-Revision-Date: 2025-05-21 11:10\n"
+"POT-Creation-Date: 2025-08-07 13:12+0000\n"
+"PO-Revision-Date: 2025-08-08 13:25\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -396,6 +396,9 @@ msgstr "Конфигурация \"{0}\" должна быть допустим�
 
 msgid "Invalid expiry time {0}."
 msgstr "Некорректное время истечения {0}."
+
+msgid "The user role ID must be one of the admin or user roles."
+msgstr ""
 
 msgid "The identifier should not be empty."
 msgstr "Идентификатор не должен быть пустым."
@@ -880,6 +883,9 @@ msgstr "Тип ключа метаданных должен быть одним 
 msgid "The resource type does not exist."
 msgstr "Тип ресурса не существует."
 
+msgid "The resource type should not be deleted."
+msgstr "Тип ресурса не должен быть удалён."
+
 msgid "The permissions should contain the owner permission."
 msgstr "Разрешения должны содержать разрешение владельца."
 
@@ -910,9 +916,6 @@ msgstr ""
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Запрещено создавать типы ресурсов v5-password-string."
 
-msgid "The resource type should not be deleted."
-msgstr "Тип ресурса не должен быть удалён."
-
 msgid "The resource metadata provided can not be decrypted."
 msgstr "Предоставленные метаданные ресурса не могут быть расшифрованы."
 
@@ -927,6 +930,9 @@ msgstr "Ресурс не должен быть уже мягко удален."
 
 msgid "The user cannot delete this resource."
 msgstr "Пользователь не может удалить этот ресурс."
+
+msgid "The resource type for this resource does not exist."
+msgstr ""
 
 msgid "The name should be a valid ASCII string."
 msgstr "Имя должно быть допустимой строкой ASCII."
@@ -987,9 +993,6 @@ msgstr "Длина имени пользователя должна быть н�
 
 msgid "The username is already in use."
 msgstr "Имя пользователя уже используется."
-
-msgid "The role identifier does not exist."
-msgstr "Идентификатор роли не существует."
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "Пользователь не должен быть единственным владельцем общего контента, передавать право собственности другим пользователям."
@@ -1462,8 +1465,14 @@ msgstr "Кэш работает."
 msgid "Cache is NOT working."
 msgstr "Кэш не работает."
 
+msgid "Deprecated `_cake_core_` cache configuration found."
+msgstr ""
+
 msgid "Check the settings in {0}"
 msgstr "Проверьте настройки в {0}"
+
+msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
+msgstr ""
 
 msgid "Debug mode is off."
 msgstr "Режим отладки выключен."
@@ -1591,11 +1600,11 @@ msgstr "Необходимо включить расширение intl, что�
 msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "См.: https://secure.php.net/manual/en/book.intl.php"
 
-msgid "The logs directory and its content are writable."
-msgstr "Каталог журналов и его содержимое доступны для записи."
+msgid "The logs directory {0} and its content are writable."
+msgstr ""
 
-msgid "The logs directory and its content are not writable."
-msgstr "Каталог журналов и его содержимое недоступны для записи."
+msgid "The logs directory {0} and its content are not writable."
+msgstr ""
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
 msgstr "Убедитесь, что каталог logs и его содержимое доступны для записи пользователю веб-сервера."
@@ -1903,12 +1912,6 @@ msgstr "Ключница не определена."
 msgid "The keyring directory is not accessible by the current user: {0}"
 msgstr "Каталог ключницы недоступен для текущего пользователя: {0}"
 
-msgid "Could not validate sub key data."
-msgstr "Не удалось проверить данные подключей."
-
-msgid "Public key sub key id could not be found."
-msgstr "Не удалось найти идентификатор вложенного ключа открытого ключа."
-
 msgid "Could not validate message data."
 msgstr "Не удалось проверить данные сообщения."
 
@@ -2008,6 +2011,12 @@ msgstr "Ошибка проверки разрешения {0}. {1}"
 msgid "Validation success for permission {0}"
 msgstr "Успешная проверка разрешения {0}"
 
+msgid "The permissions data must be an array."
+msgstr ""
+
+msgid "The permissions data array keys must be integers."
+msgstr ""
+
 msgid "Could not validate permissions data."
 msgstr "Не удалось проверить данные разрешений."
 
@@ -2031,6 +2040,9 @@ msgstr "Ошибка проверки ресурса {0}. {1}"
 
 msgid "Validation success for resource {0}"
 msgstr "Успешная проверка ресурса {0}"
+
+msgid "The resource types associated to this resource does not exist."
+msgstr ""
 
 msgid "You are not allowed to update this resource."
 msgstr "Вам не разрешено обновлять этот ресурс."
@@ -2446,8 +2458,8 @@ msgstr "Вы удалили папку"
 msgid "{0} deleted a folder"
 msgstr "{0} удалил папку"
 
-msgid "log in passbolt"
-msgstr "войти в систему"
+msgid "Log in passbolt"
+msgstr "Войти"
 
 msgid "{0} shared a folder with you"
 msgstr "{0} поделился с вами папкой"
@@ -2586,24 +2598,6 @@ msgstr "Недопустимый формат идентификатора по�
 
 msgid "Verify token has been already used in the past."
 msgstr "Подтвердите, что токен уже использовался в прошлом."
-
-msgid "Security warning!"
-msgstr "Предупреждение безопасности!"
-
-msgid "An unknown user attempted to identify as {0}."
-msgstr ""
-
-msgid "This is a potential security issue."
-msgstr "Это потенциальная проблема безопасности."
-
-msgid "Please investigate!"
-msgstr "Пожалуйста, исследуйте!"
-
-msgid "An unknown user attempted to steal your login data."
-msgstr ""
-
-msgid "Please get in touch with one of your administrators."
-msgstr "Пожалуйста, свяжитесь с одним из ваших администраторов."
 
 msgid "This is not a valid locale."
 msgstr "Это недопустимая локаль."
@@ -2995,6 +2989,24 @@ msgstr "{0} изменил настройки метаданных"
 msgid "You edited the metadata settings"
 msgstr "Вы изменили настройки метаданных"
 
+msgid "No active metadata key found."
+msgstr ""
+
+msgid "Active metadata key found or not required."
+msgstr ""
+
+msgid "The server has access to the metadata keys or does not require access to it."
+msgstr ""
+
+msgid "The server does not have access to metadata key."
+msgstr ""
+
+msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
+msgstr ""
+
+msgid "Without having access, the server won't be able to share the metadata private key with the users."
+msgstr ""
+
 msgid "No server metadata private key found."
 msgstr "Не найден закрытый ключ метаданных сервера."
 
@@ -3006,6 +3018,24 @@ msgstr "Сервер может расшифровать закрытый клю
 
 msgid "Unable to decrypt the metadata private key."
 msgstr "Не удалось расшифровать закрытый ключ метаданных."
+
+msgid "Unable to decrypt the metadata private key (id: {0}) data."
+msgstr ""
+
+msgid "The metadata private key (id: {0}) cleartext data should be in JSON format."
+msgstr ""
+
+msgid "The metadata private key (id: {0}) cleartext data should not be empty."
+msgstr ""
+
+msgid "Unable to validate metadata private key (id: {0}) cleartext data."
+msgstr ""
+
+msgid "The server metadata private key is valid."
+msgstr ""
+
+msgid "The server metadata private key is not valid."
+msgstr ""
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "Ключ метаданных не существует или был удалён."
@@ -3135,6 +3165,12 @@ msgstr "Данные сеансового ключа метаданных изм
 
 msgid "Could not save the metadata session keys, please try again later."
 msgstr "Не удалось сохранить сеансовые ключи метаданных, повторите попытку позже."
+
+msgid "Unable to save the metadata settings."
+msgstr ""
+
+msgid "An active metadata key could not be found, create a key first."
+msgstr ""
 
 msgid "Could not prepare private key for server key."
 msgstr "Не удалось подготовить закрытый ключ для ключа сервера."
@@ -3298,9 +3334,6 @@ msgstr "Вы создали новый пароль."
 msgid "{0} deleted a password."
 msgstr ""
 
-msgid "Log in passbolt"
-msgstr "Войти"
-
 msgid "{0} shared a resource with you"
 msgstr "{0} поделился с вами ресурсом"
 
@@ -3309,6 +3342,9 @@ msgstr "{0} поделился с вами ресурсом."
 
 msgid "You have edited a resource."
 msgstr "Вы изменили ресурс."
+
+msgid "{0} have edited a resource."
+msgstr ""
 
 msgid "Information about the transfer is required."
 msgstr "Информация о переводе обязательна."
@@ -3832,6 +3868,12 @@ msgstr "{0} отметил несколько паролей как истекш
 msgid "Some of your passwords expired"
 msgstr "Срок действия некоторых ваших паролей истек"
 
+msgid "You have passwords requiring your attention"
+msgstr "У вас есть пароли, требующие вашего внимания"
+
+msgid "Some of your passwords are expiring today."
+msgstr ""
+
 msgid "{0} marked the password {1} as expired"
 msgstr "{0} отметил пароль {1} как истекший"
 
@@ -3846,6 +3888,9 @@ msgstr "{0} отредактировал настройки срока дейс�
 
 msgid "The send password expire setting should be a boolean."
 msgstr "Параметр срока действия пароля для отправки должен иметь логическое значение."
+
+msgid "Password expiry is not activated."
+msgstr "Истечение срока действия пароля не активировано."
 
 msgid "The password expiry setting does not exist."
 msgstr "Параметр истечения срока действия пароля не существует."
@@ -4446,6 +4491,60 @@ msgstr "Недопустимые значения конфигурации `pass
 
 msgid "Errors: "
 msgstr "Ошибка: "
+
+msgid "Could not retrieve the user key policies."
+msgstr ""
+
+msgid "Conflicting authentication parameters, provide user_id/token only when the user is not already signed in."
+msgstr ""
+
+msgid "You are not authorized to access this location."
+msgstr ""
+
+msgid "Sign-in to passbolt, or provide a valid user ID and authentication token."
+msgstr ""
+
+msgid "The user ID must be a valid UUID."
+msgstr ""
+
+msgid "The authentication token must be a valid UUID."
+msgstr ""
+
+msgid "Unable to authenticate the guest user with the provided credentials."
+msgstr ""
+
+msgid "No registration authentication token found for the given user."
+msgstr ""
+
+msgid "The registration authentication token is expired."
+msgstr ""
+
+msgid "The preferred key type is required."
+msgstr ""
+
+msgid "The preferred key type should not be empty."
+msgstr ""
+
+msgid "The preferred key type should be one of the following: {0}."
+msgstr ""
+
+msgid "The preferred key type and size combination does not match."
+msgstr ""
+
+msgid "The preferred key type and curve combination does not match."
+msgstr ""
+
+msgid "The preferred key size is required."
+msgstr ""
+
+msgid "The preferred key size should be one of the following: {0}."
+msgstr ""
+
+msgid "The preferred key curve is required."
+msgstr ""
+
+msgid "The preferred key curve should be one of the following: {0}."
+msgstr ""
 
 msgid "The data entered are not correct"
 msgstr "Введенные данные неверны"
@@ -5140,6 +5239,9 @@ msgstr "перейти к проходному болту"
 msgid "{0} deleted {1} groups you were a member of."
 msgstr "{0} удалили {1} группы, в которых вы состояли."
 
+msgid "log in passbolt"
+msgstr "войти в систему"
+
 msgid "Username: {0}"
 msgstr "Имя пользователя: {0}"
 
@@ -5176,8 +5278,8 @@ msgstr "Этот пользователь был приглашен {0} {1}."
 msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
 msgstr "У этого пользователя отсутствует ключ шифрования для общих метаданных ресурса. Пожалуйста, войдите и перейдите в рабочую область пользователя, чтобы вручную предоставить ему ключ."
 
-msgid "view users"
-msgstr "просмотреть пользователей"
+msgid "View users"
+msgstr ""
 
 msgid "This email is an automatic notification sent by"
 msgstr "Это электронное письмо является автоматическим уведомлением, отправленным"

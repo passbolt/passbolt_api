@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Test\TestCase\Service;
 
+use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\FormValidationException;
 use App\Model\Entity\Role;
 use App\Test\Factory\OrganizationSettingFactory;
@@ -26,6 +27,7 @@ use App\Utility\UserAccessControl;
 use Cake\Http\Exception\ForbiddenException;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Service\MetadataTypesSettingsSetService;
+use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
 /**
@@ -86,5 +88,68 @@ class MetadataTypesSettingsSetServiceTest extends AppTestCaseV5
         $sut = new MetadataTypesSettingsSetService();
         $this->expectException(FormValidationException::class);
         $sut->saveSettings($uac, $data);
+    }
+
+    /**
+     * Error: v5 default selected but metadata key does not exist or is not available to all
+     *
+     * @return void
+     */
+    public function testMetadataTypesSettingsSetService_ErrorRules_No_MetadataKey_In_DB(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $data = MetadataTypesSettingsFactory::getDefaultDataV5();
+        $uac = new UserAccessControl(Role::ADMIN, $user->id);
+        $sut = new MetadataTypesSettingsSetService();
+        $this->expectException(CustomValidationException::class);
+        $this->expectExceptionMessage('Unable to save the metadata settings. An active metadata key could not be found, create a key first.');
+        $sut->saveSettings($uac, $data);
+    }
+
+    public function testMetadataTypesSettingsSetService_ErrorRules_Deleted_MetadataKey_In_DB(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $data = MetadataTypesSettingsFactory::getDefaultDataV5();
+        $uac = new UserAccessControl(Role::ADMIN, $user->id);
+        $sut = new MetadataTypesSettingsSetService();
+
+        MetadataKeyFactory::make()->deleted()->persist();
+
+        $this->expectException(CustomValidationException::class);
+        $this->expectExceptionMessage('Unable to save the metadata settings. An active metadata key could not be found, create a key first.');
+        $sut->saveSettings($uac, $data);
+    }
+
+    public function testMetadataTypesSettingsSetService_ErrorRules_Expired_MetadataKey_In_DB(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $data = MetadataTypesSettingsFactory::getDefaultDataV5();
+        $uac = new UserAccessControl(Role::ADMIN, $user->id);
+        $sut = new MetadataTypesSettingsSetService();
+
+        MetadataKeyFactory::make()->expired()->persist();
+
+        $this->expectException(CustomValidationException::class);
+        $this->expectExceptionMessage('Unable to save the metadata settings. An active metadata key could not be found, create a key first.');
+        $sut->saveSettings($uac, $data);
+    }
+
+    public function testMetadataTypesSettingsSetService_ErrorRules_Valid_MetadataKey_In_DB(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $data = MetadataTypesSettingsFactory::getDefaultDataV5();
+        $uac = new UserAccessControl(Role::ADMIN, $user->id);
+        $sut = new MetadataTypesSettingsSetService();
+
+        MetadataKeyFactory::make()->expired()->persist();
+        MetadataKeyFactory::make()->deleted()->persist();
+        MetadataKeyFactory::make()->persist();
+
+        $dto = $sut->saveSettings($uac, $data);
+        $this->assertEquals($data, $dto->toArray());
     }
 }

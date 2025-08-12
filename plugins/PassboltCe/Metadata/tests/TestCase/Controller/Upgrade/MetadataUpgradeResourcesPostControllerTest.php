@@ -174,6 +174,41 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
         ]], $response);
     }
 
+    public function testMetadataUpgradeResourcesPostController_Resource_Should_Not_Be_Of_Deleted_Resource_Type(): void
+    {
+        $admin = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        // create metadata key
+        $expiredMetadataKey = MetadataKeyFactory::make()->expired()->withServerPrivateKey()->persist();
+        MetadataPrivateKeyFactory::make()
+            ->withMetadataKey($expiredMetadataKey)
+            ->withUserPrivateKey($admin->get('gpgkey'))
+            ->persist();
+
+        $resource = ResourceFactory::make()
+            ->with(
+                'ResourceTypes',
+                ResourceTypeFactory::make()->deleted()
+            )->persist();
+
+        $this->logInAsAdmin();
+        $this->postJson('/metadata/upgrade/resources.json', [
+            [
+                'id' => $resource->get('id'),
+                'metadata_key_id' => $expiredMetadataKey->get('id'),
+                'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
+                'metadata' => $this->encryptForMetadataKey(json_encode([])), // todo: use valid v5 json metadata format
+                'modified' => $resource->get('modified'),
+                'modified_by' => $resource->get('modified_by'),
+            ],
+        ]);
+        $this->assertResponseError();
+        $this->assertResponseContains("Entity {$resource->get('id')} not found.");
+    }
+
     public function testMetadataUpgradeResourcesPostController_Error_NotJson(): void
     {
         $this->logInAsUser();
