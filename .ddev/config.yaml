@@ -7,29 +7,36 @@ xdebug_enabled: false
 additional_hostnames: []
 additional_fqdns: []
 database:
-  type: mariadb
-  version: "10.11"
+    type: mariadb
+    version: "10.11"
+hooks:
+    post-start:
+        - exec: sudo apt-get update
+        - exec: sh -c "if [ ! -f /var/www/html/config/app.php ]; then cp /var/www/html/config/app.default.php /var/www/html/config/app.php; fi"
+        - exec: gpg --list-keys
+mailpit_https_port: "9102"
+webimage_extra_packages: [php8.3-gnupg, php8.3-xdebug]
 use_dns_when_possible: true
 composer_version: "2"
 web_environment:
-  - DEBUG=true
-  - APP_FULL_BASE_URL=https://passbolt-pro-api.ddev.site
-  - PASSBOLT_SELENIUM_ACTIVE=true
-  - DATASOURCES_DEFAULT_HOST=db
-  - DATASOURCES_DEFAULT_USERNAME=db
-  - DATASOURCES_DEFAULT_PASSWORD=db
-  - DATASOURCES_DEFAULT_DATABASE=passbolt
-  - DATASOURCES_TEST_HOST=db
-  - DATASOURCES_TEST_USERNAME=db
-  - DATASOURCES_TEST_PASSWORD=db
-  - DATASOURCES_TEST_DATABASE=test_passbolt
-  - PASSBOLT_GPG_SERVER_KEY_FINGERPRINT=2FC8945833C51946E937F9FED47B0811573EE67E
-  - PASSBOLT_GPG_SERVER_KEY_PRIVATE=/var/www/html/config/gpg/unsecure_private.key
-  - PASSBOLT_GPG_SERVER_KEY_PUBLIC=/var/www/html/config/gpg/unsecure.key
-  - EMAIL_TRANSPORT_DEFAULT_HOST=localhost
-  - EMAIL_TRANSPORT_DEFAULT_PORT=1025
-  - EMAIL_DEFAULT_FROM_NAME=Passbolt Local
-  - EMAIL_DEFAULT_FROM=noreply@passbolt.local
+    - DEBUG=true
+    - APP_FULL_BASE_URL=https://passbolt-pro-api.ddev.site
+    - PASSBOLT_SELENIUM_ACTIVE=true
+    - DATASOURCES_DEFAULT_HOST=db
+    - DATASOURCES_DEFAULT_USERNAME=db
+    - DATASOURCES_DEFAULT_PASSWORD=db
+    - DATASOURCES_DEFAULT_DATABASE=passbolt
+    - DATASOURCES_TEST_HOST=db
+    - DATASOURCES_TEST_USERNAME=db
+    - DATASOURCES_TEST_PASSWORD=db
+    - DATASOURCES_TEST_DATABASE=test_passbolt
+    - PASSBOLT_GPG_SERVER_KEY_FINGERPRINT=2FC8945833C51946E937F9FED47B0811573EE67E
+    - PASSBOLT_GPG_SERVER_KEY_PRIVATE=/var/www/html/config/gpg/unsecure_private.key
+    - PASSBOLT_GPG_SERVER_KEY_PUBLIC=/var/www/html/config/gpg/unsecure.key
+    - EMAIL_TRANSPORT_DEFAULT_HOST=localhost
+    - EMAIL_TRANSPORT_DEFAULT_PORT=1025
+    - EMAIL_DEFAULT_FROM_NAME=Passbolt Local
+    - EMAIL_DEFAULT_FROM=noreply@passbolt.local
 corepack_enable: false
 disable_upload_dirs_warning: true
 
@@ -37,6 +44,8 @@ disable_upload_dirs_warning: true
 
 # name: <projectname> # Name of the project, automatically provides
 #   http://projectname.ddev.site and https://projectname.ddev.site
+# If the name is omitted, the project will take the name of the enclosing directory,
+# which is useful if you want to have a copy of the project side by side with this one.
 
 # type: <projecttype>  # backdrop, cakephp, craftcms, drupal, drupal6, drupal7, drupal8, drupal9, drupal10, drupal11, generic, laravel, magento, magento2, php, shopware6, silverstripe, symfony, typo3, wordpress
 # See https://ddev.readthedocs.io/en/stable/users/quickstart/ for more
@@ -55,9 +64,9 @@ disable_upload_dirs_warning: true
 # database:
 #   type: <dbtype> # mysql, mariadb, postgres
 #   version: <version> # database version, like "10.11" or "8.0"
-#   MariaDB versions can be 5.5-10.8, 10.11, and 11.4.
-#   MySQL versions can be 5.5-8.0.
-#   PostgreSQL versions can be 9-17.
+#   MariaDB versions can be 5.5-10.8, 10.11, 11.4, 11.8
+#   MySQL versions can be 5.5-8.0, 8.4
+#   PostgreSQL versions can be 9-17
 
 # router_http_port: <port>  # Port to be used for http (defaults to global configuration, usually 80)
 # router_https_port: <port> # Port for https (defaults to global configuration, usually 443)
@@ -205,14 +214,14 @@ disable_upload_dirs_warning: true
 # unless explicitly specified.
 
 # mailpit_http_port: "8025"
-mailpit_https_port: "9102"
+# mailpit_https_port: "8026"
 # The Mailpit ports can be changed from the default 8025 and 8026
 
 # host_mailpit_port: "8025"
 # The mailpit port is not normally bound on the host at all, instead being routed
 # through ddev-router, but it can be bound directly to localhost if specified here.
 
-webimage_extra_packages: [php8.3-gnupg, php8.3-xdebug]
+# webimage_extra_packages: [php7.4-tidy, php-bcmath]
 # Extra Debian packages that are needed in the webimage can be added here
 
 # dbimage_extra_packages: [telnet,netcat]
@@ -232,7 +241,7 @@ webimage_extra_packages: [php8.3-gnupg, php8.3-xdebug]
 
 # ngrok_args: --basic-auth username:pass1234
 # Provide extra flags to the "ngrok http" command, see
-# https://ngrok.com/docs/ngrok-agent/config or run "ngrok http -h"
+# https://ngrok.com/docs/agent/config/v3/#agent-configuration or run "ngrok http -h"
 
 # disable_settings_management: false
 # If true, DDEV will not create CMS-specific settings files like
@@ -298,11 +307,8 @@ webimage_extra_packages: [php8.3-gnupg, php8.3-xdebug]
 # and you can't erase existing hooks or all environment variables.
 # However, with "override_config: true" in a particular config.*.yaml file,
 # 'use_dns_when_possible: false' can override the existing values, and
-hooks:
-  post-start:
-    - exec: "sudo apt-get update"
-    - exec: sh -c "if [ ! -f /var/www/html/config/app.php ]; then cp /var/www/html/config/app.default.php /var/www/html/config/app.php; fi"
-    - exec: "gpg --list-keys"
+# hooks:
+#   post-start: []
 # or
 # web_environment: []
 # or

@@ -22,6 +22,7 @@ use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
+use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\SecretsFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Utility\UuidFactory;
@@ -43,6 +44,7 @@ class SoftDeleteTest extends FoldersTestCase
         GroupsUsersFixture::class,
         SecretsFixture::class,
         UsersFixture::class,
+        RolesFixture::class,
     ];
 
     /**

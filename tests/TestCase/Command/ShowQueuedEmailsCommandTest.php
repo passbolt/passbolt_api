@@ -28,14 +28,6 @@ class ShowQueuedEmailsCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
 
-    /**
-     * @inheritDoc
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
     public function testShowQueuedEmailsCommand_Help()
     {
         $this->exec('passbolt show_queued_emails -h');

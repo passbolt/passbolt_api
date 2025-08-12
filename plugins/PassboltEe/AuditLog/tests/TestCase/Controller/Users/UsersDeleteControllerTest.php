@@ -28,7 +28,7 @@ class UsersDeleteControllerTest extends LogIntegrationTestCase
     {
         RoleFactory::make()->guest()->persist();
         $admin = $this->logInAsAdmin();
-        $user = UserFactory::make()->user()->persist();
+        $user = UserFactory::make()->user()->lastLoggedIn()->persist();
         $this->deleteJson("/users/{$user->id}.json?api-version=v2");
         $this->assertSuccess();
         $retrievedUser = UserFactory::get($user->id);
@@ -53,11 +53,11 @@ class UsersDeleteControllerTest extends LogIntegrationTestCase
             'id' => $user->get('id'),
             'role_id' => $user->role_id,
             'username' => $user->username,
+            'last_logged_in' => null,
             'profile' => [
                 'first_name' => $user->profile->first_name,
                 'last_name' => $user->profile->last_name,
             ],
-            'last_logged_in' => null,
         ]];
         $this->assertSame($expected, $data);
         $this->assertSame($admin->id, $creator['id']);

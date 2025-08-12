@@ -417,7 +417,7 @@ return [
                 'backupMode' => filter_var(env('PASSBOLT_PLUGINS_TAGS_BACKUP_MODE', false), FILTER_VALIDATE_BOOLEAN),
             ],
             'userKeyPolicies' => [
-                'enabled' => filter_var(env('PASSBOLT_PLUGINS_USER_KEY_POLICIES_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_USER_KEY_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
             ],
         ],
 
