@@ -26,6 +26,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 
 class IsValidEncryptedMetadataRule
@@ -60,12 +61,27 @@ class IsValidEncryptedMetadataRule
             return false;
         }
 
-        $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
-        if (!MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo)) {
+        try {
+            $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
+        } catch (Exception $e) {
+            if (Configure::read('debug')) {
+                Log::error('Issue found with the metadata key for id: ' . $metadataKeyId . ' (Not parsable).');
+            }
+
             return false;
         }
 
-        return true;
+        try {
+            return MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo);
+        } catch (CustomValidationException $exception) {
+            if (Configure::read('debug')) {
+                if (!isset($keyInfo['sub_keys'][0]['key_id'])) {
+                    Log::error('Issue found with the metadata key for id: ' . $metadataKeyId . ' (No subkey).');
+                }
+            }
+
+            return false;
+        }
     }
 
     /**

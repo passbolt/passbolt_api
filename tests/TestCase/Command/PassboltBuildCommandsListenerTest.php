@@ -24,7 +24,7 @@ use Cake\Event\Event;
 use Cake\TestSuite\TestCase;
 use CakephpFixtureFactories\Command\PersistCommand;
 use Migrations\Command\MigrationsCreateCommand;
-use PassboltTestData\Command\InsertCommand;
+use Passbolt\TestData\Command\InsertCommand;
 
 class PassboltBuildCommandsListenerTest extends TestCase
 {

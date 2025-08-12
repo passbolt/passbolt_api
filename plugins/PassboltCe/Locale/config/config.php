@@ -77,6 +77,10 @@ return [
                         'locale' => 'uk-UA',
                         'label' => 'Українська',
                     ],
+                    [
+                        'locale' => 'cs-CZ',
+                        'label' => 'Čeština (beta)',
+                    ],
                 ],
             ],
         ],

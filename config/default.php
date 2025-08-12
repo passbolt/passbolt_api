@@ -316,7 +316,7 @@ return [
                 'enabled' => true
             ],
             'userKeyPolicies' => [
-                'enabled' => filter_var(env('PASSBOLT_PLUGINS_USER_KEY_POLICIES_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_USER_KEY_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
             ],
         ],
 
@@ -406,6 +406,7 @@ return [
     // Override the Cake ExceptionRenderer.
     'Error' => [
         'exceptionRenderer' => 'App\Error\AppExceptionRenderer',
+        'logger' => 'App\Error\AppErrorLogger',
         'skipLog' => [
             'Authentication\Authenticator\UnauthenticatedException',
         ],

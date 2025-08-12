@@ -26,6 +26,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
+use Exception;
 
 class IsValidEncryptedMetadataPrivateKey
 {
@@ -51,17 +52,42 @@ class IsValidEncryptedMetadataPrivateKey
             $rules = MessageValidationService::getAsymmetricMessageRules();
             $msgInfo = MessageValidationService::parseAndValidateMessage($entity->get('data'), $rules);
         } catch (CustomValidationException $exception) {
-            Log::error('The message must contain an asymmetric packet. Error: ' . $exception->getMessage());
+            if (Configure::read('debug')) {
+                Log::error('The message must contain an asymmetric packet. Error: ' . $exception->getMessage());
+            }
 
             return false;
         }
 
-        $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
-        if (!MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo)) {
+        try {
+            $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
+        } catch (Exception $e) {
+            if (Configure::read('debug')) {
+                if ($userId !== null) {
+                    Log::error('Issue found with the user key for user id: ' . $userId . ' (Not parsable).');
+                } else {
+                    Log::error('Issue found with the server key. (Not parsable).');
+                }
+            }
+
             return false;
         }
 
-        return true;
+        try {
+            return MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo);
+        } catch (CustomValidationException $exception) {
+            if (Configure::read('debug')) {
+                if ($userId !== null) {
+                    if (!isset($keyInfo['sub_keys'][0]['key_id'])) {
+                        Log::error('Issue found with the user key for user id: ' . $userId . ' (No subkey).');
+                    }
+                } else {
+                    Log::error('Issue found with the server key. (No subkey).');
+                }
+            }
+
+            return false;
+        }
     }
 
     /**

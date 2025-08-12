@@ -54,6 +54,8 @@ class FoldersIndexController extends AppController
      */
     public function index()
     {
+        $this->assertJson();
+
         // Retrieve and sanity the query options.
         $whitelist = [
             'contain' => [

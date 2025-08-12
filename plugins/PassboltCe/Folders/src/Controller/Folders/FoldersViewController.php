@@ -40,6 +40,8 @@ class FoldersViewController extends AppController
      */
     public function view(string $id)
     {
+        $this->assertJson();
+
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The folder id is not valid.'));
         }

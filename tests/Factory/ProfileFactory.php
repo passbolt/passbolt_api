@@ -58,4 +58,15 @@ class ProfileFactory extends CakephpBaseFactory
             ];
         });
     }
+
+    /**
+     * @param string $filename File to import
+     * @return UserFactory this
+     */
+    public function withAvatar(string $filename = FIXTURES . 'Avatar' . DS . 'ada.jpg'): self
+    {
+        return $this->with('Avatars', [
+            'data' => file_get_contents($filename),
+        ]);
+    }
 }

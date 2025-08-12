@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "52afc4ceccaad207eed24390e55a765b",
+    "content-hash": "cc7d5ff2d7fd97230b271939c03bc158",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -264,16 +264,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "5.2.5",
+            "version": "5.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "c1fc1c5b4e73eee0628f5cddffc1c2d7d6ffa466"
+                "reference": "89c925007e9bc149198d0f4cf923e3ad770fb086"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/c1fc1c5b4e73eee0628f5cddffc1c2d7d6ffa466",
-                "reference": "c1fc1c5b4e73eee0628f5cddffc1c2d7d6ffa466",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/89c925007e9bc149198d0f4cf923e3ad770fb086",
+                "reference": "89c925007e9bc149198d0f4cf923e3ad770fb086",
                 "shasum": ""
             },
             "require": {
@@ -381,20 +381,20 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/cakephp"
             },
-            "time": "2025-06-21T03:24:54+00:00"
+            "time": "2025-08-02T03:14:22+00:00"
         },
         {
             "name": "cakephp/chronos",
-            "version": "3.1.0",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/chronos.git",
-                "reference": "786d69e1ee4b735765cbdb5521b9603e9b98d650"
+                "reference": "6c820947bc1372a250288ab164ec1b3bb7afab39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/chronos/zipball/786d69e1ee4b735765cbdb5521b9603e9b98d650",
-                "reference": "786d69e1ee4b735765cbdb5521b9603e9b98d650",
+                "url": "https://api.github.com/repos/cakephp/chronos/zipball/6c820947bc1372a250288ab164ec1b3bb7afab39",
+                "reference": "6c820947bc1372a250288ab164ec1b3bb7afab39",
                 "shasum": ""
             },
             "require": {
@@ -440,7 +440,7 @@
                 "issues": "https://github.com/cakephp/chronos/issues",
                 "source": "https://github.com/cakephp/chronos"
             },
-            "time": "2024-07-18T03:18:04+00:00"
+            "time": "2025-06-28T11:35:59+00:00"
         },
         {
             "name": "cakephp/migrations",
@@ -5492,12 +5492,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-selenium-api",
-                "reference": "0d46ae337ba71659191e7625c96ff2f861da44d1"
+                "reference": "861bc4fe19b5ed58e50dd9a9c52909c997f2934a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/0d46ae337ba71659191e7625c96ff2f861da44d1",
-                "reference": "0d46ae337ba71659191e7625c96ff2f861da44d1",
+                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/861bc4fe19b5ed58e50dd9a9c52909c997f2934a",
+                "reference": "861bc4fe19b5ed58e50dd9a9c52909c997f2934a",
                 "shasum": ""
             },
             "require": {
@@ -5542,63 +5542,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2025-06-10T09:23:34+00:00"
-        },
-        {
-            "name": "passbolt/passbolt-test-data",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/passbolt/passbolt-test-data",
-                "reference": "e0e3771"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-test-data/zipball/e0e3771",
-                "reference": "e0e3771",
-                "shasum": ""
-            },
-            "require": {
-                "cakephp/cakephp": "^5.0",
-                "ext-json": "*"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^10.1.0"
-            },
-            "default-branch": true,
-            "type": "cakephp-plugin",
-            "autoload": {
-                "psr-4": {
-                    "PassboltTestData\\": "src"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "PassboltTestData\\Test\\": "tests",
-                    "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
-                }
-            },
-            "license": [
-                "AGPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Passbolt Team",
-                    "homepage": "https://www.passbolt.com/credits"
-                }
-            ],
-            "description": "Passbolt data test plugin.",
-            "homepage": "https://www.passbolt.com",
-            "keywords": [
-                "passbolt",
-                "password"
-            ],
-            "support": {
-                "bugs": "https://github.com/passbolt/passbolt/issues",
-                "help": "https://www.passbolt.com/help",
-                "source": "https://github.com/passbolt/passbolt"
-            },
-            "time": "2025-06-16T15:30:34+00:00"
+            "time": "2025-07-29T06:27:38+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -7833,7 +7777,7 @@
         "bcrowe/cakephp-api-pagination": 20,
         "psy/psysh": 0,
         "passbolt/passbolt-selenium-api": 20,
-        "passbolt/passbolt-test-data": 20
+        "psy/psysh": 0
     },
     "prefer-stable": true,
     "prefer-lowest": false,

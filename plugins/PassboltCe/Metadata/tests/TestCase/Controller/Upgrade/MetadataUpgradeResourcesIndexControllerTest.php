@@ -21,6 +21,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Core\Configure;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * @uses \Passbolt\Metadata\Controller\Upgrade\MetadataUpgradeResourcesIndexController
@@ -32,6 +33,13 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
         // V4 resources
         $nV4Resources = 3;
         ResourceFactory::make($nV4Resources)->persist();
+        // Add a v4 resource of a deleted resource type.
+        // Resources of deleted resource types should be ignored.
+        ResourceFactory::make()
+            ->with(
+                'ResourceTypes',
+                ResourceTypeFactory::make()->deleted()
+            )->persist();
 
         // V5 resource
         ResourceFactory::make()->v5Fields()->persist();

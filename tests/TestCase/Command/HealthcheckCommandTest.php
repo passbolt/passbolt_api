@@ -127,6 +127,13 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('error(s) found. Hang in there!');
     }
 
+    public function testHealthcheckCommand_Environment_Happy_Path()
+    {
+        $this->exec('passbolt healthcheck -d test --environment');
+        $this->assertExitSuccess();
+        $this->assertOutputContains('<success>[PASS]</success> The logs directory ' . LOGS . ' and its content are writable.');
+    }
+
     public function testHealthcheckCommand_Environment_Unhappy_Path()
     {
         Configure::write(PhpVersionHealthcheck::PHP_MIN_VERSION_CONFIG, '40');

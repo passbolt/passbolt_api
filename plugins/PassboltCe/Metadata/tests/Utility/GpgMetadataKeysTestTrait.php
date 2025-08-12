@@ -31,7 +31,7 @@ trait GpgMetadataKeysTestTrait
     /**
      * @var array|null cached private keys
      */
-    private static $keycache = null;
+    private static ?array $keycache = null;
 
     /**
      * Returns info related to Maki's key.
@@ -321,32 +321,51 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
     /**
      * @return array
      */
-    public function getValidPrivateKeyCleartext(): array
+    public function getValidPrivateKeyCleartext(array $override = []): array
     {
         $key = $this->getMetadataKeyInfo();
 
-        return [
+        return array_merge([
             'object_type' => 'PASSBOLT_METADATA_PRIVATE_KEY',
             'domain' => Router::url('/', true),
             'armored_key' => $key['private_key'],
             'fingerprint' => $key['fingerprint'],
             'passphrase' => $key['passphrase'],
-        ];
+        ], $override);
     }
 
-    public function getValidPrivateKeyDataForServer(): string
+    /**
+     * @param array|null $keyInfo Key information to use. I.e. for signing, etc.
+     * @param string|null $privateKeyCleartextData Private key data to set into encrypted message.
+     * @return string
+     */
+    public function getValidPrivateKeyDataForServer(?array $keyInfo = null, ?string $privateKeyCleartextData = null): string
     {
-        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
-        if (!isset(static::$keycache[$fingerprint])) {
+        $serverFingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+        $signerPrivateKey = null;
+        if (!empty($keyInfo)) {
+            $signerFingerprint = $keyInfo['fingerprint'];
+            $signerPrivateKey = $keyInfo['private_key'];
+            $signerPassphrase = $keyInfo['passphrase'];
+        } else {
+            $signerFingerprint = $serverFingerprint;
+            $signerPassphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
+        }
+
+        if (!isset(static::$keycache[$signerFingerprint])) {
             $gpg = OpenPGPBackendFactory::get();
+            if (!is_null($signerPrivateKey)) {
+                $gpg->importKeyIntoKeyring($signerPrivateKey);
+            }
             $gpg->importServerKeyInKeyring();
-            $gpg->setEncryptKeyFromFingerprint($fingerprint);
-            $gpg->setSignKeyFromFingerprint($fingerprint, Configure::read('passbolt.gpg.serverKey.passphrase'));
-            self::$keycache[$fingerprint] = $gpg->encryptSign($this->getValidPrivateKeyCleartextJson());
+            $gpg->setEncryptKeyFromFingerprint($serverFingerprint);
+            $gpg->setSignKeyFromFingerprint($signerFingerprint, $signerPassphrase);
+            $clearTextData = $privateKeyCleartextData ?? $this->getValidPrivateKeyCleartextJson();
+            static::$keycache[$signerFingerprint] = $gpg->encryptSign($clearTextData);
             $gpg->clearKeys();
         }
 
-        return self::$keycache[$fingerprint];
+        return static::$keycache[$signerFingerprint];
     }
 
     public function getValidPrivateKeyData(string $publicKey): string
@@ -361,11 +380,11 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
                 Configure::read('passbolt.gpg.serverKey.fingerprint'),
                 Configure::read('passbolt.gpg.serverKey.passphrase')
             );
-            self::$keycache[$fingerprint] = $gpg->encrypt($this->getValidPrivateKeyCleartextJson());
+            static::$keycache[$fingerprint] = $gpg->encrypt($this->getValidPrivateKeyCleartextJson());
             $gpg->clearKeys();
         }
 
-        return self::$keycache[$fingerprint];
+        return static::$keycache[$fingerprint];
     }
 
     public function getValidPrivateKeyCleartextJson(): string

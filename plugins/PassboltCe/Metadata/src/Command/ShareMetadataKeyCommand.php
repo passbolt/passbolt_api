@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Command;
 use App\Command\PassboltCommand;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
+use Cake\Core\Configure;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Query;
@@ -45,6 +46,13 @@ class ShareMetadataKeyCommand extends PassboltCommand
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
         parent::execute($args, $io);
+
+        if (!Configure::read('debug') || !Configure::read('passbolt.selenium.active')) {
+            $io->out('This command is to be used for testing and development purpose only.');
+            $io->out('Please enable DEBUG and PASSBOLT_SELENIUM_ACTIVE flags.');
+
+            return $this->errorCode();
+        }
 
         $metadataKeys = $this->getMetadataKeys();
         if (empty($metadataKeys)) {

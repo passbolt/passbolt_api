@@ -12,6 +12,8 @@ return [
                         'autoSetupClientSide',
                     ],
                 ],
+                'enableForNewInstances' => filter_var(env('PASSBOLT_PLUGINS_METADATA_ENABLE_FOR_NEW_INSTANCES', true), FILTER_VALIDATE_BOOLEAN), // phpcs:ignore
+                'enableForExistingInstances' => filter_var(env('PASSBOLT_PLUGINS_METADATA_ENABLE_FOR_EXISTING_INSTANCES', true), FILTER_VALIDATE_BOOLEAN), // phpcs:ignore
             ],
         ],
     ],
