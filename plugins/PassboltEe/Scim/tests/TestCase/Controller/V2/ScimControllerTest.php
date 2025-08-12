@@ -17,6 +17,9 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
+use App\Test\Factory\UserFactory;
+use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
 use Passbolt\Scim\Test\Utility\BaseIntegrationTest;
 
@@ -25,6 +28,8 @@ use Passbolt\Scim\Test\Utility\BaseIntegrationTest;
  */
 class ScimControllerTest extends BaseIntegrationTest
 {
+    use ScenarioAwareTrait;
+
     /**
      * Expected response for `/ServiceProviderConfig` endpoint
      */
@@ -251,6 +256,25 @@ class ScimControllerTest extends BaseIntegrationTest
                 'expectedResponseFile' => self::FIXTURE_RESPONSE_USERS_LIST_MATCH,
             ],
         ];
+    }
+
+    /**
+     * Test case for SCIM api call with a configured user with MFA enabled
+     *
+     * @return void
+     */
+    public function testScimControllerUsersIndex_WithMfaEnabled()
+    {
+        $this->enableFeaturePlugin('MultiFactorAuthentication');
+        $this->setTestNow();
+        $user = UserFactory::get($this->scimUserId, contain: ['Profiles', 'Roles']);
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+
+        $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_LIST_NO_MATCH);
+        $this->configScimAuth();
+        $this->get($this->getScimEndpoint('Users?filter=userName+eq+%22user-not-exist%40username.com%22'));
+        $this->assertResponseCode(200);
+        $this->assertResponseEquals($expectedResponse);
     }
 
     /**
