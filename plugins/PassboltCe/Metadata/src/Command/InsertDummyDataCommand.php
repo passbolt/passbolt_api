@@ -16,18 +16,21 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Command;
 
-use PassboltTestData\Command\Base\FoldersDataCommand;
-use PassboltTestData\Command\Base\FoldersPermissionsDataCommand;
-use PassboltTestData\Command\Base\FoldersRelationsDataCommand;
-use PassboltTestData\Command\Base\GpgkeysDataCommand;
-use PassboltTestData\Command\Base\GroupsDataCommand;
-use PassboltTestData\Command\Base\GroupsUsersDataCommand;
-use PassboltTestData\Command\Base\PermissionsDataCommand;
-use PassboltTestData\Command\Base\ProfilesDataCommand;
-use PassboltTestData\Command\Base\ResourcesDataCommand;
-use PassboltTestData\Command\Base\SecretsDataCommand;
-use PassboltTestData\Command\Base\UsersDataCommand;
-use PassboltTestData\Command\InsertCommand;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Core\Configure;
+use Passbolt\TestData\Command\Base\FoldersDataCommand;
+use Passbolt\TestData\Command\Base\FoldersPermissionsDataCommand;
+use Passbolt\TestData\Command\Base\FoldersRelationsDataCommand;
+use Passbolt\TestData\Command\Base\GpgkeysDataCommand;
+use Passbolt\TestData\Command\Base\GroupsDataCommand;
+use Passbolt\TestData\Command\Base\GroupsUsersDataCommand;
+use Passbolt\TestData\Command\Base\PermissionsDataCommand;
+use Passbolt\TestData\Command\Base\ProfilesDataCommand;
+use Passbolt\TestData\Command\Base\ResourcesDataCommand;
+use Passbolt\TestData\Command\Base\SecretsDataCommand;
+use Passbolt\TestData\Command\Base\UsersDataCommand;
+use Passbolt\TestData\Command\InsertCommand;
 
 class InsertDummyDataCommand extends InsertCommand
 {
@@ -56,5 +59,20 @@ class InsertDummyDataCommand extends InsertCommand
         }
 
         return parent::getShellTasks($scenario);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function execute(Arguments $args, ConsoleIo $io): ?int
+    {
+        if (!Configure::read('debug') || !Configure::read('passbolt.selenium.active')) {
+            $io->out('This command is to be used for testing and development purpose only.');
+            $io->out('Please enable DEBUG and PASSBOLT_SELENIUM_ACTIVE flags.');
+
+            return $this->errorCode();
+        }
+
+        return parent::execute($args, $io);
     }
 }

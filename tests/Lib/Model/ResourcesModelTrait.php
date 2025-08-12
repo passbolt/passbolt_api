@@ -275,8 +275,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
                 ],
             ],
         ];
-        $data = array_merge($defaultData, $data);
 
-        return $data;
+        return array_merge($defaultData, $data);
     }
 }

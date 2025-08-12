@@ -143,9 +143,12 @@ class ResourcesShareService
     private function getResource(string $resourceId): Resource
     {
         /** @var Resource|null $resource */
-        $resource = $this->Resources->findByIdAndDeleted($resourceId, false)->first();
+        $resource = $this->Resources->findByIdAndDeleted($resourceId, false)->contain(['ResourceTypes'])->first();
         if (empty($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
+        }
+        if (empty($resource->resource_type) || !is_null($resource->resource_type->deleted)) {
+            throw new NotFoundException(__('The resource types associated to this resource does not exist.'));
         }
 
         return $resource;

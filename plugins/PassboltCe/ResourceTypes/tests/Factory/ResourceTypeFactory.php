@@ -89,6 +89,7 @@ class ResourceTypeFactory extends CakephpBaseFactory
         return $this->patchData([
             'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_STANDALONE_TOTP),
             'slug' => ResourceType::SLUG_STANDALONE_TOTP,
+            'name' => 'Standalone TOTP',
         ]);
     }
 

@@ -24,6 +24,7 @@ use App\Utility\UserAccessControl;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Cake\Core\Configure;
 use Exception;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Service\MetadataTypesSettingsAssertService;
@@ -108,6 +109,10 @@ class UpdateMetadataTypesSettingsCommand extends PassboltCommand
             ->addOption(MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE, [
                 'required' => false,
                 'help' => __('Set allow downgrade of V5 items to V4 setting.'),
+            ])
+            ->addOption(MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE, [
+                'required' => false,
+                'help' => __('Set allow upgrade of V4 items to V5 setting.'),
             ]);
 
         return $parser;
@@ -119,6 +124,13 @@ class UpdateMetadataTypesSettingsCommand extends PassboltCommand
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
         parent::execute($args, $io);
+
+        if (!Configure::read('debug') || !Configure::read('passbolt.selenium.active')) {
+            $io->out('This command is to be used for testing and development purpose only.');
+            $io->out('Please enable DEBUG and PASSBOLT_SELENIUM_ACTIVE flags.');
+
+            return $this->errorCode();
+        }
 
         $user = $this->getUser($args);
         if (is_null($user)) {
@@ -200,6 +212,7 @@ class UpdateMetadataTypesSettingsCommand extends PassboltCommand
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS,
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS,
             MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE,
+            MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE,
         ];
 
         $data = [];

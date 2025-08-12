@@ -91,6 +91,9 @@ class CleanupCommand extends PassboltCommand
             'Hard Deleted Users',
             'Hard Deleted Profiles',
         ],
+        'Users' => [
+            'Inactive Users With Duplicated Username',
+        ],
     ];
 
     /**

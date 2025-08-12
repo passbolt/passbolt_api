@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Service\Healthcheck;
 
+use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
@@ -29,7 +30,7 @@ use Exception;
 use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 use PDOException;
 
-class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServiceInterface
+class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     use LocatorAwareTrait;
     use OpenPGPCommonServerOperationsTrait;
@@ -52,7 +53,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
     public function check(): HealthcheckServiceInterface
     {
         $settingsDto = MetadataTypesSettingsGetService::getSettings();
-        if (!$settingsDto->isV5ResourceCreationAllowed()) {
+        if (!$settingsDto->isV5Enabled()) {
             $this->status = true;
 
             return $this;

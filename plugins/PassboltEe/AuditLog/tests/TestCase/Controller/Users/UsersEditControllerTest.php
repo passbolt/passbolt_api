@@ -36,6 +36,7 @@ class UsersEditControllerTest extends LogIntegrationTestCase
 
     public function testUsersEditAdminRoleEditSuccess()
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->user()->persist();
         $admin = $this->logInAsAdmin();
         $this->logInAs($admin);
@@ -66,11 +67,11 @@ class UsersEditControllerTest extends LogIntegrationTestCase
             'id' => $user->get('id'),
             'role_id' => $admin->role_id, // The user is now admin!
             'username' => $user->username,
+            'last_logged_in' => $user->last_logged_in->toIso8601String(),
             'profile' => [
                 'first_name' => $user->profile->first_name,
                 'last_name' => $user->profile->last_name,
             ],
-            'last_logged_in' => null,
         ]];
         $this->assertSame($expected, $data);
         $this->assertSame($admin->id, $creator['id']);

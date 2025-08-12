@@ -52,6 +52,7 @@ class MetadataRotateKeyTagsPostControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         // create metadata keys
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         // expired tag

@@ -28,6 +28,7 @@ use App\Test\Lib\Model\GroupsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\FoldersPlugin;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class ResourcesViewControllerTest extends AppIntegrationTestCase
 {
@@ -136,6 +137,19 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
         $resourceId = UuidFactory::uuid();
         $this->getJson("/resources/$resourceId.json");
         $this->assertError(404, 'The resource does not exist.');
+    }
+
+    public function testResourcesViewController_Error_ResourceWithDeletedResourceType(): void
+    {
+        $user = $this->logInAsUser();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$user])
+            ->with('ResourceTypes', ResourceTypeFactory::make()->passwordDescriptionTotp()->deleted())
+            ->persist();
+
+        $this->getJson("/resources/{$resource->get('id')}.json");
+
+        $this->assertNotFoundError('The resource does not exist');
     }
 
     public function testResourcesViewController_Error_SoftDeletedResource(): void

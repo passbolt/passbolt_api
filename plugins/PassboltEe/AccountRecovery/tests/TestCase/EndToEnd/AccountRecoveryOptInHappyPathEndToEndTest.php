@@ -99,6 +99,7 @@ class AccountRecoveryOptInHappyPathEndToEndTest extends AccountRecoveryIntegrati
         self::$admin = UserFactory::make()->admin()->withAvatar()->persist();
         self::$admins = UserFactory::make(self::$nAdmins - 1)->admin()->withAvatar()->persist();
         self::$user = UserFactory::make()
+            ->user()
             ->with('Gpgkeys', GpgkeyFactory::make()->adaPublicKey())
             ->withAvatar()->inactive()->persist();
         UserFactory::make(10)->withAvatar()->active()->persist();

@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Command;
 use App\Command\PassboltCommand;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4FoldersToV5Service;
 
@@ -38,6 +39,13 @@ class MigrateFoldersCommand extends PassboltCommand
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
         parent::execute($args, $io);
+
+        if (!Configure::read('debug') || !Configure::read('passbolt.selenium.active')) {
+            $io->out('This command is to be used for testing and development purpose only.');
+            $io->out('Please enable DEBUG and PASSBOLT_SELENIUM_ACTIVE flags.');
+
+            return $this->errorCode();
+        }
 
         try {
             $result = (new MigrateAllV4FoldersToV5Service())->migrate();

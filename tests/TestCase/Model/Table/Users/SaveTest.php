@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Users;
 
 use App\Model\Validation\EmailValidationRule;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use Cake\Core\Configure;
@@ -31,11 +33,6 @@ class SaveTest extends AppTestCase
      * @var \App\Model\Table\UsersTable
      */
     public $Users;
-
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Groups',
-        'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
-    ];
 
     protected function getEntityDefaultOptions()
     {
@@ -250,7 +247,9 @@ class SaveTest extends AppTestCase
 
     public function testRuleUsernameIsUnique()
     {
-        $data = self::getDummyUser(['username' => 'ada@passbolt.com']);
+        $username = ['username' => 'ada@passbolt.com'];
+        UserFactory::make($username)->persist();
+        $data = self::getDummyUser($username);
         $options = self::getEntityDefaultOptions();
         $entity = $this->Users->newEntity($data, $options);
         $save = $this->Users->save($entity);
@@ -277,6 +276,27 @@ class SaveTest extends AppTestCase
     {
         $data = self::getDummyUser([
             'role_id' => self::getNonExistingRoleId(),
+        ]);
+
+        $options = self::getEntityDefaultOptions();
+
+        $entity = $this->Users->newEntity($data, $options);
+
+        $save = $this->Users->save($entity);
+
+        $this->assertFalse($save);
+
+        $errors = $entity->getErrors();
+
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['role_id']['validRole']);
+    }
+
+    public function testRuleRoleIdShouldNotBeGuest()
+    {
+        $guestRole = RoleFactory::make()->guest()->persist();
+        $data = self::getDummyUser([
+            'role_id' => $guestRole->get('id'),
         ]);
 
         $options = self::getEntityDefaultOptions();

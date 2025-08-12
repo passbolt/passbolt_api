@@ -158,4 +158,11 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $this->postJson('/folders.json?api-version=2');
         $this->assertAuthenticationError();
     }
+
+    public function testFoldersCreateError_NotJson()
+    {
+        $this->logInAsUser();
+        $this->post('/folders');
+        $this->assertResponseCode(404);
+    }
 }

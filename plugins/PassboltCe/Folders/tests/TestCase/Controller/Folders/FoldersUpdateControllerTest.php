@@ -131,4 +131,12 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
         $this->putJson("/folders/{$folderA->get('id')}.json", $data);
         $this->assertError(404, 'The folder does not exist.');
     }
+
+    public function testFoldersUpdateError_NotJson()
+    {
+        $this->logInAsUser();
+        $folderId = UuidFactory::uuid();
+        $this->put("/folders/{$folderId}");
+        $this->assertResponseCode(404);
+    }
 }

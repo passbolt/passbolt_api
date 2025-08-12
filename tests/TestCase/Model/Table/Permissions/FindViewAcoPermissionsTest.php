@@ -23,7 +23,7 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Exception;
-use PassboltTestData\Lib\PermissionMatrix;
+use Passbolt\TestData\Lib\PermissionMatrix;
 
 class FindViewAcoPermissionsTest extends AppTestCase
 {

@@ -16,12 +16,12 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Test\TestCase\Controller;
 
+use App\Event\UpdateUserLastLoggedInListener;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
-use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Database\Type\UuidType;
 use Cake\Database\TypeFactory;
@@ -41,7 +41,6 @@ use Passbolt\Log\Test\Lib\Traits\ActionLogsTestTrait;
 class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
 {
     use ActionLogsTestTrait;
-    use EmailQueueTrait;
     use LocatorAwareTrait;
 
     /**
@@ -84,12 +83,11 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         // during the login action. This is required by Apple mobile devices
         $verifyToken = strtoupper(UuidFactory::uuid());
         $this->postJson('/auth/jwt/login.json', [
-            'user_id' => $user->id,
+            'user_id' => $user->get('id'),
             'challenge' => $this->makeChallenge($user, $verifyToken),
         ]);
 
         $this->assertResponseOk('The authentication was a success.');
-        $this->assertEmailQueueCount(0);
         $this->assertEventFired(GpgJwtAuthenticator::JWT_AUTHENTICATION_AFTER_IDENTIFY);
 
         $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge));
@@ -98,13 +96,19 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertIsString($challenge->access_token);
         $this->assertTrue(Validation::uuid($challenge->refresh_token));
         $this->assertSame($verifyToken, $challenge->verify_token);
-        $this->assertSame(1, AuthenticationTokenFactory::find()->where(['token' => $challenge->refresh_token, 'user_id' => $user->id])->all()->count());
-        $this->assertSame(1, AuthenticationTokenFactory::find()->where(['token' => $challenge->verify_token, 'user_id' => $user->id])->all()->count());
+        $this->assertSame(1, AuthenticationTokenFactory::find()->where(['token' => $challenge->refresh_token, 'user_id' => $user->get('id')])->all()->count());
+        $this->assertSame(1, AuthenticationTokenFactory::find()->where(['token' => $challenge->verify_token, 'user_id' => $user->get('id')])->all()->count());
+
+        // Check user login success event triggered
+        $this->assertEventFired(UpdateUserLastLoggedInListener::EVENT_USER_LOGIN_SUCCESS);
+        // Disable hydration to temporarily disable last_logged_in virtual field accessor
+        $updatedUser = UserFactory::find()->where(['id' => $user->get('id')])->disableHydration()->firstOrFail();
+        $this->assertNotNull($updatedUser['last_logged_in']);
 
         // Assert login action log
         $this->assertOneActionLog();
         $this->assertActionLogExists([
-            'user_id' => $user->id,
+            'user_id' => $user->get('id'),
             'context' => 'POST /auth/jwt/login.json',
         ]);
     }
@@ -120,21 +124,15 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
             )
             ->persist();
 
-        $verifyToken = $user->authentication_tokens[0]->token;
+        $tokens = $user->get('authentication_tokens');
+        $verifyToken = $tokens[0]->token;
 
         $this->postJson('/auth/jwt/login.json', [
-            'user_id' => $user->id,
+            'user_id' => $user->get('id'),
             'challenge' => $this->makeChallenge($user, $verifyToken),
         ]);
 
         $this->assertResponseError('The credentials are invalid.');
-        $this->assertEmailQueueCount(1);
-        $this->assertEmailIsInQueue([
-            'email' => $user->username,
-            'subject' => 'Authentication security alert',
-            'template' => 'Passbolt/JwtAuthentication.User/jwt_attack',
-        ]);
-        $this->assertEmailInBatchContains('Verify token has been already used in the past.');
 
         // Assert login action log
         $this->assertOneActionLog();
@@ -157,7 +155,7 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->Users->softDelete($user);
 
         $this->postJson('/auth/jwt/login.json', [
-            'user_id' => $user->id,
+            'user_id' => $user->get('id'),
             'challenge' => $challenge,
         ]);
 
@@ -178,7 +176,7 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->Users->saveOrFail($user);
 
         $this->postJson('/auth/jwt/login.json', [
-            'user_id' => $user->id,
+            'user_id' => $user->get('id'),
             'challenge' => $challenge,
         ]);
 
@@ -211,7 +209,7 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertResponseOk();
 
         $this->postJson('/auth/jwt/login.json', [
-            'user_id' => $user->id,
+            'user_id' => $user->get('id'),
             'challenge' => $this->makeChallenge($user, UuidFactory::uuid()),
         ]);
         $this->assertResponseSuccess();
@@ -239,10 +237,10 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
             ->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())
             ->persist();
 
-        $this->createJwtTokenAndSetInHeader($user->id);
+        $this->createJwtTokenAndSetInHeader($user->get('id'));
 
         $this->postJson('/auth/jwt/login.json', [
-            'user_id' => $user->id,
+            'user_id' => $user->get('id'),
             'challenge' => 'Bar',
         ]);
 

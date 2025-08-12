@@ -27,6 +27,7 @@ use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\Tags\TagsPlugin;
 use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
@@ -44,6 +45,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         parent::setUp();
 
         $this->enableFeaturePlugin(TagsPlugin::class);
+        $this->enableFeaturePlugin(ResourceTypesPlugin::class);
     }
 
     public function testMetadataResourcesTagsAddController_Success(): void

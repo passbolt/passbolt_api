@@ -38,7 +38,7 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
      */
     public function testAccountRecoverySetupComplete_Success()
     {
-        $user = UserFactory::make()->inactive()->persist();
+        $user = UserFactory::make()->user()->inactive()->persist();
         $token = AuthenticationTokenFactory::make()
             ->active()
             ->type(AuthenticationToken::TYPE_REGISTER)
