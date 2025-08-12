@@ -48,13 +48,6 @@ use Cake\ORM\Entity;
 class User extends Entity implements IdentityInterface
 {
     /**
-     * last_logged_in virtual field.
-     *
-     * @var list<string>
-     */
-    protected array $_virtual = ['last_logged_in'];
-
-    /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
      * Note that when '*' is set to true, this allows all unspecified fields to

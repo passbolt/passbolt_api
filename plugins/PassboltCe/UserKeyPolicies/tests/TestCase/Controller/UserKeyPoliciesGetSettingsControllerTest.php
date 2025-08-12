@@ -134,7 +134,7 @@ class UserKeyPoliciesGetSettingsControllerTest extends AppIntegrationTestCase
         $this->assertSame(UserKeyPoliciesSettingsDto::SOURCE_DEFAULT, $response['source']);
         $this->assertSame(UserKeyPoliciesSettingsDto::DEFAULT_KEY_TYPE, $response['preferred_key_type']);
         $this->assertSame(UserKeyPoliciesSettingsDto::DEFAULT_KEY_SIZE, $response['preferred_key_size']);
-        $this->assertSame(null, $response['preferred_key_curve']);
+        $this->assertSame(UserKeyPoliciesSettingsDto::DEFAULT_KEY_CURVE, $response['preferred_key_curve']);
     }
 
     public function testUserKeyPoliciesGetSettingsController_Error_PluginDisabled(): void

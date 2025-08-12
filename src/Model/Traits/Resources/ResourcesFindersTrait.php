@@ -63,8 +63,13 @@ trait ResourcesFindersTrait
 
         $this->getEventManager()->dispatch($event);
 
-        // Filter out deleted resources
-        $query->where(['Resources.deleted' => false]);
+        $query
+            // Filter out deleted resources
+            ->where(['Resources.deleted' => false])
+            // Filter out resources with deleted resource types
+            ->innerJoinWith('ResourceTypes', function ($q) {
+                return $q->where([$q->expr()->isNull('ResourceTypes.deleted')]);
+            });
 
         if (isset($options['filter']['has-id'])) {
             $query->where(['Resources.id IN' => $options['filter']['has-id']]);
@@ -171,7 +176,8 @@ trait ResourcesFindersTrait
 
         // If contains Resource type.
         if (isset($options['contain']['resource-type'])) {
-            $query->contain('ResourceTypes')
+            $query
+                ->contain('ResourceTypes')
                 ->formatResults(ResourceTypesTable::resultFormatter(true));
         }
 
@@ -216,10 +222,9 @@ trait ResourcesFindersTrait
             throw new InvalidArgumentException('The parameter resourceId should be a valid UUID.');
         }
 
-        $query = $this->findIndex($userId, $options)
+        return $this
+            ->findIndex($userId, $options)
             ->where(['Resources.id' => $resourceId]);
-
-        return $query;
     }
 
     /**
@@ -451,6 +456,9 @@ trait ResourcesFindersTrait
                 $query->newExpr()->isNotNull('Resources.metadata'),
                 $query->newExpr()->isNotNull('Resources.metadata_key_id'),
             ])
+            ->innerJoinWith('ResourceTypes', function (Query $q) {
+                return $q->whereNull('ResourceTypes.deleted');
+            })
             ->innerJoin(['MetadataKeys' => 'metadata_keys'], [
                 'MetadataKeys.id' => new IdentifierExpression('Resources.metadata_key_id'),
                 $query->newExpr()->isNotNull('MetadataKeys.expired'),
@@ -517,9 +525,13 @@ trait ResourcesFindersTrait
      */
     public function findV4(Query $query): Query
     {
-        return $query->where([
-            'Resources.deleted' => false,
-            $query->newExpr()->isNull('Resources.metadata'),
-        ]);
+        return $query
+            ->where([
+                'Resources.deleted' => false,
+                $query->newExpr()->isNull('Resources.metadata'),
+            ])
+            ->innerJoinWith('ResourceTypes', function (Query $q) {
+                return $q->whereNull('ResourceTypes.deleted');
+            });
     }
 }

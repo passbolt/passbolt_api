@@ -227,7 +227,7 @@ class PassboltCommand extends Command implements PassboltCommandInterface
             $io->warning(__('Passbolt commands should only be executed as the web server user.'));
             $io->out();
             $io->info(__('The command should be executed with the same user as your web server. By instance:'));
-            $io->info('su -s /bin/bash -c "' . ROOT . '/bin/cake COMMAND" HTTP_USER');
+            $io->info('su -s /bin/bash -c "' . ROOT . '/bin/' . $this->getName() . '" HTTP_USER');
             $io->info(
                 __(
                     'where HTTP_USER match your web server user: {0}',
@@ -253,7 +253,7 @@ class PassboltCommand extends Command implements PassboltCommandInterface
             $this->error('Passbolt commands cannot be executed as root.', $io);
             $io->out();
             $io->out('The command should be executed with the same user as your web server. By instance:');
-            $io->out('su -s /bin/bash -c "' . ROOT . '/bin/cake COMMAND" HTTP_USER');
+            $io->info('su -s /bin/bash -c "' . ROOT . '/bin/' . $this->getName() . '" HTTP_USER');
             $io->out(
                 __(
                     'where HTTP_USER match your web server user: {0}',

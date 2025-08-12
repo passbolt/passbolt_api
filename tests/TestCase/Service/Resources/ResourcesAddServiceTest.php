@@ -31,6 +31,7 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Exception;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -119,6 +120,21 @@ class ResourcesAddServiceTest extends TestCase
         $this->assertSame(1, ResourceFactory::count());
         $this->assertSame(1, SecretFactory::count());
         $this->assertSame($data['description'], $resource->get('description'));
+    }
+
+    public function testResourceAddService_Error_ResourceTypeDeleted(): void
+    {
+        $uac = UserFactory::make()->persistedUAC();
+        $resourceType = ResourceTypeFactory::make()->standaloneTotp()->deleted()->persist();
+        $data = $this->getDummyResourcesPostData(['resource_type_id' => $resourceType->id]);
+
+        try {
+            $this->service->add($uac, new MetadataResourceDto($data));
+        } catch (Exception $e) {
+            $this->assertInstanceOf(ValidationException::class, $e);
+            $this->assertArrayHasKey('resource_type_id', $e->getErrors());
+            $this->assertArrayHasKey('resource_type_is_not_soft_deleted', $e->getErrors()['resource_type_id']);
+        }
     }
 
     public function testResourceAddServiceNoUser()

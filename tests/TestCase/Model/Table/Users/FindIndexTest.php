@@ -23,7 +23,7 @@ use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use PassboltTestData\Lib\PermissionMatrix;
+use Passbolt\TestData\Lib\PermissionMatrix;
 
 class FindIndexTest extends AppTestCase
 {

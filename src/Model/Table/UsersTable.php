@@ -24,6 +24,7 @@ use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
+use App\Model\Rule\User\IsAdminOrUserRoleIdRule;
 use App\Model\Traits\Users\UsersFindersTrait;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\UserAccessControl;
@@ -236,9 +237,8 @@ class UsersTable extends Table
             'errorField' => 'username',
             'message' => __('The username is already in use.'),
         ]);
-        $rules->add($rules->existsIn(['role_id'], 'Roles'), 'validRole', [
-            'message' => __('The role identifier does not exist.'),
-        ]);
+
+        $rules->add(new IsAdminOrUserRoleIdRule(), 'validRole', ['errorField' => 'role_id']);
 
         // Delete rules
         $msg = __('The user should not be sole owner of shared content, transfer the ownership to other users.');
@@ -595,5 +595,36 @@ class UsersTable extends Table
             ], ['id' => $user->id]);
 
         return $entitiesChanges;
+    }
+
+    /**
+     * Add a cleanup tasks to remove duplicated inactive users with the same usernames
+     * This can happen under some rare conditions with some race conditions or manual DB edits
+     *
+     * @param bool|null $dryRun
+     * @return int
+     */
+    public function cleanupInactiveUsersWithDuplicatedUsername(?bool $dryRun = false): int
+    {
+        $duplicatedUsers = $this->listDuplicateUsernames()->toArray();
+        if (empty($duplicatedUsers)) {
+            return 0;
+        }
+
+        $toDeletedIds = $this->find()
+            ->select('id')
+            ->where(['id IN' => array_keys($duplicatedUsers), 'active' => false])
+            ->all()
+            ->extract('id')
+            ->toArray();
+        if (empty($toDeletedIds)) {
+            return 0;
+        }
+
+        if ($dryRun) {
+            return count($toDeletedIds);
+        }
+
+        return $this->updateAll(['deleted' => true], ['id IN' => $toDeletedIds, 'active' => false]);
     }
 }

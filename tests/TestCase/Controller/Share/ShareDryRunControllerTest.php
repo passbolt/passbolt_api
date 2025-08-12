@@ -31,6 +31,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         'app.Base/Roles',
         'app.Base/Groups',
         'app.Base/GroupsUsers',
+        'app.Base/ResourceTypes',
         'app.Base/Resources',
         'app.Base/Permissions',
     ];

@@ -139,6 +139,15 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
     /**
      * @return bool
      */
+    public function isV5CommentCreationAllowed(): bool
+    {
+        return isset($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS])
+            && $this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] === true;
+    }
+
+    /**
+     * @return bool
+     */
     public function isV4DowngradeAllowed(): bool
     {
         return isset($this->data[MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE])
@@ -152,6 +161,15 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
     {
         return isset($this->data[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE])
             && $this->data[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE] === true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isV5Enabled(): bool
+    {
+        return $this->isV5ResourceCreationAllowed() || $this->isV5FolderCreationAllowed() ||
+            $this->isV5TagCreationAllowed() || $this->isV5CommentCreationAllowed() || $this->isV5UpgradeAllowed();
     }
 
     /**
