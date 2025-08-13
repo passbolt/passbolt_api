@@ -1,8 +1,8 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '5.4.0',
-        'name' => "It's my life",
+        'version' => '5.4.1',
+        'name' => "Ain't No Sunshine",
     ],
     'php' => [
         'minVersion' => '8.2',
