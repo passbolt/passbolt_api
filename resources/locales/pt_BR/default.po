@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-08-13 14:28\n"
+"PO-Revision-Date: 2025-08-13 17:16\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -398,7 +398,7 @@ msgid "Invalid expiry time {0}."
 msgstr "Tempo de expiração inválido {0}."
 
 msgid "The user role ID must be one of the admin or user roles."
-msgstr ""
+msgstr "O ID do papel do usuário deve ser um dos administradores ou funções de usuário."
 
 msgid "The identifier should not be empty."
 msgstr "O identificador não pode estar vazio."
@@ -911,7 +911,7 @@ msgid "The metadata key is marked as expired."
 msgstr "A chave de metadados está marcada como expirada."
 
 msgid "The shared metadata key should be unique."
-msgstr ""
+msgstr "A chave de metadados compartilhada deve ser única."
 
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Não é permitido criar tipos de recurso v5-password-string."
@@ -932,7 +932,7 @@ msgid "The user cannot delete this resource."
 msgstr "O usuário não pode excluir este recurso."
 
 msgid "The resource type for this resource does not exist."
-msgstr ""
+msgstr "O tipo para este recurso não existe."
 
 msgid "The name should be a valid ASCII string."
 msgstr "O nome deve ser uma sequência de caracteres ASCII válida."
@@ -1109,7 +1109,7 @@ msgid "{0} deleted the password {1}"
 msgstr "{0} excluiu a senha {1}"
 
 msgid "{0} deleted a password"
-msgstr ""
+msgstr "{0} excluiu uma senha"
 
 msgid "You edited a resource"
 msgstr "Você editou um recurso"
@@ -1466,13 +1466,13 @@ msgid "Cache is NOT working."
 msgstr "O cache NÃO está funcionando."
 
 msgid "Deprecated `_cake_core_` cache configuration found."
-msgstr ""
+msgstr "Configuração de cache `_cake_core_` descontinuada encontrada."
 
 msgid "Check the settings in {0}"
 msgstr "Verifique as configurações em {0}"
 
 msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
-msgstr ""
+msgstr "Substitua `_cake_core_` por `_cake_translations_` no seu arquivo de configuração {0}."
 
 msgid "Debug mode is off."
 msgstr "O modo de depuração está desativado."
@@ -1601,10 +1601,10 @@ msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "Veja: https://secure.php.net/manual/en/book.intl.php"
 
 msgid "The logs directory {0} and its content are writable."
-msgstr ""
+msgstr "O diretório de logs {0} e seu conteúdo permite gravação."
 
 msgid "The logs directory {0} and its content are not writable."
-msgstr ""
+msgstr "O diretório de logs {0} e seu conteúdo não permite gravação."
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
 msgstr "Certifique-se de que o diretório de logs e seu conteúdo sejam graváveis pelo usuário do servidor da web."
@@ -2012,10 +2012,10 @@ msgid "Validation success for permission {0}"
 msgstr "Validação com sucesso para permissão {0}"
 
 msgid "The permissions data must be an array."
-msgstr ""
+msgstr "Os dados das permissões devem ser uma matriz."
 
 msgid "The permissions data array keys must be integers."
-msgstr ""
+msgstr "As chaves de matriz de dados de permissões devem ser inteiros."
 
 msgid "Could not validate permissions data."
 msgstr "Não foi possível validar dados de permissões."
@@ -2042,7 +2042,7 @@ msgid "Validation success for resource {0}"
 msgstr "Sucesso na validação para o recurso {0}"
 
 msgid "The resource types associated to this resource does not exist."
-msgstr ""
+msgstr "Os tipos de recursos associados a este recurso não existem"
 
 msgid "You are not allowed to update this resource."
 msgstr "Você não tem permissão para atualizar este recurso."
@@ -2366,7 +2366,7 @@ msgid "The metadata key does not exist."
 msgstr "A chave de metadados não existe."
 
 msgid "The folder metadata provided cannot be decrypted."
-msgstr ""
+msgstr "Os metadados da pasta fornecidos não podem ser descriptografados."
 
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Uma pasta do tipo pessoal não pode ser compartilhada com outros usuários ou um grupo."
@@ -2990,22 +2990,22 @@ msgid "You edited the metadata settings"
 msgstr "Você editou as configurações de metadados"
 
 msgid "No active metadata key found."
-msgstr ""
+msgstr "Nenhuma chave de metadados ativa encontrada."
 
 msgid "Active metadata key found or not required."
-msgstr ""
+msgstr "Chave de metadados ativa encontrada ou não é necessária."
 
 msgid "The server has access to the metadata keys or does not require access to it."
-msgstr ""
+msgstr "O servidor tem acesso às chaves de metadados ou não exige acesso a ele."
 
 msgid "The server does not have access to metadata key."
-msgstr ""
+msgstr "O servidor não tem acesso à chave de metadados."
 
 msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
-msgstr ""
+msgstr "Quando o modo de conhecimento zero estiver desligado, o servidor deve ter acesso à chave de metadados."
 
 msgid "Without having access, the server won't be able to share the metadata private key with the users."
-msgstr ""
+msgstr "Sem ter acesso, o servidor não será capaz de compartilhar a chave privada de metadados com os usuários."
 
 msgid "No server metadata private key found."
 msgstr "Nenhuma chave privada de metadados do servidor encontrada."
@@ -3020,22 +3020,22 @@ msgid "Unable to decrypt the metadata private key."
 msgstr "Não foi possível descriptografar a chave privada de metadados."
 
 msgid "Unable to decrypt the metadata private key (id: {0}) data."
-msgstr ""
+msgstr "Não foi possível descriptografar a chave privada do metadados (id: {0})."
 
 msgid "The metadata private key (id: {0}) cleartext data should be in JSON format."
-msgstr ""
+msgstr "A chave privada de metadados (id: {0}) de texto simples devem estar no formato JSON."
 
 msgid "The metadata private key (id: {0}) cleartext data should not be empty."
-msgstr ""
+msgstr "A chave privada dos metadados (id: {0}) a limpeza de dados não deve estar vazia."
 
 msgid "Unable to validate metadata private key (id: {0}) cleartext data."
-msgstr ""
+msgstr "Não foi possível validar a chave privada do metadados (id: {0}) de texto simples."
 
 msgid "The server metadata private key is valid."
-msgstr ""
+msgstr "A chave privada de metadados do servidor é válida."
 
 msgid "The server metadata private key is not valid."
-msgstr ""
+msgstr "A chave privada de metadados do servidor não é válida."
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "A chave de metadados não existe ou já foi excluída."
@@ -3167,10 +3167,10 @@ msgid "Could not save the metadata session keys, please try again later."
 msgstr "Não foi possível salvar as chaves de sessão de metadados, por favor tente novamente mais tarde."
 
 msgid "Unable to save the metadata settings."
-msgstr ""
+msgstr "Não foi possível salvar as configurações de metadados."
 
 msgid "An active metadata key could not be found, create a key first."
-msgstr ""
+msgstr "Uma chave de metadados ativa não pôde ser encontrada, crie uma chave primeiro."
 
 msgid "Could not prepare private key for server key."
 msgstr "Não foi possível preparar a chave privada para a chave do servidor."
@@ -3257,7 +3257,7 @@ msgid "The provided modified by does not match."
 msgstr "O 'modificado por' fornecido não corresponde."
 
 msgid "The folder metadata key data could not be updated."
-msgstr ""
+msgstr "Os dados da chave de metadados da pasta não puderam ser atualizados."
 
 msgid "The resource metadata key data could not be updated."
 msgstr "Não foi possível atualizar os dados da chave de metadados do recurso."
@@ -3332,7 +3332,7 @@ msgid "You have created a new password."
 msgstr "Você criou uma nova senha."
 
 msgid "{0} deleted a password."
-msgstr ""
+msgstr "{0} excluiu uma senha."
 
 msgid "{0} shared a resource with you"
 msgstr "{0} compartilhou um recurso com você"
@@ -3344,7 +3344,7 @@ msgid "You have edited a resource."
 msgstr "Você editou um recurso."
 
 msgid "{0} have edited a resource."
-msgstr ""
+msgstr "{0} editou um recurso."
 
 msgid "Information about the transfer is required."
 msgstr "Informações sobre a transferência são necessárias."
@@ -3872,7 +3872,7 @@ msgid "You have passwords requiring your attention"
 msgstr "Você tem senhas que exigem sua atenção"
 
 msgid "Some of your passwords are expiring today."
-msgstr ""
+msgstr "Algumas das suas senhas expiram hoje."
 
 msgid "{0} marked the password {1} as expired"
 msgstr "{0} marcou a senha {1} como expirada"
@@ -4493,58 +4493,58 @@ msgid "Errors: "
 msgstr "Erros: "
 
 msgid "Could not retrieve the user key policies."
-msgstr ""
+msgstr "Não foi possível recuperar as políticas de chaves do usuário."
 
 msgid "Conflicting authentication parameters, provide user_id/token only when the user is not already signed in."
-msgstr "."
+msgstr "Parâmetros de autenticação conflitantes, forneça user_id/token somente quando o usuário não estiver logado."
 
 msgid "You are not authorized to access this location."
-msgstr ""
+msgstr "Você não tem autorização para acessar essa localização."
 
 msgid "Sign-in to passbolt, or provide a valid user ID and authentication token."
-msgstr ""
+msgstr "Faça login no passbolt ou forneça um ID de usuário e token de autenticação válidos."
 
 msgid "The user ID must be a valid UUID."
-msgstr ""
+msgstr "O ID do usuário deve ser um UUID válido."
 
 msgid "The authentication token must be a valid UUID."
-msgstr ""
+msgstr "O token de autenticação deve ser um UUID válido."
 
 msgid "Unable to authenticate the guest user with the provided credentials."
-msgstr ""
+msgstr "Não foi possível autenticar o usuário convidado com as credenciais fornecidas."
 
 msgid "No registration authentication token found for the given user."
-msgstr ""
+msgstr "Nenhum token de autenticação de registro encontrado para o usuário informado."
 
 msgid "The registration authentication token is expired."
-msgstr ""
+msgstr "O token de autenticação expirou."
 
 msgid "The preferred key type is required."
-msgstr ""
+msgstr "O tipo de chave preferida é obrigatório."
 
 msgid "The preferred key type should not be empty."
-msgstr ""
+msgstr "O tipo de chave preferido não deve estar vazio."
 
 msgid "The preferred key type should be one of the following: {0}."
-msgstr ""
+msgstr "O tipo de chave preferida deve ser um dos seguintes: {0}."
 
 msgid "The preferred key type and size combination does not match."
-msgstr ""
+msgstr "O tipo de chave preferida e a combinação de tamanho não correspondem."
 
 msgid "The preferred key type and curve combination does not match."
-msgstr ""
+msgstr "A combinação e o tipo de chave preferidas não combinam."
 
 msgid "The preferred key size is required."
-msgstr ""
+msgstr "O tamanho da chave preferida é obrigatório."
 
 msgid "The preferred key size should be one of the following: {0}."
-msgstr ""
+msgstr "O tamanho da chave preferida deve ser um dos seguintes: {0}."
 
 msgid "The preferred key curve is required."
-msgstr ""
+msgstr "A curva de teclas preferida é necessária."
 
 msgid "The preferred key curve should be one of the following: {0}."
-msgstr ""
+msgstr "A curva de chave preferida deveria ser uma das seguintes: {0}."
 
 msgid "The data entered are not correct"
 msgstr "Os dados inseridos estão incorretos"
@@ -5279,7 +5279,7 @@ msgid "This user is missing the encryption key for the shared resource metadata.
 msgstr "Este usuário está sem a chave de criptografia para os metadados de recurso compartilhados. Faça login e vá até o espaço de trabalho do usuário e compartilhe a chave manualmente."
 
 msgid "View users"
-msgstr ""
+msgstr "Visualizar usuários"
 
 msgid "This email is an automatic notification sent by"
 msgstr "Este e-mail é uma notificação automática enviada por"
