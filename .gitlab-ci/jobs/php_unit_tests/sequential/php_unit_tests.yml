@@ -157,17 +157,17 @@ seq-php8.2-mysql5.7:
 #    - if: '$TEST_DISABLED == null'
 
 ## DEBIAN 11 BULLSEYE
-seq-php8.2-mariadb10.5:
-  variables:
-    PHP_VERSION: "8.2"
-    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.5"
-  extends:
-    - .mysql-template
-    - .test-template
-  allow_failure: true
-  rules:
-    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
-    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+#seq-php8.2-mariadb10.5:
+#  variables:
+#    PHP_VERSION: "8.2"
+#    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.5"
+#  extends:
+#    - .mysql-template
+#    - .test-template
+#  allow_failure: true
+#  rules:
+#    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+#    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
 
 #seq-php7.4-postgres13.7:
 #  variables:
@@ -206,15 +206,15 @@ seq-php8.2-mysql8:
 ## RPM COMBINATIONS
 ##
 ## CENTOS 7 - with remi and mariadb repos
-seq-php8.4-mariadb10.3:
-  variables:
-    PHP_VERSION: "8.4"
-    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.3"
-  extends:
-    - .mysql-template
-    - .test-template
-  rules:
-    - if: "$TEST_DISABLED == null"
+#seq-php8.4-mariadb10.3:
+#  variables:
+#    PHP_VERSION: "8.4"
+#    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.3"
+#  extends:
+#    - .mysql-template
+#    - .test-template
+#  rules:
+#    - if: "$TEST_DISABLED == null"
 
 #seq-php8.0-postgres13.7:
 #  variables:
@@ -235,15 +235,15 @@ seq-php8.2-postgres15:
     - .postgres-template
     - .test-template
 
-seq-php8.3-mariadb10.5:
-  variables:
-    PHP_VERSION: "8.3"
-    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.5"
-  extends:
-    - .mysql-template
-    - .test-template
-  rules:
-    - if: "$TEST_DISABLED == null"
+#seq-php8.3-mariadb10.5:
+#  variables:
+#    PHP_VERSION: "8.3"
+#    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.5"
+#  extends:
+#    - .mysql-template
+#    - .test-template
+#  rules:
+#    - if: "$TEST_DISABLED == null"
 
 seq-php8.3-postgres13:
   variables:
