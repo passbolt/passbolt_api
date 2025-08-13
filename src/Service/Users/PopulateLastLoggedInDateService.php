@@ -40,7 +40,7 @@ class PopulateLastLoggedInDateService
     }
 
     /**
-     * Fill last logged in value of users table for users who don't have it.
+     * Fill last logged in value of users table for all active users.
      *
      * @return void
      */
@@ -49,10 +49,8 @@ class PopulateLastLoggedInDateService
         $users = $this->Users
             ->find('lastLoggedIn')
             ->where([
-                'last_logged_in IS' => null,
-                // Filter out guests, inactive and deleted users
+                // Filter out guests and inactive users
                 'active' => true,
-                'deleted' => false,
                 'role_id <>' => $this->Users->Roles->getIdByName(Role::GUEST),
             ])
             ->all();
