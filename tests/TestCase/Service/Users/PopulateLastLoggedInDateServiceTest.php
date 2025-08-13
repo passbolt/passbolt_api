@@ -68,7 +68,7 @@ class PopulateLastLoggedInDateServiceTest extends AppTestCase
         $this->sut->populate();
 
         // Make sure all active, disabled users and admins values are populated with the latest action log date
-        $userIds = [$admins[0]->id, $admins[1]->id, $users[0]->id, $users[1]->id, $disabled->id];
+        $userIds = [$admins[0]->id, $admins[1]->id, $users[0]->id, $users[1]->id, $disabled->id, $deleted->id];
         /** @var \App\Model\Entity\User[] $usersWithDateFilled */
         $usersWithDateFilled = UserFactory::find()->where(['id IN' => $userIds])->all();
         foreach ($usersWithDateFilled as $userWithDateFilled) {
