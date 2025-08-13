@@ -21,6 +21,7 @@ use Cake\Form\Schema;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Security;
 use Cake\Validation\Validator;
+use Passbolt\Scim\Model\Validation\ScimTokenFormatRule;
 use Passbolt\Scim\Service\ScimSetSettingsService;
 
 class ScimSettingsForm extends Form
@@ -50,21 +51,7 @@ class ScimSettingsForm extends Form
     {
         $validator
             ->notEmptyString('secret_token', __('The secret token should not be empty.'))
-            ->add('secret_token', 'correctFormat', [
-                'rule' => function ($value, array $context) {
-                    return is_string($value) && (
-                        (str_starts_with(
-                            $value,
-                            ScimSetSettingsService::SCIM_SECRET_TOKEN_PREFIX
-                        ) && strlen($value) >= 46
-                        ) ||
-                        preg_match(
-                            '/^[a-fA-F0-9]{64}$/m',
-                            $value
-                        )
-                    ) ? true : __('The secret token format is incorrect.');
-                },
-            ]);
+            ->add('secret_token', 'correctFormat', new ScimTokenFormatRule());
 
         $validator
             ->uuid('scim_user_id', __('The identifier of the default user should be a valid UUID.'))
