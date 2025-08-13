@@ -18,6 +18,7 @@ namespace App\Service\Users;
 
 use App\Model\Entity\Role;
 use App\Model\Table\UsersTable;
+use Cake\I18n\DateTime;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 
@@ -39,7 +40,7 @@ class PopulateLastLoggedInDateService
     }
 
     /**
-     * Fill last logged in value of users table for users who don't have it.
+     * Fill last logged in value of users table for all active users.
      *
      * @return void
      */
@@ -48,10 +49,8 @@ class PopulateLastLoggedInDateService
         $users = $this->Users
             ->find('lastLoggedIn')
             ->where([
-                'last_logged_in IS' => null,
-                // Filter out guests, inactive and deleted users
+                // Filter out guests and inactive users
                 'active' => true,
-                'deleted' => false,
                 'role_id <>' => $this->Users->Roles->getIdByName(Role::GUEST),
             ])
             ->all();
@@ -74,13 +73,16 @@ class PopulateLastLoggedInDateService
     private function updateLastLoggedIn(array $users): void
     {
         foreach ($users as $user) {
-            if (is_null($user->get('action_logs_last_logged_in'))) {
+            $lastLoggedIn = $user->get('action_logs_last_logged_in');
+            if (is_null($lastLoggedIn)) {
                 // do not update if no action logs associated, i.e. when user just joined and didn't logged-in yet.
                 continue;
+            } elseif ($lastLoggedIn instanceof DateTime) {
+                $lastLoggedIn = $lastLoggedIn->toDateTimeString();
             }
 
             $result = $this->Users->updateAll(
-                ['last_logged_in' => $user->get('action_logs_last_logged_in')],
+                ['last_logged_in' => $lastLoggedIn],
                 ['id' => $user->id]
             );
             if ($result === 0) {
