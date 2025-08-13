@@ -18,6 +18,7 @@ namespace App\Service\Users;
 
 use App\Model\Entity\Role;
 use App\Model\Table\UsersTable;
+use Cake\I18n\DateTime;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 
@@ -74,13 +75,16 @@ class PopulateLastLoggedInDateService
     private function updateLastLoggedIn(array $users): void
     {
         foreach ($users as $user) {
-            if (is_null($user->get('action_logs_last_logged_in'))) {
+            $lastLoggedIn = $user->get('action_logs_last_logged_in');
+            if (is_null($lastLoggedIn)) {
                 // do not update if no action logs associated, i.e. when user just joined and didn't logged-in yet.
                 continue;
+            } elseif ($lastLoggedIn instanceof DateTime) {
+                $lastLoggedIn = $lastLoggedIn->toDateTimeString();
             }
 
             $result = $this->Users->updateAll(
-                ['last_logged_in' => $user->get('action_logs_last_logged_in')],
+                ['last_logged_in' => $lastLoggedIn],
                 ['id' => $user->id]
             );
             if ($result === 0) {
