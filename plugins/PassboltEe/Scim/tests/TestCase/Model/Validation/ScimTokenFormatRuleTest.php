@@ -17,9 +17,6 @@ declare(strict_types=1);
 
 namespace Model\Validation;
 
-use App\Model\Validation\EmailValidationRule;
-use Cake\Core\Configure;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\TestSuite\TestCase;
 use Passbolt\Scim\Model\Validation\ScimTokenFormatRule;
 

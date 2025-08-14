@@ -22,7 +22,6 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Security;
 use Cake\Validation\Validator;
 use Passbolt\Scim\Model\Validation\ScimTokenFormatRule;
-use Passbolt\Scim\Service\ScimSetSettingsService;
 
 class ScimSettingsForm extends Form
 {
@@ -50,7 +49,6 @@ class ScimSettingsForm extends Form
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->notEmptyString('secret_token', __('The secret token should not be empty.'))
             ->add('secret_token', 'correctFormat', new ScimTokenFormatRule());
 
         $validator
@@ -84,6 +82,7 @@ class ScimSettingsForm extends Form
     {
         $validator = $this->validationDefault($validator);
 
+        $validator->allowEmptyString('secret_token');
         $validator
             ->allowEmptyString('setting_id')
             ->add('setting_id', 'ensureEmpty', [
@@ -104,6 +103,8 @@ class ScimSettingsForm extends Form
     public function validationExtended(Validator $validator): Validator
     {
         $validator = $this->validationDefault($validator);
+
+        $validator->notEmptyString('secret_token', __('The secret token should not be empty.'));
 
         $validator
             ->notEmptyString('setting_id', __('The ID for the SCIM settings should not be empty.'))
@@ -128,7 +129,9 @@ class ScimSettingsForm extends Form
      */
     protected function _execute(array $data): bool
     {
-        $this->_data['secret_token'] = Security::hash($data['secret_token'], 'sha256');
+        if (isset($data['secret_token'])) {
+            $this->_data['secret_token'] = Security::hash($data['secret_token'], 'sha256');
+        }
 
         return true;
     }

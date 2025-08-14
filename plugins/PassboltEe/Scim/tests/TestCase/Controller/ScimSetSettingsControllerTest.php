@@ -148,14 +148,6 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $scimUserIdDisabled = $userDisabled->id;
 
         $data = [
-            //Empty secret token
-            [
-                [
-                    'scim_user_id' => $scimUserIdActive,
-                ],
-                'secret_token._empty',
-                'The secret token should not be empty.',
-            ],
             //Wrong format secret token
             [
                 [
@@ -222,11 +214,19 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
             $data[$i][0]['setting_id'] = $settingId;
         }
 
+        //Empty secret token
+        $data[] = [
+            [
+                'scim_user_id' => $data[0][0]['scim_user_id'],
+            ],
+            'secret_token._empty',
+            'The secret token should not be empty.',
+        ];
         //Empty setting_id
         $data[] = [
             [
                 'setting_id' => null,
-                'scim_user_id' => $data[0][0]['scim_user_id'] ,
+                'scim_user_id' => $data[0][0]['scim_user_id'],
             ],
             'setting_id._empty',
             'The ID for the SCIM settings should not be empty.',
@@ -236,7 +236,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $data[] = [
             [
                 'setting_id' => 'WRONG_UUID',
-                'scim_user_id' => $data[0][0]['scim_user_id'] ,
+                'scim_user_id' => $data[0][0]['scim_user_id'],
             ],
             'setting_id.uuid',
             'The ID for the SCIM settings should be a valid UUID.',
@@ -440,5 +440,45 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $newValues = json_decode($gpg->decrypt($this->current->value), associative: true);
 
         $this->assertSame(Security::hash($data['secret_token'], 'sha256'), $newValues['secret_token']);
+    }
+
+    /**
+     * Test setSettings method: update operation success
+     * No secret token passed, should keep previous value
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function testSetSettings_Update_Success_NoSecretToken()
+    {
+        $this->setUpUpdate();
+        $this->logInAsAdmin();
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $data = [
+            'scim_user_id' => $user->id,
+        ];
+        $this->putJson("/scim/settings/{$this->current->id}.json", $data);
+
+        $response = $this->_responseJsonBody;
+
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $previousValues = json_decode($gpg->decrypt($this->current->value), associative: true);
+        $this->assertSuccess();
+        $this->assertSame($previousValues['setting_id'], $response->setting_id);
+        $this->assertSame($data['scim_user_id'], $response->scim_user_id);
+        $this->assertTrue(!isset($response->secret_token));
+        $this->assertObjectHasAttribute('id', $response);
+
+        //Check if secret token was correctly updated
+        $this->current = TableRegistry::getTableLocator()->get('OrganizationSettings')->find()->first();
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $newValues = json_decode($gpg->decrypt($this->current->value), associative: true);
+
+        $this->assertSame($previousValues['secret_token'], $newValues['secret_token']);
     }
 }

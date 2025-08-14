@@ -87,6 +87,9 @@ class ScimSetSettingsService extends ScimBaseSettingsService
         if ($current) {
             $currentValue = $this->decryptSettings($current);
             $form->set('setting_id', Hash::get($currentValue, 'setting_id'));
+            if (!$form->getData('secret_token')) {
+                $form->set('secret_token', Hash::get($currentValue, 'secret_token'));
+            }
         }
 
         $value = $this->encryptSettings($form->getData());

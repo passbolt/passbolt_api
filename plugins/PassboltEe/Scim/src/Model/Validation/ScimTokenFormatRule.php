@@ -34,17 +34,17 @@ class ScimTokenFormatRule extends PassboltValidationRule
     }
 
     /**
-     * Validates de raw format and the hash string
-     *
      * {@inheritDoc}
+     *
+     * Validates de raw format and the hash string
      */
     public function rule($value, $context): bool
     {
         return is_string($value) && (
             (str_starts_with(
-                    $value,
-                    ScimSetSettingsService::SCIM_SECRET_TOKEN_PREFIX
-                ) && strlen($value) >= 46
+                $value,
+                ScimSetSettingsService::SCIM_SECRET_TOKEN_PREFIX
+            ) && strlen($value) >= 46
             ) ||
             preg_match(
                 '/^[a-fA-F0-9]{64}$/m',
