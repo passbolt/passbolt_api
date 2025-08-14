@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-08-07 13:34+0000\n"
-"PO-Revision-Date: 2025-08-13 17:55\n"
+"PO-Revision-Date: 2025-08-14 04:34\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -5087,7 +5087,7 @@ msgid "You cannot reuse account recovery organization public keys."
 msgstr "Você não pode reutilizar as chaves públicas de recuperação de conta da organização."
 
 msgid "You cannot reuse the metadata keys."
-msgstr ""
+msgstr "Você não pode reutilizar as chaves de servidor."
 
 msgid "Could not validate public key data."
 msgstr "Não foi possível validar os dados da chave pública."
@@ -5576,7 +5576,7 @@ msgid "The directory {0} {1} was not deleted because it is ignored."
 msgstr "O diretório {0} {1} não foi excluído porque é ignorado."
 
 msgid "The directory user {0} was already suspended in passbolt."
-msgstr ""
+msgstr "O usuário do diretório {0} já foi suspenso no passbolt."
 
 msgid "The directory {0} {1} was already deleted in passbolt."
 msgstr "O diretório {0} {1} já foi excluído no campo de aplicação."
@@ -5588,7 +5588,7 @@ msgid "The {0} {1} could not be deleted because they are the only manager of one
 msgstr "O {0} {1} não pôde ser excluído porque eles são o único gerente de um ou mais grupos."
 
 msgid "The user {0} was successfully suspended."
-msgstr ""
+msgstr "O usuário {0} foi suspenso com sucesso."
 
 msgid "The {0} {1} was successfully deleted."
 msgstr "O {0} {1} foi apagado com sucesso."
@@ -6218,7 +6218,7 @@ msgid "The prompt should be one of the following: {0}."
 msgstr "O prompt deve ser um dos seguintes: {0}."
 
 msgid "The login hint should be a boolean."
-msgstr ""
+msgstr "A dica de login deve ser um booleano."
 
 msgid "The client id is too large."
 msgstr "O client id é muito grande."
@@ -6248,7 +6248,7 @@ msgid "The scope is too large."
 msgstr "O escopo é muito grande."
 
 msgid "SSO settings edit endpoints are disabled."
-msgstr ""
+msgstr "As configurações de SSO editar endpoints estão desativadas."
 
 msgid "The user is not active."
 msgstr "O usuário não está ativo."
@@ -6368,16 +6368,16 @@ msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
 msgstr "Ou defina passbolt.security.sso.sslVerify como true em {0}."
 
 msgid "The endpoints for updating the SSO configurations are disabled."
-msgstr ""
+msgstr "Os endpoints para atualizar as configurações SSO estão desativados."
 
 msgid "The endpoints for updating the SSO configurations are enabled."
-msgstr ""
+msgstr "Os endpoints para atualizar as configurações SSO estão ativados."
 
 msgid "It is recommended to disable endpoints for updating the SSO configurations."
-msgstr ""
+msgstr "É recomendado desabilitar endpoints para atualizar as configurações SSO."
 
 msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
-msgstr ""
+msgstr "Defina a variável PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED como true."
 
 msgid "The user is missing for the SSO state."
 msgstr "O usuário está ausente para o estado SSO."
@@ -6569,7 +6569,7 @@ msgid "All users can now use Single Sign-on to perform authentication."
 msgstr "Todos os usuários agora podem usar Single Sign-on para realizar a autenticação."
 
 msgid "Viewq  it in passbolt"
-msgstr ""
+msgstr "Visualize no passbolt"
 
 msgid "The SSO setting has been deleted by {0}."
 msgstr "A configuração de SSO foi excluída por {0}."
@@ -6785,7 +6785,7 @@ msgid "The is shared should be a boolean type."
 msgstr "O compartilhamento deve ser do tipo booleano."
 
 msgid "The tags plugin is in read-only mode."
-msgstr ""
+msgstr "O plugin tags está no modo somente leitura."
 
 msgid "The tag should not be empty."
 msgstr "A etiqueta não pode estar vazia."
@@ -6833,7 +6833,7 @@ msgid "Unable to migrate tag id: {0} to V5."
 msgstr "Não foi possível migrar a tag com id: {0} para V5."
 
 msgid "The tag metadata key data could not be updated."
-msgstr ""
+msgstr "Os dados da chave de metadados da pasta não puderam ser atualizados."
 
 msgid "Could not save the tags, try again later."
 msgstr "Não foi possível salvar as tags, tente novamente mais tarde."
