@@ -13,6 +13,6 @@ automatically rotated, which was not the expected behaviour. The expected behavi
 
 We thank the community for promptly reporting these issues.
 
-## [5.4.1-test.1] - 2025-08-13
+## [5.4.1] - 2025-08-13
 ### Fixed
 - PB-44220 Enforces the format to datetime string when persisting the last_logged_in field on users login
