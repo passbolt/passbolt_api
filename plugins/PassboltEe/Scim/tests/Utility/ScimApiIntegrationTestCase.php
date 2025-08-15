@@ -21,12 +21,12 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Routing\Router;
 use Passbolt\Scim\Service\ScimGetSettingsService;
-use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
+use Passbolt\Scim\Test\Factory\ScimSettingFactory;
 
 /**
- * BaseIntegrationTest class
+ * ScimApiIntegrationTestCase class
  */
-abstract class BaseIntegrationTest extends AppIntegrationTestCase
+abstract class ScimApiIntegrationTestCase extends AppIntegrationTestCase
 {
     use ScimTestRequestBodyDataTrait;
     use ScimTestUsersTrait;
@@ -72,7 +72,7 @@ abstract class BaseIntegrationTest extends AppIntegrationTestCase
         RoleFactory::make()->user()->persist();
         RoleFactory::make()->admin()->persist();
         /** @var \App\Model\Entity\OrganizationSetting $scimOrgSetting */
-        ScimOrgSettingFactory::make()->default()->persist();
+        ScimSettingFactory::make()->default()->persist();
         $settingsData = (new ScimGetSettingsService())->getSettingsDecryptedValue();
         $this->settingId = $settingsData['setting_id'] ?? '';
         $this->scimUserId = $settingsData['scim_user_id'] ?? '';
@@ -118,7 +118,7 @@ abstract class BaseIntegrationTest extends AppIntegrationTestCase
     {
         $this->configRequest([
             'headers' => [
-                'Authorization' => 'Bearer ' . ScimOrgSettingFactory::SCIM_TEST_SECRET_TOKEN,
+                'Authorization' => 'Bearer ' . ScimSettingFactory::SCIM_TEST_SECRET_TOKEN,
             ],
         ]);
     }

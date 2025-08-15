@@ -1,21 +1,34 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         5.5.0
+ */
+
 namespace Passbolt\Scim\Test\TestCase\Controller;
 
 use App\Model\Entity\OrganizationSetting;
 use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
-use Cake\ORM\TableRegistry;
 use Passbolt\Scim\ScimPlugin;
-use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
+use Passbolt\Scim\Test\Factory\ScimSettingFactory;
+use Passbolt\Scim\Test\Utility\ScimSettingsIntegrationTestCase;
 use Throwable;
 
 /**
- * Passbolt\Scim\Controller\ScimGetSettingsController Test Case
+ * @covers \Passbolt\Scim\Controller\ScimGetSettingsController
  */
-class ScimGetSettingsControllerTest extends AppIntegrationTestCase
+class ScimGetSettingsControllerTest extends ScimSettingsIntegrationTestCase
 {
     use OpenPGPCommonServerOperationsTrait;
 
@@ -24,9 +37,7 @@ class ScimGetSettingsControllerTest extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->enableFeaturePlugin(ScimPlugin::class);
-        ScimOrgSettingFactory::make()->default()->persist();
-        $this->current = TableRegistry::getTableLocator()->get('OrganizationSettings')->find()->first();
+        $this->current = ScimSettingFactory::make()->default()->persist();
     }
 
     /**
@@ -70,6 +81,18 @@ class ScimGetSettingsControllerTest extends AppIntegrationTestCase
         $this->getJson('/scim/settings.json');
 
         $this->assertResponseCode(401);
+    }
+
+    /**
+     * Test getSettings method: not a json request
+     *
+     * @return void
+     */
+    public function testGetSettings_Error_NotJson()
+    {
+        $this->logInAsAdmin();
+        $this->get("/scim/settings");
+        $this->assertResponseCode(404);
     }
 
     /**

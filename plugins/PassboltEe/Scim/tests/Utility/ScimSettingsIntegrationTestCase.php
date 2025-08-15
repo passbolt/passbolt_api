@@ -14,24 +14,28 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         5.5.0
  */
+namespace Passbolt\Scim\Test\Utility;
 
-namespace Passbolt\Scim\Log;
+use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\Scim\ScimPlugin;
 
-use Cake\Log\Log;
-use Stringable;
-
-/**
- * Scim log
- */
-class ScimLog extends Log
+abstract class ScimSettingsIntegrationTestCase extends AppIntegrationTestCase
 {
     /**
-     * @inheritDoc
+     * Setup.
      */
-    public static function write(string|int $level, Stringable|string $message, array|string $context = []): bool
+    public function setUp(): void
     {
-        $context['scope'] = ['scim'];
+        parent::setUp();
+        $this->enableFeaturePlugin(ScimPlugin::class);
+    }
 
-        return parent::write($level, $message, $context);
+    /**
+     * Tear down
+     */
+    public function tearDown(): void
+    {
+        $this->disableFeaturePlugin(ScimPlugin::class);
+        parent::tearDown();
     }
 }

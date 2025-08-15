@@ -16,23 +16,23 @@ declare(strict_types=1);
  */
 namespace Passbolt\Scim\Service;
 
-use App\Model\Entity\OrganizationSetting;
 use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
 use Exception;
 use Passbolt\Scim\Form\Settings\ScimSettingsForm;
+use Passbolt\Scim\Model\Entity\ScimSetting;
 
 /**
  * ScimBaseSettingsService class
  */
 abstract class ScimBaseSettingsService
 {
+    use LocatorAwareTrait;
     use OpenPGPCommonServerOperationsTrait;
-
-    public const SCIM_SETTINGS_PROPERTY_NAME = 'scim';
 
     /**
      * Renders the value merging the validated settings
@@ -40,11 +40,11 @@ abstract class ScimBaseSettingsService
      *
      * The form is passed in order to ensure that the data returned is sanitized
      *
-     * @param \App\Model\Entity\OrganizationSetting $setting Setting in the DB
+     * @param \Passbolt\Scim\Model\Entity\ScimSetting $setting Setting in the DB
      * @param \Passbolt\Scim\Form\Settings\ScimSettingsForm $form Form validating the value of the setting
      * @return array
      */
-    public function getRenderedValue(OrganizationSetting $setting, ScimSettingsForm $form): array
+    public function getRenderedValue(ScimSetting $setting, ScimSettingsForm $form): array
     {
         $data = $this->decryptSettings($setting);
         $renderedValue = array_merge(
@@ -67,12 +67,12 @@ abstract class ScimBaseSettingsService
     }
 
     /**
-     * @param \App\Model\Entity\OrganizationSetting $organizationSetting
+     * @param \Passbolt\Scim\Model\Entity\ScimSetting $scimSetting
      * @return array
      */
-    protected function decryptSettings(OrganizationSetting $organizationSetting): array
+    protected function decryptSettings(ScimSetting $scimSetting): array
     {
-        $value = $organizationSetting->get('value');
+        $value = $scimSetting->get('value');
         if (!$value) {
             return $this->getDefaultSettings();
         }

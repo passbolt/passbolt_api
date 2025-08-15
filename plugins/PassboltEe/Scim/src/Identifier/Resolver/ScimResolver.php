@@ -2,18 +2,19 @@
 declare(strict_types=1);
 
 /**
- * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
- * Licensed under The MIT License
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
- * @link          https://cakephp.org CakePHP(tm) Project
- * @since         1.0.0
- * @license       https://opensource.org/licenses/mit-license.php MIT License
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         5.5.0
  */
+
 namespace Passbolt\Scim\Identifier\Resolver;
 
 use App\Model\Entity\Role;
@@ -33,13 +34,11 @@ class ScimResolver implements ResolverInterface
      */
     public function find(array $conditions, string $type = self::TYPE_AND): ArrayAccess|array|null
     {
-        /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
-        $OrganizationSettings = $this->getTableLocator()->get('OrganizationSettings');
-
-        $scimOrganizationSetting = $OrganizationSettings
-            ->getByProperty(ScimBaseSettingsService::SCIM_SETTINGS_PROPERTY_NAME);
-
-        if (!$scimOrganizationSetting) {
+        /** @var \Passbolt\Scim\Model\Table\ScimSettingsTable $scimSettingsTable */
+        $scimSettingsTable = $this->fetchTable('Passbolt/Scim.ScimSettings');
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting|null $settings */
+        $settings = $scimSettingsTable->find()->first();
+        if (!$settings) {
             return null;
         }
 

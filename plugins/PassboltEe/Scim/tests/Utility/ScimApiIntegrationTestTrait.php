@@ -20,9 +20,9 @@ namespace Passbolt\Scim\Test\Utility;
 /**
  * Trait with utility function for testing scim users operations
  *
- * @mixin \Passbolt\Scim\Test\Utility\BaseIntegrationTest
+ * @mixin \Passbolt\Scim\Test\Utility\ScimApiIntegrationTestCase
  */
-trait ScimIntegrationTestTrait
+trait ScimApiIntegrationTestTrait
 {
     /**
      * @param string $userId

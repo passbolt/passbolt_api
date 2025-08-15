@@ -29,7 +29,7 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Exception;
-use Passbolt\Scim\Exception\BadRequest;
+use Passbolt\Scim\Exception\BadRequestException;
 use Passbolt\Scim\Exception\ConflictException;
 use Passbolt\Scim\Exception\NotSupportedException;
 use Passbolt\Scim\Exception\ResourceNotFoundException;
@@ -437,7 +437,7 @@ class UserScimResource implements ScimResourceInterface
         foreach ($patchRequest->getOperations() as $operation) {
             $mutability = $this->getAttributeMutability($operation);
             if ($mutability === ScimConstants::ATTRIBUTE_MUTABILITY_READ_ONLY) {
-                throw new BadRequest(sprintf(
+                throw new BadRequestException(sprintf(
                     'Unable to apply operation `%s` for the attribute `%s` with mutability `%s`',
                     $operation->getType(),
                     $operation->getAttribute(),
@@ -448,7 +448,7 @@ class UserScimResource implements ScimResourceInterface
                 $mutability === ScimConstants::ATTRIBUTE_MUTABILITY_IMMUTABLE &&
                 $operation->getType() !== Operation::TYPE_ADD
             ) {
-                throw new BadRequest(sprintf(
+                throw new BadRequestException(sprintf(
                     'Unable to apply operation `%s` for the attribute `%s` with mutability `%s`',
                     $operation->getType(),
                     $operation->getAttribute(),
@@ -526,7 +526,7 @@ class UserScimResource implements ScimResourceInterface
                             $userPatchData['disabled'] = $disabled;
                             break;
                         case 'emails':
-                            throw new BadRequest(
+                            throw new BadRequestException(
                                 'The email can not be changed',
                                 scimType: ScimException::SCIM_TYPE_MUTABILITY
                             );
@@ -552,7 +552,7 @@ class UserScimResource implements ScimResourceInterface
                             $userPatchData['disabled'] = $this->getDisabledDate();
                             break;
                         case 'emails':
-                            throw new BadRequest(
+                            throw new BadRequestException(
                                 'The email can not be changed',
                                 scimType: ScimException::SCIM_TYPE_MUTABILITY
                             );

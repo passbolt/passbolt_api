@@ -18,7 +18,6 @@ namespace Passbolt\Scim\Service;
 
 use App\Error\Exception\FormValidationException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\TableRegistry;
 use Passbolt\Scim\Form\Settings\ScimSettingsForm;
 
 class ScimGetSettingsService extends ScimBaseSettingsService
@@ -30,9 +29,10 @@ class ScimGetSettingsService extends ScimBaseSettingsService
      */
     public function getSettingsDecryptedValue(): array
     {
-        /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
-        $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
-        $settings = $OrganizationSettings->getByProperty(self::SCIM_SETTINGS_PROPERTY_NAME);
+        /** @var \Passbolt\Scim\Model\Table\ScimSettingsTable $scimSettingsTable */
+        $scimSettingsTable = $this->fetchTable('Passbolt/Scim.ScimSettings');
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting|null $settings */
+        $settings = $scimSettingsTable->find()->first();
         if (is_null($settings)) {
             return $this->getDefaultSettings();
         }
@@ -50,9 +50,10 @@ class ScimGetSettingsService extends ScimBaseSettingsService
      */
     public function getSettings(): array
     {
-        /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
-        $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
-        $settings = $OrganizationSettings->getByProperty(self::SCIM_SETTINGS_PROPERTY_NAME);
+        /** @var \Passbolt\Scim\Model\Table\ScimSettingsTable $scimSettingsTable */
+        $scimSettingsTable = $this->fetchTable('Passbolt/Scim.ScimSettings');
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting|null $settings */
+        $settings = $scimSettingsTable->find()->first();
         if (is_null($settings)) {
             return $this->getDefaultSettings();
         }

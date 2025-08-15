@@ -20,15 +20,15 @@ namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 use App\Test\Factory\UserFactory;
 use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
-use Passbolt\Scim\Test\Utility\BaseIntegrationTest;
-use Passbolt\Scim\Test\Utility\ScimIntegrationTestTrait;
+use Passbolt\Scim\Test\Utility\ScimApiIntegrationTestCase;
+use Passbolt\Scim\Test\Utility\ScimApiIntegrationTestTrait;
 
 /**
  * IntegrationUsersTest class
  */
-class IntegrationUsersTest extends BaseIntegrationTest
+class IntegrationUsersTestCase extends ScimApiIntegrationTestCase
 {
-    use ScimIntegrationTestTrait;
+    use ScimApiIntegrationTestTrait;
 
     /**
      * Test: The user does not exist in passbolt

@@ -19,7 +19,7 @@ namespace Passbolt\Scim\Exception;
 /**
  * Exception raised when Request is unparsable, syntactically incorrect, or violates schema.
  */
-class BadRequest extends ScimException
+class BadRequestException extends ScimException
 {
     /**
      * @inheritDoc

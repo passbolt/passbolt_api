@@ -21,6 +21,13 @@ return [
                 'version' => '1.0.0',
                 'enabled' => true,
                 'logScimRequests' => filter_var(env('PASSBOLT_PLUGINS_SCIM_LOG_SCIM_REQUESTS', false), FILTER_VALIDATE_BOOLEAN), // phpcs:ignore
+                'security' => [
+                    'csrfProtection' => [
+                        'unlockedActions' => [
+                            'Scim' => ['create', 'update', 'delete'],
+                        ],
+                    ],
+                ],
             ],
         ],
     ],

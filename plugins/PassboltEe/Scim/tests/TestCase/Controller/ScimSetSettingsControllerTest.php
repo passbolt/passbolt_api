@@ -1,40 +1,47 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         5.5.0
+ */
+
 namespace Passbolt\Scim\Test\TestCase\Controller;
 
-use App\Model\Entity\OrganizationSetting;
 use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Test\Factory\UserFactory;
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Utility\Security;
+use Passbolt\Scim\Model\Entity\ScimSetting;
 use Passbolt\Scim\ScimPlugin;
 use Passbolt\Scim\Service\ScimSetSettingsService;
-use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
+use Passbolt\Scim\Test\Factory\ScimSettingFactory;
+use Passbolt\Scim\Test\Utility\ScimSettingsIntegrationTestCase;
 use Throwable;
 
 /**
- * Passbolt\Scim\Controller\ScimSetSettingsController Test Case
+ * @covers \Passbolt\Scim\Controller\ScimSetSettingsController
  */
-class ScimSetSettingsControllerTest extends AppIntegrationTestCase
+class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
 {
     use OpenPGPCommonServerOperationsTrait;
 
-    protected OrganizationSetting $current;
+    protected ScimSetting $current;
 
-    public function setUp(): void
+    public function setupUpdate(): void
     {
-        parent::setUp();
-        $this->enableFeaturePlugin(ScimPlugin::class);
-    }
-
-    public function setUpUpdate(): void
-    {
-        $this->current = ScimOrgSettingFactory::make()->default()->persist();
+        $this->current = ScimSettingFactory::make()->default()->persist();
     }
 
     /**
@@ -81,13 +88,25 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
     }
 
     /**
+     * Test setSettings method: not a json request
+     *
+     * @return void
+     */
+    public function testGetSettings_Error_NotJson()
+    {
+        $this->logInAsAdmin();
+        $this->post("/scim/settings");
+        $this->assertResponseCode(404);
+    }
+
+    /**
      * Test setSettings method: create settings already set
      *
      * @return void
      */
     public function testSetSettings_Create_SettingsAlreadySet()
     {
-        $this->setUpUpdate();
+        $this->setupUpdate();
         $this->logInAsAdmin();
 
         /** @var \App\Model\Entity\User $user */
@@ -143,7 +162,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $userDisabled = UserFactory::make()->disabled()->persist();
 
         $scimUserIdActive = $userActive->id;
-        $secretToken = Hash::get(ScimOrgSettingFactory::make()->getDefaultValue(), 'secret_token');
+        $secretToken = Hash::get(ScimSettingFactory::make()->getDefaultValue(), 'secret_token');
         $scimUserIdNotActive = $userNotActive->id;
         $scimUserIdDisabled = $userDisabled->id;
 
@@ -260,7 +279,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $this->logInAsAdmin();
 
         if ($key === 'setting_id.notInUse') {
-            $this->setUpUpdate();
+            $this->setupUpdate();
         }
 
         $this->postJson('/scim/settings.json', $data);
@@ -302,7 +321,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $this->assertObjectHasAttribute('id', $response);
 
         //Check if secret token was correctly set
-        $this->current = TableRegistry::getTableLocator()->get('OrganizationSettings')->find()->first();
+        $this->current = $this->fetchTable('Passbolt/Scim.ScimSettings')->find()->first();
         $gpg = OpenPGPBackendFactory::get();
         $gpg = $this->setDecryptKeyWithServerKey($gpg);
         $values = json_decode($gpg->decrypt($this->current->value), associative: true);
@@ -317,7 +336,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      */
     public function testSetSettings_Update_Error_PluginDisabled(): void
     {
-        $this->setUpUpdate();
+        $this->setupUpdate();
         $this->disableFeaturePlugin(ScimPlugin::class);
 
         try {
@@ -335,7 +354,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      */
     public function testSetSettings_Update_Error_GuestForbidden(): void
     {
-        $this->setUpUpdate();
+        $this->setupUpdate();
         $this->logInAsUser();
 
         $this->putJson("/scim/settings/{$this->current->id}.json");
@@ -350,7 +369,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      */
     public function testSetSettings_Update_Error_Unauthenticated()
     {
-        $this->setUpUpdate();
+        $this->setupUpdate();
         $this->putJson("/scim/settings/{$this->current->id}.json");
 
         $this->assertResponseCode(401);
@@ -363,7 +382,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      */
     public function testSetSettings_Update_WrongUUID()
     {
-        $this->setUpUpdate();
+        $this->setupUpdate();
         $this->logInAsAdmin();
 
         $wrongUuid = UuidFactory::uuid();
@@ -389,7 +408,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      */
     public function testSetSettings_Update_Validation($data, $key, $message)
     {
-        $this->setUpUpdate();
+        $this->setupUpdate();
         $this->logInAsAdmin();
 
         $this->postJson("/scim/settings/{$this->current->id}.json", $data);
@@ -410,7 +429,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      */
     public function testSetSettings_Update_Success()
     {
-        $this->setUpUpdate();
+        $this->setupUpdate();
         $this->logInAsAdmin();
 
         /** @var \App\Model\Entity\User $user */
@@ -434,7 +453,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $this->assertObjectHasAttribute('id', $response);
 
         //Check if secret token was correctly updated
-        $this->current = TableRegistry::getTableLocator()->get('OrganizationSettings')->find()->first();
+        $this->current = $this->fetchTable('Passbolt/Scim.ScimSettings')->find()->first();
         $gpg = OpenPGPBackendFactory::get();
         $gpg = $this->setDecryptKeyWithServerKey($gpg);
         $newValues = json_decode($gpg->decrypt($this->current->value), associative: true);
@@ -451,7 +470,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
      */
     public function testSetSettings_Update_Success_NoSecretToken()
     {
-        $this->setUpUpdate();
+        $this->setupUpdate();
         $this->logInAsAdmin();
 
         /** @var \App\Model\Entity\User $user */
@@ -474,7 +493,7 @@ class ScimSetSettingsControllerTest extends AppIntegrationTestCase
         $this->assertObjectHasAttribute('id', $response);
 
         //Check if secret token was correctly updated
-        $this->current = TableRegistry::getTableLocator()->get('OrganizationSettings')->find()->first();
+        $this->current = ScimSettingFactory::find()->first();
         $gpg = OpenPGPBackendFactory::get();
         $gpg = $this->setDecryptKeyWithServerKey($gpg);
         $newValues = json_decode($gpg->decrypt($this->current->value), associative: true);

@@ -19,11 +19,12 @@ namespace Passbolt\Scim\Service;
 use App\Utility\UserAccessControl;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\TableRegistry;
+use Cake\ORM\Locator\LocatorAwareTrait;
 
 class ScimDeleteSettingsService
 {
     use EventDispatcherTrait;
+    use LocatorAwareTrait;
 
     /**
      * Delete the SCIM settings in the DB
@@ -36,16 +37,15 @@ class ScimDeleteSettingsService
      */
     public function deleteSettings(UserAccessControl $uac, string $id): bool
     {
-        /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
-        $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
-        $settings = $OrganizationSettings->getByProperty(
-            ScimBaseSettingsService::SCIM_SETTINGS_PROPERTY_NAME
-        );
+        /** @var \Passbolt\Scim\Model\Table\ScimSettingsTable $scimSettingsTable */
+        $scimSettingsTable = $this->fetchTable('Passbolt/Scim.ScimSettings');
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting|null $settings */
+        $settings = $scimSettingsTable->find()->first();
         if (is_null($settings) || $settings->get('id') !== $id) {
             throw new NotFoundException('The SCIM setting does not exist.');
         }
 
-        $result = $OrganizationSettings->deleteOrFail($settings);
+        $result = $scimSettingsTable->deleteOrFail($settings);
         $eventData = [
             'modified_by' => $uac->getId(),
         ];

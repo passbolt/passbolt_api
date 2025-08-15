@@ -20,7 +20,6 @@ use App\Error\Exception\FormValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Scim\Form\Settings\ScimSettingsForm;
 
@@ -71,9 +70,10 @@ class ScimSetSettingsService extends ScimBaseSettingsService
             );
         }
 
-        /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
-        $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
-        $current = $OrganizationSettings->getByProperty(self::SCIM_SETTINGS_PROPERTY_NAME);
+        /** @var \Passbolt\Scim\Model\Table\ScimSettingsTable $scimSettingsTable */
+        $scimSettingsTable = $this->fetchTable('Passbolt/Scim.ScimSettings');
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting|null $current */
+        $current = $scimSettingsTable->find()->first();
         if (!$current && $id) {
             throw new NotFoundException(__('The SCIM plugin is disabled.'));
         }
@@ -93,11 +93,13 @@ class ScimSetSettingsService extends ScimBaseSettingsService
         }
 
         $value = $this->encryptSettings($form->getData());
-        $setting = $OrganizationSettings->createOrUpdateSetting(
-            self::SCIM_SETTINGS_PROPERTY_NAME,
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $setting */
+        $setting = $scimSettingsTable->createOrUpdateSetting(
+            $scimSettingsTable->getProperty(),
             $value,
             $this->uac
         );
+
         $renderedSettings = $this->getRenderedValue($setting, $form);
 
         $this->dispatchEvent(

@@ -100,7 +100,5 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
         $routes->connect('/{settingId}/{resourceType}/{id}', ['controller' => 'Scim', 'action' => 'delete'])
             ->setPass(['settingId', 'resourceType', 'id'])
             ->setMethods(['DELETE']);
-
-        $routes->fallbacks(DashedRoute::class);
     });
 });

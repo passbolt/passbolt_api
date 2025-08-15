@@ -27,7 +27,8 @@ use Cake\Core\PluginApplicationInterface;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\RoutingMiddleware;
-use Passbolt\Scim\Command\ScimSettingsCommand;
+use Passbolt\Scim\Command\ScimSettingsCreateCommand;
+use Passbolt\Scim\Command\ScimSettingsDeleteCommand;
 use Passbolt\Scim\Middleware\ScimAuthMiddleware;
 use Passbolt\Scim\Middleware\ScimLogMiddleware;
 use Passbolt\Scim\Service\Healthcheck\ScimHealthcheckService;
@@ -63,7 +64,9 @@ class ScimPlugin extends BasePlugin
             ->extend(HealthcheckServiceCollector::class)
             ->addMethodCall('addService', [ScimHealthcheckService::class]);
 
-        $container->add(ScimSettingsCommand::class)
+        $container->add(ScimSettingsCreateCommand::class)
+            ->addArgument(GetUserCommandService::class);
+        $container->add(ScimSettingsDeleteCommand::class)
             ->addArgument(GetUserCommandService::class);
     }
 
@@ -86,7 +89,8 @@ class ScimPlugin extends BasePlugin
     public function console(CommandCollection $commands): CommandCollection
     {
         if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
-            $commands->add('passbolt scim_settings', ScimSettingsCommand::class);
+            $commands->add('passbolt scim_settings create', ScimSettingsCreateCommand::class);
+            $commands->add('passbolt scim_settings delete', ScimSettingsDeleteCommand::class);
         }
 
         return $commands;

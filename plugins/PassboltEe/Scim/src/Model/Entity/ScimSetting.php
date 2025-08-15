@@ -14,24 +14,20 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         5.5.0
  */
+namespace Passbolt\Scim\Model\Entity;
 
-namespace Passbolt\Scim\Log;
-
-use Cake\Log\Log;
-use Stringable;
+use App\Model\Entity\OrganizationSetting;
 
 /**
- * Scim log
+ * ScimSetting Entity
+ *
+ * @property string $value Settings value.
+ * @inheritDoc
  */
-class ScimLog extends Log
+class ScimSetting extends OrganizationSetting
 {
     /**
-     * @inheritDoc
+     * @var string
      */
-    public static function write(string|int $level, Stringable|string $message, array|string $context = []): bool
-    {
-        $context['scope'] = ['scim'];
-
-        return parent::write($level, $message, $context);
-    }
+    public const PROPERTY_NAME = 'scim';
 }

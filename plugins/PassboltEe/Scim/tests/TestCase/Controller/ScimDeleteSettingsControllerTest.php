@@ -1,29 +1,40 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         5.5.0
+ */
+
 namespace Passbolt\Scim\Test\TestCase\Controller;
 
 use App\Model\Entity\OrganizationSetting;
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 use Passbolt\Scim\ScimPlugin;
-use Passbolt\Scim\Test\Factory\ScimOrgSettingFactory;
+use Passbolt\Scim\Test\Factory\ScimSettingFactory;
+use Passbolt\Scim\Test\Utility\ScimSettingsIntegrationTestCase;
 use Throwable;
 
 /**
- * Passbolt\Scim\Controller\ScimDeleteSettingsController Test Case
+ * @covers \Passbolt\Scim\Controller\ScimDeleteSettingsController
  */
-class ScimDeleteSettingsControllerTest extends AppIntegrationTestCase
+class ScimDeleteSettingsControllerTest extends ScimSettingsIntegrationTestCase
 {
     protected OrganizationSetting $current;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->enableFeaturePlugin(ScimPlugin::class);
-        ScimOrgSettingFactory::make()->default()->persist();
-        $this->current = TableRegistry::getTableLocator()->get('OrganizationSettings')->find()->first();
+        $this->current = ScimSettingFactory::make()->default()->persist();
     }
 
     /**
@@ -70,6 +81,18 @@ class ScimDeleteSettingsControllerTest extends AppIntegrationTestCase
     }
 
     /**
+     * Test deleteSettings method: not a json request
+     *
+     * @return void
+     */
+    public function testDeleteSettings_Error_NotJson()
+    {
+        $this->logInAsAdmin();
+        $this->delete("/scim/settings/{$this->current->id}");
+        $this->assertResponseCode(404);
+    }
+
+    /**
      * Test deleteSettings method: wrong UUID
      *
      * @return void
@@ -92,10 +115,16 @@ class ScimDeleteSettingsControllerTest extends AppIntegrationTestCase
      */
     public function testDeleteSettings_Success()
     {
-        $this->logInAsAdmin();
+        /** @var \Passbolt\Scim\Model\Table\ScimSettingsTable $scimSettingsTable */
+        $scimSettingsTable = $this->fetchTable('Passbolt/Scim.ScimSettings');
+        $existingOrganizationSetting = $scimSettingsTable->find()->first();
+        $this->assertNotNull($existingOrganizationSetting);
 
+        $this->logInAsAdmin();
         $this->deleteJson("/scim/settings/{$this->current->id}.json");
 
         $this->assertSuccess();
+        $existingOrganizationSetting = $scimSettingsTable->find()->first();
+        $this->assertNull($existingOrganizationSetting);
     }
 }
