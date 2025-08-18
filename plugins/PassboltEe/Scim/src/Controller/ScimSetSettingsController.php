@@ -33,8 +33,8 @@ class ScimSetSettingsController extends AppController
         $this->assertJson();
         $this->User->assertIsAdmin();
 
-        $service = new ScimSetSettingsService($this->User->getAccessControl());
-        $settings = $service->saveSettings($this->getRequest()->getData(), $id);
+        $service = new ScimSetSettingsService();
+        $settings = $service->saveSettings($this->User->getAccessControl(), $this->getRequest()->getData(), $id);
 
         $this->success(__('The operation was successful.'), $settings);
     }

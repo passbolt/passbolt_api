@@ -49,13 +49,17 @@ class ScimSettingsCreateCommand extends ScimSettingsCommand
         $id = $args->getOption('id');
         $uac = new UserAccessControl(Role::ADMIN, $user->id, $user->username);
         try {
-            $service = new ScimSetSettingsService($uac);
+            $service = new ScimSetSettingsService();
             $secretToken = ScimSetSettingsService::generateToken();
-            $settings = $service->saveSettings([
-                'scim_user_id' => $user->id,
-                'setting_id' => UuidFactory::uuid(),
-                'secret_token' => $secretToken,
-            ], $id);
+            $settings = $service->saveSettings(
+                $uac,
+                [
+                    'scim_user_id' => $user->id,
+                    'setting_id' => UuidFactory::uuid(),
+                    'secret_token' => $secretToken,
+                ],
+                $id
+            );
             $settings['secret_token'] = $secretToken;
             $io->success('Settings were successfully generated. Please check them');
             $io->out(print_r($settings, return: true));

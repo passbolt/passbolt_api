@@ -36,25 +36,13 @@ class ScimSetSettingsService extends ScimBaseSettingsService
     public const SCIM_SETTINGS_UPDATE_EVENT_NAME = 'scim_settings_update_event_name';
 
     /**
-     * @var \App\Utility\UserAccessControl
-     */
-    private UserAccessControl $uac;
-
-    /**
-     * @param \App\Utility\UserAccessControl $uac UAC
-     */
-    public function __construct(UserAccessControl $uac)
-    {
-        $this->uac = $uac;
-    }
-
-    /**
-     * @param array $data data in the payload
-     * @param string|null $id ID of the setting to be updated
+     * @param UserAccessControl $uac
+     * @param array $data
+     * @param string|null $id
      * @return array
      * @throws \Exception
      */
-    public function saveSettings(array $data, ?string $id = null): array
+    public function saveSettings(UserAccessControl $uac, array $data, ?string $id = null): array
     {
         $form = new ScimSettingsForm();
         if ($id) {
@@ -98,7 +86,7 @@ class ScimSetSettingsService extends ScimBaseSettingsService
         $setting = $scimSettingsTable->createOrUpdateSetting(
             $scimSettingsTable->getProperty(),
             $value,
-            $this->uac
+            $uac
         );
 
         $renderedSettings = $this->getRenderedValue($setting, $form);
