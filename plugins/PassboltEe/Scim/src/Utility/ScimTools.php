@@ -65,6 +65,8 @@ class ScimTools
      */
     public static function isScimApiRequest(ServerRequestInterface $request): bool
     {
+        /** @var \Cake\Http\ServerRequest $request */
+
         return $request->getParam('plugin') === 'Passbolt/Scim' &&
             strtolower((string)$request->getParam('prefix')) === 'v2';
     }

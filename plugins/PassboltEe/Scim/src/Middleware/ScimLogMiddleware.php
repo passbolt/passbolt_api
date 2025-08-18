@@ -43,6 +43,7 @@ class ScimLogMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
+        /** @var \Cake\Http\ServerRequest $request */
         $logScimRequest = (
             Configure::read('passbolt.plugins.scim.logScimRequests', false) &&
             $this->isFeaturePluginEnabled('Scim') &&
