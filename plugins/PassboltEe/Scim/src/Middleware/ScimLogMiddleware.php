@@ -21,6 +21,7 @@ use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
 use Cake\Utility\Text;
 use Passbolt\Scim\Log\ScimLog;
+use Passbolt\Scim\Utility\ScimTools;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -42,15 +43,14 @@ class ScimLogMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        /** @var \Cake\Http\ServerRequest $request */
-        $isScimApiAndEnabled = (
+        $logScimRequest = (
             Configure::read('passbolt.plugins.scim.logScimRequests', false) &&
             $this->isFeaturePluginEnabled('Scim') &&
-            $request->getParam('plugin') === 'Passbolt/Scim' &&
-            $request->getParam('controller') === 'Scim'
+            ScimTools::isScimApiRequest($request)
         );
+
         $requestId = Text::uuid();
-        if ($isScimApiAndEnabled) {
+        if ($logScimRequest) {
             ScimLog::info(
                 sprintf(
                     '`%s` Request uri (%s): %s',
@@ -71,7 +71,7 @@ class ScimLogMiddleware implements MiddlewareInterface
         }
 
         $response = $handler->handle($request);
-        if ($isScimApiAndEnabled) {
+        if ($logScimRequest) {
             ScimLog::info(sprintf("`%s` Response body: \n%s", $requestId, $response->getBody()));
         }
 

@@ -26,7 +26,7 @@ use Passbolt\Scim\Test\Utility\ScimApiIntegrationTestTrait;
 /**
  * IntegrationUsersTest class
  */
-class IntegrationUsersTestCase extends ScimApiIntegrationTestCase
+class IntegrationUsersTest extends ScimApiIntegrationTestCase
 {
     use ScimApiIntegrationTestTrait;
 

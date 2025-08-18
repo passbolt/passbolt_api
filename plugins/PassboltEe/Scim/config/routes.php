@@ -14,7 +14,6 @@
  * @since         5.5.0
  */
 
-use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\RouteBuilder;
 use Passbolt\Scim\Middleware\ScimSettingsSecurityMiddleware;
 
@@ -50,19 +49,19 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
         ->setMiddleware([ScimSettingsSecurityMiddleware::class]);
 
     $routes->prefix('V2', function (RouteBuilder $routes): void {
-        $routes->connect('/{settingId}/Schemas', ['controller' => 'Scim', 'action' => 'schemas'])
+        $routes->connect('/{settingId}/Schemas', ['controller' => 'ScimSchemas', 'action' => 'schemas'])
             ->setPass(['settingId'])
             ->setMethods(['GET']);
-        $routes->connect('/{settingId}/Schemas/{schemaId}', ['controller' => 'Scim', 'action' => 'schemas'])
+        $routes->connect('/{settingId}/Schemas/{schemaId}', ['controller' => 'ScimSchemas', 'action' => 'schemas'])
             ->setPass(['settingId', 'schemaId'])
             ->setMethods(['GET']);
-        $routes->connect('/{settingId}/ResourceTypes', ['controller' => 'Scim', 'action' => 'resourceTypes'])
+        $routes->connect('/{settingId}/ResourceTypes', ['controller' => 'ScimResourceTypes', 'action' => 'resourceTypes'])
             ->setPass(['settingId'])
             ->setMethods(['GET']);
         $routes->connect(
             '/{settingId}/ResourceTypes/{resourceType}',
             [
-                'controller' => 'Scim',
+                'controller' => 'ScimResourceTypes',
                 'action' => 'resourceTypes',
             ]
         )
@@ -71,33 +70,30 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
         $routes->connect(
             '/{settingId}/ServiceProviderConfig',
             [
-                'controller' => 'Scim',
+                'controller' => 'ScimServiceProviderConfig',
                 'action' => 'serviceProviderConfig',
             ]
         )
             ->setPass(['settingId'])
             ->setMethods(['GET']);
 
-        $routes->connect('/{settingId}/ResourceTypes', ['controller' => 'Scim', 'action' => 'resourceTypes'])
-            ->setPass(['settingId'])
-            ->setMethods(['GET']);
-        $routes->connect('/{settingId}/{resourceType}', ['controller' => 'Scim', 'action' => 'index'])
+        $routes->connect('/{settingId}/{resourceType}', ['controller' => 'ScimIndex', 'action' => 'index'])
             ->setPass(['settingId', 'resourceType'])
             ->setMethods(['GET']);
 
-        $routes->connect('/{settingId}/{resourceType}', ['controller' => 'Scim', 'action' => 'create'])
+        $routes->connect('/{settingId}/{resourceType}', ['controller' => 'ScimCreate', 'action' => 'create'])
             ->setPass(['settingId', 'resourceType'])
             ->setMethods(['POST']);
 
-        $routes->connect('/{settingId}/{resourceType}/{id}', ['controller' => 'Scim', 'action' => 'view'])
+        $routes->connect('/{settingId}/{resourceType}/{id}', ['controller' => 'ScimView', 'action' => 'view'])
             ->setPass(['settingId', 'resourceType', 'id'])
             ->setMethods(['GET']);
 
-        $routes->connect('/{settingId}/{resourceType}/{id}', ['controller' => 'Scim', 'action' => 'update'])
+        $routes->connect('/{settingId}/{resourceType}/{id}', ['controller' => 'ScimUpdate', 'action' => 'update'])
             ->setPass(['settingId', 'resourceType', 'id'])
             ->setMethods(['PATCH']);
 
-        $routes->connect('/{settingId}/{resourceType}/{id}', ['controller' => 'Scim', 'action' => 'delete'])
+        $routes->connect('/{settingId}/{resourceType}/{id}', ['controller' => 'ScimDelete', 'action' => 'delete'])
             ->setPass(['settingId', 'resourceType', 'id'])
             ->setMethods(['DELETE']);
     });

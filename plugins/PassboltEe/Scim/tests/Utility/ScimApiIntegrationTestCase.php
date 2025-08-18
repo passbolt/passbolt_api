@@ -47,6 +47,86 @@ abstract class ScimApiIntegrationTestCase extends AppIntegrationTestCase
     public const FIXTURE_SCIM_PATH = PLUGINS . 'PassboltEe' . DS . 'Scim' . DS . 'tests' . DS . 'Fixture' . DS . 'Scim' . DS;
 
     /**
+     * Expected response for `/ServiceProviderConfig` endpoint
+     */
+    public const FIXTURE_RESPONSE_SERVICE_PROVIDER_CONFIG = 'service_provider_config.json';
+
+    /**
+     * Expected response for `/Schemas` endpoint
+     */
+    public const FIXTURE_RESPONSE_SCHEMAS = 'schemas.json';
+
+    /**
+     * Expected response for `/Schemas/urn:ietf:params:scim:schemas:core:2.0:User` endpoint
+     */
+    public const FIXTURE_RESPONSE_SCHEMAS_USERS = 'schemas_users.json';
+
+    /**
+     * Expected response for `/Schemas/urn:ietf:params:scim:schemas:core:2.0:Group` endpoint
+     */
+    public const FIXTURE_RESPONSE_SCHEMAS_GROUPS = 'schemas_groups.json';
+
+    /**
+     * Expected response for `/Schemas/<schemaId>` endpoint with invalid id
+     */
+    public const FIXTURE_RESPONSE_SCHEMAS_NOT_FOUND = 'schemas_not_found.json';
+
+    /**
+     * Expected response for `/ResourceTypes` endpoint
+     */
+    public const FIXTURE_RESPONSE_RESOURCE_TYPES = 'resource_types.json';
+
+    /**
+     * Expected response for `/ResourceTypes/User` endpoint
+     */
+    public const FIXTURE_RESPONSE_RESOURCE_TYPES_USER = 'resource_types_user.json';
+
+    /**
+     * Expected response for `/ResourceTypes/Group` endpoint
+     */
+    public const FIXTURE_RESPONSE_RESOURCE_TYPES_GROUP = 'resource_types_group.json';
+
+    /**
+     * Expected response for `/ResourceTypes/InvalidResource` endpoint
+     */
+    public const FIXTURE_RESPONSE_RESOURCE_TYPES_NOT_FOUND = 'resource_types_not_found.json';
+
+    /**
+     * Expected response for `/Users` endpoint with no filter
+     */
+    public const FIXTURE_RESPONSE_USERS_LIST = 'Users' . DS . 'users_list_response.json';
+
+    /**
+     * Expected response for `/Users` endpoint with matching filter
+     */
+    public const FIXTURE_RESPONSE_USERS_LIST_MATCH = 'Users' . DS . 'users_list_response_filter_match.json';
+
+    /**
+     * Expected response for `/Users` endpoint withNO  matching filter
+     */
+    public const FIXTURE_RESPONSE_USERS_LIST_NO_MATCH = 'Users' . DS . 'users_list_response_filter_no_match.json';
+
+    /**
+     * Expected response for POST `/Users` endpoint
+     */
+    public const FIXTURE_RESPONSE_USERS_ADD_SUCCESS = 'Users' . DS . 'users_add_success.json';
+
+    /**
+     * Expected response for POST `/Users` endpoint for an existing user
+     */
+    public const FIXTURE_RESPONSE_USERS_ADD_CONFLICT_EXIST = 'Users' . DS . 'users_add_conflict_exist.json';
+
+    /**
+     * Expected response for POST `/Users/<user_id>` endpoint with existing user
+     */
+    public const FIXTURE_RESPONSE_USERS_VIEW_SUCCESS = 'Users' . DS . 'users_view_success.json';
+
+    /**
+     * Expected response for POST `/Users/<user_id>` endpoint with NOT existing user
+     */
+    public const FIXTURE_RESPONSE_USERS_VIEW_NOT_FOUND = 'Users' . DS . 'users_view_not_found.json';
+
+    /**
      * Setting ID for the SCIM endpoint
      *
      * @var string
@@ -67,6 +147,7 @@ abstract class ScimApiIntegrationTestCase extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->enableFeaturePlugin('Scim');
+        $this->enableFeaturePlugin('JwtAuthentication');
 
         RoleFactory::make()->guest()->persist();
         RoleFactory::make()->user()->persist();

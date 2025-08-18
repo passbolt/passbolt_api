@@ -20,26 +20,15 @@ namespace Passbolt\Scim\Utility;
 use App\Model\Entity\User;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
-use Cake\Routing\Router;
 use Passbolt\Scim\Service\ScimGetSettingsService;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Utility class
  */
 class ScimTools
 {
-    public const API_URL_PLACEHOLDER = '{scimUrl}';
     public const API_FORMAT_DATETIME = 'Y-m-d\TH:i:s.v\Z';
-
-    /**
-     * @param string $json
-     * @param string $settingId
-     * @return string
-     */
-    public static function replacePlaceholders(string $json, string $settingId): string
-    {
-        return str_replace(self::API_URL_PLACEHOLDER, Router::url('scim/v2/' . $settingId, true), $json);
-    }
 
     /**
      * @param \Cake\I18n\DateTime $dateTime
@@ -68,5 +57,15 @@ class ScimTools
             ->contain(['Roles'])
             ->where([$usersTable->aliasField('id') => $scimConfig['scim_user_id']])
             ->first();
+    }
+
+    /**
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @return bool
+     */
+    public static function isScimApiRequest(ServerRequestInterface $request): bool
+    {
+        return $request->getParam('plugin') === 'Passbolt/Scim' &&
+            strtolower((string)$request->getParam('prefix')) === 'v2';
     }
 }
