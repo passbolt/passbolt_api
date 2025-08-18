@@ -55,7 +55,11 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
         $routes->connect('/{settingId}/Schemas/{schemaId}', ['controller' => 'ScimSchemas', 'action' => 'schemas'])
             ->setPass(['settingId', 'schemaId'])
             ->setMethods(['GET']);
-        $routes->connect('/{settingId}/ResourceTypes', ['controller' => 'ScimResourceTypes', 'action' => 'resourceTypes'])
+        $routes
+            ->connect('/{settingId}/ResourceTypes', [
+                'controller' => 'ScimResourceTypes',
+                'action' => 'resourceTypes',
+            ])
             ->setPass(['settingId'])
             ->setMethods(['GET']);
         $routes->connect(

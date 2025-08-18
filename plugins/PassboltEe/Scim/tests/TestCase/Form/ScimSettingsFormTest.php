@@ -48,11 +48,11 @@ class ScimSettingsFormTest extends AppTestCase
         $this->assertFalse($this->form->execute([]));
         $this->assertSame([
             'secret_token' => [
-                '_empty' => 'This field cannot be left empty'
+                '_empty' => 'This field cannot be left empty',
             ],
             'scim_user_id' => [
-                '_empty' => 'This field cannot be left empty'
-            ]
+                '_empty' => 'This field cannot be left empty',
+            ],
         ], $this->form->getErrors());
     }
 
@@ -60,17 +60,19 @@ class ScimSettingsFormTest extends AppTestCase
     {
         $this->assertFalse($this->form->execute([
             'scim_user_id' => 'b31c8ff3-805d-4f26-a690-15f5216ef9fc',
-            'secret_token' => 'B4fncWvw5ha2brpcCh7NVSTMPa1AnEoufFonPMSy9fN'
+            'secret_token' => 'B4fncWvw5ha2brpcCh7NVSTMPa1AnEoufFonPMSy9fN',
         ]));
-        $this->assertSame([
+        $this->assertSame(
+            [
             'secret_token' => [
-                'correctFormat' => 'The secret token format is incorrect.'
+                'correctFormat' => 'The secret token format is incorrect.',
             ],
             'scim_user_id' => [
-                'activeAndEnabled' => 'The user is not active, disabled or does not exist.'
-            ]
-        ],
-        $this->form->getErrors());
+                'activeAndEnabled' => 'The user is not active, disabled or does not exist.',
+            ],
+            ],
+            $this->form->getErrors()
+        );
     }
 
     public function testExecuteDefault_Valid()
@@ -79,7 +81,7 @@ class ScimSettingsFormTest extends AppTestCase
         $this->assertTrue($this->form->execute([
             'scim_user_id' => $user->id,
             'setting_id' => '3a0132f2-99ec-477c-8696-e951bd6ae521',
-            'secret_token' => 'pb_B4fncWvw5ha2brpcCh7NVSTMPa1AnEoufFonPMSy9fN'
+            'secret_token' => 'pb_B4fncWvw5ha2brpcCh7NVSTMPa1AnEoufFonPMSy9fN',
         ]));
         $this->assertSame([], $this->form->getErrors());
     }
@@ -89,8 +91,8 @@ class ScimSettingsFormTest extends AppTestCase
         $this->assertFalse($this->form->execute([], ['validate' => 'update']));
         $this->assertSame([
             'scim_user_id' => [
-                '_empty' => 'This field cannot be left empty'
-            ]
+                '_empty' => 'This field cannot be left empty',
+            ],
         ], $this->form->getErrors());
     }
 
@@ -99,18 +101,18 @@ class ScimSettingsFormTest extends AppTestCase
         $this->assertFalse($this->form->execute([
             'scim_user_id' => 'b31c8ff3-805d-4f26-a690-15f5216ef9fc',
             'setting_id' => '3a0132f2-99ec-477c-8696-e951bd6ae521',
-            'secret_token' => 'B4fncWvw5ha2brpcCh7NVSTMPa1AnEoufFonPMSy9fN'
+            'secret_token' => 'B4fncWvw5ha2brpcCh7NVSTMPa1AnEoufFonPMSy9fN',
         ], ['validate' => 'update']));
         $this->assertSame([
             'secret_token' => [
-                'correctFormat' => 'The secret token format is incorrect.'
+                'correctFormat' => 'The secret token format is incorrect.',
             ],
             'scim_user_id' => [
-                'activeAndEnabled' => 'The user is not active, disabled or does not exist.'
+                'activeAndEnabled' => 'The user is not active, disabled or does not exist.',
             ],
             'setting_id' => [
-                'ensureEmpty' => 'The Setting ID cannot be passed on update.'
-            ]
+                'ensureEmpty' => 'The Setting ID cannot be passed on update.',
+            ],
         ], $this->form->getErrors());
     }
 
@@ -119,7 +121,7 @@ class ScimSettingsFormTest extends AppTestCase
         $user = UserFactory::make()->active()->notDisabled()->admin()->persist();
         $this->assertTrue($this->form->execute([
             'scim_user_id' => $user->id,
-            'secret_token' => 'pb_B4fncWvw5ha2brpcCh7NVSTMPa1AnEoufFonPMSy9fN'
+            'secret_token' => 'pb_B4fncWvw5ha2brpcCh7NVSTMPa1AnEoufFonPMSy9fN',
         ], ['validate' => 'update']));
         $this->assertSame([], $this->form->getErrors());
     }

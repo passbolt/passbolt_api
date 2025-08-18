@@ -91,7 +91,7 @@ class ScimGetSettingsControllerTest extends ScimSettingsIntegrationTestCase
     public function testGetSettings_Error_NotJson()
     {
         $this->logInAsAdmin();
-        $this->get("/scim/settings");
+        $this->get('/scim/settings');
         $this->assertResponseCode(404);
     }
 

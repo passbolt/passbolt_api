@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Utility\Object;
 
+use Passbolt\Scim\Exception\BadRequestException;
 use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Utility\ScimObjectInterface;
 use Tmilos\ScimFilterParser\Mode;
@@ -100,12 +101,29 @@ class Operation implements ScimObjectInterface
      */
     public function setFromScim(array $data): self
     {
+        $this->validateScimData($data);
+
         $this->setType($data['op'] ?? null);
         $this->path = $data['path'] ?? null;
         $this->setPathData($this->path);
         $this->value = $data['value'] ?? null;
 
         return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     */
+    protected function validateScimData(array $data): void
+    {
+        if (
+            !array_key_exists('op', $data) ||
+            !array_key_exists('path', $data) ||
+            !array_key_exists('value', $data)
+        ) {
+            throw new BadRequestException('Invalid data to create a SCIM Operation');
+        }
     }
 
     /**

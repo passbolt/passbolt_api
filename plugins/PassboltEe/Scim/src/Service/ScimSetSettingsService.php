@@ -36,7 +36,7 @@ class ScimSetSettingsService extends ScimBaseSettingsService
     public const SCIM_SETTINGS_UPDATE_EVENT_NAME = 'scim_settings_update_event_name';
 
     /**
-     * @param UserAccessControl $uac
+     * @param \App\Utility\UserAccessControl $uac
      * @param array $data
      * @param string|null $id
      * @return array
@@ -51,7 +51,6 @@ class ScimSetSettingsService extends ScimBaseSettingsService
 
         // Using this approach to avoid checking for setting_id duplicates on update
         $validate = $id ? 'update' : 'extended';
-
         if (!$form->execute($data, ['validate' => $validate])) {
             throw new FormValidationException(
                 __('Could not validate the SCIM settings.'),

@@ -95,7 +95,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
     public function testGetSettings_Error_NotJson()
     {
         $this->logInAsAdmin();
-        $this->post("/scim/settings");
+        $this->post('/scim/settings');
         $this->assertResponseCode(404);
     }
 
@@ -119,7 +119,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
         ];
         $this->postJson('/scim/settings.json', $data);
 
-        $this->assertResponseCode(404);
+        $this->assertResponseCode(400);
         $this->assertSame('Please delete previous settings before creating again.', $this->_responseJsonHeader->message);
         $this->assertSame('error', $this->_responseJsonHeader->status);
     }

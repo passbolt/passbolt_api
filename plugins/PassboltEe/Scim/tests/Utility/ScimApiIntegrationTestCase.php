@@ -19,13 +19,8 @@ namespace Passbolt\Scim\Test\Utility;
 
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
-use App\Utility\UserAction;
 use Cake\Routing\Router;
 use CakephpFixtureFactories\ORM\FactoryTableRegistry;
-use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
-use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\Scim\Service\ScimGetSettingsService;
 use Passbolt\Scim\Test\Factory\ScimSettingFactory;
 

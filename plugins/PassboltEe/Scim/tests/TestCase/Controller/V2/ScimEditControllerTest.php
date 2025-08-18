@@ -24,7 +24,6 @@ use Passbolt\Scim\Test\Utility\ScimApiIntegrationTestCase;
  */
 class ScimEditControllerTest extends ScimApiIntegrationTestCase
 {
-
     /**
      * Test case for success PATCH /Users/<user_id> endpoint
      */
@@ -64,7 +63,13 @@ class ScimEditControllerTest extends ScimApiIntegrationTestCase
     {
         $this->setTestNow();
         $this->configScimAuth();
-        $this->patch($this->getScimEndpoint('Users' . DS . 'not-existing-id'));
+        $this->patch($this->getScimEndpoint('Users' . DS . 'not-existing-id'), $this->getPatchOpData([
+            [
+                'op' => 'Replace',
+                'path' => 'name.givenName',
+                'value' => 'First name replaced',
+            ],
+        ]));
         $this->assertResponseCode(404);
 
         $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_VIEW_NOT_FOUND);

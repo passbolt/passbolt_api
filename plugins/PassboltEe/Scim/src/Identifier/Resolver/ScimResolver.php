@@ -22,7 +22,6 @@ use ArrayAccess;
 use Authentication\Identifier\Resolver\ResolverInterface;
 use Cake\Core\Configure;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Passbolt\Scim\Service\ScimBaseSettingsService;
 use Passbolt\Scim\Service\ScimGetSettingsService;
 
 class ScimResolver implements ResolverInterface

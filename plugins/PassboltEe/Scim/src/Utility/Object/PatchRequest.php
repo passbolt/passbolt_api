@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Utility\Object;
 
+use Passbolt\Scim\Exception\BadRequestException;
 use Passbolt\Scim\Utility\SchemaIdentifier;
 use Passbolt\Scim\Utility\ScimObjectInterface;
 
@@ -39,6 +40,8 @@ class PatchRequest implements ScimObjectInterface
      */
     public function setFromScim(array $data): static
     {
+        $this->validateScimData($data);
+
         $this->operations = [];
         $operations = $data['Operations'] ?? [];
         foreach ((array)$operations as $operationData) {
@@ -46,6 +49,21 @@ class PatchRequest implements ScimObjectInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     */
+    protected function validateScimData(array $data): void
+    {
+        $schemas = $data['schemas'] ?? [];
+        if (!in_array(SchemaIdentifier::API_PATCH_OPERATION, $schemas)) {
+            throw new BadRequestException('Invalid schema for SCIM PATCH REQUEST');
+        }
+        if (!array_key_exists('Operations', $data)) {
+            throw new BadRequestException('Invalid data to create a SCIM PATCH REQUEST');
+        }
     }
 
     /**

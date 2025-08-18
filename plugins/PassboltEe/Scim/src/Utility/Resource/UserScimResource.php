@@ -180,6 +180,8 @@ class UserScimResource implements ScimResourceInterface
      */
     public function setFromScim(array $data): static
     {
+        $this->validateScimData($data);
+
         $this->externalId = $data['externalId'] ?? null;
         $this->userName = $data['userName'] ?? null;
         $this->firstName = $data['name']['givenName'] ?? null;
@@ -192,6 +194,18 @@ class UserScimResource implements ScimResourceInterface
         $this->email = $emails[0] ?? null;
 
         return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     */
+    protected function validateScimData(array $data): void
+    {
+        $schemas = $data['schemas'] ?? [];
+        if (!in_array(SchemaIdentifier::CORE_USER, $schemas)) {
+            throw new BadRequestException('Invalid schema for SCIM User Resource');
+        }
     }
 
     /**

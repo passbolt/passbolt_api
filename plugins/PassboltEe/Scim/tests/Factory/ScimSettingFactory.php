@@ -20,7 +20,6 @@ use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
-use Cake\Database\ExpressionInterface;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Security;
 use Passbolt\Scim\Model\Table\ScimSettingsTable;
