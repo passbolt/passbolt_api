@@ -19,6 +19,7 @@ namespace Passbolt\Scim\Service;
 use App\Error\Exception\FormValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Event\EventDispatcherTrait;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Passbolt\Scim\Form\Settings\ScimSettingsForm;
@@ -78,7 +79,7 @@ class ScimSetSettingsService extends ScimBaseSettingsService
             throw new NotFoundException(__('The SCIM plugin is disabled.'));
         }
         if (!$id && $current) {
-            throw new NotFoundException(__('Please delete previous settings before creating again.'));
+            throw new BadRequestException(__('Please delete previous settings before creating again.'));
         }
         if ($current && $current->id !== $id) {
             throw new NotFoundException(__('The uuid in the url doesn\'t match any known setting record.'));

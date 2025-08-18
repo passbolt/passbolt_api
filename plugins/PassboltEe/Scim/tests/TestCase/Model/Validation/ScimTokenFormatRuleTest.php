@@ -17,13 +17,13 @@ declare(strict_types=1);
 
 namespace Model\Validation;
 
-use Cake\TestSuite\TestCase;
+use App\Test\Lib\AppTestCase;
 use Passbolt\Scim\Model\Validation\ScimTokenFormatRule;
 
 /**
  * ScimTokenFormatRuleTest class
  */
-class ScimTokenFormatRuleTest extends TestCase
+class ScimTokenFormatRuleTest extends AppTestCase
 {
     /**
      * @var \Passbolt\Scim\Model\Validation\ScimTokenFormatRule|\App\Model\Validation\EmailValidationRule|null

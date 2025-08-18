@@ -19,7 +19,13 @@ namespace Passbolt\Scim\Test\Utility;
 
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use App\Utility\UserAction;
 use Cake\Routing\Router;
+use CakephpFixtureFactories\ORM\FactoryTableRegistry;
+use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\Scim\Service\ScimGetSettingsService;
 use Passbolt\Scim\Test\Factory\ScimSettingFactory;
 
@@ -157,6 +163,15 @@ abstract class ScimApiIntegrationTestCase extends AppIntegrationTestCase
         $settingsData = (new ScimGetSettingsService())->getSettingsDecryptedValue();
         $this->settingId = $settingsData['setting_id'] ?? '';
         $this->scimUserId = $settingsData['scim_user_id'] ?? '';
+    }
+
+    /**
+     * Tear down
+     */
+    public function tearDown(): void
+    {
+        FactoryTableRegistry::getTableLocator()->clear();
+        parent::tearDown();
     }
 
     /**
