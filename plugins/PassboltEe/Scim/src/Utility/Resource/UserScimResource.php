@@ -511,16 +511,10 @@ class UserScimResource implements ScimResourceInterface
                                 }
                                 break;
                             case 'emails':
-                                if (empty($this->email)) {
-                                    $subAttribute = $operation->getSubAttribute();
-                                    if (
-                                        $subAttribute === 'value' &&
-                                        $operation->getComparisonExpression() === 'type eq work'
-                                    ) {
-                                        $this->email = $attributeValue;
-                                    }
-                                }
-                                break;
+                                throw new BadRequestException(
+                                    'The email can not be changed',
+                                    scimType: ScimException::SCIM_TYPE_MUTABILITY
+                                );
                             default:
                                 // ignore attributes not used in this application
                         }

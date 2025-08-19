@@ -17,7 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\Utility;
 
+use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\Scim\Model\Entity\ScimEntry;
@@ -63,12 +66,7 @@ trait ScimTestUsersTrait
      */
     public function createScimUser1(): ScimEntry|iterable
     {
-        return ScimEntryFactory::make([
-            'external_identifier' => '4d36b536-42ba-4a65-9299-c4461222b47f',
-            'scim_name' => self::USER_1_SCIM_NAME,
-            'created' => DateTime::now(),
-            'modified' => DateTime::now(),
-        ])->withUser([
+        $user = UserFactory::make([
             'username' => self::USER_1_EMAIL,
             'created' => DateTime::now(),
             'modified' => DateTime::now(),
@@ -76,7 +74,14 @@ trait ScimTestUsersTrait
                 'first_name' => 'User 1',
                 'last_name' => 'Scim',
             ],
-        ])->persist();
+        ])->user();
+
+        return ScimEntryFactory::make([
+            'external_identifier' => '4d36b536-42ba-4a65-9299-c4461222b47f',
+            'scim_name' => self::USER_1_SCIM_NAME,
+            'created' => DateTime::now(),
+            'modified' => DateTime::now(),
+        ])->withUser($user)->persist();
     }
 
     /**

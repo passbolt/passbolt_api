@@ -20,8 +20,6 @@ namespace Passbolt\Scim\Utility\Object;
 use Passbolt\Scim\Exception\BadRequestException;
 use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Utility\ScimObjectInterface;
-use Tmilos\ScimFilterParser\Mode;
-use Tmilos\ScimFilterParser\Parser;
 
 /**
  * Operation class
@@ -57,11 +55,11 @@ class Operation implements ScimObjectInterface
     protected mixed $value = null;
 
     /**
-     * Path filter data
+     * Attribute
      *
-     * @var array
+     * @var string|null
      */
-    protected array $pathData = [];
+    protected ?string $attribute = null;
 
     /**
      * Constructor
@@ -79,18 +77,16 @@ class Operation implements ScimObjectInterface
     }
 
     /**
-     * Set the path filter array
+     * Set the data obtained from the path
+     *
+     * Note: At the moment we do not use any attribute with filter for PATCH operations, so no need to parse the path
      *
      * @param string|null $path
      * @return void
      */
     protected function setPathData(?string $path): void
     {
-        $this->pathData = [];
-        if ($path !== null) {
-            $parser = new Parser(Mode::PATH());
-            $this->pathData = $parser->parse($path)->dump();
-        }
+        $this->attribute = $this->path = $path;
     }
 
     /**
@@ -102,10 +98,8 @@ class Operation implements ScimObjectInterface
     public function setFromScim(array $data): self
     {
         $this->validateScimData($data);
-
         $this->setType($data['op'] ?? null);
-        $this->path = $data['path'] ?? null;
-        $this->setPathData($this->path);
+        $this->setPathData($data['path'] ?? null);
         $this->value = $data['value'] ?? null;
 
         return $this;
@@ -194,45 +188,13 @@ class Operation implements ScimObjectInterface
     }
 
     /**
-     * Return the attribute for the operation
+     * Return the attribute of the operation
      *
-     * @return string|null
+     * @return ?string
      */
     public function getAttribute(): ?string
     {
-        if (isset($this->pathData['ValuePath'])) {
-            return $this->pathData['ValuePath'][0]['AttributePath'] ?? null;
-        }
-
-        return $this->pathData['Path']['AttributePath'] ?? null;
-    }
-
-    /**
-     * Return the subAttribute for the operation
-     *
-     * @return string|null
-     */
-    public function getSubAttribute(): ?string
-    {
-        if (isset($this->pathData['ValuePath'])) {
-            return $this->pathData['AttributePath'] ?? null;
-        }
-
-        return null;
-    }
-
-    /**
-     * Return the Comparison Expression for the operation
-     *
-     * @return string|null
-     */
-    public function getComparisonExpression(): ?string
-    {
-        if (isset($this->pathData['ValuePath'])) {
-            return $this->pathData['ValuePath'][1]['ComparisonExpression'] ?? null;
-        }
-
-        return null;
+        return $this->attribute;
     }
 
     /**

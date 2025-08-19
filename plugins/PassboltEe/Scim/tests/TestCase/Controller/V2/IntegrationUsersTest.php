@@ -218,7 +218,7 @@ class IntegrationUsersTest extends ScimApiIntegrationTestCase
         $this->setTestNow();
         $scimName = self::USER_1_SCIM_NAME;
         $userEmail = self::USER_1_EMAIL;
-        UserFactory::make(['username' => $userEmail])->persist();
+        UserFactory::make(['username' => $userEmail])->user()->persist();
 
         $existingUser = $this->getUserByUsername($userEmail);
         $this->assertNotNull($existingUser);
@@ -329,7 +329,8 @@ class IntegrationUsersTest extends ScimApiIntegrationTestCase
         $userEmail = self::USER_1_EMAIL;
         /** @var \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry */
         $scimEntry = ScimEntryFactory::make(['scim_name' => $scimName])
-            ->withUser(['username' => $userEmail, 'disabled' => $disabled])->persist();
+            ->withUser(UserFactory::make(['username' => $userEmail, 'disabled' => $disabled])->user())
+            ->persist();
         $this->assertSame($scimEntry->scim_name, $scimName);
         $this->assertSame($scimEntry->user->active, true);
         $this->assertSame($scimEntry->user->disabled?->format('Y-m-d H:i:s'), $disabled);
