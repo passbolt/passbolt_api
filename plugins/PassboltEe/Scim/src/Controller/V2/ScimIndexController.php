@@ -20,7 +20,7 @@ namespace Passbolt\Scim\Controller\V2;
 use Exception;
 use Passbolt\Scim\Utility\Object\ListResponse;
 
-class ScimIndexController extends ScimController
+class ScimIndexController extends AbstractScimController
 {
     /**
      * SCIM index action

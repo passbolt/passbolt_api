@@ -180,7 +180,7 @@ class UserScimResource implements ScimResourceInterface
      */
     public function setFromScim(array $data): static
     {
-        $this->validateScimData($data);
+        $this->validateScimUserData($data);
 
         $this->externalId = $data['externalId'] ?? null;
         $this->userName = $data['userName'] ?? null;
@@ -200,7 +200,7 @@ class UserScimResource implements ScimResourceInterface
      * @param array $data
      * @return void
      */
-    protected function validateScimData(array $data): void
+    protected function validateScimUserData(array $data): void
     {
         $schemas = $data['schemas'] ?? [];
         if (!in_array(SchemaIdentifier::CORE_USER, $schemas)) {
@@ -317,13 +317,9 @@ class UserScimResource implements ScimResourceInterface
             }
             $uac = new UserAccessControl($scimUser->role->name, $scimUser->id);
             try {
-                $disabled = null;
-                if (!$this->active) {
-                    $disabled = $this->getDisabledDate();
-                }
                 $user = $this->Users->register([
                     'username' => $this->email,
-                    'disabled' => $disabled,
+                    'disabled' => $this->getDisabledValue($this->active),
                     'profile' => $profileData,
                 ], $uac);
             } catch (ValidationException $exception) {
@@ -376,10 +372,15 @@ class UserScimResource implements ScimResourceInterface
     }
 
     /**
-     * @return string
+     * @param bool $isUserActive
+     * @return string|null
      */
-    protected function getDisabledDate(): string
+    protected function getDisabledValue(bool $isUserActive): ?string
     {
+        if ($isUserActive) {
+            return null;
+        }
+
         return DateTime::now()->format('Y-m-d H:i:s');
     }
 
@@ -395,17 +396,17 @@ class UserScimResource implements ScimResourceInterface
     }
 
     /**
-     * @param \Passbolt\Scim\Utility\Object\Operation $operation
+     * @param string $attribute
      * @return string|null
      * @throws \Exception
      */
-    protected function getAttributeMutability(Operation $operation): ?string
+    protected function getAttributeMutability(string $attribute): ?string
     {
         $userSchema = Schemas::build(SchemaIdentifier::CORE_USER)->toSCIM();
-        switch ($operation->getAttribute()) {
+        switch ($attribute) {
             case 'name.givenName':
             case 'name.familyName':
-                [$attributeName, $subAttributeName] = explode('.', $operation->getAttribute());
+                [$attributeName, $subAttributeName] = explode('.', $attribute);
                 $nameAttribute = Hash::extract($userSchema, "attributes.{n}[name=$attributeName]")[0] ?? [];
                 $attribute = Hash::extract($nameAttribute, "subAttributes.{n}[name=$subAttributeName]");
                 $mutability = $attribute[0]['mutability'] ?? null;
@@ -436,7 +437,7 @@ class UserScimResource implements ScimResourceInterface
      *
      * @throws \Exception
      */
-    public function update(PatchRequest $patchRequest): static
+    public function patch(PatchRequest $patchRequest): static
     {
         $serviceConfig = new ServiceProviderConfig();
         if (!$serviceConfig->isPatchSupported()) {
@@ -449,159 +450,185 @@ class UserScimResource implements ScimResourceInterface
         $userPatchData = [];
         $scimEntryPatchData = [];
         foreach ($patchRequest->getOperations() as $operation) {
-            $mutability = $this->getAttributeMutability($operation);
-            if ($mutability === ScimConstants::ATTRIBUTE_MUTABILITY_READ_ONLY) {
-                throw new BadRequestException(sprintf(
-                    'Unable to apply operation `%s` for the attribute `%s` with mutability `%s`',
-                    $operation->getType(),
-                    $operation->getAttribute(),
-                    $mutability,
-                ), scimType: ScimException::SCIM_TYPE_MUTABILITY);
+            if ($operation->getAttribute() === null) {
+                $attributes = $operation->getValue();
+            } else {
+                $attributes[$operation->getAttribute()] = $operation->getValue();
             }
-            if (
-                $mutability === ScimConstants::ATTRIBUTE_MUTABILITY_IMMUTABLE &&
-                $operation->getType() !== Operation::TYPE_ADD
-            ) {
-                throw new BadRequestException(sprintf(
-                    'Unable to apply operation `%s` for the attribute `%s` with mutability `%s`',
-                    $operation->getType(),
-                    $operation->getAttribute(),
-                    $mutability,
-                ), scimType: ScimException::SCIM_TYPE_MUTABILITY);
-            }
+            foreach ($attributes as $attributeName => $attributeValue) {
+                $mutability = $this->getAttributeMutability($attributeName);
+                if ($mutability === ScimConstants::ATTRIBUTE_MUTABILITY_READ_ONLY) {
+                    throw new BadRequestException(sprintf(
+                        'Unable to apply operation `%s` for the attribute `%s` with mutability `%s`',
+                        $operation->getType(),
+                        $attributeName,
+                        $mutability,
+                    ), scimType: ScimException::SCIM_TYPE_MUTABILITY);
+                }
+                if (
+                    $mutability === ScimConstants::ATTRIBUTE_MUTABILITY_IMMUTABLE &&
+                    $operation->getType() !== Operation::TYPE_ADD
+                ) {
+                    throw new BadRequestException(sprintf(
+                        'Unable to apply operation `%s` for the attribute `%s` with mutability `%s`',
+                        $operation->getType(),
+                        $attributeName,
+                        $mutability,
+                    ), scimType: ScimException::SCIM_TYPE_MUTABILITY);
+                }
 
-            switch ($operation->getType()) {
-                case Operation::TYPE_ADD:
-                    switch ($operation->getAttribute()) {
-                        case 'externalId':
-                            if (empty($this->externalId)) {
-                                $scimEntryPatchData['external_identifier'] = $operation->getValue();
-                            }
-                            break;
-                        case 'userName':
-                            if (empty($this->userName)) {
-                                $scimEntryPatchData['scim_name'] = $operation->getValue();
-                            }
-                            break;
-                        case 'name.givenName':
-                            if (empty($this->firstName)) {
-                                $userPatchData['profile']['first_name'] = $operation->getValue();
-                            }
-                            break;
-                        case 'name.familyName':
-                            if (empty($this->lastName)) {
-                                $userPatchData['profile']['last_name'] = $operation->getValue();
-                            }
-                            break;
-                        case 'active':
-                            if ($this->active === null) {
-                                $disabled = null;
-                                if (!in_array($operation->getValue(), ['true','True'])) {
-                                    $disabled = $this->getDisabledDate();
+                switch ($operation->getType()) {
+                    case Operation::TYPE_ADD:
+                        switch ($attributeName) {
+                            case 'externalId':
+                                if (empty($this->externalId)) {
+                                    $scimEntryPatchData['external_identifier'] = $attributeValue;
                                 }
-                                $userPatchData['disabled'] = $disabled;
-                            }
-                            break;
-                        case 'emails':
-                            if (empty($this->email)) {
-                                $subAttribute = $operation->getSubAttribute();
-                                if (
-                                    $subAttribute === 'value' &&
-                                    $operation->getComparisonExpression() === 'type eq work'
-                                ) {
-                                    $this->email = $operation->getValue();
+                                break;
+                            case 'userName':
+                                if (empty($this->userName)) {
+                                    $scimEntryPatchData['scim_name'] = $attributeValue;
                                 }
-                            }
-                            break;
-                        default:
-                            // ignore attributes not used in this application
-                    }
-                    break;
-                case Operation::TYPE_REPLACE:
-                    switch ($operation->getAttribute()) {
-                        case 'externalId':
-                            $scimEntryPatchData['external_identifier'] = $operation->getValue();
-                            break;
-                        case 'userName':
-                            $scimEntryPatchData['scim_name'] = $operation->getValue();
-                            break;
-                        case 'name.givenName':
-                            $userPatchData['profile']['first_name'] = $operation->getValue();
-                            break;
-                        case 'name.familyName':
-                            $userPatchData['profile']['last_name'] = $operation->getValue();
-                            break;
-                        case 'active':
-                            $disabled = null;
-                            $value = strtolower($operation->getValue());
-                            if (!in_array($value, ['true', '1'])) {
-                                $disabled = $this->getDisabledDate();
-                            }
-                            $userPatchData['disabled'] = $disabled;
-                            break;
-                        case 'emails':
-                            throw new BadRequestException(
-                                'The email can not be changed',
-                                scimType: ScimException::SCIM_TYPE_MUTABILITY
-                            );
-                        default:
-                            // ignore attributes not used in this application
-                    }
-                    break;
-                case Operation::TYPE_REMOVE:
-                    switch ($operation->getAttribute()) {
-                        case 'externalId':
-                            $scimEntryPatchData['external_identifier'] = null;
-                            break;
-                        case 'userName':
-                            $scimEntryPatchData['scim_name'] = null;
-                            break;
-                        case 'name.givenName':
-                            $userPatchData['profile']['first_name'] = '';
-                            break;
-                        case 'name.familyName':
-                            $userPatchData['profile']['last_name'] = '';
-                            break;
-                        case 'active':
-                            $userPatchData['disabled'] = $this->getDisabledDate();
-                            break;
-                        case 'emails':
-                            throw new BadRequestException(
-                                'The email can not be changed',
-                                scimType: ScimException::SCIM_TYPE_MUTABILITY
-                            );
-                        default:
-                            // ignore attributes not used in this application
-                    }
-                    break;
-                default:
-                    throw new NotSupportedException(
-                        sprintf('The operation type `%s` is not supported or invalid', $operation->getType())
-                    );
+                                break;
+                            case 'name.givenName':
+                                if (empty($this->firstName)) {
+                                    $userPatchData['profile']['first_name'] = $attributeValue;
+                                }
+                                break;
+                            case 'name.familyName':
+                                if (empty($this->lastName)) {
+                                    $userPatchData['profile']['last_name'] = $attributeValue;
+                                }
+                                break;
+                            case 'active':
+                                if ($this->active === null) {
+                                    if (is_string($attributeValue)) {
+                                        $value = in_array(strtolower($attributeValue), ['true', '1']);
+                                    } else {
+                                        $value = (bool)$attributeValue;
+                                    }
+                                    $userPatchData['disabled'] = $this->getDisabledValue($value);
+                                }
+                                break;
+                            case 'emails':
+                                if (empty($this->email)) {
+                                    $subAttribute = $operation->getSubAttribute();
+                                    if (
+                                        $subAttribute === 'value' &&
+                                        $operation->getComparisonExpression() === 'type eq work'
+                                    ) {
+                                        $this->email = $attributeValue;
+                                    }
+                                }
+                                break;
+                            default:
+                                // ignore attributes not used in this application
+                        }
+                        break;
+                    case Operation::TYPE_REPLACE:
+                        switch ($attributeName) {
+                            case 'externalId':
+                                $scimEntryPatchData['external_identifier'] = $attributeValue;
+                                break;
+                            case 'userName':
+                                $scimEntryPatchData['scim_name'] = $attributeValue;
+                                break;
+                            case 'name.givenName':
+                                $userPatchData['profile']['first_name'] = $attributeValue;
+                                break;
+                            case 'name.familyName':
+                                $userPatchData['profile']['last_name'] = $attributeValue;
+                                break;
+                            case 'active':
+                                if (is_string($attributeValue)) {
+                                    $value = in_array(strtolower($attributeValue), ['true', '1']);
+                                } else {
+                                    $value = (bool)$attributeValue;
+                                }
+                                $userPatchData['disabled'] = $this->getDisabledValue($value);
+                                break;
+                            case 'emails':
+                                throw new BadRequestException(
+                                    'The email can not be changed',
+                                    scimType: ScimException::SCIM_TYPE_MUTABILITY
+                                );
+                            default:
+                                // ignore attributes not used in this application
+                        }
+                        break;
+                    case Operation::TYPE_REMOVE:
+                        switch ($attributeName) {
+                            case 'externalId':
+                                $scimEntryPatchData['external_identifier'] = null;
+                                break;
+                            case 'userName':
+                                $scimEntryPatchData['scim_name'] = null;
+                                break;
+                            case 'name.givenName':
+                                $userPatchData['profile']['first_name'] = '';
+                                break;
+                            case 'name.familyName':
+                                $userPatchData['profile']['last_name'] = '';
+                                break;
+                            case 'active':
+                                $userPatchData['disabled'] = $this->getDisabledValue(isUserActive: false);
+                                break;
+                            case 'emails':
+                                throw new BadRequestException(
+                                    'The email can not be changed',
+                                    scimType: ScimException::SCIM_TYPE_MUTABILITY
+                                );
+                            default:
+                                // ignore attributes not used in this application
+                        }
+                        break;
+                    default:
+                        throw new NotSupportedException(
+                            sprintf('The operation type `%s` is not supported or invalid', $operation->getType())
+                        );
+                }
             }
         }
 
-        $this->Users
+        $this->updateDatabaseUser($userPatchData, $scimEntryPatchData, $patchRequest);
+        // Set the object properties with the updated information
+        $this->setFromDatabase($this->userEntity->id);
+
+        return $this;
+    }
+
+    /**
+     * Update the user information in the database
+     *
+     * @param array $userPatchData
+     * @param array $scimEntryPatchData
+     * @param mixed $requestData
+     * @return bool
+     * @throws \Exception
+     */
+    protected function updateDatabaseUser(array $userPatchData, array $scimEntryPatchData, mixed $requestData): bool
+    {
+        return $this->Users
             ->getConnection()
-            ->transactional(function () use ($userPatchData, $scimEntryPatchData, $patchRequest) {
+            ->transactional(function () use ($userPatchData, $scimEntryPatchData, $requestData) {
                 if ($userPatchData) {
                     $this->Users->patchEntity($this->userEntity, $userPatchData, [
-                    'accessibleFields' => [
-                        'disabled' => true,
-                    ],
-                    'associated' => [
-                        'Profiles' => [
-                            'validate' => 'register',
-                            'accessibleFields' => [
-                                'first_name' => true,
-                                'last_name' => true,
+                        'accessibleFields' => [
+                            'disabled' => true,
+                        ],
+                        'associated' => [
+                            'Profiles' => [
+                                'validate' => 'register',
+                                'accessibleFields' => [
+                                    'first_name' => true,
+                                    'last_name' => true,
+                                ],
                             ],
                         ],
-                    ],
                     ]);
                     if (!$this->Users->save($this->userEntity, ['atomic' => false])) {
-                        ScimLog::error('Unable to update the user from a PATCH request');
-                        ScimLog::error(print_r($patchRequest, return: true));
+                        ScimLog::error('Unable to update the user from the request data');
+                        ScimLog::error(print_r($requestData, return: true));
                         ScimLog::error(print_r($this->userEntity, return: true));
 
                         throw new ConflictException(
@@ -618,16 +645,16 @@ class UserScimResource implements ScimResourceInterface
                         $scimEntryPatchData['foreign_key'] = $this->userEntity->id;
                     }
                     $this->Users->ScimEntries->patchEntity($scimEntry, $scimEntryPatchData, [
-                    'accessibleFields' => [
-                        'foreign_key' => true,
-                        'foreign_model' => true,
-                        'external_identifier' => true,
-                        'scim_name' => true,
-                    ],
+                        'accessibleFields' => [
+                            'foreign_key' => true,
+                            'foreign_model' => true,
+                            'external_identifier' => true,
+                            'scim_name' => true,
+                        ],
                     ]);
                     if (!$this->Users->ScimEntries->save($scimEntry, ['atomic' => false])) {
-                        ScimLog::error('Unable to update the scim entry from a PATCH request');
-                        ScimLog::error(print_r($patchRequest, return: true));
+                        ScimLog::error('Unable to update the scim entry from the request data');
+                        ScimLog::error(print_r($requestData, return: true));
                         ScimLog::error(print_r($scimEntry, return: true));
 
                         throw new ConflictException(
@@ -639,7 +666,45 @@ class UserScimResource implements ScimResourceInterface
 
                 return true;
             });
+    }
 
+    /**
+     * Update the resource from a PUT request
+     *
+     * @param array $putRequestData
+     * @throws \Exception
+     */
+    public function put(array $putRequestData): static
+    {
+        $this->validateScimUserData($putRequestData);
+        $userPatchData = [];
+        $scimEntryPatchData = [];
+
+        $externalId = $putRequestData['externalId'] ?? null;
+        if ($externalId !== $this->externalId) {
+            $scimEntryPatchData['external_identifier'] = $externalId;
+        }
+        $userName = $putRequestData['userName'] ?? null;
+        if ($userName !== $this->userName) {
+            $scimEntryPatchData['scim_name'] = $userName;
+        }
+        $firstName = $putRequestData['name']['givenName'] ?? null;
+        if ($firstName !== $this->firstName) {
+            $userPatchData['profile']['first_name'] = $firstName;
+        }
+        $lastName = $putRequestData['name']['familyName'] ?? null;
+        if ($lastName !== $this->lastName) {
+            $userPatchData['profile']['last_name'] = $lastName;
+        }
+        $active = null;
+        if (isset($putRequestData['active'])) {
+            $active = (bool)$putRequestData['active'];
+        }
+        if ($active !== $this->active) {
+            $userPatchData['disabled'] = $this->getDisabledValue((bool)$active);
+        }
+
+        $this->updateDatabaseUser($userPatchData, $scimEntryPatchData, $putRequestData);
         // Set the object properties with the updated information
         $this->setFromDatabase($this->userEntity->id);
 

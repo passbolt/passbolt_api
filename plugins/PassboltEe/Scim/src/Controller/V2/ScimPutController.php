@@ -20,20 +20,23 @@ namespace Passbolt\Scim\Controller\V2;
 use Exception;
 use Passbolt\Scim\Utility\ScimResources;
 
-class ScimViewController extends AbstractScimController
+class ScimPutController extends AbstractScimController
 {
     /**
-     * SCIM view action
+     * SCIM PUT action
      *
      * @param string $settingId Org Setting Id
      * @param string $resourceType Resource Type (Users, Groups)
      * @param string $resourceId Resource Id
      * @return void
      */
-    public function view(string $settingId, string $resourceType, string $resourceId): void
+    public function put(string $settingId, string $resourceType, string $resourceId): void
     {
         try {
-            $this->processResponse($settingId, ScimResources::build($resourceType)->setFromDatabase($resourceId));
+            $scimResource = ScimResources::build($resourceType)
+                ->setFromDatabase($resourceId)
+                ->put($this->getRequest()->getData());
+            $this->processResponse($settingId, $scimResource, static::STATUS_EDITED);
         } catch (Exception $e) {
             $this->processException($settingId, $e);
         }

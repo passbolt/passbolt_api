@@ -25,7 +25,7 @@ use Passbolt\Scim\Utility\Object\ErrorResponse;
 use Passbolt\Scim\Utility\ScimConstants;
 use Passbolt\Scim\Utility\ScimObjectInterface;
 
-abstract class ScimController extends AppController
+abstract class AbstractScimController extends AppController
 {
     public const STATUS_CREATED = 201;
     public const STATUS_EDITED = 200;

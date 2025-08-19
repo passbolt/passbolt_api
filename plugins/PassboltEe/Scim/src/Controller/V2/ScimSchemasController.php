@@ -22,7 +22,7 @@ use Exception;
 use Passbolt\Scim\Utility\Object\ListResponse;
 use Passbolt\Scim\Utility\Schemas;
 
-class ScimSchemasController extends ScimController
+class ScimSchemasController extends AbstractScimController
 {
     /**
      * /Schemas SCIM Endpoint (Unauthenticated)

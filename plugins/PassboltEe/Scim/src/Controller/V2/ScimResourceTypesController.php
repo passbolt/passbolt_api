@@ -22,7 +22,7 @@ use Exception;
 use Passbolt\Scim\Utility\Object\ListResponse;
 use Passbolt\Scim\Utility\ScimResourceTypes;
 
-class ScimResourceTypesController extends ScimController
+class ScimResourceTypesController extends AbstractScimController
 {
     /**
      * /ResourceTypes SCIM Endpoint (Unauthenticated)

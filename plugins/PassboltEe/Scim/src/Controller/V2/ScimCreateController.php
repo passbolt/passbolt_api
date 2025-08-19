@@ -20,7 +20,7 @@ namespace Passbolt\Scim\Controller\V2;
 use Exception;
 use Passbolt\Scim\Utility\ScimResources;
 
-class ScimCreateController extends ScimController
+class ScimCreateController extends AbstractScimController
 {
     /**
      * SCIM add action
@@ -32,10 +32,10 @@ class ScimCreateController extends ScimController
     public function create(string $settingId, string $resourceType): void
     {
         try {
-            $resource = ScimResources::build($resourceType)
+            $scimResource = ScimResources::build($resourceType)
                 ->setFromScim($this->getRequest()->getData())
                 ->create();
-            $this->processResponse($settingId, $resource, static::STATUS_CREATED);
+            $this->processResponse($settingId, $scimResource, static::STATUS_CREATED);
         } catch (Exception $e) {
             $this->processException($settingId, $e);
         }

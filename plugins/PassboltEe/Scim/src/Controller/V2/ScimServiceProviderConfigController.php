@@ -19,7 +19,7 @@ namespace Passbolt\Scim\Controller\V2;
 
 use Passbolt\Scim\Utility\Object\ServiceProviderConfig;
 
-class ScimServiceProviderConfigController extends ScimController
+class ScimServiceProviderConfigController extends AbstractScimController
 {
     /**
      * /ServiceProviderConfig SCIM Endpoint (Unauthenticated)

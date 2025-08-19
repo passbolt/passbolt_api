@@ -64,12 +64,20 @@ interface ScimResourceInterface extends ScimObjectInterface
     public function create(): static;
 
     /**
-     * Update the resource from a Patch request
+     * Update the resource from a PATCH request
      *
      * @param \Passbolt\Scim\Utility\Object\PatchRequest $patchRequest
      * @return $this
      */
-    public function update(PatchRequest $patchRequest): static;
+    public function patch(PatchRequest $patchRequest): static;
+
+    /**
+     * Update the resource from a PUT request
+     *
+     * @param array $putRequestData
+     * @return $this
+     */
+    public function put(array $putRequestData): static;
 
     /**
      * Delete the resource information in the database

@@ -119,8 +119,13 @@ class Operation implements ScimObjectInterface
     {
         if (
             !array_key_exists('op', $data) ||
-            !array_key_exists('path', $data) ||
             !array_key_exists('value', $data)
+        ) {
+            throw new BadRequestException('Invalid data to create a SCIM Operation');
+        }
+        if (
+            !array_key_exists('path', $data) &&
+            !is_array($data['value'])
         ) {
             throw new BadRequestException('Invalid data to create a SCIM Operation');
         }

@@ -20,7 +20,7 @@ namespace Passbolt\Scim\Controller\V2;
 use Exception;
 use Passbolt\Scim\Utility\ScimResources;
 
-class ScimDeleteController extends ScimController
+class ScimDeleteController extends AbstractScimController
 {
     /**
      * Delete SCIM endpoint

@@ -25,7 +25,8 @@ return [
                     'csrfProtection' => [
                         'unlockedActions' => [
                             'ScimCreate' => 'create',
-                            'ScimUpdate' => 'update',
+                            'ScimPatch' => 'patch',
+                            'ScimPut' => 'put',
                             'ScimDelete' => 'delete',
                         ],
                     ],

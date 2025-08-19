@@ -93,9 +93,12 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
             ->setPass(['settingId', 'resourceType', 'id'])
             ->setMethods(['GET']);
 
-        $routes->connect('/{settingId}/{resourceType}/{id}', ['controller' => 'ScimUpdate', 'action' => 'update'])
+        $routes->connect('/{settingId}/{resourceType}/{id}', ['controller' => 'ScimPatch', 'action' => 'patch'])
             ->setPass(['settingId', 'resourceType', 'id'])
             ->setMethods(['PATCH']);
+        $routes->connect('/{settingId}/{resourceType}/{id}', ['controller' => 'ScimPut', 'action' => 'put'])
+            ->setPass(['settingId', 'resourceType', 'id'])
+            ->setMethods(['PUT']);
 
         $routes->connect('/{settingId}/{resourceType}/{id}', ['controller' => 'ScimDelete', 'action' => 'delete'])
             ->setPass(['settingId', 'resourceType', 'id'])
