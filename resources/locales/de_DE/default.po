@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-08-13 14:28\n"
+"PO-Revision-Date: 2025-08-15 11:58\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -3023,13 +3023,13 @@ msgid "Unable to decrypt the metadata private key (id: {0}) data."
 msgstr "Der private Metadaten-Schlüssel (id: {0}) konnte nicht entschlüsselt werden."
 
 msgid "The metadata private key (id: {0}) cleartext data should be in JSON format."
-msgstr ""
+msgstr "Die Klartext-Daten des privaten Metadaten-Schlüssels (id: {0}) sollten im JSON-Format sein."
 
 msgid "The metadata private key (id: {0}) cleartext data should not be empty."
-msgstr ""
+msgstr "Die Klartext-Daten des privaten Metadaten-Schlüssels (id: {0}) sollten nicht leer sein."
 
 msgid "Unable to validate metadata private key (id: {0}) cleartext data."
-msgstr ""
+msgstr "Die Klartext-Daten des privaten Metadaten-Schlüssels (id: {0}) konnten nicht validiert werden."
 
 msgid "The server metadata private key is valid."
 msgstr "Der private Server-Metadaten-Schlüssel ist gültig."
@@ -4496,13 +4496,13 @@ msgid "Could not retrieve the user key policies."
 msgstr "Konnte die Benutzerschlüsselrichtlinien nicht abrufen."
 
 msgid "Conflicting authentication parameters, provide user_id/token only when the user is not already signed in."
-msgstr ""
+msgstr "Widersprüchliche Authentifizierungsparameter, geben user_id/token nur an, wenn der Benutzer nicht bereits angemeldet ist."
 
 msgid "You are not authorized to access this location."
 msgstr "Sie sind nicht berechtigt, auf diesen Standort zuzugreifen."
 
 msgid "Sign-in to passbolt, or provide a valid user ID and authentication token."
-msgstr ""
+msgstr "Melden Sie sich bei Passbolt an oder geben Sie eine gültige Benutzer-ID und Authentifizierungstoken an."
 
 msgid "The user ID must be a valid UUID."
 msgstr "Die Benutzer-ID muss eine gültige UUID sein."
@@ -4511,40 +4511,40 @@ msgid "The authentication token must be a valid UUID."
 msgstr "Der Authentifizierungs-Token muss eine gültige UUID sein."
 
 msgid "Unable to authenticate the guest user with the provided credentials."
-msgstr ""
+msgstr "Der Gastbenutzer konnte nicht mit den angegebenen Zugangsdaten authentifiziert werden."
 
 msgid "No registration authentication token found for the given user."
-msgstr ""
+msgstr "Kein Registrierungs-Authentifizierungs-Token für den angegebenen Benutzer gefunden."
 
 msgid "The registration authentication token is expired."
-msgstr ""
+msgstr "Das Registrierungs-Authentifizierungs-Token ist abgelaufen."
 
 msgid "The preferred key type is required."
-msgstr ""
+msgstr "Der bevorzugte Schlüsseltyp ist erforderlich."
 
 msgid "The preferred key type should not be empty."
-msgstr ""
+msgstr "Der bevorzugte Schlüsseltyp sollte nicht leer sein."
 
 msgid "The preferred key type should be one of the following: {0}."
-msgstr ""
+msgstr "Der bevorzugte Schlüsseltyp sollte einer der folgenden sein: {0}."
 
 msgid "The preferred key type and size combination does not match."
-msgstr ""
+msgstr "Die bevorzugte Schlüsseltyp und -längen-Kombination stimmt nicht überein."
 
 msgid "The preferred key type and curve combination does not match."
-msgstr ""
+msgstr "Die bevorzugte Schlüsseltyp und -kurven-Kombination stimmt nicht überein."
 
 msgid "The preferred key size is required."
-msgstr ""
+msgstr "Die bevorzugte Schlüssellänge ist erforderlich."
 
 msgid "The preferred key size should be one of the following: {0}."
-msgstr ""
+msgstr "Die bevorzugte Schlüssellänge sollte eine der folgenden sein: {0}."
 
 msgid "The preferred key curve is required."
-msgstr ""
+msgstr "Die bevorzugte Tastenkurve ist erforderlich."
 
 msgid "The preferred key curve should be one of the following: {0}."
-msgstr ""
+msgstr "Die bevorzugte Schlüsselkurve sollte eine der folgenden sein: {0}."
 
 msgid "The data entered are not correct"
 msgstr "Die eingegebenen Daten sind nicht korrekt"
