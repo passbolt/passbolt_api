@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-08-08 13:25\n"
+"PO-Revision-Date: 2025-08-21 10:04\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -398,7 +398,7 @@ msgid "Invalid expiry time {0}."
 msgstr "Tiempo de expiración no válido {0}."
 
 msgid "The user role ID must be one of the admin or user roles."
-msgstr ""
+msgstr "El ID de rol de usuario debe ser uno de los roles de administrador o usuario."
 
 msgid "The identifier should not be empty."
 msgstr "El identificador no debe estar vacío."
@@ -932,7 +932,7 @@ msgid "The user cannot delete this resource."
 msgstr "El usuario no puede eliminar este recurso."
 
 msgid "The resource type for this resource does not exist."
-msgstr ""
+msgstr "El tipo de recurso para este recurso no existe."
 
 msgid "The name should be a valid ASCII string."
 msgstr "El nombre debe ser una cadena ASCII válida."
@@ -1466,13 +1466,13 @@ msgid "Cache is NOT working."
 msgstr "La caché NO está funcionando."
 
 msgid "Deprecated `_cake_core_` cache configuration found."
-msgstr ""
+msgstr "Se encontró la configuración obsoleta de caché `_cake_core_`."
 
 msgid "Check the settings in {0}"
 msgstr "Compruebe la configuración en {0}"
 
 msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
-msgstr ""
+msgstr "Reemplace `_cake_core_` con `_cake_translations_` en su archivo de configuración {0}."
 
 msgid "Debug mode is off."
 msgstr "Modo de depuración desactivado."
@@ -1601,10 +1601,10 @@ msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "Vea: https://secure.php.net/manual/es/book.intl.php"
 
 msgid "The logs directory {0} and its content are writable."
-msgstr ""
+msgstr "El directorio de logs {0} y su contenido tienen permisos de escritura."
 
 msgid "The logs directory {0} and its content are not writable."
-msgstr ""
+msgstr "El directorio de logs {0} y su contenido no tienen permisos de escritura."
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
 msgstr "Asegúrate de que el usuario del servidor web puede escribir en el directorio de registros y en su contenido."
@@ -2012,10 +2012,10 @@ msgid "Validation success for permission {0}"
 msgstr "Validación correcta para el permiso {0}"
 
 msgid "The permissions data must be an array."
-msgstr ""
+msgstr "Los datos de permisos deben ser una matriz."
 
 msgid "The permissions data array keys must be integers."
-msgstr ""
+msgstr "Las claves de la matriz de datos de permisos deben ser enteros."
 
 msgid "Could not validate permissions data."
 msgstr "No se pudo validar los datos de permisos."
@@ -2042,7 +2042,7 @@ msgid "Validation success for resource {0}"
 msgstr "Éxito en la validación para el recurso {0}"
 
 msgid "The resource types associated to this resource does not exist."
-msgstr ""
+msgstr "Los tipos de recurso asociados a este recurso no existen."
 
 msgid "You are not allowed to update this resource."
 msgstr "No tiene permisos para actualizar este recurso."
@@ -2990,10 +2990,10 @@ msgid "You edited the metadata settings"
 msgstr "Se ha editado la configuración de los metadatos"
 
 msgid "No active metadata key found."
-msgstr ""
+msgstr "No se ha encontrado ninguna clave de metadatos activa."
 
 msgid "Active metadata key found or not required."
-msgstr ""
+msgstr "Clave de metadatos activa encontrada o no requerida."
 
 msgid "The server has access to the metadata keys or does not require access to it."
 msgstr ""
