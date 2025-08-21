@@ -18,10 +18,9 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Test\Utility;
 
 use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Routing\Router;
-use CakephpFixtureFactories\ORM\FactoryTableRegistry;
-use Passbolt\Scim\Service\ScimGetSettingsService;
 use Passbolt\Scim\Test\Factory\ScimSettingFactory;
 
 /**
@@ -153,20 +152,9 @@ abstract class ScimApiIntegrationTestCase extends AppIntegrationTestCase
         RoleFactory::make()->guest()->persist();
         RoleFactory::make()->user()->persist();
         RoleFactory::make()->admin()->persist();
-        /** @var \App\Model\Entity\OrganizationSetting $scimOrgSetting */
         ScimSettingFactory::make()->default()->persist();
-        $settingsData = (new ScimGetSettingsService())->getSettingsDecryptedValue();
-        $this->settingId = $settingsData['setting_id'] ?? '';
-        $this->scimUserId = $settingsData['scim_user_id'] ?? '';
-    }
-
-    /**
-     * Tear down
-     */
-    public function tearDown(): void
-    {
-        FactoryTableRegistry::getTableLocator()->clear();
-        parent::tearDown();
+        $this->settingId = ScimSettingFactory::SCIM_TEST_SETTING_ID;
+        $this->scimUserId = UserFactory::firstOrFail()->id;
     }
 
     /**
@@ -210,6 +198,21 @@ abstract class ScimApiIntegrationTestCase extends AppIntegrationTestCase
         $this->configRequest([
             'headers' => [
                 'Authorization' => 'Bearer ' . ScimSettingFactory::SCIM_TEST_SECRET_TOKEN,
+            ],
+        ]);
+    }
+
+    /**
+     * Sets HTTP headers for the *next* request to be identified as SCIM+JSON request.
+     *
+     * @return void
+     */
+    protected function requestAsScimPlusJson(): void
+    {
+        $this->configRequest([
+            'headers' => [
+                'Accept' => 'application/scim+json',
+                'Content-Type' => 'application/scim+json',
             ],
         ]);
     }

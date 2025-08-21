@@ -32,6 +32,7 @@ use Passbolt\Scim\Command\ScimSettingsDeleteCommand;
 use Passbolt\Scim\Middleware\ScimAuthMiddleware;
 use Passbolt\Scim\Middleware\ScimLogMiddleware;
 use Passbolt\Scim\Service\Healthcheck\ScimHealthcheckService;
+use Passbolt\Scim\Utility\ScimConstants;
 
 /**
  * ScimPlugin class
@@ -63,6 +64,22 @@ class ScimPlugin extends BasePlugin
         $container
             ->extend(HealthcheckServiceCollector::class)
             ->addMethodCall('addService', [ScimHealthcheckService::class]);
+        $container
+            ->extend(BodyParserMiddleware::class)
+            ->addMethodCall('addParser', [
+                    [ScimConstants::CONTENT_TYPE],
+                    function ($body) {
+                        if ($body === '') {
+                            return [];
+                        }
+                        $decoded = json_decode($body, true);
+                        if (json_last_error() === JSON_ERROR_NONE) {
+                            return (array)$decoded;
+                        }
+
+                        return null;
+                    },
+            ]);
 
         $container->add(ScimSettingsCreateCommand::class)
             ->addArgument(GetUserCommandService::class);

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-use Migrations\BaseMigration;
+use Migrations\AbstractMigration;
 
-class V550AddScimEntriesTable extends BaseMigration
+class V550AddScimEntriesTable extends AbstractMigration
 {
     /**
      * Change Method.

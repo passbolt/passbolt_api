@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Controller\V2;
 
+use App\Test\Factory\UserFactory;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
 use Passbolt\Scim\Test\Utility\ScimApiIntegrationTestCase;
 
@@ -40,6 +41,7 @@ class ScimAddControllerTest extends ScimApiIntegrationTestCase
         $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_ADD_SUCCESS);
         $expectedResponse = $this->replaceUserPlaceholders($expectedResponse, $scimEntry, 1);
         $this->assertResponseEquals($expectedResponse);
+        UserFactory::firstOrFail(['username' => 'user1@email.com']);
     }
 
     /**

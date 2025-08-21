@@ -23,9 +23,9 @@ use Passbolt\Scim\Utility\SchemaIdentifier;
 use Passbolt\Scim\Utility\ScimObjectInterface;
 
 /**
- * ErrorResponse class
+ * ScimErrorResponse class
  */
-class ErrorResponse implements ScimObjectInterface
+class ScimErrorResponse implements ScimObjectInterface
 {
     /**
      * Error exception
