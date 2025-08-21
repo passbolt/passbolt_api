@@ -21,7 +21,7 @@ use App\Controller\AppController;
 use Cake\Event\EventInterface;
 use Cake\Routing\Router;
 use Exception;
-use Passbolt\Scim\Utility\Object\ErrorResponse;
+use Passbolt\Scim\Utility\Object\ScimErrorResponse;
 use Passbolt\Scim\Utility\ScimConstants;
 use Passbolt\Scim\Utility\ScimObjectInterface;
 
@@ -55,7 +55,7 @@ abstract class AbstractScimController extends AppController
     protected function processException(string $settingId, Exception $e): void
     {
         $status = $e->getCode();
-        $this->processResponse($settingId, new ErrorResponse($e), $status);
+        $this->processResponse($settingId, new ScimErrorResponse($e), $status);
     }
 
     /**

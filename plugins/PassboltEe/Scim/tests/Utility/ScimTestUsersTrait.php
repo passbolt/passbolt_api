@@ -17,9 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\Utility;
 
-use App\Model\Entity\Role;
 use App\Model\Entity\User;
-use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;

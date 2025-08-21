@@ -27,9 +27,6 @@
         <testsuite name="ee">
             <directory>plugins/PassboltEe/*/tests/TestCase</directory>
         </testsuite>
-        <testsuite name="scim">
-            <directory>plugins/PassboltEe/Scim/tests/TestCase</directory>
-        </testsuite>
         <testsuite name="installers">
             <directory>tests/TestCase/Command</directory>
             <directory>plugins/PassboltCe/WebInstaller/tests/TestCase</directory>
