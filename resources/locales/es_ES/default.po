@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-08-07 13:34+0000\n"
-"PO-Revision-Date: 2025-08-08 13:25\n"
+"PO-Revision-Date: 2025-08-21 08:08\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -6248,7 +6248,7 @@ msgid "The scope is too large."
 msgstr "El alcance es demasiado grande."
 
 msgid "SSO settings edit endpoints are disabled."
-msgstr ""
+msgstr "Los endpoints de modificación de los ajustes de SSO están deshabilitados."
 
 msgid "The user is not active."
 msgstr "El usuario no está activo."
@@ -6368,16 +6368,16 @@ msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
 msgstr "O establezca passbolt.security.sso.sslVerify a true en {0}."
 
 msgid "The endpoints for updating the SSO configurations are disabled."
-msgstr ""
+msgstr "Los endpoints para actualizar las configuraciones SSO están deshabilitados."
 
 msgid "The endpoints for updating the SSO configurations are enabled."
-msgstr ""
+msgstr "Los endpoints para actualizar las configuraciones SSO están habilitados."
 
 msgid "It is recommended to disable endpoints for updating the SSO configurations."
-msgstr ""
+msgstr "Se recomienda deshabilitar los endpoints para actualizar las configuraciones SSO."
 
 msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
-msgstr ""
+msgstr "Establezca la variable de entorno PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED a true."
 
 msgid "The user is missing for the SSO state."
 msgstr "No se ha encontrado el usuario para el estado del SSO."
@@ -6569,7 +6569,7 @@ msgid "All users can now use Single Sign-on to perform authentication."
 msgstr "Ahora todos los usuarios pueden utilizar Single Sign-on para realizar la autenticación."
 
 msgid "Viewq  it in passbolt"
-msgstr ""
+msgstr "Ver en passbolt"
 
 msgid "The SSO setting has been deleted by {0}."
 msgstr "La configuración del SSO ha sido eliminada por {0}."
