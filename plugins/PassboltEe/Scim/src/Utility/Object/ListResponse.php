@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Utility\Object;
 
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\ORM\Query;
 use Exception;
 use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Model\Entity\ScimEntry;

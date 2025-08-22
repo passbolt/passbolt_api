@@ -22,6 +22,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Security;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use Passbolt\Scim\Exception\BadRequestException;
 use Passbolt\Scim\Model\Validation\ScimTokenFormatRule;
 
 class ScimSettingsForm extends Form
