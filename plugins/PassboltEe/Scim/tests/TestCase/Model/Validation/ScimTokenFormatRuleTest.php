@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         5.5.0
  */
 
-namespace Model\Validation;
+namespace Passbolt\Scim\Test\TestCase\Model\Validation;
 
 use App\Test\Lib\AppTestCase;
 use Passbolt\Scim\Model\Validation\ScimTokenFormatRule;

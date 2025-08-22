@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         5.5.0
  */
 
-namespace Form;
+namespace Passbolt\Scim\Test\TestCase\Form;
 
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
