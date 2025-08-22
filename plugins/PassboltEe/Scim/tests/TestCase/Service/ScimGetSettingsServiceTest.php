@@ -49,6 +49,7 @@ class ScimGetSettingsServiceTest extends AppTestCase
 
     public function testGetSettingsDecryptedValue()
     {
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $scimSettings */
         $scimSettings = ScimSettingFactory::make()->default()->persist();
         $gpg = OpenPGPBackendFactory::get();
         $gpg = $this->setDecryptKeyWithServerKey($gpg);
@@ -64,6 +65,7 @@ class ScimGetSettingsServiceTest extends AppTestCase
 
     public function testGetSettings()
     {
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $scimSettings */
         $scimSettings = ScimSettingFactory::make()->default()->persist();
         $gpg = OpenPGPBackendFactory::get();
         $gpg = $this->setDecryptKeyWithServerKey($gpg);

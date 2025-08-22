@@ -30,7 +30,6 @@ use Passbolt\Scim\Model\Table\ScimSettingsTable;
  * @method \Passbolt\Scim\Model\Entity\ScimSetting|\Passbolt\Scim\Model\Entity\ScimSetting[] persist()
  * @method \Passbolt\Scim\Model\Entity\ScimSetting getEntity()
  * @method \Passbolt\Scim\Model\Entity\ScimSetting[] getEntities()
- * @method static \Passbolt\Scim\Model\Entity\ScimSetting get($primaryKey, array $options = [])
  * @method static \Passbolt\Scim\Model\Entity\ScimSetting firstOrFail(ExpressionInterface|\Closure|array|string|null $conditions = null)
  */
 class ScimSettingFactory extends OrganizationSettingFactory

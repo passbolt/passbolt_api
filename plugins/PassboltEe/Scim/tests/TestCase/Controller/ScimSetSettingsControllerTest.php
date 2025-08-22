@@ -41,7 +41,9 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
 
     public function setupUpdate(): void
     {
-        $this->current = ScimSettingFactory::make()->default()->persist();
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $setting */
+        $setting = ScimSettingFactory::make()->default()->persist();
+        $this->current = $setting;
     }
 
     /**

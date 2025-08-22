@@ -44,6 +44,14 @@ trait ScimTestUsersTrait
     }
 
     /**
+     * @return void
+     */
+    protected function resetTestNow()
+    {
+        DateTime::setTestNow(null);
+    }
+
+    /**
      * @param string $text
      * @param \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry
      * @param int $userIndex

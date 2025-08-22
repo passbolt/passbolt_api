@@ -77,6 +77,7 @@ class ScimSettingsFormTest extends AppTestCase
 
     public function testExecuteDefault_Valid()
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->active()->notDisabled()->admin()->persist();
         $this->assertTrue($this->form->execute([
             'scim_user_id' => $user->id,
@@ -118,6 +119,7 @@ class ScimSettingsFormTest extends AppTestCase
 
     public function testExecuteUpdate_Valid()
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->active()->notDisabled()->admin()->persist();
         $this->assertTrue($this->form->execute([
             'scim_user_id' => $user->id,

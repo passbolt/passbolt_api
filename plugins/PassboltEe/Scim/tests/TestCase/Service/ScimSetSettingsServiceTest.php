@@ -65,6 +65,7 @@ class ScimSetSettingsServiceTest extends AppTestCase
         $scimSettings = ScimSettingFactory::find()->first();
         $this->assertNull($scimSettings);
 
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
         $data = [
@@ -86,6 +87,7 @@ class ScimSetSettingsServiceTest extends AppTestCase
     public function testSaveSettingsCreate_AlreadySet()
     {
         ScimSettingFactory::make()->default()->persist();
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
         $data = [
@@ -101,6 +103,7 @@ class ScimSetSettingsServiceTest extends AppTestCase
 
     public function testSaveSettingsCreate_ValidationError()
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
         $data = [];
@@ -134,6 +137,7 @@ class ScimSetSettingsServiceTest extends AppTestCase
         $gpg = OpenPGPBackendFactory::get();
         $gpg = $this->setDecryptKeyWithServerKey($gpg);
         $existingData = json_decode($gpg->decrypt($existingSettings->value), associative: true);
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
         $newData = [
@@ -162,8 +166,10 @@ class ScimSetSettingsServiceTest extends AppTestCase
 
     public function testSaveSettingsUpdate_ValidationError()
     {
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $scimSettings */
         $scimSettings = ScimSettingFactory::make()->default()->persist();
 
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
         $data = [];

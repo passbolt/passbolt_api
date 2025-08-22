@@ -158,6 +158,15 @@ abstract class ScimApiIntegrationTestCase extends AppIntegrationTestCase
     }
 
     /**
+     * @return void
+     */
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $this->resetTestNow();
+    }
+
+    /**
      * @param string $action
      * @return string
      */
