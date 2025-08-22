@@ -23,11 +23,14 @@ use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use App\Utility\UserAccessControl;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
 use Cake\Http\Exception\ForbiddenException;
 use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Service\MetadataKeysSettingsSetService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
@@ -36,6 +39,17 @@ use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 class MetadataKeysSettingsSetServiceTest extends AppTestCaseV5
 {
     use GpgMetadataKeysTestTrait;
+
+    /**
+     * @inheritDoc
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        // enable event tracking
+        EventManager::instance()->setEventList(new EventList());
+    }
 
     public function testMetadataKeysSettingsSetService_Success_Create(): void
     {
@@ -113,7 +127,32 @@ class MetadataKeysSettingsSetServiceTest extends AppTestCaseV5
 
     public function testMetadataKeysSettingsSetService_Success_EditZeroKnowledgeOffOn(): void
     {
-        $this->markTestIncomplete();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->withValidGpgKey()->persist();
+        $metadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
+        MetadataPrivateKeyFactory::make()->withUserPrivateKey($user->gpgkey)->withMetadataKey($metadataKey)->persist();
+        $metadataKeySettings = json_encode([
+            MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS => false,
+            MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE => false,
+        ]);
+        MetadataKeysSettingsFactory::make()->value($metadataKeySettings)->persist();
+
+        $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
+        $sut = new MetadataKeysSettingsSetService();
+        $settingsUpdated = [
+            MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS => true,
+            MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE => true,
+        ];
+        $dto = $sut->saveSettings($uac, $settingsUpdated);
+
+        $this->assertEquals([
+            MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS => true,
+            MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE => true,
+        ], $dto->toArray());
+        $this->assertEquals(1, OrganizationSettingFactory::count());
+        $expectedMetadataKeysSetting = json_decode(OrganizationSettingFactory::firstOrFail()->get('value'), true);
+        $this->assertEqualsCanonicalizing($settingsUpdated, $expectedMetadataKeysSetting);
+        $this->assertEventFired(MetadataKeysSettingsSetService::AFTER_METADATA_SETTINGS_SET_SUCCESS_EVENT_NAME);
     }
 
     public function testMetadataKeysSettingsSetService_Error_NotAdmin(): void

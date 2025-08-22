@@ -92,7 +92,7 @@ class MetadataKeysSettingsSetService
 
         /** @var \App\Model\Table\OrganizationSettingsTable $orgSettingsTable */
         $orgSettingsTable = $this->fetchTable('OrganizationSettings');
-        $orgSettingsTable->createOrUpdateSetting(
+        $updatedEntity = $orgSettingsTable->createOrUpdateSetting(
             MetadataKeysSettingsGetService::ORG_SETTING_PROPERTY,
             $dto->toJson(),
             $uac
@@ -100,7 +100,7 @@ class MetadataKeysSettingsSetService
 
         $this->dispatchEvent(
             static::AFTER_METADATA_SETTINGS_SET_SUCCESS_EVENT_NAME,
-            compact('dto', 'uac'),
+            compact('dto', 'updatedEntity', 'uac'),
             $this
         );
 
