@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         5.5.0
  */
 
-namespace Controller\V2;
+namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
 use Passbolt\Scim\Test\Utility\ScimApiIntegrationTestCase;
 
