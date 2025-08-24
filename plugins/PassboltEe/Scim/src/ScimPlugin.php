@@ -24,11 +24,14 @@ use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
+use Cake\Event\EventManagerInterface;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Passbolt\Scim\Command\ScimSettingsCreateCommand;
 use Passbolt\Scim\Command\ScimSettingsDeleteCommand;
+use Passbolt\Scim\Event\ScimAddTableAssociationsListener;
+use Passbolt\Scim\Event\ScimContainUserScimEntryListener;
 use Passbolt\Scim\Middleware\ScimAuthMiddleware;
 use Passbolt\Scim\Middleware\ScimLogMiddleware;
 use Passbolt\Scim\Service\Healthcheck\ScimHealthcheckService;
@@ -51,6 +54,20 @@ class ScimPlugin extends BasePlugin
     public function bootstrap(PluginApplicationInterface $app): void
     {
         parent::bootstrap($app);
+        $this->attachListeners($app->getEventManager());
+    }
+
+    /**
+     * Attach the Scim related event listeners.
+     *
+     * @param \Cake\Event\EventManagerInterface $eventManager EventManager
+     * @return void
+     */
+    protected function attachListeners(EventManagerInterface $eventManager): void
+    {
+        $eventManager
+            ->on(new ScimAddTableAssociationsListener())
+            ->on(new ScimContainUserScimEntryListener());
     }
 
     /**
@@ -81,10 +98,8 @@ class ScimPlugin extends BasePlugin
                     },
             ]);
 
-        $container->add(ScimSettingsCreateCommand::class)
-            ->addArgument(GetUserCommandService::class);
-        $container->add(ScimSettingsDeleteCommand::class)
-            ->addArgument(GetUserCommandService::class);
+        $container->add(ScimSettingsCreateCommand::class)->addArgument(GetUserCommandService::class);
+        $container->add(ScimSettingsDeleteCommand::class)->addArgument(GetUserCommandService::class);
     }
 
     /**

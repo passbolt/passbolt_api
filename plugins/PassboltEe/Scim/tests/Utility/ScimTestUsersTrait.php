@@ -68,9 +68,10 @@ trait ScimTestUsersTrait
     /**
      * Create the SCIM test user 1
      *
-     * @return \Passbolt\Scim\Model\Entity\ScimEntry|iterable<\Passbolt\Scim\Model\Entity\ScimEntry>
+     * @param ?bool $deleted true if the user and the SCIM entry should be deleted
+     * @return \Passbolt\Scim\Model\Entity\ScimEntry
      */
-    public function createScimUser1(): ScimEntry|iterable
+    public function createScimUser1(?bool $deleted = false): ScimEntry
     {
         $user = UserFactory::make([
             'username' => self::USER_1_EMAIL,
@@ -81,13 +82,25 @@ trait ScimTestUsersTrait
                 'last_name' => 'Scim',
             ],
         ])->user();
+        if ($deleted) {
+            $user->deleted();
+        }
 
-        return ScimEntryFactory::make([
+        $factory = ScimEntryFactory::make([
             'external_identifier' => '4d36b536-42ba-4a65-9299-c4461222b47f',
             'scim_name' => self::USER_1_SCIM_NAME,
             'created' => DateTime::now(),
             'modified' => DateTime::now(),
-        ])->withUser($user)->persist();
+        ])->withUser($user);
+
+        if ($deleted) {
+            $factory->setField('deleted', DateTime::now()->subMinutes(1));
+        }
+
+        /** @var \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry */
+        $scimEntry = $factory->persist();
+
+        return $scimEntry;
     }
 
     /**

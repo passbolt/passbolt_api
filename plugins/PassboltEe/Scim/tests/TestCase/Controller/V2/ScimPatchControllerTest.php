@@ -30,12 +30,7 @@ class ScimPatchControllerTest extends ScimApiIntegrationTestCase
     public function testScimControllerUsersPatch_Success()
     {
         $this->setTestNow();
-        /** @var \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry */
-        $this->createScimUser1();
-        $scimEntry = $this->getScimEntryByName(self::USER_1_SCIM_NAME, addUser: true);
-        $this->assertSame('User 1', $scimEntry->user->profile->first_name);
-        $this->assertSame('Scim', $scimEntry->user->profile->last_name);
-        $this->assertNull($scimEntry->user->disabled);
+        $scimEntry = $this->createScimUser1();
 
         $this->configScimAuth();
         $this->patch($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key), $this->getPatchOpData([
@@ -71,11 +66,7 @@ class ScimPatchControllerTest extends ScimApiIntegrationTestCase
     {
         $this->setTestNow();
         /** @var \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry */
-        $this->createScimUser1();
-        $scimEntry = $this->getScimEntryByName(self::USER_1_SCIM_NAME, addUser: true);
-        $this->assertSame('User 1', $scimEntry->user->profile->first_name);
-        $this->assertSame('Scim', $scimEntry->user->profile->last_name);
-        $this->assertNull($scimEntry->user->disabled);
+        $scimEntry = $this->createScimUser1();
 
         $this->configScimAuth();
         $this->patch($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key), $this->getPatchOpData([

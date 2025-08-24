@@ -91,7 +91,6 @@ class UsersIndexController extends AppController
 
         if ($this->User->isAdmin()) {
             $findIndexOptions->allowFilter('is-active');
-            $findIndexOptions->allowContain('scim_entry');
         }
 
         // Get additional filters, contain, etc. from plugin
