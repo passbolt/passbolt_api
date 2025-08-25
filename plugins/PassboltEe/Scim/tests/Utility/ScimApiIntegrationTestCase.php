@@ -117,14 +117,19 @@ abstract class ScimApiIntegrationTestCase extends AppIntegrationTestCase
     public const FIXTURE_RESPONSE_USERS_ADD_CONFLICT_EXIST = 'Users' . DS . 'users_add_conflict_exist.json';
 
     /**
-     * Expected response for POST `/Users/<user_id>` endpoint with existing user
+     * Expected response for GET `/Users/<user_id>` endpoint with existing user
      */
     public const FIXTURE_RESPONSE_USERS_VIEW_SUCCESS = 'Users' . DS . 'users_view_success.json';
 
     /**
-     * Expected response for POST `/Users/<user_id>` endpoint with NOT existing user
+     * Expected response for GET `/Users/<user_id>` endpoint with NOT existing user
      */
     public const FIXTURE_RESPONSE_USERS_VIEW_NOT_FOUND = 'Users' . DS . 'users_view_not_found.json';
+
+    /**
+     * Expected response for GET `/Users/<user_id>` endpoint with NOT a UUID as identifier
+     */
+    public const FIXTURE_RESPONSE_USERS_VIEW_NOT_UUID = 'Users' . DS . 'users_view_not_uuid.json';
 
     /**
      * Setting ID for the SCIM endpoint

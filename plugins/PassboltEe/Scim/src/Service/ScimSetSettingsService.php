@@ -22,6 +22,7 @@ use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
+use Cake\Validation\Validation;
 use Passbolt\Scim\Form\Settings\ScimSettingsForm;
 
 class ScimSetSettingsService extends ScimBaseSettingsService
@@ -46,6 +47,9 @@ class ScimSetSettingsService extends ScimBaseSettingsService
     {
         $form = new ScimSettingsForm();
         if ($id) {
+            if (!Validation::uuid($id)) {
+                throw new BadRequestException(__('The SCIM setting identifier should be a valid UUID.'));
+            }
             $data['id'] = $id;
         }
 

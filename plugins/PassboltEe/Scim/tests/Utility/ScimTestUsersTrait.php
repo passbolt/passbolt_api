@@ -145,12 +145,12 @@ trait ScimTestUsersTrait
     {
         /** @var \Passbolt\Scim\Model\Table\ScimEntriesTable $scimEntriesTable */
         $scimEntriesTable = TableRegistry::getTableLocator()->get('Passbolt/Scim.ScimEntries');
-        $query = $scimEntriesTable
-            ->find()
-            ->where([
-                $scimEntriesTable->aliasField('scim_name') => $scimName,
-                $scimEntriesTable->aliasField('deleted') . ' ' . ($isDeleted ? 'IS NOT NULL' : 'IS NULL'),
-            ]);
+        $query = $scimEntriesTable->find()->where([$scimEntriesTable->aliasField('scim_name') => $scimName]);
+        if ($isDeleted) {
+            $query->whereNotNull($scimEntriesTable->aliasField('deleted'));
+        } else {
+            $query->whereNull($scimEntriesTable->aliasField('deleted'));
+        }
         if ($addUser) {
             $query->contain(['Users.Profiles']);
         }

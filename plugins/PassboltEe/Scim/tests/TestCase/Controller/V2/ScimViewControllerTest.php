@@ -48,10 +48,24 @@ class ScimViewControllerTest extends ScimApiIntegrationTestCase
     {
         $this->setTestNow();
         $this->configScimAuth();
-        $this->get($this->getScimEndpoint('Users' . DS . 'not-existing-id'));
+        $this->get($this->getScimEndpoint('Users' . DS . 'e5bb8c65-2dab-51c3-b82b-438c77a8c2e8'));
         $this->assertResponseCode(404);
 
         $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_VIEW_NOT_FOUND);
+        $this->assertResponseEquals($expectedResponse);
+    }
+
+    /**
+     * Test case for GET /Users/<user_id> endpoint with user ID not UUID
+     */
+    public function testScimControllerUsersView_NotUUID()
+    {
+        $this->setTestNow();
+        $this->configScimAuth();
+        $this->get($this->getScimEndpoint('Users' . DS . 'not-a-uuid'));
+        $this->assertResponseCode(400);
+
+        $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_VIEW_NOT_UUID);
         $this->assertResponseEquals($expectedResponse);
     }
 }

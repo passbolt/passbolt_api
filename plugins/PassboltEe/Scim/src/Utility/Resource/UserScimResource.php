@@ -28,6 +28,7 @@ use Cake\ORM\Entity;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
+use Cake\Validation\Validation;
 use Exception;
 use Passbolt\Scim\Exception\BadRequestException;
 use Passbolt\Scim\Exception\ConflictException;
@@ -211,8 +212,11 @@ class UserScimResource implements ScimResourceInterface
     /**
      * @inheritDoc
      */
-    public function setFromDatabase(string|int $internalId): self
+    public function setFromDatabase(string $internalId): self
     {
+        if (!Validation::uuid($internalId)) {
+            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
+        }
         $this->userEntity = $this->findExistingUserEntity(
             [$this->Users->aliasField('id') => $internalId],
             findDeleted: true

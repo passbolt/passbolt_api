@@ -150,12 +150,11 @@ class ScimEntriesTable extends Table
         $conditions = [
             $this->aliasField('scim_name') => $scimEntry->scim_name,
             $this->aliasField('foreign_model') => $scimEntry->foreign_model,
-            $this->aliasField('deleted') . ' IS NULL',
         ];
         if ($scimEntry->id) {
             $conditions[$this->aliasField('id') . ' !='] = $scimEntry->id;
         }
-        $exist = $this->find()->where($conditions)->all()->count() > 0;
+        $exist = $this->find()->where($conditions)->whereNull($this->aliasField('deleted'))->all()->count() > 0;
 
         return $exist === false;
     }
