@@ -24,6 +24,7 @@ use App\Command\MigrateCommand;
 use App\Command\MigratePostgresCommand;
 use App\Command\RecoverUserCommand;
 use App\Command\RegisterUserCommand;
+use App\Service\Command\GetUserCommandService;
 use App\Service\Command\ProcessUserService;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Subscriptions\DefaultSubscriptionCheckInCommandService;
@@ -35,6 +36,7 @@ class CommandServiceProvider extends ServiceProvider
 {
     protected array $provides = [
         ProcessUserService::class,
+        GetUserCommandService::class,
         SubscriptionCheckInCommandServiceInterface::class,
         HealthcheckCommand::class,
         InstallCommand::class,
@@ -51,6 +53,7 @@ class CommandServiceProvider extends ServiceProvider
     public function services(ContainerInterface $container): void
     {
         $container->add(ProcessUserService::class);
+        $container->add(GetUserCommandService::class);
         $container->add(
             SubscriptionCheckInCommandServiceInterface::class,
             DefaultSubscriptionCheckInCommandService::class
