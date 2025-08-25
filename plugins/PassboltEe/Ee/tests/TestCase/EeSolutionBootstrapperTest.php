@@ -26,6 +26,7 @@ use Passbolt\Ee\EeSolutionBootstrapper;
 use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\PasswordExpiryPolicies\PasswordExpiryPoliciesPlugin;
 use Passbolt\PasswordPoliciesUpdate\PasswordPoliciesUpdatePlugin;
+use Passbolt\Scim\ScimPlugin;
 
 /**
  * EeFeaturePluginAdder class
@@ -77,6 +78,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/UserPassphrasePolicies',
         'Passbolt/PasswordExpiryPolicies',
         'Passbolt/UserKeyPolicies',
+        'Passbolt/Scim',
     ];
 
     public function testEeSolutionBootstrapper_Application_Bootstrap(): void
@@ -136,6 +138,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         $this->enableFeaturePlugin(PasswordPoliciesUpdatePlugin::class);
         $this->enableFeaturePlugin(PasswordExpiryPlugin::class);
         $this->enableFeaturePlugin(PasswordExpiryPoliciesPlugin::class);
+        $this->enableFeaturePlugin(ScimPlugin::class);
         // These plugins are enabled by default if not defined
         Configure::delete('passbolt.plugins.ee.enabled');
         Configure::delete('passbolt.plugins.multiFactorAuthentication.enabled');

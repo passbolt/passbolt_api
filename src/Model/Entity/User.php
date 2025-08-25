@@ -44,6 +44,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Permission[] $permissions
  * @property \Passbolt\Log\Model\Entity\ActionLog[] $action_logs
  * @property \Passbolt\AccountSettings\Model\Entity\AccountSetting|string|null $locale
+ * @property \Passbolt\Scim\Model\Entity\ScimEntry|null $scim_entry
  */
 class User extends Entity implements IdentityInterface
 {
@@ -66,6 +67,7 @@ class User extends Entity implements IdentityInterface
 
         // associated data
         'profile' => false,
+        'scim_entry' => false,
     ];
 
     /**
