@@ -53,11 +53,6 @@ class IntegrationUsersTest extends ScimApiIntegrationTestCase
         $scimName = self::USER_1_SCIM_NAME;
         $userEmail = self::USER_1_EMAIL;
 
-        $existingEntry = $this->getScimEntryByName($scimName);
-        $this->assertNull($existingEntry);
-        $existingUser = $this->getUserByUsername($userEmail);
-        $this->assertNull($existingUser);
-
         // Check if the user exists
         $this->configScimAuth();
         $this->get($this->getScimEndpoint('Users?filter=userName+eq+%22' . urlencode($scimName) . '%22'));
@@ -108,12 +103,8 @@ class IntegrationUsersTest extends ScimApiIntegrationTestCase
         $this->setTestNow();
         $scimName = self::USER_1_SCIM_NAME;
         $userEmail = self::USER_1_EMAIL;
-        UserFactory::make(['username' => $userEmail])->persist();
-
-        $existingEntry = $this->getScimEntryByName($scimName);
-        $this->assertNull($existingEntry);
-        $existingUser = $this->getUserByUsername($userEmail);
-        $this->assertNotNull($existingUser);
+        /** @var \App\Model\Entity\User $existingUser */
+        $existingUser = UserFactory::make(['username' => $userEmail])->persist();
 
         // Check if the user exists
         $this->configScimAuth();
@@ -212,19 +203,11 @@ class IntegrationUsersTest extends ScimApiIntegrationTestCase
      */
     public function testCreate_UserCreatedAndDeletedInPassbolt()
     {
-        /** @var \App\Model\Table\UsersTable $usersTable */
-        $usersTable = $this->fetchTable('Users');
-
         $this->setTestNow();
         $scimName = self::USER_1_SCIM_NAME;
         $userEmail = self::USER_1_EMAIL;
-        UserFactory::make(['username' => $userEmail])->user()->persist();
-
-        $existingUser = $this->getUserByUsername($userEmail);
-        $this->assertNotNull($existingUser);
-        $this->assertFalse($existingUser->deleted);
-        $usersTable->softDelete($existingUser);
-        $this->assertSame([], $existingUser->getErrors());
+        /** @var \App\Model\Entity\User $existingUser */
+        $existingUser = UserFactory::make(['username' => $userEmail])->user()->deleted()->persist();
 
         // Check if the user exists
         $this->configScimAuth();
@@ -428,13 +411,11 @@ class IntegrationUsersTest extends ScimApiIntegrationTestCase
         $scimName = self::USER_1_SCIM_NAME;
         $userEmail = self::USER_1_EMAIL;
         $externalId = '1234';
-        UserFactory::make(['username' => $userEmail])->persist();
+        /** @var \App\Model\Entity\User $existingUser */
+        $existingUser = UserFactory::make(['username' => $userEmail])->persist();
 
         $existingEntry = $this->getScimEntryByName($scimName);
         $this->assertNull($existingEntry);
-        $existingUser = $this->getUserByUsername($userEmail);
-        $this->assertNotNull($existingUser);
-        $this->assertSame($existingUser->username, $userEmail);
 
         // Check if the user exists
         $this->configScimAuth();
@@ -521,21 +502,10 @@ class IntegrationUsersTest extends ScimApiIntegrationTestCase
      */
     public function testEdit_UserExistAndEntryExistInPassbolt_SoftDeleted()
     {
-        /** @var \App\Model\Table\UsersTable $usersTable */
-        $usersTable = $this->fetchTable('Users');
-
         $this->setTestNow();
         $scimName = self::USER_1_SCIM_NAME;
         $userEmail = self::USER_1_EMAIL;
-        /** @var \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry */
-        $scimEntry = $this->createScimUser1();
-        $this->assertSame($scimEntry->scim_name, $scimName);
-        $this->assertSame($scimEntry->user->username, $userEmail);
-        $this->assertFalse($scimEntry->user->deleted);
-        $usersTable->softDelete($scimEntry->user);
-        $this->assertSame([], $scimEntry->user->getErrors());
-        $deletedScimEntry = $this->getScimEntryByName($scimName, addUser: true, isDeleted: true);
-        $this->assertTrue($deletedScimEntry->user->deleted);
+        $deletedScimEntry = $this->createScimUser1(true);
 
         // Check if the user exists by the associated id
         $this->configScimAuth();
@@ -580,19 +550,8 @@ class IntegrationUsersTest extends ScimApiIntegrationTestCase
      */
     public function testDelete_UserAlreadyDeletedInPassbolt()
     {
-        /** @var \App\Model\Table\UsersTable $usersTable */
-        $usersTable = $this->fetchTable('Users');
-
         $this->setTestNow();
-        $scimName = self::USER_1_SCIM_NAME;
-        /** @var ScimEntry $scimEntry */
-        $scimEntry = $this->createScimUser1();
-        $this->assertSame($scimEntry->scim_name, $scimName);
-        $this->assertFalse($scimEntry->user->deleted);
-        $usersTable->softDelete($scimEntry->user);
-        $this->assertSame([], $scimEntry->user->getErrors());
-        $scimEntry = $this->getScimEntryByName($scimName, addUser: true, isDeleted: true);
-        $this->assertTrue($scimEntry->user->deleted);
+        $scimEntry = $this->createScimUser1(true);
 
         // Check if the user exists
         $this->configScimAuth();

@@ -109,13 +109,6 @@ class UsersTable extends Table
         $this->hasOne('Profiles', [
             'foreignKey' => 'user_id',
         ]);
-        $this->hasOne('ScimEntries', [
-            'className' => 'Passbolt/Scim.ScimEntries',
-            'foreignKey' => 'foreign_key',
-            'conditions' => [
-                'ScimEntries.foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
-            ],
-        ]);
         $this->hasMany('GroupsUsers', [
             'foreignKey' => 'user_id',
         ]);
@@ -519,10 +512,12 @@ class UsersTable extends Table
         $this->Gpgkeys->updateAll(['deleted' => true], ['user_id' => $user->id]);
 
         // Mark scim_entry as deleted
-        $this->ScimEntries->updateAll(['deleted' => date('Y-m-d H:s:i')], [
-            'foreign_key' => $user->id,
-            'foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
-        ]);
+        if ($this->hasAssociation('ScimEntries')) {
+            $this->ScimEntries->updateAll(['deleted' => date('Y-m-d H:s:i')], [
+                'foreign_key' => $user->id,
+                'foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
+            ]);
+        }
 
         // Delete all tags
         if (Configure::read('passbolt.plugins.tags.enabled')) {
