@@ -64,7 +64,7 @@ class ScimPutControllerTest extends ScimApiIntegrationTestCase
     {
         $this->setTestNow();
         $this->configScimAuth();
-        $this->put($this->getScimEndpoint('Users' . DS . 'not-existing-id'), $this->getUserPostData());
+        $this->put($this->getScimEndpoint('Users' . DS . 'e5bb8c65-2dab-51c3-b82b-438c77a8c2e8'), $this->getUserPostData());
         $this->assertResponseCode(404);
 
         $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_VIEW_NOT_FOUND);

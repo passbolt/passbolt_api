@@ -3,5 +3,5 @@
         "urn:ietf:params:scim:api:messages:2.0:Error"
     ],
     "status": 404,
-    "detail": "The Users resource with id `not-existing-id` was not found"
+    "detail": "The Users resource with id `e5bb8c65-2dab-51c3-b82b-438c77a8c2e8` was not found"
 }

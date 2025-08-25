@@ -110,7 +110,7 @@ class ScimPatchControllerTest extends ScimApiIntegrationTestCase
     {
         $this->setTestNow();
         $this->configScimAuth();
-        $this->patch($this->getScimEndpoint('Users' . DS . 'not-existing-id'), $this->getPatchOpData([
+        $this->patch($this->getScimEndpoint('Users' . DS . 'e5bb8c65-2dab-51c3-b82b-438c77a8c2e8'), $this->getPatchOpData([
             [
                 'op' => 'Replace',
                 'path' => 'name.givenName',

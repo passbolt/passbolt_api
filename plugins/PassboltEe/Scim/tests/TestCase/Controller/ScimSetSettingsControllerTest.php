@@ -403,6 +403,30 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
     }
 
     /**
+     * Test setSettings method: update operation not UUID
+     *
+     * @return void
+     */
+    public function testSetSettings_Update_NotUUID()
+    {
+        $this->setupUpdate();
+        $this->logInAsAdmin();
+
+        $wrongUuid = 'foo';
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $data = [
+            'scim_user_id' => $user->id,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $this->putJson("/scim/settings/{$wrongUuid}.json", $data);
+        $this->assertBadRequestError('The SCIM setting identifier should be a valid UUID.');
+    }
+
+    /**
      * Test setSettings method: update operation validation errors
      *
      * @dataProvider updateDataProvider

@@ -101,7 +101,6 @@ class ListResponse implements ScimObjectInterface
         $scimEntriesTable = $this->fetchTable('Passbolt/Scim.ScimEntries');
         $conditions = [
             $scimEntriesTable->aliasField('foreign_model') => ScimEntry::MODEL_MAP[$resourceType],
-            $scimEntriesTable->aliasField('deleted') . ' IS NULL',
         ];
         if ($filter !== null) {
             //@todo: tmilos/scim-filter-parser should be used if more filters are needed
@@ -133,6 +132,7 @@ class ListResponse implements ScimObjectInterface
         $result = $countQuery
             ->select(['count' => $countQuery->func()->count('id')])
             ->where($conditions)
+            ->whereNull($scimEntriesTable->aliasField('deleted'))
             ->first();
         $this->totalResults = $result['count'] ?? 0;
         if ($this->totalResults === 0) {
@@ -143,6 +143,7 @@ class ListResponse implements ScimObjectInterface
         $scimResources = $scimEntriesTable
             ->find()
             ->where($conditions)
+            ->whereNull($scimEntriesTable->aliasField('deleted'))
             ->offset($this->startIndex - 1)
             ->limit($this->itemsPerPage)
             ->orderBy([

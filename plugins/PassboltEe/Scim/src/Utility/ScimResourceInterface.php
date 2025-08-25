@@ -49,11 +49,11 @@ interface ScimResourceInterface extends ScimObjectInterface
     /**
      * Set the resource properties from the database record
      *
-     * @param string|int $internalId
+     * @param string $internalId
      * @return $this
      * @throws \Passbolt\Scim\Exception\ResourceNotFoundException if the resource is not found
      */
-    public function setFromDatabase(string|int $internalId): self;
+    public function setFromDatabase(string $internalId): self;
 
     /**
      * Create the resource information in the database

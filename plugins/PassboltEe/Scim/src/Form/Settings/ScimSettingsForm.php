@@ -20,6 +20,7 @@ use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Security;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\Scim\Model\Validation\ScimTokenFormatRule;
 
@@ -54,11 +55,16 @@ class ScimSettingsForm extends Form
         $validator
             ->uuid('scim_user_id', __('The identifier of the default user should be a valid UUID.'))
             ->add('scim_user_id', 'activeAndEnabled', [
-                'rule' => function ($value, array $context) {
+                'rule' => function (string $userId) {
+                    if (!Validation::uuid($userId)) {
+                        // Return true as the uuid validator will fail.
+                        // Skip the rest of the present rule as this would throw errors on Postgres
+                        return true;
+                    }
                     $user = TableRegistry::getTableLocator()->get('Users')
                         ->find('active')
                         ->find('notDisabled')
-                        ->where(['Users.id' => $value])
+                        ->where(['Users.id' => $userId])
                         ->first();
 
                     if ($user) {
