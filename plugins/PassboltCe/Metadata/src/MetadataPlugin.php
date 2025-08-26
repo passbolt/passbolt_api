@@ -31,6 +31,7 @@ use Passbolt\Metadata\Command\MigrateResourcesCommand;
 use Passbolt\Metadata\Command\ShareMetadataKeyCommand;
 use Passbolt\Metadata\Command\UpdateMetadataTypesSettingsCommand;
 use Passbolt\Metadata\Event\AddHasManyMetadataPrivateKeysToUsersListener;
+use Passbolt\Metadata\Event\FlushServerKeyOnMetadataKeysSettingsUpdateListener;
 use Passbolt\Metadata\Event\MetadataFolderUpdateListener;
 use Passbolt\Metadata\Event\MetadataResourceIndexListener;
 use Passbolt\Metadata\Event\MetadataResourceUpdateListener;
@@ -80,7 +81,8 @@ class MetadataPlugin extends BasePlugin
             ->on(new MetadataResourceUpdateListener())
             ->on(new MetadataFolderUpdateListener())
             ->on(new AddHasManyMetadataPrivateKeysToUsersListener())
-            ->on(new MissingMetadataKeyIdsContainListener());
+            ->on(new MissingMetadataKeyIdsContainListener())
+            ->on(new FlushServerKeyOnMetadataKeysSettingsUpdateListener());
     }
 
     /**
