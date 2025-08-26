@@ -1,7 +1,7 @@
-name: passbolt-pro-api
+name: passbolt-ce-api
 type: cakephp
 docroot: webroot
-php_version: "8.3"
+php_version: "8.4"
 webserver_type: nginx-fpm
 xdebug_enabled: false
 additional_hostnames: []
@@ -11,16 +11,16 @@ database:
     version: "10.11"
 hooks:
     post-start:
-        - exec: sudo apt-get update
+        - exec: "sudo apt-get update && sudo apt-get install -y git unzip nano"
         - exec: sh -c "if [ ! -f /var/www/html/config/app.php ]; then cp /var/www/html/config/app.default.php /var/www/html/config/app.php; fi"
         - exec: gpg --list-keys
 mailpit_https_port: "9102"
-webimage_extra_packages: [php8.3-gnupg, php8.3-xdebug]
+webimage_extra_packages: ["php${DDEV_PHP_VERSION}-gnupg", "php${DDEV_PHP_VERSION}-xdebug"]
 use_dns_when_possible: true
 composer_version: "2"
 web_environment:
     - DEBUG=true
-    - APP_FULL_BASE_URL=https://passbolt-pro-api.ddev.site
+    - APP_FULL_BASE_URL=https://passbolt-ce-api.ddev.site
     - PASSBOLT_SELENIUM_ACTIVE=true
     - DATASOURCES_DEFAULT_HOST=db
     - DATASOURCES_DEFAULT_USERNAME=db
