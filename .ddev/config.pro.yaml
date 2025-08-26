@@ -1,0 +1,6 @@
+# this config file inherits all the settings declared in config.yaml, here are only overrides
+
+name: passbolt-pro-api
+php_version: "8.3" # passbolt-ce supports 8.4 but the LDAP plugin in passbolt-pro triggers warnings in 8.4 due to a composer module
+web_environment:
+    - APP_FULL_BASE_URL=https://passbolt-pro-api.ddev.site
