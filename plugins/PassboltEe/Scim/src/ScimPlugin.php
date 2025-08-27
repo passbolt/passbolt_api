@@ -54,6 +54,7 @@ class ScimPlugin extends BasePlugin
     public function bootstrap(PluginApplicationInterface $app): void
     {
         parent::bootstrap($app);
+        Configure::write('passbolt.plugins.scim.isInBeta', true);
         $this->attachListeners($app->getEventManager());
     }
 
