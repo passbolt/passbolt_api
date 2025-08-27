@@ -65,6 +65,7 @@
         "ext-pdo": "*",
         "ext-curl": "*",
         "ext-ldap": "*",
+        "ext-iconv": "*",
         "composer/composer": "^2.8.1",
         "cakephp/cakephp": "^5.2.6",
         "cakephp/migrations": "^4.0.0",
@@ -84,7 +85,7 @@
         "enygma/yubikey": "^3.8",
         "duosecurity/duo_universal_php": "^1.0.2",
         "league/oauth2-client": "^2.6",
-        "directorytree/ldaprecord": "^2.20"
+        "directorytree/ldaprecord": "^3.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.12.10",
