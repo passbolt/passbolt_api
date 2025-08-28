@@ -16,12 +16,25 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Form;
 
+use Cake\Event\EventManager;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
 
 class MetadataKeysSettingsForm extends Form
 {
+    private string $mode;
+
+    /**
+     * @inheritDoc
+     */
+    public function __construct(string $mode = 'create', ?EventManager $eventManager = null)
+    {
+        parent::__construct($eventManager);
+
+        $this->mode = $mode;
+    }
+
     /**
      * Email configuration schema.
      *
@@ -51,6 +64,49 @@ class MetadataKeysSettingsForm extends Form
             ->boolean('zero_knowledge_key_share', __('The setting should be a valid boolean.'))
             ->requirePresence('zero_knowledge_key_share', true, __('The setting is required.'));
 
+        if ($this->mode === 'update') {
+            $onZeroKnowledgeDisabled = function ($context) {
+                return !$context['data']['zero_knowledge_key_share'];
+            };
+
+            $validator
+                ->requirePresence('metadata_private_keys', true, __('The metadata private keys is required.')) // phpcs:ignore;
+                ->notEmptyArray('metadata_private_keys', __('The metadata private keys should not be empty.'), $onZeroKnowledgeDisabled) // phpcs:ignore;
+                ->hasAtLeast('metadata_private_keys', 1, __('Need at least one metadata private key.'), $onZeroKnowledgeDisabled) // phpcs:ignore;
+                // TODO: Accept multiple metadata private keys?
+                ->hasAtMost('metadata_private_keys', 1, __('Need at least one metadata private key.'), $onZeroKnowledgeDisabled) // phpcs:ignore;
+                ->addNestedMany('metadata_private_keys', $this->getServerMetadataPrivateKeysValidator(), null, $onZeroKnowledgeDisabled); // phpcs:ignore;
+        }
+
+        return $validator;
+    }
+
+    /**
+     * @return \Cake\Validation\Validator
+     */
+    private function getServerMetadataPrivateKeysValidator(): Validator
+    {
+        $validator = new Validator();
+
+        $validator
+            ->requirePresence('metadata_key_id', 'create', __('A metadata key identifier is required.'))
+            ->uuid('metadata_key_id', __('The metadata key identifier should be a valid UUID.'));
+
+        $validator
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'))
+            ->allowEmptyString('user_id')
+            ->add('user_id', 'onlyNullAllowed', [
+                'rule' => function ($value) {
+                    return $value === null;
+                },
+                'message' => __('The user identifier should be null.'),
+            ]);
+
+        $validator
+            ->requirePresence('data', 'create', __('A data is required.'))
+            ->notEmptyString('data', __('The data should not be empty.'))
+            ->ascii('data', __('The data should be a valid ASCII string.'));
+
         return $validator;
     }
 
@@ -73,6 +129,7 @@ class MetadataKeysSettingsForm extends Form
         return [
             'allow_usage_of_personal_keys' => $data['allow_usage_of_personal_keys'] ?? null,
             'zero_knowledge_key_share' => $data['zero_knowledge_key_share'] ?? null,
+            'metadata_private_keys' => $data['metadata_private_keys'] ?? null,
         ];
     }
 }
