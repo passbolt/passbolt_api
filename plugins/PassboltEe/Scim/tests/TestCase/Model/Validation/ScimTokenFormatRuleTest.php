@@ -47,16 +47,19 @@ class ScimTokenFormatRuleTest extends AppTestCase
         return [
             [true, 'pb_WRIuQrV60RPApixBVd1BA6FEQ2u32AgkNRyhczzVwc2'],
             [true, '2a42c965559a7d0fbf1354e38a42f71f5436ea820450953e57b0aa81d794d5be'],
+            [false, 'pb_WRIuQrV60RPApixBVd1BA6FEQ2u32AgkNRyhczzVwc'],
             [false, 'WRIuQrV60RPApixBVd1BA6FEQ2u32AgkNRyhczzVwc2'],
             [false, '2a42c965559a7d0fbf1354e38a42f71f5436ea820450953e57b0aa81d'],
             [false, 'random-string'],
+            [false, null],
+            [false, 123],
         ];
     }
 
     /**
      * @dataProvider ruleProvider
      */
-    public function testTokenValidationRule(bool $expected, $value): void
+    public function testScimTokenFormatRule(bool $expected, $value): void
     {
         $this->assertSame($expected, $this->rule->rule($value, null));
     }

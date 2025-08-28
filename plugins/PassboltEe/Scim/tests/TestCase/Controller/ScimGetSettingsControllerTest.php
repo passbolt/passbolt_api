@@ -17,12 +17,12 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\TestCase\Controller;
 
-use App\Model\Entity\OrganizationSetting;
 use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Passbolt\Scim\ScimPlugin;
 use Passbolt\Scim\Test\Factory\ScimSettingFactory;
 use Passbolt\Scim\Test\Utility\ScimSettingsIntegrationTestCase;
+use stdClass;
 use Throwable;
 
 /**
@@ -32,20 +32,12 @@ class ScimGetSettingsControllerTest extends ScimSettingsIntegrationTestCase
 {
     use OpenPGPCommonServerOperationsTrait;
 
-    protected OrganizationSetting $current;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->current = ScimSettingFactory::make()->default()->persist();
-    }
-
     /**
      * Test getSettings method: plugin disabled
      *
      * @return void
      */
-    public function testDeleteSettings_Error_PluginDisabled(): void
+    public function testScimGetSettingsController_Error_PluginDisabled(): void
     {
         $this->disableFeaturePlugin(ScimPlugin::class);
 
@@ -62,7 +54,7 @@ class ScimGetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testGetSettings_Error_GuestForbidden(): void
+    public function testScimGetSettingsController_Error_GuestForbidden(): void
     {
         $this->logInAsUser();
 
@@ -76,7 +68,7 @@ class ScimGetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testGetSettings_Error_Unauthenticated()
+    public function testScimGetSettingsController_Error_Unauthenticated()
     {
         $this->getJson('/scim/settings.json');
 
@@ -88,7 +80,7 @@ class ScimGetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testGetSettings_Error_NotJson()
+    public function testScimGetSettingsController_Error_NotJson()
     {
         $this->logInAsAdmin();
         $this->get('/scim/settings');
@@ -100,8 +92,10 @@ class ScimGetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testGetSettings_Success(): void
+    public function testScimGetSettingsController_Success(): void
     {
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $setting */
+        $setting = ScimSettingFactory::make()->default()->persist();
         $this->logInAsAdmin();
 
         $this->getJson('/scim/settings.json');
@@ -109,11 +103,25 @@ class ScimGetSettingsControllerTest extends ScimSettingsIntegrationTestCase
         $response = $this->_responseJsonBody;
         $gpg = OpenPGPBackendFactory::get();
         $gpg = $this->setDecryptKeyWithServerKey($gpg);
-        $data = json_decode($gpg->decrypt($this->current->value), associative: true);
+        $data = json_decode($gpg->decrypt($setting->value), associative: true);
         $this->assertSuccess();
         $this->assertSame($data['setting_id'], $response->setting_id);
         $this->assertSame($data['scim_user_id'], $response->scim_user_id);
         $this->assertEmpty($response->secret_token ?? null);
         $this->assertObjectHasAttribute('id', $response);
+    }
+
+    /**
+     * Test getSettings method: success and no settings
+     *
+     * @return void
+     */
+    public function testScimGetSettingsController_Success_No_Settings(): void
+    {
+        $this->logInAsAdmin();
+
+        $this->getJson('/scim/settings.json');
+        $this->assertSuccess();
+        $this->assertEquals(new stdClass(), $this->_responseJsonBody);
     }
 }

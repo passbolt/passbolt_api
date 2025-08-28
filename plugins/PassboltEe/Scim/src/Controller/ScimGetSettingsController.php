@@ -18,6 +18,7 @@ namespace Passbolt\Scim\Controller;
 
 use App\Controller\AppController;
 use Passbolt\Scim\Service\ScimGetSettingsService;
+use stdClass;
 
 class ScimGetSettingsController extends AppController
 {
@@ -33,6 +34,9 @@ class ScimGetSettingsController extends AppController
         $this->User->assertIsAdmin();
 
         $settings = (new ScimGetSettingsService())->getSettings();
+        if (empty($settings)) {
+            $settings = new stdClass();
+        }
 
         $this->success(__('The operation was successful.'), $settings);
     }
