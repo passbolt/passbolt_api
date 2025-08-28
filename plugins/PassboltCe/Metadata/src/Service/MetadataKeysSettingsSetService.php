@@ -22,7 +22,6 @@ use App\Utility\UserAccessControl;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\Validation\Validation;
 use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 
 class MetadataKeysSettingsSetService
@@ -47,15 +46,54 @@ class MetadataKeysSettingsSetService
     {
         $uac->assertIsAdmin();
 
-        $dto = (new MetadataKeysSettingsAssertService())->assert($data);
+        /** @var \App\Model\Table\OrganizationSettingsTable $orgSettingsTable */
+        $orgSettingsTable = $this->fetchTable('OrganizationSettings');
+        $mode = is_null($orgSettingsTable->getByProperty(MetadataKeysSettingsGetService::ORG_SETTING_PROPERTY)) ? 'create' : 'update'; // phpcs:ignore
 
+        $dto = (new MetadataKeysSettingsAssertService())->assert($data, $mode);
+
+        if ($mode == 'update' && $this->shouldCreateMetadataPrivateKey($dto, $data)) {
+            $service = new MetadataPrivateKeysCreateService();
+            foreach ($data['metadata_private_keys'] as $i => $key) {
+                try {
+                    $service->create($uac, $key['metadata_key_id'], $key);
+                } catch (ValidationException $exception) {
+                    $msg = __('The server metadata private keys data are invalid.');
+                    $errors['metadata_private_keys'][$i] = $exception->getErrors();
+                    throw new CustomValidationException($msg, $errors);
+                }
+            }
+        }
+
+        $updatedEntity = $orgSettingsTable->createOrUpdateSetting(
+            MetadataKeysSettingsGetService::ORG_SETTING_PROPERTY,
+            $dto->toJson(),
+            $uac
+        );
+
+        $this->dispatchEvent(
+            static::AFTER_METADATA_SETTINGS_SET_SUCCESS_EVENT_NAME,
+            compact('dto', 'updatedEntity', 'uac'),
+            $this
+        );
+
+        return $dto;
+    }
+
+    /**
+     * @param \Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto $settingsDto Metadata keys settings DTO.
+     * @param array $data Data to check against.
+     * @return bool
+     */
+    private function shouldCreateMetadataPrivateKey(MetadataKeysSettingsDto $settingsDto, array $data): bool
+    {
         $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
-        $keysCount = $metadataKeysTable->find()
-            ->where(['deleted IS NOT NULL'])
+        $nonDeletedKeysCount = $metadataKeysTable->find()
+            ->where(['deleted IS NULL'])
             ->all()
             ->count();
 
-        if ($keysCount && !$dto->isKeyShareZeroKnowledge()) {
+        if ($nonDeletedKeysCount && $settingsDto->isUserFriendlyMode()) {
             /** @var \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable $metadataPrivateKeysTable */
             $metadataPrivateKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys');
             $serverKeysCount = $metadataPrivateKeysTable->find()
@@ -73,37 +111,10 @@ class MetadataKeysSettingsSetService
                     throw new BadRequestException($msg);
                 }
 
-                $service = new MetadataPrivateKeysCreateService();
-                foreach ($data['metadata_private_keys'] as $i => $key) {
-                    if (!isset($key['metadata_key_id']) || !Validation::uuid($key['metadata_key_id'])) {
-                        $msg = __('The server metadata key id is required.');
-                        throw new BadRequestException($msg);
-                    }
-                    try {
-                        $service->create($uac, $key['metadata_key_id'], $key);
-                    } catch (ValidationException $exception) {
-                        $msg = __('The server metadata private key is invalid.');
-                        $errors['metadata_private_keys'][$i] = $exception->getErrors();
-                        throw new CustomValidationException($msg, $errors);
-                    }
-                }
+                return true;
             }
         }
 
-        /** @var \App\Model\Table\OrganizationSettingsTable $orgSettingsTable */
-        $orgSettingsTable = $this->fetchTable('OrganizationSettings');
-        $updatedEntity = $orgSettingsTable->createOrUpdateSetting(
-            MetadataKeysSettingsGetService::ORG_SETTING_PROPERTY,
-            $dto->toJson(),
-            $uac
-        );
-
-        $this->dispatchEvent(
-            static::AFTER_METADATA_SETTINGS_SET_SUCCESS_EVENT_NAME,
-            compact('dto', 'updatedEntity', 'uac'),
-            $this
-        );
-
-        return $dto;
+        return false;
     }
 }
