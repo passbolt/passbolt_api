@@ -27,13 +27,14 @@ use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventManagerInterface;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\MiddlewareQueue;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Passbolt\Scim\Command\ScimSettingsCreateCommand;
 use Passbolt\Scim\Command\ScimSettingsDeleteCommand;
-use Passbolt\Scim\Event\ScimAddTableAssociationsListener;
 use Passbolt\Scim\Event\ScimContainUserScimEntryListener;
 use Passbolt\Scim\Middleware\ScimAuthMiddleware;
 use Passbolt\Scim\Middleware\ScimLogMiddleware;
+use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Service\Healthcheck\ScimHealthcheckService;
 use Passbolt\Scim\Utility\ScimConstants;
 
@@ -56,6 +57,7 @@ class ScimPlugin extends BasePlugin
         parent::bootstrap($app);
         Configure::write('passbolt.plugins.scim.isInBeta', true);
         $this->attachListeners($app->getEventManager());
+        $this->addScimAssociationToUsers();
     }
 
     /**
@@ -66,9 +68,7 @@ class ScimPlugin extends BasePlugin
      */
     protected function attachListeners(EventManagerInterface $eventManager): void
     {
-        $eventManager
-            ->on(new ScimAddTableAssociationsListener())
-            ->on(new ScimContainUserScimEntryListener());
+        $eventManager->on(new ScimContainUserScimEntryListener());
     }
 
     /**
@@ -127,5 +127,23 @@ class ScimPlugin extends BasePlugin
         }
 
         return $commands;
+    }
+
+    /**
+     * @return void
+     */
+    protected function addScimAssociationToUsers(): void
+    {
+        $UsersTable = TableRegistry::getTableLocator()->get('Users');
+        if ($UsersTable->hasAssociation('ScimEntries')) {
+            return;
+        }
+        $UsersTable->hasOne('ScimEntries', [
+            'className' => 'Passbolt/Scim.ScimEntries',
+            'foreignKey' => 'foreign_key',
+            'conditions' => [
+                'ScimEntries.foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
+            ],
+        ]);
     }
 }
