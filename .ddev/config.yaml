@@ -1,4 +1,4 @@
-name: passbolt-ce-api
+name: passbolt-api
 type: cakephp
 docroot: webroot
 php_version: "8.4"
@@ -20,7 +20,7 @@ use_dns_when_possible: true
 composer_version: "2"
 web_environment:
     - DEBUG=true
-    - APP_FULL_BASE_URL=https://passbolt-ce-api.ddev.site
+    - APP_FULL_BASE_URL=https://passbolt-api.ddev.site
     - PASSBOLT_SELENIUM_ACTIVE=true
     - DATASOURCES_DEFAULT_HOST=db
     - DATASOURCES_DEFAULT_USERNAME=db
