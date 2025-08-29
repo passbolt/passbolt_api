@@ -25,8 +25,9 @@ use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 /**
- * App\Command\MigrateCommand Test Case
+ * App\Command\DatacheckCommand Test Case
  *
+ * @covers \App\Command\DatacheckCommand
  * @uses \App\Command\MigrateCommand
  */
 class DatacheckCommandTest extends AppTestCase
