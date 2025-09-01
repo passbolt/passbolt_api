@@ -81,7 +81,8 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
         if ($isResourceAlreadyExpired) {
             $expiryDate = DateTime::yesterday();
         } else {
-            $expiryDate = DateTime::tomorrow();
+            // Create a date long time in the future
+            $expiryDate = DateTime::createFromDate(2030);
         }
         [$operator, $ownerWithAccess, $editorWithAccess] = UserFactory::make(4)->user()->persist();
         /** @var \App\Model\Entity\Resource $resourceToUpdate */
