@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-08-08 13:25\n"
+"PO-Revision-Date: 2025-09-01 13:43\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Czech\n"
 "MIME-Version: 1.0\n"
@@ -2447,13 +2447,13 @@ msgid "You have created a new folder"
 msgstr "Vytvořili jste novou složku"
 
 msgid "Name: {0}"
-msgstr ""
+msgstr "Název {0}"
 
 msgid "View it in passbolt"
 msgstr "Zobrazit v passbolt"
 
 msgid "You deleted a folder"
-msgstr ""
+msgstr "Smazali jste složku"
 
 msgid "{0} deleted a folder"
 msgstr ""
@@ -2462,13 +2462,13 @@ msgid "Log in passbolt"
 msgstr "Přihlásit se do passboltu"
 
 msgid "{0} shared a folder with you"
-msgstr ""
+msgstr "{0} s vámi sdílel složku"
 
 msgid "You edited a folder"
-msgstr ""
+msgstr "Upravil jste složku"
 
 msgid "{0} edited a folder"
-msgstr ""
+msgstr "{0} upravil(a) složku"
 
 msgid "The user signature could not be verified."
 msgstr "Podpis uživatele nemohl být ověřen."
@@ -5072,7 +5072,7 @@ msgid "{0} can no longer perform administration tasks."
 msgstr ""
 
 msgid "You"
-msgstr ""
+msgstr "Vy"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr "{0} ({1}) právě dokončil(a) obnovení účtu. Pokud vám tato akce připadá podezřelá, neváhejte tohoto uživatele kontaktovat."
@@ -5108,7 +5108,7 @@ msgid "Check user suspension"
 msgstr "Zkontrolovat pozastavení uživatele"
 
 msgid "Welcome to {0}!"
-msgstr ""
+msgstr "Vítejte v {0}!"
 
 msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr ""
@@ -5204,16 +5204,16 @@ msgid "And as group manager you are also authorized to edit the members of the g
 msgstr ""
 
 msgid "You are no longer a member of this group."
-msgstr ""
+msgstr "Již nejste členem této skupiny."
 
 msgid "You are no longer authorized to access the passwords shared with this group."
-msgstr ""
+msgstr "Již nemáte oprávnění k přístupu k heslům sdíleným s touto skupinou."
 
 msgid "Please contact {0} or another group manager if this is a mistake."
 msgstr ""
 
 msgid "You are now a group manager of this group."
-msgstr ""
+msgstr "Nyní jste správcem skupiny této skupiny."
 
 msgid "As group manager you are now authorized to edit the members of this group."
 msgstr ""
@@ -5222,7 +5222,7 @@ msgid "As member of the group you still have access to all the passwords that ar
 msgstr ""
 
 msgid "You are no longer a group manager of this group."
-msgstr ""
+msgstr "Již nejste správcem skupiny této skupiny."
 
 msgid "You are no longer authorized to edit the members of this group."
 msgstr ""
@@ -5246,40 +5246,40 @@ msgid "Username: {0}"
 msgstr ""
 
 msgid "URL: {0}"
-msgstr ""
+msgstr "URL: {0}"
 
 msgid "Description: {0}"
-msgstr ""
+msgstr "Popis: {0}"
 
 msgid "{0} shared a password with you"
-msgstr ""
+msgstr "{0} s vámi sdílel heslo"
 
 msgid "{0} shared passwords with you"
-msgstr ""
+msgstr "{0} s vámi sdílel hesla"
 
 msgid "{0} resources were shared with you."
-msgstr ""
+msgstr "{0} prostředky byly s vámi sdíleny."
 
 msgid "{0} just activated their account on passbolt!"
-msgstr ""
+msgstr "{0} právě aktivoval(a) svůj účet v passboltu!"
 
 msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr ""
+msgstr "Uživatel je nyní aktivní v passboltu a můžete s ním sdílet hesla."
 
 msgid "This user was invited by you {0}."
-msgstr ""
+msgstr "Tento uživatel byl pozván vámi {0}."
 
 msgid "This user signed up themselves, since the public registration is enabled."
 msgstr ""
 
 msgid "This user was invited by {0} {1}."
-msgstr ""
+msgstr "Tento uživatel byl pozván {0} {1}."
 
 msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
 msgstr "Tento uživatel postrádá šifrovací klíč pro metadata sdíleného zdroje. Přihlaste se, přejděte do pracovního prostoru uživatele a klíč s ním sdílejte ručně."
 
 msgid "View users"
-msgstr ""
+msgstr "Zobrazit uživatele"
 
 msgid "This email is an automatic notification sent by"
 msgstr "Tento e-mail je automatické oznámení odeslané službou"
