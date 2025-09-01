@@ -183,52 +183,31 @@ class UserKeyPoliciesGetSettingsControllerTest extends AppIntegrationTestCase
         $this->assertBadRequestError('No registration authentication token found for the given user');
     }
 
-    public static function userKeyPoliciesSettingsBadQueryParametersProvider(): array
+    public function testUserKeyPoliciesGetSettingsController_Error_BadAuthenticationToken(): void
     {
         $user = UserFactory::make()->user()->inactive()->persist();
+        $queryParams = http_build_query(['user_id' => $user->get('id'), 'token' => 'foo-bar']);
+        $this->getJson('/setup/user-key-policies/settings.json?' . $queryParams);
+        $this->assertBadRequestError('The authentication token must be a valid UUID');
+    }
+
+    public function testUserKeyPoliciesGetSettingsController_Error_InvalidUser(): void
+    {
         /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = AuthenticationTokenFactory::make()
             ->active()
             ->type(AuthenticationToken::TYPE_REGISTER)
-            ->with('Users', $user)
             ->persist();
-
-        return [
-            [
-                'query params' => [
-                    'user_id' => $user->get('id'),
-                    'token' => 'foo-bar',
-                ],
-                'error' => 'The authentication token must be a valid UUID',
-            ],
-            [
-                'query params' => [
-                    'user_id' => 'not-valid-uui',
-                    'token' => $token->get('token'),
-                ],
-                'error' => 'The user ID must be a valid UUID',
-            ],
-            [
-                'query params' => [
-                    'user_id' => 'not-valid-uui',
-                    'token' => 'i-am-too-not-valid',
-                ],
-                'error' => 'The user ID must be a valid UUID',
-            ],
-        ];
+        $queryParams = http_build_query(['user_id' => 'not-valid-uui', 'token' => $token->get('token')]);
+        $this->getJson('/setup/user-key-policies/settings.json?' . $queryParams);
+        $this->assertBadRequestError('The user ID must be a valid UUID');
     }
 
-    /**
-     * @dataProvider userKeyPoliciesSettingsBadQueryParametersProvider
-     * @param array $params Query params to pass to the request.
-     * @param string $expectedMessage Expected error message.
-     * @return void
-     */
-    public function testUserKeyPoliciesGetSettingsController_Error_BadQueryParameters(array $params, string $expectedMessage): void
+    public function testUserKeyPoliciesGetSettingsController_Error_InvalidUserAndToken(): void
     {
-        $queryParams = http_build_query($params);
+        $queryParams = http_build_query(['user_id' => 'not-valid-uui', 'token' => 'i-am-too-not-valid']);
         $this->getJson('/setup/user-key-policies/settings.json?' . $queryParams);
-        $this->assertBadRequestError($expectedMessage);
+        $this->assertBadRequestError('The user ID must be a valid UUID');
     }
 
     public function testUserKeyPoliciesGetSettingsController_Error_ExpiredToken(): void
