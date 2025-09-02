@@ -22,12 +22,14 @@ use App\Utility\Healthchecks\AbstractHealthcheckService;
 use App\Utility\Healthchecks\Healthcheck;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 
 class ResourcesHealthcheckService extends AbstractHealthcheckService
 {
     public const CATEGORY = 'data';
     public const NAME = 'Resources';
     public const CHECK_VALIDATES = 'Can validate';
+    public const CHECK_IS_METADATA_KEY_EXIST_AND_ACTIVE = 'Is metadata key exist and active';
 
     /**
      * @var \App\Model\Table\ResourcesTable
@@ -43,7 +45,10 @@ class ResourcesHealthcheckService extends AbstractHealthcheckService
     {
         parent::__construct(self::NAME, self::CATEGORY);
         $this->table = $table ?? TableRegistry::getTableLocator()->get('Resources');
-        $this->checks[self::CHECK_VALIDATES] = $this->healthcheckFactory(self::CHECK_VALIDATES, true);
+        $this->checks = [
+            self::CHECK_VALIDATES => $this->healthcheckFactory(self::CHECK_VALIDATES, true),
+            self::CHECK_IS_METADATA_KEY_EXIST_AND_ACTIVE => $this->healthcheckFactory(self::CHECK_IS_METADATA_KEY_EXIST_AND_ACTIVE, true), // phpcs:ignore
+        ];
     }
 
     /**
@@ -52,9 +57,15 @@ class ResourcesHealthcheckService extends AbstractHealthcheckService
     public function check(): array
     {
         $records = $this->table->find()->all();
+        $metadataKeys = TableRegistry::getTableLocator()->get('Passbolt/Metadata.MetadataKeys')
+            ->find('active')
+            ->all()
+            ->indexBy('id')
+            ->toArray();
 
         foreach ($records as $record) {
             $this->canValidate($record);
+            $this->isMetadataKeyExistAndActive($record, $metadataKeys);
         }
 
         return $this->getHealthchecks();
@@ -84,6 +95,29 @@ class ResourcesHealthcheckService extends AbstractHealthcheckService
         } else {
             $this->checks[self::CHECK_VALIDATES]
                 ->addDetail(__('Validation success for resource {0}', $resource->id), Healthcheck::STATUS_SUCCESS);
+        }
+    }
+
+    /**
+     * Checks given resource has metadata key present and is active.
+     *
+     * @param \App\Model\Entity\Resource $resource resource
+     * @return void
+     */
+    private function isMetadataKeyExistAndActive(Resource $resource, array $metadataKeys): void
+    {
+        $metadataResourceDto = MetadataResourceDto::fromArray($resource->toArray());
+        if (!$metadataResourceDto->isV5() || $resource->metadata_key_type !== MetadataKey::TYPE_SHARED_KEY) {
+            return;
+        }
+
+        $metadataKeyExists = array_key_exists($resource->metadata_key_id, $metadataKeys);
+        if ($metadataKeyExists) {
+            $msg = __('Metadata key exist and present for resource {0}.', $resource->id);
+            $this->checks[self::CHECK_IS_METADATA_KEY_EXIST_AND_ACTIVE]->addDetail($msg, Healthcheck::STATUS_SUCCESS);
+        } else {
+            $msg = __('Metadata key does not exists or soft-deleted for resource {0}.', $resource->id);
+            $this->checks[self::CHECK_IS_METADATA_KEY_EXIST_AND_ACTIVE]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR); // phpcs:ignore
         }
     }
 }

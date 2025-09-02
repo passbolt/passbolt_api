@@ -145,10 +145,9 @@ trait FormatValidationTrait
      * Beware, this function tests only the format validation rules. The custom rules
      * defined in buildRules will not be tested.
      *
-     * @param \Cake\ORM\Table $entityTable the entityTable object
+     * @param string|\Cake\Form\Form $form The form class string or object
      * @param string $fieldName field name to be validated
-     * @param array $entityData data to populate the entity with. Add 'id' if you want to test an update.
-     * @param array $entityOptions entity options used at the creation
+     * @param array $formData data to populate the entity with. Add 'id' if you want to test an update.
      * @param array $testCases the test cases to run
      *   a test case array is composed as follow:
      *   [
@@ -165,14 +164,16 @@ trait FormatValidationTrait
      *   ]
      * @return void
      */
-    public function assertFormFieldFormatValidation($FormClass, $fieldName, $formData, $testCases)
+    public function assertFormFieldFormatValidation($form, $fieldName, $formData, $testCases)
     {
         foreach ($testCases as $testCaseName => $testCase) {
             foreach ($testCase['test_cases'] as $testCaseData => $expectedResult) {
                 $formData = Hash::insert($formData, $fieldName, $testCaseData);
                 $formData = $this->_adjustEntityData($fieldName, $formData);
-                /** @var \Cake\Form\Form $form */
-                $form = new $FormClass($this->getEventManager());
+                if (is_string($form)) {
+                    /** @var \Cake\Form\Form $form */
+                    $form = new $form($this->getEventManager());
+                }
                 $validate = $form->validate($formData);
 
                 if ($expectedResult == true) {
