@@ -405,38 +405,32 @@ class SlugDefinitionTest extends TestCase
                         ],
                     ],
                     'custom_fields' => [
-                        'type' => 'object',
-                        'required' => ['items'],
-                        'properties' => [
-                            'items' => [
-                                'type' => 'array',
-                                'maxItems' => 128,
-                                'items' => [
-                                    'type' => 'object',
-                                    'required' => ['id', 'type'],
-                                    'properties' => [
-                                        'id' => [
-                                            'type' => 'string',
-                                            'format' => 'uuid',
-                                        ],
-                                        'type' => [
-                                            'type' => 'string',
-                                            'enum' => ['text', 'password', 'boolean', 'number', 'uri'],
-                                        ],
-                                        'metadata_key' => [
-                                            'anyOf' => [
-                                                ['type' => 'string', 'maxLength' => 255],
-                                                ['type' => 'null'],
-                                            ],
-                                        ],
-                                        'metadata_value' => [
-                                            'anyOf' => [
-                                                ['type' => 'string', 'maxLength' => 20000],
-                                                ['type' => 'number'],
-                                                ['type' => 'boolean'],
-                                                ['type' => 'null'],
-                                            ],
-                                        ],
+                        'type' => 'array',
+                        'maxItems' => 128,
+                        'items' => [
+                            'type' => 'object',
+                            'required' => ['id', 'type'],
+                            'properties' => [
+                                'id' => [
+                                    'type' => 'string',
+                                    'format' => 'uuid',
+                                ],
+                                'type' => [
+                                    'type' => 'string',
+                                    'enum' => ['text', 'password', 'boolean', 'number', 'uri'],
+                                ],
+                                'metadata_key' => [
+                                    'anyOf' => [
+                                        ['type' => 'string', 'maxLength' => 255],
+                                        ['type' => 'null'],
+                                    ],
+                                ],
+                                'metadata_value' => [
+                                    'anyOf' => [
+                                        ['type' => 'string', 'maxLength' => 20000],
+                                        ['type' => 'number'],
+                                        ['type' => 'boolean'],
+                                        ['type' => 'null'],
                                     ],
                                 ],
                             ],
@@ -463,36 +457,32 @@ class SlugDefinitionTest extends TestCase
                         ],
                     ],
                     'custom_fields' => [
-                        'type' => 'object',
-                        'required' => ['items'],
-                        'properties' => [
-                            'items' => [
-                                'type' => 'array',
-                                'maxItems' => 128,
-                                'items' => [
-                                    'type' => 'object',
-                                    'required' => ['id', 'type'],
-                                    'properties' => [
-                                        'id' => [
-                                            'type' => 'string',
-                                            'format' => 'uuid',
-                                        ],
-                                        'type' => [
-                                            'type' => 'string',
-                                            'enum' => ['text', 'password', 'boolean', 'number', 'uri'],
-                                        ],
-                                        'secret_key' => [
-                                            ['type' => 'string', 'maxLength' => 255],
-                                            ['type' => 'null'],
-                                        ],
-                                        'secret_value' => [
-                                            'anyOf' => [
-                                                ['type' => 'string', 'maxLength' => 20000],
-                                                ['type' => 'number'],
-                                                ['type' => 'boolean'],
-                                                ['type' => 'null'],
-                                            ],
-                                        ],
+                        'type' => 'array',
+                        'maxItems' => 128,
+                        'items' => [
+                            'type' => 'object',
+                            'required' => ['id', 'type'],
+                            'properties' => [
+                                'id' => [
+                                    'type' => 'string',
+                                    'format' => 'uuid',
+                                ],
+                                'type' => [
+                                    'type' => 'string',
+                                    'enum' => ['text', 'password', 'boolean', 'number', 'uri'],
+                                ],
+                                'secret_key' => [
+                                    'anyOf' => [
+                                        ['type' => 'string', 'maxLength' => 255],
+                                        ['type' => 'null'],
+                                    ],
+                                ],
+                                'secret_value' => [
+                                    'anyOf' => [
+                                        ['type' => 'string', 'maxLength' => 20000],
+                                        ['type' => 'number'],
+                                        ['type' => 'boolean'],
+                                        ['type' => 'null'],
                                     ],
                                 ],
                             ],
@@ -563,38 +553,32 @@ class SlugDefinitionTest extends TestCase
                         ],
                     ],
                     'custom_fields' => [
-                        'type' => 'object',
-                        'required' => ['items'],
-                        'properties' => [
-                            'items' => [
-                                'type' => 'array',
-                                'maxItems' => 128,
-                                'items' => [
-                                    'type' => 'object',
-                                    'required' => ['id', 'type'],
-                                    'properties' => [
-                                        'id' => [
-                                            'type' => 'string',
-                                            'format' => 'uuid',
-                                        ],
-                                        'type' => [
-                                            'type' => 'string',
-                                            'enum' => ['text', 'password', 'boolean', 'number', 'uri'],
-                                        ],
-                                        'metadata_key' => [
-                                            'anyOf' => [
-                                                ['type' => 'string', 'maxLength' => 255],
-                                                ['type' => 'null'],
-                                            ],
-                                        ],
-                                        'metadata_value' => [
-                                            'anyOf' => [
-                                                ['type' => 'string', 'maxLength' => 20000],
-                                                ['type' => 'number'],
-                                                ['type' => 'boolean'],
-                                                ['type' => 'null'],
-                                            ],
-                                        ],
+                        'type' => 'array',
+                        'maxItems' => 128,
+                        'items' => [
+                            'type' => 'object',
+                            'required' => ['id', 'type'],
+                            'properties' => [
+                                'id' => [
+                                    'type' => 'string',
+                                    'format' => 'uuid',
+                                ],
+                                'type' => [
+                                    'type' => 'string',
+                                    'enum' => ['text', 'password', 'boolean', 'number', 'uri'],
+                                ],
+                                'metadata_key' => [
+                                    'anyOf' => [
+                                        ['type' => 'string', 'maxLength' => 255],
+                                        ['type' => 'null'],
+                                    ],
+                                ],
+                                'metadata_value' => [
+                                    'anyOf' => [
+                                        ['type' => 'string', 'maxLength' => 20000],
+                                        ['type' => 'number'],
+                                        ['type' => 'boolean'],
+                                        ['type' => 'null'],
                                     ],
                                 ],
                             ],
@@ -644,36 +628,32 @@ class SlugDefinitionTest extends TestCase
                         ],
                     ],
                     'custom_fields' => [
-                        'type' => 'object',
-                        'required' => ['items'],
-                        'properties' => [
-                            'items' => [
-                                'type' => 'array',
-                                'maxItems' => 128,
-                                'items' => [
-                                    'type' => 'object',
-                                    'required' => ['id', 'type'],
-                                    'properties' => [
-                                        'id' => [
-                                            'type' => 'string',
-                                            'format' => 'uuid',
-                                        ],
-                                        'type' => [
-                                            'type' => 'string',
-                                            'enum' => ['text', 'password', 'boolean', 'number', 'uri'],
-                                        ],
-                                        'secret_key' => [
-                                            ['type' => 'string', 'maxLength' => 255],
-                                            ['type' => 'null'],
-                                        ],
-                                        'secret_value' => [
-                                            'anyOf' => [
-                                                ['type' => 'string', 'maxLength' => 20000],
-                                                ['type' => 'number'],
-                                                ['type' => 'boolean'],
-                                                ['type' => 'null'],
-                                            ],
-                                        ],
+                        'type' => 'array',
+                        'maxItems' => 128,
+                        'items' => [
+                            'type' => 'object',
+                            'required' => ['id', 'type'],
+                            'properties' => [
+                                'id' => [
+                                    'type' => 'string',
+                                    'format' => 'uuid',
+                                ],
+                                'type' => [
+                                    'type' => 'string',
+                                    'enum' => ['text', 'password', 'boolean', 'number', 'uri'],
+                                ],
+                                'secret_key' => [
+                                    'anyOf' => [
+                                        ['type' => 'string', 'maxLength' => 255],
+                                        ['type' => 'null'],
+                                    ],
+                                ],
+                                'secret_value' => [
+                                    'anyOf' => [
+                                        ['type' => 'string', 'maxLength' => 20000],
+                                        ['type' => 'number'],
+                                        ['type' => 'boolean'],
+                                        ['type' => 'null'],
                                     ],
                                 ],
                             ],
@@ -829,38 +809,32 @@ class SlugDefinitionTest extends TestCase
                         ],
                     ],
                     'custom_fields' => [
-                        'type' => 'object',
-                        'required' => ['items'],
-                        'properties' => [
-                            'items' => [
-                                'type' => 'array',
-                                'maxItems' => 128,
-                                'items' => [
-                                    'type' => 'object',
-                                    'required' => ['id', 'type'],
-                                    'properties' => [
-                                        'id' => [
-                                            'type' => 'string',
-                                            'format' => 'uuid',
-                                        ],
-                                        'type' => [
-                                            'type' => 'string',
-                                            'enum' => ['text', 'password', 'boolean', 'number', 'uri'],
-                                        ],
-                                        'metadata_key' => [
-                                            'anyOf' => [
-                                                ['type' => 'string', 'maxLength' => 255],
-                                                ['type' => 'null'],
-                                            ],
-                                        ],
-                                        'metadata_value' => [
-                                            'anyOf' => [
-                                                ['type' => 'string', 'maxLength' => 20000],
-                                                ['type' => 'number'],
-                                                ['type' => 'boolean'],
-                                                ['type' => 'null'],
-                                            ],
-                                        ],
+                        'type' => 'array',
+                        'maxItems' => 128,
+                        'items' => [
+                            'type' => 'object',
+                            'required' => ['id', 'type'],
+                            'properties' => [
+                                'id' => [
+                                    'type' => 'string',
+                                    'format' => 'uuid',
+                                ],
+                                'type' => [
+                                    'type' => 'string',
+                                    'enum' => ['text', 'password', 'boolean', 'number', 'uri'],
+                                ],
+                                'metadata_key' => [
+                                    'anyOf' => [
+                                        ['type' => 'string', 'maxLength' => 255],
+                                        ['type' => 'null'],
+                                    ],
+                                ],
+                                'metadata_value' => [
+                                    'anyOf' => [
+                                        ['type' => 'string', 'maxLength' => 20000],
+                                        ['type' => 'number'],
+                                        ['type' => 'boolean'],
+                                        ['type' => 'null'],
                                     ],
                                 ],
                             ],
@@ -880,36 +854,32 @@ class SlugDefinitionTest extends TestCase
                         'enum' => ['PASSBOLT_SECRET_DATA'],
                     ],
                     'custom_fields' => [
-                        'type' => 'object',
-                        'required' => ['items'],
-                        'properties' => [
-                            'items' => [
-                                'type' => 'array',
-                                'maxItems' => 128,
-                                'items' => [
-                                    'type' => 'object',
-                                    'required' => ['id', 'type'],
-                                    'properties' => [
-                                        'id' => [
-                                            'type' => 'string',
-                                            'format' => 'uuid',
-                                        ],
-                                        'type' => [
-                                            'type' => 'string',
-                                            'enum' => ['text', 'password', 'boolean', 'number', 'uri'],
-                                        ],
-                                        'secret_key' => [
-                                            ['type' => 'string', 'maxLength' => 255],
-                                            ['type' => 'null'],
-                                        ],
-                                        'secret_value' => [
-                                            'anyOf' => [
-                                                ['type' => 'string', 'maxLength' => 20000],
-                                                ['type' => 'number'],
-                                                ['type' => 'boolean'],
-                                                ['type' => 'null'],
-                                            ],
-                                        ],
+                        'type' => 'array',
+                        'maxItems' => 128,
+                        'items' => [
+                            'type' => 'object',
+                            'required' => ['id', 'type'],
+                            'properties' => [
+                                'id' => [
+                                    'type' => 'string',
+                                    'format' => 'uuid',
+                                ],
+                                'type' => [
+                                    'type' => 'string',
+                                    'enum' => ['text', 'password', 'boolean', 'number', 'uri'],
+                                ],
+                                'secret_key' => [
+                                    'anyOf' => [
+                                        ['type' => 'string', 'maxLength' => 255],
+                                        ['type' => 'null'],
+                                    ],
+                                ],
+                                'secret_value' => [
+                                    'anyOf' => [
+                                        ['type' => 'string', 'maxLength' => 20000],
+                                        ['type' => 'number'],
+                                        ['type' => 'boolean'],
+                                        ['type' => 'null'],
                                     ],
                                 ],
                             ],

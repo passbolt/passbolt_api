@@ -32,6 +32,8 @@ $invitedBy = $body['invitedBy'];
 $invitedWhen = $body['invitedWhen'];
 /** @var bool $invitedByYou */
 $invitedByYou = $body['invitedByYou'];
+/** @var bool $missingMetadataKey */
+$missingMetadataKey = $body['missingMetadataKey'];
 
 echo $this->element('Email/module/avatar', [
     'url' => AvatarHelper::getAvatarUrl(),
