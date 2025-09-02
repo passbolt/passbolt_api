@@ -40,7 +40,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
 {
     use SubscribedEmailRedactorTrait;
 
-    public const TEMPLATE = 'LU/user_setup_complete';
+    public const TEMPLATE = 'AD/user_setup_complete';
 
     /**
      * Check if the log plugin is enabled

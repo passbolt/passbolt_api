@@ -118,7 +118,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->insertAfter(RoutingMiddleware::class, ApiVersionMiddleware::class)
             ->insertAfter(RoutingMiddleware::class, UuidParserMiddleware::class)
             ->add(new SessionPreventExtensionMiddleware())
-            ->add(new BodyParserMiddleware())
+            ->add(BodyParserMiddleware::class)
             ->add(SessionAuthPreventDeletedOrDisabledUsersMiddleware::class)
             ->insertAfter(
                 SessionAuthPreventDeletedOrDisabledUsersMiddleware::class,
@@ -296,6 +296,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $container->add(SelfRegistrationDryRunServiceInterface::class, SelfRegistrationDefaultDryRunService::class);
         $container->add(AbstractSecureCookieService::class, DefaultSecureCookieService::class);
         $container->add(Client::class);
+        $container->add(BodyParserMiddleware::class);
         $container->addServiceProvider(new TestEmailServiceProvider());
         $container->addServiceProvider(new SetupServiceProvider());
         $container->addServiceProvider(new ResourceServiceProvider());
