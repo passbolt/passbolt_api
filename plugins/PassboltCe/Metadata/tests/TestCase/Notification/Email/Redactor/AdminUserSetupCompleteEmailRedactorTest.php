@@ -26,6 +26,9 @@ use Cake\Core\Configure;
 use Cake\Event\Event;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 
+/**
+ * @covers \App\Notification\Email\Redactor\AdminUserSetupCompleteEmailRedactor
+ */
 class AdminUserSetupCompleteEmailRedactorTest extends AppTestCaseV5
 {
     use EmailQueueTrait;
