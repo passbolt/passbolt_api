@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.4.1] - 2025-08-13
+### Fixed
+- PB-44220 Enforces the format to datetime string when persisting the last_logged_in field on users login
+
 ## [5.4.0] - 2025-08-12
 ### Added
 - PB-43713 Translate the application in Czech
