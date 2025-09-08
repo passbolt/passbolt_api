@@ -19,6 +19,8 @@ namespace Passbolt\Scim\Test\TestCase\Controller;
 
 use App\Model\Entity\OrganizationSetting;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
+use Passbolt\Scim\Middleware\ScimSettingsSecurityMiddleware;
 use Passbolt\Scim\ScimPlugin;
 use Passbolt\Scim\Test\Factory\ScimSettingFactory;
 use Passbolt\Scim\Test\Utility\ScimSettingsIntegrationTestCase;
@@ -42,7 +44,7 @@ class ScimDeleteSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testDeleteSettings_Error_PluginDisabled(): void
+    public function testScimDeleteSettingsController_Error_PluginDisabled(): void
     {
         $this->disableFeaturePlugin(ScimPlugin::class);
 
@@ -54,12 +56,20 @@ class ScimDeleteSettingsControllerTest extends ScimSettingsIntegrationTestCase
         $this->assertResponseCode(404);
     }
 
+    public function testScimDeleteSettingsController_Endpoint_Disabled(): void
+    {
+        Configure::write(ScimSettingsSecurityMiddleware::PASSBOLT_SECURITY_SCIM_SETTINGS_ENDPOINTS_DISABLED, true);
+        $this->deleteJson("/scim/settings/{$this->current->id}.json");
+        $this->assertResponseCode(403);
+        $this->assertResponseContains('SCIM settings endpoints are disabled.');
+    }
+
     /**
      * Test deleteSettings method: guest forbidden
      *
      * @return void
      */
-    public function testDeleteSettings_Error_GuestForbidden(): void
+    public function testScimDeleteSettingsController_Error_GuestForbidden(): void
     {
         $this->logInAsUser();
 
@@ -73,7 +83,7 @@ class ScimDeleteSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testDeleteSettings_Error_Unauthenticated()
+    public function testScimDeleteSettingsController_Error_Unauthenticated()
     {
         $this->deleteJson("/scim/settings/{$this->current->id}.json");
 
@@ -85,7 +95,7 @@ class ScimDeleteSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testDeleteSettings_Error_NotJson()
+    public function testScimDeleteSettingsController_Error_NotJson()
     {
         $this->logInAsAdmin();
         $this->delete("/scim/settings/{$this->current->id}");
@@ -97,7 +107,7 @@ class ScimDeleteSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testDeleteSettings_WrongUUID()
+    public function testScimDeleteSettingsController_WrongUUID()
     {
         $this->logInAsAdmin();
 
@@ -113,7 +123,7 @@ class ScimDeleteSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testDeleteSettings_Success()
+    public function testScimDeleteSettingsController_Success()
     {
         /** @var \Passbolt\Scim\Model\Table\ScimSettingsTable $scimSettingsTable */
         $scimSettingsTable = $this->fetchTable('Passbolt/Scim.ScimSettings');
