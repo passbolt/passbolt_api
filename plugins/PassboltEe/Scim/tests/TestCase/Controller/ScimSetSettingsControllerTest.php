@@ -21,6 +21,7 @@ use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Test\Factory\UserFactory;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Utility\Security;
 use Passbolt\Scim\Middleware\ScimSettingsSecurityMiddleware;
 use Passbolt\Scim\Model\Entity\ScimSetting;
