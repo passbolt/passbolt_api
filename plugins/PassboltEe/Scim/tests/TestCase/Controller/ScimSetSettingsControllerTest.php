@@ -21,7 +21,9 @@ use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Test\Factory\UserFactory;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Utility\Security;
+use Passbolt\Scim\Middleware\ScimSettingsSecurityMiddleware;
 use Passbolt\Scim\Model\Entity\ScimSetting;
 use Passbolt\Scim\ScimPlugin;
 use Passbolt\Scim\Service\ScimSetSettingsService;
@@ -50,7 +52,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Create_Error_PluginDisabled(): void
+    public function testScimSetSettingsController_Create_Error_PluginDisabled(): void
     {
         $this->disableFeaturePlugin(ScimPlugin::class);
 
@@ -62,12 +64,20 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
         $this->assertResponseCode(404);
     }
 
+    public function testScimSetSettingsController_Endpoint_Disabled(): void
+    {
+        Configure::write(ScimSettingsSecurityMiddleware::PASSBOLT_SECURITY_SCIM_SETTINGS_ENDPOINTS_DISABLED, true);
+        $this->postJson('/scim/settings.json');
+        $this->assertResponseCode(403);
+        $this->assertResponseContains('SCIM settings endpoints are disabled.');
+    }
+
     /**
      * Test setSettings method: create operation guest forbidden
      *
      * @return void
      */
-    public function testSetSettings_Create_Error_GuestForbidden(): void
+    public function testScimSetSettingsController_Create_Error_GuestForbidden(): void
     {
         $this->logInAsUser();
 
@@ -81,7 +91,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Create_Error_Unauthenticated()
+    public function testScimSetSettingsController_Create_Error_Unauthenticated()
     {
         $this->postJson('/scim/settings.json');
 
@@ -105,7 +115,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Create_SettingsAlreadySet()
+    public function testScimSetSettingsController_Create_SettingsAlreadySet()
     {
         $this->setupUpdate();
         $this->logInAsAdmin();
@@ -130,7 +140,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Create_Success()
+    public function testScimSetSettingsController_Create_Success()
     {
         $this->logInAsAdmin();
 
@@ -166,7 +176,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Update_Error_PluginDisabled(): void
+    public function testScimSetSettingsController_Update_Error_PluginDisabled(): void
     {
         $this->setupUpdate();
         $this->disableFeaturePlugin(ScimPlugin::class);
@@ -184,7 +194,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Update_Error_GuestForbidden(): void
+    public function testScimSetSettingsController_Update_Error_GuestForbidden(): void
     {
         $this->setupUpdate();
         $this->logInAsUser();
@@ -199,7 +209,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Update_Error_Unauthenticated()
+    public function testScimSetSettingsController_Update_Error_Unauthenticated()
     {
         $this->setupUpdate();
         $this->putJson("/scim/settings/{$this->current->id}.json");
@@ -212,7 +222,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Update_WrongUUID()
+    public function testScimSetSettingsController_Update_WrongUUID()
     {
         $this->setupUpdate();
         $this->logInAsAdmin();
@@ -237,7 +247,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Update_NotUUID()
+    public function testScimSetSettingsController_Update_NotUUID()
     {
         $this->setupUpdate();
         $this->logInAsAdmin();
@@ -261,7 +271,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Update_Success()
+    public function testScimSetSettingsController_Update_Success()
     {
         $this->setupUpdate();
         $this->logInAsAdmin();
@@ -302,7 +312,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      * @return void
      * @throws \Exception
      */
-    public function testSetSettings_Update_Success_NoSecretToken()
+    public function testScimSetSettingsController_Update_Success_NoSecretToken()
     {
         $this->setupUpdate();
         $this->logInAsAdmin();
