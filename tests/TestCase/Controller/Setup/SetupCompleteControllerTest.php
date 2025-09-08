@@ -82,12 +82,12 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->assertSame('fr-FR', $userLocale);
         $this->assertEmailIsInQueue([
             'email' => $admin1->username,
-            'template' => 'LU/user_setup_complete',
+            'template' => 'AD/user_setup_complete',
             'subject' => $user->profile->first_name . ' just activated their account on passbolt',
         ]);
         $this->assertEmailIsInQueue([
             'email' => $admin2->username,
-            'template' => 'LU/user_setup_complete',
+            'template' => 'AD/user_setup_complete',
             'subject' => $user->profile->first_name . ' just activated their account on passbolt',
         ]);
         $this->assertEmailQueueCount(2);
@@ -143,12 +143,12 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->assertSame('fr-FR', $userLocale);
         $this->assertEmailIsInQueue([
             'email' => $admin1->username,
-            'template' => 'LU/user_setup_complete',
+            'template' => 'AD/user_setup_complete',
             'subject' => $user->profile->first_name . ' just activated their account on passbolt',
         ]);
         $this->assertEmailIsInQueue([
             'email' => $admin2->username,
-            'template' => 'LU/user_setup_complete',
+            'template' => 'AD/user_setup_complete',
             'subject' => $user->profile->first_name . ' just activated their account on passbolt',
         ]);
         $this->assertEmailQueueCount(2);
