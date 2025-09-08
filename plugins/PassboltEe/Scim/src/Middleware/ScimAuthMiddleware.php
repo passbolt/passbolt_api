@@ -16,11 +16,14 @@ declare(strict_types=1);
  */
 namespace Passbolt\Scim\Middleware;
 
+use App\Authenticator\SessionAuthenticationService;
 use App\Middleware\ContainerAwareMiddlewareTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Authentication\AuthenticationServiceInterface;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\ServerRequest;
 use Passbolt\Scim\Authenticator\ScimAuthenticationService;
 use Passbolt\Scim\Utility\ScimTools;
 use Psr\Http\Message\ResponseInterface;
@@ -46,11 +49,15 @@ class ScimAuthMiddleware implements MiddlewareInterface
         RequestHandlerInterface $handler
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
-        if ($this->isFeaturePluginEnabled('Scim') && ScimTools::isScimApiRequest($request)) {
-            Configure::write('Scim.settingId', $request->getParam('settingId'));
-            $this->services($this->getContainer($request));
-            $this->disableFeaturePlugin('JwtAuthentication');
+        if (!ScimTools::isScimApiRequest($request)) {
+            return $handler->handle($request);
         }
+
+        $this->disableFeaturePlugin('JwtAuthentication');
+        $container = $this->getContainer($request);
+        $this->assertNotSessionAuthenticated($request, $container);
+        Configure::write('Scim.settingId', $request->getParam('settingId'));
+        $this->services($container);
 
         return $handler->handle($request);
     }
@@ -59,10 +66,31 @@ class ScimAuthMiddleware implements MiddlewareInterface
      * @param \Cake\Core\ContainerInterface $container
      * @return void
      */
-    public function services(ContainerInterface $container): void
+    private function services(ContainerInterface $container): void
     {
         $container
             ->extend(AuthenticationServiceInterface::class)
             ->setConcrete(ScimAuthenticationService::class);
+    }
+
+    /**
+     * @param \Cake\Http\ServerRequest $request server request
+     * @param \Cake\Core\ContainerInterface $container container
+     * @return void
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Cake\Http\Exception\ForbiddenException if the user is logged in via session
+     */
+    private function assertNotSessionAuthenticated(ServerRequest $request, ContainerInterface $container): void
+    {
+        /** @var \Authentication\AuthenticationServiceInterface $authenticationService */
+        $authenticationService = $container->get(AuthenticationServiceInterface::class);
+        if (!($authenticationService instanceof SessionAuthenticationService)) {
+            return;
+        }
+        $isUserSessionAuthenticated = $authenticationService->authenticate($request)->isValid();
+        if ($isUserSessionAuthenticated) {
+            throw new ForbiddenException(__('Simultaneous SCIM and session authentication is not permitted.'));
+        }
     }
 }
