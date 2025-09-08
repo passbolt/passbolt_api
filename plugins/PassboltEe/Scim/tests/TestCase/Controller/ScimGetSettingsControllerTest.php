@@ -19,6 +19,8 @@ namespace Passbolt\Scim\Test\TestCase\Controller;
 
 use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use Cake\Core\Configure;
+use Passbolt\Scim\Middleware\ScimSettingsSecurityMiddleware;
 use Passbolt\Scim\ScimPlugin;
 use Passbolt\Scim\Test\Factory\ScimSettingFactory;
 use Passbolt\Scim\Test\Utility\ScimSettingsIntegrationTestCase;
@@ -47,6 +49,14 @@ class ScimGetSettingsControllerTest extends ScimSettingsIntegrationTestCase
         }
 
         $this->assertResponseCode(404);
+    }
+
+    public function testScimGetSettingsController_Endpoint_Disabled(): void
+    {
+        Configure::write(ScimSettingsSecurityMiddleware::PASSBOLT_SECURITY_SCIM_SETTINGS_ENDPOINTS_DISABLED, true);
+        $this->getJson('/scim/settings.json');
+        $this->assertResponseCode(403);
+        $this->assertResponseContains('SCIM settings endpoints are disabled.');
     }
 
     /**

@@ -32,11 +32,14 @@ use RuntimeException;
  */
 trait DummySubscriptionTrait
 {
-    protected $baseTestPath = PLUGINS . 'PassboltEe' . DS . 'Subscription' . DS . 'tests' . DS;
+    protected function getBaseTestPath(): string
+    {
+        return PLUGINS . 'PassboltEe' . DS . 'Subscription' . DS . 'tests' . DS;
+    }
 
     protected function setUpPathAndPublicSubscriptionKey()
     {
-        $subscriptionDevPublicKey = $this->baseTestPath . 'Fixture' . DS . 'gpg' . DS . 'subscription_dev_public.key';
+        $subscriptionDevPublicKey = $this->getBaseTestPath() . 'Fixture' . DS . 'gpg' . DS . 'subscription_dev_public.key';
         if (!file_exists($subscriptionDevPublicKey)) {
             throw new RuntimeException('Cannot find dummy subscription key file ' . $subscriptionDevPublicKey);
         }
@@ -196,7 +199,7 @@ trait DummySubscriptionTrait
 
     public function getAsciiKey(string $keyFileName): string
     {
-        $filePath = $this->baseTestPath . 'Fixture' . DS . 'subscription' . DS . $keyFileName;
+        $filePath = $this->getBaseTestPath() . 'Fixture' . DS . 'subscription' . DS . $keyFileName;
         if (!file_exists($filePath)) {
             throw new RuntimeException('Cannot find file ' . $filePath);
         }

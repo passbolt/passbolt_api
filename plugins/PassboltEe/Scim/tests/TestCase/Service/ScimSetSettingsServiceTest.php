@@ -53,14 +53,14 @@ class ScimSetSettingsServiceTest extends AppTestCase
         unset($this->service);
     }
 
-    public function testGenerateToken()
+    public function testScimSetSettingsService_GenerateToken()
     {
         $token = ScimSetSettingsService::generateToken();
         $this->assertStringStartsWith('pb_', $token);
         $this->assertSame(46, strlen($token));
     }
 
-    public function testSaveSettingsCreate_Success()
+    public function testScimSetSettingsService_SaveSettingsCreate_Success()
     {
         $scimSettings = ScimSettingFactory::find()->first();
         $this->assertNull($scimSettings);
@@ -84,7 +84,7 @@ class ScimSetSettingsServiceTest extends AppTestCase
         $this->assertNotNull($scimSettings);
     }
 
-    public function testSaveSettingsCreate_AlreadySet()
+    public function testScimSetSettingsService_SaveSettingsCreate_AlreadySet()
     {
         ScimSettingFactory::make()->default()->persist();
         /** @var \App\Model\Entity\User $user */
@@ -101,7 +101,7 @@ class ScimSetSettingsServiceTest extends AppTestCase
         $this->service->saveSettings($ua, $data);
     }
 
-    public function testSaveSettingsCreate_ValidationError()
+    public function testScimSetSettingsService_SaveSettingsCreate_ValidationError()
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
@@ -130,7 +130,191 @@ class ScimSetSettingsServiceTest extends AppTestCase
         ], $e->getErrors());
     }
 
-    public function testSaveSettingsUpdate_Success()
+    public function testScimSetSettingsService_SaveSettingsCreate_Validation_TokenError()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'setting_id' => UuidFactory::uuid(),
+            'scim_user_id' => $user->id,
+            'secret_token' => 'WRONG_TOKEN',
+        ];
+
+        $e = null;
+        try {
+            $this->service->saveSettings($ua, $data);
+        } catch (Exception $e) {
+        }
+
+        $this->assertNotNull($e);
+        $this->assertInstanceOf(FormValidationException::class, $e);
+        $this->assertSame(400, $e->getCode());
+        $this->assertSame('Could not validate the SCIM settings.', $e->getMessage());
+        $this->assertSame([
+            'secret_token' => [
+                'correctFormat' => 'The secret token format is incorrect.',
+            ],
+        ], $e->getErrors());
+    }
+
+    public function testScimSetSettingsService_SaveSettingsCreate_Validation_UuidError()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'setting_id' => UuidFactory::uuid(),
+            'scim_user_id' => 'WRONG_UUID',
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $e = null;
+        try {
+            $this->service->saveSettings($ua, $data);
+        } catch (Exception $e) {
+        }
+
+        $this->assertNotNull($e);
+        $this->assertInstanceOf(FormValidationException::class, $e);
+        $this->assertSame(400, $e->getCode());
+        $this->assertSame('Could not validate the SCIM settings.', $e->getMessage());
+        $this->assertSame([
+            'scim_user_id' => [
+                'uuid' => 'The identifier of the default user should be a valid UUID.',
+            ],
+        ], $e->getErrors());
+    }
+
+    public function testScimSetSettingsService_SaveSettingsCreate_Validation_InactiveUserError()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        /** @var \App\Model\Entity\User $userNotActive */
+        $userNotActive = UserFactory::make()->inactive()->persist();
+
+        $scimUserIdNotActive = $userNotActive->id;
+
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'setting_id' => UuidFactory::uuid(),
+            'scim_user_id' => $scimUserIdNotActive,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $e = null;
+        try {
+            $this->service->saveSettings($ua, $data);
+        } catch (Exception $e) {
+        }
+
+        $this->assertNotNull($e);
+        $this->assertInstanceOf(FormValidationException::class, $e);
+        $this->assertSame(400, $e->getCode());
+        $this->assertSame('Could not validate the SCIM settings.', $e->getMessage());
+        $this->assertSame([
+            'scim_user_id' => [
+                'activeAndEnabled' => 'The user is not active, disabled or does not exist.',
+            ],
+        ], $e->getErrors());
+    }
+
+    public function testScimSetSettingsService_SaveSettingsCreate_Validation_DisabledUserError()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        /** @var \App\Model\Entity\User $userDisabled */
+        $userDisabled = UserFactory::make()->disabled()->persist();
+
+        $scimUserIdDisabled = $userDisabled->id;
+
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'setting_id' => UuidFactory::uuid(),
+            'scim_user_id' => $scimUserIdDisabled,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $e = null;
+        try {
+            $this->service->saveSettings($ua, $data);
+        } catch (Exception $e) {
+        }
+
+        $this->assertNotNull($e);
+        $this->assertInstanceOf(FormValidationException::class, $e);
+        $this->assertSame(400, $e->getCode());
+        $this->assertSame('Could not validate the SCIM settings.', $e->getMessage());
+        $this->assertSame([
+            'scim_user_id' => [
+                'activeAndEnabled' => 'The user is not active, disabled or does not exist.',
+            ],
+        ], $e->getErrors());
+    }
+
+    public function testScimSetSettingsService_SaveSettingsCreate_Validation_NonExistingUserError()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'setting_id' => UuidFactory::uuid(),
+            'scim_user_id' => UuidFactory::uuid(),
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $e = null;
+        try {
+            $this->service->saveSettings($ua, $data);
+        } catch (Exception $e) {
+        }
+
+        $this->assertNotNull($e);
+        $this->assertInstanceOf(FormValidationException::class, $e);
+        $this->assertSame(400, $e->getCode());
+        $this->assertSame('Could not validate the SCIM settings.', $e->getMessage());
+        $this->assertSame([
+            'scim_user_id' => [
+                'activeAndEnabled' => 'The user is not active, disabled or does not exist.',
+            ],
+        ], $e->getErrors());
+    }
+
+    public function testScimSetSettingsService_SaveSettingsCreate_Validation_InvalidSettingError()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'setting_id' => 'WRONG_UUID',
+            'scim_user_id' => $user->id,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $e = null;
+        try {
+            $this->service->saveSettings($ua, $data);
+        } catch (Exception $e) {
+        }
+
+        $this->assertNotNull($e);
+        $this->assertInstanceOf(FormValidationException::class, $e);
+        $this->assertSame(400, $e->getCode());
+        $this->assertSame('Could not validate the SCIM settings.', $e->getMessage());
+        $this->assertSame([
+            'setting_id' => [
+                'uuid' => 'The ID for the SCIM settings should be a valid UUID.',
+            ],
+        ], $e->getErrors());
+    }
+
+    public function testScimSetSettingsService_SaveSettingsUpdate_Success()
     {
         /** @var \Passbolt\Scim\Model\Entity\ScimSetting $existingSettings */
         $existingSettings = ScimSettingFactory::make()->default()->persist();
@@ -164,7 +348,7 @@ class ScimSetSettingsServiceTest extends AppTestCase
         $this->assertNotSame($updatedData['secret_token'], $existingData['secret_token']);
     }
 
-    public function testSaveSettingsUpdate_ValidationError()
+    public function testScimSetSettingsService_SaveSettingsUpdate_ValidationError()
     {
         /** @var \Passbolt\Scim\Model\Entity\ScimSetting $scimSettings */
         $scimSettings = ScimSettingFactory::make()->default()->persist();
@@ -185,6 +369,197 @@ class ScimSetSettingsServiceTest extends AppTestCase
         $this->assertSame([
             'scim_user_id' => [
                 '_empty' => 'This field cannot be left empty',
+            ],
+        ], $e->getErrors());
+    }
+
+    public function testScimSetSettingsService_SaveSettingsUpdate_Validation_TokenError()
+    {
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $scimSettings */
+        $scimSettings = ScimSettingFactory::make()->default()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'scim_user_id' => $user->id,
+            'secret_token' => 'WRONG_TOKEN',
+        ];
+
+        $e = null;
+        try {
+            $this->service->saveSettings($ua, $data, $scimSettings->id);
+        } catch (Exception $e) {
+        }
+
+        $this->assertNotNull($e);
+        $this->assertInstanceOf(FormValidationException::class, $e);
+        $this->assertSame(400, $e->getCode());
+        $this->assertSame('Could not validate the SCIM settings.', $e->getMessage());
+        $this->assertSame([
+            'secret_token' => [
+                'correctFormat' => 'The secret token format is incorrect.',
+            ],
+        ], $e->getErrors());
+    }
+
+    public function testScimSetSettingsService_SaveSettingsUpdate_Validation_UuidError()
+    {
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $scimSettings */
+        $scimSettings = ScimSettingFactory::make()->default()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'scim_user_id' => 'WRONG_UUID',
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $e = null;
+        try {
+            $this->service->saveSettings($ua, $data, $scimSettings->id);
+        } catch (Exception $e) {
+        }
+
+        $this->assertNotNull($e);
+        $this->assertInstanceOf(FormValidationException::class, $e);
+        $this->assertSame(400, $e->getCode());
+        $this->assertSame('Could not validate the SCIM settings.', $e->getMessage());
+        $this->assertSame([
+            'scim_user_id' => [
+                'uuid' => 'The identifier of the default user should be a valid UUID.',
+            ],
+        ], $e->getErrors());
+    }
+
+    public function testScimSetSettingsService_SaveSettingsUpdate_Validation_InactiveUserError()
+    {
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $scimSettings */
+        $scimSettings = ScimSettingFactory::make()->default()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        /** @var \App\Model\Entity\User $userNotActive */
+        $userNotActive = UserFactory::make()->inactive()->persist();
+
+        $scimUserIdNotActive = $userNotActive->id;
+
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'scim_user_id' => $scimUserIdNotActive,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $e = null;
+        try {
+            $this->service->saveSettings($ua, $data, $scimSettings->id);
+        } catch (Exception $e) {
+        }
+
+        $this->assertNotNull($e);
+        $this->assertInstanceOf(FormValidationException::class, $e);
+        $this->assertSame(400, $e->getCode());
+        $this->assertSame('Could not validate the SCIM settings.', $e->getMessage());
+        $this->assertSame([
+            'scim_user_id' => [
+                'activeAndEnabled' => 'The user is not active, disabled or does not exist.',
+            ],
+        ], $e->getErrors());
+    }
+
+    public function testScimSetSettingsService_SaveSettingsUpdate_Validation_DisabledUserError()
+    {
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $scimSettings */
+        $scimSettings = ScimSettingFactory::make()->default()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        /** @var \App\Model\Entity\User $userDisabled */
+        $userDisabled = UserFactory::make()->disabled()->persist();
+
+        $scimUserIdDisabled = $userDisabled->id;
+
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'scim_user_id' => $scimUserIdDisabled,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $e = null;
+        try {
+            $this->service->saveSettings($ua, $data, $scimSettings->id);
+        } catch (Exception $e) {
+        }
+
+        $this->assertNotNull($e);
+        $this->assertInstanceOf(FormValidationException::class, $e);
+        $this->assertSame(400, $e->getCode());
+        $this->assertSame('Could not validate the SCIM settings.', $e->getMessage());
+        $this->assertSame([
+            'scim_user_id' => [
+                'activeAndEnabled' => 'The user is not active, disabled or does not exist.',
+            ],
+        ], $e->getErrors());
+    }
+
+    public function testScimSetSettingsService_SaveSettingsUpdate_Validation_NonExistingUserError()
+    {
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $scimSettings */
+        $scimSettings = ScimSettingFactory::make()->default()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'scim_user_id' => UuidFactory::uuid(),
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $e = null;
+        try {
+            $this->service->saveSettings($ua, $data, $scimSettings->id);
+        } catch (Exception $e) {
+        }
+
+        $this->assertNotNull($e);
+        $this->assertInstanceOf(FormValidationException::class, $e);
+        $this->assertSame(400, $e->getCode());
+        $this->assertSame('Could not validate the SCIM settings.', $e->getMessage());
+        $this->assertSame([
+            'scim_user_id' => [
+                'activeAndEnabled' => 'The user is not active, disabled or does not exist.',
+            ],
+        ], $e->getErrors());
+    }
+
+    public function testScimSetSettingsService_SaveSettingsUpdate_Validation_InvalidSettingsError()
+    {
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $scimSettings */
+        $scimSettings = ScimSettingFactory::make()->default()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'setting_id' => UuidFactory::uuid(),
+            'scim_user_id' => $user->id,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $e = null;
+        try {
+            $this->service->saveSettings($ua, $data, $scimSettings->id);
+        } catch (Exception $e) {
+        }
+
+        $this->assertNotNull($e);
+        $this->assertInstanceOf(FormValidationException::class, $e);
+        $this->assertSame(400, $e->getCode());
+        $this->assertSame('Could not validate the SCIM settings.', $e->getMessage());
+        $this->assertSame([
+            'setting_id' => [
+                'ensureEmpty' => 'The Setting ID cannot be passed on update.',
             ],
         ], $e->getErrors());
     }

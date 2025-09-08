@@ -481,6 +481,13 @@ return [
                 'caseSensitive' => filter_var(env('PASSBOLT_SECURITY_USERNAME_CASE_SENSITIVE', false), FILTER_VALIDATE_BOOLEAN),
             ],
 
+            // Disable SCIM settings endpoints
+            'scim' => [
+                'settings' => [
+                    'endpointsDisabled' => filter_var(env('PASSBOLT_SECURITY_SCIM_SETTINGS_ENDPOINTS_DISABLED', false), FILTER_VALIDATE_BOOLEAN),
+                ]
+            ],
+
             // Disable SMTP setting endpoint to prevent/lock down SMTP configuration via the administration workspace
             'smtpSettings' => [
                 'endpointsDisabled' => filter_var(env('PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED', false), FILTER_VALIDATE_BOOLEAN)
