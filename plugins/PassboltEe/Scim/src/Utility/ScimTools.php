@@ -17,10 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Utility;
 
-use App\Model\Entity\User;
 use Cake\I18n\DateTime;
-use Cake\ORM\TableRegistry;
-use Passbolt\Scim\Service\ScimGetSettingsService;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -37,26 +34,6 @@ class ScimTools
     public static function formatDateTimeToScim(DateTime $dateTime): string
     {
         return $dateTime->format(self::API_FORMAT_DATETIME);
-    }
-
-    /**
-     * @return \App\Model\Entity\User|null
-     */
-    public static function getScimSettingsSelectedUser(): ?User
-    {
-        $scimConfig = (new ScimGetSettingsService())->getSettingsDecryptedValue();
-        if (empty($scimConfig['scim_user_id'])) {
-            return null;
-        }
-
-        /** @var \App\Model\Table\UsersTable $usersTable */
-        $usersTable = TableRegistry::getTableLocator()->get('Users');
-
-        return $usersTable
-            ->find()
-            ->contain(['Roles'])
-            ->where([$usersTable->aliasField('id') => $scimConfig['scim_user_id']])
-            ->first();
     }
 
     /**

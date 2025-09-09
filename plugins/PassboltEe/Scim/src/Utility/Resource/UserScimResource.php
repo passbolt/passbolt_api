@@ -38,6 +38,7 @@ use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Log\ScimLog;
 use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Model\Table\ScimEntriesTable;
+use Passbolt\Scim\Service\ScimGetSettingsService;
 use Passbolt\Scim\Utility\Object\Operation;
 use Passbolt\Scim\Utility\Object\PatchRequest;
 use Passbolt\Scim\Utility\Object\ServiceProviderConfig;
@@ -315,7 +316,7 @@ class UserScimResource implements ScimResourceInterface
             'last_name' => $this->lastName,
         ];
         if (!$user) {
-            $scimUser = ScimTools::getScimSettingsSelectedUser();
+            $scimUser = $this->getScimSettingsSelectedUser();
             if (!$scimUser) {
                 throw new ConflictException('Missing or invalid SCIM user in configuration settings');
             }
@@ -373,6 +374,23 @@ class UserScimResource implements ScimResourceInterface
         $this->setFromDatabase($user->id);
 
         return $this;
+    }
+
+    /**
+     * @return \App\Model\Entity\User|null
+     */
+    protected function getScimSettingsSelectedUser(): ?User
+    {
+        $scimConfig = (new ScimGetSettingsService())->getSettingsDecryptedValue();
+        if (empty($scimConfig['scim_user_id'])) {
+            return null;
+        }
+
+        return $this->Users
+            ->find()
+            ->contain(['Roles'])
+            ->where([$this->Users->aliasField('id') => $scimConfig['scim_user_id']])
+            ->first();
     }
 
     /**

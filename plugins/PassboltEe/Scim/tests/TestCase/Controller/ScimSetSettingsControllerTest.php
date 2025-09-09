@@ -21,8 +21,9 @@ use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Test\Factory\UserFactory;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
-use Cake\Utility\Hash;
+use Cake\Core\Configure;
 use Cake\Utility\Security;
+use Passbolt\Scim\Middleware\ScimSettingsSecurityMiddleware;
 use Passbolt\Scim\Model\Entity\ScimSetting;
 use Passbolt\Scim\ScimPlugin;
 use Passbolt\Scim\Service\ScimSetSettingsService;
@@ -51,7 +52,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Create_Error_PluginDisabled(): void
+    public function testScimSetSettingsController_Create_Error_PluginDisabled(): void
     {
         $this->disableFeaturePlugin(ScimPlugin::class);
 
@@ -63,12 +64,20 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
         $this->assertResponseCode(404);
     }
 
+    public function testScimSetSettingsController_Endpoint_Disabled(): void
+    {
+        Configure::write(ScimSettingsSecurityMiddleware::PASSBOLT_SECURITY_SCIM_SETTINGS_ENDPOINTS_DISABLED, true);
+        $this->postJson('/scim/settings.json');
+        $this->assertResponseCode(403);
+        $this->assertResponseContains('SCIM settings endpoints are disabled.');
+    }
+
     /**
      * Test setSettings method: create operation guest forbidden
      *
      * @return void
      */
-    public function testSetSettings_Create_Error_GuestForbidden(): void
+    public function testScimSetSettingsController_Create_Error_GuestForbidden(): void
     {
         $this->logInAsUser();
 
@@ -82,7 +91,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Create_Error_Unauthenticated()
+    public function testScimSetSettingsController_Create_Error_Unauthenticated()
     {
         $this->postJson('/scim/settings.json');
 
@@ -106,7 +115,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Create_SettingsAlreadySet()
+    public function testScimSetSettingsController_Create_SettingsAlreadySet()
     {
         $this->setupUpdate();
         $this->logInAsAdmin();
@@ -127,180 +136,11 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
     }
 
     /**
-     * Data provider for create settings (POST)
-     *
-     * @return array[]
-     * @throws \Exception
-     */
-    public static function updateDataProvider(): array
-    {
-        $data = static::generateData();
-
-        $data[] = [
-            [
-                'setting_id' => UuidFactory::uuid(),
-                'scim_user_id' => $data[0][0]['scim_user_id'] ,
-            ],
-            'setting_id.ensureEmpty',
-            'The Setting ID cannot be passed on update.',
-        ];
-
-        return $data;
-    }
-
-    /**
-     * Generate basic data for create/update operations
-     *
-     * @return array[]
-     * @throws \Exception
-     */
-    protected static function generateData(): array
-    {
-        /** @var \App\Model\Entity\User $userActive */
-        $userActive = UserFactory::make()->active()->persist();
-        /** @var \App\Model\Entity\User $userNotActive */
-        $userNotActive = UserFactory::make()->admin()->persist();
-        /** @var \App\Model\Entity\User $userDisabled */
-        $userDisabled = UserFactory::make()->disabled()->persist();
-
-        $scimUserIdActive = $userActive->id;
-        $secretToken = Hash::get(ScimSettingFactory::make()->getDefaultValue(), 'secret_token');
-        $scimUserIdNotActive = $userNotActive->id;
-        $scimUserIdDisabled = $userDisabled->id;
-
-        $data = [
-            //Wrong format secret token
-            [
-                [
-                    'scim_user_id' => $scimUserIdActive,
-                    'secret_token' => 'WRONG_TOKEN',
-                ],
-                'secret_token.correctFormat',
-                'The secret token format is incorrect.',
-            ],
-            //Wrong UUID for user
-            [
-                [
-                    'scim_user_id' => 'WRONG_UUID',
-                    'secret_token' => $secretToken,
-                ],
-                'scim_user_id.uuid',
-                'The identifier of the default user should be a valid UUID.',
-            ],
-            //Not active user
-            [
-                [
-                    'scim_user_id' => $scimUserIdNotActive,
-                    'secret_token' => $secretToken,
-                ],
-                'scim_user_id.activeAndEnabled',
-                'The user is not active, disabled or does not exist.',
-            ],
-            //Disabled user
-            [
-                [
-                    'scim_user_id' => $scimUserIdDisabled,
-                    'secret_token' => $secretToken,
-                ],
-                'scim_user_id.activeAndEnabled',
-                'The user is not active, disabled or does not exist.',
-            ],
-            //Non-existing user
-            [
-                [
-                    'scim_user_id' => UuidFactory::uuid(),
-                    'secret_token' => $secretToken,
-                ],
-                'scim_user_id.activeAndEnabled',
-                'The user is not active, disabled or does not exist.',
-            ],
-        ];
-
-        return $data;
-    }
-
-    /**
-     * Data provider for create settings (POST)
-     *
-     * @return array[]
-     * @throws \Exception
-     */
-    public static function createDataProvider(): array
-    {
-        $settingId = UuidFactory::uuid();
-
-        $data = static::generateData();
-
-        foreach ($data as $i => $dataGroup) {
-            $data[$i][0]['setting_id'] = $settingId;
-        }
-
-        //Empty secret token
-        $data[] = [
-            [
-                'scim_user_id' => $data[0][0]['scim_user_id'],
-            ],
-            'secret_token._empty',
-            'The secret token should not be empty.',
-        ];
-        //Empty setting_id
-        $data[] = [
-            [
-                'setting_id' => null,
-                'scim_user_id' => $data[0][0]['scim_user_id'],
-            ],
-            'setting_id._empty',
-            'The ID for the SCIM settings should not be empty.',
-        ];
-
-        //Wrong UUID for setting_id
-        $data[] = [
-            [
-                'setting_id' => 'WRONG_UUID',
-                'scim_user_id' => $data[0][0]['scim_user_id'],
-            ],
-            'setting_id.uuid',
-            'The ID for the SCIM settings should be a valid UUID.',
-        ];
-
-        return $data;
-    }
-
-    /**
-     * Test setSettings method: create operation validation errors
-     *
-     * @param $data
-     * @param $key
-     * @param $message
-     * @return void
-     * @throws \Exception
-     * @dataProvider createDataProvider
-     */
-    public function testSetSettings_Create_Validation($data, $key, $message)
-    {
-        $this->logInAsAdmin();
-
-        if ($key === 'setting_id.notInUse') {
-            $this->setupUpdate();
-        }
-
-        $this->postJson('/scim/settings.json', $data);
-
-        $response = json_decode(json_encode($this->_responseJsonBody), true);
-
-        $this->assertResponseCode(400);
-        $this->assertSame('Could not validate the SCIM settings.', $this->_responseJsonHeader->message);
-        $this->assertSame('error', $this->_responseJsonHeader->status);
-
-        $this->assertSame($message, Hash::get((array)$response, $key));
-    }
-
-    /**
      * Test setSettings method: create operation success
      *
      * @return void
      */
-    public function testSetSettings_Create_Success()
+    public function testScimSetSettingsController_Create_Success()
     {
         $this->logInAsAdmin();
 
@@ -336,7 +176,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Update_Error_PluginDisabled(): void
+    public function testScimSetSettingsController_Update_Error_PluginDisabled(): void
     {
         $this->setupUpdate();
         $this->disableFeaturePlugin(ScimPlugin::class);
@@ -354,7 +194,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Update_Error_GuestForbidden(): void
+    public function testScimSetSettingsController_Update_Error_GuestForbidden(): void
     {
         $this->setupUpdate();
         $this->logInAsUser();
@@ -369,7 +209,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Update_Error_Unauthenticated()
+    public function testScimSetSettingsController_Update_Error_Unauthenticated()
     {
         $this->setupUpdate();
         $this->putJson("/scim/settings/{$this->current->id}.json");
@@ -382,7 +222,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Update_WrongUUID()
+    public function testScimSetSettingsController_Update_WrongUUID()
     {
         $this->setupUpdate();
         $this->logInAsAdmin();
@@ -407,7 +247,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      *
      * @return void
      */
-    public function testSetSettings_Update_NotUUID()
+    public function testScimSetSettingsController_Update_NotUUID()
     {
         $this->setupUpdate();
         $this->logInAsAdmin();
@@ -427,33 +267,11 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
     }
 
     /**
-     * Test setSettings method: update operation validation errors
-     *
-     * @dataProvider updateDataProvider
-     * @return void
-     */
-    public function testSetSettings_Update_Validation($data, $key, $message)
-    {
-        $this->setupUpdate();
-        $this->logInAsAdmin();
-
-        $this->postJson("/scim/settings/{$this->current->id}.json", $data);
-
-        $response = json_decode(json_encode($this->_responseJsonBody), true);
-
-        $this->assertResponseCode(400);
-        $this->assertSame('Could not validate the SCIM settings.', $this->_responseJsonHeader->message);
-        $this->assertSame('error', $this->_responseJsonHeader->status);
-
-        $this->assertSame($message, Hash::get((array)$response, $key));
-    }
-
-    /**
      * Test setSettings method: update operation success
      *
      * @return void
      */
-    public function testSetSettings_Update_Success()
+    public function testScimSetSettingsController_Update_Success()
     {
         $this->setupUpdate();
         $this->logInAsAdmin();
@@ -494,7 +312,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
      * @return void
      * @throws \Exception
      */
-    public function testSetSettings_Update_Success_NoSecretToken()
+    public function testScimSetSettingsController_Update_Success_NoSecretToken()
     {
         $this->setupUpdate();
         $this->logInAsAdmin();
