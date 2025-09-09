@@ -87,7 +87,8 @@ class UsersIndexControllerPaginationTest extends AppIntegrationTestCase
 
         $data = Hash::merge(
             $this->getArrayOfDistinctRandomStrings($numberOfUsers, 'first_name'),
-            $this->getArrayOfDistinctRandomPastDates($numberOfUsers, 'created')
+            $this->getArrayOfDistinctRandomPastDates($numberOfUsers, 'created'),
+            $this->getArrayOfDistinctRandomPastDates($numberOfUsers, 'last_logged_in')
         );
 
         $admin = UserFactory::make()
