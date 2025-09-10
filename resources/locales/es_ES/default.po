@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-08-21 11:08\n"
+"PO-Revision-Date: 2025-09-10 10:27\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -194,7 +194,7 @@ msgid "The user should not be logged in."
 msgstr "El usuario no debe estar conectado."
 
 msgid "This feature is not supported by your version of passbolt."
-msgstr "Esta característica no está soportada por su versión de passbolt."
+msgstr "Esta característica no es compatible con su versión de passbolt."
 
 msgid "The resource identifier should be a valid UUID."
 msgstr "El identificador de recurso debe ser un UUID válido."
@@ -359,7 +359,7 @@ msgid "You are not authorized to edit the role."
 msgstr "No está autorizado a editar el rol."
 
 msgid "Multiple has-access filters are not supported."
-msgstr "No se admiten múltiples filtros de acceso."
+msgstr "Los múltiples filtros de acceso no son compatibles."
 
 msgid "This operation is not allowed for this user."
 msgstr "Esta operación no está permitida para este usuario."
@@ -1631,7 +1631,7 @@ msgid "64-bit architecture system detected."
 msgstr "Sistema de arquitectura de 64 bits detectado."
 
 msgid "32-bit architecture system detected, this environment will not be supported as of Passbolt v5+."
-msgstr "Sistema de arquitectura de 32 bits detectado, este entorno no será soportado a partir de Passbolt v5."
+msgstr "Sistema de arquitectura de 32 bits detectado, este entorno no será compatible a partir de Passbolt v5."
 
 msgid "See PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
 msgstr "Vea PHP_INT_MAX - https://www.php.net/manual/es/language.types.integer.php"
@@ -2123,7 +2123,7 @@ msgid "Account recovery case must be a string."
 msgstr "El caso de recuperación de la cuenta debe ser una cadena."
 
 msgid "Account recovery reason not supported."
-msgstr "Razón de recuperación de la cuenta no soportada."
+msgstr "Razón de recuperación de la cuenta no compatible."
 
 msgid "Please provide a valid email address."
 msgstr "Por favor, introduzca una dirección de correo electrónico válida."
@@ -2249,7 +2249,7 @@ msgid "The parameter {0} is not set."
 msgstr "El parámetro {0} no está establecido."
 
 msgid "This theme is not supported."
-msgstr "Este tema no está soportado."
+msgstr "Este tema no es compatible."
 
 msgid "You are not allowed to access this location."
 msgstr "No tiene permisos para acceder a esta ubicación."
