@@ -3341,7 +3341,7 @@ msgstr ""
 msgid "You have edited a resource."
 msgstr ""
 
-msgid "{0} have edited a resource."
+msgid "{0} has edited a resource."
 msgstr ""
 
 msgid "Information about the transfer is required."
