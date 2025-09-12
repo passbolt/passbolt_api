@@ -1,8 +1,29 @@
-Release song: TBD
+Release song: https://youtu.be/L3Wo8jcNrkQ
 
-TBD
+Passbolt 5.5.0-rc.1 is a feature release candidate introducing encrypted metadata in zero-knowledge mode and SCIM provisioning (beta) for automated user management.
 
-## [5.5.0-test.2] - 2025-09-08
+## Encrypted Metadata Zero-Knowledge Mode
+
+This mode is designed for organizations that prioritize privacy over server-side auditability. In this setup, the server never has access to the shared metadata private key.
+
+* __Key distribution__: When a new user joins, the server does not distribute the metadata key.
+Administrators are notified by email and can review which users are missing the key in the __Users & Groups workspace__. Keys must then be shared manually.
+* __User experience__: Until the key is received, the user’s actions are limited. Operations that depend on metadata, such as sharing a resource, moving a private item into a shared folder or creating resources intended to be shared are blocked.
+* __Guidance in UI__: If a restricted action is attempted, the interface provides an explanation and steps to resolve the issue.
+
+More details are available in the dedicated [blog post](https://www.passbolt.com/blog/the-road-to-passbolt-v5-encrypted-metadata-and-other-core-security-changes-2) on encrypted metadata and zero-knowledge.
+
+## SCIM Provisioning (Beta)
+
+Passbolt Pro now supports __SCIM 2.0__ (beta) for automated provisioning, starting with Microsoft Entra ID (Azure AD).
+
+* __Supported actions__: Admins can create, update, and deactivate users directly from their identity provider without using the Passbolt UI.
+* __Scope__: This first release focuses on user accounts. Group synchronization will be added later.
+* __Compatibility__: Okta is expected to work with this release, though some workflows may still require adjustments.
+
+Several bugs reported by the community have also been fixed. As always, thank you to everyone who took the time to file issues and suggest improvements. Checkout the changelog for more information.
+
+## [5.5.0-rc.1] - 2025-09-10
 ### Added
 - PB-44617 As an administrator I can provision users using the SCIM protocol (beta)
 - PB-43455 As an administrator I can edit the SCIM settings
