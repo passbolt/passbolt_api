@@ -10,11 +10,6 @@
       <code><![CDATA[$user->id]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltCe/EmailNotificationSettings/tests/Factory/EmailNotificationSettingFactory.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[EmailNotificationSettingFactory]]></code>
-    </MethodSignatureMismatch>
-  </file>
   <file src="plugins/PassboltCe/EmailNotificationSettings/tests/TestCase/Utility/EmailNotificationSettingsTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$dbEmailNotifSettings->value]]></code>
@@ -312,11 +307,6 @@
       <code><![CDATA[UserFactory::make()->user()->persist()->id]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltCe/Locale/tests/Factory/LocaleSettingFactory.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[LocaleSettingFactory]]></code>
-    </MethodSignatureMismatch>
-  </file>
   <file src="plugins/PassboltCe/Locale/tests/TestCase/Controller/AccountLocalesSelectControllerTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
@@ -466,11 +456,6 @@
       <code><![CDATA[$recipient]]></code>
     </InvalidArgument>
   </file>
-  <file src="plugins/PassboltCe/Metadata/tests/Factory/MetadataKeysSettingsFactory.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[MetadataKeysSettingsFactory]]></code>
-    </MethodSignatureMismatch>
-  </file>
   <file src="plugins/PassboltCe/Metadata/tests/Factory/MetadataPrivateKeyFactory.php">
     <MethodSignatureMismatch>
       <code><![CDATA[MetadataPrivateKeyFactory]]></code>
@@ -486,11 +471,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\Metadata\Model\Entity\MetadataSessionKey getEntity()]]></code>
     </MoreSpecificImplementedParamType>
-  </file>
-  <file src="plugins/PassboltCe/Metadata/tests/Factory/MetadataTypesSettingsFactory.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[MetadataTypesSettingsFactory]]></code>
-    </MethodSignatureMismatch>
   </file>
   <file src="plugins/PassboltCe/Mobile/tests/TestCase/Controller/Transfers/TransfersUpdateControllerTest.php">
     <InvalidPropertyFetch>
@@ -532,11 +512,6 @@
   <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/Factory/MfaAuthenticationTokenFactory.php">
     <MethodSignatureMismatch>
       <code><![CDATA[MfaAuthenticationTokenFactory]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/Factory/MfaOrganizationSettingFactory.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[MfaOrganizationSettingFactory]]></code>
     </MethodSignatureMismatch>
   </file>
   <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/Scenario/Totp/MfaTotpScenario.php">
@@ -598,11 +573,6 @@
       <code><![CDATA[$authToken->token]]></code>
       <code><![CDATA[$authToken->token]]></code>
     </InvalidPropertyFetch>
-  </file>
-  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Controllers/MfaMiddlewareLoginTest.php">
-    <InvalidNamedArgument>
-      <code><![CDATA[contain]]></code>
-    </InvalidNamedArgument>
   </file>
   <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Controllers/Totp/TotpSetupPostControllerTest.php">
     <InvalidPropertyFetch>
@@ -749,11 +719,6 @@
       <code><![CDATA[$admin]]></code>
     </InvalidArgument>
   </file>
-  <file src="plugins/PassboltCe/PasswordExpiry/tests/Factory/PasswordExpirySettingFactory.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[PasswordExpirySettingFactory]]></code>
-    </MethodSignatureMismatch>
-  </file>
   <file src="plugins/PassboltCe/Rbacs/src/Model/Table/RbacsTable.php">
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\Rbacs\Model\Entity\Rbac get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
@@ -814,11 +779,6 @@
     <InvalidArgument>
       <code><![CDATA[$recipient]]></code>
     </InvalidArgument>
-  </file>
-  <file src="plugins/PassboltCe/SmtpSettings/tests/Factory/SmtpSettingFactory.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[SmtpSettingFactory]]></code>
-    </MethodSignatureMismatch>
   </file>
   <file src="plugins/PassboltCe/SmtpSettings/tests/TestCase/Command/SmtpSettingsEmailDigestPreviewCommandTest.php">
     <InvalidArrayOffset>
@@ -897,12 +857,6 @@
   <file src="src/Model/Table/GroupsUsersTable.php">
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\App\Model\Entity\GroupsUser get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
-    </MoreSpecificImplementedParamType>
-  </file>
-  <file src="src/Model/Table/OrganizationSettingsTable.php">
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[\App\Model\Entity\OrganizationSetting newEmptyEntity()]]></code>
-      <code><![CDATA[\App\Model\Entity\OrganizationSetting newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Model/Table/PermissionsTable.php">

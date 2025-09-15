@@ -29,7 +29,7 @@ use Faker\Generator;
  * @method \App\Model\Entity\OrganizationSetting|\App\Model\Entity\OrganizationSetting[] persist()
  * @method \App\Model\Entity\OrganizationSetting getEntity()
  * @method \App\Model\Entity\OrganizationSetting[] getEntities()
- * @method static \App\Model\Entity\OrganizationSetting get($primaryKey, array $options = [])
+ * @method static \App\Model\Entity\OrganizationSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method static \App\Model\Entity\OrganizationSetting firstOrFail(ExpressionInterface|Closure|array|string|null $conditions = null)
  */
 class OrganizationSettingFactory extends CakephpBaseFactory

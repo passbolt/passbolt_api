@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-08-08 13:25\n"
+"PO-Revision-Date: 2025-08-15 11:58\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -398,7 +398,7 @@ msgid "Invalid expiry time {0}."
 msgstr "Ungültige Gültigkeitsdauer {0}."
 
 msgid "The user role ID must be one of the admin or user roles."
-msgstr ""
+msgstr "Die Benutzer-Rollen-ID muss eine der Admin- oder Benutzerrollen sein."
 
 msgid "The identifier should not be empty."
 msgstr "Der Identifikator sollte nicht leer sein."
@@ -932,7 +932,7 @@ msgid "The user cannot delete this resource."
 msgstr "Der Benutzer kann diese Ressource nicht löschen."
 
 msgid "The resource type for this resource does not exist."
-msgstr ""
+msgstr "Der Ressourcentyp für diese Ressource existiert nicht."
 
 msgid "The name should be a valid ASCII string."
 msgstr "Der Name muss eine gültige ASCII-Zeichenkette sein."
@@ -1466,13 +1466,13 @@ msgid "Cache is NOT working."
 msgstr "Der Cache funktioniert NICHT."
 
 msgid "Deprecated `_cake_core_` cache configuration found."
-msgstr ""
+msgstr "Veraltete `_cake_core_` Cache-Konfiguration gefunden."
 
 msgid "Check the settings in {0}"
 msgstr "Prüfen Sie die Einstellungen in {0}"
 
 msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
-msgstr ""
+msgstr "Ersetze `_cake_core_` durch `_cake_translations_` in deiner {0} Konfigurationsdatei."
 
 msgid "Debug mode is off."
 msgstr "Debug-Modus ist ausgeschaltet."
@@ -1601,10 +1601,10 @@ msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "Siehe: https://secure.php.net/manual/en/book.intl.php"
 
 msgid "The logs directory {0} and its content are writable."
-msgstr ""
+msgstr "Das Log-Verzeichnis {0} und dessen Inhalt sind beschreibbar."
 
 msgid "The logs directory {0} and its content are not writable."
-msgstr ""
+msgstr "Das Log-Verzeichnis {0} und dessen Inhalt sind nicht beschreibbar."
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
 msgstr "Stellen Sie sicher, dass das Protokollverzeichnis und dessen Inhalt vom Benutzer des Webservers beschreibbar sind."
@@ -2012,10 +2012,10 @@ msgid "Validation success for permission {0}"
 msgstr "Validierung erfolgreich für Berechtigung {0}"
 
 msgid "The permissions data must be an array."
-msgstr ""
+msgstr "Die Berechtigungsdaten müssen ein Array sein."
 
 msgid "The permissions data array keys must be integers."
-msgstr ""
+msgstr "Die Berechtigungs-Daten-Array-Schlüssel müssen ganze Zahlen sein."
 
 msgid "Could not validate permissions data."
 msgstr "Berechtigungsdaten konnten nicht validiert werden."
@@ -2042,7 +2042,7 @@ msgid "Validation success for resource {0}"
 msgstr "Validierung erfolgreich für Ressource {0}"
 
 msgid "The resource types associated to this resource does not exist."
-msgstr ""
+msgstr "Die Ressourcentypen, die dieser Ressource zugeordnet sind, existieren nicht."
 
 msgid "You are not allowed to update this resource."
 msgstr "Sie sind nicht berechtigt diese Ressource zu aktualisieren."
@@ -2990,22 +2990,22 @@ msgid "You edited the metadata settings"
 msgstr "Sie haben die Metadateneinstellungen bearbeitet"
 
 msgid "No active metadata key found."
-msgstr ""
+msgstr "Kein aktiver Metadatenschlüssel gefunden."
 
 msgid "Active metadata key found or not required."
-msgstr ""
+msgstr "Aktiver Metadatenschlüssel gefunden oder nicht erforderlich."
 
 msgid "The server has access to the metadata keys or does not require access to it."
-msgstr ""
+msgstr "Der Server hat Zugriff auf die Metadaten-Schlüssel oder benötigt keinen Zugriff darauf."
 
 msgid "The server does not have access to metadata key."
-msgstr ""
+msgstr "Der Server hat keinen Zugriff auf den Metadaten-Schlüssel."
 
 msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
-msgstr ""
+msgstr "Wenn der Null-Wissens-Modus ausgeschaltet ist, muss der Server Zugriff auf die Metadatenschlüssel haben."
 
 msgid "Without having access, the server won't be able to share the metadata private key with the users."
-msgstr ""
+msgstr "Ohne Zugriff kann der Server den privaten Metadaten-Schlüssel nicht mit den Benutzern teilen."
 
 msgid "No server metadata private key found."
 msgstr "Kein serverseitiger Metadaten-Privatschlüssel gefunden."
@@ -3020,22 +3020,22 @@ msgid "Unable to decrypt the metadata private key."
 msgstr "Der Metadaten-Privatschlüssel kann nicht entschlüsselt werden."
 
 msgid "Unable to decrypt the metadata private key (id: {0}) data."
-msgstr ""
+msgstr "Der private Metadaten-Schlüssel (id: {0}) konnte nicht entschlüsselt werden."
 
 msgid "The metadata private key (id: {0}) cleartext data should be in JSON format."
-msgstr ""
+msgstr "Die Klartext-Daten des privaten Metadaten-Schlüssels (id: {0}) sollten im JSON-Format sein."
 
 msgid "The metadata private key (id: {0}) cleartext data should not be empty."
-msgstr ""
+msgstr "Die Klartext-Daten des privaten Metadaten-Schlüssels (id: {0}) sollten nicht leer sein."
 
 msgid "Unable to validate metadata private key (id: {0}) cleartext data."
-msgstr ""
+msgstr "Die Klartext-Daten des privaten Metadaten-Schlüssels (id: {0}) konnten nicht validiert werden."
 
 msgid "The server metadata private key is valid."
-msgstr ""
+msgstr "Der private Server-Metadaten-Schlüssel ist gültig."
 
 msgid "The server metadata private key is not valid."
-msgstr ""
+msgstr "Der private Server-Metadaten-Schlüssel ist nicht gültig."
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "Der Metadaten-Schlüssel existiert nicht oder wurde gelöscht."
@@ -3167,10 +3167,10 @@ msgid "Could not save the metadata session keys, please try again later."
 msgstr "Speichern der Metadaten-Sitzungsschlüssel fehlgeschlagen, bitte versuchen Sie es später erneut."
 
 msgid "Unable to save the metadata settings."
-msgstr ""
+msgstr "Die Metadaten-Einstellungen konnten nicht gespeichert werden."
 
 msgid "An active metadata key could not be found, create a key first."
-msgstr ""
+msgstr "Ein aktiver Metadaten-Schlüssel konnte nicht gefunden werden, erstellen Sie zuerst einen Schlüssel."
 
 msgid "Could not prepare private key for server key."
 msgstr "Konnte Privatschlüssel für den Serverschlüssel nicht vorbereiten."
@@ -3344,7 +3344,7 @@ msgid "You have edited a resource."
 msgstr "Sie haben eine Ressource bearbeitet."
 
 msgid "{0} have edited a resource."
-msgstr ""
+msgstr "{0} haben eine Ressource bearbeitet."
 
 msgid "Information about the transfer is required."
 msgstr "Informationen über die Übertragung sind erforderlich."
@@ -3872,7 +3872,7 @@ msgid "You have passwords requiring your attention"
 msgstr "Sie haben Passwörter, die Ihre Aufmerksamkeit erfordern"
 
 msgid "Some of your passwords are expiring today."
-msgstr ""
+msgstr "Einige Ihrer Passwörter laufen heute ab."
 
 msgid "{0} marked the password {1} as expired"
 msgstr "{0} hat das Passwort {1} als abgelaufen markiert"
@@ -4493,58 +4493,58 @@ msgid "Errors: "
 msgstr "Fehler: "
 
 msgid "Could not retrieve the user key policies."
-msgstr ""
+msgstr "Konnte die Benutzerschlüsselrichtlinien nicht abrufen."
 
 msgid "Conflicting authentication parameters, provide user_id/token only when the user is not already signed in."
-msgstr ""
+msgstr "Widersprüchliche Authentifizierungsparameter, geben user_id/token nur an, wenn der Benutzer nicht bereits angemeldet ist."
 
 msgid "You are not authorized to access this location."
-msgstr ""
+msgstr "Sie sind nicht berechtigt, auf diesen Standort zuzugreifen."
 
 msgid "Sign-in to passbolt, or provide a valid user ID and authentication token."
-msgstr ""
+msgstr "Melden Sie sich bei Passbolt an oder geben Sie eine gültige Benutzer-ID und Authentifizierungstoken an."
 
 msgid "The user ID must be a valid UUID."
-msgstr ""
+msgstr "Die Benutzer-ID muss eine gültige UUID sein."
 
 msgid "The authentication token must be a valid UUID."
-msgstr ""
+msgstr "Der Authentifizierungs-Token muss eine gültige UUID sein."
 
 msgid "Unable to authenticate the guest user with the provided credentials."
-msgstr ""
+msgstr "Der Gastbenutzer konnte nicht mit den angegebenen Zugangsdaten authentifiziert werden."
 
 msgid "No registration authentication token found for the given user."
-msgstr ""
+msgstr "Kein Registrierungs-Authentifizierungs-Token für den angegebenen Benutzer gefunden."
 
 msgid "The registration authentication token is expired."
-msgstr ""
+msgstr "Das Registrierungs-Authentifizierungs-Token ist abgelaufen."
 
 msgid "The preferred key type is required."
-msgstr ""
+msgstr "Der bevorzugte Schlüsseltyp ist erforderlich."
 
 msgid "The preferred key type should not be empty."
-msgstr ""
+msgstr "Der bevorzugte Schlüsseltyp sollte nicht leer sein."
 
 msgid "The preferred key type should be one of the following: {0}."
-msgstr ""
+msgstr "Der bevorzugte Schlüsseltyp sollte einer der folgenden sein: {0}."
 
 msgid "The preferred key type and size combination does not match."
-msgstr ""
+msgstr "Die bevorzugte Schlüsseltyp und -längen-Kombination stimmt nicht überein."
 
 msgid "The preferred key type and curve combination does not match."
-msgstr ""
+msgstr "Die bevorzugte Schlüsseltyp und -kurven-Kombination stimmt nicht überein."
 
 msgid "The preferred key size is required."
-msgstr ""
+msgstr "Die bevorzugte Schlüssellänge ist erforderlich."
 
 msgid "The preferred key size should be one of the following: {0}."
-msgstr ""
+msgstr "Die bevorzugte Schlüssellänge sollte eine der folgenden sein: {0}."
 
 msgid "The preferred key curve is required."
-msgstr ""
+msgstr "Die bevorzugte Tastenkurve ist erforderlich."
 
 msgid "The preferred key curve should be one of the following: {0}."
-msgstr ""
+msgstr "Die bevorzugte Schlüsselkurve sollte eine der folgenden sein: {0}."
 
 msgid "The data entered are not correct"
 msgstr "Die eingegebenen Daten sind nicht korrekt"
@@ -5279,7 +5279,7 @@ msgid "This user is missing the encryption key for the shared resource metadata.
 msgstr "Diesem Benutzer fehlt der Verschlüsselungsschlüssel für die freigegebenen Ressourcenmetadaten. Bitte melden Sie sich an und gehen Sie zum Arbeitsbereich des Benutzers, um den Schlüssel manuell mit ihm zu teilen."
 
 msgid "View users"
-msgstr ""
+msgstr "Benutzer anzeigen"
 
 msgid "This email is an automatic notification sent by"
 msgstr "Diese E-Mail ist eine automatische Benachrichtigung gesendet von"

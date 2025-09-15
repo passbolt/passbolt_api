@@ -147,9 +147,9 @@ class V340MigrateASCIIFieldsEncodingTest extends TestCase
         }
 
         return $columnName === 'id'
-            || strpos($columnName, '_id') !== false
-            || strpos($columnName, 'foreign_key') !== false
-            || strpos($columnName, '_by') !== false;
+            || str_ends_with($columnName, '_id')
+            || str_contains($columnName, 'foreign_key')
+            || str_ends_with($columnName, '_by');
     }
 
     /**
