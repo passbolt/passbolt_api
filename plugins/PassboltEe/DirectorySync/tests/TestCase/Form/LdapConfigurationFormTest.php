@@ -200,8 +200,6 @@ class LdapConfigurationFormTest extends AppTestCase
      */
     public function provideTestDirectoryLdapConfigurationFormValidateError_FieldsMapping(): array
     {
-        $dummySettingsData = LdapConfigurationTestUtility::getDummyFormData();
-
         return [
             [
                 'dataPath' => 'fields_mapping.ad',
@@ -259,54 +257,53 @@ class LdapConfigurationFormTest extends AppTestCase
                     ],
                 ],
             ],
-            /**
-             * Max length for fields mapping fields' values.
-             */
-            [
-                'dataPath' => 'fields_mapping.openldap.user',
-                'data' => array_replace(
-                    $dummySettingsData['fields_mapping']['openldap']['user'],
-                    [
-                        'firstname' => self::getStringMask('alphaASCII', 150),
-                        'username' => self::getStringMask('alphaASCII', 130),
-                    ]
-                ),
-                'expectedErrors' => [
-                    'openldap' => [
-                        'user' => [
-                            'firstname' => [
-                                'maxLength' => 'The map value length should be maximum 128 characters.',
-                            ],
-                            'username' => [
-                                'maxLength' => 'The map value length should be maximum 128 characters.',
-                            ],
-                        ],
+        ];
+    }
+
+    public function testDirectoryLdapConfigurationFormValidateError_MapMaxLength_OpenLdap()
+    {
+        $expectedErrors = [
+            'openldap' => [
+                'user' => [
+                    'firstname' => [
+                        'maxLength' => 'The map value length should be maximum 128 characters.',
                     ],
-                ],
-            ],
-            [
-                'dataPath' => 'fields_mapping.ad.group',
-                'data' => array_replace(
-                    $dummySettingsData['fields_mapping']['ad']['group'],
-                    [
-                        'created' => self::getStringMask('alphaASCII', 129),
-                        'users' => self::getStringMask('alphaASCII', 150),
-                    ]
-                ),
-                'expectedErrors' => [
-                    'ad' => [
-                        'group' => [
-                            'created' => [
-                                'maxLength' => 'The map value length should be maximum 128 characters.',
-                            ],
-                            'users' => [
-                                'maxLength' => 'The map value length should be maximum 128 characters.',
-                            ],
-                        ],
+                    'username' => [
+                        'maxLength' => 'The map value length should be maximum 128 characters.',
                     ],
                 ],
             ],
         ];
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
+        $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.openldap.user.firstname', self::getStringMask('alphaASCII', 150)); //phpcs:ignore
+        $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.openldap.user.username', self::getStringMask('alphaASCII', 130)); //phpcs:ignore
+        $form = new LdapConfigurationForm();
+        $this->assertFalse($form->validate($ldapSettings));
+        $errors = $form->getErrors();
+        $this->assertSame($expectedErrors, $errors['fields_mapping']);
+    }
+
+    public function testDirectoryLdapConfigurationFormValidateError_MapMaxLength_AdGroup()
+    {
+        $expectedErrors = [
+            'ad' => [
+                'group' => [
+                    'created' => [
+                        'maxLength' => 'The map value length should be maximum 128 characters.',
+                    ],
+                    'users' => [
+                        'maxLength' => 'The map value length should be maximum 128 characters.',
+                    ],
+                ],
+            ],
+        ];
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
+        $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.ad.group.created', self::getStringMask('alphaASCII', 129)); //phpcs:ignore
+        $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.ad.group.users', self::getStringMask('alphaASCII', 150)); //phpcs:ignore
+        $form = new LdapConfigurationForm();
+        $this->assertFalse($form->validate($ldapSettings));
+        $errors = $form->getErrors();
+        $this->assertSame($expectedErrors, $errors['fields_mapping']);
     }
 
     public function testDirectoryLdapConfigurationFormValidateError_GroupObjectClass()

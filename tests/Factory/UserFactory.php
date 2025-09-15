@@ -33,7 +33,7 @@ use Passbolt\Log\Test\Factory\ActionLogFactory;
  * @method \App\Model\Entity\User|\App\Model\Entity\User[] persist()
  * @method \App\Model\Entity\User getEntity()
  * @method \App\Model\Entity\User[] getEntities()
- * @method static \App\Model\Entity\User get($primaryKey, array $options = [])
+ * @method static \App\Model\Entity\User get($primaryKey, mixed ...$args)
  * @method static \App\Model\Entity\User firstOrFail($conditions = null)
  */
 class UserFactory extends CakephpBaseFactory

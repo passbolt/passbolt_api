@@ -38,6 +38,7 @@ use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Passbolt\Scim\Model\Entity\ScimEntry;
 
 /**
  * Users Model
@@ -46,6 +47,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\GpgkeysTable&\Cake\ORM\Association\HasOne $Gpgkeys
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
  * @property \App\Model\Table\ProfilesTable&\Cake\ORM\Association\HasOne $Profiles
+ * @property \Passbolt\Scim\Model\Table\ScimEntriesTable&\Cake\ORM\Association\HasOne $ScimEntries
  * @property \App\Model\Table\GroupsUsersTable&\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsToMany $Groups
  * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasMany $EntitiesHistory
@@ -508,6 +510,14 @@ class UsersTable extends Table
 
         // Mark gpg ke as deleted
         $this->Gpgkeys->updateAll(['deleted' => true], ['user_id' => $user->id]);
+
+        // Mark scim_entry as deleted
+        if ($this->hasAssociation('ScimEntries')) {
+            $this->ScimEntries->updateAll(['deleted' => date('Y-m-d H:s:i')], [
+                'foreign_key' => $user->id,
+                'foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
+            ]);
+        }
 
         // Delete all tags
         if (Configure::read('passbolt.plugins.tags.enabled')) {

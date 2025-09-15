@@ -29,7 +29,7 @@ use Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable;
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting|\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting[] persist()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting getEntity()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting[] getEntities()
- * @method static \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting get($primaryKey, array $options = [])
+ * @method static \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  */
 class AccountRecoveryUserSettingFactory extends CakephpBaseFactory
 {

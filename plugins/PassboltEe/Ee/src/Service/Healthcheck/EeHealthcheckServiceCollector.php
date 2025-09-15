@@ -26,6 +26,7 @@ class EeHealthcheckServiceCollector extends HealthcheckServiceCollector
      */
     public const DOMAIN_SSO = 'sso';
     public const DOMAIN_DIRECTORY_SYNC = 'directorySync';
+    public const DOMAIN_SCIM = 'scim';
 
     /**
      * @return array
@@ -35,6 +36,7 @@ class EeHealthcheckServiceCollector extends HealthcheckServiceCollector
         $defaultTitleMapping = [
             self::DOMAIN_SSO => __('SSO'),
             self::DOMAIN_DIRECTORY_SYNC => __('Directory Sync'),
+            self::DOMAIN_SCIM => __('SCIM'),
         ];
 
         return array_merge(parent::getDomainTitleMapping(), $defaultTitleMapping);

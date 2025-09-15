@@ -419,6 +419,9 @@ return [
             'userKeyPolicies' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_USER_KEY_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
             ],
+            'scim' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SCIM_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            ],
         ],
 
         // Activate specific entry points for selenium testing.
@@ -476,6 +479,13 @@ return [
             'username' => [
                 'lowerCase' => filter_var(env('PASSBOLT_SECURITY_USERNAME_LOWER_CASE', false), FILTER_VALIDATE_BOOLEAN),
                 'caseSensitive' => filter_var(env('PASSBOLT_SECURITY_USERNAME_CASE_SENSITIVE', false), FILTER_VALIDATE_BOOLEAN),
+            ],
+
+            // Disable SCIM settings endpoints
+            'scim' => [
+                'settings' => [
+                    'endpointsDisabled' => filter_var(env('PASSBOLT_SECURITY_SCIM_SETTINGS_ENDPOINTS_DISABLED', false), FILTER_VALIDATE_BOOLEAN),
+                ]
             ],
 
             // Disable SMTP setting endpoint to prevent/lock down SMTP configuration via the administration workspace

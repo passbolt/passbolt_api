@@ -26,12 +26,13 @@ class MetadataKeysSettingsAssertService
      * Validates the setting and return them
      *
      * @param array $data untrusted input
+     * @param string $mode Mode for form to know if settings are being created or modified.
      * @return \Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto dto
      * @throws \App\Error\Exception\FormValidationException if the data does not validate
      */
-    public function assert(array $data): MetadataKeysSettingsDto
+    public function assert(array $data, string $mode = 'create'): MetadataKeysSettingsDto
     {
-        $form = new MetadataKeysSettingsForm();
+        $form = new MetadataKeysSettingsForm($mode);
         if (!$form->execute($data)) {
             throw new FormValidationException(__('Could not validate the settings.'), $form);
         }

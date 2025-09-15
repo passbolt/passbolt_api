@@ -64,6 +64,17 @@ class MetadataKeysSettingsDto extends MetadataSettingsDto
     }
 
     /**
+     * Returns true if zero knowledge key share is disabled.
+     *
+     * @return bool
+     */
+    public function isUserFriendlyMode(): bool
+    {
+        return isset($this->data[self::ZERO_KNOWLEDGE_KEY_SHARE])
+            && !$this->data[self::ZERO_KNOWLEDGE_KEY_SHARE];
+    }
+
+    /**
      * @return ?array
      */
     public function toHumanReadableArray(): ?array
