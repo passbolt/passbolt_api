@@ -306,7 +306,7 @@ return [
              */
             'flags' => [],
             'cacheMetadata' => true,
-            'log' => env('DATASOURCES_DEFAULT_LOG', false),
+            'log' => filter_var(env('DATASOURCES_DEFAULT_LOG', false), FILTER_VALIDATE_BOOLEAN),
 
             /*
              * Set identifier quoting to true if you are using reserved words or
@@ -316,7 +316,7 @@ return [
              * decreases performance because each query needs to be traversed and
              * manipulated before being executed.
              */
-            'quoteIdentifiers' => env('DATASOURCES_QUOTE_IDENTIFIER', true),
+            'quoteIdentifiers' => filter_var(env('DATASOURCES_QUOTE_IDENTIFIER', true), FILTER_VALIDATE_BOOLEAN),
 
             /*
              * During development, if using MySQL < 5.6, uncommenting the
@@ -357,8 +357,8 @@ return [
             'encoding' => env('DATASOURCES_TEST_ENCODING','utf8mb4'),
             'flags' => [],
             'cacheMetadata' => true,
-            'quoteIdentifiers' => env('DATASOURCES_QUOTE_IDENTIFIER', true),
-            'log' => env('DATASOURCES_TEST_LOG', false),
+            'quoteIdentifiers' => filter_var(env('DATASOURCES_QUOTE_IDENTIFIER', true), FILTER_VALIDATE_BOOLEAN),
+            'log' => filter_var(env('DATASOURCES_TEST_LOG', false), FILTER_VALIDATE_BOOLEAN),
             //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
 
             /*

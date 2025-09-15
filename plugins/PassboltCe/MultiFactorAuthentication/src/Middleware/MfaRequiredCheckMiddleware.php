@@ -143,6 +143,7 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
             '/mfa/verify',
             '/auth/logout',
             '/logout',
+            '/scim/v2/',
         ];
         foreach ($whitelistedPaths as $path) {
             if (substr($request->getUri()->getPath(), 0, strlen($path)) === $path) {

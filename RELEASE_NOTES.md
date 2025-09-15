@@ -1,59 +1,32 @@
-Release song: https://www.youtube.com/watch?v=kymdKYtkJbQ
+Release song: https://youtu.be/L3Wo8jcNrkQ
 
-Passbolt 5.4.0 ships with encrypted metadata and the accompanying new resource types promoted to stable. These capabilities have been battle-tested for months, and the most remaining edge cases have been smoothed out so they can now be enabled for everyone.
+Passbolt 5.5.0 is a feature release introducing encrypted metadata in zero-knowledge mode and SCIM provisioning (beta) for automated user management.
 
-Removing the beta label means that every new instance starts with encrypted metadata activated by default. As a result, features introduced in previous releases, such as icons, multiple URIs and custom fields, are available from day one without any action from end-users.
+## Encrypted Metadata Zero-Knowledge Mode
 
-For existing instances, the activation process has been simplified: administrators can decide with a single click whether their organisation is ready or would prefer to postpone the launch. Once enabled, the instance immediately supports the new resource types and their extended capabilities.
+This mode is designed for organizations that prioritize privacy over server-side auditability. In this setup, the server never has access to the shared metadata private key.
 
-Because the change may disrupt external integrations, existing content is not migrated automatically, migration remains the responsibility of content owners or administrators. It can be performed item-by-item by users in the main workspace or organisation-wide with the resource-metadata administration migration tool.
+* __Key distribution__: When a new user joins, the server does not distribute the metadata key.
+Administrators are notified by email and can review which users are missing the key in the __Users & Groups workspace__. Keys must then be shared manually.
+* __User experience__: Until the key is received, the user’s actions are limited. Operations that depend on metadata, such as sharing a resource, moving a private item into a shared folder or creating resources intended to be shared are blocked.
+* __Guidance in UI__: If a restricted action is attempted, the interface provides an explanation and steps to resolve the issue.
 
-Revisiting resource capabilities was also an opportunity to increase the maximum size of secret notes to 50 000 characters, leaving ample room for full certificate chains, keys of any flavour or any long text you need to keep encrypted.
+More details are available in the dedicated [blog post](https://www.passbolt.com/blog/the-road-to-passbolt-v5-encrypted-metadata-and-other-core-security-changes-2) on encrypted metadata and zero-knowledge.
 
-This release further improves cryptographic performance by introducing elliptic-curve keys (Curve25519/Ed25519) for new users. These keys provide security comparable to RSA-3072 while significantly reducing processing time and payload size.
+Several bugs reported by the community have also been fixed. As always, thank you to everyone who took the time to file issues and suggest improvements. Checkout the changelog for more information.
 
-Performance has been tuned for large organisations that manage substantial numbers of users or resources. Among other improvements: Users' workspace now opens more quickly, and deleting multiple resources generates fewer I/O operations.
-
-Czech joins the list of supported languages, allowing native speakers to use Passbolt entirely in their own words, vítejte!
-
-Many thanks to everyone who reported issues and tested encrypted metadata over the past months. Your feedback made this release possible and brings these new features to all users today.
-
-## [5.4.0] - 2025-08-12
+## [5.5.0] - 2025-09-15
 ### Added
-- PB-43713 Translate the application in Czech
-- PB-44285 Add endpoint to help clients enable E2EE by default for new instances
-- PB-44184 As an administrator I should not be allowed to retrieve resources to migrate from v4 to v5 resource types from v4 resource types that are deleted
-- PB-44071 Add a cleanup tasks to soft-delete inactive users with same usernames
-- PB-44376 Set ECC key type as a default for new users
-- PB-44405 Add new healthcheck to notify administrators when there are no active metadata key if E2EE is enabled
-- PB-44406 Add new healthcheck to notify administrators when zero-knowledge disabled and the server does not have access to the shared metadata key
-- PB-44407 Add new healthcheck to notify administrators when server cannot validate its own shared metadata private key
-- PB-44416 Add metadata settings getting started endpoint
-- PB-38155 Add JSON schema definition to resource types migrations
-- PB-44474 Switch encrypted metadata plugin to stable
-- PB-43631 As an admin running a command as root, I should see the name of the command in the suggestion proposed by the CLI
+- PB-44639 As an administrator, when updating metadata settings from friendly mode to zero knowledge, I should see the server key dropped in DB
+- PB-44756 Updates metadata keys settings endpoint to accept server metadata private key
+- PB-44752 Adds a new data check for existing resources v5 encrypted with hard or soft deleted shared metadata key
 
 ### Fixed
-- PB-43187 Retrieve user last logged data from users table instead of the log to improve application performance
-- PB-43922 Fix notification emails about a resource update
-- PB-43709 Fix enabling E2EE without a key should trigger an error
-- PB-44093 Fix a warning message in ActionLogsUsernameQueryStrategy
-- PB-44177 Fix as a user I should not be allowed to create v4 resource if the resource type is deleted
-- PB-44179 Fix as user I should not view/index v4 resource types if the resource type is deleted
-- PB-43936 Fix IsValidEncryptedMetadataPrivateKey should log, then return false and not throw an exception if isMessageForRecipient fails
-- PB-44182 Fix as user I should not be allowed to delete a v4 resource if v4 resource type is deleted
-- PB-44181 Fix as user I should not be allowed to share a v4 resource if v4 resource type is deleted
-- PB-44252 Fix as an admin I should not be able to set the role of a user to guest
-- PB-44178 Fix as a user I should not be allowed to update v4 resource if the resource type is deleted
-- PB-44180 Fix as user I should not view/index v5 resource types if the resource type is deleted
-- PB-44186 Fix as an administrator I should not be able to rotate the metadata key for resources that have a deleted resource types
-- PB-44189 Fix command line metadata commands should be loaded in debug mode only
-- PB-43936 Fix isMessageForRecipient should work if encryption is done with main key
-- PB-41818 Fix as a user setting a date as boolean the API should not return a 500 code response
+- PB-45060 Fixes custom fields json schema properties type
+- PB-45062 Fixes user_setup_complete.php template in LU folder instead of AD
+- PB-44760 Fixes health check "record not found in table organization_settings" issue (GITHUB #563)
 
 ### Maintenance
-- PB-43524 Create a TestData plugin in plugins/PassboltCe
-- PB-44087 Remove V331 backward compatibility migration
-- PB-44267 Bump SeleniumApi plugin version
-- PB-43752 Add assertJson assertions to folders endpoints
-- PB-41818 Bump cakephp version to 5.2.6
+- PB-44915 Changes DDEV containers names and URLs from passbolt-ce-api to passbolt-api
+- PB-44813 Updates ddev config
+- PB-44772 Speeds up continuous integration by splitting pipelines in two distinct test suites

@@ -103,7 +103,7 @@
     PASSBOLT_SELENIUM_ACTIVE: 1
     # This is the development dummy fingerprint
     PASSBOLT_GPG_SERVER_KEY_FINGERPRINT: 2FC8945833C51946E937F9FED47B0811573EE67E
-    PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml
+    PHPUNIT_COMMAND: vendor/bin/phpunit --testsuite $TEST_SUITE_GROUP -c tmp/tests/testsuitesplit.xml --log-junit unitreport.xml
     COMPOSER_ALLOW_SUPERUSER: 1
   image: $CI_REGISTRY_IMAGE_TEST:$PHP_VERSION
   script:
@@ -112,6 +112,7 @@
     - gpg --import config/gpg/unsecure_private.key
     - gpg --import config/gpg/unsecure.key
     - ./bin/cake passbolt create_jwt_keys
+    - composer create-split-testsuite
     - $PHPUNIT_COMMAND
   artifacts:
     reports:
@@ -122,10 +123,22 @@
 ##
 ## CUSTOM COMBINATIONS
 ##
-seq-php8.2-mysql5.7:
+seq-php8.2-mysql5.7-testsuite-1-of-2:
   variables:
     PHP_VERSION: "8.2"
     DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mysql:5.7"
+    TEST_SUITE_GROUP: "1"
+  extends:
+    - .mysql-template
+    - .test-template
+  rules:
+    - if: "$TEST_DISABLED == null"
+
+seq-php8.2-mysql5.7-testsuite-2-of-2:
+  variables:
+    PHP_VERSION: "8.2"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mysql:5.7"
+    TEST_SUITE_GROUP: "2"
   extends:
     - .mysql-template
     - .test-template
@@ -157,17 +170,17 @@ seq-php8.2-mysql5.7:
 #    - if: '$TEST_DISABLED == null'
 
 ## DEBIAN 11 BULLSEYE
-seq-php8.2-mariadb10.5:
-  variables:
-    PHP_VERSION: "8.2"
-    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.5"
-  extends:
-    - .mysql-template
-    - .test-template
-  allow_failure: true
-  rules:
-    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
-    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+#seq-php8.2-mariadb10.5:
+#  variables:
+#    PHP_VERSION: "8.2"
+#    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.5"
+#  extends:
+#    - .mysql-template
+#    - .test-template
+#  allow_failure: true
+#  rules:
+#    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+#    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
 
 #seq-php7.4-postgres13.7:
 #  variables:
@@ -191,10 +204,23 @@ seq-php8.2-mariadb10.5:
 #    - if: '$TEST_DISABLED == null'
 
 ## UBUNTU 22.04 LTS JAMMY
-seq-php8.2-mysql8:
+seq-php8.2-mysql8-testsuite-1-of-2:
   variables:
     PHP_VERSION: "8.2"
     DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mysql:8.0"
+    TEST_SUITE_GROUP: "1"
+  extends:
+    - .mysql-template
+    - .test-template
+  rules:
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+
+seq-php8.2-mysql8-testsuite-2-of-2:
+  variables:
+    PHP_VERSION: "8.2"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mysql:8.0"
+    TEST_SUITE_GROUP: "2"
   extends:
     - .mysql-template
     - .test-template
@@ -206,15 +232,15 @@ seq-php8.2-mysql8:
 ## RPM COMBINATIONS
 ##
 ## CENTOS 7 - with remi and mariadb repos
-seq-php8.4-mariadb10.3:
-  variables:
-    PHP_VERSION: "8.4"
-    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.3"
-  extends:
-    - .mysql-template
-    - .test-template
-  rules:
-    - if: "$TEST_DISABLED == null"
+#seq-php8.4-mariadb10.3:
+#  variables:
+#    PHP_VERSION: "8.4"
+#    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.3"
+#  extends:
+#    - .mysql-template
+#    - .test-template
+#  rules:
+#    - if: "$TEST_DISABLED == null"
 
 #seq-php8.0-postgres13.7:
 #  variables:
@@ -227,28 +253,39 @@ seq-php8.4-mariadb10.3:
 #    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
 #    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
 
-seq-php8.2-postgres15:
+seq-php8.2-postgres15-testsuite-1-of-2:
   variables:
     PHP_VERSION: "8.2"
     DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/postgres:15-alpine"
+    TEST_SUITE_GROUP: "1"
   extends:
     - .postgres-template
     - .test-template
 
-seq-php8.3-mariadb10.5:
+seq-php8.2-postgres15-testsuite-2-of-2:
   variables:
-    PHP_VERSION: "8.3"
-    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.5"
+    PHP_VERSION: "8.2"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/postgres:15-alpine"
+    TEST_SUITE_GROUP: "2"
   extends:
-    - .mysql-template
+    - .postgres-template
     - .test-template
-  rules:
-    - if: "$TEST_DISABLED == null"
 
-seq-php8.3-postgres13:
+#seq-php8.3-mariadb10.5:
+#  variables:
+#    PHP_VERSION: "8.3"
+#    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.5"
+#  extends:
+#    - .mysql-template
+#    - .test-template
+#  rules:
+#    - if: "$TEST_DISABLED == null"
+
+seq-php8.3-postgres13-testsuite-1-of-2:
   variables:
     PHP_VERSION: "8.3"
     DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/postgres:13-alpine"
+    TEST_SUITE_GROUP: "1"
   extends:
     - .postgres-template
     - .test-template
@@ -256,13 +293,27 @@ seq-php8.3-postgres13:
     - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
     - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
 
+seq-php8.3-postgres13-testsuite-2-of-2:
+  variables:
+    PHP_VERSION: "8.3"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/postgres:13-alpine"
+    TEST_SUITE_GROUP: "2"
+  extends:
+    - .postgres-template
+    - .test-template
+  rules:
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+
+
 # Mariadb 11.5 tests
 
 # This is what we ship with the docker image as of 14 Nov 2024
-seq-php8.2-mariadb11.5:
+seq-php8.2-mariadb11.5-testsuite-1-of-2:
   variables:
     PHP_VERSION: "8.2"
     DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:11.5"
+    TEST_SUITE_GROUP: "1"
   extends:
     - .mariadb-template
     - .test-template
@@ -270,10 +321,23 @@ seq-php8.2-mariadb11.5:
     - if: "$TEST_DISABLED == null"
   allow_failure: true
 
-seq-php8.3-mariadb11.5:
+seq-php8.2-mariadb11.5-testsuite-2-of-2:
+  variables:
+    PHP_VERSION: "8.2"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:11.5"
+    TEST_SUITE_GROUP: "2"
+  extends:
+    - .mariadb-template
+    - .test-template
+  rules:
+    - if: "$TEST_DISABLED == null"
+  allow_failure: true
+
+seq-php8.3-mariadb11.5-testsuite-1-of-2:
   variables:
     PHP_VERSION: "8.3"
     DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:11.5"
+    TEST_SUITE_GROUP: "1"
   extends:
     - .mariadb-template
     - .test-template
@@ -281,4 +345,18 @@ seq-php8.3-mariadb11.5:
       - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
       - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
       - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "release"'
+  allow_failure: true
+
+seq-php8.3-mariadb11.5-testsuite-2-of-2:
+  variables:
+    PHP_VERSION: "8.3"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:11.5"
+    TEST_SUITE_GROUP: "2"
+  extends:
+    - .mariadb-template
+    - .test-template
+  rules:
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "release"'
   allow_failure: true

@@ -48,6 +48,6 @@ class UpdateUserLastLoggedInListener implements EventListenerInterface
 
         /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = TableRegistry::getTableLocator()->get('Users');
-        $usersTable->updateAll(['last_logged_in' => DateTime::now()], ['id' => $userId]);
+        $usersTable->updateAll(['last_logged_in' => DateTime::now()->toDateTimeString()], ['id' => $userId]);
     }
 }
