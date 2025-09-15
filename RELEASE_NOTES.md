@@ -1,6 +1,6 @@
 Release song: https://youtu.be/L3Wo8jcNrkQ
 
-Passbolt 5.5.0-rc.1 is a feature release candidate introducing encrypted metadata in zero-knowledge mode and SCIM provisioning (beta) for automated user management.
+Passbolt 5.5.0 is a feature release introducing encrypted metadata in zero-knowledge mode and SCIM provisioning (beta) for automated user management.
 
 ## Encrypted Metadata Zero-Knowledge Mode
 
@@ -23,7 +23,7 @@ Passbolt Pro now supports __SCIM 2.0__ (beta) for automated provisioning, starti
 
 Several bugs reported by the community have also been fixed. As always, thank you to everyone who took the time to file issues and suggest improvements. Checkout the changelog for more information.
 
-## [5.5.0-rc.1] - 2025-09-10
+## [5.5.0] - 2025-09-15
 ### Added
 - PB-44617 As an administrator I can provision users using the SCIM protocol (beta)
 - PB-43455 As an administrator I can edit the SCIM settings
