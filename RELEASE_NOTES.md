@@ -1,6 +1,6 @@
 Release song: https://youtu.be/L3Wo8jcNrkQ
 
-Passbolt 5.5.0-rc.1 is a feature release candidate introducing encrypted metadata in zero-knowledge mode and SCIM provisioning (beta) for automated user management.
+Passbolt 5.5.0 is a feature release introducing encrypted metadata in zero-knowledge mode and SCIM provisioning (beta) for automated user management.
 
 ## Encrypted Metadata Zero-Knowledge Mode
 
@@ -15,7 +15,7 @@ More details are available in the dedicated [blog post](https://www.passbolt.com
 
 Several bugs reported by the community have also been fixed. As always, thank you to everyone who took the time to file issues and suggest improvements. Checkout the changelog for more information.
 
-## [5.5.0-rc.1] - 2025-09-12
+## [5.5.0] - 2025-09-15
 ### Added
 - PB-44639 As an administrator, when updating metadata settings from friendly mode to zero knowledge, I should see the server key dropped in DB
 - PB-44756 Updates metadata keys settings endpoint to accept server metadata private key
