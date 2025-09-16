@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-08-07 13:34+0000\n"
-"PO-Revision-Date: 2025-08-08 13:25\n"
+"PO-Revision-Date: 2025-09-16 09:42\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -6569,7 +6569,7 @@ msgid "All users can now use Single Sign-on to perform authentication."
 msgstr "Wszyscy użytkownicy mogą teraz używać pojedynczego logowania do wykonania uwierzytelnienia."
 
 msgid "Viewq  it in passbolt"
-msgstr ""
+msgstr "Sprawdź w passbolt"
 
 msgid "The SSO setting has been deleted by {0}."
 msgstr "Ustawienie SSO zostały usunięte przez użytkownika {0}."
@@ -7169,7 +7169,7 @@ msgid "This user is missing the encryption key for the shared resource metadata.
 msgstr "Ten użytkownik nie ma klucza szyfrującego do udostępnionych metadanych zasobu. Zaloguj się i przejdź do obszaru roboczego użytkownika, a następnie ręcznie udostępnij mu klucz."
 
 msgid "View users"
-msgstr ""
+msgstr "Wyświetl użytkowników"
 
 msgid "This email is an automatic notification sent by"
 msgstr "Ten email jest automatycznym powiadomieniem wysłanym przez"
