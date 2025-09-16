@@ -364,8 +364,9 @@ return [
             // Only set to true if your instance runs behind load balancers/proxies that you control.
             'proxies' => [
                 'active' => filter_var(env('PASSBOLT_SECURITY_PROXIES_ACTIVE', false), FILTER_VALIDATE_BOOLEAN),
-                // If your instance is behind multiple proxies, redefine the list of IP addresses of proxies in your control in passbolt.php
-                'trustedProxies' => [],
+                // If your instance is behind multiple proxies, redefine the list of IP addresses of proxies in your control via passbolt.php or env var
+                // Example via env var: PASSBOLT_SECURITY_PROXIES_TRUSTED_PROXIES="127.1.1.1, 127.0.0.2"
+                'trustedProxies' => env('PASSBOLT_SECURITY_PROXIES_TRUSTED_PROXIES', ''),
             ],
             'mfa' => [
                 'duoVerifySubscriber' => filter_var(env('PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER', false), FILTER_VALIDATE_BOOLEAN),
