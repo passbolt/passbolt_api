@@ -1603,7 +1603,7 @@
   "User Passphrase Policies": "사용자 비밀문구 정책",
   "User path": "사용자 경로",
   "User path is used in addition to base DN while searching users.": "사용자 검색 시 기본 DN 외에 사용자 경로가 사용됩니다.",
-  "User provisionning": "사용자 프로비저닝",
+  "User provisioning": "사용자 프로비저닝",
   "User self registration enables users with an email from a whitelisted domain to create their passbolt account without prior admin invitation.": "사용자 자체 등록을 사용하려면 허용 목록의 도메인 있는 도메인의 이메일을 사용하는 사용자가 관리자 사전 초대 없이 암호 계정을 만들 수 있습니다.",
   "User self registration is disabled.": "사용자 자체 등록이 비활성화되었습니다.",
   "User settings": "사용자 설정",
