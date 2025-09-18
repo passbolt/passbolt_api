@@ -1603,7 +1603,7 @@
   "User Passphrase Policies": "Politici de parolă de acces ale utilizatorului",
   "User path": "Cale utilizator",
   "User path is used in addition to base DN while searching users.": "Calea utilizatorului este folosită în plus față de baza DN în timpul căutării utilizatorilor.",
-  "User provisionning": "User provisionning",
+  "User provisioning": "User provisioning",
   "User self registration enables users with an email from a whitelisted domain to create their passbolt account without prior admin invitation.": "Auto-înregistrarea utilizatorului permite utilizatorilor cu o adresă de e-mail dintr-un domeniu autorizat să își creeze contul Passbolt fără invitație prealabilă din partea unui administrator.",
   "User self registration is disabled.": "Auto-înregistrarea utilizatorului este dezactivată.",
   "User settings": "Setări utilizator",

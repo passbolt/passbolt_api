@@ -1603,7 +1603,7 @@
   "User Passphrase Policies": "Benutzer-Passphrase-Richtlinien",
   "User path": "Benutzerpfad",
   "User path is used in addition to base DN while searching users.": "Der Benutzerpfad wird zusätzlich zur Basis-DN bei der Suche von Benutzern verwendet.",
-  "User provisionning": "Benutzer-Bereitstellung",
+  "User provisioning": "Benutzer-Bereitstellung",
   "User self registration enables users with an email from a whitelisted domain to create their passbolt account without prior admin invitation.": "Benutzer-Selbstregistrierung ermöglicht Benutzern mit einer E-Mail von einer Whitelist-Domain ein Passbolt-Konto, ohne vorherige Einladung eines Administrators zu erstellen.",
   "User self registration is disabled.": "Die Benutzer-Selbstregistrierung ist deaktiviert.",
   "User settings": "Benutzereinstellungen",

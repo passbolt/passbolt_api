@@ -1603,7 +1603,7 @@
   "User Passphrase Policies": "Politike uporabniških gesel",
   "User path": "Pot uporabnikov",
   "User path is used in addition to base DN while searching users.": "Pot uporabnikov se uporablja poleg osnovnega DN pri iskanju uporabnikov.",
-  "User provisionning": "Upravljanje uporabnikov",
+  "User provisioning": "Upravljanje uporabnikov",
   "User self registration enables users with an email from a whitelisted domain to create their passbolt account without prior admin invitation.": "Samoregistracija uporabnikov omogoča uporabnikom z e-poštnim naslovom iz seznama dovoljenih domen, da ustvarijo svoj račun na passboltu brez predhodnega povabila skrbnika.",
   "User self registration is disabled.": "Samoregistracija uporabnikov je onemogočena.",
   "User settings": "Nastavitve uporabnika",

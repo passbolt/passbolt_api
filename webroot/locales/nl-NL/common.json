@@ -1603,7 +1603,7 @@
   "User Passphrase Policies": "Gebruikerswachtwoordzinbeleid",
   "User path": "Gebruikerspad",
   "User path is used in addition to base DN while searching users.": "Het gebruikerspad wordt toegepast in combinatie met de basis-DN tijdens het zoeken naar gebruikers.",
-  "User provisionning": "User provisionning",
+  "User provisioning": "User provisioning",
   "User self registration enables users with an email from a whitelisted domain to create their passbolt account without prior admin invitation.": "Met self-registratie kunnen gebruikers met een e-mailadres van een toegestane domein hun Passbolt-account aanmaken zonder voorafgaande uitnodiging van een beheerder.",
   "User self registration is disabled.": "Self-registratie is uitgeschakeld.",
   "User settings": "Gebruikersinstellingen",
