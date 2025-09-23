@@ -21,6 +21,7 @@ use App\Test\Lib\AppTestCaseV5;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\Event\EventDispatcherTrait;
+use Cake\Validation\Validator;
 use Passbolt\Metadata\Form\MetadataKeysSettingsForm;
 use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4ToV5ServiceCollector;
@@ -111,8 +112,8 @@ class MetadataKeysSettingsFormTest extends AppTestCaseV5
     public function testMetadataKeysSettingsForm_Error_MetadataPrivateKeys_Empty(): void
     {
         $data = self::getDefaultData([], []);
-        $form = new MetadataKeysSettingsForm('update');
-        $result = $form->execute($data);
+        $form = new MetadataKeysSettingsForm();
+        $result = $form->execute($data, ['validate' => 'withMetadataPrivateKeys']);
         $errors = $form->getErrors();
         $this->assertFalse($result);
         $this->assertArrayHasKey('_empty', $errors['metadata_private_keys']);
@@ -136,8 +137,8 @@ class MetadataKeysSettingsFormTest extends AppTestCaseV5
     public function testMetadataKeysSettingsForm_Error_MetadataPrivateKeys_FieldsRequired(array $privateKeyData): void
     {
         $data = self::getDefaultData([], $privateKeyData);
-        $form = new MetadataKeysSettingsForm('update');
-        $result = $form->execute($data);
+        $form = new MetadataKeysSettingsForm();
+        $result = $form->execute($data, ['validate' => 'withMetadataPrivateKeys']);
         $errors = $form->getErrors();
         $this->assertFalse($result);
         $requiredFields = ['metadata_key_id', 'user_id', 'data'];
@@ -154,8 +155,8 @@ class MetadataKeysSettingsFormTest extends AppTestCaseV5
             'data' => $this->getEncryptedMetadataPrivateKeyForServerKey(),
         ]]);
 
-        $form = new MetadataKeysSettingsForm('update');
-        $result = $form->execute($data);
+        $form = new MetadataKeysSettingsForm();
+        $result = $form->execute($data, ['validate' => 'withMetadataPrivateKeys']);
         $errors = $form->getErrors();
 
         $this->assertFalse($result);
@@ -178,7 +179,10 @@ class MetadataKeysSettingsFormTest extends AppTestCaseV5
             'ascii' => self::getAsciiTestCases(),
         ];
 
-        $form = new MetadataKeysSettingsForm('update');
+        $form = new MetadataKeysSettingsForm();
+        $validator = new Validator();
+        $withMetadataPrivateKeysValidator = $form->validationWithMetadataPrivateKeys($validator);
+        $form->setValidator('default', $withMetadataPrivateKeysValidator);
         $this->assertFormFieldFormatValidation(
             $form,
             'metadata_private_keys.0.data',
