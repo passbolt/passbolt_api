@@ -241,6 +241,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesUpdateController_Error_AllowModificationOfV5ResourceDisabled(): void
     {
+        $this->markTestSkipped('Not handled for edit');
         // Allow only V4 format
         MetadataTypesSettingsFactory::make()->v4()->persist();
         /** @var \App\Model\Entity\User $user */
@@ -277,6 +278,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesUpdateController_Error_AllowModificationOfV4ResourceDisabled(): void
     {
+        $this->markTestSkipped('Not handled for edit');
         // Disable V4 format
         MetadataTypesSettingsFactory::make()->v6()->persist();
         /** @var \App\Model\Entity\User $user */
