@@ -16,25 +16,12 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Form;
 
-use Cake\Event\EventManager;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
 
 class MetadataKeysSettingsForm extends Form
 {
-    private string $mode;
-
-    /**
-     * @inheritDoc
-     */
-    public function __construct(string $mode = 'create', ?EventManager $eventManager = null)
-    {
-        parent::__construct($eventManager);
-
-        $this->mode = $mode;
-    }
-
     /**
      * Email configuration schema.
      *
@@ -64,21 +51,25 @@ class MetadataKeysSettingsForm extends Form
             ->boolean('zero_knowledge_key_share', __('The setting should be a valid boolean.'))
             ->requirePresence('zero_knowledge_key_share', true, __('The setting is required.'));
 
-        if ($this->mode === 'update') {
-            $onZeroKnowledgeDisabled = function ($context) {
-                return !$context['data']['zero_knowledge_key_share'];
-            };
-
-            $validator
-                ->requirePresence('metadata_private_keys', true, __('The metadata private keys is required.')) // phpcs:ignore;
-                ->notEmptyArray('metadata_private_keys', __('The metadata private keys should not be empty.'), $onZeroKnowledgeDisabled) // phpcs:ignore;
-                ->hasAtLeast('metadata_private_keys', 1, __('Need at least one metadata private key.'), $onZeroKnowledgeDisabled) // phpcs:ignore;
-                // TODO: Accept multiple metadata private keys?
-                ->hasAtMost('metadata_private_keys', 1, __('Need at least one metadata private key.'), $onZeroKnowledgeDisabled) // phpcs:ignore;
-                ->addNestedMany('metadata_private_keys', $this->getServerMetadataPrivateKeysValidator(), null, $onZeroKnowledgeDisabled); // phpcs:ignore;
-        }
-
         return $validator;
+    }
+
+    /**
+     * Default validation rules + validation for metadata private keys
+     *
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
+     */
+    public function validationWithMetadataPrivateKeys(Validator $validator): Validator
+    {
+        return $this
+            ->validationDefault($validator)
+            ->requirePresence('metadata_private_keys', true, __('The metadata private keys is required.')) // phpcs:ignore;
+            ->notEmptyArray('metadata_private_keys', __('The metadata private keys should not be empty.')) // phpcs:ignore;
+            ->hasAtLeast('metadata_private_keys', 1, __('Need at least one metadata private key.')) // phpcs:ignore;
+            // TODO: Accept multiple metadata private keys?
+            ->hasAtMost('metadata_private_keys', 1, __('Need at most one metadata private key.')) // phpcs:ignore;
+            ->addNestedMany('metadata_private_keys', $this->getServerMetadataPrivateKeysValidator()); // phpcs:ignore;
     }
 
     /**

@@ -78,6 +78,20 @@ class MetadataKeysSettingsSetServiceTest extends AppTestCaseV5
         $this->assertEquals($data, $dto->toArray());
     }
 
+    public function testMetadataKeysSettingsSetService_Success_UpdateFromUserFriendlyMode_To_UserFriendlyMode(): void
+    {
+        $user = UserFactory::make()->admin()->persist();
+        MetadataKeysSettingsFactory::make()->persist();
+        $data = MetadataKeysSettingsFormTest::getDefaultData([
+            MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS => true,
+            MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE => false,
+        ]);
+        $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
+        $sut = new MetadataKeysSettingsSetService();
+        $dto = $sut->saveSettings($uac, $data);
+        $this->assertEquals($data, $dto->toArray());
+    }
+
     public function testMetadataKeysSettingsSetService_Success_EditAllowUsageOfPersonalKeys(): void
     {
         $user = UserFactory::make()->admin()->persist();
