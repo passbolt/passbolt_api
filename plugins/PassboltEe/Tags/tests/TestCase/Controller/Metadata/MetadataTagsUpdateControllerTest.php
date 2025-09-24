@@ -346,7 +346,7 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
             'slug' => 'chrome',
         ]);
 
-        $this->assertBadRequestError('Tag creation\/modification with cleartext metadata not allowed');
+        $this->assertBadRequestError('Tag creation with cleartext metadata not allowed');
     }
 
     /**
