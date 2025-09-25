@@ -19,8 +19,9 @@ namespace Passbolt\DirectorySync\Utility\DirectoryEntry;
 use ArrayAccess;
 use Cake\I18n\DateTime;
 use Exception;
+use LdapRecord\Models\Attributes\DistinguishedName;
+use LdapRecord\Models\Attributes\Guid;
 use LdapRecord\Models\Entry;
-use LdapRecord\Utilities;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
 use ReturnTypeWillChange;
 
@@ -293,7 +294,7 @@ abstract class DirectoryEntry implements ArrayAccess
 
         if (empty($this->id)) {
             $this->_addError('id', 'id could not be retrieved');
-        } elseif (!Utilities::isValidGuid($this->id)) {
+        } elseif (!Guid::isValid($this->id)) {
             $this->_addError('id', 'id does not match the expected Guid format');
         }
 
@@ -321,7 +322,7 @@ abstract class DirectoryEntry implements ArrayAccess
      */
     public static function isValidDn(string $dn): bool
     {
-        return ($pieces = Utilities::explodeDn($dn)) && count($pieces) >= 2;
+        return ($pieces = DistinguishedName::explode($dn)) && count($pieces) >= 2;
     }
 
     /**
