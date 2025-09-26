@@ -51,7 +51,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         EventManager::instance()->setEventList(new EventList());
     }
 
-    public function v5ResourceTypesSlugProvider()
+    public static function v5ResourceTypesSlugProvider(): array
     {
         $resourceTypeSlugs = [];
         foreach (ResourceType::V5_RESOURCE_TYPE_SLUGS as $v5ResourceTypeSlug) {

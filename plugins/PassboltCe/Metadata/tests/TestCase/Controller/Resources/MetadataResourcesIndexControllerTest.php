@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Test\TestCase\Controller\Resources;
 
 use App\Test\Factory\ResourceFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
+use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\I18n\DateTime;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
@@ -27,7 +28,26 @@ use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class MetadataResourcesIndexControllerTest extends AppIntegrationTestCaseV5
 {
-    public function testMetadataResourcesIndexController_Metadata_Enabled_Success(): void
+    public static function v5ResourceTypesSlugProvider(): array
+    {
+        $resourceTypeSlugs = [];
+        foreach (ResourceType::V5_RESOURCE_TYPE_SLUGS as $v5ResourceTypeSlug) {
+            // simple password string isn't possible in v5
+            if ($v5ResourceTypeSlug === ResourceType::SLUG_V5_PASSWORD_STRING) {
+                continue;
+            }
+
+            $resourceTypeSlugs[] = [$v5ResourceTypeSlug];
+        }
+
+        return $resourceTypeSlugs;
+    }
+
+    /**
+     * @dataProvider v5ResourceTypesSlugProvider
+     * @return void
+     */
+    public function testMetadataResourcesIndexController_Metadata_Enabled_Success(string $resourceTypeSlug): void
     {
         $user = $this->logInAsUser();
         ResourceFactory::make()
@@ -37,6 +57,7 @@ class MetadataResourcesIndexControllerTest extends AppIntegrationTestCaseV5
         ResourceFactory::make()
             ->withPermissionsFor([$user])
             ->v5Fields()
+            ->with('ResourceTypes', ResourceTypeFactory::make(['id' => UuidFactory::uuid('resource-types.id.' . $resourceTypeSlug), 'slug' => $resourceTypeSlug]))
             ->setField('modified', DateTime::now())
             ->persist();
 
