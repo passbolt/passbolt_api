@@ -101,7 +101,7 @@ return [
      */
     'Cache' => [
         'default' => [
-            'className' => FileEngine::class,
+            'className' => env('CACHE_DEFAULT_CLASSNAME', FileEngine::class),
             'path' => CACHE,
             'url' => env('CACHE_DEFAULT_URL', null),
 
@@ -141,7 +141,7 @@ return [
          * Duration will be set to '+2 minutes' in bootstrap.php when debug = true
          */
         '_cake_model_' => [
-            'className' => FileEngine::class,
+            'className' => env('CACHE_CAKEMODEL_CLASSNAME', FileEngine::class),
             'prefix' => 'myapp_cake_model_',
             'path' => CACHE . 'models' . DS,
             'serialize' => true,
