@@ -37,6 +37,7 @@ use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
@@ -55,14 +56,37 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
         EventManager::instance()->setEventList(new EventList());
     }
 
-    public function testResourcesUpdateController_Success_SharedKey(): void
+    public static function v5ResourceTypesSlugProvider(): array
+    {
+        $resourceTypeSlugs = [];
+        foreach (ResourceType::V5_RESOURCE_TYPE_SLUGS as $v5ResourceTypeSlug) {
+            // simple password string isn't possible in v5
+            if ($v5ResourceTypeSlug === ResourceType::SLUG_V5_PASSWORD_STRING) {
+                continue;
+            }
+
+            $resourceTypeSlugs[] = [$v5ResourceTypeSlug];
+        }
+
+        return $resourceTypeSlugs;
+    }
+
+    /**
+     * @dataProvider v5ResourceTypesSlugProvider
+     * @param string $resourceTypeSlug Resource type slug.
+     * @return void
+     */
+    public function testResourcesUpdateController_Success_SharedKey(string $resourceTypeSlug): void
     {
         MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         [$user, $userWithPermission] = UserFactory::make(2)->user()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
         $v4ResourceTypeId = ResourceTypeFactory::make()->passwordString()->persist()->get('id');
-        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+        $resourceTypeId = ResourceTypeFactory::make([
+            'id' => UuidFactory::uuid('resource-types.id.' . $resourceTypeSlug),
+            'slug' => $resourceTypeSlug,
+        ])->persist()->get('id');
         $metadataKeyId = $metadataKey->get('id');
         $resource = ResourceFactory::make(['resource_type_id' => $v4ResourceTypeId])->withPermissionsFor([$user, $userWithPermission])->persist();
         $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
