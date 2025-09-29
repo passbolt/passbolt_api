@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.5.2] - 2025-09-29
+### Fixed
+- PB-45439 As an administrator I can edit the metadata key settings when not editing zero-knowledge mode
+
 ## [5.5.2-test.1] - 2025-09-29
 ### Fixed
 - PB-45439 As an administrator I can edit the metadata key settings when not editing zero-knowledge mode  when not editing zero-knowledge mode
