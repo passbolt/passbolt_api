@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-08-08 13:25\n"
+"POT-Creation-Date: 2025-09-29 09:18+0000\n"
+"PO-Revision-Date: 2025-09-29 10:50\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -2041,6 +2041,12 @@ msgstr "{0} 리소스에 대한 검증이 실패되었습니다. {1}"
 msgid "Validation success for resource {0}"
 msgstr "{0} 리소스에 대한 유효성 검증 성공"
 
+msgid "Metadata key exist and present for resource {0}."
+msgstr ""
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr ""
+
 msgid "The resource types associated to this resource does not exist."
 msgstr "이 리소스에 연결된 리소스 유형이 존재하지 않습니다."
 
@@ -2794,6 +2800,24 @@ msgstr "설정은 유효한 부울이어야 합니다."
 msgid "The setting is required."
 msgstr "설정이 필요합니다."
 
+msgid "The metadata private keys is required."
+msgstr ""
+
+msgid "The metadata private keys should not be empty."
+msgstr ""
+
+msgid "Need at most one metadata private key."
+msgstr ""
+
+msgid "A metadata key identifier is required."
+msgstr "메타데이터 키 식별자가 필요합니다."
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "메타데이터 키 식별자는 유효한 UUID여야 합니다."
+
+msgid "The user identifier should be null."
+msgstr ""
+
 msgid "The data is required."
 msgstr "데이터가 필요합니다."
 
@@ -2824,14 +2848,8 @@ msgstr "메타데이터 키 유형은 공유 키여야 합니다."
 msgid "The metadata key should not be deleted."
 msgstr "메타데이터 키는 삭제될 수 없습니다."
 
-msgid "A metadata key identifier is required."
-msgstr "메타데이터 키 식별자가 필요합니다."
-
 msgid "The metadata key identifier should not be empty."
 msgstr "메타데이터 키 식별자는 비워 둘 수 없습니다."
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr "메타데이터 키 식별자는 유효한 UUID여야 합니다."
 
 msgid "A metadata key type is required."
 msgstr "메타데이터 키 유형이 필요합니다."
@@ -3097,14 +3115,11 @@ msgstr "OpenPGP 사용자 키를 찾을 수 없습니다."
 msgid "Could not validate the settings."
 msgstr "설정의 유효성을 검사할 수 없습니다."
 
+msgid "The server metadata private keys data are invalid."
+msgstr ""
+
 msgid "The server metadata private key is required to enable these settings."
 msgstr "서버 메타데이터 개인 키가 이러한 설정을 활성화하는 데 필요합니다."
-
-msgid "The server metadata key id is required."
-msgstr "서버 메타데이터 키 ID가 필요합니다."
-
-msgid "The server metadata private key is invalid."
-msgstr "서버 메타데이터 개인 키가 유효하지 않습니다."
 
 msgid "The metadata private key could not be created."
 msgstr "메타데이터 개인 키를 생성할 수 없습니다."
@@ -5113,6 +5128,27 @@ msgstr "{0} 에 오신 것을 환영합니다!"
 msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr "{0} 이(가) 자체 등록 기능을 사용하여 패스볼트에 계정을 생성했습니다."
 
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} 이(가) 패스볼트에서 계정을 활성화했습니다!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "이제 사용자의 패스볼트 활성화 되었으며 비밀번호를 공유할 수 있습니다."
+
+msgid "This user was invited by you {0}."
+msgstr "{0} 이(가) 이 사용자를 초대했습니다."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "공개 등록이 활성화되었기 때문에 이 사용자가 직접 등록했습니다."
+
+msgid "This user was invited by {0} {1}."
+msgstr "{0} {1} 에서 이 사용자를 초대했습니다."
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr "이 사용자는 공유 리소스 메타데이터에 대한 암호화 키가 누락되었습니다. 로그인한 후 사용자 작업 공간으로 이동하여 키를 수동으로 공유해 주세요."
+
+msgid "View users"
+msgstr "사용자 보기"
+
 msgid "You have initiated an account recovery!"
 msgstr "계정 복구가 시작되었습니다."
 
@@ -5259,27 +5295,6 @@ msgstr "{0} 이(가) 당신과 비밀번호를 공유함"
 
 msgid "{0} resources were shared with you."
 msgstr "{0} 이(가) 당신과 리소스를 공유함"
-
-msgid "{0} just activated their account on passbolt!"
-msgstr "{0} 이(가) 패스볼트에서 계정을 활성화했습니다!"
-
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "이제 사용자의 패스볼트 활성화 되었으며 비밀번호를 공유할 수 있습니다."
-
-msgid "This user was invited by you {0}."
-msgstr "{0} 이(가) 이 사용자를 초대했습니다."
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr "공개 등록이 활성화되었기 때문에 이 사용자가 직접 등록했습니다."
-
-msgid "This user was invited by {0} {1}."
-msgstr "{0} {1} 에서 이 사용자를 초대했습니다."
-
-msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr "이 사용자는 공유 리소스 메타데이터에 대한 암호화 키가 누락되었습니다. 로그인한 후 사용자 작업 공간으로 이동하여 키를 수동으로 공유해 주세요."
-
-msgid "View users"
-msgstr "사용자 보기"
 
 msgid "This email is an automatic notification sent by"
 msgstr "이 이메일은 다음에서 자동으로 발송되는 알림입니다."
