@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-08-07 13:34+0000\n"
-"PO-Revision-Date: 2025-08-15 11:58\n"
+"POT-Creation-Date: 2025-09-29 08:52+0000\n"
+"PO-Revision-Date: 2025-09-29 11:36\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -2047,6 +2047,12 @@ msgstr "Überprüfung fehlgeschlagen für Ressource {0}. {1}"
 msgid "Validation success for resource {0}"
 msgstr "Validierung erfolgreich für Ressource {0}"
 
+msgid "Metadata key exist and present for resource {0}."
+msgstr ""
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr ""
+
 msgid "The resource types associated to this resource does not exist."
 msgstr "Die Ressourcentypen, die dieser Ressource zugeordnet sind, existieren nicht."
 
@@ -2800,6 +2806,24 @@ msgstr "Die Einstellung sollte ein gültiger Boolescher Wert sein."
 msgid "The setting is required."
 msgstr "Die Einstellung ist erforderlich."
 
+msgid "The metadata private keys is required."
+msgstr ""
+
+msgid "The metadata private keys should not be empty."
+msgstr ""
+
+msgid "Need at most one metadata private key."
+msgstr ""
+
+msgid "A metadata key identifier is required."
+msgstr "Eine Metadaten-Schlüssel-ID ist erforderlich."
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "Der Metadaten-Schlüsselbezeichner sollte eine gültige UUID sein."
+
+msgid "The user identifier should be null."
+msgstr ""
+
 msgid "The data is required."
 msgstr "Die Daten sind erforderlich."
 
@@ -2830,14 +2854,8 @@ msgstr "Der Metadaten-Schlüsseltyp sollte ein freigegebener Schlüssel sein."
 msgid "The metadata key should not be deleted."
 msgstr "Der Metadaten-Schlüssel sollte nicht gelöscht werden."
 
-msgid "A metadata key identifier is required."
-msgstr "Eine Metadaten-Schlüssel-ID ist erforderlich."
-
 msgid "The metadata key identifier should not be empty."
 msgstr "Der Metadaten-Schlüsselbezeichner darf nicht leer sein."
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr "Der Metadaten-Schlüsselbezeichner sollte eine gültige UUID sein."
 
 msgid "A metadata key type is required."
 msgstr "Ein Metadaten-Schlüsseltyp ist erforderlich."
@@ -3103,14 +3121,11 @@ msgstr "Der OpenPGP-Benutzerschlüssel kann nicht gefunden werden."
 msgid "Could not validate the settings."
 msgstr "Die Einstellungen konnten nicht validiert werden."
 
+msgid "The server metadata private keys data are invalid."
+msgstr ""
+
 msgid "The server metadata private key is required to enable these settings."
 msgstr "Der serverseitige Metadaten-Privatschlüssel ist erforderlich, um diese Einstellungen zu aktivieren."
-
-msgid "The server metadata key id is required."
-msgstr "Die ID des serverseitigen Metadaten-Schlüssels ist erforderlich."
-
-msgid "The server metadata private key is invalid."
-msgstr "Der serverseitige Metadaten-Privatschlüssel ist ungültig."
 
 msgid "The metadata private key could not be created."
 msgstr "Der Metadaten-Privatschlüssel konnte nicht erstellt werden."
@@ -5998,6 +6013,9 @@ msgstr "Der reguläre Ausdruck sollte ein gültiger String sein"
 msgid "Directory Sync"
 msgstr "Verzeichnistyp"
 
+msgid "SCIM"
+msgstr ""
+
 msgid "Only administrators are allowed to create/update MFA policies settings."
 msgstr "Nur Administratoren dürfen MFA-Richtlinien-Einstellungen erstellen/aktualisieren."
 
@@ -6081,6 +6099,90 @@ msgstr "sie"
 
 msgid "view it in passbolt"
 msgstr "in Passbolt anzeigen"
+
+msgid "The SCIM setting id should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the default user should be a valid UUID."
+msgstr ""
+
+msgid "The user is not active, disabled or does not exist."
+msgstr ""
+
+msgid "The Setting ID cannot be passed on update."
+msgstr ""
+
+msgid "The secret token should not be empty."
+msgstr ""
+
+msgid "The ID for the SCIM settings should not be empty."
+msgstr ""
+
+msgid "The ID for the SCIM settings should be a valid UUID."
+msgstr ""
+
+msgid "Simultaneous SCIM and session authentication is not permitted."
+msgstr ""
+
+msgid "SCIM settings endpoints are disabled."
+msgstr ""
+
+msgid "An entry for the same related entity already exists"
+msgstr ""
+
+msgid "An entry with the same `scim_name` and ResourceType already exist."
+msgstr ""
+
+msgid "Users"
+msgstr "Benutzer"
+
+msgid "Groups"
+msgstr "Gruppen"
+
+msgid "The secret token format is incorrect."
+msgstr ""
+
+msgid "SCIM plugin is enabled."
+msgstr ""
+
+msgid "SCIM plugin is disabled."
+msgstr ""
+
+msgid "The SCIM settings could not be decrypted with the server gpg key."
+msgstr ""
+
+msgid "The SCIM settings could not be encrypted with the server gpg key."
+msgstr ""
+
+msgid "Could not validate the SCIM settings found in database."
+msgstr ""
+
+msgid "The SCIM setting identifier should be a valid UUID."
+msgstr ""
+
+msgid "Could not validate the SCIM settings."
+msgstr ""
+
+msgid "The SCIM plugin is disabled."
+msgstr ""
+
+msgid "Please delete previous settings before creating again."
+msgstr ""
+
+msgid "The uuid in the url doesn't match any known setting record."
+msgstr ""
+
+msgid "Email"
+msgstr "E-Mail"
+
+msgid "External id"
+msgstr ""
+
+msgid "Invalid Schema"
+msgstr ""
+
+msgid "Invalid ResourceType"
+msgstr ""
 
 msgid "SsoRecover plugin is disabled."
 msgstr "SsoRecover-Plugin ist deaktiviert."
@@ -7006,6 +7108,27 @@ msgstr "Willkommen bei {0}!"
 msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr "{0} hat die Selbstregistrierungsfunktion genutzt, um ein Konto in Passbolt zu erstellen."
 
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} hat gerade ihr*sein Konto bei Passwort aktiviert!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "Benutzer*in ist jetzt auf Passbolt aktiv und Sie können Passwörter mit ihr*ihm teilen."
+
+msgid "This user was invited by you {0}."
+msgstr "Benutzer*in wurde durch Sie {0} eingeladen."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "Diese*r Benutzer*in hat sich selber registriert, da die öffentliche Registrierung aktiv ist."
+
+msgid "This user was invited by {0} {1}."
+msgstr "Benutzer*in wurde durch {0} {1} eingeladen."
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr "Diesem Benutzer fehlt der Verschlüsselungsschlüssel für die freigegebenen Ressourcenmetadaten. Bitte melden Sie sich an und gehen Sie zum Arbeitsbereich des Benutzers, um den Schlüssel manuell mit ihm zu teilen."
+
+msgid "View users"
+msgstr "Benutzer anzeigen"
+
 msgid "Welcome back!"
 msgstr "Willkommen zurück!"
 
@@ -7149,27 +7272,6 @@ msgstr "{0} hat Passwörter mit Ihnen geteilt"
 
 msgid "{0} resources were shared with you."
 msgstr "{0} Ressourcen wurden mit Ihnen geteilt."
-
-msgid "{0} just activated their account on passbolt!"
-msgstr "{0} hat gerade ihr*sein Konto bei Passwort aktiviert!"
-
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "Benutzer*in ist jetzt auf Passbolt aktiv und Sie können Passwörter mit ihr*ihm teilen."
-
-msgid "This user was invited by you {0}."
-msgstr "Benutzer*in wurde durch Sie {0} eingeladen."
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr "Diese*r Benutzer*in hat sich selber registriert, da die öffentliche Registrierung aktiv ist."
-
-msgid "This user was invited by {0} {1}."
-msgstr "Benutzer*in wurde durch {0} {1} eingeladen."
-
-msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr "Diesem Benutzer fehlt der Verschlüsselungsschlüssel für die freigegebenen Ressourcenmetadaten. Bitte melden Sie sich an und gehen Sie zum Arbeitsbereich des Benutzers, um den Schlüssel manuell mit ihm zu teilen."
-
-msgid "View users"
-msgstr "Benutzer anzeigen"
 
 msgid "This email is an automatic notification sent by"
 msgstr "Diese E-Mail ist eine automatische Benachrichtigung gesendet von"
