@@ -46,13 +46,11 @@ class MetadataKeysSettingsSetService
     {
         $uac->assertIsAdmin();
 
-        /** @var \App\Model\Table\OrganizationSettingsTable $orgSettingsTable */
-        $orgSettingsTable = $this->fetchTable('OrganizationSettings');
-        $mode = is_null($orgSettingsTable->getByProperty(MetadataKeysSettingsGetService::ORG_SETTING_PROPERTY)) ? 'create' : 'update'; // phpcs:ignore
+        $settingsInDB = MetadataKeysSettingsGetService::getSettings();
+        $isDisablingZeroKnowledge = $this->isDisablingZeroKnowledge($data, $settingsInDB);
+        $dto = (new MetadataKeysSettingsAssertService())->assert($data, $isDisablingZeroKnowledge);
 
-        $dto = (new MetadataKeysSettingsAssertService())->assert($data, $mode);
-
-        if ($mode == 'update' && $this->shouldCreateMetadataPrivateKey($dto, $data)) {
+        if ($isDisablingZeroKnowledge && $this->shouldCreateMetadataPrivateKey($dto, $data)) {
             $service = new MetadataPrivateKeysCreateService();
             foreach ($data['metadata_private_keys'] as $i => $key) {
                 try {
@@ -65,6 +63,8 @@ class MetadataKeysSettingsSetService
             }
         }
 
+        /** @var \App\Model\Table\OrganizationSettingsTable $orgSettingsTable */
+        $orgSettingsTable = $this->fetchTable('OrganizationSettings');
         $updatedEntity = $orgSettingsTable->createOrUpdateSetting(
             MetadataKeysSettingsGetService::ORG_SETTING_PROPERTY,
             $dto->toJson(),
@@ -116,5 +116,27 @@ class MetadataKeysSettingsSetService
         }
 
         return false;
+    }
+
+    /**
+     * When updating the settings, we want to know if the zero knowledge mode is being disabled.
+     * If so, metadata private keys will be requested in the payload at a later stage.
+     *
+     * @param array $data payload
+     * @param \Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto $organizationSetting DTO of the settings currently in DB
+     * @return bool
+     */
+    private function isDisablingZeroKnowledge(array $data, MetadataKeysSettingsDto $organizationSetting): bool
+    {
+        if ($organizationSetting->isUserFriendlyMode()) {
+            // The setting is already in user-friendly mode, potentially because falling back on the default settings
+            return false;
+        }
+        if (!isset($data['zero_knowledge_key_share'])) {
+            // If not set in payload, will fail validation at a later stage
+            return false;
+        }
+
+        return !$data['zero_knowledge_key_share'];
     }
 }
