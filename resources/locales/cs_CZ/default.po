@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-08-07 13:34+0000\n"
-"PO-Revision-Date: 2025-09-01 13:44\n"
+"POT-Creation-Date: 2025-09-29 08:52+0000\n"
+"PO-Revision-Date: 2025-09-29 11:37\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Czech\n"
 "MIME-Version: 1.0\n"
@@ -2047,6 +2047,12 @@ msgstr "Validace zdroje {0} selhala. {1}"
 msgid "Validation success for resource {0}"
 msgstr "Ověření zdroje {0} bylo úspěšné"
 
+msgid "Metadata key exist and present for resource {0}."
+msgstr ""
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr ""
+
 msgid "The resource types associated to this resource does not exist."
 msgstr ""
 
@@ -2800,6 +2806,24 @@ msgstr "Nastavení by mělo být platný boolean."
 msgid "The setting is required."
 msgstr "Nastavení je povinné."
 
+msgid "The metadata private keys is required."
+msgstr ""
+
+msgid "The metadata private keys should not be empty."
+msgstr ""
+
+msgid "Need at most one metadata private key."
+msgstr ""
+
+msgid "A metadata key identifier is required."
+msgstr "Je vyžadován identifikátor klíče metadat."
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "Identifikátor klíče metadat by měl být platný UUID."
+
+msgid "The user identifier should be null."
+msgstr ""
+
 msgid "The data is required."
 msgstr "Data jsou povinná."
 
@@ -2830,14 +2854,8 @@ msgstr "Typ klíče metadat by měl být \"shared key\"."
 msgid "The metadata key should not be deleted."
 msgstr "Klíč metadat by neměl být odstraněn."
 
-msgid "A metadata key identifier is required."
-msgstr "Je vyžadován identifikátor klíče metadat."
-
 msgid "The metadata key identifier should not be empty."
 msgstr "Identifikátor klíče metadat by neměl být prázdný."
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr "Identifikátor klíče metadat by měl být platný UUID."
 
 msgid "A metadata key type is required."
 msgstr "Je vyžadován typ klíče metadat."
@@ -3103,14 +3121,11 @@ msgstr "OpenPGP klíč uživatele nebyl nalezen."
 msgid "Could not validate the settings."
 msgstr "Nepodařilo se ověřit nastavení."
 
+msgid "The server metadata private keys data are invalid."
+msgstr ""
+
 msgid "The server metadata private key is required to enable these settings."
 msgstr "Pro povolení těchto nastavení je vyžadován soukromý klíč metadat serveru."
-
-msgid "The server metadata key id is required."
-msgstr "ID serverového klíče metadat je povinné."
-
-msgid "The server metadata private key is invalid."
-msgstr "Soukromý klíč metadat serveru je neplatný."
 
 msgid "The metadata private key could not be created."
 msgstr "Soukromý klíč metadat se nepodařilo vytvořit."
@@ -5998,6 +6013,9 @@ msgstr "SSO"
 msgid "Directory Sync"
 msgstr "Synchronizace adresáře"
 
+msgid "SCIM"
+msgstr "SCIM"
+
 msgid "Only administrators are allowed to create/update MFA policies settings."
 msgstr "Pouze administrátoři mohou vytvářet nebo aktualizovat nastavení zásad MFA."
 
@@ -6081,6 +6099,90 @@ msgstr "vy"
 
 msgid "view it in passbolt"
 msgstr "zobrazit v passbolt"
+
+msgid "The SCIM setting id should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the default user should be a valid UUID."
+msgstr ""
+
+msgid "The user is not active, disabled or does not exist."
+msgstr ""
+
+msgid "The Setting ID cannot be passed on update."
+msgstr ""
+
+msgid "The secret token should not be empty."
+msgstr ""
+
+msgid "The ID for the SCIM settings should not be empty."
+msgstr ""
+
+msgid "The ID for the SCIM settings should be a valid UUID."
+msgstr ""
+
+msgid "Simultaneous SCIM and session authentication is not permitted."
+msgstr ""
+
+msgid "SCIM settings endpoints are disabled."
+msgstr ""
+
+msgid "An entry for the same related entity already exists"
+msgstr ""
+
+msgid "An entry with the same `scim_name` and ResourceType already exist."
+msgstr ""
+
+msgid "Users"
+msgstr "Uživatelé"
+
+msgid "Groups"
+msgstr "Skupiny"
+
+msgid "The secret token format is incorrect."
+msgstr ""
+
+msgid "SCIM plugin is enabled."
+msgstr ""
+
+msgid "SCIM plugin is disabled."
+msgstr ""
+
+msgid "The SCIM settings could not be decrypted with the server gpg key."
+msgstr ""
+
+msgid "The SCIM settings could not be encrypted with the server gpg key."
+msgstr ""
+
+msgid "Could not validate the SCIM settings found in database."
+msgstr ""
+
+msgid "The SCIM setting identifier should be a valid UUID."
+msgstr ""
+
+msgid "Could not validate the SCIM settings."
+msgstr ""
+
+msgid "The SCIM plugin is disabled."
+msgstr ""
+
+msgid "Please delete previous settings before creating again."
+msgstr ""
+
+msgid "The uuid in the url doesn't match any known setting record."
+msgstr ""
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "External id"
+msgstr ""
+
+msgid "Invalid Schema"
+msgstr ""
+
+msgid "Invalid ResourceType"
+msgstr ""
 
 msgid "SsoRecover plugin is disabled."
 msgstr "Modul SsoRecover je deaktivován."
@@ -7006,6 +7108,27 @@ msgstr "Vítejte v {0}!"
 msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr ""
 
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} právě aktivoval(a) svůj účet v passboltu!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "Uživatel je nyní aktivní v passboltu a můžete s ním sdílet hesla."
+
+msgid "This user was invited by you {0}."
+msgstr "Tento uživatel byl pozván vámi {0}."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr ""
+
+msgid "This user was invited by {0} {1}."
+msgstr "Tento uživatel byl pozván {0} {1}."
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr "Tento uživatel postrádá šifrovací klíč pro metadata sdíleného zdroje. Přihlaste se, přejděte do pracovního prostoru uživatele a klíč s ním sdílejte ručně."
+
+msgid "View users"
+msgstr "Zobrazit uživatele"
+
 msgid "Welcome back!"
 msgstr "Vítejte zpět!"
 
@@ -7149,27 +7272,6 @@ msgstr "{0} s vámi sdílel hesla"
 
 msgid "{0} resources were shared with you."
 msgstr "{0} prostředky byly s vámi sdíleny."
-
-msgid "{0} just activated their account on passbolt!"
-msgstr "{0} právě aktivoval(a) svůj účet v passboltu!"
-
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "Uživatel je nyní aktivní v passboltu a můžete s ním sdílet hesla."
-
-msgid "This user was invited by you {0}."
-msgstr "Tento uživatel byl pozván vámi {0}."
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr ""
-
-msgid "This user was invited by {0} {1}."
-msgstr "Tento uživatel byl pozván {0} {1}."
-
-msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr "Tento uživatel postrádá šifrovací klíč pro metadata sdíleného zdroje. Přihlaste se, přejděte do pracovního prostoru uživatele a klíč s ním sdílejte ručně."
-
-msgid "View users"
-msgstr "Zobrazit uživatele"
 
 msgid "This email is an automatic notification sent by"
 msgstr "Tento e-mail je automatické oznámení odeslané službou"
