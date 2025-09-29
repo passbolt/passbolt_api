@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-08-08 13:25\n"
+"POT-Creation-Date: 2025-09-29 09:18+0000\n"
+"PO-Revision-Date: 2025-09-29 10:50\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -2041,6 +2041,12 @@ msgstr "Nepavyko patvirtinti ištekliaus {0}. {1}"
 msgid "Validation success for resource {0}"
 msgstr "Sėkmingas ištekliaus {0} patvirtinimas"
 
+msgid "Metadata key exist and present for resource {0}."
+msgstr ""
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr ""
+
 msgid "The resource types associated to this resource does not exist."
 msgstr ""
 
@@ -2794,6 +2800,24 @@ msgstr "Nustatymas turi būti tinkamas loginis dydis."
 msgid "The setting is required."
 msgstr "Nustatymas yra privalomas."
 
+msgid "The metadata private keys is required."
+msgstr ""
+
+msgid "The metadata private keys should not be empty."
+msgstr ""
+
+msgid "Need at most one metadata private key."
+msgstr ""
+
+msgid "A metadata key identifier is required."
+msgstr "Reikalingas metaduomenų rakto identifikatorius."
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "Metaduomenų rakto identifikatorius turi būti galiojantis UUID."
+
+msgid "The user identifier should be null."
+msgstr ""
+
 msgid "The data is required."
 msgstr "Reikalingi duomenys."
 
@@ -2824,14 +2848,8 @@ msgstr "Metaduomenų rakto tipas turi būti bendrinamas raktas."
 msgid "The metadata key should not be deleted."
 msgstr "Metaduomenų rakto negalima ištrinti."
 
-msgid "A metadata key identifier is required."
-msgstr "Reikalingas metaduomenų rakto identifikatorius."
-
 msgid "The metadata key identifier should not be empty."
 msgstr "Metaduomenų rakto identifikatoriaus laukas neturi būti tuščias."
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr "Metaduomenų rakto identifikatorius turi būti galiojantis UUID."
 
 msgid "A metadata key type is required."
 msgstr "Reikalingas metaduomenų rakto tipas."
@@ -3097,14 +3115,11 @@ msgstr "Nepavyko rasti \"OpenPGP\" vartotojo rakto."
 msgid "Could not validate the settings."
 msgstr "Nepavyko patvirtinti nustatymų."
 
+msgid "The server metadata private keys data are invalid."
+msgstr ""
+
 msgid "The server metadata private key is required to enable these settings."
 msgstr "Norint įjungti šiuos nustatymus, reikalingas serverio metaduomenų privatus raktas."
-
-msgid "The server metadata key id is required."
-msgstr "Reikalingas serverio metaduomenų rakto id."
-
-msgid "The server metadata private key is invalid."
-msgstr "Serverio metaduomenų privatus raktas neteisingas."
 
 msgid "The metadata private key could not be created."
 msgstr "Nepavyko sukurti metaduomenų privataus rakto."
@@ -5113,6 +5128,27 @@ msgstr "Sveiki atvykę į {0}!"
 msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr "{0} naudojo savarankiškos registracijos funkciją, kad sukurtų paskyrą naudojant „passbolt“."
 
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} ką tik suaktyvino savo paskyrą \"passbolt\"!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "Dabar vartotojas yra aktyvus „passbolt'e“ ir galite su juo dalintis slaptažodžiais."
+
+msgid "This user was invited by you {0}."
+msgstr "Šį naudotoją pakvietėte jūs {0}."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "Šis vartotojas užsiregistravo pats, nes įjungta vieša registracija."
+
+msgid "This user was invited by {0} {1}."
+msgstr "Šį naudotoją pakvietė {0} {1}."
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr "Šiam naudotojui trūksta šifravimo rakto bendrinamų išteklių metaduomenims. Prisijunkite ir eikite į naudotojo erdvę, kad rankiniu būdu pasidalintumėte raktu."
+
+msgid "View users"
+msgstr ""
+
 msgid "You have initiated an account recovery!"
 msgstr "Pradėjote paskyros atkūrimą!"
 
@@ -5259,27 +5295,6 @@ msgstr "{0} pasidalino su jumis slaptažodžiais"
 
 msgid "{0} resources were shared with you."
 msgstr "{0} ištekliai(-ių) pasidalinta su jumis."
-
-msgid "{0} just activated their account on passbolt!"
-msgstr "{0} ką tik suaktyvino savo paskyrą \"passbolt\"!"
-
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "Dabar vartotojas yra aktyvus „passbolt'e“ ir galite su juo dalintis slaptažodžiais."
-
-msgid "This user was invited by you {0}."
-msgstr "Šį naudotoją pakvietėte jūs {0}."
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr "Šis vartotojas užsiregistravo pats, nes įjungta vieša registracija."
-
-msgid "This user was invited by {0} {1}."
-msgstr "Šį naudotoją pakvietė {0} {1}."
-
-msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr "Šiam naudotojui trūksta šifravimo rakto bendrinamų išteklių metaduomenims. Prisijunkite ir eikite į naudotojo erdvę, kad rankiniu būdu pasidalintumėte raktu."
-
-msgid "View users"
-msgstr ""
 
 msgid "This email is an automatic notification sent by"
 msgstr "Šis el. laiškas yra automatinis pranešimas, siunčiamas"
