@@ -1603,7 +1603,7 @@
   "User Passphrase Policies": "Zásady přístupové fráze uživatele",
   "User path": "Cesta pro uživatele",
   "User path is used in addition to base DN while searching users.": "Při vyhledávání uživatelů se kromě základního DN používá i uživatelská cesta.",
-  "User provisionning": "Zřizování uživatelů",
+  "User provisioning": "Zřizování uživatelů",
   "User self registration enables users with an email from a whitelisted domain to create their passbolt account without prior admin invitation.": "Samo-registrace uživatelů umožňuje lidem s e-mailem z povolené domény vytvořit si účet v Passboltu bez předchozí pozvánky administrátora.",
   "User self registration is disabled.": "Samo-registrace uživatelů je zakázána.",
   "User settings": "Uživatelská nastavení",
