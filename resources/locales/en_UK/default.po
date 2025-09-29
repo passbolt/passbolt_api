@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2025-08-07 13:12+0000\n"
+"POT-Creation-Date: 2025-09-29 09:18+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -2039,6 +2039,12 @@ msgstr ""
 msgid "Validation success for resource {0}"
 msgstr ""
 
+msgid "Metadata key exist and present for resource {0}."
+msgstr ""
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr ""
+
 msgid "The resource types associated to this resource does not exist."
 msgstr ""
 
@@ -2792,6 +2798,24 @@ msgstr ""
 msgid "The setting is required."
 msgstr ""
 
+msgid "The metadata private keys is required."
+msgstr ""
+
+msgid "The metadata private keys should not be empty."
+msgstr ""
+
+msgid "Need at most one metadata private key."
+msgstr ""
+
+msgid "A metadata key identifier is required."
+msgstr ""
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr ""
+
+msgid "The user identifier should be null."
+msgstr ""
+
 msgid "The data is required."
 msgstr ""
 
@@ -2822,13 +2846,7 @@ msgstr ""
 msgid "The metadata key should not be deleted."
 msgstr ""
 
-msgid "A metadata key identifier is required."
-msgstr ""
-
 msgid "The metadata key identifier should not be empty."
-msgstr ""
-
-msgid "The metadata key identifier should be a valid UUID."
 msgstr ""
 
 msgid "A metadata key type is required."
@@ -3095,13 +3113,10 @@ msgstr ""
 msgid "Could not validate the settings."
 msgstr ""
 
+msgid "The server metadata private keys data are invalid."
+msgstr ""
+
 msgid "The server metadata private key is required to enable these settings."
-msgstr ""
-
-msgid "The server metadata key id is required."
-msgstr ""
-
-msgid "The server metadata private key is invalid."
 msgstr ""
 
 msgid "The metadata private key could not be created."
@@ -5111,6 +5126,27 @@ msgstr ""
 msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr ""
 
+msgid "{0} just activated their account on passbolt!"
+msgstr ""
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr ""
+
+msgid "This user was invited by you {0}."
+msgstr ""
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr ""
+
+msgid "This user was invited by {0} {1}."
+msgstr ""
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr ""
+
+msgid "View users"
+msgstr ""
+
 msgid "You have initiated an account recovery!"
 msgstr ""
 
@@ -5256,27 +5292,6 @@ msgid "{0} shared passwords with you"
 msgstr ""
 
 msgid "{0} resources were shared with you."
-msgstr ""
-
-msgid "{0} just activated their account on passbolt!"
-msgstr ""
-
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr ""
-
-msgid "This user was invited by you {0}."
-msgstr ""
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr ""
-
-msgid "This user was invited by {0} {1}."
-msgstr ""
-
-msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr ""
-
-msgid "View users"
 msgstr ""
 
 msgid "This email is an automatic notification sent by"
