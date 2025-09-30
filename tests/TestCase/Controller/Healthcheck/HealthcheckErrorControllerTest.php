@@ -24,6 +24,14 @@ class HealthcheckErrorControllerTest extends AppIntegrationTestCase
 {
     use IntegrationTestTrait;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        // Mock a client IP to check it surfaces as-is and is not hidden by
+        // a proxy. Chosen IP is safe for simulating external networks (RFC5737).
+        $this->mockUserIp('198.51.100.42');
+    }
+
     public function testHealthcheckErrorController_Error_Disabled(): void
     {
         $og = Configure::read('passbolt.healthcheck.error');
@@ -39,6 +47,9 @@ class HealthcheckErrorControllerTest extends AppIntegrationTestCase
         Configure::write('passbolt.healthcheck.error', true);
         $this->get('/healthcheck/error.json');
         $this->assertResponseCode(500);
+
+        // ensure the message contains the mocked up user IP
+        $this->assertResponseContains('198.51.100.42');
         Configure::write('passbolt.healthcheck.error', $og);
     }
 }

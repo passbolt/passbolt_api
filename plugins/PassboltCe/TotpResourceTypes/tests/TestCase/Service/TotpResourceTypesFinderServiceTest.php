@@ -52,6 +52,6 @@ class TotpResourceTypesFinderServiceTest extends AppTestCase
 
         $result = $this->service->find();
 
-        $this->assertCount(4, $result->toArray());
+        $this->assertCount(5, $result->toArray());
     }
 }
