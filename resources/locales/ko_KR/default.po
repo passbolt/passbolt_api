@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-09-29 09:18+0000\n"
-"PO-Revision-Date: 2025-09-30 07:06\n"
+"PO-Revision-Date: 2025-09-30 13:22\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -5069,7 +5069,7 @@ msgid "Your account has been suspended."
 msgstr "계정이 중지되었습니다."
 
 msgid "You are not able to sign in to passbolt and receive email notifications."
-msgstr "패스볼트에 로그인 할 수 없으며 이메일 알림을 받을 수 없습니다."
+msgstr "Passbolt에 로그인 할 수 없으며 이메일 알림을 받을 수 없습니다."
 
 msgid "Other users can still share resources with you and add you to a group."
 msgstr "다른 사용자는 여전히 사용자와 리소스를 공유하고 사용자를 그룹에 추가할 수 있습니다."
@@ -5093,7 +5093,7 @@ msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch w
 msgstr "{0} ({1}) 이(가) 방금 계정 복구를 완료했습니다. 이 동작이 의심스럽다고 생각되면 언제든지 이 사용자에게 연락하세요."
 
 msgid "View user in passbolt"
-msgstr "패스볼트에서 사용자 보기"
+msgstr "Passbolt에서 사용자 보기"
 
 msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다!"
@@ -5114,7 +5114,7 @@ msgid "The user {0} has been suspended."
 msgstr "{0} 사용자가 중지됨."
 
 msgid "This user will not be able to sign in to passbolt and receive email notifications."
-msgstr "이 사용자는 패스볼트에 로그인을 할 수 없으며 이메일 알림도 받을 수 없습니다."
+msgstr "이 사용자는 Passbolt에 로그인을 할 수 없으며 이메일 알림도 받을 수 없습니다."
 
 msgid "Other users can share resources and add this user to a group."
 msgstr "다른 사용자는 리소스를 공유하고 이 사용자를 그룹에 추가할 수 있습니다"
