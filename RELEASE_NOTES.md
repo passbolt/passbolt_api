@@ -4,6 +4,6 @@ Passbolt 5.5.2 resolves an issue introduced in the previous version that affecte
 
 We thank the community for reporting this issue!
 
-## [5.5.2-test.1] - 2025-09-29
+## [5.5.2] - 2025-09-29
 ### Fixed
-- PB-45439 As an administrator I can edit the metadata key settings when not editing zero-knowledge mode  when not editing zero-knowledge mode
+- PB-45439 As an administrator I can edit the metadata key settings when not editing zero-knowledge mode
