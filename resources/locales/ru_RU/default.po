@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-08-08 13:25\n"
+"POT-Creation-Date: 2025-09-29 09:18+0000\n"
+"PO-Revision-Date: 2025-09-29 10:50\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -2041,6 +2041,12 @@ msgstr "Ошибка проверки ресурса {0}. {1}"
 msgid "Validation success for resource {0}"
 msgstr "Успешная проверка ресурса {0}"
 
+msgid "Metadata key exist and present for resource {0}."
+msgstr ""
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr ""
+
 msgid "The resource types associated to this resource does not exist."
 msgstr ""
 
@@ -2794,6 +2800,24 @@ msgstr "Параметр настройки должен быть допусти
 msgid "The setting is required."
 msgstr "Настройка обязательна."
 
+msgid "The metadata private keys is required."
+msgstr ""
+
+msgid "The metadata private keys should not be empty."
+msgstr ""
+
+msgid "Need at most one metadata private key."
+msgstr ""
+
+msgid "A metadata key identifier is required."
+msgstr "Требуется идентификатор ключа метаданных."
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "Идентификатор ключа метаданных должен быть действительным UUID."
+
+msgid "The user identifier should be null."
+msgstr ""
+
 msgid "The data is required."
 msgstr "Требуются данные."
 
@@ -2824,14 +2848,8 @@ msgstr "Тип ключа метаданных должен быть shared key.
 msgid "The metadata key should not be deleted."
 msgstr "Ключ метаданных не должен быть удалён."
 
-msgid "A metadata key identifier is required."
-msgstr "Требуется идентификатор ключа метаданных."
-
 msgid "The metadata key identifier should not be empty."
 msgstr "Идентификатор ключа метаданных не должен быть пустым."
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr "Идентификатор ключа метаданных должен быть действительным UUID."
 
 msgid "A metadata key type is required."
 msgstr "Требуется тип ключа метаданных."
@@ -3097,14 +3115,11 @@ msgstr "Невозможно найти ключ пользователя OpenPG
 msgid "Could not validate the settings."
 msgstr "Не удалось проверить настройки."
 
+msgid "The server metadata private keys data are invalid."
+msgstr ""
+
 msgid "The server metadata private key is required to enable these settings."
 msgstr "Для включения этих настроек необходим закрытый ключ метаданных сервера."
-
-msgid "The server metadata key id is required."
-msgstr "Требуется идентификатор ключа метаданных сервера."
-
-msgid "The server metadata private key is invalid."
-msgstr "Недействительный закрытый ключ метаданных сервера."
 
 msgid "The metadata private key could not be created."
 msgstr "Не удалось создать закрытый ключ метаданных."
@@ -5113,6 +5128,27 @@ msgstr "Добро пожаловать в {0}!"
 msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr "{0} использовал функцию саморегистрации для создания учетной записи на passbolt."
 
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} только что активировали свою учетную запись на passbolt!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "Пользователь теперь активен в passbolt, и вы можете поделиться с ним паролями."
+
+msgid "This user was invited by you {0}."
+msgstr "Этот пользователь был приглашен вами {0}."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "Этот пользователь зарегистрировался сам, так как включена публичная регистрация."
+
+msgid "This user was invited by {0} {1}."
+msgstr "Этот пользователь был приглашен {0} {1}."
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr "У этого пользователя отсутствует ключ шифрования для общих метаданных ресурса. Пожалуйста, войдите и перейдите в рабочую область пользователя, чтобы вручную предоставить ему ключ."
+
+msgid "View users"
+msgstr ""
+
 msgid "You have initiated an account recovery!"
 msgstr "Вы инициировали восстановление аккаунта!"
 
@@ -5259,27 +5295,6 @@ msgstr "{0} поделился с вами паролями"
 
 msgid "{0} resources were shared with you."
 msgstr "Вам предоставлен доступ к {0} ресурсам."
-
-msgid "{0} just activated their account on passbolt!"
-msgstr "{0} только что активировали свою учетную запись на passbolt!"
-
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "Пользователь теперь активен в passbolt, и вы можете поделиться с ним паролями."
-
-msgid "This user was invited by you {0}."
-msgstr "Этот пользователь был приглашен вами {0}."
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr "Этот пользователь зарегистрировался сам, так как включена публичная регистрация."
-
-msgid "This user was invited by {0} {1}."
-msgstr "Этот пользователь был приглашен {0} {1}."
-
-msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr "У этого пользователя отсутствует ключ шифрования для общих метаданных ресурса. Пожалуйста, войдите и перейдите в рабочую область пользователя, чтобы вручную предоставить ему ключ."
-
-msgid "View users"
-msgstr ""
 
 msgid "This email is an automatic notification sent by"
 msgstr "Это электронное письмо является автоматическим уведомлением, отправленным"
