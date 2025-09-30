@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-09-29 08:52+0000\n"
-"PO-Revision-Date: 2025-09-29 11:36\n"
+"PO-Revision-Date: 2025-09-30 01:45\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -2048,10 +2048,10 @@ msgid "Validation success for resource {0}"
 msgstr "{0} 리소스에 대한 유효성 검증 성공"
 
 msgid "Metadata key exist and present for resource {0}."
-msgstr ""
+msgstr "리소스 {0}에 대한 메타데이터 키가 존재합니다."
 
 msgid "Metadata key does not exists or soft-deleted for resource {0}."
-msgstr ""
+msgstr "리소스 {0}에 대한 메타데이터 키가 존재하지 않거나 소프트 삭제되었습니다."
 
 msgid "The resource types associated to this resource does not exist."
 msgstr "이 리소스에 연결된 리소스 유형이 존재하지 않습니다."
@@ -2807,10 +2807,10 @@ msgid "The setting is required."
 msgstr "설정이 필요합니다."
 
 msgid "The metadata private keys is required."
-msgstr ""
+msgstr "메타데이터 개인 키가 필요합니다."
 
 msgid "The metadata private keys should not be empty."
-msgstr ""
+msgstr "메타데이터 개인 키는 비워 둘 수 없습니다."
 
 msgid "Need at most one metadata private key."
 msgstr ""
@@ -6101,37 +6101,37 @@ msgid "view it in passbolt"
 msgstr "패스볼트에서 보기"
 
 msgid "The SCIM setting id should be a valid UUID."
-msgstr ""
+msgstr "SCIM 설정 id는 올바른 UUID여야 합니다."
 
 msgid "The identifier of the default user should be a valid UUID."
-msgstr ""
+msgstr "기본 사용자의 식별자는 유효한 UUID여야 합니다."
 
 msgid "The user is not active, disabled or does not exist."
-msgstr ""
+msgstr "사용자가 활성화되지 않았거나 비활성화되었거나 존재하지 않습니다."
 
 msgid "The Setting ID cannot be passed on update."
-msgstr ""
+msgstr "업데이트 시 설정 ID를 전달할 수 없습니다."
 
 msgid "The secret token should not be empty."
-msgstr ""
+msgstr "비밀 토큰은 비어 있을 수 없습니다."
 
 msgid "The ID for the SCIM settings should not be empty."
-msgstr ""
+msgstr "SCIM 설정에 대한 ID는 비워둘 수 없습니다."
 
 msgid "The ID for the SCIM settings should be a valid UUID."
-msgstr ""
+msgstr "SCIM 설정에 대한 ID는 올바른 UUID여야 합니다."
 
 msgid "Simultaneous SCIM and session authentication is not permitted."
-msgstr ""
+msgstr "SCIM과 세션 인증은 동시에 허용되지 않습니다."
 
 msgid "SCIM settings endpoints are disabled."
-msgstr ""
+msgstr "SCIM 설정 엔드포인트가 비활성화되었습니다."
 
 msgid "An entry for the same related entity already exists"
-msgstr ""
+msgstr "동일한 관련 엔터티에 대한 항목이 이미 존재합니다."
 
 msgid "An entry with the same `scim_name` and ResourceType already exist."
-msgstr ""
+msgstr "동일한 `scim_name`과 리소스유형을 가진 항목이 이미 존재합니다."
 
 msgid "Users"
 msgstr "사용자"
@@ -6140,49 +6140,49 @@ msgid "Groups"
 msgstr "그룹"
 
 msgid "The secret token format is incorrect."
-msgstr ""
+msgstr "비밀 토큰 형식이 올바르지 않습니다."
 
 msgid "SCIM plugin is enabled."
-msgstr ""
+msgstr "SCIM 플러그인이 활성화되었습니다."
 
 msgid "SCIM plugin is disabled."
-msgstr ""
+msgstr "SCIM 플러그인이 비활성화되었습니다."
 
 msgid "The SCIM settings could not be decrypted with the server gpg key."
-msgstr ""
+msgstr "SCIM 설정은 서버 GPG 키로 해독할 수 없습니다."
 
 msgid "The SCIM settings could not be encrypted with the server gpg key."
-msgstr ""
+msgstr "SCIM 설정은 서버 GPG 키로 암호화할 수 없습니다."
 
 msgid "Could not validate the SCIM settings found in database."
-msgstr ""
+msgstr "데이터베이스에서 발견된 SCIM 설정을 검증할 수 없습니다."
 
 msgid "The SCIM setting identifier should be a valid UUID."
-msgstr ""
+msgstr "SCIM 설정 식별자는 유효한 UUID여야 합니다."
 
 msgid "Could not validate the SCIM settings."
-msgstr ""
+msgstr "SCIM 설정을 검증할 수 없습니다."
 
 msgid "The SCIM plugin is disabled."
-msgstr ""
+msgstr "SCIM 플러그인이 비활성화되었습니다."
 
 msgid "Please delete previous settings before creating again."
-msgstr ""
+msgstr "다시 만들기 전에 이전 설정을 삭제하세요."
 
 msgid "The uuid in the url doesn't match any known setting record."
-msgstr ""
+msgstr "url의 uuid가 알려진 설정 레코드와 일치하지 않습니다."
 
 msgid "Email"
 msgstr "이메일"
 
 msgid "External id"
-msgstr ""
+msgstr "외부 id"
 
 msgid "Invalid Schema"
-msgstr ""
+msgstr "잘못된 스키마"
 
 msgid "Invalid ResourceType"
-msgstr ""
+msgstr "잘못된 리소스유형"
 
 msgid "SsoRecover plugin is disabled."
 msgstr "SsoRecover 플러그인이 사용되지 않도록 설정되었습니다."
