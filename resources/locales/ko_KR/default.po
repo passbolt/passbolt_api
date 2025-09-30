@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-09-29 08:52+0000\n"
-"PO-Revision-Date: 2025-09-30 07:06\n"
+"PO-Revision-Date: 2025-09-30 08:08\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -5615,13 +5615,13 @@ msgid "The {0} {1} could not be deleted because of an internal error. Please try
 msgstr "{0} {1} 이(가) 내부 오류로 인해 삭제할 수 없습니다. 나중에 다시 시도하세요."
 
 msgid "The {0} {1} was not synced because the passbolt {0} is marked as to be ignored."
-msgstr "패스볼트 {0} 이(가) 무시되도록 표시되었기 때문에 {0} {1} 이(가) 동기화되지 않았습니다."
+msgstr "{0} {1} 은(는) Passbolt {0} 이(가) 무시 대상으로 표시되어 있어 동기화되지 않았습니다."
 
 msgid "The {0} {1} was not synced because the directory {0} is marked as to be ignored."
 msgstr "디렉토리 {0} 이(가) 무시되도록 표시되었기 때문에 {0} {1} 이(가) 동기화되지 않았습니다."
 
 msgid "The {0} {1} was successfully added to passbolt."
-msgstr "{0} {1} 이(가) 패스볼트에 성공적으로 추가되었습니다."
+msgstr "{0} {1} 이(가) Passbolt에 성공적으로 추가되었습니다."
 
 msgid "The {0} {1} could not be added because of data validation issues."
 msgstr "데이터 유효성 검사 문제로 인해 {0} {1} 을(를) 추가할 수 없습니다."
@@ -5633,25 +5633,25 @@ msgid "The previously suspended {0} {1} was not unsuspended."
 msgstr "이전에 일시중지된 {0} {1}이(가) 일시중지 해제되지 않았습니다."
 
 msgid "The previously deleted {0} {1} was not re-added to passbolt."
-msgstr "이전에 삭제한 {0} {1} 이(가) 패스볼트에 다시 추가되지 않았습니다."
+msgstr "이전에 삭제한 {0} {1} 이(가) Passbolt에 다시 추가되지 않았습니다."
 
 msgid "The previously suspended {0} {1} was unsuspended."
 msgstr "이전에 일시중지된 {0} {1}이(가) 일시중지 해제되었습니다."
 
 msgid "The previously deleted {0} {1} was re-added to passbolt."
-msgstr "이전에 삭제한 {0} {1} 이(가) 패스볼트에 다시 추가되었습니다."
+msgstr "이전에 삭제한 {0} {1} 이(가) Passbolt에 다시 추가되었습니다."
 
 msgid "The deleted {0} {1} could not be re-added to passbolt because of validation errors."
-msgstr "유효성 검사 오류로 인해 삭제된 {0} {1} 을(를) 패스볼트에 다시 추가할 수 없습니다."
+msgstr "유효성 검사 오류로 인해 삭제된 {0} {1} 을(를) Passbolt에 다시 추가할 수 없습니다."
 
 msgid "The deleted {0} {1} could not be re-added to passbolt because of an internal error."
-msgstr "내부 오류로 인해 삭제된 {0} {1} 을(를) 패스볼트에 다시 추가할 수 없습니다."
+msgstr "내부 오류로 인해 삭제된 {0} {1} 을(를) Passbolt에 다시 추가할 수 없습니다."
 
 msgid "The {0} {1} was mapped with an existing {0} in passbolt."
-msgstr "{0} {1} 이(가) 기존 {0} 의 패스볼트로 매핑되었습니다."
+msgstr "{0} {1} 이(가) 기존 {0} 의 Passbolt로 매핑되었습니다."
 
 msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after."
-msgstr "{0} {1} 은(는) 이후에 생성되었기 때문에 기존 {0} 의 패스볼트로 매핑할 수 없습니다."
+msgstr "{0} {1} 은(는) 이후에 생성되었기 때문에 기존 {0} 의 Passbolt로 매핑할 수 없습니다."
 
 msgid "The user {0} full name has been successfully updated to {1} {2}."
 msgstr "{0} 사용자의 전체 이름이 {1} {2}(으)로 업데이트되었습니다."
@@ -6098,7 +6098,7 @@ msgid "you"
 msgstr "당신"
 
 msgid "view it in passbolt"
-msgstr "패스볼트에서 보기"
+msgstr "Passbolt에서 보기"
 
 msgid "The SCIM setting id should be a valid UUID."
 msgstr "SCIM 설정 id는 올바른 UUID여야 합니다."
@@ -6653,16 +6653,16 @@ msgid "To fix this, you as an administrator have to update the Azure SSO credent
 msgstr "이 문제를 해결하려면 관리자로서 Azure SSO 자격 증명을 업데이트해야 합니다."
 
 msgid "Update it in passbolt"
-msgstr "패스볼트에서 업데이트"
+msgstr "Passbolt에서 업데이트"
 
 msgid "The client secret expiry date of your Azure AD instance is {0}."
 msgstr "Azure AD 인스턴스의 클라이언트 시크릿 만료 날짜는 {0} 입니다."
 
 msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
-msgstr "패스볼트 사용자는 클라이언트 만료 날짜 이후 Azure SSO를 통해 로그인할 수 없습니다."
+msgstr "Passbolt 사용자는 클라이언트 만료 날짜 이후 Azure SSO를 통해 로그인할 수 없습니다."
 
 msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
-msgstr "Azure 측에서 이 문제를 해결하고 패스볼에서 최신 세부 정보를 업데이트하는 것이 좋습니다."
+msgstr "Azure 측에서 이 문제를 해결하고 Passbolt에서 최신 세부 정보를 업데이트하는 것이 좋습니다."
 
 msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
 msgstr "SSO 공급자 {0}이(가) {1}에 의해 테스트되고 활성화되었습니다. "
@@ -6671,7 +6671,7 @@ msgid "All users can now use Single Sign-on to perform authentication."
 msgstr "이제 모든 사용자가 SSO를 사용하여 인증할 수 있습니다."
 
 msgid "Viewq  it in passbolt"
-msgstr "패스볼트에서 Viewq를 확인하세요"
+msgstr "Passbolt에서 Viewq를 확인하세요"
 
 msgid "The SSO setting has been deleted by {0}."
 msgstr "SSO 설정이 {0}에 의해 삭제되었습니다."
@@ -6728,7 +6728,7 @@ msgid "The subscription key cannot be verified."
 msgstr "구독 키를 확인할 수 없습니다."
 
 msgid "The passbolt OpenPGP public key could not be found."
-msgstr "패스볼트 OpenPGP 공개 키를 찾을 수 없습니다."
+msgstr "Passbolt OpenPGP 공개 키를 찾을 수 없습니다."
 
 msgid "A users quantity is required."
 msgstr "사용자 수가 필요합니다."
@@ -6803,7 +6803,7 @@ msgid "We are here for you. You can contact us at sales@passbolt.com"
 msgstr "저희가 도와드리겠습니다. sales@passbolt.com으로 연락해 주세요."
 
 msgid "Thanks for choosing Passbolt Pro"
-msgstr "패스볼트 프로를 선택해주셔서 감사합니다."
+msgstr "Passbolt Pro를 선택해주셔서 감사합니다."
 
 msgid "Below are your subscription key details"
 msgstr "다음은 구독 키 세부정보입니다."
@@ -7049,7 +7049,7 @@ msgid "Your account has been suspended."
 msgstr "계정이 중지되었습니다."
 
 msgid "You are not able to sign in to passbolt and receive email notifications."
-msgstr "패스볼트에 로그인 할 수 없으며 이메일 알림을 받을 수 없습니다."
+msgstr "Passbolt에 로그인 할 수 없으며 이메일 알림을 받을 수 없습니다."
 
 msgid "Other users can still share resources with you and add you to a group."
 msgstr "다른 사용자는 여전히 사용자와 리소스를 공유하고 사용자를 그룹에 추가할 수 있습니다."
@@ -7073,7 +7073,7 @@ msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch w
 msgstr "{0} ({1}) 이(가) 방금 계정 복구를 완료했습니다. 이 동작이 의심스럽다고 생각되면 언제든지 이 사용자에게 연락하세요."
 
 msgid "View user in passbolt"
-msgstr "패스볼트에서 사용자 보기"
+msgstr "Passbolt에서 사용자 보기"
 
 msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다!"
@@ -7094,7 +7094,7 @@ msgid "The user {0} has been suspended."
 msgstr "{0} 사용자가 중지됨."
 
 msgid "This user will not be able to sign in to passbolt and receive email notifications."
-msgstr "이 사용자는 패스볼트에 로그인을 할 수 없으며 이메일 알림도 받을 수 없습니다."
+msgstr "이 사용자는 Passbolt에 로그인을 할 수 없으며 이메일 알림도 받을 수 없습니다."
 
 msgid "Other users can share resources and add this user to a group."
 msgstr "다른 사용자는 리소스를 공유하고 이 사용자를 그룹에 추가할 수 있습니다"
