@@ -47,6 +47,7 @@ abstract class DirectorySyncDeprecatedIntegrationTestCase extends AppIntegration
         'app.Base/Groups',
         'app.Base/Roles',
         'app.Base/Resources',
+        'app.Base/ResourceTypes',
         'app.Alt0/GroupsUsers',
         'app.Alt0/Permissions',
         'app.Base/Favorites',
