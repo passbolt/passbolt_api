@@ -70,13 +70,40 @@ class MetadataKeyUpdateForm extends Form
         $validator
             ->requirePresence('expired')
             ->notEmptyDateTime('expired')
-            ->dateTime('expired', [Validation::DATETIME_ISO8601], __('The modified date should be a valid ISO 80601 date.')); // phpcs:ignore;
+            /**
+             * Front-end considers ISO8601 format as "YYYYYY-MM-DDTHH:mm:ss.sssZ" not the ATOM format.
+             * Hence, we need another validation to try to parse it using strtotime() so other parts of the code can reliably parse the value.
+             *
+             * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+             */
+            ->dateTime('expired', [Validation::DATETIME_ISO8601], __('The expired field value should be a valid ISO 80601 date.')) // phpcs:ignore;
+            ->add('expired', 'dateTimeStringParseable', [
+                'rule' => [$this, 'isDateTimeStringParseable'],
+                'message' => __('The expired field value should be parseable.'),
+            ]);
 
         $validator
             ->allowEmptyDateTime('deleted')
             ->add('deleted', 'isNullOnCreate', new IsNullOnCreateRule());
 
         return $validator;
+    }
+
+    /**
+     * Checks if given datetime string value is parseable via `strtotime()` function.
+     *
+     * @param string $check Value to check
+     * @param array $context A key value list of data containing the validation context.
+     * @return bool Success
+     */
+    public function isDateTimeStringParseable(string $check, array $context): bool
+    {
+        $value = strtotime($check);
+        if (is_int($value)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
