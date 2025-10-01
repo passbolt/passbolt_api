@@ -17,15 +17,15 @@
   "license": "AGPL-3.0",
   "homepage": "https://www.passbolt.com",
   "devDependencies": {
-    "grunt": "^1.5.3",
     "@babel/runtime": "^7.27.0",
     "@babel/runtime-corejs3": "^7.26.10",
+    "grunt": "^1.5.3",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "jquery": "^3.5.1",
     "lockfile-lint": "^4.14.1",
     "openpgp": "^5.11.3",
-    "passbolt-styleguide": "^5.5.1"
+    "passbolt-styleguide": "^5.6.0-alpha.0"
   },
   "scripts": {
     "lint": "npm run lint:lockfile",

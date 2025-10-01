@@ -65,6 +65,7 @@
         "ext-pdo": "*",
         "ext-curl": "*",
         "ext-ldap": "*",
+        "ext-iconv": "*",
         "composer/composer": "^2.8.1",
         "cakephp/cakephp": "^5.2.6",
         "cakephp/migrations": "^4.0.0",
@@ -84,7 +85,7 @@
         "enygma/yubikey": "^3.8",
         "duosecurity/duo_universal_php": "^1.0.2",
         "league/oauth2-client": "^2.6",
-        "directorytree/ldaprecord": "^2.20"
+        "directorytree/ldaprecord": "^3.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.12.10",
@@ -205,15 +206,7 @@
         "stan": "phpstan analyse --memory-limit=-1",
         "psalm": "psalm.phar",
         "test": "phpunit --colors=always",
-        "create-split-testsuite" : "php tests/create_paratest_suites.php tmp/tests/testsuitesplit.xml 2",
-        "testsuite-1": [
-            "@composer create-split-testsuite",
-            "@composer test -- --testsuite 1 -c tmp/tests/testsuitesplit.xml"
-        ],
-        "testsuite-2": [
-            "@composer create-split-testsuite",
-            "@composer test -- --testsuite 2 -c tmp/tests/testsuitesplit.xml"
-        ],
+        "create-split-testsuite" : "php tests/create_paratest_suites.php tmp/tests/testsuitesplit.xml",
         "i18n:externalize": [
             "./bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_UK --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes",
             "find resources/locales/en_UK -name '*.pot' -exec sh -c 'mv \"$1\" \"${1%.pot}.po\"' _ {} \\;"

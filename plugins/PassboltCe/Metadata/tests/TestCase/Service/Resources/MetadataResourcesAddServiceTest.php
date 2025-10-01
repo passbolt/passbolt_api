@@ -28,6 +28,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
+use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
@@ -37,6 +38,7 @@ use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use PDOException;
 
 /**
  * Part of the logic of this test is handled in the ResourcesAddControllerTest.
@@ -210,7 +212,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
             $this->service->add($uac, new MetadataResourceDto($payload));
         } catch (ValidationException $exception) {
             $this->assertSame(
-                'The resource type should be one of the following: v5-password-string, v5-default, v5-totp-standalone, v5-default-with-totp, v5-custom-fields.',
+                'The resource type should be one of the following: v5-password-string, v5-default, v5-totp-standalone, v5-default-with-totp, v5-custom-fields, v5-note.',
                 $exception->getErrors()['resource_type_id']['inList']
             );
         }
@@ -405,5 +407,49 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
             $errors = $exception->getErrors();
             $this->assertTrue(isset($errors['metadata_key_id']['metadata_key_exists']));
         }
+    }
+
+    public function testMetadataResourceAddService_Success_After_PDOException_On_First_Attempt()
+    {
+        $user = UserFactory::make()->user()->persist();
+        // Create two metadata keys to ensure that IsSharedMetadataKeyUniqueActiveRule is skipped
+        [$metadataKey] = MetadataKeyFactory::make(2)->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
+        $v4ResourceTypeId = ResourceTypeFactory::make()->default()->persist()->get('id');
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+        $metadataKeyId = $metadataKey->get('id');
+        $dummyResourceData = $this->getDummyResourcesPostData([
+            'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
+        ]);
+        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
+        $metadata = $this->encryptForMetadataKey($clearTextMetadata);
+        $metadataKeyType = 'shared_key';
+
+        $payload = [
+            MetadataResourceDto::METADATA_KEY_TYPE => $metadataKeyType,
+            MetadataResourceDto::METADATA => $metadata,
+            MetadataResourceDto::METADATA_KEY_ID => $metadataKeyId,
+            'resource_type_id' => $resourceTypeId,
+            'secrets' => [
+                ['data' => $this->getDummyGpgMessage()],
+            ],
+        ];
+        $uac = UserFactory::make()->persistedUAC();
+
+        $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
+        $ResourcesTable->getEventManager()->on('Model.beforeSave', function (Event $event, Resource $resource) {
+            // Check if a first attempt at saving the resource was already made
+            $didFirstAttemptAlreadyFail = $resource->get('firstAttemptFailed') === true;
+            if (!$didFirstAttemptAlreadyFail) {
+                $resource->set('firstAttemptFailed', true);
+                throw new PDOException('Unable to save the resource at first attempt.');
+            }
+        });
+
+        $resource = $this->service->add($uac, MetadataResourceDto::fromArray($payload));
+
+        $this->assertTrue($resource->get('firstAttemptFailed'));
+        $this->assertSame(1, ResourceFactory::count());
+        $this->assertSame(1, SecretFactory::count());
     }
 }

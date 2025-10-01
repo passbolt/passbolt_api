@@ -22,7 +22,7 @@ use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Passbolt\Ee\Service\Healthcheck\EeHealthcheckServiceCollector;
 
-class ScimHealthcheckService implements HealthcheckServiceInterface, HealthcheckCliInterface
+class ScimHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     use FeaturePluginAwareTrait;
 

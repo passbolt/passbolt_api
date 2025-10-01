@@ -36,7 +36,6 @@ use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
-use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
@@ -91,8 +90,6 @@ class ResourcesUpdateService
      */
     public function update(UserAccessControl $uac, string $id, MetadataResourceDto $resourceDto): Resource
     {
-        $this->assertCreationAllowedByMetadataSettings($resourceDto->isV5(), MetadataTypesSettingsDto::ENTITY_RESOURCE);
-
         $resource = $this->getResource($uac, $id);
         $meta = $this->extractDataResourceMeta($resourceDto);
         $meta = $this->presetOrAssertResourceType($meta);
