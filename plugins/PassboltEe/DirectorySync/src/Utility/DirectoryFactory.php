@@ -30,7 +30,7 @@ class DirectoryFactory
     /**
      * Get directory factory.
      *
-     * @param \Passbolt\DirectorySync\Utility\DirectoryOrgSettings $settings The directory settings
+     * @param \Passbolt\DirectorySync\Utility\DirectoryOrgSettings|null $settings The directory settings
      * @return mixed
      * @throws \Exception
      */

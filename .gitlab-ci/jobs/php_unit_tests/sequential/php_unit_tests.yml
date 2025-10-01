@@ -112,7 +112,7 @@
     - gpg --import config/gpg/unsecure_private.key
     - gpg --import config/gpg/unsecure.key
     - ./bin/cake passbolt create_jwt_keys
-    - composer create-split-testsuite
+    - composer create-split-testsuite -- 2
     - $PHPUNIT_COMMAND
   artifacts:
     reports:

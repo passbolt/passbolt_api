@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Model\Dto;
 
 use Cake\I18n\DateTime;
-use DateTimeInterface;
 
 class MetadataKeyUpdateDto
 {
@@ -60,8 +59,8 @@ class MetadataKeyUpdateDto
     public static function fromArray(array $data): self
     {
         if (is_string($data['expired'])) {
-            // ISO-8601 format
-            $data['expired'] = DateTime::createFromFormat(DateTimeInterface::ATOM, $data['expired']);
+            // Try to parse about any English textual datetime description into a Unix timestamp to convert it into a DateTime object
+            $data['expired'] = DateTime::createFromTimestamp(strtotime($data['expired']));
         }
 
         return new self($data['fingerprint'], $data['armored_key'], $data['expired']);

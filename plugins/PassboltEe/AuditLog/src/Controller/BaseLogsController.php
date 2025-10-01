@@ -72,9 +72,9 @@ abstract class BaseLogsController extends AppController
     {
         try {
             $logs = $logsFinder->find($this->User->getAccessControl(), $entityId);
-            /** @var \Cake\ORM\ResultSet $paginatedLogs */
-            $paginatedLogs = $this->paginate($logs)->items();
-            $resultParser = new ActionLogResultsParser($paginatedLogs, [lcfirst($this->getModelName()) => [$entityId]]);
+            $logs = $this->paginate($logs)->items();
+            /** @psalm-suppress InvalidArgument **/
+            $resultParser = new ActionLogResultsParser($logs, [lcfirst($this->getModelName()) => [$entityId]]);
             $logs = $resultParser->parse();
         } catch (PageOutOfBoundsException | FeaturePluginDisabledException $e) {
             $logs = [];

@@ -35,7 +35,7 @@ use Passbolt\Scim\Event\ScimContainUserScimEntryListener;
 use Passbolt\Scim\Middleware\ScimAuthMiddleware;
 use Passbolt\Scim\Middleware\ScimLogMiddleware;
 use Passbolt\Scim\Model\Entity\ScimEntry;
-use Passbolt\Scim\Service\Healthcheck\ScimHealthcheckService;
+use Passbolt\Scim\Service\Healthcheck\ScimHealthcheck;
 use Passbolt\Scim\Utility\ScimConstants;
 
 /**
@@ -77,11 +77,11 @@ class ScimPlugin extends BasePlugin
     public function services(ContainerInterface $container): void
     {
         // SSO Health checks
-        $container->add(ScimHealthcheckService::class);
+        $container->add(ScimHealthcheck::class);
         // Add SSO health check services to collector
         $container
             ->extend(HealthcheckServiceCollector::class)
-            ->addMethodCall('addService', [ScimHealthcheckService::class]);
+            ->addMethodCall('addService', [ScimHealthcheck::class]);
         $container
             ->extend(BodyParserMiddleware::class)
             ->addMethodCall('addParser', [

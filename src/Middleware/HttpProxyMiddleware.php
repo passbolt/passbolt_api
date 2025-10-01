@@ -18,6 +18,7 @@ namespace App\Middleware;
 
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
+use Cake\Validation\Validation;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -58,9 +59,15 @@ class HttpProxyMiddleware implements MiddlewareInterface
      */
     private function setupServerRequestFromConfig(ServerRequest $request): void
     {
-        if (Configure::read(self::PASSBOLT_SECURITY_PROXIES_ACTIVE_CONFIG_NAME)) {
-            $trustedProxiesArray = Configure::read(self::PASSBOLT_SECURITY_PROXIES_TRUSTED_PROXIES_CONFIG_NAME);
-            $request->setTrustedProxies($trustedProxiesArray);
+        if (!Configure::read(self::PASSBOLT_SECURITY_PROXIES_ACTIVE_CONFIG_NAME)) {
+            return;
+        }
+
+        $request->trustProxy = true;
+
+        $trustedProxies = $this->getTrustedProxies();
+        if (!empty($trustedProxies)) {
+            $request->setTrustedProxies($trustedProxies);
         }
     }
 
@@ -75,5 +82,33 @@ class HttpProxyMiddleware implements MiddlewareInterface
         }
 
         return $response;
+    }
+
+    /**
+     * @return array
+     */
+    private function getTrustedProxies(): array
+    {
+        $trustedProxiesConfig = Configure::read(self::PASSBOLT_SECURITY_PROXIES_TRUSTED_PROXIES_CONFIG_NAME);
+
+        if (empty($trustedProxiesConfig) && !is_string($trustedProxiesConfig) && !is_array($trustedProxiesConfig)) {
+            return [];
+        }
+
+        if (is_string($trustedProxiesConfig)) {
+            $proxies = explode(',', $trustedProxiesConfig);
+        } else {
+            $proxies = $trustedProxiesConfig;
+        }
+
+        $result = [];
+        foreach ($proxies as $proxy) {
+            $proxy = trim($proxy);
+            if (Validation::ip($proxy)) {
+                $result[] = $proxy;
+            }
+        }
+
+        return $result;
     }
 }

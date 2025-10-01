@@ -63,6 +63,9 @@ class ResourceChangesDigestTemplate extends AbstractDigestTemplate
             ResourceCreateEmailRedactor::TEMPLATE,
             ResourceUpdateEmailRedactor::TEMPLATE,
             ResourceDeleteEmailRedactor::TEMPLATE,
+            ResourceCreateEmailRedactor::TEMPLATE_V5,
+            ResourceUpdateEmailRedactor::TEMPLATE_V5,
+            ResourceDeleteEmailRedactor::TEMPLATE_V5,
         ];
     }
 

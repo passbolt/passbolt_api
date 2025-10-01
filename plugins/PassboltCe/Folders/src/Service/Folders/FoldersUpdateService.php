@@ -29,7 +29,6 @@ use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
-use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Utility\Folders\FolderSaveV5AwareTrait;
 use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 
@@ -72,8 +71,6 @@ class FoldersUpdateService
      */
     public function update(UserAccessControl $uac, string $id, MetadataFolderDto $folderDto): Folder
     {
-        $this->assertCreationAllowedByMetadataSettings($folderDto->isV5(), MetadataTypesSettingsDto::ENTITY_FOLDER);
-
         $folder = $this->getFolder($uac, $id);
 
         $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $folderDto): void {
