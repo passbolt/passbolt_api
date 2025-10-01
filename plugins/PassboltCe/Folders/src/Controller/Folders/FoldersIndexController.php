@@ -84,9 +84,9 @@ class FoldersIndexController extends AppController
         $foldersTable = $this->fetchTable('Passbolt/Folders.Folders');
         $folders = $foldersTable->findIndex($this->User->id(), $options);
         $folders->disableHydration();
-        $paginatedFolders = $this->paginate($folders)->items();
-        /** @var \Cake\Datasource\ResultSetInterface $paginatedFolders */
-        $folders = FolderizableBehavior::unsetPersonalPropertyIfNullOnResultSet($paginatedFolders);
+        $folders = $this->paginate($folders)->items();
+        /** @psalm-suppress InvalidArgument **/
+        $folders = FolderizableBehavior::unsetPersonalPropertyIfNullOnResultSet($folders);
         ISOFormatDateTimeType::remapDatetimeTypesToDefault();
         $folders = $this->removeJoinDataFromResults($folders->toArray(), $options);
         $folders = (new MetadataFoldersRenderService())->renderFolders($folders);

@@ -599,4 +599,34 @@ class SlugDefinition
             ],
         ]);
     }
+
+    /**
+     * @return string|false
+     */
+    public static function v5Note(): string|false
+    {
+        return json_encode([
+            'resource' => [
+                'type' => 'object',
+                'required' => ['name'],
+                'properties' => [
+                    'name' => self::$nameMetadataPropertySchemaV5,
+                    'uris' => self::$urisMetadataPropertySchemaV5,
+                    'description' => self::$descriptionMetadataPropertySchemaV5,
+                    'icon' => self::$iconMetadataPropertySchemaV5,
+                ],
+            ],
+            'secret' => [
+                'type' => 'object',
+                'required' => [
+                    'description',
+                    'object_type',
+                ],
+                'properties' => [
+                    'object_type' => self::$objectTypeSecretPropertySchemaV5,
+                    'description' => self::$descriptionSecretPropertySchemaV5,
+                ],
+            ],
+        ]);
+    }
 }

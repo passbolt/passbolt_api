@@ -20,6 +20,7 @@ namespace Passbolt\ResourceTypes\Test\TestCase\Controller;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Utility\UuidFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
@@ -37,7 +38,7 @@ class ResourceTypesUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->enableFeaturePlugin(ResourceTypesPlugin::class);
     }
 
-    public function testResourceTypesUpdateController_Success(): void
+    public function testResourceTypesUpdateController_Success_V4(): void
     {
         MetadataTypesSettingsFactory::make()->v4()->persist();
 
@@ -49,6 +50,40 @@ class ResourceTypesUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->putJson("/resource-types/$resourceTypeId.json", ['deleted' => null]);
 
         $this->assertSuccess();
+    }
+
+    public static function v5resourceTypesSlugProvider(): array
+    {
+        return [
+            [ResourceType::SLUG_V5_PASSWORD_STRING],
+            [ResourceType::SLUG_V5_DEFAULT],
+            [ResourceType::SLUG_V5_CUSTOM_FIELD_STANDALONE],
+            [ResourceType::SLUG_V5_NOTE],
+        ];
+    }
+
+    /**
+     * @dataProvider v5resourceTypesSlugProvider
+     * @param string $slug Resource type slug.
+     * @return void
+     * @throws \Exception
+     */
+    public function testResourceTypesUpdateController_Success_V5(string $slug): void
+    {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+
+        /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $resourceType */
+        $resourceType = ResourceTypeFactory::make([
+            'id' => UuidFactory::uuid('resource-types.id.' . $slug),
+            'slug' => $slug,
+        ])->deleted()->persist();
+        $resourceTypeId = $resourceType->id;
+
+        $this->logInAsAdmin();
+        $this->putJson("/resource-types/{$resourceTypeId}.json", ['deleted' => null]);
+
+        $this->assertSuccess();
+        $this->assertNull(ResourceTypeFactory::get($resourceTypeId)->get('deleted'));
     }
 
     public function testResourceTypesUpdateController_ErrorNotDeleted(): void

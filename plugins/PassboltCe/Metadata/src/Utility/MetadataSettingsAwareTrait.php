@@ -96,15 +96,15 @@ trait MetadataSettingsAwareTrait
         } else {
             if ($entity === MetadataTypesSettingsDto::ENTITY_RESOURCE) {
                 if (!$settingsDto->isV4ResourceCreationAllowed()) {
-                    throw new BadRequestException(__('Resource creation/modification with cleartext metadata not allowed.')); // phpcs:ignore
+                    throw new BadRequestException(__('Resource creation with cleartext metadata not allowed.'));
                 }
             } elseif ($entity === MetadataTypesSettingsDto::ENTITY_FOLDER) {
                 if (!$settingsDto->isV4FolderCreationAllowed()) {
-                    throw new BadRequestException(__('Folder creation/modification with cleartext metadata not allowed.')); // phpcs:ignore
+                    throw new BadRequestException(__('Folder creation with cleartext metadata not allowed.'));
                 }
             } elseif ($entity === MetadataTypesSettingsDto::ENTITY_TAG) {
                 if (!$settingsDto->isV4TagCreationAllowed()) {
-                    throw new BadRequestException(__('Tag creation/modification with cleartext metadata not allowed.')); // phpcs:ignore
+                    throw new BadRequestException(__('Tag creation with cleartext metadata not allowed.'));
                 }
             }
         }

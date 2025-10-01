@@ -25,6 +25,7 @@ use App\Service\Profiles\ProfilesHealthcheckService;
 use App\Service\Resources\ResourcesHealthcheckService;
 use App\Service\Secrets\SecretsHealthcheckService;
 use App\Service\Users\UsersHealthcheckService;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\Healthchecks\Healthcheck;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
@@ -32,9 +33,13 @@ use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Exception\CakeException;
 use Cake\Utility\Hash;
 use Exception;
+use Passbolt\Metadata\MetadataPlugin;
+use Passbolt\Metadata\Service\Datacheck\MetadataKeyHealthcheckService;
 
 class DatacheckCommand extends PassboltCommand
 {
+    use FeaturePluginAwareTrait;
+
     /**
      * @var \Cake\Console\Arguments
      */
@@ -95,6 +100,9 @@ class DatacheckCommand extends PassboltCommand
         $services[] = new ResourcesHealthcheckService();
         $services[] = new SecretsHealthcheckService();
         $services[] = new UsersHealthcheckService();
+        if ($this->isFeaturePluginEnabled(MetadataPlugin::class)) {
+            $services[] = new MetadataKeyHealthcheckService();
+        }
 
         foreach ($services as $service) {
             try {

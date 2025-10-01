@@ -40,7 +40,7 @@ echo $this->element('Email/module/avatar',[
 if ($user['id'] === $recipient['id']) {
     $text = __('You have edited a resource.') . '<br/>';
 } else {
-    $text = __('{0} have edited a resource.', Purifier::clean($user['profile']['first_name'])) . '<br/>';
+    $text = __('{0} has edited a resource.', Purifier::clean($user['profile']['first_name'])) . '<br/>';
 }
 
 echo $this->element('Email/module/text', [
