@@ -48,7 +48,7 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
 
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
-        $this->assertCount(4, $this->_responseJsonBody);
+        $this->assertCount(5, $this->_responseJsonBody);
     }
 
     public function testResourceTypesIndex_Success_WithoutTotpResourceTypes()
@@ -64,7 +64,7 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
         $this->assertResourceTypeAttributes($this->_responseJsonBody[0]);
-        $this->assertCount(2, $this->_responseJsonBody);
+        $this->assertCount(3, $this->_responseJsonBody);
     }
 
     public function testResourceTypesIndex_ResourceTypesPlugin_Disabled()

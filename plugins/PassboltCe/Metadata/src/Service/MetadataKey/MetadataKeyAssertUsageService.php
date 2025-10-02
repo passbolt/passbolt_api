@@ -18,6 +18,7 @@ namespace Passbolt\Metadata\Service\MetadataKey;
 
 use Cake\Core\Configure;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\ORM\Query;
 use Cake\Validation\Validation;
 use InvalidArgumentException;
 
@@ -39,18 +40,17 @@ class MetadataKeyAssertUsageService
     }
 
     /**
-     * @param string $tableName name
+     * @param \Cake\ORM\Query $query query on the table to perform the assertion of usage on
      * @param string $metadataKeyId key uuid
      * @param bool $assertKeyId assert key id default true
      * @return bool if some tags are using the metadata key
      * @throws \InvalidArgumentException if $metadataKeyId is not a valid uuid and assertKeyId true
      */
-    private function isUsedByTable(string $tableName, string $metadataKeyId, bool $assertKeyId = true): bool
+    private function isUsedByTable(Query $query, string $metadataKeyId, bool $assertKeyId = true): bool
     {
         $this->assertKeyId($metadataKeyId, $assertKeyId);
 
-        return $this->fetchTable($tableName)
-                ->find()
+        return $query
                 ->where(['metadata_key_id' => $metadataKeyId])
                 ->all()
                 ->count() > 0;
@@ -78,7 +78,9 @@ class MetadataKeyAssertUsageService
      */
     public function isUsedByResources(string $metadataKeyId, bool $assertKeyId = true): bool
     {
-        return $this->isUsedByTable('Resources', $metadataKeyId, $assertKeyId);
+        $resources = $this->getTableLocator()->get('Resources')->find()->where(['Resources.deleted' => false]);
+
+        return $this->isUsedByTable($resources, $metadataKeyId, $assertKeyId);
     }
 
     /**
@@ -90,7 +92,9 @@ class MetadataKeyAssertUsageService
     public function isUsedByFolders(string $metadataKeyId, bool $assertKeyId = true): bool
     {
         if (Configure::read('passbolt.plugins.folders.enabled')) {
-            return $this->isUsedByTable('Passbolt/Folders.Folders', $metadataKeyId, $assertKeyId);
+            $folders = $this->getTableLocator()->get('Passbolt/Folders.Folders')->find();
+
+            return $this->isUsedByTable($folders, $metadataKeyId, $assertKeyId);
         }
 
         return false;
@@ -105,7 +109,9 @@ class MetadataKeyAssertUsageService
     public function isUsedByTags(string $metadataKeyId, bool $assertKeyId = true): bool
     {
         if (Configure::read('passbolt.plugins.tags')) {
-            return $this->isUsedByTable('Passbolt/Tags.Tags', $metadataKeyId, $assertKeyId);
+            $tags = $this->getTableLocator()->get('Passbolt/Tags.Tags')->find();
+
+            return $this->isUsedByTable($tags, $metadataKeyId, $assertKeyId);
         }
 
         return false;

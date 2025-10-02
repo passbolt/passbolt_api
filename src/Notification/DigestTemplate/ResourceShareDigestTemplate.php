@@ -50,6 +50,7 @@ class ResourceShareDigestTemplate extends AbstractDigestTemplate
     {
         return [
             ShareEmailRedactor::TEMPLATE,
+            ShareEmailRedactor::TEMPLATE_V5,
         ];
     }
 

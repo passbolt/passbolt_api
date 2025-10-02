@@ -29,12 +29,33 @@ use Cake\Http\Exception\NotFoundException;
 use Passbolt\Metadata\Service\MetadataKey\MetadataKeyDeleteService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * @covers \Passbolt\Metadata\Service\MetadataKey\MetadataKeyDeleteService
  */
 class MetadataKeyDeleteServiceTest extends AppTestCaseV5
 {
+    private MetadataKeyDeleteService $service;
+
+    /**
+     * @inheritDoc
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->service = new MetadataKeyDeleteService();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function tearDown(): void
+    {
+        unset($this->service);
+        parent::tearDown();
+    }
+
     public function testMetadataKeyDeleteService_Success(): void
     {
         EventManager::instance()->setEventList(new EventList());
@@ -51,8 +72,7 @@ class MetadataKeyDeleteServiceTest extends AppTestCaseV5
         $id = $key->get('id');
         $uac = $this->makeUac($user);
 
-        $sut = new MetadataKeyDeleteService();
-        $sut->delete($uac, $id);
+        $this->service->delete($uac, $id);
 
         $this->assertEquals(2, MetadataKeyFactory::count());
         $this->assertEquals(1, MetadataPrivateKeyFactory::count());
@@ -70,33 +90,30 @@ class MetadataKeyDeleteServiceTest extends AppTestCaseV5
         $id = $key->get('id');
         $user = UserFactory::make()->user()->persist();
         $uac = $this->makeUac($user);
-        $sut = new MetadataKeyDeleteService();
 
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage('Access restricted to administrators.');
-        $sut->delete($uac, $id);
+        $this->service->delete($uac, $id);
     }
 
     public function testMetadataKeyDeleteService_Error_IdNotUUID(): void
     {
         $user = UserFactory::make()->admin()->persist();
         $uac = $this->makeUac($user);
-        $sut = new MetadataKeyDeleteService();
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('The metadata key ID should be a valid UUID.');
-        $sut->delete($uac, '🔥');
+        $this->service->delete($uac, '🔥');
     }
 
     public function testMetadataKeyDeleteService_Error_RecordNotFound(): void
     {
         $user = UserFactory::make()->admin()->persist();
         $uac = $this->makeUac($user);
-        $sut = new MetadataKeyDeleteService();
 
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('The metadata key does not exist or has been deleted.');
-        $sut->delete($uac, UuidFactory::uuid());
+        $this->service->delete($uac, UuidFactory::uuid());
     }
 
     public function testMetadataKeyDeleteService_Error_KeyIsAlreadyDeleted(): void
@@ -105,11 +122,10 @@ class MetadataKeyDeleteServiceTest extends AppTestCaseV5
         $id = $key->get('id');
         $user = UserFactory::make()->admin()->persist();
         $uac = $this->makeUac($user);
-        $sut = new MetadataKeyDeleteService();
 
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage('deleted');
-        $sut->delete($uac, $id);
+        $this->expectExceptionMessage('The metadata key has already been deleted.');
+        $this->service->delete($uac, $id);
     }
 
     public function testMetadataKeyDeleteService_Error_KeyIsNotExpired(): void
@@ -118,11 +134,10 @@ class MetadataKeyDeleteServiceTest extends AppTestCaseV5
         $id = $key->get('id');
         $user = UserFactory::make()->admin()->persist();
         $uac = $this->makeUac($user);
-        $sut = new MetadataKeyDeleteService();
 
         $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('expired first');
-        $sut->delete($uac, $id);
+        $this->expectExceptionMessage('The metadata key should be marked as expired first.');
+        $this->service->delete($uac, $id);
     }
 
     public function testMetadataKeyDeleteService_Error_KeyIsInUseByResources(): void
@@ -135,10 +150,64 @@ class MetadataKeyDeleteServiceTest extends AppTestCaseV5
             ->persist();
         $metadataKeyId = $resource->metadata_key_id;
         $uac = $this->makeUac($user);
-        $sut = new MetadataKeyDeleteService();
 
         $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('migrate the remaining items');
-        $sut->delete($uac, $metadataKeyId);
+        $this->expectExceptionMessage('The metadata key is still in use, migrate the remaining items to the new key first.');
+        $this->service->delete($uac, $metadataKeyId);
+    }
+
+    /**
+     * Given that a metadata key is associated with a resource of a deleted resource type
+     * When I delete the metadata key
+     * Then a bad request exception should be thrown
+     * With the message "The metadata key is still in use, migrate the remaining items to the new key first."
+     *
+     * @return void
+     */
+    public function testMetadataKeyDeleteService_KeyIsUsedByResourceOfADeletedResourceType(): void
+    {
+        $uac = UserFactory::make()->admin()->persistedUAC();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->v5Fields(true)
+            ->with('MetadataKeys', MetadataKeyFactory::make()->withServerPrivateKey()->expired())
+            ->with('ResourceTypes', ResourceTypeFactory::make()->deleted())
+            ->persist();
+
+        $metadataKeyId = $resource->metadata_key_id;
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The metadata key is still in use, migrate the remaining items to the new key first.');
+        $this->service->delete($uac, $metadataKeyId);
+    }
+
+    /**
+     * Given that a metadata key is associated with a deleted resource
+     * When I delete the metadata key
+     * Then the metadata key should be marked as deleted
+     * With the message "The metadata key is still in use, migrate the remaining items to the new key first."
+     *
+     * @return void
+     */
+    public function testMetadataKeyDeleteService_KeyIsUsedByASoftDeletedResource(): void
+    {
+        $uac = UserFactory::make()->admin()->persistedUAC();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->v5Fields(true)
+            ->with('MetadataKeys', MetadataKeyFactory::make()->withServerPrivateKey()->expired())
+            ->deleted()
+            ->persist();
+
+        $metadataKeyId = $resource->metadata_key_id;
+
+        $this->service->delete($uac, $metadataKeyId);
+
+        $this->assertEquals(1, MetadataKeyFactory::count());
+        $this->assertEquals(0, MetadataPrivateKeyFactory::count());
+
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $updatedKey */
+        $updatedKey = MetadataKeyFactory::get($metadataKeyId);
+        $this->assertTrue($updatedKey->isDeleted());
     }
 }

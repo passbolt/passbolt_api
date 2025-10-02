@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-09-29 09:18+0000\n"
-"PO-Revision-Date: 2025-09-29 10:50\n"
+"POT-Creation-Date: 2025-10-01 06:12+0000\n"
+"PO-Revision-Date: 2025-10-01 07:29\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian\n"
 "MIME-Version: 1.0\n"
@@ -2791,8 +2791,11 @@ msgstr "Datele nu trebuie să fie goale."
 msgid "The data should be a valid ASCII string."
 msgstr "Datele ar trebui să fie un șir ASCII valid."
 
-msgid "The modified date should be a valid ISO 80601 date."
-msgstr "Data modificării ar trebui să fie o dată ISO 80601 validă."
+msgid "The expired field value should be a valid ISO 80601 date."
+msgstr ""
+
+msgid "The expired field value should be parseable."
+msgstr ""
 
 msgid "The setting should be a valid boolean."
 msgstr "Setarea trebuie să fie un boolean valid."
@@ -2820,6 +2823,9 @@ msgstr ""
 
 msgid "The data is required."
 msgstr "Datele sunt necesare."
+
+msgid "The modified date should be a valid ISO 80601 date."
+msgstr "Data modificării ar trebui să fie o dată ISO 80601 validă."
 
 msgid "A modified date is required."
 msgstr "Este necesară o dată de modificare."
@@ -3006,6 +3012,12 @@ msgstr "{0} a editat setările de metadata"
 
 msgid "You edited the metadata settings"
 msgstr "Ați editat setările de metadata"
+
+msgid "No metadata private keys found for metadata key {0}."
+msgstr ""
+
+msgid "Metadata keys present for metadata key {0}"
+msgstr ""
 
 msgid "No active metadata key found."
 msgstr ""
@@ -3298,14 +3310,14 @@ msgstr "Crearea/modificarea folderului cu metadata criptată nu este permisă."
 msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr "Crearea/modificarea etichetelor cu metadata criptată nu este permisă."
 
-msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr "Crearea/modificarea resursei cu metadata în text clar nu este permisă."
+msgid "Resource creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr "Crearea/modificarea folderului cu metadata în text clar nu este permisă."
+msgid "Folder creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr "Crearea/modificarea etichetelor cu metadata în text clar nu este permisă."
+msgid "Tag creation with cleartext metadata not allowed."
+msgstr ""
 
 msgid "You created a new metadata key."
 msgstr "Ați creat o nouă cheie de metadata."
@@ -3358,7 +3370,7 @@ msgstr "{0} a partajat o resursă cu dvs."
 msgid "You have edited a resource."
 msgstr "Ați editat o resursă."
 
-msgid "{0} have edited a resource."
+msgid "{0} has edited a resource."
 msgstr ""
 
 msgid "Information about the transfer is required."

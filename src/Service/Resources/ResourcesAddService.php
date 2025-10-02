@@ -92,12 +92,11 @@ class ResourcesAddService
 
         $this->attachListenerToAfterSaveEvent($uac, $resourceDto);
         $attempts = 1;
+        $resource = $this->buildEntity($uac->getId(), $resourceDto);
+        $this->handleValidationError($resource);
         do {
-            $resource = $this->buildEntity($uac->getId(), $resourceDto);
-            $this->handleValidationError($resource);
             try {
                 $this->Resources->save($resource);
-                $this->handleValidationError($resource);
                 break;
             } catch (PDOException $e) {
                 Log::error(get_class($e) . ' --- attempt #' . $attempts . ' --- ' . $e->getMessage());
@@ -105,6 +104,7 @@ class ResourcesAddService
             }
             usleep(self::SLEEP_DURATION_WHEN_LOCKED);
         } while ($attempts <= self::ATTEMPTS_ALLOWED);
+        $this->handleValidationError($resource);
 
         $this->handleAttemptsExceededError($attempts);
 

@@ -51,7 +51,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         EventManager::instance()->setEventList(new EventList());
     }
 
-    public function v5ResourceTypesSlugProvider()
+    public static function v5ResourceTypesSlugProvider(): array
     {
         $resourceTypeSlugs = [];
         foreach (ResourceType::V5_RESOURCE_TYPE_SLUGS as $v5ResourceTypeSlug) {
@@ -357,7 +357,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         ];
         $this->postJson('/resources.json', $data);
 
-        $this->assertBadRequestError('Resource creation\/modification with cleartext metadata not allowed');
+        $this->assertBadRequestError('Resource creation with cleartext metadata not allowed');
     }
 
     public function testResourcesAddController_Error_MetadataKeySettings_PersonalKeysDisabled(): void
