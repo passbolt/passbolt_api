@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-09-29 09:18+0000\n"
-"PO-Revision-Date: 2025-09-29 10:50\n"
+"POT-Creation-Date: 2025-10-01 06:12+0000\n"
+"PO-Revision-Date: 2025-10-01 07:30\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -2791,8 +2791,11 @@ msgstr "Os dados não devem estar vazios."
 msgid "The data should be a valid ASCII string."
 msgstr "Os dados devem ser uma string ASCII válida."
 
-msgid "The modified date should be a valid ISO 80601 date."
-msgstr "A data de modificação deve ser uma data ISO 80601 válida."
+msgid "The expired field value should be a valid ISO 80601 date."
+msgstr ""
+
+msgid "The expired field value should be parseable."
+msgstr ""
 
 msgid "The setting should be a valid boolean."
 msgstr "A configuração deve ser um booleano válido."
@@ -2820,6 +2823,9 @@ msgstr ""
 
 msgid "The data is required."
 msgstr "Os dados são obrigatórios."
+
+msgid "The modified date should be a valid ISO 80601 date."
+msgstr "A data de modificação deve ser uma data ISO 80601 válida."
 
 msgid "A modified date is required."
 msgstr "Uma data de modificação é necessária."
@@ -3006,6 +3012,12 @@ msgstr "{0} editou as configurações de metadados"
 
 msgid "You edited the metadata settings"
 msgstr "Você editou as configurações de metadados"
+
+msgid "No metadata private keys found for metadata key {0}."
+msgstr ""
+
+msgid "Metadata keys present for metadata key {0}"
+msgstr ""
 
 msgid "No active metadata key found."
 msgstr "Nenhuma chave de metadados ativa encontrada."
@@ -3298,14 +3310,14 @@ msgstr "A criação/modificação de pasta com metadados criptografados não é 
 msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr "A criação/modificação de tag com metadados criptografados não é permitida."
 
-msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr "A criação/modificação de recurso com metadados em texto claro não é permitida."
+msgid "Resource creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr "A criação/modificação de pasta com metadados em texto claro não é permitida."
+msgid "Folder creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr "A criação/modificação de tag com metadados em texto claro não é permitida."
+msgid "Tag creation with cleartext metadata not allowed."
+msgstr ""
 
 msgid "You created a new metadata key."
 msgstr "Você criou uma nova chave de metadados."
@@ -3358,8 +3370,8 @@ msgstr "{0} compartilhou um recurso com você."
 msgid "You have edited a resource."
 msgstr "Você editou um recurso."
 
-msgid "{0} have edited a resource."
-msgstr "{0} editou um recurso."
+msgid "{0} has edited a resource."
+msgstr ""
 
 msgid "Information about the transfer is required."
 msgstr "Informações sobre a transferência são necessárias."
