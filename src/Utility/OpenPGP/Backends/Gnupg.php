@@ -62,7 +62,10 @@ class Gnupg extends OpenPGPBackend
             putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
         }
 
-        $this->_gpg = new PhpGnupg();
+        $this->_gpg = new PhpGnupg(array_filter([
+            'file_name' => Configure::read('passbolt.gpg.program'),
+            'home_dir' => Configure::read('passbolt.gpg.keyring'),
+        ], static fn ($v) => !empty($v)));
         $this->_gpg->seterrormode(GNUPG_ERROR_EXCEPTION);
     }
 
