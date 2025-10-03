@@ -102,6 +102,11 @@ class AzureException extends OAuth2Exception
              * to Azure AD.
              */
             'invalid_resource',
+
+            /**
+             * The tenant name wasn't found in the data store. Check to make sure you have the correct tenant ID.
+             */
+            'invalid_tenant',
         ];
     }
 }
