@@ -1,29 +1,16 @@
-Release song: https://youtu.be/RyP8hGuyknA
+Release song: https://www.youtube.com/watch?v=bu50DtPF1Ac
 
-Passbolt 5.6.0 is a feature release that brings standalone notes, shared metadata key rotation and resizable sidebars. This release comes as usual with security reinforcement by updating 3rd party libraries and other bug fixes.
+Passbolt 5.6.0-rc.1 is a feature release candidate introducing standalone notes, shared metadata key rotation and resizable sidebars. This release comes as usual with security reinforcement by updating 3rd party libraries and other bug fixes.
 
-## Standalone notes
-
-This new resource type allows the user to create notes without any other attached elements (i.e. password). Import and export are updated to take into account this new resource type.
-Thus, imported resources with only a description will be set as standalone notes.
-
-## Shared metadata key rotation
-
-Now the shared metadata key can be rotated. This marks one of the final steps in the metadata encryption requirements. Administrators can, at any time, rotate this key through the organisation settings while maintaining the Passbolt instance in a working state.
-
-## Resizable sidebars
-
-On the resource workspace and the user workspace, the 2 sidebars are now resisable. This brings more customisation for users and helps readability (i.e for long folder names or folders in deep folder tree).
-After resizing a sidebar, a simple double click on the handle brings the sidebar to its default width.
-
-## Miscellaneous
-
-Different bug fixes and maintenance update are into the party:
+In addition, it also includes bug fixes and maintenance updates:
 - export of account kit is compatible with bigger private keys
 - group membership update process is updated to reduce request size and avoid some size limitations
 - folders name sort includes now natural number counting
 
-## [5.6.0-test.1] - 2025-10-01
+Make sure to follow the steps here. As always, your feedback is invaluable, give it a try and report any issues you come across.
+Enjoy the testing journey! ❤️
+
+## [5.6.0-rc.1] - 2025-10-03
 ### Added
 - PB-45058 Add datacheck to check for existing metadata key with no metadata private keys
 - PB-44187 As an admin I cannot delete a metadata key associated with a deleted resource
