@@ -99,7 +99,7 @@ class SetupRecoverAbortAdminEmailRedactor implements SubscribedEmailRedactorInte
         $subject = (new LocaleService())->translateString(
             $locale,
             function () use ($user) {
-                return __('{0} can not complete the account recovery process!', $user->profile->first_name);
+                return __('{0} cannot complete the account recovery process!', $user->profile->first_name);
             }
         );
 
