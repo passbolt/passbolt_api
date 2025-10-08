@@ -56,7 +56,7 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireTest extends AppTes
         parent::tearDown();
     }
 
-    public function emailSettingProvider(): array
+    public static function emailSettingProvider(): array
     {
         return [
             [true, true, 4],

@@ -67,7 +67,7 @@ class SsoSettingsSetServiceTest extends SsoTestCase
      * @see testSsoSettingsSetService_Success
      * @return array[]
      */
-    public function ssoSettingsValidDataProvider()
+    public static function ssoSettingsValidDataProvider()
     {
         $expiry = Chronos::now()->addDays(365);
 

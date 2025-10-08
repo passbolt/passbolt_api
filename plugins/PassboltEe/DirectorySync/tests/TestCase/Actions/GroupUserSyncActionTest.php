@@ -586,7 +586,7 @@ class GroupUserSyncActionTest extends DirectorySyncDeprecatedIntegrationTestCase
         $this->assertEmailQueueCount(0);
     }
 
-    public function requestMembersAddToManagerProvider(): array
+    public static function requestMembersAddToManagerProvider(): array
     {
         return [
             [

@@ -109,7 +109,7 @@ class BaseIdTokenTest extends AppTestCase
         $this->assertTrue(true);
     }
 
-    public function invalidJwksDefaultAlgValuesProvider(): array
+    public static function invalidJwksDefaultAlgValuesProvider(): array
     {
         return [
             [
