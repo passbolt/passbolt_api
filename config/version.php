@@ -1,7 +1,7 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '5.6.0-rc.1',
+        'version' => '5.6.0',
         'name' => 'Big Jet Plane',
     ],
     'php' => [
