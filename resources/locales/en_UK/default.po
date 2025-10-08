@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2025-09-29 09:18+0000\n"
+"POT-Creation-Date: 2025-10-01 06:12+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -2789,7 +2789,10 @@ msgstr ""
 msgid "The data should be a valid ASCII string."
 msgstr ""
 
-msgid "The modified date should be a valid ISO 80601 date."
+msgid "The expired field value should be a valid ISO 80601 date."
+msgstr ""
+
+msgid "The expired field value should be parseable."
 msgstr ""
 
 msgid "The setting should be a valid boolean."
@@ -2817,6 +2820,9 @@ msgid "The user identifier should be null."
 msgstr ""
 
 msgid "The data is required."
+msgstr ""
+
+msgid "The modified date should be a valid ISO 80601 date."
 msgstr ""
 
 msgid "A modified date is required."
@@ -3003,6 +3009,12 @@ msgid "{0} edited the metadata settings"
 msgstr ""
 
 msgid "You edited the metadata settings"
+msgstr ""
+
+msgid "No metadata private keys found for metadata key {0}."
+msgstr ""
+
+msgid "Metadata keys present for metadata key {0}"
 msgstr ""
 
 msgid "No active metadata key found."
@@ -3296,13 +3308,13 @@ msgstr ""
 msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr ""
 
-msgid "Resource creation/modification with cleartext metadata not allowed."
+msgid "Resource creation with cleartext metadata not allowed."
 msgstr ""
 
-msgid "Folder creation/modification with cleartext metadata not allowed."
+msgid "Folder creation with cleartext metadata not allowed."
 msgstr ""
 
-msgid "Tag creation/modification with cleartext metadata not allowed."
+msgid "Tag creation with cleartext metadata not allowed."
 msgstr ""
 
 msgid "You created a new metadata key."
@@ -3356,7 +3368,7 @@ msgstr ""
 msgid "You have edited a resource."
 msgstr ""
 
-msgid "{0} have edited a resource."
+msgid "{0} has edited a resource."
 msgstr ""
 
 msgid "Information about the transfer is required."

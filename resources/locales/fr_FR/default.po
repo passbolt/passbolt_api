@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-08-08 13:25\n"
+"POT-Creation-Date: 2025-10-01 06:12+0000\n"
+"PO-Revision-Date: 2025-10-01 07:29\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -2041,6 +2041,12 @@ msgstr "Échec de validation de la ressource {0}. {1}"
 msgid "Validation success for resource {0}"
 msgstr "Validation de la ressource {0} réussie"
 
+msgid "Metadata key exist and present for resource {0}."
+msgstr ""
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr ""
+
 msgid "The resource types associated to this resource does not exist."
 msgstr ""
 
@@ -2785,8 +2791,11 @@ msgstr "Les données ne doivent pas être vides."
 msgid "The data should be a valid ASCII string."
 msgstr "Les données doivent être une chaîne ASCII valide."
 
-msgid "The modified date should be a valid ISO 80601 date."
-msgstr "La date de modification doit être une date ISO 80601 valide."
+msgid "The expired field value should be a valid ISO 80601 date."
+msgstr ""
+
+msgid "The expired field value should be parseable."
+msgstr ""
 
 msgid "The setting should be a valid boolean."
 msgstr "Le paramètre doit être un booléen valide."
@@ -2794,8 +2803,29 @@ msgstr "Le paramètre doit être un booléen valide."
 msgid "The setting is required."
 msgstr "Un paramètre est requis."
 
+msgid "The metadata private keys is required."
+msgstr ""
+
+msgid "The metadata private keys should not be empty."
+msgstr ""
+
+msgid "Need at most one metadata private key."
+msgstr ""
+
+msgid "A metadata key identifier is required."
+msgstr "Un identifiant de clé de métadonnées est requis."
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "L'identifiant de la clé de métadonnées doit être un UUID valide."
+
+msgid "The user identifier should be null."
+msgstr ""
+
 msgid "The data is required."
 msgstr "Les données sont requises."
+
+msgid "The modified date should be a valid ISO 80601 date."
+msgstr "La date de modification doit être une date ISO 80601 valide."
 
 msgid "A modified date is required."
 msgstr "Une date de modification est requise."
@@ -2824,14 +2854,8 @@ msgstr "Le type de clé de métadonnées doit être une clé partagée."
 msgid "The metadata key should not be deleted."
 msgstr "La clé de métadonnées ne doit pas être supprimée."
 
-msgid "A metadata key identifier is required."
-msgstr "Un identifiant de clé de métadonnées est requis."
-
 msgid "The metadata key identifier should not be empty."
 msgstr "L'identifiant de la clé de métadonnées ne doit pas être vide."
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr "L'identifiant de la clé de métadonnées doit être un UUID valide."
 
 msgid "A metadata key type is required."
 msgstr "Un type de clé de métadonnées est requis."
@@ -2989,6 +3013,12 @@ msgstr "{0} a modifié les paramètres de métadonnées"
 msgid "You edited the metadata settings"
 msgstr "Vous avez modifié les paramètres de métadonnées"
 
+msgid "No metadata private keys found for metadata key {0}."
+msgstr ""
+
+msgid "Metadata keys present for metadata key {0}"
+msgstr ""
+
 msgid "No active metadata key found."
 msgstr ""
 
@@ -3097,14 +3127,11 @@ msgstr "La clé utilisateur OpenPGP est introuvable."
 msgid "Could not validate the settings."
 msgstr "Impossible de valider les paramètres."
 
+msgid "The server metadata private keys data are invalid."
+msgstr ""
+
 msgid "The server metadata private key is required to enable these settings."
 msgstr "La clé privée de métadonnées serveur est requise pour activer ces paramètres."
-
-msgid "The server metadata key id is required."
-msgstr "L'identifiant de la clé de métadonnées serveur est requis."
-
-msgid "The server metadata private key is invalid."
-msgstr "La clé privée de métadonnées serveur n'est pas valide."
 
 msgid "The metadata private key could not be created."
 msgstr "La clé privée de métadonnées n'a pas pu être créée."
@@ -3283,14 +3310,14 @@ msgstr "La création/modification de dossier avec des métadonnées chiffrées n
 msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr "La création/modification de tag avec des métadonnées chiffrées n'est pas autorisée."
 
-msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr "La création/modification de ressource avec des métadonnées en clair n'est pas autorisée."
+msgid "Resource creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr "La création/modification de dossier avec des métadonnées en clair n'est pas autorisée."
+msgid "Folder creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr "La création/modification de tag avec des métadonnées en clair n'est pas autorisée."
+msgid "Tag creation with cleartext metadata not allowed."
+msgstr ""
 
 msgid "You created a new metadata key."
 msgstr "Vous avez créé une nouvelle clé de métadonnées."
@@ -3343,7 +3370,7 @@ msgstr "{0} a partagé une ressource avec vous."
 msgid "You have edited a resource."
 msgstr "Vous avez modifié une ressource."
 
-msgid "{0} have edited a resource."
+msgid "{0} has edited a resource."
 msgstr ""
 
 msgid "Information about the transfer is required."
@@ -5113,6 +5140,27 @@ msgstr "Bienvenue {0} !"
 msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr "{0} a utilisé la fonction d'auto-inscription pour créer un compte sur passbolt."
 
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} vient d'activer son compte sur passbolt!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "L'utilisateur est maintenant actif sur passbolt et vous pouvez partager des mots de passe avec lui."
+
+msgid "This user was invited by you {0}."
+msgstr "Cet utilisateur a été invité par vous {0}."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "Cet utilisateur s'est inscrit lui-même, puisque l'inscription publique est activée."
+
+msgid "This user was invited by {0} {1}."
+msgstr "Cet utilisateur a été invité par {0} {1}."
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr "Cet utilisateur n'a pas la clé de chiffrement pour les métadonnées de la ressource partagée. Veuillez vous connecter, accéder à l'espace de travail utilisateur et partager la clé manuellement."
+
+msgid "View users"
+msgstr ""
+
 msgid "You have initiated an account recovery!"
 msgstr "Vous avez initié une récupération de compte !"
 
@@ -5259,27 +5307,6 @@ msgstr "{0} a partagé des mots de passe avec vous"
 
 msgid "{0} resources were shared with you."
 msgstr "{0} ressources ont été partagées avec vous."
-
-msgid "{0} just activated their account on passbolt!"
-msgstr "{0} vient d'activer son compte sur passbolt!"
-
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "L'utilisateur est maintenant actif sur passbolt et vous pouvez partager des mots de passe avec lui."
-
-msgid "This user was invited by you {0}."
-msgstr "Cet utilisateur a été invité par vous {0}."
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr "Cet utilisateur s'est inscrit lui-même, puisque l'inscription publique est activée."
-
-msgid "This user was invited by {0} {1}."
-msgstr "Cet utilisateur a été invité par {0} {1}."
-
-msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr "Cet utilisateur n'a pas la clé de chiffrement pour les métadonnées de la ressource partagée. Veuillez vous connecter, accéder à l'espace de travail utilisateur et partager la clé manuellement."
-
-msgid "View users"
-msgstr ""
 
 msgid "This email is an automatic notification sent by"
 msgstr "Cet e-mail est une notification automatique envoyée par"

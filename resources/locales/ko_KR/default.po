@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-08-08 13:25\n"
+"POT-Creation-Date: 2025-10-01 06:12+0000\n"
+"PO-Revision-Date: 2025-10-01 08:34\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -194,7 +194,7 @@ msgid "The user should not be logged in."
 msgstr "사용자는 로그인하면 안 됩니다."
 
 msgid "This feature is not supported by your version of passbolt."
-msgstr "사용중인 패스볼트 버전에서는 이 기능을 지원하지 않습니다."
+msgstr "사용중인 Passbolt 버전에서는 이 기능을 지원하지 않습니다."
 
 msgid "The resource identifier should be a valid UUID."
 msgstr "리소스 식별자는 유효한 UUID여야 합니다."
@@ -1064,7 +1064,7 @@ msgid "{0} shared several items with you"
 msgstr "{0} 이(가) 몇개의 아이템을 당신과 공유함"
 
 msgid "{0} just activated their account on passbolt"
-msgstr "{0} 이(가) 패스볼트에서 계정을 활성화했습니다."
+msgstr "{0} 이(가) Passbolt에서 계정을 활성화함"
 
 msgid "{0} commented on {1}"
 msgstr "{1} 에 주석됨 {0}"
@@ -1157,7 +1157,7 @@ msgid "{0} has been suspended"
 msgstr "{0} 이(가) 중지되었습니다."
 
 msgid "Welcome to passbolt, {0}!"
-msgstr "패스볼트에 오신 것을 환영합니다, {0}!"
+msgstr "Passbolt에 오신 것을 환영합니다, {0}!"
 
 msgid "The purify subject setting should be a boolean."
 msgstr "정화된 제목 설정은 부울이어야 합니다."
@@ -1349,7 +1349,7 @@ msgid "Serving the compiled version of the javascript app."
 msgstr "자바스크립트 앱의 컴파일된 버전을 제공합니다."
 
 msgid "Using non-compiled Javascript. Passbolt will be slower."
-msgstr "컴파일되지 않은 자바스크립트를 사용하면 패스볼트 속도가 느려집니다."
+msgstr "컴파일되지 않은 자바스크립트를 사용하면 Passbolt가 더 느려질 수 있습니다."
 
 msgid "Set passbolt.js.build to production in {0}"
 msgstr "{0}에서 passbolt.js.build를 프로덕션으로 설정"
@@ -1361,16 +1361,16 @@ msgid "Could not read tag information on github repository"
 msgstr "github 리포지토리에 태그 정보를 읽을 수 없습니다."
 
 msgid "Using latest passbolt version ({0})."
-msgstr "최신 패스볼트 버전({0})을 사용."
+msgstr "최신 Passbolt 버전({0})을 사용."
 
 msgid "Could connect to passbolt repository to check versions."
-msgstr "버전을 확인하기 위해 패스볼트 저장소에 연결할 수 있습니다."
+msgstr "버전을 확인하기 위해 Passbolt 저장소에 연결할 수 있습니다."
 
 msgid "This installation is not up to date. Currently using {0} and it should be {1}."
 msgstr "이 설치는 최신 상태가 아닙니다. 현재 {0}을(를) 사용하고 있으며 {1}이어야 합니다."
 
 msgid "Could not connect to passbolt repository to check versions."
-msgstr "버전을 확인하기 위해 패스볼트 저장소에 연결할 수 없습니다."
+msgstr "버전을 확인하기 위해 Passbolt 저장소에 연결할 수 없습니다."
 
 msgid "It is not possible to check if your version is up-to-date."
 msgstr "버전이 최신인지 확인할 수 없습니다."
@@ -1424,10 +1424,10 @@ msgid "You may remove the \"passbolt.registration.public\" setting."
 msgstr "\"passbolt.registration.public\" 설정을 제거할 수 있습니다."
 
 msgid "Passbolt is configured to force SSL use."
-msgstr "패스볼트가 SSL을 강제로 사용하도록 구성되어 있습니다."
+msgstr "Passbolt가 SSL을 강제로 사용하도록 구성되어 있습니다."
 
 msgid "Passbolt is not configured to force SSL use."
-msgstr "패스볼트가 SSL을 강제로 사용하도록 구성되지 않았습니다."
+msgstr "Passbolt가 SSL을 강제로 사용하도록 구성되지 않았습니다."
 
 msgid "Set passbolt.ssl.force to true in {0}."
 msgstr "{0}에서 passbolt.ssl.force를 true로 설정합니다."
@@ -1451,13 +1451,13 @@ msgid "Copy {0} to {1}"
 msgstr "{0} 을(를) {1} 에 복사"
 
 msgid "The passbolt config file is present"
-msgstr "패스볼트 구성 파일이 존재합니다."
+msgstr "Passbolt 구성 파일이 존재함"
 
 msgid "The passbolt config file is missing in {0}"
-msgstr "{0} 에 패스볼트 구성 파일이 없습니다."
+msgstr "{0} 에 Passbolt 구성 파일이 없음"
 
 msgid "The passbolt config file is not required if passbolt is configured with environment variables"
-msgstr "패스볼트가 환경 변수로 구성된 경우 패스볼트 구성 파일이 필요하지 않습니다."
+msgstr "Passbolt가 환경 변수로 구성된 경우 패스볼트 구성 파일이 필요하지 않음"
 
 msgid "Cache is working."
 msgstr "캐시가 작동 중입니다."
@@ -1583,7 +1583,7 @@ msgid "GD or Imagick extension is installed."
 msgstr "GD 또는 Imagick 확장 프로그램이 설치되어 있습니다."
 
 msgid "You must enable the gd or imagick extensions to use Passbolt."
-msgstr "패스볼트를 사용하려면 gd 또는 imagick 확장을 활성화해야 합니다."
+msgstr "Passbolt를 사용하려면 gd 또는 imagick 확장을 활성화해야 합니다."
 
 msgid "See: https://secure.php.net/manual/en/book.image.php"
 msgstr "htttps://secure.php.net/manual/en/book.image.php 를 참조하세요."
@@ -1595,7 +1595,7 @@ msgid "Intl extension is installed."
 msgstr "intl 확장이 설치되었습니다."
 
 msgid "You must enable the intl extension to use Passbolt."
-msgstr "패스볼트를 사용하려면 intl 확장을 활성화해야 합니다."
+msgstr "Passbolt를 사용하려면 intl 확장을 활성화해야 합니다."
 
 msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "https://secure.php.net/manual/en/book.intl.php 를 참조하세요."
@@ -1616,7 +1616,7 @@ msgid "Mbstring extension is installed."
 msgstr "mbstring 확장이 설치되었습니다."
 
 msgid "You must enable the mbstring extension to use Passbolt."
-msgstr "패스볼트를 사용하려면 mbstring 확장을 활성화해야 합니다."
+msgstr "Passbolt를 사용하려면 mbstring 확장을 활성화해야 합니다."
 
 msgid "See: https://secure.php.net/manual/en/book.mbstring.php"
 msgstr "https://secure.php.net/manual/en/book.mbstring.php 를 참조하세요."
@@ -1625,7 +1625,7 @@ msgid "PHP version is {0} or above."
 msgstr "PHP 버전은 {0} 이상입니다."
 
 msgid "PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment."
-msgstr "{0} 미만의 PHP 버전은 곧 패스볼트에서 지원되지 않으므로 운영 체제나 PHP 환경을 업그레이드하는 것이 좋습니다."
+msgstr "{0} 미만의 PHP 버전은 곧 Passbolt에서 지원되지 않으므로 운영 체제나 PHP 환경을 업그레이드하는 것이 좋습니다."
 
 msgid "64-bit architecture system detected."
 msgstr "64비트 아키텍처 시스템이 감지되었습니다."
@@ -1649,7 +1649,7 @@ msgid "PHP version {0}."
 msgstr "PHP 버전 {0}."
 
 msgid "PHP version is too low, passbolt need PHP {0} or higher."
-msgstr "PHP 버전이 너무 낮습니다. 패스볼트는 PHP {0} 이상이 필요합니다."
+msgstr "PHP 버전이 너무 낮습니다. Passbolt는 PHP {0} 이상이 필요합니다."
 
 msgid "System clock is synchronized and NTP service is active."
 msgstr "시스템 시각이 동기화되고 NTP 서비스가 활성화됩니다."
@@ -2040,6 +2040,12 @@ msgstr "{0} 리소스에 대한 검증이 실패되었습니다. {1}"
 
 msgid "Validation success for resource {0}"
 msgstr "{0} 리소스에 대한 유효성 검증 성공"
+
+msgid "Metadata key exist and present for resource {0}."
+msgstr "리소스 {0}에 대한 메타데이터 키가 존재합니다."
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr "리소스 {0}에 대한 메타데이터 키가 존재하지 않거나 소프트 삭제되었습니다."
 
 msgid "The resource types associated to this resource does not exist."
 msgstr "이 리소스에 연결된 리소스 유형이 존재하지 않습니다."
@@ -2450,7 +2456,7 @@ msgid "Name: {0}"
 msgstr "이름: {0}"
 
 msgid "View it in passbolt"
-msgstr "패스볼트에서 보기"
+msgstr "Passbolt에서 보기"
 
 msgid "You deleted a folder"
 msgstr "폴더를 삭제했습니다"
@@ -2459,7 +2465,7 @@ msgid "{0} deleted a folder"
 msgstr "{0} 이(가) 폴더를 삭제함"
 
 msgid "Log in passbolt"
-msgstr "패스볼트 로그인"
+msgstr "Passbolt 로그인"
 
 msgid "{0} shared a folder with you"
 msgstr "{0} 이(가) 당신과 폴더를 공유함"
@@ -2785,8 +2791,11 @@ msgstr "데이터는 비워둘 수 없습니다."
 msgid "The data should be a valid ASCII string."
 msgstr "데이터는 유효한 ASCII 문자열이어야 합니다."
 
-msgid "The modified date should be a valid ISO 80601 date."
-msgstr "수정된 날짜는 유효한 ISO 80601 날짜여야 합니다."
+msgid "The expired field value should be a valid ISO 80601 date."
+msgstr "만료된 필드 값은 유효한 ISO 80601 날짜여야 합니다."
+
+msgid "The expired field value should be parseable."
+msgstr "만료된 필드 값은 구문 분석 가능해야 합니다."
 
 msgid "The setting should be a valid boolean."
 msgstr "설정은 유효한 부울이어야 합니다."
@@ -2794,8 +2803,29 @@ msgstr "설정은 유효한 부울이어야 합니다."
 msgid "The setting is required."
 msgstr "설정이 필요합니다."
 
+msgid "The metadata private keys is required."
+msgstr "메타데이터 개인 키가 필요합니다."
+
+msgid "The metadata private keys should not be empty."
+msgstr "메타데이터 개인 키는 비워 둘 수 없습니다."
+
+msgid "Need at most one metadata private key."
+msgstr "최대 1개의 메타데이터 개인 키가 필요합니다."
+
+msgid "A metadata key identifier is required."
+msgstr "메타데이터 키 식별자가 필요합니다."
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "메타데이터 키 식별자는 유효한 UUID여야 합니다."
+
+msgid "The user identifier should be null."
+msgstr "사용자 식별자는 null이어야 합니다."
+
 msgid "The data is required."
 msgstr "데이터가 필요합니다."
+
+msgid "The modified date should be a valid ISO 80601 date."
+msgstr "수정된 날짜는 유효한 ISO 80601 날짜여야 합니다."
 
 msgid "A modified date is required."
 msgstr "수정 날짜가 필요합니다."
@@ -2824,14 +2854,8 @@ msgstr "메타데이터 키 유형은 공유 키여야 합니다."
 msgid "The metadata key should not be deleted."
 msgstr "메타데이터 키는 삭제될 수 없습니다."
 
-msgid "A metadata key identifier is required."
-msgstr "메타데이터 키 식별자가 필요합니다."
-
 msgid "The metadata key identifier should not be empty."
 msgstr "메타데이터 키 식별자는 비워 둘 수 없습니다."
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr "메타데이터 키 식별자는 유효한 UUID여야 합니다."
 
 msgid "A metadata key type is required."
 msgstr "메타데이터 키 유형이 필요합니다."
@@ -2989,6 +3013,12 @@ msgstr "{0} 이(가) 새로운 메타데이터 키를 수정했습니다"
 msgid "You edited the metadata settings"
 msgstr "메타데이터 설정을 수정했습니다"
 
+msgid "No metadata private keys found for metadata key {0}."
+msgstr "메타데이터 키 {0}에 대한 메타데이터 개인 키를 찾을 수 없습니다."
+
+msgid "Metadata keys present for metadata key {0}"
+msgstr "메타데이터 키 {0}에 대한 메타데이터 키가 있음"
+
 msgid "No active metadata key found."
 msgstr "활성 메타데이터 키를 찾을 수 없습니다."
 
@@ -3097,14 +3127,11 @@ msgstr "OpenPGP 사용자 키를 찾을 수 없습니다."
 msgid "Could not validate the settings."
 msgstr "설정의 유효성을 검사할 수 없습니다."
 
+msgid "The server metadata private keys data are invalid."
+msgstr "서버 메타데이터 개인 키 데이터가 잘못되었습니다."
+
 msgid "The server metadata private key is required to enable these settings."
 msgstr "서버 메타데이터 개인 키가 이러한 설정을 활성화하는 데 필요합니다."
-
-msgid "The server metadata key id is required."
-msgstr "서버 메타데이터 키 ID가 필요합니다."
-
-msgid "The server metadata private key is invalid."
-msgstr "서버 메타데이터 개인 키가 유효하지 않습니다."
 
 msgid "The metadata private key could not be created."
 msgstr "메타데이터 개인 키를 생성할 수 없습니다."
@@ -3283,14 +3310,14 @@ msgstr "암호화된 메타데이터로 폴더를 생성/수정할 수 없습니
 msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr "암호화된 메타데이터로 태그를 생성/수정할 수 없습니다."
 
-msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr "평문 메타데이터로 리소스를 생성/수정할 수 없습니다."
+msgid "Resource creation with cleartext metadata not allowed."
+msgstr "평문 메타데이터를 사용한 리소스 생성은 허용되지 않습니다."
 
-msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr "평문 메타데이터로 폴더를 생성/수정할 수 없습니다."
+msgid "Folder creation with cleartext metadata not allowed."
+msgstr "평문 메타데이터를 사용한 폴더 생성은 허용되지 않습니다."
 
-msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr "평문 메타데이터로 태그를 생성/수정할 수 없습니다."
+msgid "Tag creation with cleartext metadata not allowed."
+msgstr "평문 메타데이터를 사용한 태그 생성은 허용되지 않습니다."
 
 msgid "You created a new metadata key."
 msgstr "새 메타데이터 키를 생성했습니다."
@@ -3343,7 +3370,7 @@ msgstr "{0} 이(가) 당신과 리소스를 공유함."
 msgid "You have edited a resource."
 msgstr "리소스가 수정됨."
 
-msgid "{0} have edited a resource."
+msgid "{0} has edited a resource."
 msgstr "{0} 에 의해 리소스가 수정됨."
 
 msgid "Information about the transfer is required."
@@ -3710,7 +3737,7 @@ msgid "How does it work?"
 msgstr "어떻게 작동하나요?"
 
 msgid "You sign in to passbolt just like you normally do."
-msgstr "평소와 마찬가지로 패스볼트에 로그인합니다."
+msgstr "평소와 마찬가지로 Passbolt에 로그인합니다."
 
 msgid "Use you 2FA device to authenticate."
 msgstr "2FA 장치를 사용하여 인증합니다."
@@ -3902,16 +3929,16 @@ msgid "The password expiry settings have been updated."
 msgstr "비밀번호 만료 설정이 업데이트되었습니다."
 
 msgid "View them in passbolt"
-msgstr "패스볼트에서 보기"
+msgstr "Passbolt에서 보기"
 
 msgid "{0} resources were affected."
 msgstr "{0} 개의 리소스가 영향을 받았습니다."
 
 msgid "It would be too much to list them here, but you can go check them on passbolt."
-msgstr "여기에 나열하는 건 무리만, 패스볼트에서 확인하면 됩니다."
+msgstr "여기에 모두 나열하기에는 너무 많지만, Passbolt에서 확인하세요."
 
 msgid "Change them in passbolt"
-msgstr "패스볼트에서 변경"
+msgstr "Passbolt에서 변경"
 
 msgid "You have been requested to change them"
 msgstr "변경 요청을 받았습니다"
@@ -3929,7 +3956,7 @@ msgid "Please rotate it to ensure continued security."
 msgstr "지속적인 보안을 위해 순환해 주세요."
 
 msgid "Change it in passbolt "
-msgstr "패스볼트에서 변경 "
+msgstr "Passbolt에서 변경 "
 
 msgid "Could not retrieve the password policies."
 msgstr "비밀번호 정책을 검색할 수 없습니다."
@@ -4175,7 +4202,7 @@ msgid "Description"
 msgstr "설명"
 
 msgid "Passbolt report"
-msgstr "패스볼트 보고서"
+msgstr "Passbolt 보고서"
 
 msgid "Report name"
 msgstr "보고서 이름"
@@ -4298,7 +4325,7 @@ msgid "You edited the self registration settings."
 msgstr "자체 등록 설정을 편집했습니다."
 
 msgid "{0} just created an account on passbolt!"
-msgstr "{0} 이(가) 방금 패스볼트에 계정을 생성했습니다!"
+msgstr "{0} 이(가) 방금 Passbolt에 계정을 생성했습니다!"
 
 msgid "The email is already registered."
 msgstr "이메일이 이미 등록되어 있습니다."
@@ -4478,13 +4505,13 @@ msgid "To fix this problem, you need to configure the SMTP server again."
 msgstr "이 문제를 해결하려면 SMTP 서버를 다시 구성해야 합니다."
 
 msgid "Passbolt test email"
-msgstr "패스볼트 테스트 이메일"
+msgstr "Passbolt 테스트 이메일"
 
 msgid "Congratulations!"
 msgstr "축하합니다!"
 
 msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
-msgstr "이 이메일을 수신하면 패스볼트 smtp 구성이 올바르게 작동 중임을 의미합니다."
+msgstr "이 이메일을 수신하면 Passbolt smtp 구성이 올바르게 작동 중임을 의미합니다."
 
 msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
 msgstr "'passbolt.plugins.smtpSettings.security' 구성 값이 잘못되었습니다."
@@ -4502,7 +4529,7 @@ msgid "You are not authorized to access this location."
 msgstr "이 위치에 접근할 권한이 없습니다."
 
 msgid "Sign-in to passbolt, or provide a valid user ID and authentication token."
-msgstr "패스볼트에 로그인하거나 유효한 사용자 ID와 인증 토큰을 제공하세요."
+msgstr "Passbolt에 로그인하거나 유효한 사용자 ID와 인증 토큰을 제공하세요."
 
 msgid "The user ID must be a valid UUID."
 msgstr "사용자 ID는 올바른 UUID여야 합니다."
@@ -4649,7 +4676,7 @@ msgid "The OpenPGP private key cannot be used to decrypt."
 msgstr "OpenPGP 개인 키를 사용하여 복호화할 수 없습니다."
 
 msgid "Please note that passbolt does not support OpenPGP key protected with a secret."
-msgstr "패스볼트는 비밀번호로 보호된 OpenPGP 키를 지원하지 않습니다."
+msgstr "Passbolt는 비밀번호로 보호된 OpenPGP 키를 지원하지 않습니다."
 
 msgid "The fingerprint should not be empty."
 msgstr "지문은 비워둘 수 없습니다."
@@ -4673,10 +4700,10 @@ msgid "The force ssl setting should be a valid boolean."
 msgstr "강제 ssl 설정은 유효한 부울이어야 합니다."
 
 msgid "The passbolt config is writable."
-msgstr "패스볼트 구성에 쓸 수 있습니다."
+msgstr "Passbolt 설정 파일이 쓰기 가능합니다."
 
 msgid "The passbolt config is not writable."
-msgstr "패스볼트 구성에 쓸 수 없습니다."
+msgstr "Passbolt 설정 파일이 쓰기 불가능합니다."
 
 msgid "Ensure the file "
 msgstr "파일 확인 "
@@ -4808,13 +4835,13 @@ msgid "Client"
 msgstr "클라이언트"
 
 msgid "Passbolt is not configured."
-msgstr "패스볼트가 구성되지 않았습니다."
+msgstr "Passbolt가 구성되지 않았습니다."
 
 msgid "Passbolt is not configured yet!"
-msgstr "패스볼트가 아직 구성되지 않았습니다."
+msgstr "Passbolt가 아직 구성되지 않았습니다!"
 
 msgid "If you see this page, it means that passbolt is present on your server but not configured. Click on \"Get Started\" to launch the configuration wizard."
-msgstr "이 페이지가 표시되면 서버에 패스볼트가 존재하지만 구성되지 않았음을 의미합니다. \"시작\"을 클릭하여 구성 마법사를 시작합니다."
+msgstr "이 페이지가 표시되면 서버에 Passbolt가 존재하지만 구성되지 않았음을 의미합니다. \"시작\"을 클릭하여 구성 마법사를 시작합니다."
 
 msgid "Get Started"
 msgstr "시작하기"
@@ -4865,10 +4892,10 @@ msgid "Some binary things are happening..."
 msgstr "몇 가지 이원적인 일들이 발생하는 중..."
 
 msgid "Passbolt Pro activation."
-msgstr "패스볼트 프로 활성화."
+msgstr "Passbolt Pro 활성화."
 
 msgid "Copy paste your Passbolt Pro subscription key here"
-msgstr "여기에 패스볼트 구독 키를 복사 붙여넣기"
+msgstr "여기에 Passbolt 구독 키를 복사 붙여넣기"
 
 msgid "Choose your preferences."
 msgstr "기본 설정을 선택하세요."
@@ -4880,22 +4907,22 @@ msgid "Full base url"
 msgstr "전체 기본 Url"
 
 msgid "This is the url where passbolt will be accessible. This url will be used for places where the passbolt url cannot be guessed automatically, such as links in emails. No trailing slash."
-msgstr "패스볼트에 접근할 수 있는 url입니다. 이 url은 이메일의 링크와 같이 패스볼트 url을 자동으로 추측할 수 없는 위치에 사용됩니다. 후행 슬래시가 없습니다."
+msgstr "Passbolt에 접근할 수 있는 url입니다. 이 url은 이메일의 링크와 같이 Passbolt url을 자동으로 추측할 수 없는 위치에 사용됩니다. 후행 슬래시가 없습니다."
 
 msgid "Force SSL?"
 msgstr "SSL 강제여부"
 
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
-msgstr "SSL을 강제 적용하면 패스볼트가 안전하지 않은 프로토콜에서 오는 연결을 허용하지 않습니다. SSL이 강제 적용되면 서버를 HTTPS로 구성해야 합니다. 그렇게 하는 것이 좋습니다."
+msgstr "SSL을 강제 적용하면 Passbolt가 안전하지 않은 프로토콜에서 오는 연결을 허용하지 않습니다. SSL이 강제 적용되면 서버를 HTTPS로 구성해야 합니다. 그렇게 하는 것이 좋습니다."
 
 msgid "Welcome to Passbolt! Let's get started with the configuration."
-msgstr "패스볼트에 오신 것을 환영합니다! 구성을 시작하겠습니다."
+msgstr "Passbolt에 오신 것을 환영합니다! 구성을 시작하겠습니다."
 
 msgid "Nice one! Your environment is ready for passbolt."
-msgstr "잘했습니다! 사용자 환경이 패스볼트를 사용할 준비가 되었습니다."
+msgstr "잘했습니다! 사용자 환경이 Passbolt를 사용할 준비가 되었습니다."
 
 msgid "Oops!! Passbolt cannot run yet on your server."
-msgstr "앗!! 패스볼트가 서버에서 실행되지 않았습니다."
+msgstr "앗!! Passbolt가 서버에서 실행되지 않았습니다."
 
 msgid "Environment is configured correctly."
 msgstr "환경이 올바르게 구성되었습니다."
@@ -4922,7 +4949,7 @@ msgid "You have completed successfully the configuration procedure, congrats!"
 msgstr "구성 절차를 성공적으로 완료했습니다. 축하합니다!"
 
 msgid "You will soon be redirected to passbolt to complete your account setup."
-msgstr "계정 설정을 완료하기 위해 곧 패스볼트로 리디렉션됩니다"
+msgstr "계정 설정을 완료하기 위해 곧 Passbolt로 리디렉션됩니다."
 
 msgid "You will soon be redirected to the login page."
 msgstr "곧 로그인 페이지로 리디렉션됩니다."
@@ -4943,7 +4970,7 @@ msgid "Existing installation?"
 msgstr "기존 설치?"
 
 msgid "If you want to use an existing passbolt database, the installer will take care of updating it to the current passbolt version while keeping your data."
-msgstr "기존 패스볼트 데이터베이스를 사용하려는 경우 데이터를 보관하는 동안 설치 관리자가 해당 데이터베이스를 현재 패스볼트 버전으로 업데이트합니다."
+msgstr "기존 Passbolt 데이터베이스를 사용하려는 경우 데이터를 보관하는 동안 설치 관리자가 해당 데이터베이스를 현재 Passbolt 버전으로 업데이트합니다."
 
 msgid "As a precaution, do not forget to backup your database before you continue."
 msgstr "예방 차원에서 계속하기 전 데이터베이스를 백업하는 것을 잊지 마세요."
@@ -4952,13 +4979,13 @@ msgid "Help"
 msgstr "도움말"
 
 msgid "Need help? You can find more information on how to install passbolt in the official online help."
-msgstr "도움이 필요하세요? 패스볼트 설치 방법에 대한 자세한 내용은 공식 온라인 도움말을 참조하세요."
+msgstr "도움이 필요하세요? Passbolt 설치 방법에 대한 자세한 내용은 공식 온라인 도움말을 참조하세요."
 
 msgid "What subscription key?"
 msgstr "구독 키란?"
 
 msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
-msgstr "구독 키는 패스볼트 프로를 구입할 때 보낸 파일입니다. 패스볼트의 프로의 기능을 활성화하기 위해서는 구독 키가 필요합니다."
+msgstr "구독 키는 Passbolt Pro를 구입할 때 보낸 파일입니다. Passbolt의 Pro 기능을 활성화하기 위해서는 구독 키가 필요합니다."
 
 msgid "Send test email"
 msgstr "테스트 이메일 보내기"
@@ -4979,7 +5006,7 @@ msgid "Why do I need a SMTP server?"
 msgstr "SMTP 서버가 필요한 이유는 무엇입니까?"
 
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
-msgstr "패스볼트는 계정 생성 후 초대 메일을 발송하고 메일 알림을 보내기 위해 smtp 서버가 필요합니다."
+msgstr "Passbolt는 계정 생성 후 초대 메일을 발송하고 메일 알림을 보내기 위해 smtp 서버가 필요합니다."
 
 msgid "Error"
 msgstr "오류"
@@ -4997,7 +5024,7 @@ msgid "Health checks"
 msgstr "상태 확인"
 
 msgid "Passbolt API Status"
-msgstr "패스볼트 API 상태"
+msgstr "Passbolt API 상태"
 
 msgid "Group manager"
 msgstr "그룹 관리자"
@@ -5039,10 +5066,10 @@ msgid "login"
 msgstr "로그인"
 
 msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
-msgstr "관리자 {0} ({1}) 이(가) 패스볼트 조직에서 삭제되었습니다."
+msgstr "{0} ({1}) 관리자가 Passbolt 조직에서 삭제되었습니다."
 
 msgid "{0} deleted you from the passbolt organisation."
-msgstr "{0} 이(가) 패스볼트 조직에서 사용자를 삭제하였습니다."
+msgstr "{0} 이(가) Passbolt 조직에서 사용자를 삭제하였습니다."
 
 msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
 msgstr "이 조치가 의심스럽다면 작업 시작 시 관리자에게 언제든지 연락하세요."
@@ -5054,7 +5081,7 @@ msgid "Your account has been suspended."
 msgstr "계정이 중지되었습니다."
 
 msgid "You are not able to sign in to passbolt and receive email notifications."
-msgstr "패스볼트에 로그인 할 수 없으며 이메일 알림을 받을 수 없습니다."
+msgstr "Passbolt에 로그인 할 수 없으며 이메일 알림을 받을 수 없습니다."
 
 msgid "Other users can still share resources with you and add you to a group."
 msgstr "다른 사용자는 여전히 사용자와 리소스를 공유하고 사용자를 그룹에 추가할 수 있습니다."
@@ -5078,7 +5105,7 @@ msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch w
 msgstr "{0} ({1}) 이(가) 방금 계정 복구를 완료했습니다. 이 동작이 의심스럽다고 생각되면 언제든지 이 사용자에게 연락하세요."
 
 msgid "View user in passbolt"
-msgstr "패스볼트에서 사용자 보기"
+msgstr "Passbolt에서 사용자 보기"
 
 msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다!"
@@ -5099,7 +5126,7 @@ msgid "The user {0} has been suspended."
 msgstr "{0} 사용자가 중지됨."
 
 msgid "This user will not be able to sign in to passbolt and receive email notifications."
-msgstr "이 사용자는 패스볼트에 로그인을 할 수 없으며 이메일 알림도 받을 수 없습니다."
+msgstr "이 사용자는 Passbolt에 로그인을 할 수 없으며 이메일 알림도 받을 수 없습니다."
 
 msgid "Other users can share resources and add this user to a group."
 msgstr "다른 사용자는 리소스를 공유하고 이 사용자를 그룹에 추가할 수 있습니다"
@@ -5111,7 +5138,28 @@ msgid "Welcome to {0}!"
 msgstr "{0} 에 오신 것을 환영합니다!"
 
 msgid "{0} used the self registration feature to create an account on passbolt."
-msgstr "{0} 이(가) 자체 등록 기능을 사용하여 패스볼트에 계정을 생성했습니다."
+msgstr "{0} 이(가) 자체 등록 기능을 사용하여 Passbolt에 계정을 생성했습니다."
+
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} 이(가) Passbolt에서 계정을 활성화했습니다!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "이제 사용자의 Passbolt 활성화 되었으며 비밀번호를 공유할 수 있습니다."
+
+msgid "This user was invited by you {0}."
+msgstr "{0} 이(가) 이 사용자를 초대했습니다."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "공개 등록이 활성화되었기 때문에 이 사용자가 직접 등록했습니다."
+
+msgid "This user was invited by {0} {1}."
+msgstr "{0} {1} 에서 이 사용자를 초대했습니다."
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr "이 사용자는 공유 리소스 메타데이터에 대한 암호화 키가 누락되었습니다. 로그인한 후 사용자 작업 공간으로 이동하여 키를 수동으로 공유해 주세요."
+
+msgid "View users"
+msgstr "사용자 보기"
 
 msgid "You have initiated an account recovery!"
 msgstr "계정 복구가 시작되었습니다."
@@ -5120,7 +5168,7 @@ msgid "Welcome back!"
 msgstr "다시 오신 것을 환영합니다!"
 
 msgid "You just requested to recover your passbolt account on this device."
-msgstr "방금 이 기기에서 패스볼트 계정을 복구하도록 요청했습니다."
+msgstr "방금 이 기기에서 Passbolt 계정을 복구하도록 요청했습니다."
 
 msgid "Make sure you have a backup of your secret key handy."
 msgstr "비밀키를 백업해 두세요."
@@ -5135,16 +5183,16 @@ msgid "You just completed an account recovery. Feel free to get in touch with an
 msgstr "방금 계정 복구를 완료했습니다. 이 동작이 의심스럽다고 생각되면 언제든지 이 관리자에게 연락하세요."
 
 msgid "{0} just created an account for you on passbolt!"
-msgstr "{0} 이(가) 패스볼트에서 계정을 생성했습니다!"
+msgstr "{0} 이(가) Passbolt에서 계정을 생성했습니다!"
 
 msgid "Welcome {0}"
 msgstr "{0} 어서 오세요."
 
 msgid "{0} just invited you to join passbolt at {1}"
-msgstr "{0} 이(가) {1} 에 패스볼트에 가입하도록 초대했습니다."
+msgstr "{0} 이(가) {1} 에서 Passbolt에 가입하도록 초대했습니다."
 
 msgid "Passbolt is an open source password manager."
-msgstr "패스볼트는 오픈소스 비밀번호 관리자입니다."
+msgstr "Passbolt는 오픈소스 비밀번호 관리자입니다."
 
 msgid "It is designed to allow sharing credentials securely with your team!"
 msgstr "팀과 안전하게 자격 증명을 공유할 수 있도록 고안되었습니다!"
@@ -5156,10 +5204,10 @@ msgid "get started"
 msgstr "시작하기"
 
 msgid "You just created your account on passbolt!"
-msgstr "방금 패스볼트에 계정을 생성했습니다!"
+msgstr "방금 Passbolt에 계정을 생성했습니다!"
 
 msgid "You just opened an account on passbolt at {0}."
-msgstr "{0} 에서 패스볼트에 대한 계정을 방금 개설했습니다."
+msgstr "{0} 에서 Passbolt에 대한 계정을 방금 개설했습니다."
 
 msgid "There was a change in the user directory."
 msgstr "사용자 디렉토리에 변경 사항이 있습니다."
@@ -5183,7 +5231,7 @@ msgid "{0} deleted the user {1}"
 msgstr "{0} 에 의해 {1} 사용자가 삭제됨"
 
 msgid "The user {0} {1} ({2}) is now deleted from your organisation in passbolt."
-msgstr "사용자 {0} {1}({2}) 이(가) 패스볼트내 조직에서 삭제되었습니다."
+msgstr " {0} {1}({2}) 사용자가 Passbolt내 조직에서 삭제되었습니다."
 
 msgid "This user was a member of the following group(s) you manage:"
 msgstr "이 사용자는 당신이 관리하는 다음 그룹(들)의 구성원이었습니다:"
@@ -5231,16 +5279,16 @@ msgid "{0} group memberships were affected."
 msgstr "{0} 그룹 멤버십이 영향을 받았습니다."
 
 msgid "It would be too much to list them here, but you can get more information on passbolt."
-msgstr "여기에 나열하기에는 무리가 있지만, 패스볼트에 대한 자세한 정보를 얻을 수 있습니다."
+msgstr "여기에 모두 나열하기에는 너무 많지만, Passbolt에 대한 자세한 정보를 얻을 수 있습니다."
 
 msgid "go to passbolt"
-msgstr "패스볼트로 이동"
+msgstr "Passbolt로 이동"
 
 msgid "{0} deleted {1} groups you were a member of."
 msgstr "{0} 이(가) 사용자가 속한 {1} 개 그룹을 삭제했습니다."
 
 msgid "log in passbolt"
-msgstr "패스볼트 로그인"
+msgstr "Passbolt 로그인"
 
 msgid "Username: {0}"
 msgstr "사용자이름: {0}"
@@ -5259,27 +5307,6 @@ msgstr "{0} 이(가) 당신과 비밀번호를 공유함"
 
 msgid "{0} resources were shared with you."
 msgstr "{0} 이(가) 당신과 리소스를 공유함"
-
-msgid "{0} just activated their account on passbolt!"
-msgstr "{0} 이(가) 패스볼트에서 계정을 활성화했습니다!"
-
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "이제 사용자의 패스볼트 활성화 되었으며 비밀번호를 공유할 수 있습니다."
-
-msgid "This user was invited by you {0}."
-msgstr "{0} 이(가) 이 사용자를 초대했습니다."
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr "공개 등록이 활성화되었기 때문에 이 사용자가 직접 등록했습니다."
-
-msgid "This user was invited by {0} {1}."
-msgstr "{0} {1} 에서 이 사용자를 초대했습니다."
-
-msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr "이 사용자는 공유 리소스 메타데이터에 대한 암호화 키가 누락되었습니다. 로그인한 후 사용자 작업 공간으로 이동하여 키를 수동으로 공유해 주세요."
-
-msgid "View users"
-msgstr "사용자 보기"
 
 msgid "This email is an automatic notification sent by"
 msgstr "이 이메일은 다음에서 자동으로 발송되는 알림입니다."

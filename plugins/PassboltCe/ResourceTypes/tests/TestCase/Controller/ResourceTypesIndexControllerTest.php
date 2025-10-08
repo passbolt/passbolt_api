@@ -48,7 +48,7 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCaseV5
 
         $this->assertSuccess();
         $this->assertResourceTypeAttributes($this->_responseJsonBody[0]);
-        $this->assertCount(2, $this->_responseJsonBody);
+        $this->assertCount(3, $this->_responseJsonBody);
     }
 
     public function testResourceTypesIndexController_Success_V4()

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-08-08 13:25\n"
+"POT-Creation-Date: 2025-10-01 06:12+0000\n"
+"PO-Revision-Date: 2025-10-01 07:30\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Ukrainian\n"
 "MIME-Version: 1.0\n"
@@ -2041,6 +2041,12 @@ msgstr "Перевірка не пройшла для ресурсу {0}. {1}"
 msgid "Validation success for resource {0}"
 msgstr "Перевірка пройшла успішно для ресурсу {0}"
 
+msgid "Metadata key exist and present for resource {0}."
+msgstr ""
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr ""
+
 msgid "The resource types associated to this resource does not exist."
 msgstr ""
 
@@ -2785,8 +2791,11 @@ msgstr "Дані не мають бути порожніми."
 msgid "The data should be a valid ASCII string."
 msgstr "Дані мають бути дійсним рядком ASCII."
 
-msgid "The modified date should be a valid ISO 80601 date."
-msgstr "Дата зміни має бути дійсною датою у форматі ISO 80601."
+msgid "The expired field value should be a valid ISO 80601 date."
+msgstr ""
+
+msgid "The expired field value should be parseable."
+msgstr ""
 
 msgid "The setting should be a valid boolean."
 msgstr "Налаштування має бути дійсним логічним значенням."
@@ -2794,8 +2803,29 @@ msgstr "Налаштування має бути дійсним логічним
 msgid "The setting is required."
 msgstr "Налаштування є обов'язковим."
 
+msgid "The metadata private keys is required."
+msgstr ""
+
+msgid "The metadata private keys should not be empty."
+msgstr ""
+
+msgid "Need at most one metadata private key."
+msgstr ""
+
+msgid "A metadata key identifier is required."
+msgstr "Потрібно вказати ідентифікатор ключа метаданих."
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "Ідентифікатор ключа метаданих має бути дійсним UUID."
+
+msgid "The user identifier should be null."
+msgstr ""
+
 msgid "The data is required."
 msgstr "Дані є обов'язковими."
+
+msgid "The modified date should be a valid ISO 80601 date."
+msgstr "Дата зміни має бути дійсною датою у форматі ISO 80601."
 
 msgid "A modified date is required."
 msgstr "Потрібна дата зміни."
@@ -2824,14 +2854,8 @@ msgstr "Тип ключа метаданих має бути спільним к
 msgid "The metadata key should not be deleted."
 msgstr "Ключ метаданих не слід видаляти."
 
-msgid "A metadata key identifier is required."
-msgstr "Потрібно вказати ідентифікатор ключа метаданих."
-
 msgid "The metadata key identifier should not be empty."
 msgstr "Ідентифікатор ключа метаданих не повинен бути порожнім."
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr "Ідентифікатор ключа метаданих має бути дійсним UUID."
 
 msgid "A metadata key type is required."
 msgstr "Потрібно вказати тип ключа метаданих."
@@ -2989,6 +3013,12 @@ msgstr "{0} відредагував(-ла) налаштування метад�
 msgid "You edited the metadata settings"
 msgstr "Ви відредагували налаштування метаданих"
 
+msgid "No metadata private keys found for metadata key {0}."
+msgstr ""
+
+msgid "Metadata keys present for metadata key {0}"
+msgstr ""
+
 msgid "No active metadata key found."
 msgstr ""
 
@@ -3097,14 +3127,11 @@ msgstr "Не знайдено ключа користувача OpenPGP."
 msgid "Could not validate the settings."
 msgstr "Неможливо перевірити налаштування."
 
+msgid "The server metadata private keys data are invalid."
+msgstr ""
+
 msgid "The server metadata private key is required to enable these settings."
 msgstr "Для активації цих налаштувань потрібен приватний ключ метаданих сервера."
-
-msgid "The server metadata key id is required."
-msgstr "Потрібен ідентифікатор ключа метаданих сервера."
-
-msgid "The server metadata private key is invalid."
-msgstr "Приватний ключ метаданих сервера є недійсним."
 
 msgid "The metadata private key could not be created."
 msgstr "Неможливо створити приватний ключ метаданих."
@@ -3283,14 +3310,14 @@ msgstr "Створення/зміну теки з зашифрованими м�
 msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr "Створення/зміну тегу з зашифрованими метаданими заборонено."
 
-msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr "Створення/зміну ресурсу з метаданими у відкритому вигляді заборонено."
+msgid "Resource creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr "Створення/зміну теки з метаданими у відкритому вигляді заборонено."
+msgid "Folder creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr "Створення/зміну тегу з метаданими у відкритому вигляді заборонено."
+msgid "Tag creation with cleartext metadata not allowed."
+msgstr ""
 
 msgid "You created a new metadata key."
 msgstr "Ви створили новий ключ метаданих."
@@ -3343,7 +3370,7 @@ msgstr "{0} поділився ресурсом з вами."
 msgid "You have edited a resource."
 msgstr "Ви відредагували ресурс."
 
-msgid "{0} have edited a resource."
+msgid "{0} has edited a resource."
 msgstr ""
 
 msgid "Information about the transfer is required."
@@ -5113,6 +5140,27 @@ msgstr "Ласкаво просимо до {0}!"
 msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr "{0} використав(ла) функцію самореєстрації, щоб створити обліковий запис у passbolt."
 
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} щойно активував(ла) свій обліковий запис у Passbolt!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "Тепер користувач активний у Passbolt і ви можете поділитись із ним паролями."
+
+msgid "This user was invited by you {0}."
+msgstr "Цей користувач був запрошений вами {0}."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "Цей користувач зареєструвався самостійно, оскільки публічна реєстрація увімкнена."
+
+msgid "This user was invited by {0} {1}."
+msgstr "Цей користувач був запрошений {0} {1}."
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr "Цьому користувачу бракує ключа шифрування для метаданих спільного ресурсу. Будь ласка, увійдіть і відкрийте робочий простір користувача, а потім поділіться з ним ключем вручну."
+
+msgid "View users"
+msgstr ""
+
 msgid "You have initiated an account recovery!"
 msgstr "Ви ініціювали відновлення облікового запису!"
 
@@ -5259,27 +5307,6 @@ msgstr "{0} поділився(лась) з вами паролями"
 
 msgid "{0} resources were shared with you."
 msgstr "{0} ресурсів було поширено з вами."
-
-msgid "{0} just activated their account on passbolt!"
-msgstr "{0} щойно активував(ла) свій обліковий запис у Passbolt!"
-
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "Тепер користувач активний у Passbolt і ви можете поділитись із ним паролями."
-
-msgid "This user was invited by you {0}."
-msgstr "Цей користувач був запрошений вами {0}."
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr "Цей користувач зареєструвався самостійно, оскільки публічна реєстрація увімкнена."
-
-msgid "This user was invited by {0} {1}."
-msgstr "Цей користувач був запрошений {0} {1}."
-
-msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr "Цьому користувачу бракує ключа шифрування для метаданих спільного ресурсу. Будь ласка, увійдіть і відкрийте робочий простір користувача, а потім поділіться з ним ключем вручну."
-
-msgid "View users"
-msgstr ""
 
 msgid "This email is an automatic notification sent by"
 msgstr "Цей електронний лист є автоматичним сповіщенням, надісланим"

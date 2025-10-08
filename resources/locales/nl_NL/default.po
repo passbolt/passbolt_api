@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-08-08 13:25\n"
+"POT-Creation-Date: 2025-10-01 06:12+0000\n"
+"PO-Revision-Date: 2025-10-01 07:30\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -2041,6 +2041,12 @@ msgstr "Validatie van middel {0} is mislukt. {1}"
 msgid "Validation success for resource {0}"
 msgstr "Validatie van middel {0} is geslaagd"
 
+msgid "Metadata key exist and present for resource {0}."
+msgstr ""
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr ""
+
 msgid "The resource types associated to this resource does not exist."
 msgstr ""
 
@@ -2785,8 +2791,11 @@ msgstr "De gegevens moeten ingevuld worden."
 msgid "The data should be a valid ASCII string."
 msgstr "De gegevens moeten een geldige ASCII-tekenreeks zijn."
 
-msgid "The modified date should be a valid ISO 80601 date."
-msgstr "De wijzigingsdatum moet een geldige ISO 80601-datum zijn."
+msgid "The expired field value should be a valid ISO 80601 date."
+msgstr ""
+
+msgid "The expired field value should be parseable."
+msgstr ""
 
 msgid "The setting should be a valid boolean."
 msgstr "De instelling moet een geldige boolean zijn."
@@ -2794,8 +2803,29 @@ msgstr "De instelling moet een geldige boolean zijn."
 msgid "The setting is required."
 msgstr "De instelling is vereist."
 
+msgid "The metadata private keys is required."
+msgstr ""
+
+msgid "The metadata private keys should not be empty."
+msgstr ""
+
+msgid "Need at most one metadata private key."
+msgstr ""
+
+msgid "A metadata key identifier is required."
+msgstr "Een metadata-sleutel-ID is vereist."
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "De ID van de metadata-sleutel moet een geldige UUID zijn."
+
+msgid "The user identifier should be null."
+msgstr ""
+
 msgid "The data is required."
 msgstr "De gegevens zijn vereist."
+
+msgid "The modified date should be a valid ISO 80601 date."
+msgstr "De wijzigingsdatum moet een geldige ISO 80601-datum zijn."
 
 msgid "A modified date is required."
 msgstr "Een wijzigingsdatum is vereist."
@@ -2824,14 +2854,8 @@ msgstr "Het metadata-sleuteltype moet een gedeelde sleutel zijn."
 msgid "The metadata key should not be deleted."
 msgstr "De metadata-sleutel mag niet worden verwijderd."
 
-msgid "A metadata key identifier is required."
-msgstr "Een metadata-sleutel-ID is vereist."
-
 msgid "The metadata key identifier should not be empty."
 msgstr "De metadata-sleutel-ID mag niet leeg zijn."
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr "De ID van de metadata-sleutel moet een geldige UUID zijn."
 
 msgid "A metadata key type is required."
 msgstr "Een metadata-sleuteltype is vereist."
@@ -2989,6 +3013,12 @@ msgstr "{0} heeft de metadata-instellingen gewijzigd"
 msgid "You edited the metadata settings"
 msgstr "Je hebt de metadata-instellingen gewijzigd"
 
+msgid "No metadata private keys found for metadata key {0}."
+msgstr ""
+
+msgid "Metadata keys present for metadata key {0}"
+msgstr ""
+
 msgid "No active metadata key found."
 msgstr ""
 
@@ -3097,14 +3127,11 @@ msgstr "De OpenPGP-gebruikerssleutel kan niet worden gevonden."
 msgid "Could not validate the settings."
 msgstr "De instellingen konden niet worden gevalideerd."
 
+msgid "The server metadata private keys data are invalid."
+msgstr ""
+
 msgid "The server metadata private key is required to enable these settings."
 msgstr "De server-metadata privésleutel is vereist om deze instellingen in te schakelen."
-
-msgid "The server metadata key id is required."
-msgstr "De servermetadata-sleutel-ID is vereist."
-
-msgid "The server metadata private key is invalid."
-msgstr "De server-metadata privésleutel is ongeldig."
 
 msgid "The metadata private key could not be created."
 msgstr "De metadata privésleutel kon niet worden gemaakt."
@@ -3283,14 +3310,14 @@ msgstr "Het maken/wijzigen van mappen met versleutelde metadata is niet toegesta
 msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr "Het maken/wijzigen van labels met versleutelde metadata is niet toegestaan."
 
-msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr "Het maken/wijzigen van middelen met niet-versleutelde metadata is niet toegestaan."
+msgid "Resource creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr "Het maken/wijzigen van mappen met niet-versleutelde metadata is niet toegestaan."
+msgid "Folder creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr "Het maken/wijzigen van labels met niet-versleutelde metadata is niet toegestaan."
+msgid "Tag creation with cleartext metadata not allowed."
+msgstr ""
 
 msgid "You created a new metadata key."
 msgstr "Je hebt een nieuwe metadata-sleutel aangemaakt."
@@ -3343,7 +3370,7 @@ msgstr "{0} heeft een middel met je gedeeld."
 msgid "You have edited a resource."
 msgstr "Je hebt een middel bewerkt."
 
-msgid "{0} have edited a resource."
+msgid "{0} has edited a resource."
 msgstr ""
 
 msgid "Information about the transfer is required."
@@ -5113,6 +5140,27 @@ msgstr "Welkom bij {0}!"
 msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr "{0} heeft de self registration-functie gebruikt om een account bij Passbolt aan te maken."
 
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} heeft zojuist diens account geactiveerd bij Passbolt!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "De gebruiker is nu actief op Passbolt en je kunt wachtwoorden met deze delen."
+
+msgid "This user was invited by you {0}."
+msgstr "Deze gebruiker is uitgenodigd door jou {0}."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "Deze gebruiker heeft zichzelf aangemeld, aangezien de openbare registratie is ingeschakeld."
+
+msgid "This user was invited by {0} {1}."
+msgstr "Deze gebruiker is uitgenodigd door {0} {1}."
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr "Deze gebruiker mist de versleutelingssleutel voor de gedeelde resource-metadata. Log in, ga naar de gebruikerswerkruimte en deel de sleutel handmatig met hen."
+
+msgid "View users"
+msgstr ""
+
 msgid "You have initiated an account recovery!"
 msgstr "Je hebt het herstel van de account geïnitieerd!"
 
@@ -5259,27 +5307,6 @@ msgstr "{0} heeft wachtwoorden met je gedeeld"
 
 msgid "{0} resources were shared with you."
 msgstr "{0} middelen zijn met je gedeeld."
-
-msgid "{0} just activated their account on passbolt!"
-msgstr "{0} heeft zojuist diens account geactiveerd bij Passbolt!"
-
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "De gebruiker is nu actief op Passbolt en je kunt wachtwoorden met deze delen."
-
-msgid "This user was invited by you {0}."
-msgstr "Deze gebruiker is uitgenodigd door jou {0}."
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr "Deze gebruiker heeft zichzelf aangemeld, aangezien de openbare registratie is ingeschakeld."
-
-msgid "This user was invited by {0} {1}."
-msgstr "Deze gebruiker is uitgenodigd door {0} {1}."
-
-msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr "Deze gebruiker mist de versleutelingssleutel voor de gedeelde resource-metadata. Log in, ga naar de gebruikerswerkruimte en deel de sleutel handmatig met hen."
-
-msgid "View users"
-msgstr ""
 
 msgid "This email is an automatic notification sent by"
 msgstr "Deze e-mail is een automatische melding verzonden door"

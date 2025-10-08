@@ -54,7 +54,8 @@ class MetadataKeyUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->putJson('/metadata/keys/' . $key->get('id') . '.json', [
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-            'expired' => DateTime::yesterday()->setTimezone('Asia/Kolkata')->toIso8601String(), // e.g. 2025-01-29T13:45:06+00:00
+            // Front-end uses this format as ISO8601 (zulu string format)
+            'expired' => DateTime::now()->subDays(1)->setTimezone('Asia/Kolkata')->format('Y-m-d\TH:i:s.v\Z'), // e.g. 2025-01-29T13:45:06.000Z
         ]);
 
         $this->assertResponseCode(200);

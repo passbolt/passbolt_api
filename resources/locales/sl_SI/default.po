@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-08-08 13:25\n"
+"POT-Creation-Date: 2025-10-01 06:12+0000\n"
+"PO-Revision-Date: 2025-10-01 07:30\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -2041,6 +2041,12 @@ msgstr "Preverjanje za vir {0} ni uspelo. {1}"
 msgid "Validation success for resource {0}"
 msgstr "Preverjanje za vir {0} je bilo uspešno"
 
+msgid "Metadata key exist and present for resource {0}."
+msgstr ""
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr ""
+
 msgid "The resource types associated to this resource does not exist."
 msgstr ""
 
@@ -2785,8 +2791,11 @@ msgstr "Podatki ne smejo biti prazni."
 msgid "The data should be a valid ASCII string."
 msgstr "Podatki morajo biti veljaven niz ASCII"
 
-msgid "The modified date should be a valid ISO 80601 date."
-msgstr "Spremenjeni datum mora biti veljaven datum ISO 80601."
+msgid "The expired field value should be a valid ISO 80601 date."
+msgstr ""
+
+msgid "The expired field value should be parseable."
+msgstr ""
 
 msgid "The setting should be a valid boolean."
 msgstr "Nastavitev mora biti veljavna logična vrednost."
@@ -2794,8 +2803,29 @@ msgstr "Nastavitev mora biti veljavna logična vrednost."
 msgid "The setting is required."
 msgstr "Nastavitev je obvezna."
 
+msgid "The metadata private keys is required."
+msgstr ""
+
+msgid "The metadata private keys should not be empty."
+msgstr ""
+
+msgid "Need at most one metadata private key."
+msgstr ""
+
+msgid "A metadata key identifier is required."
+msgstr "Potreben je identifikator ključa metapodatkov."
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "Identifikator ključa metapodatkov mora biti veljaven UUID."
+
+msgid "The user identifier should be null."
+msgstr ""
+
 msgid "The data is required."
 msgstr "Podatki so zahtevani."
+
+msgid "The modified date should be a valid ISO 80601 date."
+msgstr "Spremenjeni datum mora biti veljaven datum ISO 80601."
 
 msgid "A modified date is required."
 msgstr "Datum spremembe je obvezen."
@@ -2824,14 +2854,8 @@ msgstr "Vrsta ključa metapodatkov mora biti \"shared key\"."
 msgid "The metadata key should not be deleted."
 msgstr "Ključa metapodatkov ni dovoljeno izbrisati."
 
-msgid "A metadata key identifier is required."
-msgstr "Potreben je identifikator ključa metapodatkov."
-
 msgid "The metadata key identifier should not be empty."
 msgstr "Identifikator ključa metapodatkov ne sme biti prazen."
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr "Identifikator ključa metapodatkov mora biti veljaven UUID."
 
 msgid "A metadata key type is required."
 msgstr "Potrebna je vrsta ključa metapodatkov."
@@ -2989,6 +3013,12 @@ msgstr "{0} je uredil nastavitve metapodatkov"
 msgid "You edited the metadata settings"
 msgstr "Uredili ste nastavitve metapodatkov"
 
+msgid "No metadata private keys found for metadata key {0}."
+msgstr ""
+
+msgid "Metadata keys present for metadata key {0}"
+msgstr ""
+
 msgid "No active metadata key found."
 msgstr ""
 
@@ -3097,14 +3127,11 @@ msgstr "Uporabniškega ključa OpenPGP ni mogoče najti."
 msgid "Could not validate the settings."
 msgstr "Ni bilo mogoče preveriti nastavitev."
 
+msgid "The server metadata private keys data are invalid."
+msgstr ""
+
 msgid "The server metadata private key is required to enable these settings."
 msgstr "Za omogočanje teh nastavitev je potreben zasebni ključ strežniških metapodatkov."
-
-msgid "The server metadata key id is required."
-msgstr "ID strežniškega ključa metapodatkov je obvezen."
-
-msgid "The server metadata private key is invalid."
-msgstr "Zasebni ključ strežniških metapodatkov je neveljaven."
 
 msgid "The metadata private key could not be created."
 msgstr "Zasebnega ključa metapodatkov ni bilo mogoče ustvariti."
@@ -3283,14 +3310,14 @@ msgstr "Ustvarjanje/spreminjanje mape s šifriranimi metapodatki ni dovoljeno."
 msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr "Ustvarjanje/spreminjanje oznake s šifriranimi metapodatki ni dovoljeno."
 
-msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr "Ustvarjanje/spreminjanje vira z nešifriranimi metapodatki ni dovoljeno."
+msgid "Resource creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr "Ustvarjanje/spreminjanje mape z nešifriranimi metapodatki ni dovoljeno."
+msgid "Folder creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr "Ustvarjanje/spreminjanje oznake z nešifriranimi metapodatki ni dovoljeno."
+msgid "Tag creation with cleartext metadata not allowed."
+msgstr ""
 
 msgid "You created a new metadata key."
 msgstr "Ustvarili ste nov ključ metapodatkov."
@@ -3343,7 +3370,7 @@ msgstr "{0} je z vami delil vir."
 msgid "You have edited a resource."
 msgstr "Uredili ste vir."
 
-msgid "{0} have edited a resource."
+msgid "{0} has edited a resource."
 msgstr ""
 
 msgid "Information about the transfer is required."
@@ -5113,6 +5140,27 @@ msgstr "Dobrodošli v {0}!"
 msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr "{0} je uporabil funkcijo samoregistracije za ustvarjanje računa na passboltu."
 
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} je pravkar aktiviral svoj račun na passbolt!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "Uporabnik je sedaj aktiven na passbolt in lahko z njim delite gesla."
+
+msgid "This user was invited by you {0}."
+msgstr "Tega uporabnika ste povabili {0}."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "Ta uporabnik se je sam registriral, saj je javna registracija omogočena."
+
+msgid "This user was invited by {0} {1}."
+msgstr "Tega uporabnika je povabil {0} {1}."
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr "Uporabniku manjka šifrirni ključ za deljene metapodatke vira. Prosimo, prijavite se in pojdite v uporabniški delovni prostor ter ročno delite ključ z njim."
+
+msgid "View users"
+msgstr ""
+
 msgid "You have initiated an account recovery!"
 msgstr "Začeli ste postopek obnove računa!"
 
@@ -5259,27 +5307,6 @@ msgstr "{0} je z vami delil gesla"
 
 msgid "{0} resources were shared with you."
 msgstr "{0} virov je bilo deljenih z vami."
-
-msgid "{0} just activated their account on passbolt!"
-msgstr "{0} je pravkar aktiviral svoj račun na passbolt!"
-
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "Uporabnik je sedaj aktiven na passbolt in lahko z njim delite gesla."
-
-msgid "This user was invited by you {0}."
-msgstr "Tega uporabnika ste povabili {0}."
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr "Ta uporabnik se je sam registriral, saj je javna registracija omogočena."
-
-msgid "This user was invited by {0} {1}."
-msgstr "Tega uporabnika je povabil {0} {1}."
-
-msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr "Uporabniku manjka šifrirni ključ za deljene metapodatke vira. Prosimo, prijavite se in pojdite v uporabniški delovni prostor ter ročno delite ključ z njim."
-
-msgid "View users"
-msgstr ""
 
 msgid "This email is an automatic notification sent by"
 msgstr "To je avtomatsko sporočilo, ki ga je poslal"

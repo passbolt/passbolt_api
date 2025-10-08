@@ -21,6 +21,7 @@ use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Utility\UuidFactory;
 use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
@@ -38,17 +39,37 @@ class ResourceTypesDeleteControllerTest extends AppIntegrationTestCaseV5
         $this->enableFeaturePlugin(ResourceTypesPlugin::class);
     }
 
-    public function testResourceTypesDeleteController_Success(): void
+    public static function resourceTypesSlugProvider(): array
+    {
+        return [
+            [ResourceType::SLUG_PASSWORD_AND_DESCRIPTION],
+            [ResourceType::SLUG_V5_PASSWORD_STRING],
+            [ResourceType::SLUG_V5_DEFAULT],
+            [ResourceType::SLUG_V5_CUSTOM_FIELD_STANDALONE],
+            [ResourceType::SLUG_V5_NOTE],
+        ];
+    }
+
+    /**
+     * @dataProvider resourceTypesSlugProvider
+     * @param string $slug Resource type slug.
+     * @return void
+     * @throws \Exception
+     */
+    public function testResourceTypesDeleteController_Success(string $slug): void
     {
         MetadataTypesSettingsFactory::make()->v4()->persist();
 
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $resourceType */
         $resourceType = ResourceTypeFactory::make()->passwordString()->persist();
-        ResourceTypeFactory::make()->passwordAndDescription()->persist();
+        ResourceTypeFactory::make([
+            'id' => UuidFactory::uuid('resource-types.id.' . $slug),
+            'slug' => $slug,
+        ])->persist();
         $resourceTypeId = $resourceType->id;
 
         $this->logInAsAdmin();
-        $this->deleteJson("/resource-types/$resourceTypeId.json");
+        $this->deleteJson("/resource-types/{$resourceTypeId}.json");
 
         $this->assertSuccess();
         $this->assertEquals(2, ResourceTypeFactory::count());

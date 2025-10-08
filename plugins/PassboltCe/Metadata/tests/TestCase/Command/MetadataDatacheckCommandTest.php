@@ -104,4 +104,37 @@ class MetadataDatacheckCommandTest extends AppTestCaseV5
         $this->assertOutputContains('<error>[FAIL] Is metadata key exist and active: 1/2</error>');
         $this->assertOutputContains("Metadata key does not exists or soft-deleted for resource {$v5ResourceWithMetadataKeyMissing->get('id')}");
     }
+
+    public function testMetadataDatacheckCommand_Success_MetadataKeysWithoutMetadataPrivateKeys(): void
+    {
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        // v4 resource
+        $v4Resource = ResourceFactory::make()->withPermissionsFor([UserFactory::make()->persist()])->persist();
+        // v5 resource
+        $metadataKeyWithPrivateKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
+        $metadataKeyWithoutPrivateKey = MetadataKeyFactory::make()->persist();
+        MetadataKeyFactory::make()->deleted()->persist(); // make sure deleted metadata keys are omitted
+        $v5Resource = ResourceFactory::make()
+            ->v5Fields(true, [
+                'metadata_key_id' => $metadataKeyWithPrivateKey->get('id'),
+                'metadata' => $this->encryptForMetadataKey(json_encode([])),
+            ])
+            ->withPermissionsFor([$admin])
+            ->persist();
+
+        $this->exec('passbolt datacheck');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('<error>[FAIL] Data integrity for MetadataKeys.</error>');
+        $this->assertOutputContains("Validation success for resource {$v4Resource->get('id')}");
+        $this->assertOutputContains("Validation success for resource {$v5Resource->get('id')}");
+        $this->assertOutputContains('<error>[FAIL] Check metadata private keys present: 1/2</error>');
+        $this->assertOutputContains("Metadata keys present for metadata key {$metadataKeyWithPrivateKey->get('id')}");
+        $this->assertOutputContains("No metadata private keys found for metadata key {$metadataKeyWithoutPrivateKey->get('id')}");
+    }
 }

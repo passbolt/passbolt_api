@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-08-07 13:12+0000\n"
-"PO-Revision-Date: 2025-09-10 10:27\n"
+"POT-Creation-Date: 2025-10-01 06:12+0000\n"
+"PO-Revision-Date: 2025-10-07 22:26\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -2041,6 +2041,12 @@ msgstr "Error de validación para el recurso {0}. {1}"
 msgid "Validation success for resource {0}"
 msgstr "Éxito en la validación para el recurso {0}"
 
+msgid "Metadata key exist and present for resource {0}."
+msgstr "La clave de metadatos existe y está presente para el recurso {0}."
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr "La clave de metadatos no existe o ha sido marcada como eliminada para el recurso {0}."
+
 msgid "The resource types associated to this resource does not exist."
 msgstr "Los tipos de recurso asociados a este recurso no existen."
 
@@ -2785,8 +2791,11 @@ msgstr "Los datos no deben estar vacíos."
 msgid "The data should be a valid ASCII string."
 msgstr "Los datos deben ser una cadena ASCII válida."
 
-msgid "The modified date should be a valid ISO 80601 date."
-msgstr "La fecha modificada debe ser una fecha ISO 80601 válida."
+msgid "The expired field value should be a valid ISO 80601 date."
+msgstr "El valor del campo caducado debe ser una fecha ISO 80601 válida."
+
+msgid "The expired field value should be parseable."
+msgstr "El valor del campo caducado debe ser analizable."
 
 msgid "The setting should be a valid boolean."
 msgstr "El ajuste debe ser un booleano válido."
@@ -2794,8 +2803,29 @@ msgstr "El ajuste debe ser un booleano válido."
 msgid "The setting is required."
 msgstr "Se requiere el ajuste."
 
+msgid "The metadata private keys is required."
+msgstr "Se requieren las claves privadas de metadatos."
+
+msgid "The metadata private keys should not be empty."
+msgstr "Las claves privadas de metadatos no deben estar vacías."
+
+msgid "Need at most one metadata private key."
+msgstr "Se necesita como máximo una clave privada de metadatos."
+
+msgid "A metadata key identifier is required."
+msgstr "Se requiere un identificador de clave de metadatos."
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "El identificador de clave de metadatos debe ser un UUID válido."
+
+msgid "The user identifier should be null."
+msgstr "El identificador de usuario debe ser nulo."
+
 msgid "The data is required."
 msgstr "Se requieren los datos."
+
+msgid "The modified date should be a valid ISO 80601 date."
+msgstr "La fecha modificada debe ser una fecha ISO 80601 válida."
 
 msgid "A modified date is required."
 msgstr "Se requiere una fecha de modificación."
@@ -2824,14 +2854,8 @@ msgstr "El tipo de clave de metadatos debe ser una clave compartida."
 msgid "The metadata key should not be deleted."
 msgstr "La clave de metadatos no debe ser eliminada."
 
-msgid "A metadata key identifier is required."
-msgstr "Se requiere un identificador de clave de metadatos."
-
 msgid "The metadata key identifier should not be empty."
 msgstr "El identificador de clave de metadatos no debe estar vacío."
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr "El identificador de clave de metadatos debe ser un UUID válido."
 
 msgid "A metadata key type is required."
 msgstr "Se requiere un tipo de clave de metadatos."
@@ -2989,6 +3013,12 @@ msgstr "{0} ha editado los ajustes de metadatos"
 msgid "You edited the metadata settings"
 msgstr "Se ha editado la configuración de los metadatos"
 
+msgid "No metadata private keys found for metadata key {0}."
+msgstr "No se encontraron claves privadas de metadatos para la clave de metadatos {0}."
+
+msgid "Metadata keys present for metadata key {0}"
+msgstr "Claves de metadatos presentes para la clave de metadatos {0}"
+
 msgid "No active metadata key found."
 msgstr "No se ha encontrado ninguna clave de metadatos activa."
 
@@ -3023,13 +3053,13 @@ msgid "Unable to decrypt the metadata private key (id: {0}) data."
 msgstr "No se pudo descifrar los datos de la clave privada de metadatos (ID: {0})."
 
 msgid "The metadata private key (id: {0}) cleartext data should be in JSON format."
-msgstr "Los datos de texto claro de la clave privada de metadatos (ID: {0}) deben estar en formato JSON."
+msgstr "Los datos de texto plano de la clave privada de metadatos (ID: {0}) deben estar en formato JSON."
 
 msgid "The metadata private key (id: {0}) cleartext data should not be empty."
-msgstr "Los datos de texto claro de la clave privada de metadatos (ID: {0}) no deben estar vacíos."
+msgstr "Los datos de texto plano de la clave privada de metadatos (ID: {0}) no deben estar vacíos."
 
 msgid "Unable to validate metadata private key (id: {0}) cleartext data."
-msgstr "No se pudieron validar los datos de texto claro de la clave privada de metadatos (ID: {0})."
+msgstr "No se pudieron validar los datos de texto plano de la clave privada de metadatos (ID: {0})."
 
 msgid "The server metadata private key is valid."
 msgstr "La clave privada de metadatos del servidor es válida."
@@ -3083,13 +3113,13 @@ msgid "The metadata private key should not be empty."
 msgstr "La clave privada de metadatos no debe estar vacía."
 
 msgid "The metadata private key cleartext data should be in JSON format."
-msgstr "Los datos de texto claro de la clave privada de metadatos deben estar en formato JSON."
+msgstr "Los datos de texto plano de la clave privada de metadatos deben estar en formato JSON."
 
 msgid "The metadata private key cleartext data should not be empty."
-msgstr "Los datos de texto claro de la clave privada de metadatos no deben estar vacíos."
+msgstr "Los datos de texto plano de la clave privada de metadatos no deben estar vacíos."
 
 msgid "The metadata private key cleartext data is not valid."
-msgstr "Los datos de texto claro de clave privada de metadatos no son válidos."
+msgstr "Los datos de texto plano de clave privada de metadatos no son válidos."
 
 msgid "The OpenPGP user key cannot be found."
 msgstr "No se pudo encontrar la clave de usuario OpenPGP."
@@ -3097,14 +3127,11 @@ msgstr "No se pudo encontrar la clave de usuario OpenPGP."
 msgid "Could not validate the settings."
 msgstr "No se pudieron validar los ajustes."
 
+msgid "The server metadata private keys data are invalid."
+msgstr "Los datos de las claves privadas de metadatos del servidor no son válidos."
+
 msgid "The server metadata private key is required to enable these settings."
 msgstr "Se requiere la clave privada de los metadatos del servidor para habilitar estos ajustes."
-
-msgid "The server metadata key id is required."
-msgstr "Se requiere el identificador de clave de metadatos del servidor."
-
-msgid "The server metadata private key is invalid."
-msgstr "La clave privada de metadatos del servidor no es válida."
 
 msgid "The metadata private key could not be created."
 msgstr "No se pudo crear la clave privada de metadatos."
@@ -3283,14 +3310,14 @@ msgstr "No se permite la creación/modificación de carpetas con metadatos cifra
 msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr "No se permite la creación/modificación de etiquetas con metadatos cifrados."
 
-msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr "No se permite la creación/modificación de recursos con metadatos de texto claro."
+msgid "Resource creation with cleartext metadata not allowed."
+msgstr "No se permite la creación de recursos con metadatos de texto plano."
 
-msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr "No se permite la creación/modificación de carpetas con metadatos de texto claro."
+msgid "Folder creation with cleartext metadata not allowed."
+msgstr "No se permite la creación de carpetas con metadatos de texto plano."
 
-msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr "No se permite la creación/modificación de etiquetas con metadatos de texto claro."
+msgid "Tag creation with cleartext metadata not allowed."
+msgstr "No se permite la creación de etiquetas con metadatos de texto plano."
 
 msgid "You created a new metadata key."
 msgstr "Se ha creado una nueva clave de metadatos."
@@ -3343,7 +3370,7 @@ msgstr "{0} ha compartido un recurso contigo."
 msgid "You have edited a resource."
 msgstr "Se ha editado un recurso."
 
-msgid "{0} have edited a resource."
+msgid "{0} has edited a resource."
 msgstr "{0} ha editado un recurso."
 
 msgid "Information about the transfer is required."
@@ -5113,6 +5140,27 @@ msgstr "¡Bienvenido a {0}!"
 msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr "{0} ha usado la función de auto-registro para crear una cuenta en Passbolt."
 
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} acaba de activar su cuenta en passbolt!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "El usuario está ahora activo en passbolt y puedes compartir contraseñas con él."
+
+msgid "This user was invited by you {0}."
+msgstr "Este usuario fue invitado por ti {0}."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "Este usuario se registró por sí mismo, ya que el registro público está habilitado."
+
+msgid "This user was invited by {0} {1}."
+msgstr "Este usuario fue invitado por {0} {1}."
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr "Este usuario no tiene la clave de cifrado para los metadatos de recursos compartidos. Por favor inicie sesión, vaya al área de trabajo del usuario y comparta la clave con ellos manualmente."
+
+msgid "View users"
+msgstr "Ver usuarios"
+
 msgid "You have initiated an account recovery!"
 msgstr "¡Se ha iniciado una recuperación de cuenta!"
 
@@ -5259,27 +5307,6 @@ msgstr "{0} ha compartido contraseñas contigo"
 
 msgid "{0} resources were shared with you."
 msgstr "{0} recursos han sido compartidos contigo."
-
-msgid "{0} just activated their account on passbolt!"
-msgstr "{0} acaba de activar su cuenta en passbolt!"
-
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "El usuario está ahora activo en passbolt y puedes compartir contraseñas con él."
-
-msgid "This user was invited by you {0}."
-msgstr "Este usuario fue invitado por ti {0}."
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr "Este usuario se registró por sí mismo, ya que el registro público está habilitado."
-
-msgid "This user was invited by {0} {1}."
-msgstr "Este usuario fue invitado por {0} {1}."
-
-msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr "Este usuario no tiene la clave de cifrado para los metadatos de recursos compartidos. Por favor inicie sesión, vaya al área de trabajo del usuario y comparta la clave con ellos manualmente."
-
-msgid "View users"
-msgstr "Ver usuarios"
 
 msgid "This email is an automatic notification sent by"
 msgstr "Este correo electrónico es una notificación automática enviada por"
