@@ -62,7 +62,7 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEmailQueueCount(1);
     }
 
-    public function isResourceAlreadyExpired(): array
+    public static function isResourceAlreadyExpired(): array
     {
         return [
             [false],

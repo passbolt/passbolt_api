@@ -69,7 +69,7 @@ class AvatarsValidationTest extends TestCase
         $this->assertSame('avatars', $this->Avatars->getTable());
     }
 
-    public function dataProviderForValidationDefaultSuccess(): array
+    public static function dataProviderForValidationDefaultSuccess(): array
     {
         return [
             ['png'],

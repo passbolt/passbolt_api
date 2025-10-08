@@ -35,7 +35,7 @@ class ValidFullBaseUrlCoreHealthcheckTest extends TestCase
         $this->assertSame($expectedResult, $result);
     }
 
-    public function validFullBaseUrlCoreHealthcheckUrlsProvider(): array
+    public static function validFullBaseUrlCoreHealthcheckUrlsProvider(): array
     {
         return [
             [

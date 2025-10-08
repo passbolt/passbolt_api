@@ -113,7 +113,7 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         $this->Actions->clearCache();
     }
 
-    public function dataProviderForLoginType(): array
+    public static function dataProviderForLoginType(): array
     {
         return [[self::SESSION_LOGIN], [self::JWT_LOGIN]];
     }

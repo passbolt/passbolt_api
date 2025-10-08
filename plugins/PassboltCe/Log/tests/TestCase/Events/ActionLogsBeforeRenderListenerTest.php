@@ -33,7 +33,7 @@ use PDOException;
  */
 class ActionLogsBeforeRenderListenerTest extends TestCase
 {
-    public function exceptionsForNoDBConnection(): array
+    public static function exceptionsForNoDBConnection(): array
     {
         return [
             [new MissingConnectionException()],

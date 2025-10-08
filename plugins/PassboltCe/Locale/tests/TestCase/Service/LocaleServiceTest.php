@@ -61,7 +61,7 @@ class LocaleServiceTest extends TestCase
         ], LocaleService::getSystemLocales());
     }
 
-    public function dataForTestLocaleServiceLocaleIsValid(): array
+    public static function dataForTestLocaleServiceLocaleIsValid(): array
     {
         return [
             ['en-UK', true],
@@ -87,7 +87,7 @@ class LocaleServiceTest extends TestCase
         );
     }
 
-    public function dataProviderForTestLocaleServiceLocaleTranslateString_On_Existing_Locale_English_Default(): array
+    public static function dataProviderForTestLocaleServiceLocaleTranslateString_On_Existing_Locale_English_Default(): array
     {
         return [
             ['fr-FR', 'Courriel envoyé de: admin@passbolt.com'],
@@ -99,7 +99,7 @@ class LocaleServiceTest extends TestCase
         ];
     }
 
-    public function dataProviderForTestLocaleServiceLocaleTranslateString_On_Existing_Locale_French_Default(): array
+    public static function dataProviderForTestLocaleServiceLocaleTranslateString_On_Existing_Locale_French_Default(): array
     {
         return [
             ['fr-FR', 'Courriel envoyé de: admin@passbolt.com'],

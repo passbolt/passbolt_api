@@ -39,7 +39,7 @@ class AvatarProcessingTest extends TestCase
         mkdir($this->testDirectory);
     }
 
-    public function imagesToProcess()
+    public static function imagesToProcess()
     {
         return [
             ['ada.png'],

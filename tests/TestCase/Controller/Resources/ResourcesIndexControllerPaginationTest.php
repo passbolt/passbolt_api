@@ -52,7 +52,7 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
         unset($this->defaultSortDirection);
     }
 
-    public function dataProviderForSortingDirection(): array
+    public static function dataProviderForSortingDirection(): array
     {
         return [
             [],

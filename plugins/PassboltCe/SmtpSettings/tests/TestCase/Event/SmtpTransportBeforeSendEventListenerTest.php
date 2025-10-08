@@ -118,7 +118,7 @@ class SmtpTransportBeforeSendEventListenerTest extends TestCase
     /**
      * @return array
      */
-    public function smtpSettingsContextSslOptionsDataProvider(): array
+    public static function smtpSettingsContextSslOptionsDataProvider(): array
     {
         return [
             [

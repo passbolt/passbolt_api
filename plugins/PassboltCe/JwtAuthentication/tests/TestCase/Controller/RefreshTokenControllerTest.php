@@ -80,7 +80,7 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertBadRequestError('No active refresh token matching the request could be found.');
     }
 
-    public function dataProviderWithAndWithoutAccessToken(): array
+    public static function dataProviderWithAndWithoutAccessToken(): array
     {
         return [
             [true], [false],

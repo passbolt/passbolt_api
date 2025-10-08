@@ -97,13 +97,13 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
         $this->assertCount(2, $metadataPrivateKeys);
     }
 
-    public function invalidMetadataKeyDataProvider(): array
+    public static function invalidMetadataKeyDataProvider(): array
     {
-        $dummyKey = $this->getMetadataKeyInfo();
-        $makiKey = $this->getUserKeyInfo();
-        $expiredKey = $this->getExpiredKeyInfo();
-        $msgForServer = $this->getEncryptedMetadataPrivateKeyForServerKey();
-        $invalidAlgKey = $this->getInvalidAlgKeyInfo();
+        $dummyKey = self::getMetadataKeyInfo();
+        $makiKey = self::getUserKeyInfo();
+        $expiredKey = self::getExpiredKeyInfo();
+        $msgForServer = self::getEncryptedMetadataPrivateKeyForServerKey();
+        $invalidAlgKey = self::getInvalidAlgKeyInfo();
 
         return [
             [
@@ -135,11 +135,11 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                     'metadata_private_keys' => [
                         [
                             'user_id' => UuidFactory::uuid(),
-                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => self::getDummyPrivateKeyOpenPGPMessage(),
                         ],
                         [
                             'user_id' => null,
-                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => self::getDummyPrivateKeyOpenPGPMessage(),
                         ],
                     ],
                 ],
@@ -169,15 +169,15 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                     'metadata_private_keys' => [
                         [
                             'user_id' => 'foo-bar',
-                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => self::getDummyPrivateKeyOpenPGPMessage(),
                         ],
                         [
                             'user_id' => '🔥🔥🔥',
-                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => self::getDummyPrivateKeyOpenPGPMessage(),
                         ],
                         [
                             'user_id' => 12345,
-                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => self::getDummyPrivateKeyOpenPGPMessage(),
                         ],
                     ],
                 ],
@@ -190,7 +190,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                     'metadata_private_keys' => [
                         [
                             'user_id' => null,
-                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => self::getDummyPrivateKeyOpenPGPMessage(),
                         ],
                     ],
                 ],

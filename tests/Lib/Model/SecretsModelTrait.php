@@ -30,7 +30,7 @@ trait SecretsModelTrait
      * @param array|null $options The entity options
      * @return Secret
      */
-    public function addSecret(?array $data = [], ?array $options = []): Secret
+    public static function addSecret(?array $data = [], ?array $options = []): Secret
     {
         $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
 
@@ -52,7 +52,7 @@ trait SecretsModelTrait
      * @param array|null $options The new entity options.
      * @return Secret
      */
-    public function getDummySecretEntity(?array $data = [], ?array $options = []): Secret
+    public static function getDummySecretEntity(?array $data = [], ?array $options = []): Secret
     {
         $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
         $defaultOptions = [

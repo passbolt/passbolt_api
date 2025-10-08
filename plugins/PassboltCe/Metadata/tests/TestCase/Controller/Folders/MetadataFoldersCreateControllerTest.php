@@ -230,7 +230,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
      *
      * @return array[]
      */
-    public function invalidFolderDataProvider(): array
+    public static function invalidFolderDataProvider(): array
     {
         return [
             [

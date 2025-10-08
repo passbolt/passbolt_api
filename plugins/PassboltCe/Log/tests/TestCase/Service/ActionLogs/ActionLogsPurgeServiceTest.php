@@ -30,7 +30,7 @@ use Passbolt\Log\Test\Factory\SecretAccessFactory;
 
 class ActionLogsPurgeServiceTest extends AppTestCase
 {
-    public function dataForTest(): array
+    public static function dataForTest(): array
     {
         return [
             'dryRun' => [true],

@@ -53,7 +53,7 @@ class SelfRegistrationSetSettingsServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function isInvalidDataInDb(): array
+    public static function isInvalidDataInDb(): array
     {
         return [[true], [false]];
     }
