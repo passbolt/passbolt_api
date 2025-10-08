@@ -88,7 +88,7 @@ class ShareNotificationTest extends ShareControllerTest
         $data['permissions'][] = ['id' => $permissionUserBId, 'delete' => true];
         // Add an owner permission for the user Edith
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userE->id, 'type' => Permission::OWNER];
-        $data['secrets'][] = ['user_id' => $userE->id, 'data' => $this->getValidSecret()];
+        $data['secrets'][] = ['user_id' => $userE->id, 'data' => self::getValidSecret()];
 
         // Group permissions changes.
         // Change the permission of the group Board (no users are expected to be added or removed).
@@ -97,8 +97,8 @@ class ShareNotificationTest extends ShareControllerTest
         $data['permissions'][] = ['id' => $permissionGroupFId, 'delete' => true];
         // Add a read permission for the group Accounting.
         $data['permissions'][] = ['aro' => 'Group', 'aro_foreign_key' => $groupToAddPermissionTo->id, 'type' => Permission::READ];
-        $data['secrets'][] = ['user_id' => $userMemberOfTheGroupToAddPermissionOn->id, 'data' => $this->getValidSecret()];
-        $data['secrets'][] = ['user_id' => $userMemberOfTheGroupToAddPermissionOn2->id, 'data' => $this->getValidSecret()];
+        $data['secrets'][] = ['user_id' => $userMemberOfTheGroupToAddPermissionOn->id, 'data' => self::getValidSecret()];
+        $data['secrets'][] = ['user_id' => $userMemberOfTheGroupToAddPermissionOn2->id, 'data' => self::getValidSecret()];
 
         $resourceId = $resource->id;
         $this->logInAs($userOwner);

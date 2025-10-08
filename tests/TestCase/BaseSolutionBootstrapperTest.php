@@ -151,7 +151,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         $this->assertFalse($plugin->isEnabled('routes'));
     }
 
-    public function dataFortestBaseSolutionBootstrapper_AddFeaturePlugin_On_Disabled_Plugin(): array
+    public static function dataFortestBaseSolutionBootstrapper_AddFeaturePlugin_On_Disabled_Plugin(): array
     {
         return [
             [],
@@ -181,7 +181,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         $this->assertFalse($this->app->getPlugins()->has('Passbolt/Mobile'));
     }
 
-    public function data_for_testBaseSolutionBootstrapper_AddFeaturePlugin_On_Enabled_Plugin_By_Default()
+    public static function data_for_testBaseSolutionBootstrapper_AddFeaturePlugin_On_Enabled_Plugin_By_Default()
     {
         return [
             [true],

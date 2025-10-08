@@ -162,9 +162,9 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
         $this->assertForbiddenError('Access restricted to administrators.');
     }
 
-    public function invalidRequestDataProvider(): array
+    public static function invalidRequestDataProvider(): array
     {
-        $dummyKey = $this->getMetadataKeyInfo();
+        $dummyKey = static::getMetadataKeyInfo();
 
         return [
             [
@@ -174,7 +174,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
                     'metadata_private_keys' => [
                         [
                             'user_id' => null, // valid - server key
-                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => self::getDummyPrivateKeyOpenPGPMessage(),
                         ],
                     ],
                  ],

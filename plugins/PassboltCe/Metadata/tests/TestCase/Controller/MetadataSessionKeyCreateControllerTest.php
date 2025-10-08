@@ -85,9 +85,9 @@ class MetadataSessionKeyCreateControllerTest extends AppIntegrationTestCaseV5
         $this->assertResponseCode(400);
     }
 
-    public function invalidRequestDataProvider(): array
+    public static function invalidRequestDataProvider(): array
     {
-        $sessionKeyForServer = $this->getEncryptedMetadataSessionKeyForServerKey();
+        $sessionKeyForServer = self::getEncryptedMetadataSessionKeyForServerKey();
 
         return [
             [

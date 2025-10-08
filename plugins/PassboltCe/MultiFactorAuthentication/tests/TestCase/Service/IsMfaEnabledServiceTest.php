@@ -162,7 +162,7 @@ class IsMfaEnabledServiceTest extends TestCase
     /**
      * @return array
      */
-    public function provideProvidersForDisabledMfa()
+    public static function provideProvidersForDisabledMfa()
     {
         return [
             [
@@ -183,7 +183,7 @@ class IsMfaEnabledServiceTest extends TestCase
     /**
      * @return array
      */
-    public function provideProvidersForEnabledMfa()
+    public static function provideProvidersForEnabledMfa()
     {
         return [
             [

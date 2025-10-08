@@ -40,7 +40,7 @@ class SanitizeUrlComponentTest extends TestCase
         $this->assertSame($expectedResult, $result);
     }
 
-    public function dataForTestSanitizeUrlComponent_Sanitize(): array
+    public static function dataForTestSanitizeUrlComponent_Sanitize(): array
     {
         return [
             ['', [], false, false, true, '/'],
@@ -66,7 +66,7 @@ class SanitizeUrlComponentTest extends TestCase
         $this->assertSame($expectedResult, $result);
     }
 
-    public function dataForTestSanitizeUrlComponent_SanitizeRedirect(): array
+    public static function dataForTestSanitizeUrlComponent_SanitizeRedirect(): array
     {
         $baseUrl = '/foo';
         $urlElements = parse_url(Router::url('/', true));
@@ -120,7 +120,7 @@ class SanitizeUrlComponentTest extends TestCase
         $this->assertSame($expectedRedirect, $result);
     }
 
-    public function dataForTestSanitizeUrlComponent_SanitizeRedirect_With_LoopStop(): array
+    public static function dataForTestSanitizeUrlComponent_SanitizeRedirect_With_LoopStop(): array
     {
         return [
             ['', '', '/'],

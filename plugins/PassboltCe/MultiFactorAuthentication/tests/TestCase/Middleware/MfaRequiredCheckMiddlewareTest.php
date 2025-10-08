@@ -49,7 +49,7 @@ class MfaRequiredCheckMiddlewareTest extends AppTestCase
         parent::tearDown();
     }
 
-    public function dataForWhiteListUrl()
+    public static function dataForWhiteListUrl()
     {
         return [
             ['/mfa/verify', false,],

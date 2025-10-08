@@ -98,7 +98,7 @@ class MetadataResourcesBatchValidationServiceTest extends TestCase
         $this->service->validateMany($requestData);
     }
 
-    public function metadataResourcesBatchValidationServiceInvalidRequestDataValuesProvider(): array
+    public static function metadataResourcesBatchValidationServiceInvalidRequestDataValuesProvider(): array
     {
         return [
             [

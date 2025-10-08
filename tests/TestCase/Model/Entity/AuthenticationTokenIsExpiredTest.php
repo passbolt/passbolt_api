@@ -38,7 +38,7 @@ class AuthenticationTokenIsExpiredTest extends TestCase
         $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
     }
 
-    public function expiryData(): array
+    public static function expiryData(): array
     {
         return [
             [AuthenticationToken::TYPE_REFRESH_TOKEN, false], // month

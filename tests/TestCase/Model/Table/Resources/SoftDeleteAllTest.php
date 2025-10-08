@@ -98,7 +98,7 @@ class SoftDeleteAllTest extends AppTestCase
      * @return array
      * @see ResourcesTable::softDeleteAll()
      */
-    public function dataForTestSoftDeleteAllSuccessWithAssociation()
+    public static function dataForTestSoftDeleteAllSuccessWithAssociation()
     {
         return [[true], [false]];
     }

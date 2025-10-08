@@ -60,7 +60,7 @@ class ShareControllerTest extends AppIntegrationTestCase
         $this->gpg = OpenPGPBackendFactory::get();
     }
 
-    protected function getValidSecret(): string
+    protected static function getValidSecret(): string
     {
         return '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
@@ -111,7 +111,7 @@ hcciUFw5
         $expectedRemovedUsersIds[] = $userBId;
         // Add an owner permission for the user Edith
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
-        $data['secrets'][] = ['user_id' => $userEId, 'data' => $this->getValidSecret()];
+        $data['secrets'][] = ['user_id' => $userEId, 'data' => self::getValidSecret()];
         $expectedAddedUsersIds[] = $userEId;
 
         // Groups permissions changes.
@@ -122,7 +122,7 @@ hcciUFw5
         $expectedRemovedUsersIds = array_merge($expectedRemovedUsersIds, [$userJId, $userKId, $userLId, $userMId, $userNId]);
         // Add a read permission for the group Accounting.
         $data['permissions'][] = ['aro' => 'Group', 'aro_foreign_key' => $groupAId, 'type' => Permission::READ];
-        $data['secrets'][] = ['user_id' => $userFId, 'data' => $this->getValidSecret()];
+        $data['secrets'][] = ['user_id' => $userFId, 'data' => self::getValidSecret()];
         $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
 
         $this->authenticateAs('ada');
@@ -151,7 +151,7 @@ hcciUFw5
         }
     }
 
-    public function dataForTestErrorValidation(): array
+    public static function dataForTestErrorValidation(): array
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $resourceAprilId = UuidFactory::uuid('resource.id.april');
@@ -211,7 +211,7 @@ hcciUFw5
             ['cannot add a secret for a user who do not have access to the resource', [
                 'errorField' => 'secrets.0.resource_id.has_resource_access',
                 'data' => ['secrets' => [
-                    ['user_id' => $userEId, 'data' => $this->getValidSecret()],
+                    ['user_id' => $userEId, 'data' => self::getValidSecret()],
                 ]],
             ]],
         ];
