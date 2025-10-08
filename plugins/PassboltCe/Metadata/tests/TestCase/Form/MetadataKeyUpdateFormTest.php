@@ -43,7 +43,7 @@ class MetadataKeyUpdateFormTest extends TestCase
         unset($this->form);
     }
 
-    public function getDefaultData(): array
+    public static function getDefaultData(): array
     {
         return [
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
@@ -54,7 +54,7 @@ class MetadataKeyUpdateFormTest extends TestCase
 
     public function testMetadataKeyUpdateForm_Success(): void
     {
-        $this->assertTrue($this->form->execute($this->getDefaultData()));
+        $this->assertTrue($this->form->execute(self::getDefaultData()));
     }
 
     public function testMetadataKeyUpdateForm_Error_Required(): void

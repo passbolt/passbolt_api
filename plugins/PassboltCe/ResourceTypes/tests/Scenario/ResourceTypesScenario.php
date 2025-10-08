@@ -34,6 +34,10 @@ class ResourceTypesScenario implements FixtureScenarioInterface
                 'slug' => ResourceType::SLUG_PASSWORD_AND_DESCRIPTION,
                 'definition' => SlugDefinition::passwordAndDescription(),
             ],
+            [
+                'slug' => ResourceType::SLUG_V5_NOTE,
+                'definition' => SlugDefinition::v5Note(),
+            ],
         ])->persist();
     }
 }

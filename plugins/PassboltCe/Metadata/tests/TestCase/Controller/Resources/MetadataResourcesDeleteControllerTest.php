@@ -25,8 +25,11 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\Purifier;
+use App\Utility\UuidFactory;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * @covers \App\Controller\Resources\ResourcesDeleteController
@@ -46,7 +49,26 @@ class MetadataResourcesDeleteControllerTest extends AppIntegrationTestCaseV5
         EventManager::instance()->setEventList(new EventList());
     }
 
-    public function testMetadataResourcesDeleteController_Success(): void
+    public static function v5ResourceTypesSlugProvider(): array
+    {
+        $resourceTypeSlugs = [];
+        foreach (ResourceType::V5_RESOURCE_TYPE_SLUGS as $v5ResourceTypeSlug) {
+            // simple password string isn't possible in v5
+            if ($v5ResourceTypeSlug === ResourceType::SLUG_V5_PASSWORD_STRING) {
+                continue;
+            }
+
+            $resourceTypeSlugs[] = [$v5ResourceTypeSlug];
+        }
+
+        return $resourceTypeSlugs;
+    }
+
+    /**
+     * @dataProvider v5ResourceTypesSlugProvider
+     * @return void
+     */
+    public function testMetadataResourcesDeleteController_Success(string $resourceTypeSlug): void
     {
         $this->disableErrorHandlerMiddleware();
         /** @var \App\Model\Entity\User $owner */
@@ -62,6 +84,7 @@ class MetadataResourcesDeleteControllerTest extends AppIntegrationTestCaseV5
             ->withPermissionsFor([$owner])
             ->withPermissionsFor([$user], Permission::READ)
             ->v5Fields(true, ['metadata' => json_encode([]), 'metadata_key_id' => $owner->gpgkey->id])
+            ->with('ResourceTypes', ResourceTypeFactory::make(['id' => UuidFactory::uuid('resource-types.id.' . $resourceTypeSlug), 'slug' => $resourceTypeSlug]))
             ->persist()
             ->get('id');
 

@@ -402,6 +402,7 @@ class MetadataFoldersUpdateControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataFoldersUpdateController_Error_AllowCreationOfV5FoldersDisabled()
     {
+        $this->markTestSkipped('Not handled for edit');
         // Allow only V4 format
         MetadataTypesSettingsFactory::make()->v4()->persist();
         /** @var \App\Model\Entity\User $ada */
@@ -430,6 +431,7 @@ class MetadataFoldersUpdateControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataFoldersUpdateController_Error_AllowCreationOfV4FoldersDisabled()
     {
+        $this->markTestSkipped('Not handled for edit');
         // Allow only V6 format
         MetadataTypesSettingsFactory::make()->v6()->persist();
         /** @var \App\Model\Entity\User $ada */

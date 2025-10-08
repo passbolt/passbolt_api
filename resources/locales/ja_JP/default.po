@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-08-07 13:34+0000\n"
-"PO-Revision-Date: 2025-08-08 13:25\n"
+"POT-Creation-Date: 2025-10-01 06:24+0000\n"
+"PO-Revision-Date: 2025-10-01 10:39\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -2047,6 +2047,12 @@ msgstr "リソース {0} の検証に失敗しました。 {1}"
 msgid "Validation success for resource {0}"
 msgstr "リソース {0} の検証に成功しました"
 
+msgid "Metadata key exist and present for resource {0}."
+msgstr ""
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr ""
+
 msgid "The resource types associated to this resource does not exist."
 msgstr ""
 
@@ -2791,8 +2797,11 @@ msgstr "データは空にしないでください。"
 msgid "The data should be a valid ASCII string."
 msgstr "データは有効なASCII文字列である必要があります。"
 
-msgid "The modified date should be a valid ISO 80601 date."
-msgstr "変更日は有効なISO 80601日付である必要があります。"
+msgid "The expired field value should be a valid ISO 80601 date."
+msgstr ""
+
+msgid "The expired field value should be parseable."
+msgstr ""
 
 msgid "The setting should be a valid boolean."
 msgstr "設定は有効なブール値でなければなりません。"
@@ -2800,8 +2809,29 @@ msgstr "設定は有効なブール値でなければなりません。"
 msgid "The setting is required."
 msgstr "設定が必要です。"
 
+msgid "The metadata private keys is required."
+msgstr ""
+
+msgid "The metadata private keys should not be empty."
+msgstr ""
+
+msgid "Need at most one metadata private key."
+msgstr ""
+
+msgid "A metadata key identifier is required."
+msgstr "メタデータ鍵の識別子が必要です。"
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "メタデータ鍵の識別子は有効なUUIDでなければなりません。"
+
+msgid "The user identifier should be null."
+msgstr ""
+
 msgid "The data is required."
 msgstr "データが必要です。"
+
+msgid "The modified date should be a valid ISO 80601 date."
+msgstr "変更日は有効なISO 80601日付である必要があります。"
 
 msgid "A modified date is required."
 msgstr "変更日が必要です。"
@@ -2830,14 +2860,8 @@ msgstr "メタデータ鍵のタイプは共有鍵である必要があります
 msgid "The metadata key should not be deleted."
 msgstr "メタデータ鍵を削除すべきではありません。"
 
-msgid "A metadata key identifier is required."
-msgstr "メタデータ鍵の識別子が必要です。"
-
 msgid "The metadata key identifier should not be empty."
 msgstr "メタデータ鍵の識別子は空にしないでください。"
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr "メタデータ鍵の識別子は有効なUUIDでなければなりません。"
 
 msgid "A metadata key type is required."
 msgstr "メタデータ鍵のタイプが必要です。"
@@ -2995,6 +3019,12 @@ msgstr "{0} がメタデータ設定を編集しました"
 msgid "You edited the metadata settings"
 msgstr "メタデータ設定を編集しました"
 
+msgid "No metadata private keys found for metadata key {0}."
+msgstr ""
+
+msgid "Metadata keys present for metadata key {0}"
+msgstr ""
+
 msgid "No active metadata key found."
 msgstr ""
 
@@ -3103,14 +3133,11 @@ msgstr "OpenPGPユーザー鍵が見つかりません。"
 msgid "Could not validate the settings."
 msgstr "設定を検証できませんでした。"
 
+msgid "The server metadata private keys data are invalid."
+msgstr ""
+
 msgid "The server metadata private key is required to enable these settings."
 msgstr "これらの設定を有効にするにはサーバのメタデータ秘密鍵が必要です。"
-
-msgid "The server metadata key id is required."
-msgstr "サーバのメタデータ鍵IDが必要です。"
-
-msgid "The server metadata private key is invalid."
-msgstr "サーバのメタデータ秘密鍵が無効です。"
 
 msgid "The metadata private key could not be created."
 msgstr "メタデータ秘密鍵を作成できませんでした。"
@@ -3289,14 +3316,14 @@ msgstr "暗号化されたメタデータでのフォルダ作成・変更は許
 msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr "暗号化されたメタデータでのタグ作成・変更は許可されていません。"
 
-msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr "平文メタデータでのリソース作成・変更は許可されていません。"
+msgid "Resource creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr "平文メタデータでのフォルダ作成・変更は許可されていません。"
+msgid "Folder creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr "平文メタデータでのタグ作成・変更は許可されていません。"
+msgid "Tag creation with cleartext metadata not allowed."
+msgstr ""
 
 msgid "You created a new metadata key."
 msgstr "新しいメタデータ鍵を作成しました。"
@@ -3349,7 +3376,7 @@ msgstr "{0} さんがリソースを共有しました。"
 msgid "You have edited a resource."
 msgstr "リソースを編集しました。"
 
-msgid "{0} have edited a resource."
+msgid "{0} has edited a resource."
 msgstr ""
 
 msgid "Information about the transfer is required."
@@ -5998,6 +6025,9 @@ msgstr "シングルサインオン"
 msgid "Directory Sync"
 msgstr "ディレクトリ同期"
 
+msgid "SCIM"
+msgstr ""
+
 msgid "Only administrators are allowed to create/update MFA policies settings."
 msgstr "管理者のみがMFAポリシー設定を作成/更新できます。"
 
@@ -6081,6 +6111,90 @@ msgstr "あなた"
 
 msgid "view it in passbolt"
 msgstr "パスボルトで表示"
+
+msgid "The SCIM setting id should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the default user should be a valid UUID."
+msgstr ""
+
+msgid "The user is not active, disabled or does not exist."
+msgstr ""
+
+msgid "The Setting ID cannot be passed on update."
+msgstr ""
+
+msgid "The secret token should not be empty."
+msgstr ""
+
+msgid "The ID for the SCIM settings should not be empty."
+msgstr ""
+
+msgid "The ID for the SCIM settings should be a valid UUID."
+msgstr ""
+
+msgid "Simultaneous SCIM and session authentication is not permitted."
+msgstr ""
+
+msgid "SCIM settings endpoints are disabled."
+msgstr ""
+
+msgid "An entry for the same related entity already exists"
+msgstr ""
+
+msgid "An entry with the same `scim_name` and ResourceType already exist."
+msgstr ""
+
+msgid "Users"
+msgstr "ユーザー"
+
+msgid "Groups"
+msgstr "グループ"
+
+msgid "The secret token format is incorrect."
+msgstr ""
+
+msgid "SCIM plugin is enabled."
+msgstr ""
+
+msgid "SCIM plugin is disabled."
+msgstr ""
+
+msgid "The SCIM settings could not be decrypted with the server gpg key."
+msgstr ""
+
+msgid "The SCIM settings could not be encrypted with the server gpg key."
+msgstr ""
+
+msgid "Could not validate the SCIM settings found in database."
+msgstr ""
+
+msgid "The SCIM setting identifier should be a valid UUID."
+msgstr ""
+
+msgid "Could not validate the SCIM settings."
+msgstr ""
+
+msgid "The SCIM plugin is disabled."
+msgstr ""
+
+msgid "Please delete previous settings before creating again."
+msgstr ""
+
+msgid "The uuid in the url doesn't match any known setting record."
+msgstr ""
+
+msgid "Email"
+msgstr "メール"
+
+msgid "External id"
+msgstr ""
+
+msgid "Invalid Schema"
+msgstr ""
+
+msgid "Invalid ResourceType"
+msgstr ""
 
 msgid "SsoRecover plugin is disabled."
 msgstr "SsoRecoverプラグインは無効です。"
@@ -7006,6 +7120,27 @@ msgstr "{0} へようこそ！"
 msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr "{0} さんがセルフ登録機能を使用してパスボルトにアカウントを作成しました。"
 
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0}さんがパスボルトでアカウントを有効化したところです！"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "ユーザーがパスボルトでアクティブになり、パスワードを共有できます。"
+
+msgid "This user was invited by you {0}."
+msgstr "このユーザーはあなた、{0}さんに招待されました。"
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "公開登録が有効になっているため、このユーザーは自分自身でサインアップしました。"
+
+msgid "This user was invited by {0} {1}."
+msgstr "このユーザーは {0} {1} に招待されました。"
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr "このユーザーには共有リソースメタデータを復号する鍵がありません。ログインしてユーザーのワークスペースに移動し、手動で鍵を共有してください。"
+
+msgid "View users"
+msgstr ""
+
 msgid "Welcome back!"
 msgstr "おかえりなさい！"
 
@@ -7149,27 +7284,6 @@ msgstr "{0}さんがパスワードを共有しました"
 
 msgid "{0} resources were shared with you."
 msgstr "{0}個のリソースが共有されました。"
-
-msgid "{0} just activated their account on passbolt!"
-msgstr "{0}さんがパスボルトでアカウントを有効化したところです！"
-
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "ユーザーがパスボルトでアクティブになり、パスワードを共有できます。"
-
-msgid "This user was invited by you {0}."
-msgstr "このユーザーはあなた、{0}さんに招待されました。"
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr "公開登録が有効になっているため、このユーザーは自分自身でサインアップしました。"
-
-msgid "This user was invited by {0} {1}."
-msgstr "このユーザーは {0} {1} に招待されました。"
-
-msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr "このユーザーには共有リソースメタデータを復号する鍵がありません。ログインしてユーザーのワークスペースに移動し、手動で鍵を共有してください。"
-
-msgid "View users"
-msgstr ""
 
 msgid "This email is an automatic notification sent by"
 msgstr "このメールは自動通知として送信されています"

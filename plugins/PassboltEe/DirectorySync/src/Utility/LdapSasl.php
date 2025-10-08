@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Utility;
 
 use LdapRecord\Ldap;
+use LdapRecord\LdapResultResponse;
 
 class LdapSasl extends Ldap
 {
@@ -51,16 +52,16 @@ class LdapSasl extends Ldap
     /**
      * @inheritDoc
      */
-    public function bind($username, $password)
+    public function bind(?string $dn = null, ?string $password = null, ?array $controls = null): LdapResultResponse
     {
         //SASL only works with LDAP v3
         $this->setOption(LDAP_OPT_PROTOCOL_VERSION, 3);
 
-        return $this->bound = $this->executeFailableOperation(function () use ($username, $password) {
+        return $this->bound = $this->executeFailableOperation(function () use ($dn, $password) {
             /** @psalm-suppress InvalidArgument works with this, might be false-positive */
             return ldap_sasl_bind(
-                $this->connection, // @phpstan-ignore-line
-                $username,
+                $this->connection,
+                $dn,
                 $password ? html_entity_decode($password) : '',
                 $this->saslOptions['mech'],
                 $this->saslOptions['realm'],

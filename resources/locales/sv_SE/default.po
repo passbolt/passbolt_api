@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-08-07 13:34+0000\n"
-"PO-Revision-Date: 2025-08-08 13:26\n"
+"POT-Creation-Date: 2025-10-01 06:24+0000\n"
+"PO-Revision-Date: 2025-10-01 10:39\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -2047,6 +2047,12 @@ msgstr "Validering misslyckades för resursen {0}. {1}"
 msgid "Validation success for resource {0}"
 msgstr "Valideringen lyckades för resursen {0}"
 
+msgid "Metadata key exist and present for resource {0}."
+msgstr ""
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr ""
+
 msgid "The resource types associated to this resource does not exist."
 msgstr ""
 
@@ -2791,8 +2797,11 @@ msgstr "Datan får inte vara tom."
 msgid "The data should be a valid ASCII string."
 msgstr "Uppgifterna bör vara en giltig ASCII-sträng."
 
-msgid "The modified date should be a valid ISO 80601 date."
-msgstr "Ändringsdatumet bör vara ett giltigt ISO 80601-datum."
+msgid "The expired field value should be a valid ISO 80601 date."
+msgstr ""
+
+msgid "The expired field value should be parseable."
+msgstr ""
 
 msgid "The setting should be a valid boolean."
 msgstr "Inställningen bör vara en giltig boolean."
@@ -2800,8 +2809,29 @@ msgstr "Inställningen bör vara en giltig boolean."
 msgid "The setting is required."
 msgstr "En inställning krävs."
 
+msgid "The metadata private keys is required."
+msgstr ""
+
+msgid "The metadata private keys should not be empty."
+msgstr ""
+
+msgid "Need at most one metadata private key."
+msgstr ""
+
+msgid "A metadata key identifier is required."
+msgstr "En metadata-nyckelidentifierare krävs."
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "Metadata-nyckelns identifierare bör vara ett giltigt UUID."
+
+msgid "The user identifier should be null."
+msgstr ""
+
 msgid "The data is required."
 msgstr "Datan krävs."
+
+msgid "The modified date should be a valid ISO 80601 date."
+msgstr "Ändringsdatumet bör vara ett giltigt ISO 80601-datum."
 
 msgid "A modified date is required."
 msgstr "Ett ändringsdatum krävs."
@@ -2830,14 +2860,8 @@ msgstr "Metadata-nyckeltypen bör vara en delad nyckel."
 msgid "The metadata key should not be deleted."
 msgstr "Metadata-nyckeln bör inte vara raderad."
 
-msgid "A metadata key identifier is required."
-msgstr "En metadata-nyckelidentifierare krävs."
-
 msgid "The metadata key identifier should not be empty."
 msgstr "Metadata-nyckelns identifierare får inte vara tom."
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr "Metadata-nyckelns identifierare bör vara ett giltigt UUID."
 
 msgid "A metadata key type is required."
 msgstr "En metadata-nyckeltyp krävs."
@@ -2995,6 +3019,12 @@ msgstr "{0} redigerade metadata-inställningarna"
 msgid "You edited the metadata settings"
 msgstr "Du redigerade metadata-inställningarna"
 
+msgid "No metadata private keys found for metadata key {0}."
+msgstr ""
+
+msgid "Metadata keys present for metadata key {0}"
+msgstr ""
+
 msgid "No active metadata key found."
 msgstr ""
 
@@ -3103,14 +3133,11 @@ msgstr "OpenPGP-användarnyckeln kan inte hittas."
 msgid "Could not validate the settings."
 msgstr "Kunde inte validera inställningarna."
 
+msgid "The server metadata private keys data are invalid."
+msgstr ""
+
 msgid "The server metadata private key is required to enable these settings."
 msgstr "Servermetadata-privat nyckel krävs för att aktivera dessa inställningar."
-
-msgid "The server metadata key id is required."
-msgstr "Servermetadata-nyckel-ID krävs."
-
-msgid "The server metadata private key is invalid."
-msgstr "Servermetadata-privat nyckel är ogiltig."
 
 msgid "The metadata private key could not be created."
 msgstr "Metadata-privata nyckeln kunde inte skapas."
@@ -3289,14 +3316,14 @@ msgstr "Skapande/ändring av mappar med krypterad metadata är inte tillåtet."
 msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr "Skapande/ändring av taggar med krypterad metadata är inte tillåtet."
 
-msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr "Skapande/ändring av resurser med klartextmetadata är inte tillåtet."
+msgid "Resource creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr "Skapande/ändring av mappar med klartextmetadata är inte tillåtet."
+msgid "Folder creation with cleartext metadata not allowed."
+msgstr ""
 
-msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr "Skapande/ändring av taggar med klartextmetadata är inte tillåtet."
+msgid "Tag creation with cleartext metadata not allowed."
+msgstr ""
 
 msgid "You created a new metadata key."
 msgstr "Du skapade en ny metadata-nyckel."
@@ -3349,7 +3376,7 @@ msgstr "{0} har delat en resurs med dig."
 msgid "You have edited a resource."
 msgstr "Du har redigerat en resurs."
 
-msgid "{0} have edited a resource."
+msgid "{0} has edited a resource."
 msgstr ""
 
 msgid "Information about the transfer is required."
@@ -5998,6 +6025,9 @@ msgstr "\"SSO\""
 msgid "Directory Sync"
 msgstr "\"Katalogsynk\""
 
+msgid "SCIM"
+msgstr ""
+
 msgid "Only administrators are allowed to create/update MFA policies settings."
 msgstr "Endast administratörer får skapa/uppdatera MFA-policys inställningar."
 
@@ -6081,6 +6111,90 @@ msgstr "du"
 
 msgid "view it in passbolt"
 msgstr "visa i passbolt"
+
+msgid "The SCIM setting id should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the default user should be a valid UUID."
+msgstr ""
+
+msgid "The user is not active, disabled or does not exist."
+msgstr ""
+
+msgid "The Setting ID cannot be passed on update."
+msgstr ""
+
+msgid "The secret token should not be empty."
+msgstr ""
+
+msgid "The ID for the SCIM settings should not be empty."
+msgstr ""
+
+msgid "The ID for the SCIM settings should be a valid UUID."
+msgstr ""
+
+msgid "Simultaneous SCIM and session authentication is not permitted."
+msgstr ""
+
+msgid "SCIM settings endpoints are disabled."
+msgstr ""
+
+msgid "An entry for the same related entity already exists"
+msgstr ""
+
+msgid "An entry with the same `scim_name` and ResourceType already exist."
+msgstr ""
+
+msgid "Users"
+msgstr "Användare"
+
+msgid "Groups"
+msgstr "Grupper"
+
+msgid "The secret token format is incorrect."
+msgstr ""
+
+msgid "SCIM plugin is enabled."
+msgstr ""
+
+msgid "SCIM plugin is disabled."
+msgstr ""
+
+msgid "The SCIM settings could not be decrypted with the server gpg key."
+msgstr ""
+
+msgid "The SCIM settings could not be encrypted with the server gpg key."
+msgstr ""
+
+msgid "Could not validate the SCIM settings found in database."
+msgstr ""
+
+msgid "The SCIM setting identifier should be a valid UUID."
+msgstr ""
+
+msgid "Could not validate the SCIM settings."
+msgstr ""
+
+msgid "The SCIM plugin is disabled."
+msgstr ""
+
+msgid "Please delete previous settings before creating again."
+msgstr ""
+
+msgid "The uuid in the url doesn't match any known setting record."
+msgstr ""
+
+msgid "Email"
+msgstr "E-post"
+
+msgid "External id"
+msgstr ""
+
+msgid "Invalid Schema"
+msgstr ""
+
+msgid "Invalid ResourceType"
+msgstr ""
 
 msgid "SsoRecover plugin is disabled."
 msgstr "SsoRecover-plugin är inaktiverad."
@@ -7006,6 +7120,27 @@ msgstr "Välkommen till {0}!"
 msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr "{0} använde självregistreringsfunktionen för att skapa ett konto på passbolt."
 
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} aktiverade precis sitt konto på passbolt!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "Användaren är nu aktiv på passbolt och du kan dela lösenord med dem."
+
+msgid "This user was invited by you {0}."
+msgstr "Den här användaren bjöds in av dig {0}."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "Denna användare registrerade sig själv, eftersom den offentliga registreringen är aktiverad."
+
+msgid "This user was invited by {0} {1}."
+msgstr "Den här användaren blev inbjuden av {0} {1}."
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr "Den här användaren saknar krypteringsnyckeln för den delade resursens metadata. Logga in och öppna användarens arbetsyta för att dela nyckeln manuellt."
+
+msgid "View users"
+msgstr ""
+
 msgid "Welcome back!"
 msgstr "Välkommen tillbaka!"
 
@@ -7149,27 +7284,6 @@ msgstr "{0} delade lösenord med dig"
 
 msgid "{0} resources were shared with you."
 msgstr "{0} resurser har delats med dig."
-
-msgid "{0} just activated their account on passbolt!"
-msgstr "{0} aktiverade precis sitt konto på passbolt!"
-
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "Användaren är nu aktiv på passbolt och du kan dela lösenord med dem."
-
-msgid "This user was invited by you {0}."
-msgstr "Den här användaren bjöds in av dig {0}."
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr "Denna användare registrerade sig själv, eftersom den offentliga registreringen är aktiverad."
-
-msgid "This user was invited by {0} {1}."
-msgstr "Den här användaren blev inbjuden av {0} {1}."
-
-msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr "Den här användaren saknar krypteringsnyckeln för den delade resursens metadata. Logga in och öppna användarens arbetsyta för att dela nyckeln manuellt."
-
-msgid "View users"
-msgstr ""
 
 msgid "This email is an automatic notification sent by"
 msgstr "Detta e-postmeddelande är en automatisk notifiering som skickats av"

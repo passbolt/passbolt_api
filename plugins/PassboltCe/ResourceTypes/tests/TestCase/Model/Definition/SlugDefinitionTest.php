@@ -892,4 +892,81 @@ class SlugDefinitionTest extends TestCase
         $result = SlugDefinition::v5CustomFields();
         $this->assertEquals($expected, $result);
     }
+
+    public function testV5Note(): void
+    {
+        $expected = json_encode([
+            'resource' => [
+                'type' => 'object',
+                'required' => ['name'],
+                'properties' => [
+                    'name' => [
+                        'type' => 'string',
+                        'maxLength' => 255,
+                    ],
+                    'uris' => [
+                        'type' => 'array',
+                        'items' => [
+                            'anyOf' => [
+                                ['type' => 'string', 'maxLength' => 1024],
+                                ['type' => 'null'],
+                            ],
+                        ],
+                        'maxItems' => 32,
+                    ],
+                    'description' => [
+                        'anyOf' => [
+                            ['type' => 'string', 'maxLength' => 10000],
+                            ['type' => 'null'],
+                        ],
+                    ],
+                    'icon' => [
+                        'type' => 'object',
+                        'required' => [],
+                        'properties' => [
+                            'type' => [
+                                'type' => 'string',
+                                'enum' => ['keepass-icon-set', 'passbolt-icon-set'],
+                            ],
+                            'value' => [
+                                'type' => 'integer',
+                                'minimum' => 0,
+                            ],
+                            'background_color' => [
+                                'anyOf' => [
+                                    [
+                                        'type' => 'string',
+                                        'pattern' => '^#(?:[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$',
+                                    ],
+                                    ['type' => 'null'],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'secret' => [
+                'type' => 'object',
+                'required' => [
+                    'description',
+                    'object_type',
+                ],
+                'properties' => [
+                    'object_type' => [
+                        'type' => 'string',
+                        'enum' => ['PASSBOLT_SECRET_DATA'],
+                    ],
+                    'description' => [
+                        'anyOf' => [
+                            ['type' => 'string', 'maxLength' => 50000],
+                            ['type' => 'null'],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $result = SlugDefinition::v5Note();
+        $this->assertEquals($expected, $result);
+    }
 }

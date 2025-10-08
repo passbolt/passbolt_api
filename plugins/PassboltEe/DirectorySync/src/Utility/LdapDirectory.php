@@ -125,9 +125,9 @@ class LdapDirectory implements DirectoryInterface
         foreach ($ldapSettings as $domain => $settings) {
             $connectionSettings = $this->prepareSettings($domain, $settings);
             $connection = $this->getConnection($connectionSettings);
-            Container::addConnection($connection, $domain);
+            Container::getInstance()->addConnection($connection, $domain);
         }
-        Container::setDefaultConnection($this->defaultDomain);
+        Container::getInstance()->setDefaultConnection($this->defaultDomain);
         $this->initializeMapping();
     }
 
@@ -230,12 +230,13 @@ class LdapDirectory implements DirectoryInterface
      *
      * @param string $ldapObjectType ldap object type (user or group)
      * @return string
+     * @throws \LdapRecord\Configuration\ConfigurationException
      */
     public function getDNFullPath(string $ldapObjectType): string
     {
         $paths = [];
         $paths['additionalPath'] = $this->directorySettings->getObjectPath($ldapObjectType);
-        $paths['baseDN'] = Container::getDefaultConnection()->getConfiguration()->get('base_dn');
+        $paths['baseDN'] = Container::getInstance()->getDefaultConnection()->getConfiguration()->get('base_dn');
 
         return ltrim(implode(',', $paths), ',');
     }
@@ -273,11 +274,15 @@ class LdapDirectory implements DirectoryInterface
      * @param ?string $domain Domain to get directory type
      * @return string
      * @throws \InvalidArgumentException Directory type could not be found for domain
+     * @throws \LdapRecord\Configuration\ConfigurationException
      */
     public function getDirectoryType(?string $domain = null): string
     {
         if (!$domain) {
-            $domain = Container::getDefaultConnection()->getConfiguration()->get('domain') ?? $this->defaultDomain;
+            $domain = Container::getInstance()
+                ->getDefaultConnection()
+                ->getConfiguration()
+                ->get('domain') ?? $this->defaultDomain;
         }
 
         if (!isset($this->directoryTypes[$domain])) {
@@ -416,7 +421,7 @@ class LdapDirectory implements DirectoryInterface
      */
     protected function getQuery(string $entryType): Builder
     {
-        $domain = Container::getDefaultConnection()->getConfiguration()->get('domain');
+        $domain = Container::getInstance()->getDefaultConnection()->getConfiguration()->get('domain');
         $directoryType = $this->getDirectoryType($domain);
         $directoryTypeName = $this->getDirectoryTypeName($domain);
         $className = "\LdapRecord\Models\\$directoryTypeName\\" . ucfirst($entryType);
@@ -441,6 +446,7 @@ class LdapDirectory implements DirectoryInterface
      *
      * @param string $entryType Entry type (user, group)
      * @return \LdapRecord\Query\Model\Builder
+     * @throws \LdapRecord\Configuration\ConfigurationException
      */
     protected function _fetchAndInitializeQuery(string $entryType): Builder
     {
@@ -476,13 +482,13 @@ class LdapDirectory implements DirectoryInterface
     public function fetchDirectoryData(): DirectoryResults
     {
         // Fetch directory data for all domains.
-        $domains = array_keys(Container::allConnections());
+        $domains = array_keys(Container::getInstance()->getConnections());
         $ldapGroups = new Collection();
         $ldapUsers = new Collection();
 
         if ($this->directoryResults->isEmpty()) {
             foreach ($domains as $domain) {
-                Container::setDefaultConnection($domain);
+                Container::getInstance()->setDefaultConnection($domain);
                 $directoryType = $this->getDirectoryType($domain);
                 $tmpGroups = $this->_fetchAndInitializeGroupsQuery()->paginate();
                 foreach ($tmpGroups as $tmpGroup) {
@@ -514,9 +520,8 @@ class LdapDirectory implements DirectoryInterface
     public function getUsers(): array
     {
         $directoryResults = $this->getFilteredDirectoryResults();
-        $users = $directoryResults->getUsersAsArray();
 
-        return $users;
+        return $directoryResults->getUsersAsArray();
     }
 
     /**
@@ -528,9 +533,8 @@ class LdapDirectory implements DirectoryInterface
     public function getGroups(): array
     {
         $directoryResults = $this->getFilteredDirectoryResults();
-        $groups = $directoryResults->getGroupsAsArray();
 
-        return $groups;
+        return $directoryResults->getGroupsAsArray();
     }
 
     /**
