@@ -1,16 +1,22 @@
 Release song: https://www.youtube.com/watch?v=bu50DtPF1Ac
 
-Passbolt 5.6.0-rc.1 is a feature release candidate introducing standalone notes, shared metadata key rotation and resizable sidebars. This release comes as usual with security reinforcement by updating 3rd party libraries and other bug fixes.
+Passbolt 5.6.0 introduces standalone notes, shared metadata key rotation, and resizable sidebars. As usual, this version also brings important security hardening through dependency updates as well as a series of bug fixes and maintenance improvements.
 
-In addition, it also includes bug fixes and maintenance updates:
-- export of account kit is compatible with bigger private keys
-- group membership update process is updated to reduce request size and avoid some size limitations
-- folders name sort includes now natural number counting
+## Standalone notes
+It is now possible to create notes as a standalone resource type, without attaching them to credentials or other elements. Import and export processes have been updated to recognize and support this new type. Any imported resources that contain only a description will now be created as standalone notes.
 
-Make sure to follow the steps here. As always, your feedback is invaluable, give it a try and report any issues you come across.
-Enjoy the testing journey! ❤️
+## Shared metadata key rotation
+Administrators can now rotate the shared metadata key at any time from the organization settings. This improvement marks one of the final steps in meeting metadata encryption requirements. The rotation process can be performed while the instance remains operational, so availability is not disrupted.
 
-## [5.6.0-rc.1] - 2025-10-03
+## Resizable sidebars
+Both main workspace and Users & Groups workspace now feature sidebars that can be resized. This allows users to improve readability when working with long folder names or deeply nested folder structures. After resizing, a double-click on the sidebar handle resets it to its default width.
+
+## Miscellaneous Improvements
+The export of account kits is now compatible with larger private keys. The group membership update process has been optimized to reduce request payload size and to avoid certain size limitations. Sorting of folder names has also been improved with natural number ordering, meaning for example that "folder2" now correctly appears before "folder10."
+
+Many thanks to everyone who shared feedback, reported issues, and helped refine these features.
+
+## [5.6.0] - 2025-10-08
 ### Added
 - PB-45058 Add datacheck to check for existing metadata key with no metadata private keys
 - PB-44187 As an admin I cannot delete a metadata key associated with a deleted resource
