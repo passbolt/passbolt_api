@@ -264,9 +264,6 @@ trait UsersFindersTrait
         if (isset($options['contain']['groups_users']) && $options['contain']['groups_users']) {
             $query->contain('GroupsUsers');
         }
-        if (isset($options['contain']['last_logged_in']) && $options['contain']['last_logged_in']) {
-            $query->find('lastLoggedIn');
-        }
 
         // Filter out guests and deleted users
         $query->where([
