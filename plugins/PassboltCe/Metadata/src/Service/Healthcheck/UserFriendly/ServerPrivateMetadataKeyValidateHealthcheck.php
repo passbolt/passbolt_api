@@ -15,11 +15,12 @@ declare(strict_types=1);
  * @since         5.4.0
  */
 
-namespace Passbolt\Metadata\Service\Healthcheck;
+namespace Passbolt\Metadata\Service\Healthcheck\UserFriendly;
 
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use App\Service\Healthcheck\SkipHealthcheckInterface;
 use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
@@ -28,9 +29,10 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query\SelectQuery;
 use Exception;
 use Passbolt\Metadata\Form\MetadataCleartextPrivateKeyForm;
+use Passbolt\Metadata\Service\MetadataKeysSettingsGetService;
 use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 
-class ServerPrivateMetadataKeyValidateHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class ServerPrivateMetadataKeyValidateHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface, SkipHealthcheckInterface // phpcs:ignore
 {
     use LocatorAwareTrait;
     use OpenPGPCommonServerOperationsTrait;
@@ -48,13 +50,26 @@ class ServerPrivateMetadataKeyValidateHealthcheck implements HealthcheckServiceI
     private ?string $errorMessage = null;
 
     /**
+     * @var bool
+     */
+    private bool $isSkipped = false;
+
+    /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $metadataKeysSettingsDto = MetadataTypesSettingsGetService::getSettings();
-        if (!$metadataKeysSettingsDto->isV5Enabled()) {
+        $metadataTypesSettingsDto = MetadataTypesSettingsGetService::getSettings();
+        if (!$metadataTypesSettingsDto->isV5Enabled()) {
             $this->status = true;
+
+            return $this;
+        }
+
+        // In Zero-knowledge mode, the server doesn't have any server metadata key so validating it isn't required.
+        $metadataKeysSettingsDto = MetadataKeysSettingsGetService::getSettings();
+        if ($metadataKeysSettingsDto->isKeyShareZeroKnowledge()) {
+            $this->markAsSkipped();
 
             return $this;
         }
@@ -202,5 +217,21 @@ class ServerPrivateMetadataKeyValidateHealthcheck implements HealthcheckServiceI
     public function getLegacyArrayKey(): string
     {
         return 'canValidatePrivateMetadataKey';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function markAsSkipped(): void
+    {
+        $this->isSkipped = true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isSkipped(): bool
+    {
+        return $this->isSkipped;
     }
 }
