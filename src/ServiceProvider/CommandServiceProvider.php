@@ -24,6 +24,7 @@ use App\Command\MigrateCommand;
 use App\Command\MigratePostgresCommand;
 use App\Command\RecoverUserCommand;
 use App\Command\RegisterUserCommand;
+use App\Command\UsersIndexCommand;
 use App\Service\Command\GetUserCommandService;
 use App\Service\Command\ProcessUserService;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
@@ -45,6 +46,7 @@ class CommandServiceProvider extends ServiceProvider
         RecoverUserCommand::class,
         MigratePostgresCommand::class,
         RegisterUserCommand::class,
+        UsersIndexCommand::class,
     ];
 
     /**
@@ -76,5 +78,6 @@ class CommandServiceProvider extends ServiceProvider
         $container->add(RecoverUserCommand::class)->addArgument(ProcessUserService::class);
         $container->add(MigratePostgresCommand::class)->addArgument(ProcessUserService::class);
         $container->add(RegisterUserCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(UsersIndexCommand::class)->addArgument(ProcessUserService::class);
     }
 }
