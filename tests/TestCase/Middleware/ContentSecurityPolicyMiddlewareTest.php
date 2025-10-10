@@ -40,7 +40,7 @@ class ContentSecurityPolicyMiddlewareTest extends TestCase
             "default-src 'self'",
             "script-src 'self'",
             "style-src 'self' 'unsafe-inline'",
-            "img-src 'self'",
+            "img-src 'self' data:",
             "frame-src 'self' https://*.duosecurity.com",
             "frame-ancestors 'none'",
             "form-action 'self'",
