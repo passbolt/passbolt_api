@@ -55,7 +55,7 @@ class SmtpSettingsEnvSettingBackwardCompatibilityTest extends TestCase
         putenv('PASSBOLT_PLUGINS_SMTP_SETTINGS');
     }
 
-    public function data(): array
+    public static function data(): array
     {
         return [
             ['PASSBOLT_PLUGINS_SMTP_SETTINGS_ENABLED', 1, true],

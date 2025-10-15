@@ -129,7 +129,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
         ], $headers['pagination']);
     }
 
-    public function metadataRotateKeyResourcesIndexControllerPaginationLimitValuesProvider(): array
+    public static function metadataRotateKeyResourcesIndexControllerPaginationLimitValuesProvider(): array
     {
         return [
             [

@@ -110,7 +110,7 @@ class CustomSslOptionsFormTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function sslCaFileValidateTypeProvider(): array
+    public static function sslCaFileValidateTypeProvider(): array
     {
         return [
             [

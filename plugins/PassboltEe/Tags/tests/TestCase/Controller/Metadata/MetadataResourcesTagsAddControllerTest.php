@@ -571,7 +571,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
     }
 
-    public function metadataResourcesTagsAddControllerErrorDeletedOrExpiredValuesProvider(): array
+    public static function metadataResourcesTagsAddControllerErrorDeletedOrExpiredValuesProvider(): array
     {
         return [
             [

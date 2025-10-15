@@ -49,7 +49,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateServiceTest extends AppTestCase
         parent::tearDown();
     }
 
-    public function validationFail(): array
+    public static function validationFail(): array
     {
         $uuid = UuidFactory::uuid();
         $today = DateTime::tomorrow()->toDateTimeString();
@@ -66,7 +66,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateServiceTest extends AppTestCase
         ];
     }
 
-    public function validationSuccess(): array
+    public static function validationSuccess(): array
     {
         $uuid1 = UuidFactory::uuid();
         $uuid2 = UuidFactory::uuid();

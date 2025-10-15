@@ -84,7 +84,7 @@ class MetadataSessionKeyDeleteServiceTest extends AppTestCaseV5
         $this->assertCount(3, $metadataSessionKeys);
     }
 
-    public function invalidMetadataSessionKeyIdProvider(): array
+    public static function invalidMetadataSessionKeyIdProvider(): array
     {
         return [
             ['foo-bar'],

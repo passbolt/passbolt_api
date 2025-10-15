@@ -52,7 +52,7 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
      *
      * @return array
      */
-    public function metadataTagsUpdatePersonalProvider(): array
+    public static function metadataTagsUpdatePersonalProvider(): array
     {
         return [
             ['user key id' => true],
@@ -390,7 +390,7 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
     }
 
-    public function metadataTagsUpdateControllerErrorDeletedOrExpiredValuesProvider(): array
+    public static function metadataTagsUpdateControllerErrorDeletedOrExpiredValuesProvider(): array
     {
         return [
             [

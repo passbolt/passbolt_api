@@ -198,7 +198,7 @@ class LdapConfigurationFormTest extends AppTestCase
      *
      * @return array[]
      */
-    public function provideTestDirectoryLdapConfigurationFormValidateError_FieldsMapping(): array
+    public static function provideTestDirectoryLdapConfigurationFormValidateError_FieldsMapping(): array
     {
         return [
             [
@@ -707,7 +707,7 @@ class LdapConfigurationFormTest extends AppTestCase
      *
      * @return array
      */
-    public function fieldFallbacksDataProvider(): array
+    public static function fieldFallbacksDataProvider(): array
     {
         return [
             [

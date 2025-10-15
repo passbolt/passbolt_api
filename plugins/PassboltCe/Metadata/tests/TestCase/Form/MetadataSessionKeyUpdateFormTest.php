@@ -58,7 +58,7 @@ class MetadataSessionKeyUpdateFormTest extends TestCase
         $this->assertTrue(isset($errors['data']['_empty']));
     }
 
-    public function metadataSessionKeyUpdateFormInvalidModifiedDateTimeProvider()
+    public static function metadataSessionKeyUpdateFormInvalidModifiedDateTimeProvider()
     {
         return [
             ['🔥'],

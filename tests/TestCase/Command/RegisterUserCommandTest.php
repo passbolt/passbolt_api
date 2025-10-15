@@ -70,7 +70,7 @@ class RegisterUserCommandTest extends AppTestCase
         $this->assertCommandCannotBeRunAsRootUser('register_user');
     }
 
-    public function withAdmin(): array
+    public static function withAdmin(): array
     {
         return [[false, true]];
     }

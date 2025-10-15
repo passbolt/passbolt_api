@@ -129,7 +129,7 @@ class SmtpSettingsSslOptionsGetServiceTest extends AppTestCase
         $this->assertFalse($this->service->isDefault());
     }
 
-    public function invalidConfigValuesProvider()
+    public static function invalidConfigValuesProvider()
     {
         return [
             [

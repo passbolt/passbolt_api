@@ -125,7 +125,7 @@ class MetadataRotateKeyTagsIndexControllerTest extends AppIntegrationTestCaseV5
         ], $headers['pagination']);
     }
 
-    public function metadataRotateKeyTagsIndexControllerPaginationLimitValuesProvider(): array
+    public static function metadataRotateKeyTagsIndexControllerPaginationLimitValuesProvider(): array
     {
         return [
             [

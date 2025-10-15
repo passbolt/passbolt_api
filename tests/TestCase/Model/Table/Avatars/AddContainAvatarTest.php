@@ -42,7 +42,7 @@ class AddContainAvatarTest extends TestCase
         $this->loadRoutes();
     }
 
-    public function enableHydration(): array
+    public static function enableHydration(): array
     {
         return [[true], [false]];
     }

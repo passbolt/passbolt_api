@@ -190,7 +190,7 @@ class EmailConfigurationFormTest extends TestCase
         $this->assertSame($data['expected']['password'], $this->form->getData('password'));
     }
 
-    public function data_Valid_Field(): array
+    public static function data_Valid_Field(): array
     {
         return [
             ['username', null],
@@ -205,7 +205,7 @@ class EmailConfigurationFormTest extends TestCase
         ];
     }
 
-    public function data_For_Tls_Mapping(): array
+    public static function data_For_Tls_Mapping(): array
     {
         return [
             [1, true],
@@ -223,7 +223,7 @@ class EmailConfigurationFormTest extends TestCase
         ];
     }
 
-    public function data_Invalid(): array
+    public static function data_Invalid(): array
     {
         return [
             ['sender_name', ''],
@@ -235,14 +235,14 @@ class EmailConfigurationFormTest extends TestCase
         ];
     }
 
-    public function data_Invalid_On_Update(): array
+    public static function data_Invalid_On_Update(): array
     {
         return [
             ['sender_email', 'foo'],
         ];
     }
 
-    public function dataForClientFieldValidUnchanged(): array
+    public static function dataForClientFieldValidUnchanged(): array
     {
         $faker = Factory::create();
 
@@ -255,7 +255,7 @@ class EmailConfigurationFormTest extends TestCase
         ];
     }
 
-    public function dataForClientFieldValidMappedToNull(): array
+    public static function dataForClientFieldValidMappedToNull(): array
     {
         return [
             [''],
@@ -265,16 +265,16 @@ class EmailConfigurationFormTest extends TestCase
         ];
     }
 
-    public function dataForClientFieldInvalid(): array
+    public static function dataForClientFieldInvalid(): array
     {
         return [
             ['passbolt', 'The client should be a valid IP or a valid domain.'],
             [1, 'The client should be a valid IP or a valid domain.'],
-            [$this, 'The client should be a valid IP or a valid domain.'],
+            [new stdClass(), 'The client should be a valid IP or a valid domain.'],
         ];
     }
 
-    public function dataForUsernamePasswordValuesAuthenticationMethod(): array
+    public static function dataForUsernamePasswordValuesAuthenticationMethod(): array
     {
         return [
             [

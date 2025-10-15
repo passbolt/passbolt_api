@@ -134,7 +134,7 @@ class MetadataRotateKeyTagsUpdateServiceTest extends AppTestCaseV5
         $this->service->updateMany($uac, ['foo', 'bar', 'baz']);
     }
 
-    public function metadataRotateKeyResourcesUpdateServiceInvalidMetadataEncryptedMessage(): array
+    public static function metadataRotateKeyResourcesUpdateServiceInvalidMetadataEncryptedMessage(): array
     {
         return [
             ['🔥'],

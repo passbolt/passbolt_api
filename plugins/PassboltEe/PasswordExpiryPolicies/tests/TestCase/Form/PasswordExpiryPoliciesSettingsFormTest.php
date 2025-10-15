@@ -45,7 +45,7 @@ class PasswordExpiryPoliciesSettingsFormTest extends TestCase
         parent::tearDown();
     }
 
-    public function data(): array
+    public static function data(): array
     {
         return [
             [[], false],
