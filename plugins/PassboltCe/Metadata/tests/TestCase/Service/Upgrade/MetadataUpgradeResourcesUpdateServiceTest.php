@@ -135,7 +135,7 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
         $this->service->updateMany($uac, ['foo', 'bar', 'baz']);
     }
 
-    public function MetadataUpgradeResourcesUpdateServiceInvalidMetadataEncryptedMessage(): array
+    public static function MetadataUpgradeResourcesUpdateServiceInvalidMetadataEncryptedMessage(): array
     {
         return [
             ['🔥'],

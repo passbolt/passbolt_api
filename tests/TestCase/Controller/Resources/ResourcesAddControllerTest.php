@@ -238,37 +238,37 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $this->assertEmailQueueIsEmpty();
     }
 
-    public function dataFortestResourcesAddController_ValidationErrors(): array
+    public static function dataFortestResourcesAddController_ValidationErrors(): array
     {
         return [
             ['resource name is missing', [
                 'errorField' => 'name._empty',
-                'data' => $this->getDummyResourcesPostData(['name' => null]),
+                'data' => self::getDummyResourcesPostData(['name' => null]),
             ]],
             ['secret must be provided', [
                 'errorField' => 'secrets._empty',
-                'data' => $this->getDummyResourcesPostData(['secrets' => null]),
+                'data' => self::getDummyResourcesPostData(['secrets' => null]),
             ]],
             ['secret data must be provided', [
                 'errorField' => 'secrets.0.data._required',
-                'data' => $this->getDummyResourcesPostData(['secrets' => []]),
+                'data' => self::getDummyResourcesPostData(['secrets' => []]),
             ]],
             ['secret is invalid', [
                 'errorField' => 'secrets.0.data.isValidOpenPGPMessage',
-                'data' => $this->getDummyResourcesPostData(['secrets' => [
+                'data' => self::getDummyResourcesPostData(['secrets' => [
                     0 => ['data' => 'Invalid secret'],
                 ]]),
             ]],
             ['too many secrets provided', [
                 'errorField' => 'secrets.hasAtMost',
-                'data' => $this->getDummyResourcesPostData(['secrets' => [
-                    0 => ['data' => $this->getDummyGpgMessage()],
-                    1 => ['user_id' => UuidFactory::uuid('user.id.betty'), 'data' => $this->getDummyGpgMessage()],
+                'data' => self::getDummyResourcesPostData(['secrets' => [
+                    0 => ['data' => self::getDummyGpgMessage()],
+                    1 => ['user_id' => UuidFactory::uuid('user.id.betty'), 'data' => self::getDummyGpgMessage()],
                 ]]),
             ]],
             ['invalid resource type', [
                 'errorField' => 'resource_type_id',
-                'data' => $this->getDummyResourcesPostData([
+                'data' => self::getDummyResourcesPostData([
                     'name' => 'new resource name',
                     'username' => 'username@domain.com',
                     'uri' => 'https://www.domain.com',
@@ -279,12 +279,12 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         ];
     }
 
-    public function dataFortestResourcesAddController_BuildRulesErrors(): array
+    public static function dataFortestResourcesAddController_BuildRulesErrors(): array
     {
         return [
             ['non-existing resource type', [
                 'errorField' => 'resource_type_id',
-                'data' => $this->getDummyResourcesPostData([
+                'data' => self::getDummyResourcesPostData([
                     'name' => 'new resource name',
                     'username' => 'username@domain.com',
                     'uri' => 'https://www.domain.com',

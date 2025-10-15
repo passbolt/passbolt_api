@@ -68,7 +68,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertResponseOk();
     }
 
-    public function dataProviderForTestUsersRegisterController_Success(): array
+    public static function dataProviderForTestUsersRegisterController_Success(): array
     {
         return [
             ['chinese_name' => [

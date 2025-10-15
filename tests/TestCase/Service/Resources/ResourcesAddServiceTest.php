@@ -75,28 +75,28 @@ class ResourcesAddServiceTest extends TestCase
         unset($this->service);
     }
 
-    public function dataForTestResourceAddSuccess(): array
+    public static function dataForTestResourceAddSuccess(): array
     {
         return [
-            ['chinese' => $this->getDummyResourcesPostData([
+            ['chinese' => self::getDummyResourcesPostData([
                 'name' => '新的專用資源名稱',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.域.com',
                 'description' => '新的資源描述',
             ])],
-            ['slavic' => $this->getDummyResourcesPostData([
+            ['slavic' => self::getDummyResourcesPostData([
                 'name' => 'Новое имя частного ресурса',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.домен.com',
                 'description' => 'Новое описание частного ресурса',
             ])],
-            ['french' => $this->getDummyResourcesPostData([
+            ['french' => self::getDummyResourcesPostData([
                 'name' => 'Nouveau nom de resource privée',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.mon-domain.com',
                 'description' => 'Nouvelle description de resource privée',
             ])],
-            ['emoticon' => $this->getDummyResourcesPostData([
+            ['emoticon' => self::getDummyResourcesPostData([
                 'name' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}",
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.domain.com',

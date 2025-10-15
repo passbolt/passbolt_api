@@ -47,7 +47,7 @@ class FilterQueryByResourcesAccessTest extends TestCase
         unset($this->Users);
     }
 
-    public function role(): array
+    public static function role(): array
     {
         return [
             'no role defined' => [0, 'roles' => []],

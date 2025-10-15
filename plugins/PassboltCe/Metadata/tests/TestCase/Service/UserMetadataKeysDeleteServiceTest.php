@@ -82,7 +82,7 @@ class UserMetadataKeysDeleteServiceTest extends AppTestCaseV5
         $this->assertCount(0, $deletedSessionKeys);
     }
 
-    public function invalidUserIdsProvider(): array
+    public static function invalidUserIdsProvider(): array
     {
         return [
             ['foo-bar'],

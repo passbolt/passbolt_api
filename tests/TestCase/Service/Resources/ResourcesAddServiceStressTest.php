@@ -77,7 +77,7 @@ class ResourcesAddServiceStressTest extends TestCase
         self::$uac = UserFactory::make()->user()->persistedUAC();
     }
 
-    public function dataForStressTest(): array
+    public static function dataForStressTest(): array
     {
         $iter = [];
         foreach (range(1, self::$NIterations) as $i) {

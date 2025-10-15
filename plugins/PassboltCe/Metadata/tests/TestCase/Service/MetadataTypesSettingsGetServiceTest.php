@@ -90,7 +90,7 @@ class MetadataTypesSettingsGetServiceTest extends AppTestCaseV5
      *
      * @return array[]
      */
-    public function creationAllowedMethodsDataProvider(): array
+    public static function creationAllowedMethodsDataProvider(): array
     {
         return [
             [

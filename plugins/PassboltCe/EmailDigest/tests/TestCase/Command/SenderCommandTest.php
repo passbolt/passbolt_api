@@ -124,7 +124,7 @@ class SenderCommandTest extends AppIntegrationTestCase
         $this->assertMailBodyStringCount(1, '</head>');
     }
 
-    public function noRowsLockedProvider(): array
+    public static function noRowsLockedProvider(): array
     {
         return [
             ['single_email' => 1],

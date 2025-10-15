@@ -199,7 +199,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
         $this->assertFalse($result);
     }
 
-    public function withSpecifiedValueFailedAttemptsNotExceededProvider(): array
+    public static function withSpecifiedValueFailedAttemptsNotExceededProvider(): array
     {
         return [
             // session auth

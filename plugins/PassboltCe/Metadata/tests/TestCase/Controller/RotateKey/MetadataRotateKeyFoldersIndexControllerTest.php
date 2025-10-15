@@ -127,7 +127,7 @@ class MetadataRotateKeyFoldersIndexControllerTest extends AppIntegrationTestCase
         ], $headers['pagination']);
     }
 
-    public function metadataRotateKeyFoldersIndexControllerPaginationLimitValuesProvider(): array
+    public static function metadataRotateKeyFoldersIndexControllerPaginationLimitValuesProvider(): array
     {
         return [
             [

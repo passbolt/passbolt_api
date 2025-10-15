@@ -25,7 +25,7 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 class MfaVerifyAjaxErrorControllerTest extends MfaIntegrationTestCase
 {
-    public function dataProviderForScenarios()
+    public static function dataProviderForScenarios()
     {
         return [
             [MfaDuoScenario::class, 'duo'],
