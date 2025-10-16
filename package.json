@@ -24,7 +24,7 @@
     "grunt-contrib-watch": "^1.1.0",
     "jquery": "^3.5.1",
     "lockfile-lint": "^4.14.1",
-    "openpgp": "^5.11.3",
+    "openpgp": "6.2.2",
     "passbolt-styleguide": "^5.6.1"
   },
   "overrides": {
