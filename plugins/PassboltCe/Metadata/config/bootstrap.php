@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  */
 
+use App\Command\CleanupCommand;
 use Cake\Core\Configure;
 use Cake\Utility\Hash;
 
@@ -21,3 +22,15 @@ Configure::load('Passbolt/Metadata.config', 'default', true);
 $pluginConfig = Configure::read('passbolt.plugins.metadata');
 $newConfig = Hash::merge($pluginConfig, $mainConfig);
 Configure::write('passbolt.plugins.metadata', $newConfig);
+
+// Add cleanup tasks for Metadata plugin
+if (PHP_SAPI === 'cli') {
+    $cleanups = [
+        'Passbolt/Metadata.MetadataPrivateKeys' => [
+            // Clean up all metadata private keys of soft and/or hard deleted users
+            'Hard Deleted Users',
+            'Soft Deleted Users',
+        ],
+    ];
+    CleanupCommand::addCleanups($cleanups);
+}
