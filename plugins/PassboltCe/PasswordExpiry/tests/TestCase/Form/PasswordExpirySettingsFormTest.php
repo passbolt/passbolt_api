@@ -52,36 +52,36 @@ class PasswordExpirySettingsFormTest extends TestCase
     {
         return [
             [
-                'inputData' => [],
-                'expectedResult' => false,
+                [], //input data
+                false, //expected result
             ],
             [
-                'inputData' => [
+                [
                     PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
                     PasswordExpirySettingsDto::AUTOMATIC_UPDATE => false,
                 ],
-                'expectedResult' => false,
+                false,
             ],
             [
-                'inputData' => [
+                [
                     PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => false,
                     PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
                 ],
-                'expectedResult' => false,
+                false,
             ],
             [
-                'inputData' => [
+                [
                     PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => false,
                     PasswordExpirySettingsDto::AUTOMATIC_UPDATE => false,
                 ],
-                'expectedResult' => false,
+                false,
             ],
             [
-                'inputData' => [
+                [
                     PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
                     PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
                 ],
-                'expectedResult' => true,
+                true,
             ],
         ];
     }
