@@ -55,8 +55,8 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
     public static function metadataTagsUpdatePersonalProvider(): array
     {
         return [
-            ['user key id' => true],
-            ['user key id' => false],
+            [true],
+            [false],
         ];
     }
 
@@ -394,12 +394,12 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
     {
         return [
             [
-                'input' => ['expired' => DateTime::yesterday()],
-                'expected response' => 'isMetadataKeyNotExpired',
+                ['expired' => DateTime::yesterday()], //input
+                'isMetadataKeyNotExpired', //expected response
             ],
             [
-                'input' => ['deleted' => DateTime::now()],
-                'expected response' => 'metadata_key_exists',
+                ['deleted' => DateTime::now()],
+                'metadata_key_exists',
             ],
         ];
     }
