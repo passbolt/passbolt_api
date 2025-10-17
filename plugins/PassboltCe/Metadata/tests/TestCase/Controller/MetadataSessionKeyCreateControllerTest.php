@@ -91,16 +91,16 @@ class MetadataSessionKeyCreateControllerTest extends AppIntegrationTestCaseV5
 
         return [
             [
-                 'request data' => ['data' => 'foo-bar'],
-                 'expected errors paths' => ['data.isValidOpenPGPMessage'],
+                 ['data' => 'foo-bar'], //request data
+                 ['data.isValidOpenPGPMessage'], //expected errors paths
             ],
             [
-                'request data' => ['data' => '😎😎😎'],
-                'expected errors paths' => ['data.ascii'],
+                ['data' => '😎😎😎'],
+                ['data.ascii'],
             ],
             [
-                'request data' => ['data' => $sessionKeyForServer],
-                'expected errors paths' => ['data.isValidEncryptedMetadataSessionKey'],
+                ['data' => $sessionKeyForServer],
+                ['data.isValidEncryptedMetadataSessionKey'],
             ],
         ];
     }

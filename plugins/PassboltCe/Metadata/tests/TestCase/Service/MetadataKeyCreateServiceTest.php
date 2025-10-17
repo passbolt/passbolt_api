@@ -107,7 +107,8 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
 
         return [
             [
-                'data (invalid types)' => [
+                //invalid types
+                [
                     'armored_key' => 'bar-foo',
                     'fingerprint' => '🔥🔥🔥',
                     'metadata_private_keys' => [
@@ -121,15 +122,16 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                         ],
                     ],
                 ],
-                'expected errors paths' => [
+                [
                     'armored_key.isParsableArmoredPublicKey',
                     'fingerprint.alphaNumeric',
                     'metadata_private_keys.{n}.user_id.uuid',
                     'metadata_private_keys.{n}.data.isValidOpenPGPMessage',
-                ],
+                ], //expected errors path
             ],
+            //expired armored key
             [
-                'data (expired armored key)' => [
+                [
                     'armored_key' => $expiredKey['armored_key'],
                     'fingerprint' => $expiredKey['fingerprint'],
                     'metadata_private_keys' => [
@@ -143,10 +145,11 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                         ],
                     ],
                 ],
-                'expected errors paths' => ['armored_key.isPublicKeyValidStrict'],
+                ['armored_key.isPublicKeyValidStrict'],
             ],
+            //more than one user_id null
             [
-                'data (more than one user_id null)' => [
+                [
                     'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => [
@@ -160,10 +163,11 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                         ],
                     ],
                 ],
-                'expected errors paths' => ['metadata_private_keys.{n}.user_id._isUnique'],
+                ['metadata_private_keys.{n}.user_id._isUnique'],
             ],
+            //more than one invalid uuid in user_id
             [
-                'data (more than one invalid uuid in user_id)' => [
+                [
                     'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => [
@@ -181,10 +185,11 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                         ],
                     ],
                 ],
-                'expected errors paths' => ['metadata_private_keys.{n}.user_id.uuid'],
+                ['metadata_private_keys.{n}.user_id.uuid'],
             ],
+            //data is not encrypted with the server key if user_id if set to null
             [
-                'data (data is not encrypted with the server key if user_id if set to null)' => [
+                [
                     'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => [
@@ -194,10 +199,11 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                         ],
                     ],
                 ],
-                'expected errors paths' => ['metadata_private_keys.{n}.data.isValidEncryptedMetadataPrivateKey'],
+                ['metadata_private_keys.{n}.data.isValidEncryptedMetadataPrivateKey'],
             ],
+            //fingerprint not matching public key
             [
-                'data (fingerprint not matching public key)' => [
+                [
                     'armored_key' => $makiKey['armored_key'],
                     'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => [
@@ -207,12 +213,13 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                         ],
                     ],
                 ],
-                'expected errors paths' => [
+                [
                     'fingerprint.isMatchingKeyFingerprint',
                 ],
             ],
+            //valid algorithm for public key
             [
-                'data (valid algorithm for public key)' => [
+                [
                     'armored_key' => $invalidAlgKey['armored_key'],
                     'fingerprint' => $invalidAlgKey['fingerprint'],
                     'metadata_private_keys' => [
@@ -222,7 +229,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                         ],
                     ],
                 ],
-                'expected errors paths' => [
+                [
                     'armored_key.isPublicKeyValidStrict',
                 ],
             ],
