@@ -46,7 +46,7 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
      */
     protected ProcessUserService $processUserService;
 
-    private bool $isNoVerifyModeOn;
+    private bool $isVerifyModeOn = true;
 
     /**
      * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
@@ -81,6 +81,7 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
                 'short' => 'n',
                 'required' => false,
                 'boolean' => true,
+                'default' => false,
                 'help' => 'Skip administrator username and fingerprint checks',
             ]);
 
@@ -96,7 +97,7 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
         // Root user is not allowed to execute this command.
         $this->assertCurrentProcessUser($io, $this->processUserService);
 
-        $this->isNoVerifyModeOn = !$args->getOption('no-verify');
+        $this->isVerifyModeOn = !$args->getOption('no-verify');
         $this->interactWithOperator($args, $io);
 
         $this->truncateTables($io);
@@ -155,7 +156,8 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
             ->first();
 
         // if the user has enabled the --no-verify option then we don't ask confirmation
-        if ($this->isNoVerifyModeOn) {
+        // @TODO: check the logic here when verify in not ON
+        if ($this->isVerifyModeOn) {
             if (is_null($admin)) {
                 $continue = $io->askChoice('The admin could not be found. Continue anyway?', ['y', 'n'], 'n');
                 $this->abortIfNoContinue($continue, $io);
@@ -189,7 +191,8 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
             ->first();
 
         // if the user has enabled the --no-verify option then we don't ask confirmation
-        if ($this->isNoVerifyModeOn) {
+        // @TODO: check the logic here when verify in not ON
+        if ($this->isVerifyModeOn) {
             if (is_null($fingerprint)) {
                 $continue = $io->askChoice(
                     'The fingerprint could not be found in account_recovery_organization_public_keys table. '
