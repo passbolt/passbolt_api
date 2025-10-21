@@ -92,9 +92,9 @@ class ResourcesAddService
 
         $this->attachListenerToAfterSaveEvent($uac, $resourceDto);
         $attempts = 1;
-        $resource = $this->buildEntity($uac->getId(), $resourceDto);
-        $this->handleValidationError($resource);
         do {
+            $resource = $this->buildEntity($uac->getId(), $resourceDto);
+            $this->handleValidationError($resource);
             try {
                 $this->Resources->save($resource);
                 break;
