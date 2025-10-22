@@ -105,6 +105,7 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
         }
 
         $operator = $this->usersTable->findFirstForEmail($uac->getId());
+        /** @var array<\App\Model\Entity\User> $recipients */
         $recipients = $this->findUsersUsernameToSendEmailTo($folder);
         foreach ($recipients as $recipient) {
             $email = $this->createEmail($recipient, $operator, $folder, $isV5);

@@ -79,6 +79,7 @@ class PasswordExpiryPasswordMarkedExpiredEmailRedactor implements SubscribedEmai
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ])->firstOrFail();
+        /** @var array<\App\Model\Entity\User> $usersToNotify */
         $usersToNotify = $this->findOwnersToNotify($resource->id, $operator);
 
         // Send emails to all the users
