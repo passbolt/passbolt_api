@@ -18,6 +18,7 @@ namespace App\Command;
 
 use App\Model\Entity\Role;
 use App\Model\Table\UsersTable;
+use App\Model\Validation\EmailValidationRule;
 use App\Service\Command\ProcessUserService;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\UserAccessControl;
@@ -110,6 +111,12 @@ class UserPromoteToAdministratorCommand extends PassboltCommand
         // Ensure the admin we are going to impersonate exists in the DB and is really an admin
         $providedAdminUsername = $args->getOption('admin-username');
 
+        // Validate admin email
+        if (!EmailValidationRule::check($providedAdminUsername)) {
+            $this->error(__('The administrator username must be a valid email address.', $providedAdminUsername), $io);
+            $this->abort();
+        }
+
         // $adminUser = $usersTable->find()->where(['username' => $providedAdminUsername])->first();
         $adminUser = $this->UsersTable->findByUsername($providedAdminUsername)->first();
 
@@ -130,6 +137,13 @@ class UserPromoteToAdministratorCommand extends PassboltCommand
 
         // Ensure the user we are going to promote exists in the DB
         $providedUserUsername = $args->getOption('user-username');
+
+        // Validate admin email
+        if (!EmailValidationRule::check($providedUserUsername)) {
+            $this->error(__('The user username parameter must be a valid email address.', $providedUserUsername), $io);
+            $this->abort();
+        }
+
         $userToPromote = $this->UsersTable->findByUsername($providedUserUsername)->first();
 
         if (!$userToPromote) {

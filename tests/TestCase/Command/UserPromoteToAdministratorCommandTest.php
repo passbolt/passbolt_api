@@ -79,6 +79,24 @@ class UserPromoteToAdministratorCommandTest extends AppTestCase
 
     /**
      * @Given I am not root
+     * @When I run "passbolt user_promote_to_administrator" with invalid admin email
+     * @Then the command returns an error code with a message
+     */
+    public function testUserPromoteToAdministratorCommandAsNonRootInvalidAdminUsername()
+    {
+        $userToPromote = UserFactory::make()->user()->active()->persist();
+        $invalidAdminUserName = 'invalidAdminUserName';
+
+        // "--org acme_test" the tests will run in the database defined in the config.php file
+        $options = " --user-username $userToPromote->username --admin-username $invalidAdminUserName";
+        $this->exec('passbolt user_promote_to_administrator' . $options);
+        $this->assertExitError();
+
+        $this->assertOutputContains('The administrator username must be a valid email address');
+    }
+
+    /**
+     * @Given I am not root
      * @When I run "passbolt user_promote_to_administrator" with incorrect admin name
      * @Then the command returns an error code with a message
      */
@@ -93,6 +111,24 @@ class UserPromoteToAdministratorCommandTest extends AppTestCase
         $this->assertExitError();
 
         $this->assertOutputContains('No administrator matching');
+    }
+
+    /**
+     * @Given I am not root
+     * @When I run "passbolt user_promote_to_administrator" with invalid admin email
+     * @Then the command returns an error code with a message
+     */
+    public function testUserPromoteToAdministratorCommandAsNonRootInvalidUserUsername()
+    {
+        $invalidUserUserName = 'InvalidUserUserName';
+        $admin = UserFactory::make()->admin()->active()->persist();
+
+        // "--org acme_test" the tests will run in the database defined in the config.php file
+        $options = " --user-username $invalidUserUserName --admin-username $admin->username";
+        $this->exec('passbolt user_promote_to_administrator' . $options);
+        $this->assertExitError();
+
+        $this->assertOutputContains('The user username parameter must be a valid email address');
     }
 
     /**
