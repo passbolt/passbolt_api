@@ -127,9 +127,9 @@ class SenderCommandTest extends AppIntegrationTestCase
     public static function noRowsLockedProvider(): array
     {
         return [
-            ['single_email' => 1],
-            ['multiple_emails_in_digest' => 2],
-            ['threshold_exceeded' => 11],
+            [1], //num of emails
+            [2],
+            [11],
         ];
     }
 

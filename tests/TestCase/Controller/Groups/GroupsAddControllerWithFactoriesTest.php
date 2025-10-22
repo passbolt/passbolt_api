@@ -145,22 +145,22 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
     {
         return [
             'chinese' => [
-                'name' => '私人團體',
+                '私人團體', //name
                 /**
                  * We are using closure here because data providers run before the phpunit's setUp method.
                  * And in setUp we truncate all the dirty tables hence we don't get the data in the test case that was generated via data provider.
                  * Using closure here makes sure we generate data in the test case.
                  */
-                'groups_users' => function () {
+                function () {
                     return [
                         ['user_id' => UserFactory::make()->user()->persist()->id, 'is_admin' => 1],
                         ['user_id' => UserFactory::make()->user()->persist()->id],
                     ];
-                },
+                }, //group_users
             ],
             'slavic' => [
-                'name' => 'Частная группа',
-                'groups_users' => function () {
+                'Частная группа',
+                function () {
                     return [
                         ['user_id' => UserFactory::make()->user()->persist()->id, 'is_admin' => 1],
                         ['user_id' => UserFactory::make()->user()->persist()->id, 'is_admin' => 1],
@@ -169,8 +169,8 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
                 },
             ],
             'french' => [
-                'name' => 'Groupe privé',
-                'groups_users' => function () {
+                'Groupe privé',
+                function () {
                     return [
                         ['user_id' => UserFactory::make()->user()->persist()->id, 'is_admin' => 1],
                         ['user_id' => UserFactory::make()->user()->persist()->id],
@@ -178,8 +178,8 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
                 },
             ],
             'funny' => [
-                'name' => '😃',
-                'groups_users' => function () {
+                '😃',
+                function () {
                     return [
                         ['user_id' => UserFactory::make()->user()->persist()->id, 'is_admin' => 1],
                         ['user_id' => UserFactory::make()->user()->persist()->id],

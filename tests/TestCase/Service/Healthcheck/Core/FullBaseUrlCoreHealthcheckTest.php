@@ -39,60 +39,60 @@ class FullBaseUrlCoreHealthcheckTest extends TestCase
     {
         return [
             [
-                'url' => 'https://cloud.passbolt.com/workspace',
-                'expected result' => true,
+                'https://cloud.passbolt.com/workspace', //url
+                true, //expected result
             ],
             [
-                'url' => 'https://passbolt.com',
-                'expected result' => true,
+                'https://passbolt.com',
+                true,
             ],
             [
-                'url' => 'https://passbolt.cloud',
-                'expected result' => true,
+                'https://passbolt.cloud',
+                true,
             ],
             [
-                'url' => 'https://passbolt',
-                'expected result' => true,
+                'https://passbolt',
+                true,
             ],
             [
-                'url' => 'https://localhost',
-                'expected result' => true,
+                'https://localhost',
+                true,
             ],
             [
-                'url' => 'https://localhost:8443',
-                'expected result' => true,
+                'https://localhost:8443',
+                true,
             ],
             [
-                'url' => 'http://cloud.passbolt.com/workspace',
-                'expected result' => true,
+                'http://cloud.passbolt.com/workspace',
+                true,
             ],
             [
-                'url' => 'http://passbolt.com',
-                'expected result' => true,
+                'http://passbolt.com',
+                true,
             ],
             [
-                'url' => 'http://passbolt.cloud',
-                'expected result' => true,
+                'http://passbolt.cloud',
+                true,
             ],
             [
-                'url' => 'http://passbolt',
-                'expected result' => true,
+                'http://passbolt',
+                true,
             ],
             [
-                'url' => 'http://127.0.0.1',
-                'expected result' => true,
+                'http://127.0.0.1',
+                true,
             ],
             [
-                'url' => 'http://localhost',
-                'expected result' => true,
+                'http://localhost',
+                true,
             ],
             [
-                'url' => 'http://localhost:8080',
-                'expected result' => true,
+                'http://localhost:8080',
+                true,
             ],
             [
-                'url' => '🔥',
-                'expected result' => true,
+                '🔥',
+                true,
             ],
         ];
     }

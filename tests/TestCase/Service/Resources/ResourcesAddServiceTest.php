@@ -78,30 +78,30 @@ class ResourcesAddServiceTest extends TestCase
     public static function dataForTestResourceAddSuccess(): array
     {
         return [
-            ['chinese' => self::getDummyResourcesPostData([
+            [self::getDummyResourcesPostData([
                 'name' => '新的專用資源名稱',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.域.com',
                 'description' => '新的資源描述',
-            ])],
-            ['slavic' => self::getDummyResourcesPostData([
+            ])], //chinese
+            [self::getDummyResourcesPostData([
                 'name' => 'Новое имя частного ресурса',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.домен.com',
                 'description' => 'Новое описание частного ресурса',
-            ])],
-            ['french' => self::getDummyResourcesPostData([
+            ])], //slavic
+            [self::getDummyResourcesPostData([
                 'name' => 'Nouveau nom de resource privée',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.mon-domain.com',
                 'description' => 'Nouvelle description de resource privée',
-            ])],
-            ['emoticon' => self::getDummyResourcesPostData([
+            ])], //french
+            [self::getDummyResourcesPostData([
                 'name' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}",
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.domain.com',
                 'description' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}",
-            ])],
+            ])], //emoticon
         ];
     }
 
