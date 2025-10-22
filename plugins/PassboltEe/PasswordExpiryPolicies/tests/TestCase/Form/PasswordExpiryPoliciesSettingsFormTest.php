@@ -65,14 +65,16 @@ class PasswordExpiryPoliciesSettingsFormTest extends TestCase
                 PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
                 PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
             ], false],
-            ['expiry notification negative' => [
+            //expiry notification negative
+            [[
                 PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => false,
                 PasswordExpirySettingsDto::AUTOMATIC_UPDATE => false,
                 PasswordExpirySettingsDto::POLICY_OVERRIDE => false,
                 PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD => null,
 //                PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => -1,
             ], true],
-            ['default expiry period equal to zero' => [
+            //default expiry period equal to zero
+            [[
                 PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => false,
                 PasswordExpirySettingsDto::AUTOMATIC_UPDATE => false,
                 PasswordExpirySettingsDto::POLICY_OVERRIDE => false,
@@ -93,28 +95,32 @@ class PasswordExpiryPoliciesSettingsFormTest extends TestCase
 //                PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD => null,
 //                PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => 0,
 //            ], false],
-            ['expiry notification null' => [
+            //expiry notification null
+            [[
                 PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
                 PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
                 PasswordExpirySettingsDto::POLICY_OVERRIDE => true,
                 PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD => null,
 //                PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => null,
             ], true],
-            ['expiry notification natural integer' => [
+            //expiry notification natural integer
+            [[
                 PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
                 PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
                 PasswordExpirySettingsDto::POLICY_OVERRIDE => true,
                 PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD => null,
 //                PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => 1,
             ], true],
-            ['expiry period empty string' => [
+            //expiry period empty string
+            [[
                 PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
                 PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
                 PasswordExpirySettingsDto::POLICY_OVERRIDE => true,
                 PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD => '',
 //                PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => 1,
             ], true],
-            ['expiry notification empty string' => [
+            //expiry notification empty string
+            [[
                 PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
                 PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
                 PasswordExpirySettingsDto::POLICY_OVERRIDE => true,

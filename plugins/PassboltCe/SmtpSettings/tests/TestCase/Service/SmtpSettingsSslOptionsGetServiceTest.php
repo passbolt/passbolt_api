@@ -133,13 +133,15 @@ class SmtpSettingsSslOptionsGetServiceTest extends AppTestCase
     {
         return [
             [
-                'data' => [
+                //data
+                [
                     'sslVerifyPeer' => 'foo',
                     'sslVerifyPeerName' => 123,
                     'sslAllowSelfSigned' => [],
                     'sslCafile' => true,
                 ],
-                'expectedErrorMessages' => [
+                //expected error messages
+                [
                     'The sslVerifyPeer configuration should be a boolean.',
                     'The sslVerifyPeerName configuration should be a boolean.',
                     'The sslAllowSelfSigned configuration should be a boolean.',
@@ -147,24 +149,24 @@ class SmtpSettingsSslOptionsGetServiceTest extends AppTestCase
                 ],
             ],
             [
-                'data' => [
+                [
                     'sslVerifyPeer' => true,
                     'sslVerifyPeerName' => true,
                     'sslAllowSelfSigned' => false,
                     'sslCafile' => [['foo' => 'bar']],
                 ],
-                'expectedErrorMessages' => [
+                [
                     'The sslCafile configuration should be NULL or string.',
                 ],
             ],
             [
-                'data' => [
+                [
                     'sslVerifyPeer' => 90.82,
                     'sslVerifyPeerName' => 'admin\'--\' AND 1=1;',
                     'sslAllowSelfSigned' => true,
                     'sslCafile' => '/path/to/cafile.crt',
                 ],
-                'expectedErrorMessages' => [
+                [
                     'The sslVerifyPeer configuration should be a boolean.',
                     'The sslVerifyPeerName configuration should be a boolean.',
                 ],

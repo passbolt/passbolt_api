@@ -133,14 +133,14 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
     {
         return [
             [
-                'config limit' => 201,
-                'no of resources' => 201,
-                'expected count' => 200,
+                201, //config limit
+                201, //no of resources
+                200, //expected count
             ],
             [
-                'config limit' => -1,
-                'no of resources' => 2,
-                'expected count' => 1,
+                -1,
+                2,
+                1,
             ],
         ];
     }

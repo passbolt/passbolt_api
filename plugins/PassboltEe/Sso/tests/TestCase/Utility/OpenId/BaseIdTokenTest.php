@@ -114,18 +114,18 @@ class BaseIdTokenTest extends AppTestCase
         return [
             [
                 // Invalid configuration type
-                'configValue' => ['foo' => 'bar'],
-                'expectedErrorMessage' => 'configuration value should be a string or NULL',
+                ['foo' => 'bar'], //config value
+                'configuration value should be a string or NULL', //expected error message
             ],
             [
                 // Invalid configuration type
-                'configValue' => new stdClass(),
-                'expectedErrorMessage' => 'configuration value should be a string or NULL',
+                new stdClass(),
+                'configuration value should be a string or NULL',
             ],
             [
                 // Invalid configuration(alg) value
-                'configValue' => 'FOOBAR256',
-                'expectedErrorMessage' => 'configuration value should be one of the following',
+                'FOOBAR256',
+                'configuration value should be one of the following',
             ],
         ];
     }
