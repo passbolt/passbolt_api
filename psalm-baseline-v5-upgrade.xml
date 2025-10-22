@@ -1554,11 +1554,6 @@
       <code><![CDATA[\Passbolt\Tags\Model\Entity\Tag getEntity()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="plugins/PassboltEe/UserPassphrasePolicies/src/Notification/Email/UserPassphrasePoliciesSettingsUpdatedEmailRedactor.php">
-    <InvalidArgument>
-      <code><![CDATA[$admin]]></code>
-    </InvalidArgument>
-  </file>
   <file src="src/Controller/Settings/SettingsIndexController.php">
     <InvalidConstantAssignmentValue>
       <code><![CDATA[SETTINGS_VISIBILITY_KEY = 'settingsVisibility']]></code>
