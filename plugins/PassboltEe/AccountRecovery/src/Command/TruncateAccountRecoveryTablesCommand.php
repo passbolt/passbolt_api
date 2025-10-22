@@ -125,8 +125,13 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
      */
     protected function interactWithOperator(Arguments $args, ConsoleIo $io): void
     {
-        $this->processUsername($args, $io);
-        $this->processFingerprint($args, $io);
+        // If the user has activated the no-verify option, he assume the risk of deleting the ORK  even if
+        // the provided fingerprint or admin parameters do not match those in the database. This is necessary to
+        // allow system administrators to act even if they don't have access to the user interface.
+        if ($this->isVerifyModeOn) {
+            $this->processUsername($args, $io);
+            $this->processFingerprint($args, $io);
+        }
 
         $io->info('The following tables will be truncated:');
         $io->info(self::ACCOUNT_RECOVERY_TABLES_TO_TRUNCATE);
@@ -156,16 +161,11 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
             ->first();
 
         // if the user has enabled the --no-verify option then we don't ask confirmation
-        // @TODO: check the logic here when verify in not ON
-        if ($this->isVerifyModeOn) {
-            if (is_null($admin)) {
-                $continue = $io->askChoice('The admin could not be found. Continue anyway?', ['y', 'n'], 'n');
-                $this->abortIfNoContinue($continue, $io);
-            }
-
-            $io->success('The admin was successfully found.');
+        if (is_null($admin)) {
+            $continue = $io->askChoice('The admin could not be found. Continue anyway?', ['y', 'n'], 'n');
+            $this->abortIfNoContinue($continue, $io);
         } else {
-            $io->success('Warning! The admin was not found.');
+            $io->success('The admin was successfully found.');
         }
     }
 
@@ -190,24 +190,16 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
             ->where(compact('fingerprint'))
             ->first();
 
-        // if the user has enabled the --no-verify option then we don't ask confirmation
-        // @TODO: check the logic here when verify in not ON
-        if ($this->isVerifyModeOn) {
-            if (is_null($fingerprint)) {
-                $continue = $io->askChoice(
-                    'The fingerprint could not be found in account_recovery_organization_public_keys table. '
-                    . 'Continue anyway?',
-                    ['y', 'n'],
-                    'n'
-                );
-                $this->abortIfNoContinue($continue, $io);
-            }
-
-            $io->success('The fingerprint was successfully found.');
-        } else {
-            $io->success(
-                'Warning! The fingerprint could not be found in account_recovery_organization_public_keys table.'
+        if (is_null($fingerprint)) {
+            $continue = $io->askChoice(
+                'The fingerprint could not be found in account_recovery_organization_public_keys table. '
+                . 'Continue anyway?',
+                ['y', 'n'],
+                'n'
             );
+            $this->abortIfNoContinue($continue, $io);
+        } else {
+            $io->success('The fingerprint was successfully found.');
         }
     }
 

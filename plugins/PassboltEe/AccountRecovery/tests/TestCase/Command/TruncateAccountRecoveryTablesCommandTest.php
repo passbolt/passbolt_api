@@ -137,8 +137,6 @@ class TruncateAccountRecoveryTablesCommandTest extends TestCase
         );
 
         $this->assertExitSuccess();
-        $this->assertOutputContains('Warning! The admin was not found.');
-        $this->assertOutputContains('Warning! The fingerprint could not be found in account_recovery_organization_public_keys table.');
         $this->assertOutputContains('The following tables will be truncated:');
 
         foreach ($factories as $factory) {
