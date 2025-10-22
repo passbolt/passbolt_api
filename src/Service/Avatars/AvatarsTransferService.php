@@ -88,17 +88,18 @@ class AvatarsTransferService
     {
         $fileStorages = $this->FileStorage->find()->where(['model' => 'Avatar']);
 
+        /** @var \Cake\Datasource\EntityInterface $fileStorage */
         foreach ($fileStorages as $fileStorage) {
             $filePath = $fileStorage->get('path');
             if (empty($filePath)) {
-                $id = $fileStorage->id;
+                $id = $fileStorage->get('id');
                 $this->logError("The file storage with id {$id} has no path defined.");
                 continue;
             }
             $uploadedFile = $this->getUploadedFile($filePath);
             if ($uploadedFile !== false) {
                 $avatar = $this->Avatars->newEntity([
-                    'profile_id' => $fileStorage->foreign_key,
+                    'profile_id' => $fileStorage->get('foreign_key'),
                     'file' => $uploadedFile,
                 ], ['validate' => false]);
 
