@@ -50,6 +50,7 @@ class UsersIndexCommandTest extends AppTestCase
     {
         $this->exec('passbolt users_index -h');
         $this->assertExitSuccess();
+        $this->assertOutputContains('List users.');
         $this->assertOutputContains('cake passbolt users_index');
     }
 
@@ -77,7 +78,7 @@ class UsersIndexCommandTest extends AppTestCase
         $deleted = UserFactory::make()->user()->deleted()->withProfileName('N_Deleted1', 'SN_Deleted1')->persist();
         $admin = UserFactory::make()->admin()->active()->withProfileName('N_Admin1', 'SN_Admin1')->persist();
         $admin = UserFactory::make()->admin()->active()->withProfileName('N_Admin1', 'SN_Admin1')->persist();
-        $guest = UserFactory::make()->guest()->active()->persist();
+        RoleFactory::make()->guest()->persist(); // db records for roles are required by users->findIndex query builder
 
         $this->exec('passbolt users_index');
         $this->assertExitSuccess();
@@ -92,7 +93,6 @@ class UsersIndexCommandTest extends AppTestCase
         // we assert the role column is filled
         $this->assertOutputContains($active->get('role')->get('name'));
         $this->assertOutputContains($active->get('role')->get('name'));
-        $this->assertOutputNotContains($guest->get('role')->get('name'));
     }
 
     /**

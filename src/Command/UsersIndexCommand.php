@@ -24,7 +24,6 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
-use Cake\Console\ConsoleOptionParser;
 use Cake\ORM\TableRegistry;
 use Passbolt\MultiFactorAuthentication\Service\Query\IsMfaEnabledQueryService;
 
@@ -73,11 +72,9 @@ class UsersIndexCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
-    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
+    public static function getCommandDescription(): string
     {
-        $parser = parent::buildOptionParser($parser);
-
-        return $parser;
+        return __('List users.');
     }
 
     /**
@@ -122,67 +119,27 @@ class UsersIndexCommand extends PassboltCommand
             return $this->successCode();
         }
 
-        // Prepares the columns headers labels for a nice tabular view with
-        // the column adapted to the size of the fields content
         $headers = ['Role', 'Username', 'Last name', 'First name',
                     'Created At', 'Active', 'Disabled', 'Deleted', 'MFA enabled'];
-        $col_widths = array_combine(
-            $headers,
-            array_map('strlen', $headers)
-        );
 
-        // In order to resize the columns to fit the maximum size we have to navigate the resultset
-        // only the string values are affected by varying size changes
+        // Format the rows
+        $rows = [];
         foreach ($users as $user) {
-            $col_widths[$headers[0]] = max($col_widths[$headers[0]], strlen((string)($user->role->name ?? '')));
-            $col_widths[$headers[1]] = max($col_widths[$headers[1]], strlen((string)$user->username));
-            $col_widths[$headers[2]] = max($col_widths[$headers[2]], strlen((string)($user->profile->last_name ?? '')));
-            $col_widths[$headers[3]] = max(
-                $col_widths[$headers[3]],
-                strlen((string)($user->profile->first_name ?? ''))
-            );
-        }
-
-        // Generate dynmically the sprintf sized statment
-        $format = sprintf(
-            '| %%-%ds | %%-%ds | %%-%ds | %%-%ds | %%-%ds | %%-%ds | %%-%ds | %%-%ds | %%-%ds |',
-            $col_widths[$headers[0]],
-            $col_widths[$headers[1]],
-            $col_widths[$headers[2]],
-            $col_widths[$headers[3]],
-            $col_widths[$headers[4]],
-            $col_widths[$headers[5]],
-            $col_widths[$headers[6]],
-            $col_widths[$headers[7]],
-            $col_widths[$headers[8]]
-        );
-
-        // Generate a nice ASCII line separator
-        $parts = [];
-        foreach ($headers as $header) {
-            $parts[] = str_repeat('-', $col_widths[$header] + 2); // +2 pour les espaces autour du texte
-        }
-        $hr = '+' . implode('+', $parts) . '+';
-
-        // And now display the table
-        $io->out($hr);
-        $io->out(vsprintf($format, $headers));
-        $io->out($hr);
-        foreach ($users as $user) {
-            $io->out(vsprintf($format, [
-                $user->role ? $user->role->name : '',
+            $rows[] = [
+                $user->role->name ?? '',
                 $user->username,
                 $user->profile->last_name ?? '',
                 $user->profile->first_name ?? '',
-                $user->created?->format('Y-m-d') ?? '',
+                $user->created?->toAtomString() ?? '',
                 $user->active ? 'yes' : 'no',
                 $user->disabled ? 'yes' : 'no',
                 $user->deleted ? 'yes' : 'no',
                 $user->is_mfa_enabled ? 'yes' : 'no',
-            ]));
+            ];
         }
 
-        $io->out($hr);
+        $tableData = array_merge([$headers], $rows);
+        $io->helper('Table')->output($tableData);
 
         return $this->successCode();
     }
