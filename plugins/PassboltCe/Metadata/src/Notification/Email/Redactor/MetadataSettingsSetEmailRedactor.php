@@ -87,6 +87,7 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
         $dto = $event->getData('dto');
 
         $modifier = $this->Users->findFirstForEmail($uac->getId());
+        /** @var array<\App\Model\Entity\User> $admins */
         $admins = $this->Users
             ->findAdmins()
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
