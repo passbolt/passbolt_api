@@ -92,21 +92,23 @@ class TruncateAccountRecoveryTablesCommandTest extends TestCase
         }
     }
 
-    public function testTruncateAccountRecoveryTablesCommand_Success_Without_Parameters()
+    public function testTruncateAccountRecoveryTablesCommand_Success_With_Good_Parameters_NoVerify()
     {
         $factories = $this->getFactories();
         foreach ($factories as $factory) {
             $factory->persist();
         }
 
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->active()->persist();
+        $orgPubKey = AccountRecoveryOrganizationPublicKeyFactory::firstOrFail();
+
         $this->exec(
-            'passbolt truncate_account_recovery_tables',
-            ['y', 'y', 'y']
+            "passbolt truncate_account_recovery_tables -u {$admin->username} -f {$orgPubKey->fingerprint} --no-verify",
+            ['y',]
         );
 
         $this->assertExitSuccess();
-        $this->assertOutputContains('No admin username was provided. Continue anyway?');
-        $this->assertOutputContains('No fingerprint was provided. Continue anyway?');
         $this->assertOutputContains('The following tables will be truncated:');
         $this->assertOutputContains('Continue anyway?');
 
@@ -116,20 +118,12 @@ class TruncateAccountRecoveryTablesCommandTest extends TestCase
         }
     }
 
-    public function testTruncateAccountRecoveryTablesCommand_Success_No_Interaction()
+    public function testTruncateAccountRecoveryTablesCommand_Fails_With_No_Parameters()
     {
-        $factories = $this->getFactories();
-        foreach ($factories as $factory) {
-            $factory->persist();
-        }
+        $this->exec('passbolt truncate_account_recovery_tables');
+        $this->assertExitError();
 
-        $this->exec('passbolt truncate_account_recovery_tables -n');
-        $this->assertExitSuccess();
-
-        foreach ($factories as $factory) {
-            $this->assertOutputContains("All entries in {$factory->getTable()->getTable()} table were deleted.");
-            $this->assertSame(0, $factory::count());
-        }
+        $this->assertErrorContains('Missing required option');
     }
 
     public function testTruncateAccountRecoveryTablesCommand_Success_With_Valid_Parameters_But_Not_In_DB()
@@ -149,6 +143,27 @@ class TruncateAccountRecoveryTablesCommandTest extends TestCase
         $this->assertOutputContains('The fingerprint could not be found in account_recovery_organization_public_keys table. Continue anyway?');
         $this->assertOutputContains('The following tables will be truncated:');
         $this->assertOutputContains('Continue anyway?');
+
+        foreach ($factories as $factory) {
+            $this->assertOutputContains("All entries in {$factory->getTable()->getTable()} table were deleted.");
+            $this->assertSame(0, $factory::count());
+        }
+    }
+
+    public function testTruncateAccountRecoveryTablesCommand_Success_With_Valid_Parameters_But_Not_In_DB_NoVerify()
+    {
+        $factories = $this->getFactories();
+        foreach ($factories as $factory) {
+            $factory->persist();
+        }
+
+        $this->exec(
+            'passbolt truncate_account_recovery_tables --no-verify -u foo@bar.com -f 8FF56AE5DFCEE142949B7826FD986838F4F9AB31',
+            ['y',]
+        );
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('The following tables will be truncated:');
 
         foreach ($factories as $factory) {
             $this->assertOutputContains("All entries in {$factory->getTable()->getTable()} table were deleted.");
