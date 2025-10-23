@@ -92,6 +92,32 @@ class TruncateAccountRecoveryTablesCommandTest extends TestCase
         }
     }
 
+    public function testTruncateAccountRecoveryTablesCommand_Success_With_Good_Parameters_NoVerify()
+    {
+        $factories = $this->getFactories();
+        foreach ($factories as $factory) {
+            $factory->persist();
+        }
+
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->active()->persist();
+        $orgPubKey = AccountRecoveryOrganizationPublicKeyFactory::firstOrFail();
+
+        $this->exec(
+            "passbolt truncate_account_recovery_tables -u {$admin->username} -f {$orgPubKey->fingerprint} --no-verify",
+            ['y',]
+        );
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('The following tables will be truncated:');
+        $this->assertOutputContains('Continue anyway?');
+
+        foreach ($factories as $factory) {
+            $this->assertOutputContains("All entries in {$factory->getTable()->getTable()} table were deleted.");
+            $this->assertSame(0, $factory::count());
+        }
+    }
+
     public function testTruncateAccountRecoveryTablesCommand_Fails_With_No_Parameters()
     {
         $this->exec('passbolt truncate_account_recovery_tables');
