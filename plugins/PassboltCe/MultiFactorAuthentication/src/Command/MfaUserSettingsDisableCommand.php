@@ -20,6 +20,7 @@ use App\Command\PassboltCommand;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
+use App\Model\Validation\EmailValidationRule;
 use App\Service\Command\ProcessUserService;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\UserAccessControl;
@@ -111,6 +112,13 @@ class MfaUserSettingsDisableCommand extends PassboltCommand
 
         // Ensure the user we are going to promote exists in the DB
         $providedUsername = $args->getOption('user-username');
+
+        // Validate admin email
+        if (!EmailValidationRule::check($providedUsername)) {
+            $this->error(__('The username must be a valid email address.', $providedUsername), $io);
+            $this->abort();
+        }
+
         try {
             $userToUpdate = $this->GetUserWithLocaleAndMfaIsEnabledInfo($providedUsername);
         } catch (RecordNotFoundException) {

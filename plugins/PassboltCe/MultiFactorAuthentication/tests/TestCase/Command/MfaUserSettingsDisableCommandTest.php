@@ -131,7 +131,6 @@ class MfaUserSettingsDisableCommandTest extends AppTestCase
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->user()->active()->persist();
 
-        // "--org acme_test" the tests will run in the database defined in the config.php file
         $options = " --user-username $user->username";
         $this->exec('passbolt mfa_user_settings_disable' . $options);
         $this->assertExitError();
@@ -145,9 +144,21 @@ class MfaUserSettingsDisableCommandTest extends AppTestCase
      * @And the given user does not exists
      * @Then the command runs, returning an error code and message.
      */
+    public function testMfaUserSettingsDisableCommandAsNonRootInvalidUsernameFormat()
+    {
+        $this->exec('passbolt mfa_user_settings_disable  --user-username InvalidUserUserName');
+        $this->assertExitError();
+        $this->assertOutputContains('The username must be a valid email address');
+    }
+
+    /**
+     * @Given I am not root
+     * @When I run "passbolt MfaUserSettingsDisableCommand"
+     * @And the given user does not exists
+     * @Then the command runs, returning an error code and message.
+     */
     public function testMfaUserSettingsDisableCommandAsNonRootUserNotFound()
     {
-        // "--org acme_test" the tests will run in the database defined in the config.php file
         $options = ' --user-username john.doe@passbolt.com';
         $this->exec('passbolt mfa_user_settings_disable' . $options);
         $this->assertExitError();
