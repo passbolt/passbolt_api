@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cc7d5ff2d7fd97230b271939c03bc158",
+    "content-hash": "4634983a9ffe8a7a45a103a515c22e5f",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -264,16 +264,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "5.2.6",
+            "version": "5.2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "89c925007e9bc149198d0f4cf923e3ad770fb086"
+                "reference": "12d41e43f945c1cb38ef3d983a9d87f9b13c041f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/89c925007e9bc149198d0f4cf923e3ad770fb086",
-                "reference": "89c925007e9bc149198d0f4cf923e3ad770fb086",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/12d41e43f945c1cb38ef3d983a9d87f9b13c041f",
+                "reference": "12d41e43f945c1cb38ef3d983a9d87f9b13c041f",
                 "shasum": ""
             },
             "require": {
@@ -321,7 +321,7 @@
                 "cakephp/validation": "self.version"
             },
             "require-dev": {
-                "cakephp/cakephp-codesniffer": "^5.2",
+                "cakephp/cakephp-codesniffer": "^5.3",
                 "http-interop/http-factory-tests": "dev-main",
                 "mikey179/vfsstream": "^1.6.10",
                 "mockery/mockery": "^1.6",
@@ -381,7 +381,7 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/cakephp"
             },
-            "time": "2025-08-02T03:14:22+00:00"
+            "time": "2025-10-17T03:14:02+00:00"
         },
         {
             "name": "cakephp/chronos",

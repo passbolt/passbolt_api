@@ -87,6 +87,7 @@ class MetadataKeyDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         $metadataKey = $event->getData('metadataKey');
 
         $modifier = $this->Users->findFirstForEmail($uac->getId());
+        /** @var array<\App\Model\Entity\User> $admins */
         $admins = $this->Users
             ->findAdmins()
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
