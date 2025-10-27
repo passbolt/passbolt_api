@@ -92,6 +92,7 @@ class BaseSolutionBootstrapper
 
         $this->addFeaturePluginIfEnabled($app, 'PasswordPolicies');
         $this->addFeaturePluginIfEnabled($app, 'UserKeyPolicies');
+        $this->addFeaturePluginIfEnabled($app, 'SecretRevisions');
     }
 
     /**
