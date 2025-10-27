@@ -311,6 +311,9 @@ return [
             'passwordPolicies' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_PASSWORD_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
             ],
+            'secretRevisions' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SECRET_REVISIONS_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            ],
             'disableUser' => [
                 // Feature flag to allow client to tune behavior for backward compatibility
                 'enabled' => true
