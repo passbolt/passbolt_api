@@ -52,6 +52,9 @@ class SecretsCleanupHardDeletedPermissionsServiceTest extends TestCase
             ->withPermissionsFor([$userWithDirectPermission, $group])
             ->withSecretsFor([$userWithDirectPermission, $userWithGroupPermission])->persist();
 
+        // Insert some deleted secrets that should be ignored by the cleanup
+        SecretFactory::make(2)->deleted()->persist();
+
         // Insert some random secrets to be deleted
         $nSecretsToDelete = 5;
         $nPermissions = 5;
@@ -61,7 +64,7 @@ class SecretsCleanupHardDeletedPermissionsServiceTest extends TestCase
         $secretsToDeleteCount = $this->service->cleanupHardDeletedPermissions();
 
         $this->assertSame($nSecretsToDelete, $secretsToDeleteCount);
-        $this->assertSame(2, SecretFactory::count());
+        $this->assertSame(4, SecretFactory::count());
         $this->assertSame(2, SecretFactory::find()->where(['resource_id' => $resource->get('id')])->all()->count());
     }
 
@@ -73,6 +76,9 @@ class SecretsCleanupHardDeletedPermissionsServiceTest extends TestCase
             ->withPermissionsFor([$userWithDirectPermission, $group])
             ->withSecretsFor([$userWithDirectPermission, $userWithGroupPermission])->persist();
 
+        // Insert some deleted secrets that should be ignored by the cleanup
+        SecretFactory::make(2)->deleted()->persist();
+
         // Insert some random secrets to be deleted
         $nSecretsToDelete = 5;
         SecretFactory::make($nSecretsToDelete)->persist();
@@ -80,7 +86,7 @@ class SecretsCleanupHardDeletedPermissionsServiceTest extends TestCase
         $secretsToDeleteCount = $this->service->cleanupHardDeletedPermissions(true);
 
         $this->assertSame($nSecretsToDelete, $secretsToDeleteCount);
-        $this->assertSame(2 + $nSecretsToDelete, SecretFactory::count());
+        $this->assertSame(4 + $nSecretsToDelete, SecretFactory::count());
         $this->assertSame(2, SecretFactory::find()->where(['resource_id' => $resource->get('id')])->all()->count());
     }
 }
