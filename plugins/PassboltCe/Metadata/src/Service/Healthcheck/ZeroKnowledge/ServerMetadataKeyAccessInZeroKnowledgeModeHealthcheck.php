@@ -12,26 +12,21 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         5.4.0
+ * @since         5.7.0
  */
 
-namespace Passbolt\Metadata\Service\Healthcheck;
+namespace Passbolt\Metadata\Service\Healthcheck\ZeroKnowledge;
 
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use App\Service\Healthcheck\SkipHealthcheckInterface;
 use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
-use Cake\Core\Configure;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\Query\SelectQuery;
+use Passbolt\Metadata\Service\MetadataKeysSettingsGetService;
 use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
-use PDOException;
 
-/**
- * No active metadata key when encrypted metadata is enabled
- */
-class NoActiveMetadataKeyHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class ServerMetadataKeyAccessInZeroKnowledgeModeHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface, SkipHealthcheckInterface // phpcs:ignore
 {
     use LocatorAwareTrait;
     use OpenPGPCommonServerOperationsTrait;
@@ -44,41 +39,37 @@ class NoActiveMetadataKeyHealthcheck implements HealthcheckServiceInterface, Hea
     private bool $status = false;
 
     /**
-     * @var string|null
+     * @var bool
      */
-    private ?string $errorMessage = null;
+    private bool $isSkipped = false;
 
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $settingsDto = MetadataTypesSettingsGetService::getSettings();
-        if (!$settingsDto->isV5Enabled()) {
-            $this->status = true;
+        $metadataTypesSettingsDto = MetadataTypesSettingsGetService::getSettings();
+        if (!$metadataTypesSettingsDto->isV5Enabled()) {
+            $this->markAsSkipped();
 
             return $this;
         }
 
-        try {
-            $this->fetchTable('Passbolt/Metadata.MetadataKeys')
-                ->find('active')
-                ->innerJoinWith('MetadataPrivateKeys', function (SelectQuery $q) {
-                    $expr = $q->newExpr()->isNull('MetadataPrivateKeys.user_id');
+        $metadataKeysSettingsDto = MetadataKeysSettingsGetService::getSettings();
+        if (!$metadataKeysSettingsDto->isKeyShareZeroKnowledge()) {
+            $this->markAsSkipped();
 
-                    return $q->where([$expr]);
-                })
-                ->orderBy(['MetadataKeys.created' => 'DESC'])
-                ->firstOrFail();
+            return $this;
+        }
 
+        $query = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys')->find();
+        $count = $query
+            ->where([$query->newExpr()->isNull('user_id')])
+            ->count();
+
+        if ($count === 0) {
             $this->status = true;
-        } catch (PDOException | RecordNotFoundException $exception) {
-            $this->errorMessage = __('No active metadata key found.');
-            if (Configure::read('debug')) {
-                $this->errorMessage .= ' ' . $exception->getMessage();
-            }
 
-            // No metadata private key found
             return $this;
         }
 
@@ -114,7 +105,7 @@ class NoActiveMetadataKeyHealthcheck implements HealthcheckServiceInterface, Hea
      */
     public function getSuccessMessage(): string
     {
-        return __('Active metadata key found or not required.');
+        return __('The server does not have access to the server metadata private key in Zero-knowledge mode.'); // phpcs:ignore
     }
 
     /**
@@ -122,9 +113,7 @@ class NoActiveMetadataKeyHealthcheck implements HealthcheckServiceInterface, Hea
      */
     public function getFailureMessage(): string
     {
-        $this->errorMessage = $this->errorMessage ?? __('No active metadata key found.');
-
-        return $this->errorMessage;
+        return __('The server has access to the server metadata private key while in Zero-knowledge mode.');
     }
 
     /**
@@ -132,7 +121,7 @@ class NoActiveMetadataKeyHealthcheck implements HealthcheckServiceInterface, Hea
      */
     public function getHelpMessage(): array|string|null
     {
-        return null;
+        return __('When Zero-knowledge mode is enabled, the server should not have access to the server metadata private key.'); // phpcs:ignore
     }
 
     /**
@@ -150,6 +139,22 @@ class NoActiveMetadataKeyHealthcheck implements HealthcheckServiceInterface, Hea
      */
     public function getLegacyArrayKey(): string
     {
-        return 'noActiveMetadataKey';
+        return 'isServerMetadataKeyAccessInZeroKnowledgeMode';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function markAsSkipped(): void
+    {
+        $this->isSkipped = true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isSkipped(): bool
+    {
+        return $this->isSkipped;
     }
 }
