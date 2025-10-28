@@ -79,6 +79,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/PasswordExpiryPolicies',
         'Passbolt/UserKeyPolicies',
         'Passbolt/Scim',
+        'Passbolt/SecretRevisions',
     ];
 
     public function testEeSolutionBootstrapper_Application_Bootstrap(): void
