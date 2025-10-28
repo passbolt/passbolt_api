@@ -137,10 +137,16 @@ W3AI8+rWjK8MGH2T88hCYI/6
      * @param $resourceId
      * @param $userId
      */
-    protected function assertSecretExists($resourceId, $userId)
+    protected function assertSecretExists($resourceId, $userId, bool $isDeleted = false)
     {
         $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
-        $secret = $secretsTable->find()->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
+        $secret = $secretsTable->find()->where(['resource_id' => $resourceId, 'user_id' => $userId]);
+        if ($isDeleted) {
+            $secret->where(['deleted IS NOT NULL']);
+        } else {
+            $secret->where(['deleted IS NULL']);
+        }
+        $secret = $secret->first();
         $this->assertNotEmpty($secret);
     }
 
