@@ -26,6 +26,7 @@ use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Model\Entity\MetadataPrivateKey;
+use Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
@@ -41,9 +42,9 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
     /**
      * Test subject
      *
-     * @var \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable
+     * @var \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable|null
      */
-    protected $MetadataPrivateKeys;
+    protected ?MetadataPrivateKeysTable $MetadataPrivateKeys = null;
 
     /**
      * @inheritDoc
@@ -300,6 +301,128 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
         $this->assertNotEmpty($entity->getErrors());
         $this->assertCount(1, $entity->getErrors()['data']);
         $this->assertArrayHasKey('isValidEncryptedMetadataPrivateKey', $entity->getErrors()['data']);
+    }
+
+    /**
+     * @return void
+     * @uses \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable::cleanupHardDeletedUsers()
+     */
+    public function testMetadataPrivateKeysTable_CleanupHardDeletedUsers_DryRun(): void
+    {
+        $john = UserFactory::make()->user()->persist();
+        // metadata key
+        $metadataKey = MetadataKeyFactory::make()->withServerKey()->withCreatorAndModifier($john)->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($john)->persist();
+        $jane = UserFactory::make()->user()->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($jane)->persist();
+        // metadata private keys with no actual users present
+        $noOfUsers = mt_rand(2, 10);
+        MetadataPrivateKeyFactory::make(['user_id' => UuidFactory::uuid()], $noOfUsers)->withMetadataKey($metadataKey)->persist();
+
+        $dryRun = true;
+        $result = $this->MetadataPrivateKeys->cleanupHardDeletedUsers($dryRun);
+
+        $this->assertSame($noOfUsers, $result);
+    }
+
+    /**
+     * @return void
+     * @uses \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable::cleanupSoftDeletedUsers()
+     */
+    public function testMetadataPrivateKeysTable_CleanupSoftDeletedUsers_DryRun(): void
+    {
+        $john = UserFactory::make()->user()->persist();
+        // metadata key
+        $metadataKey = MetadataKeyFactory::make()->withServerKey()->withCreatorAndModifier($john)->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($john)->persist();
+        $jane = UserFactory::make()->user()->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($jane)->persist();
+        // metadata private keys with soft-deleted user associated
+        $noOfUsers = mt_rand(2, 10);
+        MetadataPrivateKeyFactory::make($noOfUsers)
+            ->withMetadataKey($metadataKey)
+            ->with('Users', UserFactory::make()->user()->deleted())
+            ->persist();
+
+        $dryRun = true;
+        $result = $this->MetadataPrivateKeys->cleanupSoftDeletedUsers($dryRun);
+
+        $this->assertSame($noOfUsers, $result);
+    }
+
+    /**
+     * @return void
+     * @uses \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable::cleanupHardDeletedUsers()
+     */
+    public function testMetadataPrivateKeysTable_CleanupHardDeletedUsers(): void
+    {
+        $john = UserFactory::make()->user()->persist();
+        // metadata key
+        $metadataKey = MetadataKeyFactory::make()->withServerKey()->withCreatorAndModifier($john)->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($john)->persist();
+        $jane = UserFactory::make()->user()->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($jane)->persist();
+        // metadata private keys with no actual users present
+        $noOfUsers = mt_rand(2, 10);
+        MetadataPrivateKeyFactory::make(['user_id' => UuidFactory::uuid()], $noOfUsers)->withMetadataKey($metadataKey)->persist();
+
+        $result = $this->MetadataPrivateKeys->cleanupHardDeletedUsers();
+
+        $this->assertSame($noOfUsers, $result);
+        $this->assertSame(2, MetadataPrivateKeyFactory::find()->count());
+    }
+
+    /**
+     * @return void
+     * @uses \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable::cleanupSoftDeletedUsers()
+     */
+    public function testMetadataPrivateKeysTable_CleanupSoftDeletedUsers(): void
+    {
+        $john = UserFactory::make()->user()->persist();
+        // metadata key
+        $metadataKey = MetadataKeyFactory::make()->withServerKey()->withCreatorAndModifier($john)->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($john)->persist();
+        $jane = UserFactory::make()->user()->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($jane)->persist();
+        // metadata private keys with soft-deleted user associated
+        $noOfUsers = mt_rand(2, 10);
+        MetadataPrivateKeyFactory::make($noOfUsers)
+            ->withMetadataKey($metadataKey)
+            ->with('Users', UserFactory::make()->user()->deleted())
+            ->persist();
+
+        $result = $this->MetadataPrivateKeys->cleanupSoftDeletedUsers();
+
+        $this->assertSame($noOfUsers, $result);
+        $this->assertSame(2, MetadataPrivateKeyFactory::find()->count());
+    }
+
+    /**
+     * @return void
+     */
+    public function testMetadataPrivateKeysTable_CleanupSoftAndHardTogether(): void
+    {
+        $john = UserFactory::make()->admin()->persist();
+        $jane = UserFactory::make()->user()->persist();
+        $bobby = UserFactory::make()->user()->deleted()->persist(); // soft-deleted user
+        $adam = UserFactory::make()->admin()->deleted()->persist(); // soft-deleted admin
+        // metadata key
+        $metadataKey = MetadataKeyFactory::make()->withServerKey()->withCreatorAndModifier($john)->persist();
+        // metadata private keys
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($john)->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($jane)->persist();
+        $metadataKeyOfSoftDeletedUser = MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($bobby)->persist();
+        $metadataKeyOfSoftDeletedAdmin = MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($adam)->persist();
+        $metadataKeyOfHardDeletedUser = MetadataPrivateKeyFactory::make(['user_id' => UuidFactory::uuid()])->withMetadataKey($metadataKey)->persist();
+
+        $result1 = $this->MetadataPrivateKeys->cleanupHardDeletedUsers();
+        $result2 = $this->MetadataPrivateKeys->cleanupSoftDeletedUsers();
+
+        $this->assertSame(3, $result1 + $result2);
+        $this->assertSame(2, MetadataPrivateKeyFactory::find()->count());
+        $this->assertNull(MetadataPrivateKeyFactory::find()->where(['user_id' => $metadataKeyOfSoftDeletedUser->get('id')])->first());
+        $this->assertNull(MetadataPrivateKeyFactory::find()->where(['user_id' => $metadataKeyOfHardDeletedUser->get('id')])->first());
+        $this->assertNull(MetadataPrivateKeyFactory::find()->where(['user_id' => $metadataKeyOfSoftDeletedAdmin->get('id')])->first());
     }
 
     // ---------------------------

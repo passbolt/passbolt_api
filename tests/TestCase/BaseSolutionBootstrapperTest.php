@@ -61,6 +61,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/Folders',
         'Passbolt/PasswordPolicies',
         'Passbolt/UserKeyPolicies',
+        'Passbolt/SecretRevisions',
     ];
 
     public function testBaseSolutionBootstrapper_Application_Bootstrap(): void

@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Model\Table;
 
+use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -48,6 +49,8 @@ use Passbolt\Metadata\Model\Rule\UserIsActiveAndNotDeletedIfPresent;
  */
 class MetadataPrivateKeysTable extends Table
 {
+    use TableCleanupTrait;
+
     /**
      * Initialize method
      *
@@ -147,5 +150,27 @@ class MetadataPrivateKeysTable extends Table
         ]);
 
         return $rules;
+    }
+
+    /**
+     * Delete all records where associated users are deleted
+     *
+     * @param bool|null $dryRun false
+     * @return int of affected records
+     */
+    public function cleanupHardDeletedUsers(?bool $dryRun = false): int
+    {
+        return $this->cleanupHardDeleted('Users', $dryRun);
+    }
+
+    /**
+     * Delete all records where associated users are soft deleted
+     *
+     * @param bool|null $dryRun false
+     * @return int of affected records
+     */
+    public function cleanupSoftDeletedUsers(?bool $dryRun = false): int
+    {
+        return $this->cleanupSoftDeleted('Users', $dryRun);
     }
 }

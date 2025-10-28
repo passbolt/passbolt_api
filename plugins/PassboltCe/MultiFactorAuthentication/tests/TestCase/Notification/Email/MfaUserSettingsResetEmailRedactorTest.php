@@ -23,8 +23,8 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Event\Event;
 use Cake\TestSuite\TestCase;
-use Passbolt\MultiFactorAuthentication\Controller\UserSettings\MfaUserSettingsDeleteController;
 use Passbolt\MultiFactorAuthentication\Notification\Email\MfaUserSettingsResetEmailRedactor;
+use Passbolt\MultiFactorAuthentication\Service\MfaUserSettings\MfaUserSettingsDeleteService;
 
 class MfaUserSettingsResetEmailRedactorTest extends TestCase
 {
@@ -44,7 +44,7 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
     {
         $this->assertTrue(
             in_array(
-                MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT,
+                MfaUserSettingsDeleteService::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT,
                 $this->sut->getSubscribedEvents()
             )
         );
@@ -56,7 +56,7 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
         $user = UserFactory::make()->user()->willDisable()->persist();
         $user->set('locale', 'Foo');
         $uac = new UserAccessControl('admin', $adminUser->id, 'ada@passbolt.com');
-        $event = new Event(MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT);
+        $event = new Event(MfaUserSettingsDeleteService::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT);
         $event->setData([
             'target' => $user,
             'uac' => $uac,
@@ -83,7 +83,7 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
             'disabled' => null,
         ]);
         $uac = new UserAccessControl('admin', $userId, 'ada@passbolt.com');
-        $event = new Event(MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT);
+        $event = new Event(MfaUserSettingsDeleteService::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT);
         $event->setData([
             'target' => $user,
             'uac' => $uac,
