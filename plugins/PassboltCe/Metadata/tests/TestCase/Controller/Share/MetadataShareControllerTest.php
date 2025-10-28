@@ -81,6 +81,7 @@ class MetadataShareControllerTest extends AppIntegrationTestCaseV5
                 ['aro' => 'User', 'aro_foreign_key' => $user2->get('id'), 'type' => Permission::OWNER],
             ],
             'secrets' => [
+                ['user_id' => $user->get('id'), 'data' => $this->getDummyPrivateKeyOpenPGPMessage()],
                 ['user_id' => $user2->get('id'), 'data' => $this->getDummyPrivateKeyOpenPGPMessage()],
             ],
         ];

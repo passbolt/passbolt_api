@@ -105,7 +105,11 @@ class ResourceFactory extends CakephpBaseFactory
     {
         foreach ($users as $user) {
             if ($user instanceof User) {
-                $secretData = ['user_id' => $user->id];
+                $secretData = [
+                    'user_id' => $user->id,
+                    'created_by' => $user->id,
+                    'modified_by' => $user->id,
+                ];
                 $this->with('Secrets', $secretData);
             } elseif ($user instanceof Group) {
                 foreach ($user->groups_users as $groupUser) {
@@ -146,12 +150,13 @@ class ResourceFactory extends CakephpBaseFactory
     {
         $aco = PermissionsTable::RESOURCE_ACO;
         $aro_foreign_key = $creator->id;
+        $aro = PermissionsTable::USER_ARO;
 
         return $this
             ->patchData(['created_by' => $creator->id])
             ->with(
                 'Permission',
-                PermissionFactory::make(compact('aco', 'aro_foreign_key'))
+                PermissionFactory::make(compact('aco', 'aro', 'aro_foreign_key'))
             );
     }
 

@@ -55,6 +55,8 @@ trait ResourceSaveV5AwareTrait
                     'accessibleFields' => [
                         'user_id' => true,
                         'data' => true,
+                        'created_by' => true,
+                        'modified_by' => true,
                     ],
                 ],
             ],

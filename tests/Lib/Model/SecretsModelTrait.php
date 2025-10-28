@@ -127,7 +127,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
      */
     protected function assertSecretAttributes($secret)
     {
-        $attributes = ['id', 'user_id', 'resource_id', 'data', 'created', 'modified'];
+        $attributes = ['id', 'user_id', 'resource_id', 'created_by', 'modified_by', 'data', 'created', 'modified'];
         $this->assertObjectHasAttributes($attributes, $secret);
     }
 

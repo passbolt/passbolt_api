@@ -129,6 +129,8 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $this->assertEquals($user->id, $resource->secrets[0]->user_id);
         $this->assertEquals($resource->id, $resource->secrets[0]->resource_id);
         $this->assertEquals($data['secrets'][0]['data'], $resource->secrets[0]->data);
+        $this->assertEquals($user->id, $resource->secrets[0]->created_by);
+        $this->assertEquals($user->id, $resource->secrets[0]->modified_by);
 
         // Ensure that an email was sent
         $this->assertEmailIsInQueue([

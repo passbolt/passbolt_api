@@ -130,6 +130,7 @@ class ActionLogsUsernameQueryStrategyTest extends LogIntegrationTestCase
                 ['aro' => 'User', 'aro_foreign_key' => $edith->id, 'type' => Permission::OWNER],
             ],
             'secrets' => [
+                ['user_id' => $user->id, 'data' => Hash::get(self::getDummySecretData(), 'data')],
                 ['user_id' => $edith->id, 'data' => Hash::get(self::getDummySecretData(), 'data')],
             ],
         ];
@@ -166,6 +167,7 @@ class ActionLogsUsernameQueryStrategyTest extends LogIntegrationTestCase
                 ['aro' => 'User', 'aro_foreign_key' => $edith->id, 'type' => Permission::OWNER],
             ],
             'secrets' => [
+                ['user_id' => $user->id, 'data' => Hash::get(self::getDummySecretData(), 'data')],
                 ['user_id' => $edith->id, 'data' => Hash::get(self::getDummySecretData(), 'data')],
             ],
         ];

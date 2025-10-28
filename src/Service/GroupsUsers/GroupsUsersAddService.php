@@ -98,7 +98,7 @@ class GroupsUsersAddService
             function () use ($uac, $groupUser, $secretsData, $missingAccessResourcesIds, $entitiesChangesDto) {
                 $this->saveGroupUser($groupUser);
                 $entitiesChangesDto->pushAddedEntity($groupUser);
-                $secrets = $this->buildSecretsEntities($groupUser, $missingAccessResourcesIds, $secretsData);
+                $secrets = $this->buildSecretsEntities($uac, $groupUser, $missingAccessResourcesIds, $secretsData);
                 $this->saveSecrets($groupUser, $secrets);
                 $entitiesChangesDto->pushAddedEntities($secrets);
                 $this->dispatchGroupUserAddedEvent($uac, $groupUser);
@@ -169,6 +169,7 @@ class GroupsUsersAddService
      * @throws \App\Error\Exception\ValidationException If too many secrets are provided (Duplicate)
      */
     private function buildSecretsEntities(
+        UserAccessControl $uac,
         GroupsUser $groupUser,
         array $missingAccessResourcesIds,
         array $secretsData = []
@@ -176,7 +177,13 @@ class GroupsUsersAddService
         $secrets = [];
 
         foreach ($secretsData as $secretRowRef => $secretData) {
-            $secrets[] = $this->buildSecretEntity($secretRowRef, $secretData, $groupUser, $missingAccessResourcesIds);
+            $secrets[] = $this->buildSecretEntity(
+                $uac,
+                $secretRowRef,
+                $secretData,
+                $groupUser,
+                $missingAccessResourcesIds
+            );
         }
 
         $countProvidedSecrets = count($secrets);
@@ -228,15 +235,23 @@ class GroupsUsersAddService
      *  by being added to the group.
      */
     private function buildSecretEntity(
+        UserAccessControl $uac,
         int $secretRowRef,
         array $secretData,
         GroupsUser $groupUser,
         array $missingSecretsResourcesIds = []
     ): Secret {
+        $secretData = array_merge($secretData, [
+            'created_by' => $uac->getId(),
+            'modified_by' => $uac->getId(),
+        ]);
+
         $accessibleFields = [
             'resource_id' => true,
             'user_id' => true,
             'data' => true,
+            'created_by' => true,
+            'modified_by' => true,
         ];
         $secret = $this->secretsTable->newEntity($secretData, ['accessibleFields' => $accessibleFields]);
 

@@ -22,6 +22,7 @@ use App\Service\Resources\ResourcesUpdateService;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\RoleFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
@@ -31,6 +32,9 @@ use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
+/**
+ * @covers \App\Controller\Resources\ResourcesUpdateController
+ */
 class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 {
     use GroupsModelTrait;
@@ -113,6 +117,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $r1 = ResourceFactory::make()
             ->withCreatorAndPermission($userA)
             ->withPermissionsFor([$userB, $g1])
+            ->withSecretsFor([$userA])
             ->persist();
 
         $this->logInAs($userB);
@@ -157,6 +162,28 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertCount(1, $resourceUpdated->secrets);
         $this->assertSecretAttributes($resourceUpdated->secrets[0]);
         $this->assertEquals($r1EncryptedSecretB, $resourceUpdated->secrets[0]->data);
+        $this->assertSame($userB->id, $resourceUpdated->secrets[0]->created_by);
+        $this->assertSame($userB->id, $resourceUpdated->secrets[0]->modified_by);
+
+        // Assert secret records in the database
+        /** @var \App\Model\Entity\Secret[] $expectedSecrets */
+        $expectedSecrets = SecretFactory::find()->where(['resource_id' => $r1->id])->all()->toArray();
+        $this->assertCount(3, $expectedSecrets);
+        foreach ($expectedSecrets as $expectedSecret) {
+            if ($expectedSecret->user_id === $userA->id) {
+                $this->assertSame($r1EncryptedSecretA, $expectedSecret->data);
+                $this->assertSame($userA->id, $expectedSecret->created_by);
+                $this->assertSame($userB->id, $expectedSecret->modified_by);
+            } elseif ($expectedSecret->user_id === $userB->id) {
+                $this->assertSame($r1EncryptedSecretB, $expectedSecret->data);
+                $this->assertSame($userB->id, $expectedSecret->created_by);
+                $this->assertSame($userB->id, $expectedSecret->modified_by);
+            } elseif ($expectedSecret->user_id === $userC->id) {
+                $this->assertSame($r1EncryptedSecretC, $expectedSecret->data);
+                $this->assertSame($userB->id, $expectedSecret->created_by);
+                $this->assertSame($userB->id, $expectedSecret->modified_by);
+            }
+        }
     }
 
     public function testUpdateResourcesController_Error_NotValidId(): void

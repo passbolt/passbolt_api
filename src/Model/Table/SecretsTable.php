@@ -76,6 +76,16 @@ class SecretsTable extends Table
 
         $this->belongsTo('Resources');
         $this->belongsTo('Users');
+        $this->belongsTo('Creator', [
+            'className' => 'Users',
+            'bindingKey' => 'created_by',
+            'foreignKey' => 'id',
+        ]);
+        $this->belongsTo('Modifier', [
+            'className' => 'Users',
+            'bindingKey' => 'modified_by',
+            'foreignKey' => 'id',
+        ]);
 
         $this->addBehavior('Timestamp');
     }

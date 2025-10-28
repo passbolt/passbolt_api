@@ -21,7 +21,6 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Secret;
 use App\Model\Table\SecretsTable;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 
 class SecretsCreateService
 {
@@ -67,18 +66,13 @@ class SecretsCreateService
      */
     private function buildEntity(array $data): Secret
     {
-        $data = [
-            'resource_id' => Hash::get($data, 'resource_id'),
-            'user_id' => Hash::get($data, 'user_id'),
-            'data' => Hash::get($data, 'data'),
-        ];
-        $accessibleFields = [
+        return $this->secretsTable->newEntity($data, ['accessibleFields' => [
             'resource_id' => true,
             'user_id' => true,
             'data' => true,
-        ];
-
-        return $this->secretsTable->newEntity($data, ['accessibleFields' => $accessibleFields]);
+            'created_by' => true,
+            'modified_by' => true,
+        ]]);
     }
 
     /**
