@@ -1,0 +1,136 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         5.7.0
+ */
+namespace App\Service\Secrets;
+
+use App\Model\Entity\Resource;
+use App\Model\Table\ResourcesTable;
+use App\Model\Table\SecretsTable;
+use Cake\Database\Expression\IdentifierExpression;
+use Cake\ORM\TableRegistry;
+use Passbolt\Log\Model\Table\EntitiesHistoryTable;
+
+class PopulateCreatedByAndModifiedByInSecretsService
+{
+    private ResourcesTable $ResourcesTable;
+
+    private EntitiesHistoryTable $EntitiesHistoryTable;
+
+    private SecretsTable $SecretsTable;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
+        $this->EntitiesHistoryTable = TableRegistry::getTableLocator()->get('Passbolt/Log.EntitiesHistory');
+        $this->SecretsTable = TableRegistry::getTableLocator()->get('Secrets');
+    }
+
+    /**
+     * @return void
+     */
+    public function populate(): void
+    {
+        $resourcesQuery = $this->ResourcesTable->find();
+        $resources = $resourcesQuery
+            ->where(['Resources.deleted' => false])
+            ->innerJoinWith('ResourceTypes', function ($q) {
+                return $q->where([$q->expr()->isNull('ResourceTypes.deleted')]);
+            })
+            ->all();
+
+        if ($resources->count() === 0) {
+            return;
+        }
+
+        $resources
+            ->chunk(1000)
+            ->each(function ($resourcesBatch): void {
+                $this->populateSecrets($resourcesBatch);
+            });
+    }
+
+    /**
+     * @param array $resources Resources batch to update secrets.
+     * @return void
+     */
+    private function populateSecrets(array $resources): void
+    {
+        foreach ($resources as $resource) {
+            $this->populateCreatedByAndModifiedBySecret($resource);
+        }
+    }
+
+    /**
+     * @param Resource $resource Resource's secrets to update.
+     * @return void
+     */
+    private function populateCreatedByAndModifiedBySecret(Resource $resource): void
+    {
+        $query = $this->EntitiesHistoryTable->find();
+
+        $entitiesHistory = $query
+            ->select([
+                'Secrets.id',
+                'EntitiesHistory.crud',
+                'EntitiesHistory.created',
+                'ActionLogs.user_id',
+                'ActionLogs.created',
+            ])
+            ->innerJoin(['SecretsHistory' => 'secrets_history'], [
+                'SecretsHistory.id' => new IdentifierExpression('EntitiesHistory.foreign_key'),
+                'EntitiesHistory.foreign_model' => 'SecretsHistory',
+            ])
+            ->innerJoin(['Secrets' => 'secrets'], [
+                'Secrets.id' => new IdentifierExpression('SecretsHistory.id'),
+            ])
+            ->innerJoin(['ActionLogs' => 'action_logs'], [
+                'ActionLogs.id' => new IdentifierExpression('EntitiesHistory.action_log_id'),
+                // Eliminate data integrity issue where user isn't present to not get surprises down the line
+                $query->newExpr()->isNotNull('ActionLogs.user_id'),
+            ])
+            ->where(['SecretsHistory.resource_id' => $resource->id])
+            ->orderByAsc('EntitiesHistory.created')
+            ->all();
+
+        if ($entitiesHistory->count() > 0) {
+            $entitiesHistory = $entitiesHistory->toArray();
+            // The action logs of oldest entry is most likely performed by the initial creator of the secret.
+            // And the latest action log user entry we take it as modified.
+            $oldestHistory = array_key_first($entitiesHistory);
+            $latestHistory = array_key_last($entitiesHistory);
+            $createdBy = $entitiesHistory[$oldestHistory]['ActionLogs']['user_id'];
+            $modifiedBy = $entitiesHistory[$latestHistory]['ActionLogs']['user_id'];
+        } else {
+            $resourceCreatedBy = $this->ResourcesTable->find()
+                ->select(['created_by'])
+                ->where(['id' => $resource->id])
+                ->firstOrFail();
+            $createdBy = $modifiedBy = $resourceCreatedBy->get('created_by');
+        }
+
+        // Update secrets table
+        $this->SecretsTable->updateAll(
+            [
+                'created_by' => $createdBy,
+                'modified_by' => $modifiedBy,
+            ],
+            ['resource_id' => $resource->id]
+        );
+    }
+}
