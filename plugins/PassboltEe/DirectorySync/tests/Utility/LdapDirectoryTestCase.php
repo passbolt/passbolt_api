@@ -14,8 +14,9 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.0.0
  */
-namespace Passbolt\DirectorySync\Test\Mock;
+namespace Passbolt\DirectorySync\Test\Utility;
 
+use App\Test\Lib\AppTestCase;
 use LdapRecord\Configuration\DomainConfiguration;
 use LdapRecord\Connection;
 use LdapRecord\Models\ActiveDirectory\Group;
@@ -30,15 +31,14 @@ use Passbolt\DirectorySync\Utility\DirectoryInterface;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 use Passbolt\DirectorySync\Utility\LdapDirectory;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 /**
- * LdapDirectoryMock class
+ * LdapDirectoryTestCase class
  *
  * @package Passbolt\DirectorySync\Test\Mock
  */
-class LdapDirectoryMock
+class LdapDirectoryTestCase extends AppTestCase
 {
     use ConsecutiveParams;
 
@@ -52,69 +52,16 @@ class LdapDirectoryMock
     public $settings;
 
     /**
-     * @var TestCase
+     * Initialize a mocked LdapDirectory with chosen methods.
      */
-    protected $testCase;
-
-    /**
-     * Constructor
-     */
-    private function __construct(TestCase $testCase, DirectoryOrgSettings $settings, array $config)
+    public function setUpLdap(array $methods, DirectoryOrgSettings $settings): void
     {
-        $this->testCase = $testCase;
         $this->settings = $settings;
-        $this->Ldap = $this->testCase->getMockBuilder(LdapDirectory::class)
-            ->onlyMethods($config['methods'])
+        $this->Ldap = $this->getMockBuilder(LdapDirectory::class)
+            ->onlyMethods($methods)
             ->setConstructorArgs([$this->settings, false])
             ->getMock();
-    }
-
-    /**
-     * Create default instance
-     *
-     * @param TestCase $testCase
-     * @param DirectoryOrgSettings $settings
-     * @return LdapDirectoryMock
-     */
-    public static function createDefault(TestCase $testCase, DirectoryOrgSettings $settings): LdapDirectoryMock
-    {
-        $methods = ['getConnection', 'fetchDirectoryData', 'getQuery', '_fetchAndInitializeQuery', '_fetchAndInitializeUsersQuery', '_fetchAndInitializeGroupsQuery'];
-        $mock = new self($testCase, $settings, ['methods' => $methods]);
-        $mock->mockConnection();
-
-        return $mock;
-    }
-
-    /**
-     * Create instance allowing fetch directory mock data
-     *
-     * @param TestCase $testCase
-     * @param DirectoryOrgSettings $settings
-     * @return LdapDirectoryMock
-     */
-    public static function createAllowingFetch(TestCase $testCase, DirectoryOrgSettings $settings): LdapDirectoryMock
-    {
-        $methods = ['getConnection', 'getQuery'];
-        $mock = new self($testCase, $settings, ['methods' => $methods]);
-        $mock->mockConnection();
-
-        return $mock;
-    }
-
-    /**
-     * Create instance without actually getting results
-     *
-     * @param TestCase $testCase
-     * @param DirectoryOrgSettings $settings
-     * @return LdapDirectoryMock
-     */
-    public static function createWithoutResultsProcessing(TestCase $testCase, DirectoryOrgSettings $settings): LdapDirectoryMock
-    {
-        $methods = ['getConnection', 'getFilteredDirectoryResults'];
-        $mock = new self($testCase, $settings, ['methods' => $methods]);
-        $mock->mockConnection();
-
-        return $mock;
+        $this->mockConnection();
     }
 
     /**
@@ -124,17 +71,17 @@ class LdapDirectoryMock
      */
     public function mockConnection()
     {
-        $configuration = $this->testCase->getMockBuilder(DomainConfiguration::class)->getMock();
-        $configuration->expects($this->testCase->any())
+        $configuration = $this->getMockBuilder(DomainConfiguration::class)->getMock();
+        $configuration->expects($this->any())
             ->method('get')
             ->with()
             ->willReturnMap([['base_dn', LdapDirectoryTest::BASE_DN], ['domain', LdapDirectoryTest::TEST_DOMAIN]]);
 
-        $connection = $this->testCase->getMockBuilder(Connection::class)->getMock();
-        $connection->expects($this->testCase->any())
+        $connection = $this->getMockBuilder(Connection::class)->getMock();
+        $connection->expects($this->any())
             ->method('getConfiguration')
             ->willReturn($configuration);
-        $this->Ldap->expects($this->testCase->any())
+        $this->Ldap->expects($this->any())
             ->method('getConnection')
             ->willReturn($connection);
 
@@ -148,7 +95,7 @@ class LdapDirectoryMock
      */
     public function generateDirectoryResultsMock(): MockObject
     {
-        $directoryResults = $this->testCase->getMockBuilder(DirectoryResults::class)
+        $directoryResults = $this->getMockBuilder(DirectoryResults::class)
             ->onlyMethods(['getUsersAsArray', 'getGroupsAsArray', 'getRecursivelyFromParentGroup', 'initializeWithLdapResults'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -168,12 +115,12 @@ class LdapDirectoryMock
     public function setDirectoryResultsUsersExpectation(MockObject $directoryResults, ?array $expectedUsers = null)
     {
         if (!$expectedUsers) {
-            $directoryResults->expects($this->testCase->never())
+            $directoryResults->expects($this->never())
                 ->method('getUsersAsArray');
 
             return;
         }
-        $directoryResults->expects($this->testCase->once())
+        $directoryResults->expects($this->once())
             ->method('getUsersAsArray')
             ->willReturn($expectedUsers);
     }
@@ -188,12 +135,12 @@ class LdapDirectoryMock
     public function setDirectoryResultsGroupsExpectation(MockObject $directoryResults, ?array $expectedGroups = null)
     {
         if (!$expectedGroups) {
-            $directoryResults->expects($this->testCase->never())
+            $directoryResults->expects($this->never())
                 ->method('getGroupsAsArray');
 
             return;
         }
-        $directoryResults->expects($this->testCase->once())
+        $directoryResults->expects($this->once())
             ->method('getGroupsAsArray')
             ->willReturn($expectedGroups);
     }
@@ -209,7 +156,7 @@ class LdapDirectoryMock
      */
     public function setDirectoryResultsRecursivelyFromParentGroupExpectation(MockObject $directoryResults, string $type, string $group, MockObject $filtered)
     {
-        $directoryResults->expects($this->testCase->once())
+        $directoryResults->expects($this->once())
             ->method('getRecursivelyFromParentGroup')
             ->with($type, $group)
             ->willReturn($filtered);
@@ -225,7 +172,7 @@ class LdapDirectoryMock
      */
     public function setDirectoryResultsRecursivelyFromParentGroupConsecutiveExpectation(MockObject $directoryResults, array $parameters, array $filtered)
     {
-        $directoryResults->expects($this->testCase->exactly(count($parameters)))
+        $directoryResults->expects($this->exactly(count($parameters)))
             ->method('getRecursivelyFromParentGroup')
             ->with(...$this->withConsecutive(...$parameters))
             ->willReturnOnConsecutiveCalls(...$filtered);
@@ -239,7 +186,7 @@ class LdapDirectoryMock
      */
     public function setFetchDirectoryDataExpectation(MockObject $directoryResults)
     {
-        $this->Ldap->expects($this->testCase->once())
+        $this->Ldap->expects($this->once())
             ->method('fetchDirectoryData')
             ->willReturn($directoryResults);
     }
@@ -252,7 +199,7 @@ class LdapDirectoryMock
     public function setGetQueryExpectation()
     {
         $mappingRules = $this->settings->getFieldsMapping(DirectoryInterface::TYPE_AD);
-        $builder = $this->testCase->getMockBuilder(Builder::class)
+        $builder = $this->getMockBuilder(Builder::class)
             ->onlyMethods(['select', 'setBaseDn', 'where', 'paginate', 'rawFilter'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -298,43 +245,43 @@ class LdapDirectoryMock
             $getExpectationCount = 1;
         }
         if ($rawFilterConditions) {
-            $builder->expects($this->testCase->exactly(count($rawFilterConditions)))
+            $builder->expects($this->exactly(count($rawFilterConditions)))
                 ->method('rawFilter')
                 ->with(...$this->withConsecutive(...$rawFilterConditions))
                 ->willReturnSelf();
         } else {
-            $builder->expects($this->testCase->never())
+            $builder->expects($this->never())
                 ->method('rawFilter');
         }
-        $ldapGroup = $this->testCase->getMockBuilder(Group::class)
+        $ldapGroup = $this->getMockBuilder(Group::class)
             ->onlyMethods(['addAttributeValue'])
             ->getMock();
-        $ldapGroup->expects($this->testCase->exactly($validGroupCustomFilter ? 2 : 0))
+        $ldapGroup->expects($this->exactly($validGroupCustomFilter ? 2 : 0))
             ->method('addAttributeValue')
             ->with(...$this->withConsecutive(['objectType', DirectoryInterface::ENTRY_TYPE_GROUP], ['directoryType', DirectoryInterface::TYPE_AD]));
-        $ldapUser = $this->testCase->getMockBuilder(User::class)
+        $ldapUser = $this->getMockBuilder(User::class)
             ->onlyMethods(['addAttributeValue', 'isEnabled'])
             ->getMock();
 
-        $ldapUser->expects($this->testCase->exactly($validGroupCustomFilter && $validUserCustomFilter ? 2 : 0))
+        $ldapUser->expects($this->exactly($validGroupCustomFilter && $validUserCustomFilter ? 2 : 0))
             ->method('addAttributeValue')
             ->with(...$this->withConsecutive(['objectType', DirectoryInterface::ENTRY_TYPE_USER], ['directoryType', DirectoryInterface::TYPE_AD]));
 
-        $builder->expects($this->testCase->exactly($getExpectationCount))
+        $builder->expects($this->exactly($getExpectationCount))
             ->method('paginate')
             ->willReturn([$ldapGroup], [$ldapUser]);
-        $builder->expects($this->testCase->exactly($expectationCount))
+        $builder->expects($this->exactly($expectationCount))
             ->method('select')
             ->with(...$this->withConsecutive(
                 [array_values($mappingRules[DirectoryInterface::ENTRY_TYPE_GROUP])],
                 [array_values($mappingRules[DirectoryInterface::ENTRY_TYPE_USER])]
             ))
             ->willReturnSelf();
-        $builder->expects($this->testCase->exactly($expectationCount))
+        $builder->expects($this->exactly($expectationCount))
             ->method('setBaseDn')
             ->with(...$this->withConsecutive([$this->Ldap->getDNFullPath(DirectoryInterface::ENTRY_TYPE_GROUP)], [$this->Ldap->getDNFullPath(DirectoryInterface::ENTRY_TYPE_USER)]))
             ->willReturnSelf();
-        $this->Ldap->expects($this->testCase->exactly($expectationCount))
+        $this->Ldap->expects($this->exactly($expectationCount))
             ->method('getQuery')
             ->with(...$this->withConsecutive([DirectoryInterface::ENTRY_TYPE_GROUP], [DirectoryInterface::ENTRY_TYPE_USER]))
             ->willReturn($builder);
@@ -348,7 +295,7 @@ class LdapDirectoryMock
      */
     public function setFilteredDirectoryResultsExpectation(MockObject $directoryResults)
     {
-        $this->Ldap->expects($this->testCase->once())
+        $this->Ldap->expects($this->once())
             ->method('getFilteredDirectoryResults')
             ->willReturn($directoryResults);
     }
@@ -361,14 +308,14 @@ class LdapDirectoryMock
      */
     public function setFetchAndInitializeQueryExpectation(string $entryType)
     {
-        $builder = $this->testCase->getMockBuilder(Builder::class)
+        $builder = $this->getMockBuilder(Builder::class)
             ->onlyMethods(['getUnescapedQuery'])
             ->disableOriginalConstructor()
             ->getMock();
-        $builder->expects($this->testCase->once())
+        $builder->expects($this->once())
             ->method('getUnescapedQuery')
             ->willReturn($entryType);
-        $this->Ldap->expects($this->testCase->once())
+        $this->Ldap->expects($this->once())
             ->method('_fetchAndInitializeQuery')
             ->with($entryType)
             ->willReturn($builder);
