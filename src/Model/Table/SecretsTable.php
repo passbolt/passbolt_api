@@ -24,6 +24,8 @@ use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Service\Secrets\SecretsCleanupHardDeletedPermissionsService;
+use Cake\Database\Expression\QueryExpression;
+use Cake\ORM\Query;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -195,6 +197,17 @@ class SecretsTable extends Table
                 'resource_id' => $resourceId,
                 'user_id' => $userId,
             ]);
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query query
+     * @return \Cake\ORM\Query
+     */
+    public function findNotDeleted(Query $query): Query
+    {
+        return $query->where(function (QueryExpression $exp) {
+            return $exp->isNull($this->aliasField('deleted'));
+        });
     }
 
     /**

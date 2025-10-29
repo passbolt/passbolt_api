@@ -18,6 +18,7 @@ namespace App\Test\Factory;
 
 use App\Model\Entity\User;
 use Cake\I18n\Date;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -60,6 +61,15 @@ class SecretFactory extends CakephpBaseFactory
                 'modified' => Date::now()->subDays($faker->randomNumber(4)),
             ];
         });
+    }
+
+    /**
+     * @param DateTime|null $deleted
+     * @return SecretFactory
+     */
+    public function deleted(?DateTime $deleted = null): SecretFactory
+    {
+        return $this->patchData(['deleted' => $deleted ?? DateTime::yesterday()]);
     }
 
     /**
