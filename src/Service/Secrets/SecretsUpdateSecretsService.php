@@ -91,6 +91,7 @@ class SecretsUpdateSecretsService
 
         foreach ($data as $rowIndex => $row) {
             if (array_key_exists($row['user_id'], $secrets)) {
+                $row['modified_by'] = $uac->getId();
                 $secret = $secrets[$row['user_id']];
                 $updatedSecret = $this->updateSecret($secret, $rowIndex, $row);
                 $entitiesChanges->pushUpdatedEntity($updatedSecret);
@@ -121,6 +122,7 @@ class SecretsUpdateSecretsService
         $patchEntityOptions = [
             'accessibleFields' => [
                 'data' => true,
+                'modified_by' => true,
             ],
         ];
         $secret = $this->secretsTable->patchEntity($secret, $data, $patchEntityOptions);
@@ -166,6 +168,8 @@ class SecretsUpdateSecretsService
             'resource_id' => $resourceId,
             'user_id' => Hash::get($data, 'user_id', ''),
             'data' => Hash::get($data, 'data', ''),
+            'created_by' => $uac->getId(),
+            'modified_by' => $uac->getId(),
         ];
 
         $secret = null;

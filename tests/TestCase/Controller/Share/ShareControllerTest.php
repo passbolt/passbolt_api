@@ -123,7 +123,7 @@ hcciUFw5
         // Add a read permission for the group Accounting.
         $data['permissions'][] = ['aro' => 'Group', 'aro_foreign_key' => $groupAId, 'type' => Permission::READ];
         $data['secrets'][] = ['user_id' => $userFId, 'data' => self::getValidSecret()];
-        $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
+        $expectedAddedUsersIds[] = $userFId;
 
         $this->authenticateAs('ada');
         $this->putJson("/share/resource/$resourceId.json", $data);

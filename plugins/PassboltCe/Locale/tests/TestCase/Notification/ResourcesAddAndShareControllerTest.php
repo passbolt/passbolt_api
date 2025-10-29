@@ -79,6 +79,7 @@ class ResourcesAddAndShareControllerTest extends AppIntegrationTestCase
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $defaultUser->id, 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $englishUser->id, 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $frenchUser2->id, 'type' => Permission::OWNER];
+        $data['secrets'][] = ['user_id' => $frenchUser->get('id'), 'data' => SecretFactory::make()->getEntity()->data];
         $data['secrets'][] = ['user_id' => $defaultUser->id, 'data' => SecretFactory::make()->getEntity()->data];
         $data['secrets'][] = ['user_id' => $englishUser->id, 'data' => SecretFactory::make()->getEntity()->data];
         $data['secrets'][] = ['user_id' => $frenchUser2->id, 'data' => SecretFactory::make()->getEntity()->data];
@@ -87,7 +88,7 @@ class ResourcesAddAndShareControllerTest extends AppIntegrationTestCase
         $this->putJson("/share/resource/{$resource->id}.json?api-version=v2", $data);
         $this->assertResponseOk();
 
-        $this->assertEmailQueueCount(3);
+        $this->assertEmailQueueCount(4);
         $this->assertEmailLocale($defaultUser->username, $englishLocale);
         $this->assertEmailLocale($englishUser->username, $englishLocale);
         $this->assertEmailLocale($frenchUser2->username, $frenchLocale);
