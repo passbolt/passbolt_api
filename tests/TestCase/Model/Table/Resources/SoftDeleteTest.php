@@ -17,10 +17,14 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Resources;
 
-use App\Model\Table\ResourcesTable;
+use App\Model\Entity\Permission;
+use App\Test\Factory\FavoriteFactory;
+use App\Test\Factory\PermissionFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
 
@@ -30,22 +34,10 @@ class SoftDeleteTest extends AppTestCase
 
     public $Resources;
 
-    public array $fixtures = [
-        'app.Base/Users',
-        'app.Base/Groups',
-        'app.Base/GroupsUsers',
-        'app.Base/ResourceTypes',
-        'app.Base/Resources',
-        'app.Base/Favorites',
-        'app.Base/Secrets',
-        'app.Base/Permissions',
-    ];
-
     public function setUp(): void
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Resources') ? [] : ['className' => ResourcesTable::class];
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources', $config);
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
     public function tearDown(): void
@@ -57,15 +49,21 @@ class SoftDeleteTest extends AppTestCase
 
     public function testSoftDeleteSuccess()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $resource = $this->Resources->get($resourceId);
-        $this->assertFalse($resource->deleted);
-        $this->Resources->softDelete($userId, $resource);
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+        // Create several resources associated with this user for more randomness
+        [$resource, $otherResource] = ResourceFactory::make(3)
+            ->withPermissionsFor([$user])
+            ->withSecretsFor([$user])
+            ->persist();
+        FavoriteFactory::make()->setResource($resource)->persist();
+        FavoriteFactory::make()->setResource($otherResource)->persist();
+
+        $this->Resources->softDelete($user->id, $resource);
         $this->assertEmpty($resource->getErrors());
 
         // Check that the resource is well soft deleted.
-        $resource = $this->Resources->get($resourceId);
+        $resource = $this->Resources->get($resource->id);
         $this->assertTrue($resource->deleted);
 
         // Description, username and URI are empty
@@ -73,38 +71,46 @@ class SoftDeleteTest extends AppTestCase
         $this->assertEmpty($resource->uri);
         $this->assertEmpty($resource->description);
 
-        // No favorites in db.
+        // No favorites for this resource in db.
         $favorites = $this->Resources->getAssociation('Favorites')
             ->find()->where(['Favorites.foreign_key' => $resource->id])->toArray();
         $this->assertEmpty($favorites);
-        // No permissions in db.
+        $this->assertSame(1, FavoriteFactory::count());
+        // No permissions for this resource in db.
         $permissions = $this->Resources->getAssociation('Permissions')
             ->find()->where(['Permissions.aco_foreign_key' => $resource->id])->toArray();
         $this->assertEmpty($permissions);
-        // No secrets in db.
+        $this->assertSame(2, PermissionFactory::count());
+        // No secrets for this resource in db.
         $secrets = $this->Resources->getAssociation('Secrets')
             ->find()->where(['Secrets.resource_id' => $resource->id])->toArray();
         $this->assertEmpty($secrets);
+        $this->assertSame(2, SecretFactory::count());
     }
 
     public function testSoftDeleteErrorNotValidUserIdParameter()
     {
         $userId = 'not-valid-uuid';
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $resource = $this->Resources->get($resourceId);
+        /** @var \App\Model\Entity\User $resource */
+        $resource = ResourceFactory::make()->persist();
         try {
             $this->Resources->softDelete($userId, $resource);
+            $this->fail();
         } catch (InvalidArgumentException $e) {
-            return $this->assertTrue(true);
+            $this->assertSame('The user identifier should be a valid UUID.', $e->getMessage());
         }
     }
 
     public function testSoftDeleteErrorResourceIsSoftDeleted()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $resource = $this->Resources->get($resourceId);
-        $this->Resources->softDelete($userId, $resource);
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->deleted()
+            ->withPermissionsFor([$user])
+            ->persist();
+        $this->Resources->softDelete($user->id, $resource);
         $errors = $resource->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertNotEmpty($errors['deleted']['is_not_soft_deleted']);
@@ -112,10 +118,11 @@ class SoftDeleteTest extends AppTestCase
 
     public function testSoftDeleteErrorAccessDenied()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $resourceId = UuidFactory::uuid('resource.id.april');
-        $resource = $this->Resources->get($resourceId);
-        $this->Resources->softDelete($userId, $resource);
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->persist();
+        $this->Resources->softDelete($user->id, $resource);
         $errors = $resource->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertNotEmpty($errors['id']['has_access']);
@@ -123,12 +130,35 @@ class SoftDeleteTest extends AppTestCase
 
     public function testSoftDeleteErrorAccessDenied_ReadAccess()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $resourceId = UuidFactory::uuid('resource.id.bower');
-        $resource = $this->Resources->get($resourceId);
-        $this->Resources->softDelete($userId, $resource);
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$user], Permission::READ)
+            ->persist();
+        $this->Resources->softDelete($user->id, $resource);
         $errors = $resource->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertNotEmpty($errors['id']['has_access']);
+    }
+
+    public function testSoftDeleteError_UpdateAccess_Success()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$user], Permission::UPDATE)
+            ->persist();
+        $this->Resources->softDelete($user->id, $resource);
+
+        // Check that the resource is well soft deleted.
+        $resource = $this->Resources->get($resource->id);
+        $this->assertTrue($resource->deleted);
+
+        // Description, username and URI are empty
+        $this->assertEmpty($resource->username);
+        $this->assertEmpty($resource->uri);
+        $this->assertEmpty($resource->description);
     }
 }

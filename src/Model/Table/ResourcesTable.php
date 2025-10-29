@@ -129,7 +129,6 @@ class ResourcesTable extends Table
         ]);
         $this->hasMany('Secrets', [
             'foreignKey' => 'resource_id',
-            'saveStrategy' => 'replace',
         ]);
 
         $this->belongsTo('ResourceTypes', [
@@ -564,7 +563,6 @@ class ResourcesTable extends Table
         $data = [
             'deleted' => true,
             'modified_by' => $userId,
-            'secrets' => [],
             // cleanup sensitive data
             'username' => null,
             'uri' => null,
@@ -576,7 +574,6 @@ class ResourcesTable extends Table
                 'uri' => true,
                 'description' => true,
                 'deleted' => true,
-                'secrets' => true,
                 'modified' => true,
                 'modified_by' => true,
             ],
@@ -591,6 +588,10 @@ class ResourcesTable extends Table
         if ($resource->getErrors()) {
             return false;
         }
+
+        // Remove all the associated secrets.
+        $this->getAssociation('Secrets')
+            ->deleteAll(['Secrets.resource_id' => $resource->id]);
 
         // Remove all the associated permissions.
         $this->getAssociation('Permissions')
