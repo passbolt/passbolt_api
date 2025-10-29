@@ -95,7 +95,7 @@ class SecretsCleanupHardDeletedPermissionsService
             ->groupBy(['resource_id', 'user_id']);
 
         // Use a "LEFT JOIN" instead of a "NOT IN" for performance reason.
-        return $this->Secrets->find()
+        return $this->Secrets->find('notDeleted')
             ->leftJoin(['ExpectedSecrets' => $userExpectedSecretsQuery], [
                 'ExpectedSecrets.resource_id' => new IdentifierExpression('Secrets.resource_id'),
                 'ExpectedSecrets.user_id' => new IdentifierExpression('Secrets.user_id'),
@@ -137,7 +137,8 @@ class SecretsCleanupHardDeletedPermissionsService
                 AND ExpectedSecrets.user_id = secrets.user_id
             )
 
-            WHERE ExpectedSecrets.resource_id IS NULL;
+            WHERE ExpectedSecrets.resource_id IS NULL
+            AND secrets.deleted IS NULL;
         ";
 
         return $connection->execute($sql)->rowCount();
