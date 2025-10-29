@@ -115,7 +115,11 @@ abstract class BaseActionLogsFinder
         $query->contain(['EntitiesHistory.SecretsHistory' => [
             'fields' => [
                 'SecretsHistory.id',
-            ]]]);
+            ],
+            'conditions' => [
+                ['EntitiesHistory.crud' => 'u'],
+            ],
+        ]]);
         $query->leftJoinWith('EntitiesHistory.SecretsHistory');
 
         $query->contain(['EntitiesHistory.SecretsHistory.SecretsHistoryUsers' => [
