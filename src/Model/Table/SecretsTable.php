@@ -23,6 +23,7 @@ use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
+use App\Model\Validation\IsNullOnCreateRule;
 use App\Service\Secrets\SecretsCleanupHardDeletedPermissionsService;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
@@ -107,6 +108,11 @@ class SecretsTable extends Table
             ->requirePresence('data', 'create', __('A message is required.'))
             ->notEmptyString('data', __('The message should not be empty.'))
             ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
+
+        $validator
+            ->dateTime('deleted')
+            ->allowEmptyDateTime('deleted')
+            ->add('deleted', 'isNullOnCreate', new IsNullOnCreateRule());
 
         return $validator;
     }
