@@ -22,6 +22,7 @@ use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsSetService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaOrgSettingsTestTrait;
 use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
@@ -44,7 +45,7 @@ class MfaOrgSettingsSetServiceTest extends TestCase
         $uac = new UserAccessControl(Role::ADMIN, $user->id);
         $data = $this->getDefaultMfaOrgSettings();
 
-        $duoSdkClientMock = DuoSdkClientMock::createDefault($this, $user)->getClient();
+        $duoSdkClientMock = DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
         $service = new MfaOrgSettingsSetService();
         $returnedSettings = $service->setOrgSettings($data, $uac, $duoSdkClientMock);
 

@@ -131,7 +131,7 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
         $this->mockMfaOrgSettings($config, 'database', $this->makeUac($user));
         $this->authenticateAs('admin');
         $this->mockService(Client::class, function () use ($user) {
-            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
         });
 
         $this->putJson('/mfa/settings.json?api-version=v2', $this->getDefaultMfaOrgSettings());
