@@ -22,6 +22,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
+use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsDuoService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
@@ -261,7 +262,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaOrgSettingsValidateDuoSettings_Empty()
     {
-        $duoSdkClientMock = (new DuoSdkClientMock($this))->mockSuccessHealthCheck()->getClient();
+        $duoSdkClientMock = (new DuoSdkClientMock($this->getMockBuilder(Client::class)))->mockSuccessHealthCheck()->getClient();
         try {
             $duoSettings = new MfaOrgSettingsDuoService([[
                 MfaSettings::PROVIDER_DUO => [
@@ -285,7 +286,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaOrgSettingsValidateDuoSettings_Invalid()
     {
-        $duoSdkClientMock = (new DuoSdkClientMock($this))->mockSuccessHealthCheck()->getClient();
+        $duoSdkClientMock = (new DuoSdkClientMock($this->getMockBuilder(Client::class)))->mockSuccessHealthCheck()->getClient();
         try {
             $duoSettings = new MfaOrgSettingsDuoService([
                 MfaSettings::PROVIDER_DUO => [
@@ -320,7 +321,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
                 ],
             ],
         );
-        $duoSdkClientMock = (new DuoSdkClientMock($this))->mockSuccessHealthCheck()->getClient();
+        $duoSdkClientMock = (new DuoSdkClientMock($this->getMockBuilder(Client::class)))->mockSuccessHealthCheck()->getClient();
         $duoSettings->validateDuoSettings($duoSdkClientMock);
         $this->assertTrue(true);
     }

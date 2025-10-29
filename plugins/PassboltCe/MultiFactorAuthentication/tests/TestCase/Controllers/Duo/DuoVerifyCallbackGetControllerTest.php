@@ -71,7 +71,7 @@ class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
         $duoState = UuidFactory::uuid();
         $userId = $user->get('id');
         $this->mockService(Client::class, function () use ($user) {
-            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
         });
 
         AuthenticationTokenFactory::make()->active()->data([
@@ -96,7 +96,7 @@ class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
         $duoState = UuidFactory::uuid();
         $userId = $user->get('id');
         $this->mockService(Client::class, function () use ($user) {
-            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
         });
 
         $authToken = AuthenticationTokenFactory::make()->active()->data([
@@ -127,7 +127,7 @@ class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
         $error = 'DuoCallbackError';
         $errorDesc = 'DuoCallbackErrorDescription';
         $this->mockService(Client::class, function () use ($user) {
-            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
         });
 
         $authToken = AuthenticationTokenFactory::make()->active()->data([
@@ -160,7 +160,7 @@ class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
         $error = 'DuoCallbackError';
         $errorDesc = 'DuoCallbackErrorDescription';
         $this->mockService(Client::class, function () use ($user) {
-            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
         });
 
         $authToken = AuthenticationTokenFactory::make()->active()->data([
@@ -190,7 +190,7 @@ class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
         $duoState = UuidFactory::uuid();
         $userId = $user->get('id');
         $this->mockService(Client::class, function () use ($user) {
-            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
         });
 
         $authToken = AuthenticationTokenFactory::make()->active()->data([
@@ -218,7 +218,7 @@ class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
         $duoState = UuidFactory::uuid();
         $userId = $user->get('id');
         $this->mockService(Client::class, function () use ($user) {
-            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
         });
 
         $authToken = AuthenticationTokenFactory::make()->active()->data([
@@ -245,7 +245,7 @@ class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
         $duoState = UuidFactory::uuid();
         $userId = $user->get('id');
         $this->mockService(Client::class, function () use ($user) {
-            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
         });
 
         $authToken = AuthenticationTokenFactory::make()->active()->data([
