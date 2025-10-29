@@ -151,7 +151,7 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
         $secrets = $this->Secrets->findByResourceId($r1->id)->toArray();
         $this->assertCount(2, $secrets);
         $this->assertSecretExists($r1->id, $userA->id);
-        $this->assertSecretExists($r1->id, $userB->id, true);
+        $this->assertSecretExists($r1->id, $userB->id);
         $this->assertNull(SecretFactory::get($secretToKeepId)->get('deleted'));
         $this->assertNotNull(SecretFactory::get($secretToSoftDeleteId)->get('deleted'));
     }
@@ -178,7 +178,7 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
         $secrets = $this->Secrets->findByResourceId($r1->id)->toArray();
         $this->assertCount(3, $secrets);
         $this->assertSecretExists($r1->id, $userA->id);
-        $this->assertSecretExists($r1->id, $userB->id, true);
+        $this->assertSecretExists($r1->id, $userB->id);
         $this->assertNull(SecretFactory::get($secretToKeepId)->get('deleted'));
         $this->assertNotNull(SecretFactory::get($secretToSoftDeleteId)->get('deleted'));
         $this->assertNotNull(SecretFactory::get($deletedSecret->id)->get('deleted'));
