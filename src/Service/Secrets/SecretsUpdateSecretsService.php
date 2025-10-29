@@ -200,11 +200,11 @@ class SecretsUpdateSecretsService
             'resource_id' => $resourceId,
             'user_id NOT IN' => $usersIds,
         ];
-        $lostAccessSecrets = $this->secretsTable->find('notDeleted')
+        $lostAccessSecrets = $this->secretsTable->find()
             ->select(['id', 'resource_id', 'user_id'])
             ->where($lostAccessSecretsConditions)
             ->all()->toArray();
-        $this->secretsTable->softDeleteMany($lostAccessSecrets);
+        $this->secretsTable->deleteMany($lostAccessSecrets);
 
         return $lostAccessSecrets;
     }
