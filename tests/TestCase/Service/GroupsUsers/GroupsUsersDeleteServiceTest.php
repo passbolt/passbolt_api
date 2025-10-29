@@ -98,11 +98,11 @@ class GroupsUsersDeleteServiceTest extends AppTestCase
         $this->service->delete($uac, $groupUserToDelete->id);
 
         $this->assertEquals(1, GroupsUserFactory::count());
-        $this->assertEquals(1, SecretFactory::count());
+        $this->assertEquals(2, SecretFactory::count());
         $this->assertUserIsMemberOf($g1->id, $u1->id, true);
         $this->assertUserIsNotMemberOf($g1->id, $u2->id);
         $this->assertSecretExists($r1->id, $u1->id);
-        $this->assertSecretNotExist($r1->id, $u2->id);
+        $this->assertSecretExists($r1->id, $u2->id, true);
     }
 
     /**
@@ -119,13 +119,13 @@ class GroupsUsersDeleteServiceTest extends AppTestCase
         $this->service->delete($uac, $groupUserToDelete->id);
 
         $this->assertEquals(1, GroupsUserFactory::count());
-        $this->assertEquals(2, SecretFactory::count());
+        $this->assertEquals(4, SecretFactory::count());
         $this->assertUserIsMemberOf($g1->id, $u1->id, true);
         $this->assertUserIsNotMemberOf($g1->id, $u2->id);
         $this->assertSecretExists($r1->id, $u1->id);
-        $this->assertSecretNotExist($r1->id, $u2->id);
+        $this->assertSecretExists($r1->id, $u2->id, true);
         $this->assertSecretExists($r2->id, $u1->id);
-        $this->assertSecretNotExist($r2->id, $u2->id);
+        $this->assertSecretExists($r2->id, $u2->id, true);
     }
 
     /**
@@ -142,11 +142,11 @@ class GroupsUsersDeleteServiceTest extends AppTestCase
         $this->service->delete($uac, $groupUserToDelete->id);
 
         $this->assertEquals(1, GroupsUserFactory::count());
-        $this->assertEquals(3, SecretFactory::count());
+        $this->assertEquals(4, SecretFactory::count());
         $this->assertUserIsMemberOf($g1->id, $u1->id, true);
         $this->assertUserIsNotMemberOf($g1->id, $u2->id);
         $this->assertSecretExists($r1->id, $u1->id);
-        $this->assertSecretNotExist($r1->id, $u2->id);
+        $this->assertSecretExists($r1->id, $u2->id, true);
         $this->assertSecretExists($r2->id, $u1->id);
         $this->assertSecretExists($r2->id, $u2->id);
     }

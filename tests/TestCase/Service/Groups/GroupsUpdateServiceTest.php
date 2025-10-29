@@ -116,12 +116,12 @@ class GroupsUpdateServiceTest extends AppTestCase
         // R1
         $this->assertSecretExists($r1->id, $userA->id);
         $this->assertSecretExists($r1->id, $userB->id);
-        $this->assertSecretNotExist($r1->id, $userC->id);
+        $this->assertSecretExists($r1->id, $userC->id, true);
         $this->assertSecretExists($r1->id, $userD->id);
         // R2
         $this->assertSecretExists($r2->id, $userA->id);
         $this->assertSecretExists($r2->id, $userB->id);
-        $this->assertSecretNotExist($r2->id, $userC->id);
+        $this->assertSecretExists($r2->id, $userC->id, true);
         $this->assertSecretExists($r2->id, $userD->id);
     }
 
