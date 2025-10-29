@@ -130,7 +130,12 @@ hcciUFw5
         $this->assertSuccess();
 
         // Load the resource.
-        $resource = ResourceFactory::get($resourceId, contain: ['Permissions', 'Secrets']);
+        $resource = ResourceFactory::find()
+            ->where(['Resources.id' => $resourceId,])
+            ->contain('Permissions')
+            ->contain('Secrets', function ($q) {
+                return $q->find('notDeleted');
+            })->firstOrFail();
 
         // Verify that all the allowed users have a secret for the resource.
         $secretsUsersIds = Hash::extract($resource->secrets, '{n}.user_id');
