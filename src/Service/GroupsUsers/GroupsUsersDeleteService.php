@@ -127,11 +127,11 @@ class GroupsUsersDeleteService
             'user_id' => $groupUser->user_id,
             'resource_id IN' => $this->findLostAccessResourcesIdsQuery($groupUser),
         ];
-        $lostAccessSecrets = $this->secretsTable->find()
+        $lostAccessSecrets = $this->secretsTable->find('notDeleted')
             ->select(['id', 'resource_id', 'user_id'])
             ->where($lostAccessSecretsConditions)
             ->all()->toArray();
-        $this->secretsTable->deleteMany($lostAccessSecrets);
+        $this->secretsTable->softDeleteMany($lostAccessSecrets);
 
         return $lostAccessSecrets;
     }
