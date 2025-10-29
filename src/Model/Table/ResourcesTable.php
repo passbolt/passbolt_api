@@ -130,6 +130,9 @@ class ResourcesTable extends Table
         $this->hasMany('Secrets', [
             'foreignKey' => 'resource_id',
         ]);
+        $this->hasMany('SecretRevisions', [
+            'className' => 'Passbolt/SecretRevisions.SecretRevisions',
+        ]);
 
         $this->belongsTo('ResourceTypes', [
             'className' => 'Passbolt/ResourceTypes.ResourceTypes',

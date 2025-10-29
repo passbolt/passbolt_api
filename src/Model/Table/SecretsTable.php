@@ -91,6 +91,9 @@ class SecretsTable extends Table
             'bindingKey' => 'modified_by',
             'foreignKey' => 'id',
         ]);
+        $this->belongsTo('SecretRevisions', [
+            'className' => 'Passbolt/SecretRevisions.SecretRevisions',
+        ]);
 
         $this->addBehavior('Timestamp');
     }
