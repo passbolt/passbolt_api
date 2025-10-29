@@ -25,10 +25,12 @@ use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Service\Secrets\SecretsCleanupHardDeletedPermissionsService;
 use Cake\Database\Expression\QueryExpression;
+use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
 /**
@@ -208,6 +210,20 @@ class SecretsTable extends Table
         return $query->where(function (QueryExpression $exp) {
             return $exp->isNull($this->aliasField('deleted'));
         });
+    }
+
+    /**
+     * @param array $secrets secrets to be soft deleted
+     * @return int
+     */
+    public function softDeleteMany(array $secrets): int
+    {
+        $secretIds = Hash::extract($secrets, '{n}.id');
+        if (empty($secretIds)) {
+            return 0;
+        }
+
+        return $this->updateAll(['deleted' => DateTime::now()], ['id IN' => $secretIds]);
     }
 
     /**

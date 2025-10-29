@@ -78,7 +78,7 @@ class SecretsUpdateSecretsService
         $secrets = [];
         if (!empty($userIds)) {
             $secrets = $this->secretsTable
-                ->find()
+                ->find('notDeleted')
                 ->select(['id', 'user_id', 'resource_id', 'data'])
                 ->where([
                     'user_id IN' => $userIds,
@@ -200,11 +200,11 @@ class SecretsUpdateSecretsService
             'resource_id' => $resourceId,
             'user_id NOT IN' => $usersIds,
         ];
-        $lostAccessSecrets = $this->secretsTable->find()
+        $lostAccessSecrets = $this->secretsTable->find('notDeleted')
             ->select(['id', 'resource_id', 'user_id'])
             ->where($lostAccessSecretsConditions)
             ->all()->toArray();
-        $this->secretsTable->deleteMany($lostAccessSecrets);
+        $this->secretsTable->softDeleteMany($lostAccessSecrets);
 
         return $lostAccessSecrets;
     }
@@ -220,6 +220,7 @@ class SecretsUpdateSecretsService
         $usersIdsHavingAccess = $this->accessService->getUsersIdsHavingAccessTo($resourceId);
         sort($usersIdsHavingAccess);
         $usersIdsHavingASecret = $this->secretsTable->findByResourceId($resourceId)
+            ->find('notDeleted')
             ->all()
             ->extract('user_id')
             ->toArray();

@@ -20,6 +20,7 @@ namespace App\Test\TestCase\Service\Secrets;
 use App\Error\Exception\CustomValidationException;
 use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\ORM\TableRegistry;
@@ -139,6 +140,8 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
         [$userA, $userB] = UserFactory::make(2)->persist();
         // Betty has no permissions but has secret.
         $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withSecretsFor([$userA,$userB])->persist();
+        $secretToKeepId = $r1->secrets[0]->id;
+        $secretToSoftDeleteId = $r1->secrets[1]->id;
 
         $data = [];
 
@@ -146,8 +149,39 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
 
         // Assert secrets
         $secrets = $this->Secrets->findByResourceId($r1->id)->toArray();
-        $this->assertCount(1, $secrets);
+        $this->assertCount(2, $secrets);
         $this->assertSecretExists($r1->id, $userA->id);
+        $this->assertSecretExists($r1->id, $userB->id);
+        $this->assertNull(SecretFactory::get($secretToKeepId)->get('deleted'));
+        $this->assertNotNull(SecretFactory::get($secretToSoftDeleteId)->get('deleted'));
+    }
+
+    public function testUpdateSecretsSuccess_DeleteSecrets_Ignore_Deleted_Secrets()
+    {
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        // Betty has no permissions but has secret.
+        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withSecretsFor([$userA,$userB])->persist();
+        $secretToKeepId = $r1->secrets[0]->id;
+        $secretToSoftDeleteId = $r1->secrets[1]->id;
+
+        //Deleted secret to be ignored
+        $deletedSecret = SecretFactory::make()
+            ->with('Users', $userB)
+            ->with('Resources', $r1)
+            ->deleted()
+            ->persist();
+        $data = [];
+
+        $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
+
+        // Assert secrets
+        $secrets = $this->Secrets->findByResourceId($r1->id)->toArray();
+        $this->assertCount(3, $secrets);
+        $this->assertSecretExists($r1->id, $userA->id);
+        $this->assertSecretExists($r1->id, $userB->id);
+        $this->assertNull(SecretFactory::get($secretToKeepId)->get('deleted'));
+        $this->assertNotNull(SecretFactory::get($secretToSoftDeleteId)->get('deleted'));
+        $this->assertNotNull(SecretFactory::get($deletedSecret->id)->get('deleted'));
     }
 
     /* UPDATE SECRETS */
