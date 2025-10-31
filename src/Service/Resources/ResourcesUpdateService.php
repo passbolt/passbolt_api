@@ -25,6 +25,7 @@ use App\Model\Entity\Secret;
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
+use App\Service\Secrets\SecretsCreateService;
 use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
@@ -38,6 +39,8 @@ use Cake\Utility\Hash;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
+use Passbolt\SecretRevisions\Model\Entity\SecretRevision;
+use Passbolt\SecretRevisions\Service\CreateSecretRevisionsService;
 
 class ResourcesUpdateService
 {
@@ -104,12 +107,15 @@ class ResourcesUpdateService
             function () use (&$resource, $uac, $meta, $secrets, $resourceDto): void {
                 $this->updateResourceMeta($uac, $resource, $meta, $resourceDto);
 
-                $updatedSecrets = [];
+                $createdSecrets = [];
                 if (!empty($secrets)) {
-                    $updatedSecrets = $this->updateResourceSecrets($uac, $resource, $secrets);
+                    // TODO: Create new revision and pass it further (will be done at later stage)
+                    $createdSecrets = $this->createSecrets($uac, $resource, $secrets);
+                    // todo: clean up - soft-delete previous secret revision of this resource and it's associated secrets
+                    // todo: deleteLostAccessSecrets, pushDeletedEntities, assertAllSecretsAreProvided
                 }
 
-                $this->postResourceUpdate($uac, $resource, $updatedSecrets, $resourceDto);
+                $this->postResourceUpdate($uac, $resource, $createdSecrets, $resourceDto);
             }
         );
 
@@ -277,7 +283,7 @@ class ResourcesUpdateService
      * @return array<\App\Model\Entity\Secret>
      * @throws \Exception If an unexpected error occurred
      */
-    private function updateResourceSecrets(UserAccessControl $uac, Resource $resource, array $data): array
+    private function createSecrets(UserAccessControl $uac, Resource $resource, array $data): array
     {
         $secrets = [];
         $usersIdsHavingAccess = $this->getUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($resource->id);
@@ -292,9 +298,22 @@ class ResourcesUpdateService
         }
 
         try {
-            $entitiesChanges = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
+//            $entitiesChanges = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
             /** @var array<\App\Model\Entity\Secret> $secrets */
-            $secrets = $entitiesChanges->getUpdatedEntities(Secret::class);
+//            $secrets = $entitiesChanges->getUpdatedEntities(Secret::class);
+
+            $secretCreateService = new SecretsCreateService();
+            foreach ($data as $rowIndexRef => $row) {
+                $row['modified_by'] = $uac->getId();
+                //$row['secret_revision_id'] = $secretRevision->id;
+
+                try {
+                    $secrets[$rowIndexRef] = $secretCreateService->create($row);
+                } catch (ValidationException $e) {
+                    $errors = [$rowIndexRef => $e->getEntity()->getErrors()];
+                    throw new CustomValidationException(__('Could not validate secrets data.'), $errors);
+                }
+            }
         } catch (CustomValidationException $e) {
             $resource->setError('secrets', $e->getErrors());
             $this->handleValidationErrors($resource);
