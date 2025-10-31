@@ -46,23 +46,88 @@ class PopulateCreatedByAndModifiedByInSecretsService
      */
     public function populate(): void
     {
-        $resourcesQuery = $this->ResourcesTable->find();
-        $resources = $resourcesQuery
-            ->where(['Resources.deleted' => false])
-            ->innerJoinWith('ResourceTypes', function ($q) {
-                return $q->where([$q->expr()->isNull('ResourceTypes.deleted')]);
-            })
-            ->all();
+//        $resourcesQuery = $this->ResourcesTable->find();
+//        $resources = $resourcesQuery
+//            ->where(['Resources.deleted' => false])
+//            ->innerJoinWith('ResourceTypes', function ($q) {
+//                return $q->where([$q->expr()->isNull('ResourceTypes.deleted')]);
+//            })
+//            ->all();
 
-        if ($resources->count() === 0) {
+//        if ($resources->count() === 0) {
+//            return;
+//        }
+//
+//        $resources
+//            ->chunk(1000)
+//            ->each(function ($resourcesBatch): void {
+//                $this->populateSecrets($resourcesBatch);
+//            });
+
+        $entitiesHistoryQuery = $this->EntitiesHistoryTable->find();
+        // oldest for created_by
+        $oldestSubQuery = $entitiesHistoryQuery
+            ->select(['ActionLogs.user_id'])
+            ->innerJoin(['SecretsHistory' => 'secrets_history'], [
+                'SecretsHistory.id' => new IdentifierExpression('EntitiesHistory.foreign_key'),
+                'EntitiesHistory.foreign_model' => 'SecretsHistory',
+            ])
+            ->innerJoin(['ActionLogs' => 'action_logs'], [
+                'ActionLogs.id' => new IdentifierExpression('EntitiesHistory.action_log_id'),
+                // Eliminate data integrity issue where user isn't present to not get surprises down the line
+                $entitiesHistoryQuery->newExpr()->isNotNull('ActionLogs.user_id'),
+            ])
+            ->where(['SecretsHistory.id' => new IdentifierExpression('Secrets.id')])
+            ->orderByAsc('ActionLogs.created')
+            ->limit(1);
+        // latest for modified_by
+        $latestSubQuery = $entitiesHistoryQuery
+            ->select(['ActionLogs.user_id'])
+            ->innerJoin(['SecretsHistory' => 'secrets_history'], [
+                'SecretsHistory.id' => new IdentifierExpression('EntitiesHistory.foreign_key'),
+                'EntitiesHistory.foreign_model' => 'SecretsHistory',
+            ])
+            ->innerJoin(['ActionLogs' => 'action_logs'], [
+                'ActionLogs.id' => new IdentifierExpression('EntitiesHistory.action_log_id'),
+                // Eliminate data integrity issue where user isn't present to not get surprises down the line
+                $entitiesHistoryQuery->newExpr()->isNotNull('ActionLogs.user_id'),
+            ])
+            ->where(['SecretsHistory.id' => new IdentifierExpression('Secrets.id')])
+            ->orderByDesc('ActionLogs.created')
+            ->limit(1);
+
+        $secretsQuery = $this->SecretsTable->find();
+        $secretsWithCreatorAndModifierQuery = $secretsQuery
+            ->select([
+                'secret_id' => 'Secrets.id',
+                'created_by' => $secretsQuery->func()->coalesce([
+                    $oldestSubQuery,
+                    // Fallback to resources table value
+                    new IdentifierExpression('Resources.created_by'),
+                ]),
+                'modified_by' => $secretsQuery->func()->coalesce([
+                    $latestSubQuery,
+                    // Fallback to resources table value
+                    new IdentifierExpression('Resources.created_by'),
+                ]),
+            ])
+            ->leftJoin(['Resources' => 'resources'], [
+                'Resources.id' => new IdentifierExpression('Secrets.resource_id'),
+            ])
+            ->orderByAsc('Secrets.created');
+
+        if ($secretsWithCreatorAndModifierQuery->count() === 0) {
             return;
         }
 
-        $resources
-            ->chunk(1000)
-            ->each(function ($resourcesBatch): void {
-                $this->populateSecrets($resourcesBatch);
-            });
+        $secretsUpdateQuery = $this->SecretsTable->updateQuery();
+        $count = $secretsUpdateQuery
+            ->innerJoin(['SecretsWithCreatorAndModifier' => $secretsWithCreatorAndModifierQuery], [
+                'Secrets.id' => new IdentifierExpression('SecretsWithCreatorAndModifier.secret_id'),
+            ])
+            ->set('Secrets.created_by', new IdentifierExpression('SecretsWithCreatorAndModifier.created_by'))
+            ->set('Secrets.modified_by', new IdentifierExpression('SecretsWithCreatorAndModifier.modified_by'))
+            ->execute();
     }
 
     /**
