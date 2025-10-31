@@ -147,6 +147,7 @@ class RbacsUpdateService
             ]);
 
             if ($updatedEntity->getErrors()) {
+                /** @psalm-suppress InvalidArrayOffset */
                 $errors = [$i => $updatedEntity->getErrors()];
                 throw new CustomValidationException(__('This is not a valid setting.'), $errors, $this->rbacsTable);
             }
