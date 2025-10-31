@@ -22,6 +22,7 @@ use App\Service\Resources\ResourcesUpdateService;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\PermissionFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
@@ -127,12 +128,14 @@ class ResourcesUpdateServiceTest extends AppTestCase
 
         $this->service->update($this->makeUac($userA), $r1->id, new MetadataResourceDto($data));
 
+        // Assert that the secrets have been added to revision, and not hard deleted
+        $this->assertSame(9, SecretFactory::count());
         // Assert R1 secrets have been updated
-        $r1SecretA = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userA->id)->first();
+        $r1SecretA = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userA->id)->find('notDeleted')->first();
         $this->assertEquals($r1EncryptedSecretA, $r1SecretA->data);
-        $r1SecretB = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userB->id)->first();
+        $r1SecretB = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userB->id)->find('notDeleted')->first();
         $this->assertEquals($r1EncryptedSecretB, $r1SecretB->data);
-        $r1SecretC = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userC->id)->first();
+        $r1SecretC = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userC->id)->find('notDeleted')->first();
         $this->assertEquals($r1EncryptedSecretC, $r1SecretC->data);
         // Assert R1 meta has not been updated except for the modified field.
         $r1Updated = $this->resourcesTable->findById($r1->id)->first();

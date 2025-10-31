@@ -21,12 +21,10 @@ use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
-use App\Model\Entity\Secret;
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Service\Secrets\SecretsCreateService;
-use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Event\EventDispatcherTrait;
@@ -39,8 +37,6 @@ use Cake\Utility\Hash;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
-use Passbolt\SecretRevisions\Model\Entity\SecretRevision;
-use Passbolt\SecretRevisions\Service\CreateSecretRevisionsService;
 
 class ResourcesUpdateService
 {
@@ -67,17 +63,11 @@ class ResourcesUpdateService
     private ResourcesTable $Resources;
 
     /**
-     * @var \App\Service\Secrets\SecretsUpdateSecretsService
-     */
-    private SecretsUpdateSecretsService $secretsUpdateSecretsService;
-
-    /**
      * Instantiate the service.
      */
     public function __construct()
     {
         $this->getUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
-        $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();
         $this->Permissions = $this->fetchTable('Permissions');
         $this->Resources = $this->fetchTable('Resources');
     }
@@ -110,6 +100,7 @@ class ResourcesUpdateService
                 $createdSecrets = [];
                 if (!empty($secrets)) {
                     // TODO: Create new revision and pass it further (will be done at later stage)
+                    $this->Resources->Secrets->softDeleteMany($resource->id);
                     $createdSecrets = $this->createSecrets($uac, $resource, $secrets);
                     // todo: clean up - soft-delete previous secret revision of this resource and it's associated secrets
                     // todo: deleteLostAccessSecrets, pushDeletedEntities, assertAllSecretsAreProvided
@@ -299,12 +290,14 @@ class ResourcesUpdateService
 
         try {
 //            $entitiesChanges = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
-            /** @var array<\App\Model\Entity\Secret> $secrets */
+//            /** @var array<\App\Model\Entity\Secret> $secrets */
 //            $secrets = $entitiesChanges->getUpdatedEntities(Secret::class);
 
             $secretCreateService = new SecretsCreateService();
             foreach ($data as $rowIndexRef => $row) {
+                $row['resource_id'] = $resource->id;
                 $row['modified_by'] = $uac->getId();
+                $row['created_by'] = $uac->getId();
                 //$row['secret_revision_id'] = $secretRevision->id;
 
                 try {

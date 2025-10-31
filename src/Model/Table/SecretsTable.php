@@ -31,7 +31,6 @@ use Cake\ORM\Query;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
 /**
@@ -159,10 +158,14 @@ class SecretsTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
+        // Only one non-deleted secret for the couple (user_id, resource_id)
         $rules->addCreate(
             $rules->isUnique(
-                ['user_id', 'resource_id'],
-                __('A secret already exists for the given user and resource.')
+                ['user_id', 'resource_id', 'deleted'],
+                [
+                    'message' => __('A secret already exists for the given user and resource.'),
+                    'allowMultipleNulls' => false,
+                ]
             ),
             'secret_unique'
         );
@@ -222,17 +225,12 @@ class SecretsTable extends Table
     }
 
     /**
-     * @param array $secrets secrets to be soft deleted
+     * @param string $resourceId resource ID of the secrets to soft-delete
      * @return int
      */
-    public function softDeleteMany(array $secrets): int
+    public function softDeleteMany(string $resourceId): int
     {
-        $secretIds = Hash::extract($secrets, '{n}.id');
-        if (empty($secretIds)) {
-            return 0;
-        }
-
-        return $this->updateAll(['deleted' => DateTime::now()], ['id IN' => $secretIds]);
+        return $this->updateAll(['deleted' => DateTime::now()], ['resource_id' => $resourceId]);
     }
 
     /**

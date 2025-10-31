@@ -165,14 +165,17 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertSame($userB->id, $resourceUpdated->secrets[0]->created_by);
         $this->assertSame($userB->id, $resourceUpdated->secrets[0]->modified_by);
 
+        // Assert that one secret has been added to revision, and not hard deleted
+        // while two new secrets for userB and userC were created
+        $this->assertSame(4, SecretFactory::count());
         // Assert secret records in the database
         /** @var \App\Model\Entity\Secret[] $expectedSecrets */
-        $expectedSecrets = SecretFactory::find()->where(['resource_id' => $r1->id])->all()->toArray();
+        $expectedSecrets = SecretFactory::find('notDeleted')->where(['resource_id' => $r1->id])->all()->toArray();
         $this->assertCount(3, $expectedSecrets);
         foreach ($expectedSecrets as $expectedSecret) {
             if ($expectedSecret->user_id === $userA->id) {
                 $this->assertSame($r1EncryptedSecretA, $expectedSecret->data);
-                $this->assertSame($userA->id, $expectedSecret->created_by);
+                $this->assertSame($userB->id, $expectedSecret->created_by);
                 $this->assertSame($userB->id, $expectedSecret->modified_by);
             } elseif ($expectedSecret->user_id === $userB->id) {
                 $this->assertSame($r1EncryptedSecretB, $expectedSecret->data);
