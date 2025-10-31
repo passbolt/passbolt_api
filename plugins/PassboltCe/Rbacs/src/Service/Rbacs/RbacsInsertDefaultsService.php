@@ -39,6 +39,7 @@ class RbacsInsertDefaultsService
         $alreadyExistingRbacUiActionIds = $Rbacs->find()->select('foreign_id');
 
         $UiActions = TableRegistry::getTableLocator()->get('Passbolt/Rbacs.UiActions');
+        /** @var array<\Passbolt\Rbacs\Model\Entity\UiAction> $uiactions */
         $uiactions = $UiActions->find()
             ->where(['UiActions.id NOT IN' => $alreadyExistingRbacUiActionIds]);
 

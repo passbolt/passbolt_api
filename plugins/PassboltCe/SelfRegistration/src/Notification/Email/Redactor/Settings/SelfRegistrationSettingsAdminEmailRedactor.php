@@ -78,6 +78,7 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
         /** @var \App\Model\Table\UsersTable $UsersTable */
         $UsersTable = TableRegistry::getTableLocator()->get('Users');
         $modifier = $UsersTable->findFirstForEmail($modifiedById);
+        /** @var array<\App\Model\Entity\User> $admins */
         $admins = $UsersTable
             ->findAdmins()
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
