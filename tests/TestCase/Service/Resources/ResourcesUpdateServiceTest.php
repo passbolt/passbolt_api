@@ -264,4 +264,26 @@ class ResourcesUpdateServiceTest extends AppTestCase
             $this->assertArrayHasKey('resource_type_is_not_soft_deleted', $e->getErrors()['resource_type_id']);
         }
     }
+
+    public function testUpdateResourcesError_UpdateSecrets_ValidationExceptions_InvalidGpgMessage()
+    {
+        $userA = UserFactory::make()->persist();
+        $r1 = ResourceFactory::make()
+            ->with('ResourceTypes', ResourceTypeFactory::make()->default())
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA])->persist();
+
+        $data = [
+            'secrets' => [['user_id' => $userA->id, 'data' => 'invalid-message']],
+        ];
+
+        try {
+            $this->service->update($this->makeUac($userA), $r1->id, new MetadataResourceDto($data));
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (ValidationException $e) {
+            $this->assertSame(['secrets' => [[
+                'data' => ['isValidOpenPGPMessage' => 'The message should be a valid ASCII-armored OpenPGP message.'],
+            ]]], $e->getErrors());
+        }
+    }
 }

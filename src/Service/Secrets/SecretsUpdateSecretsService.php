@@ -27,6 +27,11 @@ use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
+/**
+ * @deprecated the logic of this layer of service will be moved one level up
+ * @see \App\Service\Resources\ResourcesUpdateService
+ * @see \App\Service\Resources\ResourcesShareService
+ */
 class SecretsUpdateSecretsService
 {
     /**
