@@ -169,11 +169,12 @@ class PopulateCreatedByAndModifiedByInSecretsServiceTest extends TestCase
 
         $this->service->populate();
 
+        // Betty updated the resource secrets the last, she should be created_by and modified_by of both secrets.
         $expectedSecretOfAda = SecretFactory::get($secretOfAda->id);
-        $this->assertSame($ada->id, $expectedSecretOfAda->created_by);
+        $this->assertSame($betty->id, $expectedSecretOfAda->created_by);
         $this->assertSame($betty->id, $expectedSecretOfAda->modified_by);
         $expectedSecretOfBetty = SecretFactory::get($secretOfBetty->id);
-        $this->assertSame($ada->id, $expectedSecretOfBetty->created_by);
+        $this->assertSame($betty->id, $expectedSecretOfBetty->created_by);
         $this->assertSame($betty->id, $expectedSecretOfBetty->modified_by);
     }
 

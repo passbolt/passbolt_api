@@ -46,6 +46,45 @@ class PopulateCreatedByAndModifiedByInSecretsService
      */
     public function populate(): void
     {
+        $tbl = $this->SecretsTable->getTable();
+
+        // Latest user responsible for creating or updating this secret (by secret id).
+        $latestUserIdSub = $this->EntitiesHistoryTable->find()
+            ->select(['ActionLogs.user_id'])
+            // Join the action that originated the secret creation/update.
+            ->innerJoin(['ActionLogs' => 'action_logs'], [
+                'ActionLogs.id' => new IdentifierExpression('EntitiesHistory.action_log_id'),
+                $this->EntitiesHistoryTable->find()->newExpr()->isNotNull('ActionLogs.user_id'),
+            ])
+            // Correlate with the outer UPDATE query  row: use the physical table name because CakePHP removes aliases in UPDATE/DELETE queries.
+            ->where(['EntitiesHistory.foreign_key' => new IdentifierExpression("$tbl.id")])
+            // Use the most recent relevant action.
+            ->orderByDesc('EntitiesHistory.created')
+            ->limit(1);
+
+        // Fallback on modified_by from resources (by resource_id).
+        $fallbackCreatedBySub = $this->ResourcesTable->find()
+            ->select(['Resources.created_by'])
+            // Correlate with the outer UPDATE query row: use the physical table name because CakePHP removes aliases in UPDATE/DELETE queries.
+            ->where(['Resources.id' => new IdentifierExpression("$tbl.resource_id")])
+            ->limit(1);
+
+        // Update the secrets
+        $update = $this->SecretsTable->updateQuery();
+        $fn = $update->func();
+
+        $update
+            ->set('created_by',  $fn->coalesce([$latestUserIdSub, $fallbackCreatedBySub]))
+            // modified_by copies created by, it might later be used to persist the ID of the user who re-encrypt and sign the payload.
+            ->set('modified_by', $fn->coalesce([$latestUserIdSub, $fallbackCreatedBySub]))
+            ->execute();
+    }
+
+    /**
+     * @return void
+     */
+    public function populateBackup(): void
+    {
 //        $resourcesQuery = $this->ResourcesTable->find();
 //        $resources = $resourcesQuery
 //            ->where(['Resources.deleted' => false])
