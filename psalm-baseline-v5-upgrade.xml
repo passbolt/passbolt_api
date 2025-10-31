@@ -31,26 +31,6 @@
       <code><![CDATA[$includeRoot === true]]></code>
     </TypeDoesNotContainType>
   </file>
-  <file src="plugins/PassboltCe/Folders/src/Notification/Email/DeleteFolderEmailRedactor.php">
-    <InvalidArgument>
-      <code><![CDATA[$recipient]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="plugins/PassboltCe/Folders/src/Notification/Email/UpdateFolderEmailRedactor.php">
-    <InvalidArgument>
-      <code><![CDATA[$recipient]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="plugins/PassboltCe/Folders/src/Service/Folders/FoldersDeleteService.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$folderRelation->foreign_id]]></code>
-      <code><![CDATA[$folderRelation->foreign_model]]></code>
-    </InvalidPropertyFetch>
-    <NoInterfaceProperties>
-      <code><![CDATA[$folderRelation->foreign_id]]></code>
-      <code><![CDATA[$folderRelation->foreign_model]]></code>
-    </NoInterfaceProperties>
-  </file>
   <file src="plugins/PassboltCe/Folders/tests/Factory/FolderFactory.php">
     <MethodSignatureMismatch>
       <code><![CDATA[FolderFactory]]></code>
@@ -436,26 +416,6 @@
       <code><![CDATA[\Passbolt\Metadata\Model\Entity\MetadataSessionKey newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="plugins/PassboltCe/Metadata/src/Notification/Email/Redactor/MetadataKeyCreateEmailRedactor.php">
-    <InvalidArgument>
-      <code><![CDATA[$recipient]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="plugins/PassboltCe/Metadata/src/Notification/Email/Redactor/MetadataKeyDeleteEmailRedactor.php">
-    <InvalidArgument>
-      <code><![CDATA[$recipient]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="plugins/PassboltCe/Metadata/src/Notification/Email/Redactor/MetadataKeyExpireEmailRedactor.php">
-    <InvalidArgument>
-      <code><![CDATA[$recipient]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="plugins/PassboltCe/Metadata/src/Notification/Email/Redactor/MetadataSettingsSetEmailRedactor.php">
-    <InvalidArgument>
-      <code><![CDATA[$recipient]]></code>
-    </InvalidArgument>
-  </file>
   <file src="plugins/PassboltCe/Metadata/tests/Factory/MetadataPrivateKeyFactory.php">
     <MethodSignatureMismatch>
       <code><![CDATA[MetadataPrivateKeyFactory]]></code>
@@ -709,16 +669,6 @@
       <code><![CDATA[$user->authentication_tokens]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltCe/PasswordExpiry/src/Notification/Email/PasswordExpiryPasswordMarkedExpiredEmailRedactor.php">
-    <InvalidArgument>
-      <code><![CDATA[$user]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="plugins/PassboltCe/PasswordExpiry/src/Notification/Email/PasswordExpirySettingsUpdatedEmailRedactor.php">
-    <InvalidArgument>
-      <code><![CDATA[$admin]]></code>
-    </InvalidArgument>
-  </file>
   <file src="plugins/PassboltCe/Rbacs/src/Model/Table/RbacsTable.php">
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\Rbacs\Model\Entity\Rbac get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
@@ -728,11 +678,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\Rbacs\Model\Entity\UiAction newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
-  </file>
-  <file src="plugins/PassboltCe/Rbacs/src/Service/Rbacs/RbacsInsertDefaultsService.php">
-    <NoInterfaceProperties>
-      <code><![CDATA[$uiaction->id]]></code>
-    </NoInterfaceProperties>
   </file>
   <file src="plugins/PassboltCe/Rbacs/tests/Factory/RbacFactory.php">
     <MethodSignatureMismatch>
@@ -769,16 +714,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\ResourceTypes\Model\Entity\ResourceType|\Passbolt\ResourceTypes\Model\Entity\ResourceType[] persist()]]></code>
     </MoreSpecificImplementedParamType>
-  </file>
-  <file src="plugins/PassboltCe/SelfRegistration/src/Notification/Email/Redactor/Settings/SelfRegistrationSettingsAdminEmailRedactor.php">
-    <InvalidArgument>
-      <code><![CDATA[$recipient]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="plugins/PassboltCe/SelfRegistration/src/Notification/Email/Redactor/User/SelfRegistrationAdminEmailRedactor.php">
-    <InvalidArgument>
-      <code><![CDATA[$recipient]]></code>
-    </InvalidArgument>
   </file>
   <file src="plugins/PassboltCe/SmtpSettings/tests/TestCase/Command/SmtpSettingsEmailDigestPreviewCommandTest.php">
     <InvalidArrayOffset>
@@ -893,20 +828,6 @@
     <TypeDoesNotContainType>
       <code><![CDATA[$includeRoot === true]]></code>
     </TypeDoesNotContainType>
-  </file>
-  <file src="src/Notification/Email/Redactor/Group/GroupUserAddRequestEmailRedactor.php">
-    <InvalidArgument>
-      <code><![CDATA[$groupManager]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="src/Service/Avatars/AvatarsTransferService.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$fileStorage->foreign_key]]></code>
-    </InvalidPropertyFetch>
-    <NoInterfaceProperties>
-      <code><![CDATA[$fileStorage->foreign_key]]></code>
-      <code><![CDATA[$fileStorage->id]]></code>
-    </NoInterfaceProperties>
   </file>
   <file src="src/Service/OpenPGP/GenerateOpenPGPKeyService.php">
     <TypeDoesNotContainType>

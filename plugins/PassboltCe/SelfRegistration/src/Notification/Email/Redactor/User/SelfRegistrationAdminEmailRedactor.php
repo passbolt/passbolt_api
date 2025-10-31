@@ -66,6 +66,7 @@ class SelfRegistrationAdminEmailRedactor implements SubscribedEmailRedactorInter
 
         /** @var \App\Model\Table\UsersTable $UsersTable */
         $UsersTable = TableRegistry::getTableLocator()->get('Users');
+        /** @var array<\App\Model\Entity\User> $admins */
         $admins = $UsersTable
             ->findAdmins()
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()])

@@ -88,6 +88,7 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
         }
 
         // Get group managers of group.
+        /** @var array<\App\Model\Entity\User> $groupManagers */
         $groupManagers = $this->usersTable->findGroupManagersToNotify($group->id);
         $admin = $this->usersTable->findFirstForEmail($accessControl->getId());
 
