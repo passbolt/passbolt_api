@@ -26,4 +26,6 @@ $routes->plugin('Passbolt/SecretRevisions', ['path' => '/secret-revisions'], fun
         ->setMethods(['PUT', 'POST']);
     $routes->connect('/settings', ['controller' => 'SecretRevisionsSettingsGet', 'action' => 'get'])
         ->setMethods(['GET']);
+    $routes->connect('/settings', ['controller' => 'SecretRevisionsSettingsDelete', 'action' => 'delete'])
+        ->setMethods(['DELETE']);
 });
