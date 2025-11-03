@@ -19,6 +19,8 @@ namespace Passbolt\SecretRevisions\Test\TestCase\Controller;
 
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use Cake\Core\Configure;
+use Passbolt\SecretRevisions\Middleware\SecretRevisionsSettingsMiddleware;
 use Passbolt\SecretRevisions\SecretRevisionsPlugin;
 use Passbolt\SecretRevisions\Service\SecretRevisionsSettingsGetService;
 use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsSettingsFactory;
@@ -134,5 +136,19 @@ class SecretRevisionsSettingsPostControllerTest extends AppIntegrationTestCase
             'allow_sharing_revisions' => false,
         ]);
         $this->assertNotJsonError();
+    }
+
+    public function testSecretRevisionsSettingsPostController_Error_SettingEditionDisabled(): void
+    {
+        Configure::write(
+            SecretRevisionsSettingsMiddleware::PASSBOLT_SECURITY_SECRET_REVISIONS_SETTINGS_EDITION_DISABLED,
+            true
+        );
+        $this->logInAsAdmin();
+        $this->postJson('/secret-revisions/settings.json', [
+            'max_revisions' => 2,
+            'allow_sharing_revisions' => false,
+        ]);
+        $this->assertForbiddenError('Secret revisions settings endpoints are disabled');
     }
 }

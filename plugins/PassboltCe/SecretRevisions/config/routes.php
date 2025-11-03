@@ -14,18 +14,22 @@
  * @since         5.7.0
  */
 use Cake\Routing\RouteBuilder;
+use Passbolt\SecretRevisions\Middleware\SecretRevisionsSettingsMiddleware;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 $routes->plugin('Passbolt/SecretRevisions', ['path' => '/secret-revisions'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
+    $routes->registerMiddleware(SecretRevisionsSettingsMiddleware::class, new SecretRevisionsSettingsMiddleware());
 
     /**
      * Settings.
      */
     $routes->connect('/settings', ['controller' => 'SecretRevisionsSettingsPost', 'action' => 'post'])
-        ->setMethods(['PUT', 'POST']);
+        ->setMethods(['PUT', 'POST'])
+        ->setMiddleware([SecretRevisionsSettingsMiddleware::class]);
     $routes->connect('/settings', ['controller' => 'SecretRevisionsSettingsGet', 'action' => 'get'])
         ->setMethods(['GET']);
     $routes->connect('/settings', ['controller' => 'SecretRevisionsSettingsDelete', 'action' => 'delete'])
-        ->setMethods(['DELETE']);
+        ->setMethods(['DELETE'])
+        ->setMiddleware([SecretRevisionsSettingsMiddleware::class]);
 });
