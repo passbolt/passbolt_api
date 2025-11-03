@@ -288,25 +288,14 @@ class ResourcesUpdateService
             $this->handleValidationErrors($resource);
         }
 
+        $data = Hash::insert($data, '{n}.resource_id', $resource->id);
+        $data = Hash::insert($data, '{n}.modified_by', $uac->getId());
+        $data = Hash::insert($data, '{n}.created_by', $uac->getId());
+//        $data = Hash::insert($data, '{n}.secret_revision_id', $secretRevision->id);
+        $secretCreateService = new SecretsCreateService();
         try {
-//            $entitiesChanges = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
-//            /** @var array<\App\Model\Entity\Secret> $secrets */
-//            $secrets = $entitiesChanges->getUpdatedEntities(Secret::class);
-
-            $secretCreateService = new SecretsCreateService();
-            foreach ($data as $rowIndexRef => $row) {
-                $row['resource_id'] = $resource->id;
-                $row['modified_by'] = $uac->getId();
-                $row['created_by'] = $uac->getId();
-                //$row['secret_revision_id'] = $secretRevision->id;
-
-                try {
-                    $secrets[$rowIndexRef] = $secretCreateService->create($row);
-                } catch (ValidationException $e) {
-                    $errors = [$rowIndexRef => $e->getEntity()->getErrors()];
-                    throw new CustomValidationException(__('Could not validate secrets data.'), $errors);
-                }
-            }
+            /** @var array<\App\Model\Entity\Secret> $secrets */
+            $secrets = $secretCreateService->createMany($data);
         } catch (CustomValidationException $e) {
             $resource->setError('secrets', $e->getErrors());
             $this->handleValidationErrors($resource);
