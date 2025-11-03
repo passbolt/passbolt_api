@@ -65,7 +65,7 @@
         "ext-pdo": "*",
         "ext-curl": "*",
         "composer/composer": "^2.8.1",
-        "cakephp/cakephp": "^5.2.6",
+        "cakephp/cakephp": "^5.2.9",
         "cakephp/migrations": "^4.0.0",
         "cakephp/plugin-installer": "^2.0",
         "mobiledetect/mobiledetectlib": "^4.8.03",

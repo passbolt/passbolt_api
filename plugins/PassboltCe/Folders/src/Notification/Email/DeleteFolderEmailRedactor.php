@@ -96,6 +96,7 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
         }
 
         $operator = $this->usersTable->findFirstForEmail($uac->getId());
+        /** @var array<\App\Model\Entity\User> $recipients */
         $recipients = $this->findUsersUsernameToSendEmailTo($users);
         foreach ($recipients as $recipient) {
             $email = $this->createEmail($recipient, $operator, $folder);
