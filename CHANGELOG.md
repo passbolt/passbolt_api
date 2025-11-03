@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.6.1] - 2025-11-04
+### Security
+- PB-45919 Fix security issue in query generation for CakePHP
+
 ## [5.6.1-test.1] - 2025-11-03
 ### Security
 - PB-45919 Fix security issue in query generation for CakePHP
