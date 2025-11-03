@@ -395,6 +395,11 @@ return [
                     'editionDisabled' => filter_var(env('PASSBOLT_SECURITY_METADATA_SETTINGS_EDITION_DISABLED', false), FILTER_VALIDATE_BOOLEAN)
                 ],
             ],
+            'secretRevisions' => [
+                'settings' => [
+                    'editionDisabled' => filter_var(env('PASSBOLT_SECURITY_SECRET_REVISIONS_SETTINGS_EDITION_DISABLED', false), FILTER_VALIDATE_BOOLEAN),
+                ],
+            ],
         ],
 
         // Should the app be SSL / HTTPS only.
