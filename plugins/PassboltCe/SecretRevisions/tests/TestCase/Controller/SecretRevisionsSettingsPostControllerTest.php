@@ -20,7 +20,7 @@ namespace Passbolt\SecretRevisions\Test\TestCase\Controller;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Passbolt\SecretRevisions\SecretRevisionsPlugin;
-use Passbolt\SecretRevisions\Service\SecretRevisionsSettingsSetService;
+use Passbolt\SecretRevisions\Service\SecretRevisionsSettingsGetService;
 use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsSettingsFactory;
 
 /**
@@ -49,7 +49,7 @@ class SecretRevisionsSettingsPostControllerTest extends AppIntegrationTestCase
         $orgSettings = SecretRevisionsSettingsFactory::find()->all()->toArray();
         $this->assertCount(1, $orgSettings);
         $orgSetting = $orgSettings[0];
-        $this->assertSame(SecretRevisionsSettingsSetService::ORG_SETTING_PROPERTY, $orgSetting['property']);
+        $this->assertSame(SecretRevisionsSettingsGetService::ORG_SETTING_PROPERTY, $orgSetting['property']);
         $this->assertSame($operator->id, $orgSetting['created_by']);
         $this->assertSame($operator->id, $orgSetting['modified_by']);
         $settings = json_decode($orgSetting['value'], true);
@@ -79,7 +79,7 @@ class SecretRevisionsSettingsPostControllerTest extends AppIntegrationTestCase
         $this->assertArrayHasAttributes(['max_revisions', 'allow_sharing_revisions'], $response);
         // assert database entries
         $orgSetting = SecretRevisionsSettingsFactory::get($existingEntity->id);
-        $this->assertSame(SecretRevisionsSettingsSetService::ORG_SETTING_PROPERTY, $orgSetting['property']);
+        $this->assertSame(SecretRevisionsSettingsGetService::ORG_SETTING_PROPERTY, $orgSetting['property']);
         $this->assertSame($ada->id, $orgSetting['created_by']);
         $this->assertSame($betty->id, $orgSetting['modified_by']);
         $settings = json_decode($orgSetting['value'], true);
@@ -133,6 +133,6 @@ class SecretRevisionsSettingsPostControllerTest extends AppIntegrationTestCase
             'max_revisions' => 1,
             'allow_sharing_revisions' => false,
         ]);
-        $this->assertResponseCode(404, 'Please use .json extension in URL or accept application/json');
+        $this->assertNotJsonError();
     }
 }
