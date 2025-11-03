@@ -27,8 +27,6 @@ class SecretRevisionsSettingsSetService
     use EventDispatcherTrait;
     use LocatorAwareTrait;
 
-    public const ORG_SETTING_PROPERTY = 'secretRevisions';
-
     /**
      * Validates and save the secret revisions settings.
      *
@@ -47,7 +45,7 @@ class SecretRevisionsSettingsSetService
         /** @var \App\Model\Table\OrganizationSettingsTable $orgSettingsTable */
         $orgSettingsTable = $this->fetchTable('OrganizationSettings');
         $organizationSetting = $orgSettingsTable->createOrUpdateSetting(
-            self::ORG_SETTING_PROPERTY,
+            SecretRevisionsSettingsGetService::ORG_SETTING_PROPERTY,
             $dto->toJson(),
             $uac
         );

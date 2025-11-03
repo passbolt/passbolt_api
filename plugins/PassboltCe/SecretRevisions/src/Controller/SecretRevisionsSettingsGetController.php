@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
@@ -13,17 +14,22 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         5.7.0
  */
-use Cake\Routing\RouteBuilder;
+namespace Passbolt\SecretRevisions\Controller;
 
-/** @var \Cake\Routing\RouteBuilder $routes */
-$routes->plugin('Passbolt/SecretRevisions', ['path' => '/secret-revisions'], function (RouteBuilder $routes): void {
-    $routes->setExtensions(['json']);
+use App\Controller\AppController;
+use Passbolt\SecretRevisions\Service\SecretRevisionsSettingsGetService;
 
+class SecretRevisionsSettingsGetController extends AppController
+{
     /**
-     * Settings.
+     * Returns secret revisions settings.
+     *
+     * @return void
      */
-    $routes->connect('/settings', ['controller' => 'SecretRevisionsSettingsPost', 'action' => 'post'])
-        ->setMethods(['PUT', 'POST']);
-    $routes->connect('/settings', ['controller' => 'SecretRevisionsSettingsGet', 'action' => 'get'])
-        ->setMethods(['GET']);
-});
+    public function get(): void
+    {
+        $this->assertJson();
+        $settingsDto = SecretRevisionsSettingsGetService::getSettings();
+        $this->success(__('The operation was successful.'), $settingsDto->toArray());
+    }
+}

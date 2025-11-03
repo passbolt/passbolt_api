@@ -19,7 +19,7 @@ namespace Passbolt\SecretRevisions\Test\Factory;
 use App\Model\Entity\OrganizationSetting;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Utility\UuidFactory;
-use Passbolt\SecretRevisions\Service\SecretRevisionsSettingsSetService;
+use Passbolt\SecretRevisions\Service\SecretRevisionsSettingsGetService;
 
 /**
  * SecretRevisionsSettingsFactory
@@ -34,8 +34,8 @@ class SecretRevisionsSettingsFactory extends OrganizationSettingFactory
         parent::setDefaultTemplate();
 
         $this->patchData([
-            'property' => SecretRevisionsSettingsSetService::ORG_SETTING_PROPERTY,
-            'property_id' => UuidFactory::uuid(OrganizationSetting::UUID_NAMESPACE . SecretRevisionsSettingsSetService::ORG_SETTING_PROPERTY),
+            'property' => SecretRevisionsSettingsGetService::ORG_SETTING_PROPERTY,
+            'property_id' => UuidFactory::uuid(OrganizationSetting::UUID_NAMESPACE . SecretRevisionsSettingsGetService::ORG_SETTING_PROPERTY),
             'value' => json_encode(self::getDefaultData()),
         ]);
     }
