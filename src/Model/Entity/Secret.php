@@ -26,6 +26,7 @@ use Cake\ORM\Entity;
  * @property string $user_id
  * @property string $resource_id
  * @property string $data
+ * @property string $secret_revision_id
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
  * @property \Cake\I18n\DateTime|null $created_by

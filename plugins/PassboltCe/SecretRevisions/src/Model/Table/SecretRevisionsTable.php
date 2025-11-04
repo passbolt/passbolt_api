@@ -28,6 +28,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
  * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
  * @property \Passbolt\ResourceTypes\Model\Table\ResourceTypesTable&\Cake\ORM\Association\BelongsTo $ResourceTypes
+ * @property \App\Model\Table\SecretsTable&\Cake\ORM\Association\HasMany $Secrets
  * @method \Passbolt\SecretRevisions\Model\Entity\SecretRevision newEmptyEntity()
  * @method \Passbolt\SecretRevisions\Model\Entity\SecretRevision newEntity(array $data, array $options = [])
  * @method \Passbolt\SecretRevisions\Model\Entity\SecretRevision[] newEntities(array $data, array $options = [])
@@ -113,6 +114,22 @@ class SecretRevisionsTable extends Table
         $validator
             ->uuid('modified_by', __('The identifier of the user who modified the secret revision should be a valid UUID.')) // phpcs:ignore;
             ->allowEmptyString('modified_by');
+
+        return $validator;
+    }
+
+    /**
+     * Create resource validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationSaveResource(Validator $validator): Validator
+    {
+        $validator = $this->validationDefault($validator);
+
+        // The resource_id is added by cake after the resource is created.
+        $validator->remove('resource_id');
 
         return $validator;
     }
