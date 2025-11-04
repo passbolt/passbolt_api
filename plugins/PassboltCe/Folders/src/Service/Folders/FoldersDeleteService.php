@@ -172,6 +172,7 @@ class FoldersDeleteService
      */
     private function deleteFolderChildrenOrMoveToRoot(UserAccessControl $uac, Folder $folder): void
     {
+        /** @var array<\Passbolt\Folders\Model\Entity\FoldersRelation> $children */
         $children = $this->foldersRelationsTable->findByFolderParentId($folder->id);
 
         foreach ($children as $folderRelation) {
