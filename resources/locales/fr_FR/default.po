@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-10-01 06:12+0000\n"
-"PO-Revision-Date: 2025-10-01 07:29\n"
+"PO-Revision-Date: 2025-10-17 07:18\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -911,7 +911,7 @@ msgid "The metadata key is marked as expired."
 msgstr "La clé de métadonnées est marquée comme expirée."
 
 msgid "The shared metadata key should be unique."
-msgstr ""
+msgstr "La clé de métadonnée partagée doit être unique."
 
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Il n'est pas autorisé de créer des types de ressource v5-password-string."
@@ -932,7 +932,7 @@ msgid "The user cannot delete this resource."
 msgstr "L'utilisateur ne peut pas supprimer cette ressource."
 
 msgid "The resource type for this resource does not exist."
-msgstr ""
+msgstr "Le type de ressource pour cette ressource n'existe pas."
 
 msgid "The name should be a valid ASCII string."
 msgstr "Le nom doit être une chaîne ASCII valide."
@@ -1109,7 +1109,7 @@ msgid "{0} deleted the password {1}"
 msgstr "{0} a supprimé le mot de passe {1}"
 
 msgid "{0} deleted a password"
-msgstr ""
+msgstr "{0} a supprimé un mot de passe"
 
 msgid "You edited a resource"
 msgstr "Vous avez modifié une ressource"
@@ -1601,10 +1601,10 @@ msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "Voir https://secure.php.net/manual/en/book.intl.php"
 
 msgid "The logs directory {0} and its content are writable."
-msgstr ""
+msgstr "Le répertoire de logs {0} et son contenu sont accessibles en écriture."
 
 msgid "The logs directory {0} and its content are not writable."
-msgstr ""
+msgstr "Le répertoire de logs {0} et son contenu ne sont pas accessibles en écriture."
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
 msgstr "Assurez-vous que le répertoire des logs et son contenu sont accessibles en écriture par l'utilisateur du serveur web."
