@@ -22,6 +22,7 @@ use App\Service\Resources\ResourcesUpdateService;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\PermissionFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
@@ -127,12 +128,14 @@ class ResourcesUpdateServiceTest extends AppTestCase
 
         $this->service->update($this->makeUac($userA), $r1->id, new MetadataResourceDto($data));
 
+        // Assert that the secrets have been added to revision, and not hard deleted
+        $this->assertSame(9, SecretFactory::count());
         // Assert R1 secrets have been updated
-        $r1SecretA = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userA->id)->first();
+        $r1SecretA = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userA->id)->find('notDeleted')->first();
         $this->assertEquals($r1EncryptedSecretA, $r1SecretA->data);
-        $r1SecretB = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userB->id)->first();
+        $r1SecretB = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userB->id)->find('notDeleted')->first();
         $this->assertEquals($r1EncryptedSecretB, $r1SecretB->data);
-        $r1SecretC = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userC->id)->first();
+        $r1SecretC = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userC->id)->find('notDeleted')->first();
         $this->assertEquals($r1EncryptedSecretC, $r1SecretC->data);
         // Assert R1 meta has not been updated except for the modified field.
         $r1Updated = $this->resourcesTable->findById($r1->id)->first();
@@ -259,6 +262,28 @@ class ResourcesUpdateServiceTest extends AppTestCase
             $this->assertInstanceOf(ValidationException::class, $e);
             $this->assertArrayHasKey('resource_type_id', $e->getErrors());
             $this->assertArrayHasKey('resource_type_is_not_soft_deleted', $e->getErrors()['resource_type_id']);
+        }
+    }
+
+    public function testUpdateResourcesError_UpdateSecrets_ValidationExceptions_InvalidGpgMessage()
+    {
+        $userA = UserFactory::make()->persist();
+        $r1 = ResourceFactory::make()
+            ->with('ResourceTypes', ResourceTypeFactory::make()->default())
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA])->persist();
+
+        $data = [
+            'secrets' => [['user_id' => $userA->id, 'data' => 'invalid-message']],
+        ];
+
+        try {
+            $this->service->update($this->makeUac($userA), $r1->id, new MetadataResourceDto($data));
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (ValidationException $e) {
+            $this->assertSame(['secrets' => [[
+                'data' => ['isValidOpenPGPMessage' => 'The message should be a valid ASCII-armored OpenPGP message.'],
+            ]]], $e->getErrors());
         }
     }
 }

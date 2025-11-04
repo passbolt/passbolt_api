@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Service\Secrets;
 
+use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Secret;
 use App\Model\Table\SecretsTable;
@@ -73,6 +74,28 @@ class SecretsCreateService
             'created_by' => true,
             'modified_by' => true,
         ]]);
+    }
+
+    /**
+     * Create a secret.
+     *
+     * @param array $data The secret data
+     * @return array<\App\Model\Entity\Secret>
+     * @throws \Exception
+     */
+    public function createMany(array $data): array
+    {
+        $secrets = [];
+        foreach ($data as $rowIndexRef => $row) {
+            try {
+                $secrets[$rowIndexRef] = $this->create($row);
+            } catch (ValidationException $e) {
+                $errors = [$rowIndexRef => $e->getEntity()->getErrors()];
+                throw new CustomValidationException(__('Could not validate secrets data.'), $errors);
+            }
+        }
+
+        return $secrets;
     }
 
     /**

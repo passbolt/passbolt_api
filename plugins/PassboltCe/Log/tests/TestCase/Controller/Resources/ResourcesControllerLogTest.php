@@ -186,7 +186,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
             'crud' => EntityHistory::CRUD_UPDATE,
         ];
         $this->assertOneEntityHistory(['foreign_model' => 'Resources']);
-        $this->assertEntitiesHistoryCount('4', ['foreign_model' => 'SecretsHistory']);
+        $this->assertEntitiesHistoryCount(0, ['foreign_model' => 'SecretsHistory']);
         $this->assertEntityHistoryExists($expectedEntityHistory);
     }
 
