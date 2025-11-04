@@ -29,6 +29,7 @@ use Faker\Generator;
  * @method \App\Model\Entity\Secret[] getEntities()
  * @method \App\Model\Entity\Secret|\App\Model\Entity\Secret[] persist()
  * @method static \App\Model\Entity\Secret get(mixed $primaryKey, array $options = [])
+ * @method static \App\Model\Entity\Secret firstOrFail($conditions = null)
  */
 class SecretFactory extends CakephpBaseFactory
 {

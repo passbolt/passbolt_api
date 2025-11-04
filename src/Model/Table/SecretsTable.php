@@ -120,6 +120,10 @@ class SecretsTable extends Table
             ->notEmptyString('user_id', __('The user identifier should not be empty.'));
 
         $validator
+            ->uuid('secret_revision_id', __('The secret revision identifier should be a valid UUID.'))
+            ->requirePresence('secret_revision_id', 'create', __('A secret revision identifier is required.'));
+
+        $validator
             ->ascii('data', __('The message should be a valid ASCII string.'))
             ->requirePresence('data', 'create', __('A message is required.'))
             ->notEmptyString('data', __('The message should not be empty.'))
@@ -145,6 +149,8 @@ class SecretsTable extends Table
 
         // The resource_id is added by cake after the resource is created.
         $validator->remove('resource_id');
+        // The secret_revision_id is added after the resource was created.
+        $validator->remove('secret_revision_id');
 
         return $validator;
     }
@@ -173,6 +179,11 @@ class SecretsTable extends Table
             'errorField' => 'user_id',
             'message' => __('The user does not exist.'),
         ]);
+//        $rules->addCreate(new IsNotSoftDeletedRule(), 'secret_revision_is_not_soft_deleted', [
+//            'table' => 'Passbolt/SecretRevisions.SecretRevisions',
+//            'errorField' => 'secret_revision_id',
+//            'message' => __('The secret revision does not exist.'),
+//        ]);
         $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
             'table' => 'Users',
             'errorField' => 'user_id',
