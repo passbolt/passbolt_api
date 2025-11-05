@@ -68,6 +68,7 @@ hcciUFw5
         [$ada, $edith] = UserFactory::make(2)->persist();
         [$resourceToDeletePermissionOn, $resourceNotDeleted] = ResourceFactory::make(2)
             ->withPermissionsFor([$ada])
+            ->withSecretRevisions()
             ->persist();
         $permissionToDelete = $resourceToDeletePermissionOn->permissions[0];
 
