@@ -242,7 +242,10 @@ class SecretsTable extends Table
      */
     public function softDeleteMany(string $resourceId): int
     {
-        return $this->updateAll(['deleted' => DateTime::now()], ['resource_id' => $resourceId]);
+        return $this->updateAll(['deleted' => DateTime::now()], [
+            'resource_id' => $resourceId,
+            'deleted IS NULL',
+        ]);
     }
 
     /**
