@@ -22,6 +22,7 @@ use App\Service\Resources\ResourcesUpdateService;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\PermissionFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\RoleFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
@@ -33,6 +34,8 @@ use Cake\ORM\TableRegistry;
 use Exception;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\SecretRevisions\SecretRevisionsPlugin;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 /**
  * \App\Service\Resources\ResourcesUpdateService Test Case
@@ -107,10 +110,12 @@ class ResourcesUpdateServiceTest extends AppTestCase
     public function testUpdateResourcesSuccess_UpdateResourceSecrets()
     {
         $users = [$userA, $userB, $userC] = UserFactory::make(3)->withValidGpgKey()->persist();
+        RoleFactory::make()->guest()->persist();
         [$r1, $r2] = ResourceFactory::make(2)
             ->with('ResourceTypes', ResourceTypeFactory::make()->default())
             ->withSecretsFor($users)
             ->withPermissionsFor($users)
+            ->withSecretRevisions()
             ->persist();
 
         $r2SecretA = $r2->secrets[0];
@@ -126,6 +131,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
             ],
         ];
 
+        $this->loadPlugins([SecretRevisionsPlugin::class => []]);
         $this->service->update($this->makeUac($userA), $r1->id, new MetadataResourceDto($data));
 
         // Assert that the secrets have been added to revision, and not hard deleted
@@ -147,6 +153,9 @@ class ResourcesUpdateServiceTest extends AppTestCase
         // Assert R2 secrets have not been updated
         $r2AfterUpdateSecretA = $this->secretsTable->findByResourceIdAndUserId($r2->id, $userA->id)->first();
         $this->assertEquals($r2SecretA->data, $r2AfterUpdateSecretA->data);
+
+        // Assert that a new revision is persisted
+        $this->assertSame(3, SecretRevisionFactory::count());
     }
 
     public function testUpdateResourcesError_UpdateResourceMeta_ValidationError()
@@ -182,6 +191,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
         // ---
         // R1 (Ada:O, Betty:O, G1:O)
         [$userA, $userB, $userC] = UserFactory::make(3)->withValidGpgKey()->persist();
+        RoleFactory::make()->guest()->persist();
         $group = GroupFactory::make()->withGroupsManagersFor([$userA,$userC])->persist();
         $r1 = ResourceFactory::make()
             ->with('ResourceTypes', ResourceTypeFactory::make()->default())
@@ -203,7 +213,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
             $this->assertEquals('Could not validate resource data.', $e->getMessage());
             $this->assertSame([
                 'secrets' => [
-                    'secrets_provided' => 'The secrets of all the users having access to the resource are required.',
+                    'secrets_provided' => 'The secrets should contain the secrets of all the users having access to the resource.',
                 ],
             ], $e->getErrors());
         }

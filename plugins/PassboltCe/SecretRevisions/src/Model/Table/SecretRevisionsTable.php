@@ -18,6 +18,7 @@ namespace Passbolt\SecretRevisions\Model\Table;
 
 use App\Model\Validation\IsNullOnCreateRule;
 use Cake\Database\Expression\QueryExpression;
+use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -163,5 +164,19 @@ class SecretRevisionsTable extends Table
         return $query->where(function (QueryExpression $exp) {
             return $exp->isNull($this->aliasField('deleted'));
         });
+    }
+
+    /**
+     * @param string $resourceId resource ID of the secret revision to soft-delete
+     * @return int
+     */
+    public function softDelete(string $resourceId): int
+    {
+        $this->Secrets->softDeleteMany($resourceId);
+
+        return $this->updateAll(['deleted' => DateTime::now()], [
+            'resource_id' => $resourceId,
+            'deleted IS NULL',
+        ]);
     }
 }

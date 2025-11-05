@@ -73,7 +73,7 @@ class ResourcesAddAndShareControllerTest extends AppIntegrationTestCase
         $frenchUser2 = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 
         /** @var \App\Model\Entity\Resource $resource */
-        $resource = ResourceFactory::make()->withCreatorAndPermission($frenchUser)->persist();
+        $resource = ResourceFactory::make()->withSecretRevisions()->withCreatorAndPermission($frenchUser)->persist();
 
         $data = [];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $defaultUser->id, 'type' => Permission::OWNER];

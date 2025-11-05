@@ -30,18 +30,19 @@ class SecretRevisionsAfterResourceCreatedEventListener implements EventListenerI
     public function implementedEvents(): array
     {
         return [
-            'Model.afterSave' => 'populateSecretRevisions',
+            'Model.beforeSave' => 'createNewRevision', // when a resource's secret is updated
+            'Model.afterSave' => 'createFirstRevision', // when a resource is created
         ];
     }
 
     /**
-     * When the first user of an instance is registering, enable the password expiry feature
+     * When a resource has been created, create its first revision and update the secrets accordingly
      *
      * @param \Cake\Event\Event $event a user has completed registration
      * @param \Cake\Datasource\EntityInterface $resource the resource being saved
      * @return void
      */
-    public function populateSecretRevisions(Event $event, EntityInterface $resource): void
+    public function createFirstRevision(Event $event, EntityInterface $resource): void
     {
         if (!($resource instanceof Resource)) {
             return;
@@ -50,6 +51,28 @@ class SecretRevisionsAfterResourceCreatedEventListener implements EventListenerI
         if (!$resource->isNew()) {
             return;
         }
-        (new CreateSecretRevisionsService())->create($resource);
+
+        (new CreateSecretRevisionsService())->createFirstRevision($resource);
+    }
+
+    /**
+     * Create a new revision:
+     * - when a resource's secrets are being updated
+     * - TODO: when the resource type is updated
+     *
+     * @param \Cake\Event\Event $event a user has completed registration
+     * @param \Cake\Datasource\EntityInterface $resource the resource being saved
+     * @return void
+     */
+    public function createNewRevision(Event $event, EntityInterface $resource): void
+    {
+        if (!($resource instanceof Resource)) {
+            return;
+        }
+        if ($resource->isNew()) {
+            return;
+        }
+
+        (new CreateSecretRevisionsService())->createNewRevision($resource);
     }
 }

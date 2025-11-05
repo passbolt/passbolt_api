@@ -26,9 +26,16 @@ use Cake\Utility\Hash;
 use Passbolt\Log\Model\Entity\EntityHistory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\SecretRevisions\SecretRevisionsPlugin;
 
 class ResourcesControllerLogTest extends LogIntegrationTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(SecretRevisionsPlugin::class);
+    }
+
     /**
      * @dataProvider dataProviderForLoginType
      */
