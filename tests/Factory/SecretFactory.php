@@ -21,6 +21,7 @@ use Cake\I18n\Date;
 use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 /**
  * SecretFactory
@@ -29,6 +30,7 @@ use Faker\Generator;
  * @method \App\Model\Entity\Secret[] getEntities()
  * @method \App\Model\Entity\Secret|\App\Model\Entity\Secret[] persist()
  * @method static \App\Model\Entity\Secret get(mixed $primaryKey, array $options = [])
+ * @method static \App\Model\Entity\Secret firstOrFail($conditions = null)
  */
 class SecretFactory extends CakephpBaseFactory
 {
@@ -119,5 +121,18 @@ hcciUFw5
     public function withCreatorAndModifier(User $user): self
     {
         return $this->withModifier($user)->withCreator($user);
+    }
+
+    /**
+     * @param SecretRevisionFactory|null $factory secret revision
+     * @return self
+     */
+    public function withSecretRevision(?SecretRevisionFactory $factory = null): self
+    {
+        if (is_null($factory)) {
+            $factory = SecretRevisionFactory::make();
+        }
+
+        return $this->with('SecretRevisions', $factory);
     }
 }

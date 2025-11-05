@@ -32,6 +32,7 @@ use Cake\ORM\Entity;
  *
  * @property \Passbolt\ResourceTypes\Model\Entity\ResourceType $resource_type
  * @property \App\Model\Entity\Resource $resource
+ * @property \App\Model\Entity\Secret[] $secrets
  */
 class SecretRevision extends Entity
 {

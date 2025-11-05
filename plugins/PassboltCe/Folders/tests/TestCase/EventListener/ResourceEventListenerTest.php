@@ -145,6 +145,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
             ->withFoldersRelationsFor([$userA], $folder)
             ->withPermissionsFor([$userA])
             ->withSecretsFor([$userA])
+            ->withSecretRevisions()
             ->persist();
 
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userB->id, 'type' => Permission::OWNER];

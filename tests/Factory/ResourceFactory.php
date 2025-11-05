@@ -28,6 +28,7 @@ use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 /**
  * ResourceFactory
@@ -194,5 +195,14 @@ class ResourceFactory extends CakephpBaseFactory
         ], $v5Fields);
 
         return $this->patchData($data)->with('ResourceTypes', ResourceTypeFactory::make()->v5Default());
+    }
+
+    public function withSecretRevisions(?SecretRevisionFactory $factory = null): self
+    {
+        if (is_null($factory)) {
+            $factory = SecretRevisionFactory::make();
+        }
+
+        return $this->with('SecretRevisions', $factory);
     }
 }

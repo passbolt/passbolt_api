@@ -17,6 +17,9 @@ declare(strict_types=1);
 namespace Passbolt\SecretRevisions\Model\Table;
 
 use App\Model\Validation\IsNullOnCreateRule;
+use Cake\Database\Expression\QueryExpression;
+use Cake\I18n\DateTime;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -28,6 +31,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
  * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
  * @property \Passbolt\ResourceTypes\Model\Table\ResourceTypesTable&\Cake\ORM\Association\BelongsTo $ResourceTypes
+ * @property \App\Model\Table\SecretsTable&\Cake\ORM\Association\HasMany $Secrets
  * @method \Passbolt\SecretRevisions\Model\Entity\SecretRevision newEmptyEntity()
  * @method \Passbolt\SecretRevisions\Model\Entity\SecretRevision newEntity(array $data, array $options = [])
  * @method \Passbolt\SecretRevisions\Model\Entity\SecretRevision[] newEntities(array $data, array $options = [])
@@ -118,6 +122,22 @@ class SecretRevisionsTable extends Table
     }
 
     /**
+     * Create resource validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationSaveResource(Validator $validator): Validator
+    {
+        $validator = $this->validationDefault($validator);
+
+        // The resource_id is added by cake after the resource is created.
+        $validator->remove('resource_id');
+
+        return $validator;
+    }
+
+    /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
@@ -133,5 +153,30 @@ class SecretRevisionsTable extends Table
         ]);
 
         return $rules;
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query query
+     * @return \Cake\ORM\Query
+     */
+    public function findNotDeleted(Query $query): Query
+    {
+        return $query->where(function (QueryExpression $exp) {
+            return $exp->isNull($this->aliasField('deleted'));
+        });
+    }
+
+    /**
+     * @param string $resourceId resource ID of the secret revision to soft-delete
+     * @return int
+     */
+    public function softDelete(string $resourceId): int
+    {
+        $this->Secrets->softDeleteMany($resourceId);
+
+        return $this->updateAll(['deleted' => DateTime::now()], [
+            'resource_id' => $resourceId,
+            'deleted IS NULL',
+        ]);
     }
 }

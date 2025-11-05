@@ -57,6 +57,7 @@ use Throwable;
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
  * @property \App\Model\Table\SecretsTable&\Cake\ORM\Association\HasMany $Secrets
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
+ * @property \Passbolt\SecretRevisions\Model\Table\SecretRevisionsTable&\Cake\ORM\Association\HasMany $SecretRevisions
  * @method \App\Model\Entity\Resource get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\Resource[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\Resource|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -596,6 +597,10 @@ class ResourcesTable extends Table
         $this->getAssociation('Secrets')
             ->deleteAll(['Secrets.resource_id' => $resource->id]);
 
+        // Remove all the associated secret revisions.
+        $this->getAssociation('SecretRevisions')
+            ->deleteAll(['SecretRevisions.resource_id' => $resource->id]);
+
         // Remove all the associated permissions.
         $this->getAssociation('Permissions')
             ->deleteAll(['Permissions.aco_foreign_key' => $resource->id]);
@@ -657,6 +662,9 @@ class ResourcesTable extends Table
             $Favorites->deleteAll(['foreign_key IN' => $resourceIds]);
 
             $Secrets = TableRegistry::getTableLocator()->get('Secrets');
+            $Secrets->deleteAll(['resource_id IN' => $resourceIds]);
+
+            $Secrets = TableRegistry::getTableLocator()->get('Passbolt/SecretRevisions.SecretRevisions');
             $Secrets->deleteAll(['resource_id IN' => $resourceIds]);
 
             $Permissions = TableRegistry::getTableLocator()->get('Permissions');

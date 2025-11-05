@@ -69,6 +69,7 @@ class ShareNotificationTest extends ShareControllerTest
         // Create a resource shared with ada betty freelancer and board (all OWNER).
         $resource = ResourceFactory::make()
             ->withPermissionsFor([$userOwner, $userA, $userB, $groupF, $groupB])
+            ->withSecretRevisions()
             ->withSecretsFor([$userOwner, $userA, $userB])
             ->persist();
 

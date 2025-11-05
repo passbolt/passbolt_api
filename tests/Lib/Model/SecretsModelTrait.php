@@ -97,6 +97,7 @@ trait SecretsModelTrait
         $entityContent = [
             'resource_id' => UuidFactory::uuid('resource.id.april'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
+            'secret_revision_id' => UuidFactory::uuid('secret_revision.id.april'),
             'data' => '-----BEGIN PGP MESSAGE-----
 
 hQIMA1P90Qk1JHA+ARAAu3oaLzv/BfeukST6tYAkAID+xbt5dhsv4lxL3oSbo8Nm

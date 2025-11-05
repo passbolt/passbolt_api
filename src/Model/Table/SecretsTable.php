@@ -38,6 +38,7 @@ use Cake\Validation\Validator;
  *
  * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \Passbolt\SecretRevisions\Model\Table\SecretRevisionsTable&\Cake\ORM\Association\BelongsTo $SecretRevisions
  * @method \App\Model\Entity\Secret get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\Secret newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\Secret[] newEntities(array $data, array $options = [])
@@ -120,6 +121,11 @@ class SecretsTable extends Table
             ->notEmptyString('user_id', __('The user identifier should not be empty.'));
 
         $validator
+            ->uuid('secret_revision_id', __('The secret revision identifier should be a valid UUID.'))
+            ->requirePresence('secret_revision_id', 'create', __('A secret revision identifier is required.'))
+            ->notEmptyString('secret_revision_id', __('The secret revision identifier should not be empty.'));
+
+        $validator
             ->ascii('data', __('The message should be a valid ASCII string.'))
             ->requirePresence('data', 'create', __('A message is required.'))
             ->notEmptyString('data', __('The message should not be empty.'))
@@ -145,6 +151,8 @@ class SecretsTable extends Table
 
         // The resource_id is added by cake after the resource is created.
         $validator->remove('resource_id');
+        // The secret_revision_id is added after the resource was created.
+        $validator->remove('secret_revision_id');
 
         return $validator;
     }
@@ -173,6 +181,11 @@ class SecretsTable extends Table
             'errorField' => 'user_id',
             'message' => __('The user does not exist.'),
         ]);
+//        $rules->addCreate(new IsNotSoftDeletedRule(), 'secret_revision_is_not_soft_deleted', [
+//            'table' => 'Passbolt/SecretRevisions.SecretRevisions',
+//            'errorField' => 'secret_revision_id',
+//            'message' => __('The secret revision does not exist.'),
+//        ]);
         $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
             'table' => 'Users',
             'errorField' => 'user_id',
@@ -230,7 +243,10 @@ class SecretsTable extends Table
      */
     public function softDeleteMany(string $resourceId): int
     {
-        return $this->updateAll(['deleted' => DateTime::now()], ['resource_id' => $resourceId]);
+        return $this->updateAll(['deleted' => DateTime::now()], [
+            'resource_id' => $resourceId,
+            'deleted IS NULL',
+        ]);
     }
 
     /**

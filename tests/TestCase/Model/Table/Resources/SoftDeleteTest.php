@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Resources;
 
 use App\Model\Entity\Permission;
+use App\Model\Table\ResourcesTable;
 use App\Test\Factory\FavoriteFactory;
 use App\Test\Factory\PermissionFactory;
 use App\Test\Factory\ResourceFactory;
@@ -27,12 +28,13 @@ use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 class SoftDeleteTest extends AppTestCase
 {
     use FormatValidationTrait;
 
-    public $Resources;
+    public ResourcesTable $Resources;
 
     public function setUp(): void
     {
@@ -55,6 +57,7 @@ class SoftDeleteTest extends AppTestCase
         [$resource, $otherResource] = ResourceFactory::make(3)
             ->withPermissionsFor([$user])
             ->withSecretsFor([$user])
+            ->withSecretRevisions()
             ->persist();
         FavoriteFactory::make()->setResource($resource)->persist();
         FavoriteFactory::make()->setResource($otherResource)->persist();
@@ -86,6 +89,11 @@ class SoftDeleteTest extends AppTestCase
             ->find()->where(['Secrets.resource_id' => $resource->id])->toArray();
         $this->assertEmpty($secrets);
         $this->assertSame(2, SecretFactory::count());
+        // No secret revision for this resource in db.
+        $secretRevisions = $this->Resources->SecretRevisions
+            ->find()->where(['resource_id' => $resource->id])->toArray();
+        $this->assertEmpty($secretRevisions);
+        $this->assertSame(2, SecretRevisionFactory::count());
     }
 
     public function testSoftDeleteErrorNotValidUserIdParameter()
