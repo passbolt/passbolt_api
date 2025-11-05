@@ -57,4 +57,13 @@ class SecretRevisionFactory extends CakephpBaseFactory
             ];
         });
     }
+
+    /**
+     * @param DateTime|null $deleted
+     * @return self
+     */
+    public function deleted(?DateTime $deleted = null): self
+    {
+        return $this->patchData(['deleted' => $deleted ?? DateTime::yesterday()]);
+    }
 }

@@ -35,6 +35,7 @@ use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\Utility\Hash;
 
 class ResourcesShareService
 {
@@ -205,6 +206,7 @@ class ResourcesShareService
     private function updateSecrets(UserAccessControl $uac, Resource $resource, array $data): EntitiesChangesDto
     {
         $result = new EntitiesChangesDto();
+        $data = $this->setSecretRevisionInData($resource, $data);
 
         try {
             $result = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
@@ -214,6 +216,26 @@ class ResourcesShareService
         }
 
         return $result;
+    }
+
+    /**
+     * @param \App\Model\Entity\Resource $resource resource being shared
+     * @param array $data secrets to create during the share
+     * @return array
+     */
+    private function setSecretRevisionInData(Resource $resource, array $data): array
+    {
+        // If no secrets are created during the share, no need to fetch the revision
+        if (empty($data)) {
+            return $data;
+        }
+        $secretRevision = $this->Resources->SecretRevisions
+            ->find('notDeleted')
+            ->select('id')
+            ->where(['resource_id' => $resource->id])
+            ->firstOrFail();
+
+        return Hash::insert($data, '{n}.secret_revision_id', $secretRevision->id);
     }
 
     /**
