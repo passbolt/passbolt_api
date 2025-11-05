@@ -597,6 +597,10 @@ class ResourcesTable extends Table
         $this->getAssociation('Secrets')
             ->deleteAll(['Secrets.resource_id' => $resource->id]);
 
+        // Remove all the associated secret revisions.
+        $this->getAssociation('SecretRevisions')
+            ->deleteAll(['SecretRevisions.resource_id' => $resource->id]);
+
         // Remove all the associated permissions.
         $this->getAssociation('Permissions')
             ->deleteAll(['Permissions.aco_foreign_key' => $resource->id]);
@@ -658,6 +662,9 @@ class ResourcesTable extends Table
             $Favorites->deleteAll(['foreign_key IN' => $resourceIds]);
 
             $Secrets = TableRegistry::getTableLocator()->get('Secrets');
+            $Secrets->deleteAll(['resource_id IN' => $resourceIds]);
+
+            $Secrets = TableRegistry::getTableLocator()->get('Passbolt/SecretRevisions.SecretRevisions');
             $Secrets->deleteAll(['resource_id IN' => $resourceIds]);
 
             $Permissions = TableRegistry::getTableLocator()->get('Permissions');
