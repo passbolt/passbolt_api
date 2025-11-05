@@ -96,7 +96,7 @@ class ResourcesAddService
             $resource = $this->buildEntity($uac->getId(), $resourceDto);
             $this->handleValidationError($resource);
             try {
-                $this->Resources->save($resource);
+                $this->Resources->save($resource, ['isResourceAdded' => true]);
                 break;
             } catch (PDOException $e) {
                 Log::error(get_class($e) . ' --- attempt #' . $attempts . ' --- ' . $e->getMessage());

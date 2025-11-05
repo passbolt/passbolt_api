@@ -58,7 +58,6 @@ class SecretRevisionsAfterResourceCreatedEventListener implements EventListenerI
     /**
      * Create a new revision:
      * - when a resource's secrets are being updated
-     * - TODO: when the resource type is updated
      *
      * @param \Cake\Event\Event $event a user has completed registration
      * @param \Cake\Datasource\EntityInterface $resource the resource being saved
