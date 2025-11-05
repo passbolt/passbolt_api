@@ -65,7 +65,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $user = UserFactory::make()->user()->persist();
         $edith = UserFactory::make()->user()->persist();
         /** @var \App\Model\Entity\Resource $resource */
-        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $resource = ResourceFactory::make()->withSecretRevisions()->withCreatorAndPermission($user)->persist();
         $resourceId = $resource->id;
         // Add an owner permission for the user Edith
         $data = [

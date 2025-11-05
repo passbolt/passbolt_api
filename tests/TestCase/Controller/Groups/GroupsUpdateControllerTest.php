@@ -260,7 +260,9 @@ hcciUFw5
             ->persist();
         [$userA, $userC, $userF] = UserFactory::make(3)->persist();
 
-        [$resourceC, $resourceF, $resourceG] = ResourceFactory::make(3)->withPermissionsFor([$group, $userC], Permission::UPDATE)
+        [$resourceC, $resourceF, $resourceG] = ResourceFactory::make(3)
+            ->withSecretRevisions()
+            ->withPermissionsFor([$group, $userC], Permission::UPDATE)
             ->withSecretsFor([$group, $userC])
             ->persist();
         PermissionFactory::make()

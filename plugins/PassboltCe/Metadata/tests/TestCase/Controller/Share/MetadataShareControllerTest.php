@@ -71,6 +71,7 @@ class MetadataShareControllerTest extends AppIntegrationTestCaseV5
         $resource = ResourceFactory::make()
             ->v5Fields(true)
             ->withCreatorAndPermission($user)
+            ->withSecretRevisions()
             ->with('ResourceTypes', ResourceTypeFactory::make()->v5Default())
             ->persist();
         $this->logInAs($user);
