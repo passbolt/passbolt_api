@@ -51,6 +51,7 @@ class ShareControllerWithFactoriesTest extends AppIntegrationTestCase
         [$userA, $userB, $userC, $userD, $userE] = UserFactory::make(5)->withValidGpgKey()->persist();
         $resource = ResourceFactory::make()
             ->withCreatorAndPermission($userA)
+            ->withSecretRevisions()
             ->with('Secrets', [ // create associated secrets
                 [
                     'user_id' => $userA->id,

@@ -71,6 +71,7 @@ class SecretsCreateService
             'resource_id' => true,
             'user_id' => true,
             'data' => true,
+            'secret_revision_id' => true,
             'created_by' => true,
             'modified_by' => true,
         ]]);

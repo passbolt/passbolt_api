@@ -62,6 +62,8 @@ class SecretsUpdateSecretsService
     /**
      * Update a resource's secrets.
      *
+     * This service is used only when sharing resources, not updating the secrets
+     *
      * @param \App\Utility\UserAccessControl $uac The operator.
      * @param string $resourceId The resource to update the secrets for.
      * @param array $data The list of secrets to add
@@ -173,6 +175,7 @@ class SecretsUpdateSecretsService
             'resource_id' => $resourceId,
             'user_id' => Hash::get($data, 'user_id', ''),
             'data' => Hash::get($data, 'data', ''),
+            'secret_revision_id' => Hash::get($data, 'secret_revision_id', null),
             'created_by' => $uac->getId(),
             'modified_by' => $uac->getId(),
         ];

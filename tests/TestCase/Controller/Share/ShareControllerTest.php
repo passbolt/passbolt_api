@@ -25,6 +25,7 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 class ShareControllerTest extends AppIntegrationTestCase
 {
@@ -95,6 +96,8 @@ hcciUFw5
         $groupBId = UuidFactory::uuid('group.id.board');
         $groupFId = UuidFactory::uuid('group.id.freelancer');
         $groupAId = UuidFactory::uuid('group.id.accounting');
+
+        SecretRevisionFactory::make(['resource_id' => $resourceId])->persist();
 
         // Expected results.
         $expectedAddedUsersIds = [];
@@ -228,6 +231,7 @@ hcciUFw5
     public function testShareController_Error_Validation($caseLabel, $case)
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
+        SecretRevisionFactory::make(['resource_id' => $resourceId])->persist();
         $this->authenticateAs('ada');
         $this->putJson("/share/resource/$resourceId.json", $case['data']);
         $this->assertError();

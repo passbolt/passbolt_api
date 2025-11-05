@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace Passbolt\SecretRevisions\Model\Table;
 
 use App\Model\Validation\IsNullOnCreateRule;
+use Cake\Database\Expression\QueryExpression;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -150,5 +152,16 @@ class SecretRevisionsTable extends Table
         ]);
 
         return $rules;
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query query
+     * @return \Cake\ORM\Query
+     */
+    public function findNotDeleted(Query $query): Query
+    {
+        return $query->where(function (QueryExpression $exp) {
+            return $exp->isNull($this->aliasField('deleted'));
+        });
     }
 }
