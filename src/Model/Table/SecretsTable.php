@@ -122,7 +122,8 @@ class SecretsTable extends Table
 
         $validator
             ->uuid('secret_revision_id', __('The secret revision identifier should be a valid UUID.'))
-            ->requirePresence('secret_revision_id', 'create', __('A secret revision identifier is required.'));
+            ->requirePresence('secret_revision_id', 'create', __('A secret revision identifier is required.'))
+            ->notEmptyString('secret_revision_id', __('The secret revision identifier should not be empty.'));
 
         $validator
             ->ascii('data', __('The message should be a valid ASCII string.'))

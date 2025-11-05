@@ -42,10 +42,13 @@ class CreateSecretRevisionsService
      * - the secrets associated to this resource
      *
      * @param \App\Model\Entity\Resource $resource the resource being saved
-     * @return \Passbolt\SecretRevisions\Model\Entity\SecretRevision
+     * @return \Passbolt\SecretRevisions\Model\Entity\SecretRevision|null
      */
-    public function createFirstRevision(Resource $resource): SecretRevision
+    public function createFirstRevision(Resource $resource): ?SecretRevision
     {
+        if (empty($resource->secrets)) {
+            return null;
+        }
         $userId = $resource->modified_by;
 
         $data = [

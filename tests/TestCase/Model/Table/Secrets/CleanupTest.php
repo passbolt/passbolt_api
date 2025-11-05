@@ -17,17 +17,15 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Secrets;
 
+use App\Test\Factory\SecretFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\CleanupTrait;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 
 class CleanupTest extends AppTestCase
 {
     use CleanupTrait;
 
-    public $Secrets;
-    public $Groups;
     public array $fixtures = [
         'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Permissions',
         'app.Base/Resources', 'app.Base/Secrets',
@@ -37,7 +35,6 @@ class CleanupTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $this->options = ['accessibleFields' => [
            'resource_id' => true,
            'user_id' => true,
@@ -53,51 +50,57 @@ class CleanupTest extends AppTestCase
 
     public function testCleanupSecretsSoftDeletedResourcesSuccess()
     {
-        $originalCount = $this->Secrets->find()->all()->count();
-        $sec = $this->Secrets->newEntity(self::getDummySecretData([
+        $originalCount = SecretFactory::count();
+        SecretFactory::make(self::getDummySecretData([
             'resource_id' => UuidFactory::uuid('resource.id.jquery'),
-            'user_id' => UuidFactory::uuid('user.id.ada')]), $this->options);
-        $this->Secrets->save($sec, ['checkRules' => false]);
+            'user_id' => UuidFactory::uuid('user.id.ada')]))
+            ->withSecretRevision()
+            ->persist();
+
         $this->runCleanupChecks('Secrets', 'cleanupSoftDeletedResources', $originalCount);
     }
 
     public function testCleanupSecretsHardDeletedResourcesSuccess()
     {
-        $originalCount = $this->Secrets->find()->all()->count();
-        $sec = $this->Secrets->newEntity(self::getDummySecretData([
+        $originalCount = SecretFactory::count();
+        SecretFactory::make(self::getDummySecretData([
             'resource_id' => UuidFactory::uuid('resource.id.nope'),
-            'user_id' => UuidFactory::uuid('user.id.ada')]), $this->options);
-        $this->Secrets->save($sec, ['checkRules' => false]);
+            'user_id' => UuidFactory::uuid('user.id.ada')]))
+            ->withSecretRevision()
+            ->persist();
         $this->runCleanupChecks('Secrets', 'cleanupHardDeletedResources', $originalCount);
     }
 
     public function testCleanupSecretsSoftDeletedUsersSuccess()
     {
-        $originalCount = $this->Secrets->find()->all()->count();
-        $sec = $this->Secrets->newEntity(self::getDummySecretData([
+        $originalCount = SecretFactory::count();
+        SecretFactory::make(self::getDummySecretData([
             'resource_id' => UuidFactory::uuid('resource.id.jquery'),
-            'user_id' => UuidFactory::uuid('user.id.sofia')]), $this->options);
-        $this->Secrets->save($sec, ['checkRules' => false]);
+            'user_id' => UuidFactory::uuid('user.id.sofia')]))
+            ->withSecretRevision()
+            ->persist();
         $this->runCleanupChecks('Secrets', 'cleanupSoftDeletedUsers', $originalCount);
     }
 
     public function testCleanupSecretsHardDeletedUsersSuccess()
     {
-        $originalCount = $this->Secrets->find()->all()->count();
-        $sec = $this->Secrets->newEntity(self::getDummySecretData([
+        $originalCount = SecretFactory::count();
+        SecretFactory::make(self::getDummySecretData([
             'resource_id' => UuidFactory::uuid('resource.id.jquery'),
-            'user_id' => UuidFactory::uuid('user.id.nope')]), $this->options);
-        $this->Secrets->save($sec, ['checkRules' => false]);
+            'user_id' => UuidFactory::uuid('user.id.nope')]))
+            ->withSecretRevision()
+            ->persist();
         $this->runCleanupChecks('Secrets', 'cleanupHardDeletedUsers', $originalCount);
     }
 
     public function testCleanupSecretsHardDeletedPermissionsSuccess()
     {
-        $originalCount = $this->Secrets->find()->all()->count();
-        $sec = $this->Secrets->newEntity(self::getDummySecretData([
+        $originalCount = SecretFactory::count();
+        SecretFactory::make(self::getDummySecretData([
             'resource_id' => UuidFactory::uuid('resource.id.apache'),
-            'user_id' => UuidFactory::uuid('user.id.frances')]), $this->options);
-        $this->Secrets->save($sec, ['checkRules' => false]);
+            'user_id' => UuidFactory::uuid('user.id.frances')]))
+            ->withSecretRevision()
+            ->persist();
         $this->runCleanupChecks('Secrets', 'cleanupHardDeletedPermissions', $originalCount);
     }
 }
