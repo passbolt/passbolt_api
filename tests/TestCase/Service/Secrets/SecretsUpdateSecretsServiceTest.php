@@ -23,7 +23,6 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
@@ -70,8 +69,13 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
             ->withSecretRevisions()
             ->persist();
 
+        $newSecretRevision = SecretRevisionFactory::make()->persist();
         $data = [
-            ['user_id' => $userB->id, 'data' => Hash::get(self::getDummySecretData(), 'data')],
+            [
+                'user_id' => $userB->id,
+                'data' => Hash::get(self::getDummySecretData(), 'data'),
+                'secret_revision_id' => $newSecretRevision->id,
+            ],
         ];
 
         $changes = $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
@@ -79,7 +83,7 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
         // Assert secrets
         $secrets = $this->Secrets->findByResourceId($r1->id)->toArray();
         $secretAdded = $changes->getAddedEntities()[0];
-        $this->assertSame($r1->secret_revisions[0]->id, $secretAdded->secret_revision_id);
+        $this->assertSame($newSecretRevision->id, $secretAdded->secret_revision_id);
         $this->assertCount(2, $secrets);
         $this->assertSecretExists($r1->id, $userA->id);
         $this->assertSecretExists($r1->id, $userB->id);
@@ -115,8 +119,13 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
             ->withSecretsFor([$userA])
             ->withSecretRevisions()
             ->persist();
+        $newSecretRevision = SecretRevisionFactory::make()->persist();
 
-        $data = [['user_id' => $userB->id, 'data' => Hash::get(self::getDummySecretData(), 'data')], ];
+        $data = [[
+            'user_id' => $userB->id,
+            'data' => Hash::get(self::getDummySecretData(), 'data'),
+            'secret_revision_id' => $newSecretRevision->id,
+        ]];
 
         try {
             $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
@@ -142,7 +151,13 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
             ->withPermissionsFor([$userA,$userB])
             ->withSecretsFor([$userA])->persist();
 
-        $data = [['user_id' => $userB->id, 'data' => Hash::get(self::getDummySecretData(), 'data')], ];
+        $newSecretRevision = SecretRevisionFactory::make()->persist();
+
+        $data = [[
+            'user_id' => $userB->id,
+            'data' => Hash::get(self::getDummySecretData(), 'data'),
+            'secret_revision_id' => $newSecretRevision->id,
+        ]];
 
         try {
             $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
@@ -205,18 +220,38 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
         $this->assertNull(SecretFactory::get($secretToKeepId)->get('deleted'));
     }
 
+    /**
+     * TODO: this should fail once the rule secret_revision_is_not_soft_deleted is in place
+     */
     public function testUpdateSecrets_Error_If_Revision_Is_Deleted()
     {
-        $userA = UserFactory::make()->persist();
-        // Betty has no permissions but has secret.
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        // Add Betty's permission without secret.
         $r1 = ResourceFactory::make()
-            ->withPermissionsFor([$userA])
-            ->withSecretRevisions(SecretRevisionFactory::make()->deleted())
+            ->withPermissionsFor([$userA, $userB])
+            ->withSecretsFor([$userA])
+            ->withSecretRevisions()
             ->persist();
 
-        $data = [];
+        $newSecretRevision = SecretRevisionFactory::make()->deleted()->persist();
+        $data = [
+            [
+                'user_id' => $userB->id,
+                'data' => Hash::get(self::getDummySecretData(), 'data'),
+                'secret_revision_id' => $newSecretRevision->id,
+            ],
+        ];
 
-        $this->expectException(RecordNotFoundException::class);
-        $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
+        $changes = $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
+
+        // Assert secrets
+        $secrets = $this->Secrets->findByResourceId($r1->id)->toArray();
+        $secretAdded = $changes->getAddedEntities()[0];
+        $this->assertSame($newSecretRevision->id, $secretAdded->secret_revision_id);
+        $this->assertCount(2, $secrets);
+        $this->assertSecretExists($r1->id, $userA->id);
+        $this->assertSecretExists($r1->id, $userB->id);
+        $secret = $this->Secrets->findByResourceIdAndUserId($r1->id, $userB->id)->first();
+        $this->assertEquals($data[0]['data'], $secret->data);
     }
 }

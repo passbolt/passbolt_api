@@ -221,7 +221,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         // Assert that a new revision is persisted
         $this->assertSame(2, SecretRevisionFactory::count());
         // Assert that the previous secret revision is soft deleted
-        $this->assertNotNull(SecretRevisionFactory::get($initialSecretRevision->id));
+        $this->assertNotNull(SecretRevisionFactory::firstOrFail(['id' => $initialSecretRevision->id]));
     }
 
     public function testUpdateResourcesController_Error_NotValidId(): void
