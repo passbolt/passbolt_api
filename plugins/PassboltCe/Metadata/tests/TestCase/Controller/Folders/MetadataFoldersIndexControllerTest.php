@@ -78,7 +78,6 @@ class MetadataFoldersIndexControllerTest extends AppIntegrationTestCaseV5
         // Assert response
         $response = $this->getResponseBodyAsArray();
         $this->assertCount(2, $response);
-        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
         foreach ($response as $folder) {
             if ($folder['id'] === $v5Folder->get('id')) {
                 // assert v5 fields
@@ -138,7 +137,6 @@ class MetadataFoldersIndexControllerTest extends AppIntegrationTestCaseV5
         // Assert controller response
         $response = $this->getResponseBodyAsArray();
         $this->assertCount(2, $response);
-        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
         foreach ($response as $folder) {
             if ($folder['id'] === $v5Folder->get('id')) {
                 // assert v5 fields
