@@ -25,6 +25,7 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 class ShareControllerTest extends AppIntegrationTestCase
 {
@@ -96,6 +97,8 @@ hcciUFw5
         $groupFId = UuidFactory::uuid('group.id.freelancer');
         $groupAId = UuidFactory::uuid('group.id.accounting');
 
+        SecretRevisionFactory::make(['resource_id' => $resourceId])->persist();
+
         // Expected results.
         $expectedAddedUsersIds = [];
         $expectedRemovedUsersIds = [];
@@ -123,14 +126,19 @@ hcciUFw5
         // Add a read permission for the group Accounting.
         $data['permissions'][] = ['aro' => 'Group', 'aro_foreign_key' => $groupAId, 'type' => Permission::READ];
         $data['secrets'][] = ['user_id' => $userFId, 'data' => self::getValidSecret()];
-        $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
+        $expectedAddedUsersIds[] = $userFId;
 
         $this->authenticateAs('ada');
         $this->putJson("/share/resource/$resourceId.json", $data);
         $this->assertSuccess();
 
         // Load the resource.
-        $resource = ResourceFactory::get($resourceId, contain: ['Permissions', 'Secrets']);
+        $resource = ResourceFactory::find()
+            ->where(['Resources.id' => $resourceId,])
+            ->contain('Permissions')
+            ->contain('Secrets', function ($q) {
+                return $q->find('notDeleted');
+            })->firstOrFail();
 
         // Verify that all the allowed users have a secret for the resource.
         $secretsUsersIds = Hash::extract($resource->secrets, '{n}.user_id');
@@ -223,6 +231,7 @@ hcciUFw5
     public function testShareController_Error_Validation($caseLabel, $case)
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
+        SecretRevisionFactory::make(['resource_id' => $resourceId])->persist();
         $this->authenticateAs('ada');
         $this->putJson("/share/resource/$resourceId.json", $case['data']);
         $this->assertError();

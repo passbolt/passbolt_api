@@ -26,8 +26,12 @@ use Cake\ORM\Entity;
  * @property string $user_id
  * @property string $resource_id
  * @property string $data
+ * @property string $secret_revision_id
+ * @property \Cake\I18n\DateTime|null $deleted
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
+ * @property \Cake\I18n\DateTime|null $created_by
+ * @property \Cake\I18n\DateTime|null $modified_by
  * @property \App\Model\Entity\Resource $resource
  * @property \App\Model\Entity\User $user
  * @property \Passbolt\Log\Model\Entity\SecretHistory $secrets_history
@@ -48,6 +52,8 @@ class Secret extends Entity
         'user_id' => false,
         'resource_id' => false,
         'data' => false,
+        'created_by' => false,
+        'modified_by' => false,
         'created' => false,
         'modified' => false,
     ];

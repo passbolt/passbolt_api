@@ -193,7 +193,7 @@ trait ResourcesModelTrait
             $hasAccess = $this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resourceId, $userId);
             $this->assertFalse($hasAccess);
             // No secret for the resource.
-            $secret = $this->Resources->Secrets->find()
+            $secret = $this->Resources->Secrets->find('notDeleted')
                 ->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
             $this->assertNull($secret);
             // Not favorite for the resource.
@@ -216,7 +216,7 @@ trait ResourcesModelTrait
             $hasAccess = $this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resourceId, $userId);
             $this->assertTrue($hasAccess);
             // Secret existing.
-            $secret = $this->Resources->Secrets->find()
+            $secret = $this->Resources->Secrets->find('notDeleted')
                 ->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
             $this->assertNotNull($secret);
         }

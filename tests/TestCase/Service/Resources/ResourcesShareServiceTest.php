@@ -126,8 +126,11 @@ hcciUFw5
             ->withSecretsFor([$userA, $userB, $userC, $userD, $userE, $userF, $userG, $userH, $userI])
             ->withPermissionsFor([$userA, $groupB])
             ->withPermissionsFor([$userB, $groupA], Permission::READ)
+            ->withSecretRevisions()
             ->persist();
 
+        // Secret revision
+        $secretRevision = $resource->secret_revisions[0];
         // Permissions
         $permissionUserAId = $resource->permissions[0]->id;
         $permissionGroupBId = $resource->permissions[1]->id;
@@ -150,7 +153,7 @@ hcciUFw5
         $expectedRemovedUsersIds[] = $userB->id;
         // Add an owner permission for the userC
         $changes[] = ['aro' => 'User', 'aro_foreign_key' => $userC->id, 'type' => Permission::OWNER];
-        $secrets[] = ['user_id' => $userC->id, 'data' => $this->getValidSecret()];
+        $secrets[] = ['user_id' => $userC->id, 'data' => $this->getValidSecret(), 'secret_revision_id' => $secretRevision->id];
         $expectedAddedUsersIds[] = $userC->id;
 
         // Groups permissions changes.
@@ -164,7 +167,7 @@ hcciUFw5
             $userH->id]);
         // Add a read permission for the group Accounting.
         $changes[] = ['aro' => 'Group', 'aro_foreign_key' => $groupC->id, 'type' => Permission::READ];
-        $secrets[] = ['user_id' => $userI->id, 'data' => $this->getValidSecret()];
+        $secrets[] = ['user_id' => $userI->id, 'data' => $this->getValidSecret(), 'secret_revision_id' => $secretRevision->id];
         $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userI->id]);
 
         // Share
@@ -172,7 +175,12 @@ hcciUFw5
         $this->assertFalse($resource->hasErrors());
 
         // Load the resource.
-        $resource = $this->Resources->get($resource->id, contain: ['Permissions', 'Secrets']);
+        $resource = ResourceFactory::find()
+            ->where(['Resources.id' => $resource->id,])
+            ->contain('Permissions')
+            ->contain('Secrets', function ($q) {
+                return $q->find('notDeleted');
+            })->firstOrFail();
 
         // Verify that all the allowed users have a secret for the resource.
         $secretsUsersIds = Hash::extract($resource->secrets, '{n}.user_id');
@@ -247,10 +255,12 @@ hcciUFw5
         $uac = $this->makeUac($userA);
         $resourceA = ResourceFactory::make()
             ->withPermissionsFor([$userA])
+            ->withSecretRevisions()
             ->persist();
         $resourceAPermissionId = $resourceA->permissions[0]->id;
         $resourceB = ResourceFactory::make()
             ->withPermissionsFor([$userE], Permission::READ)
+            ->withSecretRevisions()
             ->persist();
         $resourceBPermissionId = $resourceB->permissions[0]->id;
 

@@ -22,6 +22,7 @@ use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\Log\Model\Entity\EntityHistory;
+use Passbolt\Log\Model\Entity\SecretHistory;
 
 /**
  * ActionLogFactory
@@ -90,6 +91,15 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
     }
 
     /**
+     * @param \Passbolt\Log\Test\Factory\SecretsHistoryFactory|SecretHistory|array $secretHistory Secret history factory
+     * @return $this
+     */
+    public function withSecretsHistory(array|SecretsHistoryFactory|SecretHistory $secretHistory = [])
+    {
+        return $this->secretsHistory()->with('SecretsHistory', $secretHistory);
+    }
+
+    /**
      * @return $this
      */
     public function users()
@@ -116,8 +126,24 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
     /**
      * @return $this
      */
+    public function secretsHistory()
+    {
+        return $this->setField('foreign_model', 'SecretsHistory');
+    }
+
+    /**
+     * @return $this
+     */
     public function create()
     {
         return $this->setField('crud', EntityHistory::CRUD_CREATE);
+    }
+
+    /**
+     * @return $this
+     */
+    public function update()
+    {
+        return $this->setField('crud', EntityHistory::CRUD_UPDATE);
     }
 }

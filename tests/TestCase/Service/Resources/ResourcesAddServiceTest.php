@@ -35,6 +35,8 @@ use Exception;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\SecretRevisions\SecretRevisionsPlugin;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 /**
  * Part of the logic of this test is handled in the ResourcesAddControllerTest.
@@ -67,6 +69,7 @@ class ResourcesAddServiceTest extends TestCase
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
         ResourceTypeFactory::make()->default()->persist();
         $this->service = new ResourcesAddService();
+        $this->loadPlugins([SecretRevisionsPlugin::class => []]);
     }
 
     public function tearDown(): void
@@ -120,6 +123,14 @@ class ResourcesAddServiceTest extends TestCase
         $this->assertSame(1, ResourceFactory::count());
         $this->assertSame(1, SecretFactory::count());
         $this->assertSame($data['description'], $resource->get('description'));
+
+        // Assert that a secret revision was created
+        $this->assertSame(1, SecretRevisionFactory::count());
+        $secretRevision = SecretRevisionFactory::firstOrFail();
+        $secret = SecretFactory::firstOrFail();
+        $this->assertSame($resource->resource_type_id, $secretRevision->resource_type_id);
+        $this->assertSame($resource->id, $secretRevision->resource_id);
+        $this->assertSame($secret->secret_revision_id, $secretRevision->id);
     }
 
     public function testResourceAddService_Error_ResourceTypeDeleted(): void

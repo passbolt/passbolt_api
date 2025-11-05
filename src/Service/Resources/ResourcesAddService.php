@@ -134,7 +134,10 @@ class ResourcesAddService
 
         // If no secrets given, the model will throw a validation error, no need to take care of it here.
         if (isset($data['secrets']) && is_array($data['secrets'])) {
+            // Add or update these array values
             $data['secrets'][0]['user_id'] = $userId;
+            $data['secrets'][0]['created_by'] = $userId;
+            $data['secrets'][0]['modified_by'] = $userId;
         }
 
         if (!isset($data['resource_type_id']) || !Configure::read('passbolt.plugins.resourceTypes.enabled')) {

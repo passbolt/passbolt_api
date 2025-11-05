@@ -63,6 +63,7 @@ class SaveTest extends AppTestCase
                 'resource_id' => true,
                 'user_id' => true,
                 'data' => true,
+                'secret_revision_id' => true,
             ],
         ];
     }
@@ -87,6 +88,16 @@ class SaveTest extends AppTestCase
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
         $this->assertFieldFormatValidation($this->Secrets, 'resource_id', self::getDummySecretData(), self::getEntityDefaultOptions(), $testCases);
+    }
+
+    public function testSecretsSaveValidationSecretRevisionId()
+    {
+        $testCases = [
+            'uuid' => self::getUuidTestCases(),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->Secrets, 'secret_revision_id', self::getDummySecretData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testSecretsSaveValidationData()

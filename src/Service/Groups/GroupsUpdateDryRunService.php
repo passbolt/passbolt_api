@@ -232,7 +232,7 @@ class GroupsUpdateDryRunService
         $resourceIds = array_unique(Hash::extract($usersMissingSecrets, '{n}.resource_id'));
 
         // Retrieve the secrets the operator will have to encrypt.
-        $query = $this->secretsTable->find()
+        $query = $this->secretsTable->find('notDeleted')
             ->where([
                 'resource_id IN' => $resourceIds,
                 'user_id' => $uac->getId() ?? '',

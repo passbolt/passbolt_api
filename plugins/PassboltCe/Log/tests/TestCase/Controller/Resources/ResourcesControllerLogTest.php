@@ -26,9 +26,16 @@ use Cake\Utility\Hash;
 use Passbolt\Log\Model\Entity\EntityHistory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\SecretRevisions\SecretRevisionsPlugin;
 
 class ResourcesControllerLogTest extends LogIntegrationTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(SecretRevisionsPlugin::class);
+    }
+
     /**
      * @dataProvider dataProviderForLoginType
      */
@@ -186,7 +193,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
             'crud' => EntityHistory::CRUD_UPDATE,
         ];
         $this->assertOneEntityHistory(['foreign_model' => 'Resources']);
-        $this->assertEntitiesHistoryCount('4', ['foreign_model' => 'SecretsHistory']);
+        $this->assertEntitiesHistoryCount(0, ['foreign_model' => 'SecretsHistory']);
         $this->assertEntityHistoryExists($expectedEntityHistory);
     }
 
