@@ -228,7 +228,7 @@ class SecretsTable extends Table
      */
     public function findByResourceUser(string $resourceId, string $userId): SelectQuery
     {
-        return $this->find()
+        return $this->find('notDeleted')
             ->where([
                 'resource_id' => $resourceId,
                 'user_id' => $userId,
