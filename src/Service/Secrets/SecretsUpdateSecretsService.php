@@ -130,6 +130,7 @@ class SecretsUpdateSecretsService
             'accessibleFields' => [
                 'data' => true,
                 'modified_by' => true,
+                'secret_revision_id' => true,
             ],
         ];
         $secret = $this->secretsTable->patchEntity($secret, $data, $patchEntityOptions);
