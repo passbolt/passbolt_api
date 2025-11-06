@@ -220,9 +220,6 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
         $this->assertNull(SecretFactory::get($secretToKeepId)->get('deleted'));
     }
 
-    /**
-     * TODO: this should fail once the rule secret_revision_is_not_soft_deleted is in place
-     */
     public function testUpdateSecrets_Error_If_Revision_Is_Deleted()
     {
         [$userA, $userB] = UserFactory::make(2)->persist();
@@ -242,16 +239,8 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
             ],
         ];
 
-        $changes = $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
-
-        // Assert secrets
-        $secrets = $this->Secrets->findByResourceId($r1->id)->toArray();
-        $secretAdded = $changes->getAddedEntities()[0];
-        $this->assertSame($newSecretRevision->id, $secretAdded->secret_revision_id);
-        $this->assertCount(2, $secrets);
-        $this->assertSecretExists($r1->id, $userA->id);
-        $this->assertSecretExists($r1->id, $userB->id);
-        $secret = $this->Secrets->findByResourceIdAndUserId($r1->id, $userB->id)->first();
-        $this->assertEquals($data[0]['data'], $secret->data);
+        $this->expectException(CustomValidationException::class);
+        $this->expectExceptionMessage('Could not validate secrets data.');
+        $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
     }
 }
