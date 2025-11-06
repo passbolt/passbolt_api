@@ -25,6 +25,7 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string $user_id
  * @property string $resource_id
+ * @property \Passbolt\SecretRevisions\Model\Entity\SecretRevision $secret_revision_id
  * @property string $data
  * @property string $secret_revision_id
  * @property \Cake\I18n\DateTime|null $deleted
