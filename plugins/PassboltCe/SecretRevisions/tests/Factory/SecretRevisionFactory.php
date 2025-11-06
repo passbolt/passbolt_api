@@ -66,4 +66,22 @@ class SecretRevisionFactory extends CakephpBaseFactory
     {
         return $this->patchData(['deleted' => $deleted ?? DateTime::yesterday()]);
     }
+
+    /**
+     * @param string $resourceId Identifier to set.
+     * @return self
+     */
+    public function resourceId(string $resourceId): self
+    {
+        return $this->patchData(['resource_id' => $resourceId]);
+    }
+
+    /**
+     * @param string $resourceTypeId Identifier to set.
+     * @return self
+     */
+    public function resourceTypeId(string $resourceTypeId): self
+    {
+        return $this->patchData(['resource_type_id' => $resourceTypeId]);
+    }
 }
