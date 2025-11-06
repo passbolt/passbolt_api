@@ -32,4 +32,11 @@ $routes->plugin('Passbolt/SecretRevisions', ['path' => '/secret-revisions'], fun
     $routes->connect('/settings', ['controller' => 'SecretRevisionsSettingsDelete', 'action' => 'delete'])
         ->setMethods(['DELETE'])
         ->setMiddleware([SecretRevisionsSettingsMiddleware::class]);
+
+    /**
+     * Secret revisions of a resource
+     */
+    $routes->connect('/resource/{id}', ['controller' => 'SecretRevisionsResourceGet', 'action' => 'get'])
+        ->setPass(['id'])
+        ->setMethods(['GET']);
 });
