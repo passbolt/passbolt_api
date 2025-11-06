@@ -29,6 +29,7 @@ use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 /**
  * @uses \Passbolt\Metadata\Controller\Upgrade\MetadataUpgradeResourcesPostController
@@ -60,23 +61,32 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
         // create metadata key
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        [$resource] = ResourceFactory::make(2)->persist();
+        [$resourceA, $resourceB] = ResourceFactory::make(2)->persist();
+        // create secret revisions
+        $secretRevisionForA = SecretRevisionFactory::make()
+            ->resourceId($resourceA->get('id'))
+            ->resourceTypeId($resourceA->get('resource_type_id'))
+            ->persist();
+        $secretRevisionForB = SecretRevisionFactory::make()
+            ->resourceId($resourceB->get('id'))
+            ->resourceTypeId($resourceB->get('resource_type_id'))
+            ->persist();
 
         Configure::write('passbolt.plugins.metadata.defaultPaginationLimit', 1);
         $this->logInAsAdmin();
         $this->postJson('/metadata/upgrade/resources.json?contain[permissions]=1', [
             [
-                'id' => $resource->get('id'),
+                'id' => $resourceA->get('id'),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForMetadataKey(json_encode([])), // todo: use valid v5 json metadata format
-                'modified' => $resource->get('modified'),
-                'modified_by' => $resource->get('modified_by'),
+                'modified' => $resourceA->get('modified'),
+                'modified_by' => $resourceA->get('modified_by'),
             ],
         ]);
 
         $this->assertSuccess();
-        $updatedResource = ResourceFactory::get($resource->get('id'));
+        $updatedResource = ResourceFactory::get($resourceA->get('id'));
         $this->assertSame($activeMetadataKey->get('id'), $updatedResource->get('metadata_key_id'));
         $this->assertSame(MetadataKey::TYPE_SHARED_KEY, $updatedResource->get('metadata_key_type'));
         $this->assertNotEmpty($updatedResource->get('metadata'));
@@ -95,6 +105,10 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
         ], $headers['pagination']);
         // Assert that permissions are not contained
         $this->assertArrayHasKey('permissions', $response[0]);
+        // Assert resource_type_id is updated in secret_revisions table
+        $expectedResourceType = ResourceTypeFactory::find()->where(['slug' => ResourceType::SLUG_V5_DEFAULT])->firstOrFail();
+        $this->assertSame($expectedResourceType->get('id'), SecretRevisionFactory::get($secretRevisionForA->get('id'))->get('resource_type_id'));
+        $this->assertSame($resourceB->get('resource_type_id'), SecretRevisionFactory::get($secretRevisionForB->get('id'))->get('resource_type_id'));
     }
 
     public function testMetadataUpgradeResourcesPostController_Success_Personal_Key_Missing(): void
