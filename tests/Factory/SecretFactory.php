@@ -97,7 +97,7 @@ hcciUFw5
     }
 
     /**
-     * @param UserFactory $factory User Factory class.
+     * @param User $factory User Factory class.
      * @return SecretFactory
      */
     public function withCreator(User $factory): self
@@ -106,7 +106,7 @@ hcciUFw5
     }
 
     /**
-     * @param UserFactory $factory User Factory class.
+     * @param User $factory User Factory class.
      * @return SecretFactory
      */
     public function withModifier(User $factory): self

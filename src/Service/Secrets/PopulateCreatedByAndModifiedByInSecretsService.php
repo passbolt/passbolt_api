@@ -76,6 +76,10 @@ class PopulateCreatedByAndModifiedByInSecretsService
             ->set('created_by', $fn->coalesce([$latestUserIdSub, $fallbackCreatedBySub]))
             // modified_by copies created by, it might later be used to persist the ID of the user who re-encrypt and sign the payload.
             ->set('modified_by', $fn->coalesce([$latestUserIdSub, $fallbackCreatedBySub]))
+            ->where([
+                $update->newExpr()->isNull('created_by'),
+                $update->newExpr()->isNull('modified_by'),
+            ])
             ->execute();
     }
 }

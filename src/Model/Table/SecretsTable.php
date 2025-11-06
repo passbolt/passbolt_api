@@ -32,6 +32,7 @@ use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\SecretRevisions\Model\Rule\IsSecretRevisionNotSoftDeletedRule;
 
 /**
  * Secrets Model
@@ -177,15 +178,23 @@ class SecretsTable extends Table
             ),
             'secret_unique'
         );
+        // Only one secret for the combination (user_id, resource_id, secret_revision_id)
+        $rules->addCreate(
+            $rules->isUnique(
+                ['user_id', 'resource_id', 'secret_revision_id'],
+                __('A secret already exists for the given user, resource and secret revision.')
+            ),
+            'secret_revision_unique'
+        );
         $rules->addCreate($rules->existsIn(['user_id'], 'Users'), 'user_exists', [
             'errorField' => 'user_id',
             'message' => __('The user does not exist.'),
         ]);
-//        $rules->addCreate(new IsNotSoftDeletedRule(), 'secret_revision_is_not_soft_deleted', [
-//            'table' => 'Passbolt/SecretRevisions.SecretRevisions',
-//            'errorField' => 'secret_revision_id',
-//            'message' => __('The secret revision does not exist.'),
-//        ]);
+        $rules->addCreate(new IsSecretRevisionNotSoftDeletedRule(), 'secret_revision_is_not_soft_deleted', [
+            'table' => 'Passbolt/SecretRevisions.SecretRevisions',
+            'errorField' => 'secret_revision_id',
+            'message' => __('The secret revision does not exist or is deleted.'),
+        ]);
         $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
             'table' => 'Users',
             'errorField' => 'user_id',

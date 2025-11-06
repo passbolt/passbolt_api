@@ -32,7 +32,9 @@ use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\SecretRevisions\SecretRevisionsPlugin;
+use Passbolt\SecretRevisions\Service\SecretRevisionsSettingsGetService;
 use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsSettingsFactory;
 
 /**
  * @covers \App\Controller\Resources\ResourcesUpdateController
@@ -46,6 +48,12 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->enableFeaturePlugin(SecretRevisionsPlugin::class);
+    }
+
+    public function tearDown(): void
+    {
+        SecretRevisionsSettingsGetService::clear();
+        parent::tearDown();
     }
 
     public function testUpdateResourcesController_Success_UpdateResourceMeta(): void
@@ -126,6 +134,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 
     public function testUpdateResourcesController_Success_UpdateResourceSecrets(): void
     {
+        SecretRevisionsSettingsFactory::make()->setMaxRevisions(2)->persist();
         RoleFactory::make()->guest()->persist();
         // Ada is OWNER of resource R1
         // Betty is OWNER of resource R1

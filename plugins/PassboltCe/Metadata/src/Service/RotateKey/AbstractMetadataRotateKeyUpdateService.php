@@ -52,7 +52,8 @@ abstract class AbstractMetadataRotateKeyUpdateService
         $this->assertRequestData($requestData);
 
         $data = $this->metadataBatchValidationService->validateMany($requestData);
-        $this->updateData($uac, $data, $this->metadataBatchValidationService->getEntities());
+        $entities = $this->metadataBatchValidationService->getEntities();
+        $this->updateData($uac, $data, $entities);
     }
 
     /**

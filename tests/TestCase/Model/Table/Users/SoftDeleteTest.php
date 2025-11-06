@@ -18,15 +18,20 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Users;
 
 use App\Model\Entity\Permission;
+use App\Model\Table\UsersTable;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 class SoftDeleteTest extends AppTestCase
 {
     public $GroupsUsers;
     public $Permissions;
-    public $Users;
+    public UsersTable $Users;
 
     public array $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites', 'app.Base/Roles',
@@ -424,5 +429,26 @@ class SoftDeleteTest extends AppTestCase
         $this->assertUserIsSoftDeleted($userOId);
         $this->assertGroupIsNotSoftDeleted($groupMId);
         $this->assertResourceIsNotSoftDeleted($resourceLId);
+    }
+
+    public function testUsersSoftDeleteSuccess_Delete_Revision_Of_Personal_Resource_But_Keep_Revision_Of_Shared_Resource()
+    {
+        $users = [$user1,] = UserFactory::make(2)->persist();
+        $resourceToDelete = ResourceFactory::make()
+            ->withSecretRevisions()
+            ->withSecretsFor([$user1])
+            ->withPermissionsFor([$user1])
+            ->persist();
+        $resourceToMaintain = ResourceFactory::make()
+            ->withSecretRevisions()
+            ->withSecretsFor($users)
+            ->withPermissionsFor($users)
+            ->persist();
+
+        $this->Users->softDelete($user1);
+
+        $this->assertSame(0, SecretRevisionFactory::find()->where(['id' => $resourceToDelete->secret_revisions[0]->id])->count());
+        $this->assertSame(1, SecretRevisionFactory::find()->where(['id' => $resourceToMaintain->secret_revisions[0]->id])->count());
+        $this->assertSame(1, SecretFactory::find()->where(['resource_id' => $resourceToMaintain->id])->count());
     }
 }

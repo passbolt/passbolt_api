@@ -123,7 +123,7 @@ hcciUFw5
 
         // Define actors of this tests
         $resource = ResourceFactory::make()
-            ->withSecretsFor([$userA, $userB, $userC, $userD, $userE, $userF, $userG, $userH, $userI])
+            ->withSecretsFor([$userA, $userB, $userD, $userE, $userF, $userG, $userH,])
             ->withPermissionsFor([$userA, $groupB])
             ->withPermissionsFor([$userB, $groupA], Permission::READ)
             ->withSecretRevisions()
@@ -153,7 +153,7 @@ hcciUFw5
         $expectedRemovedUsersIds[] = $userB->id;
         // Add an owner permission for the userC
         $changes[] = ['aro' => 'User', 'aro_foreign_key' => $userC->id, 'type' => Permission::OWNER];
-        $secrets[] = ['user_id' => $userC->id, 'data' => $this->getValidSecret(), 'secret_revision_id' => $secretRevision->id];
+        $secrets[] = ['user_id' => $userC->id, 'data' => $this->getValidSecret(),];
         $expectedAddedUsersIds[] = $userC->id;
 
         // Groups permissions changes.
@@ -167,7 +167,7 @@ hcciUFw5
             $userH->id]);
         // Add a read permission for the group Accounting.
         $changes[] = ['aro' => 'Group', 'aro_foreign_key' => $groupC->id, 'type' => Permission::READ];
-        $secrets[] = ['user_id' => $userI->id, 'data' => $this->getValidSecret(), 'secret_revision_id' => $secretRevision->id];
+        $secrets[] = ['user_id' => $userI->id, 'data' => $this->getValidSecret(),];
         $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userI->id]);
 
         // Share
@@ -175,6 +175,7 @@ hcciUFw5
         $this->assertFalse($resource->hasErrors());
 
         // Load the resource.
+        /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::find()
             ->where(['Resources.id' => $resource->id,])
             ->contain('Permissions')
@@ -194,6 +195,16 @@ hcciUFw5
         foreach ($expectedAddedUsersIds as $userId) {
             $this->assertContains($userId, $secretsUsersIds);
             $this->assertContains($userId, $hasAccessUsersIds);
+        }
+        $usersWithAFreshNewSecret = [$userC->id, $userI->id];
+        foreach ($resource->secrets as $secret) {
+            if (in_array($secret->user_id, $usersWithAFreshNewSecret)) {
+                $this->assertSame($secretRevision->id, $secret->secret_revision_id);
+                $this->assertTrue($secret->created->isToday());
+                $this->assertTrue($secret->modified->isToday());
+            } else {
+                $this->assertNull($secret->secret_revision_id);
+            }
         }
         // Ensure that the removed users don't have a secret, and are no more allowed to access the resource.
         foreach ($expectedRemovedUsersIds as $userId) {
@@ -570,5 +581,24 @@ hcciUFw5
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('The permissions data array keys must be integers.');
         $this->service->share($uac, $resource->get('id'), $data);
+    }
+
+    public function testResourceShareService_Share_Permission_On_Resource_With_No_Secret_Revision()
+    {
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->persist();
+        $uac = $this->makeUac($userA);
+
+        $changes[] = ['aro' => 'User', 'aro_foreign_key' => $userB->id, 'type' => Permission::OWNER];
+        $secrets[] = ['user_id' => $userB->id, 'data' => $this->getValidSecret(),];
+
+        try {
+            $this->service->share($uac, $resource->get('id'), $changes, $secrets);
+            $this->fail('Should have thrown an exception.');
+        } catch (ValidationException $e) {
+            $this->assertValidationException($e, 'Could not validate resource data.', 'secrets');
+        }
     }
 }

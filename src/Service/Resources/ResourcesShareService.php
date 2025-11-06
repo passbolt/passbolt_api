@@ -31,6 +31,7 @@ use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Utility\UserAccessControl;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\NotFoundException;
@@ -206,12 +207,15 @@ class ResourcesShareService
     private function updateSecrets(UserAccessControl $uac, Resource $resource, array $data): EntitiesChangesDto
     {
         $result = new EntitiesChangesDto();
-        $data = $this->setSecretRevisionInData($resource, $data);
 
         try {
+            $data = $this->setSecretRevisionInData($resource, $data);
             $result = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
         } catch (CustomValidationException $e) {
             $resource->setError('secrets', $e->getErrors());
+        } catch (RecordNotFoundException $e) {
+            $resource->setError('secrets', __('No secret revision were found for this resource.'));
+        } finally {
             $this->handleValidationErrors($resource);
         }
 

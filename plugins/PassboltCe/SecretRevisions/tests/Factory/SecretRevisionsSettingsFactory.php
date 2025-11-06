@@ -50,4 +50,16 @@ class SecretRevisionsSettingsFactory extends OrganizationSettingFactory
             'allow_sharing_revisions' => false,
         ];
     }
+
+    /**
+     * @param int $n
+     * @return self
+     */
+    public function setMaxRevisions(int $n): self
+    {
+        $value = self::getDefaultData();
+        $value['max_revisions'] = $n;
+
+        return $this->value($value);
+    }
 }

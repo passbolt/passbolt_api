@@ -35,7 +35,9 @@ use Exception;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\SecretRevisions\SecretRevisionsPlugin;
+use Passbolt\SecretRevisions\Service\SecretRevisionsSettingsGetService;
 use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsSettingsFactory;
 
 /**
  * \App\Service\Resources\ResourcesUpdateService Test Case
@@ -76,6 +78,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
         unset($this->resourcesTable);
         unset($this->secretsTable);
         unset($this->service);
+        SecretRevisionsSettingsGetService::clear();
     }
 
     public function testUpdateResourcesSuccess_UpdateResourceMeta()
@@ -109,6 +112,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
 
     public function testUpdateResourcesSuccess_UpdateResourceSecrets()
     {
+        SecretRevisionsSettingsFactory::make()->setMaxRevisions(2)->persist();
         $users = [$userA, $userB, $userC] = UserFactory::make(3)->withValidGpgKey()->persist();
         RoleFactory::make()->guest()->persist();
         [$r1, $r2] = ResourceFactory::make(2)

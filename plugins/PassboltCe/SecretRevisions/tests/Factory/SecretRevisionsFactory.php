@@ -16,19 +16,23 @@ declare(strict_types=1);
  */
 namespace Passbolt\SecretRevisions\Test\Factory;
 
-use Cake\I18n\DateTime;
+use App\Utility\UuidFactory;
+use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
- * SecretRevisionFactory
+ * SecretRevisionsFactory
  *
  * @method \Passbolt\SecretRevisions\Model\Entity\SecretRevision getEntity()
  * @method \Passbolt\SecretRevisions\Model\Entity\SecretRevision[] getEntities()
  * @method \Passbolt\SecretRevisions\Model\Entity\SecretRevision|\Passbolt\SecretRevisions\Model\Entity\SecretRevision[] persist()
- * @method static \Passbolt\SecretRevisions\Model\Entity\SecretRevision firstOrFail($conditions = null)
+ * @method static \Passbolt\SecretRevisions\Model\Entity\SecretRevision firstOrFail($conditions = null)()
+ * @method static \Passbolt\SecretRevisions\Model\Entity\SecretRevision get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null,  mixed ...$args)
  */
-class SecretRevisionFactory extends CakephpBaseFactory
+class SecretRevisionsFactory extends CakephpBaseFactory
 {
     /**
      * Defines the Table Registry used to generate entities with
@@ -41,47 +45,25 @@ class SecretRevisionFactory extends CakephpBaseFactory
     }
 
     /**
-     * @inheritDoc
+     * Defines the factory's default values. This is useful for
+     * not nullable fields. You may use methods of the present factory here too.
+     *
+     * @return void
      */
     protected function setDefaultTemplate(): void
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
                 'resource_id' => $faker->uuid(),
-                'resource_type_id' => $faker->uuid(),
+                'resource_type_id' => UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_PASSWORD_AND_DESCRIPTION),
                 'deleted' => null,
-                'created_id' => $faker->uuid(),
-                'modified_id' => $faker->uuid(),
-                'created' => DateTime::now()->subDays($faker->randomNumber(4)),
-                'modified' => DateTime::now()->subDays($faker->randomNumber(4)),
+                'created_by' => $faker->uuid(),
+                'modified_by' => $faker->uuid(),
+                'created' => Chronos::now(),
+                'modified' => Chronos::now(),
             ];
         });
-    }
 
-    /**
-     * @param DateTime|null $deleted
-     * @return self
-     */
-    public function deleted(?DateTime $deleted = null): self
-    {
-        return $this->patchData(['deleted' => $deleted ?? DateTime::yesterday()]);
-    }
-
-    /**
-     * @param string $resourceId Identifier to set.
-     * @return self
-     */
-    public function resourceId(string $resourceId): self
-    {
-        return $this->patchData(['resource_id' => $resourceId]);
-    }
-
-    /**
-     * @param string $resourceTypeId Identifier to set.
-     * @return self
-     */
-    public function resourceTypeId(string $resourceTypeId): self
-    {
-        return $this->patchData(['resource_type_id' => $resourceTypeId]);
+        $this->with('ResourceTypes', ResourceTypeFactory::make()->passwordAndDescription());
     }
 }
