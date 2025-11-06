@@ -117,7 +117,7 @@ class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
         $this->assertTrue(isset($actionLogs[0]['data']));
         $this->assertTrue(isset($actionLogs[0]['data']['resource']));
         // Assert secret revision
-        $this->assertEquals(ActionLogResultsParser::TYPE_SECRET_REVISION_CREATED, $actionLogs[1]['type']);
+        $this->assertEquals(ActionLogResultsParser::TYPE_SECRETS_UPDATED, $actionLogs[1]['type']);
         $this->assertTrue(isset($actionLogs[1]['data']));
         $creator = $actionLogs[1]['creator'];
         $this->assertSame($uac->getId(), $creator['id']);
