@@ -316,13 +316,22 @@ class PopulateCreatedByAndModifiedByInSecretsServiceTest extends TestCase
                 'modified_by' => null,
             ])
             ->persist();
+        $resourceWithCreatorAndModifier = ResourceFactory::make()
+            ->withCreatorAndPermission($ada)
+            ->with('Secrets', ['user_id' => $ada->id])
+            ->persist();
         // secret history
         $secretOfAda = $resource->secrets[0];
 
         $this->service->populate();
 
-        $expectedSecretOfAda = SecretFactory::get($secretOfAda->id);
-        $this->assertSame($ada->id, $expectedSecretOfAda->created_by);
-        $this->assertSame($ada->id, $expectedSecretOfAda->modified_by);
+        $actualSecretOfAda = SecretFactory::get($secretOfAda->id);
+        $this->assertSame($ada->id, $actualSecretOfAda->created_by);
+        $this->assertSame($ada->id, $actualSecretOfAda->modified_by);
+        // Assert it didn't touched already filled values
+        $expectedSecretAlreadyFilled = $resourceWithCreatorAndModifier->secrets[0];
+        $actualSecretAlreadyFilled = SecretFactory::get($expectedSecretAlreadyFilled->id);
+        $this->assertSame($expectedSecretAlreadyFilled->created_by, $actualSecretAlreadyFilled->created_by);
+        $this->assertSame($expectedSecretAlreadyFilled->modified_by, $actualSecretAlreadyFilled->modified_by);
     }
 }
