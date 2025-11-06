@@ -60,6 +60,14 @@ class SecretRevisionsSettingsDto
     }
 
     /**
+     * @return int
+     */
+    public function getMaxRevisions(): int
+    {
+        return $this->maxRevisions;
+    }
+
+    /**
      * @return string self::data serialized as json string
      * @throws \JsonException if there is an issue with the data
      */
