@@ -55,6 +55,7 @@ class ActionLogResultsParser
     public const TYPE_USER_CREATED = 'Users.created';
     public const TYPE_USER_UPDATED = 'Users.updated';
     public const TYPE_USER_DELETED = 'Users.deleted';
+    public const TYPE_SECRET_REVISION_CREATED = 'SecretRevisions.created';
 
     /**
      * ActionLogResultsParser constructor.
@@ -230,6 +231,24 @@ class ActionLogResultsParser
     }
 
     /**
+     * Process secret revisions crud operations.
+     *
+     * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
+     * @return void
+     */
+    protected function _processSecretRevisionsOperations(ActionLog $actionLog): void
+    {
+        foreach ($actionLog->entities_history as $entityHistory) {
+            if ($entityHistory->foreign_model === 'SecretRevisions') {
+                $data = []; // TODO: Ask FE if they'll use it or not
+                $type = self::TYPE_SECRET_REVISION_CREATED;
+
+                $this->_addEntry($type, $data, $actionLog);
+            }
+        }
+    }
+
+    /**
      * Process secrets update operations
      *
      * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
@@ -397,6 +416,7 @@ class ActionLogResultsParser
             $this->_processFoldersCrudOperations($actionLog);
         }
         $this->_processUsersCrudOperations($actionLog);
+        $this->_processSecretRevisionsOperations($actionLog);
     }
 
     /**
