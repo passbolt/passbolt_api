@@ -120,6 +120,9 @@ class EntitiesHistoryCreateService
                 'Secrets' => [
                     EntityHistory::CRUD_UPDATE,
                 ],
+                'SecretRevisions' => [
+                    EntityHistory::CRUD_CREATE,
+                ],
             ],
         ],
         'ResourcesDelete.delete' => [
