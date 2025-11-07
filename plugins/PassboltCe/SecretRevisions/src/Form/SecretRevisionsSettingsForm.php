@@ -52,7 +52,7 @@ class SecretRevisionsSettingsForm extends Form
                 'rule' => function ($value) {
                     $limit = Configure::read('passbolt.plugins.secretRevisions.maxRevisionsLimit');
 
-                    return $value <= $limit;
+                    return $value <= $limit + 1;
                 },
                 'message' => __('The max revisions should not exceed the max revisions limit set by the administrator.'), // phpcs:ignore
             ]);

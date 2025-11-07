@@ -100,10 +100,18 @@ class SecretRevisionsSettingsFormTest extends AppTestCase
         $this->assertArrayHasKey('greaterThan', $this->form->getError('max_revisions'));
     }
 
-    public function testSecretRevisionsSettingsForm_Error_MaxRevisionsLimitExceed(): void
+    public function testSecretRevisionsSettingsForm_Success_MaxRevisions_Plus_One(): void
     {
         Configure::write('passbolt.plugins.secretRevisions.maxRevisionsLimit', 5);
         $data = array_merge(self::getDefaultData(), ['max_revisions' => 6]);
+        $result = $this->form->execute($data);
+        $this->assertTrue($result);
+    }
+
+    public function testSecretRevisionsSettingsForm_Error_MaxRevisionsLimitExceed(): void
+    {
+        Configure::write('passbolt.plugins.secretRevisions.maxRevisionsLimit', 5);
+        $data = array_merge(self::getDefaultData(), ['max_revisions' => 7]);
         $result = $this->form->execute($data);
         $this->assertFalse($result);
         $this->assertArrayHasKey('maxRevisionsLimit', $this->form->getError('max_revisions'));
