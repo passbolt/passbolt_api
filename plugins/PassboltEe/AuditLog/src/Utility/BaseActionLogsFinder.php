@@ -122,6 +122,22 @@ abstract class BaseActionLogsFinder
         ]]);
         $query->leftJoinWith('EntitiesHistory.SecretsHistory');
 
+        $query->contain('EntitiesHistory.SecretRevisions', function (Query $q) {
+            return $q
+                ->select(['id', 'resource_id'])
+                ->contain('Resources', function (Query $q) {
+                    return $q->select(['Resources.id', 'Resources.name']);
+                })
+                ->contain('Secrets', function (Query $q) {
+                    return $q
+                        ->find('notDeleted')
+                        ->select(['Secrets.id', 'Secrets.secret_revision_id'])
+                        ->contain('Users', function (Query $q) {
+                            return $q->select(['Users.id', 'Users.username']);
+                        });
+                });
+        });
+
         $query->contain(['EntitiesHistory.SecretsHistory.SecretsHistoryUsers' => [
             'fields' => [
                 'SecretsHistoryUsers.id',

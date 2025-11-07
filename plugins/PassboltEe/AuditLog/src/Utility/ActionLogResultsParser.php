@@ -55,6 +55,7 @@ class ActionLogResultsParser
     public const TYPE_USER_CREATED = 'Users.created';
     public const TYPE_USER_UPDATED = 'Users.updated';
     public const TYPE_USER_DELETED = 'Users.deleted';
+    public const TYPE_SECRET_REVISION_CREATED = 'SecretRevisions.created';
 
     /**
      * ActionLogResultsParser constructor.
@@ -230,6 +231,42 @@ class ActionLogResultsParser
     }
 
     /**
+     * Process secret revisions crud operations.
+     *
+     * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
+     * @return void
+     */
+    protected function _processSecretRevisionsOperations(ActionLog $actionLog): void
+    {
+        foreach ($actionLog->entities_history as $entityHistory) {
+            if ($entityHistory->foreign_model === 'SecretRevisions') {
+                $data = [];
+                // The secret revision might have been deleted if the amount of secret revisions in DB
+                // is above the threshold defined in the SecretRevisionsSettings
+                $secretRevision = $entityHistory->secret_revision;
+                if (!is_null($secretRevision)) {
+                    $data['resource'] = $secretRevision->resource;
+                    foreach ($secretRevision->secrets as $secret) {
+                        $data['secrets'][] = [
+                            'id' => $secret->id,
+                            'secrets_history_resource' => [
+                                'id' => $secretRevision->resource->id,
+                                'name' => $secretRevision->resource->name,
+                            ],
+                            'secrets_history_user' => [
+                                'id' => $secret->user->id,
+                                'username' => $secret->user->username,
+                            ],
+                        ];
+                    }
+                }
+
+                $this->_addEntry(self::TYPE_SECRETS_UPDATED, $data, $actionLog);
+            }
+        }
+    }
+
+    /**
      * Process secrets update operations
      *
      * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
@@ -397,6 +434,7 @@ class ActionLogResultsParser
             $this->_processFoldersCrudOperations($actionLog);
         }
         $this->_processUsersCrudOperations($actionLog);
+        $this->_processSecretRevisionsOperations($actionLog);
     }
 
     /**

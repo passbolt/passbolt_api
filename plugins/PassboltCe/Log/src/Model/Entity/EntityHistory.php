@@ -33,6 +33,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Resource $resource
  * @property \Passbolt\Log\Model\Entity\SecretAccess $secret_access
  * @property \App\Model\Entity\User $user
+ * @property \Passbolt\SecretRevisions\Model\Entity\SecretRevision $secret_revision
  */
 class EntityHistory extends Entity
 {

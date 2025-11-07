@@ -86,6 +86,15 @@ class SecretRevisionsTable extends Table
         ]);
 
         $this->hasMany('Secrets');
+
+        /**
+         * The contains below are a duplicate of above. They are named differently so that we can easily put specific conditions in deeply nested associations.
+         */
+        $this->belongsTo('SecretRevisionsResources', [
+            'foreignKey' => 'resource_id',
+            'className' => 'Resources',
+            'joinType' => 'LEFT',
+        ]);
     }
 
     /**
