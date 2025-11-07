@@ -176,7 +176,8 @@ class SecretRevisionsTable extends Table
             ->select('id')
             ->where(['resource_id' => $resourceId])
             ->limit($maxRevisions)
-            ->orderByDesc('created')
+            ->orderByDesc($this->subquery()->newExpr()->isNull('deleted'))
+            ->orderByDesc('deleted')
             ->disableHydration()
             ->all()
             ->toList();
@@ -198,7 +199,7 @@ class SecretRevisionsTable extends Table
             'deleted IS NOT NULL',
         ])->execute();
         // Delete the secrets that are for that resource, but not associated to the revisions kept
-        // Ensure that only soft deleted revisions are flushed
+        // Ensure that only soft deleted secrets are flushed
         $this->Secrets->deleteQuery()->where([
             'secret_revision_id NOT IN' => $revisionsToKeep,
             'resource_id' => $resourceId,
