@@ -93,6 +93,11 @@ class EntitiesHistoryTable extends Table
                 'className' => 'Passbolt/Folders.FoldersHistory',
             ]);
         }
+        $this->belongsTo('SecretRevisions', [
+            'foreignKey' => 'foreign_key',
+            'className' => 'Passbolt/SecretRevisions.SecretRevisions',
+            'joinType' => 'LEFT',
+        ]);
     }
 
     /**
