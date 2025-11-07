@@ -52,7 +52,9 @@ class SecretRevisionsSettingsForm extends Form
                 'rule' => function ($value) {
                     $limit = Configure::read('passbolt.plugins.secretRevisions.maxRevisionsLimit');
 
-                    return $value <= $limit;
+                    // The max revision maxRevisionsLimit is considered by the client side as the number of past revisions
+                    // As we also have an active revision, the max_revisions can be up to maxRevisionsLimit pas revisions + 1 active revision
+                    return $value <= $limit + 1;
                 },
                 'message' => __('The max revisions should not exceed the max revisions limit set by the administrator.'), // phpcs:ignore
             ]);

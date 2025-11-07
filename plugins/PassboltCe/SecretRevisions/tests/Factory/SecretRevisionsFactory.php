@@ -18,6 +18,7 @@ namespace Passbolt\SecretRevisions\Test\Factory;
 
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
@@ -65,5 +66,14 @@ class SecretRevisionsFactory extends CakephpBaseFactory
         });
 
         $this->with('ResourceTypes', ResourceTypeFactory::make()->passwordAndDescription());
+    }
+
+    /**
+     * @param DateTime|null $deleted
+     * @return self
+     */
+    public function deleted(?DateTime $deleted = null): self
+    {
+        return $this->patchData(['deleted' => $deleted ?? DateTime::yesterday()]);
     }
 }
