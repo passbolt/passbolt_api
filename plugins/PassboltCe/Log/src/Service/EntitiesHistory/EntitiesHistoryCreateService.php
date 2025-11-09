@@ -167,6 +167,13 @@ class EntitiesHistoryCreateService
                 ],
             ],
         ],
+        'SecretRevisionsResourceGet.get' => [
+            'models' => [
+                'SecretAccesses' => [
+                    EntityHistory::CRUD_CREATE,
+                ],
+            ],
+        ],
     ];
 
     /**
