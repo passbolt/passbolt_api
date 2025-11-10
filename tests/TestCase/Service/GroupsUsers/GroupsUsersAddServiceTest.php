@@ -343,7 +343,7 @@ class GroupsUsersAddServiceTest extends AppTestCase
         [$u1, $g1, $r1] = $this->insertFixture_GroupWithOneManager_OneResourceSharedWithGroup();
         $uac = new UserAccessControl(Role::USER, $u1->id);
         $u2 = UserFactory::make()->persist();
-        $r2 = ResourceFactory::make()->withPermissionsFor([$u1])->withSecretsFor([$u1])->persist();
+        $r2 = ResourceFactory::make()->withSecretRevisions()->withPermissionsFor([$u1])->withSecretsFor([$u1])->persist();
 
         $groupUserData = ['group_id' => $g1->id, 'user_id' => $u2->id];
         $secretsData = [
@@ -374,7 +374,7 @@ class GroupsUsersAddServiceTest extends AppTestCase
         [$u1, $g1, $r1] = $this->insertFixture_GroupWithOneManager_OneResourceSharedWithGroup();
         $uac = new UserAccessControl(Role::USER, $u1->id);
         $u2 = UserFactory::make()->persist();
-        $r2 = ResourceFactory::make()->withPermissionsFor([$g1, $u2])->withSecretsFor([$u1, $u2])->persist();
+        $r2 = ResourceFactory::make()->withSecretRevisions()->withPermissionsFor([$g1, $u2])->withSecretsFor([$u1, $u2])->persist();
 
         $groupUserData = ['group_id' => $g1->id, 'user_id' => $u2->id];
         $secretsData = [
@@ -461,7 +461,10 @@ class GroupsUsersAddServiceTest extends AppTestCase
     {
         $u1 = UserFactory::make()->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$g1])->withSecretsFor([$u1])->persist();
+        $r1 = ResourceFactory::make()
+            ->withSecretRevisions()
+            ->withPermissionsFor([$g1])
+            ->withSecretsFor([$u1])->persist();
 
         return [$u1, $g1, $r1];
     }
@@ -470,8 +473,8 @@ class GroupsUsersAddServiceTest extends AppTestCase
     {
         $u1 = UserFactory::make()->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$g1])->withSecretsFor([$u1])->persist();
-        $r2 = ResourceFactory::make()->withPermissionsFor([$g1])->withSecretsFor([$u1])->persist();
+        $r1 = ResourceFactory::make()->withSecretRevisions()->withPermissionsFor([$g1])->withSecretsFor([$u1])->persist();
+        $r2 = ResourceFactory::make()->withSecretRevisions()->withPermissionsFor([$g1])->withSecretsFor([$u1])->persist();
 
         return [$u1, $g1, $r1, $r2];
     }
@@ -481,8 +484,8 @@ class GroupsUsersAddServiceTest extends AppTestCase
         $u1 = UserFactory::make()->persist();
         $u2 = UserFactory::make()->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$g1, $u2])->withSecretsFor([$u1, $u2])->persist();
-        $r2 = ResourceFactory::make()->withPermissionsFor([$g1])->withSecretsFor([$u1])->persist();
+        $r1 = ResourceFactory::make()->withSecretRevisions()->withPermissionsFor([$g1, $u2])->withSecretsFor([$u1, $u2])->persist();
+        $r2 = ResourceFactory::make()->withSecretRevisions()->withPermissionsFor([$g1])->withSecretsFor([$u1])->persist();
 
         return [$u1, $u2, $g1, $r1, $r2];
     }

@@ -110,28 +110,28 @@ class CustomSslOptionsFormTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function sslCaFileValidateTypeProvider(): array
+    public static function sslCaFileValidateTypeProvider(): array
     {
         return [
             [
-                'input' => null,
-                'expected' => true,
+                null, //input
+                true, //expected result
             ],
             [
-                'input' => 'im a string',
-                'expected' => true,
+                'im a string',
+                true,
             ],
             [
-                'input' => true,
-                'expected' => false,
+                true,
+                false,
             ],
             [
-                'input' => ['foo' => 'bar'],
-                'expected' => false,
+                ['foo' => 'bar'],
+                false,
             ],
             [
-                'input' => new stdClass(),
-                'expected' => false,
+                new stdClass(),
+                false,
             ],
         ];
     }

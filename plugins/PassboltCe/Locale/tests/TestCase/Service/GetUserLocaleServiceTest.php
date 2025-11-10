@@ -44,7 +44,7 @@ class GetUserLocaleServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function dataForTestGetUserLocaleServiceGetLocale(): array
+    public static function dataForTestGetUserLocaleServiceGetLocale(): array
     {
         return [
             ['hasLocaleSetting@test.test', 'fr-FR'],

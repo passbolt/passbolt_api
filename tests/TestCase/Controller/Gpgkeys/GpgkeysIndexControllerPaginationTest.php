@@ -26,7 +26,7 @@ class GpgkeysIndexControllerPaginationTest extends AppIntegrationTestCase
 {
     use PaginationTestTrait;
 
-    public function dataProviderForSortingDirection(): array
+    public static function dataProviderForSortingDirection(): array
     {
         return [
             ['Gpgkeys.key_id', 'asc', 'key_id'],

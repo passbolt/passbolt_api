@@ -46,6 +46,8 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
      */
     protected ProcessUserService $processUserService;
 
+    private bool $isVerifyModeOn = true;
+
     /**
      * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
      */
@@ -67,19 +69,20 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
             ])
             ->addOption('username', [
                 'short' => 'u',
-                'required' => false,
-                'help' => 'The user name (email)',
+                'required' => true,
+                'help' => 'The adminstrator user name (email)',
             ])
             ->addOption('fingerprint', [
                 'short' => 'f',
-                'required' => false,
+                'required' => true,
                 'help' => 'Organization public key\'s fingerprint',
             ])
             ->addOption('no-verify', [
                 'short' => 'n',
                 'required' => false,
                 'boolean' => true,
-                'help' => 'Skip email and fingerprint checks',
+                'default' => false,
+                'help' => 'Skip administrator username and fingerprint checks',
             ]);
 
         return $parser;
@@ -94,10 +97,8 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
         // Root user is not allowed to execute this command.
         $this->assertCurrentProcessUser($io, $this->processUserService);
 
-        $isInteractiveModeOn = !$args->getOption('no-verify');
-        if ($isInteractiveModeOn) {
-            $this->interactWithOperator($args, $io);
-        }
+        $this->isVerifyModeOn = !$args->getOption('no-verify');
+        $this->interactWithOperator($args, $io);
 
         $this->truncateTables($io);
 
@@ -124,8 +125,13 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
      */
     protected function interactWithOperator(Arguments $args, ConsoleIo $io): void
     {
-        $this->processUsername($args, $io);
-        $this->processFingerprint($args, $io);
+        // If the user has activated the no-verify option, he assume the risk of deleting the ORK  even if
+        // the provided fingerprint or admin parameters do not match those in the database. This is necessary to
+        // allow system administrators to act even if they don't have access to the user interface.
+        if ($this->isVerifyModeOn) {
+            $this->processUsername($args, $io);
+            $this->processFingerprint($args, $io);
+        }
 
         $io->info('The following tables will be truncated:');
         $io->info(self::ACCOUNT_RECOVERY_TABLES_TO_TRUNCATE);
@@ -143,13 +149,6 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
     {
         $username = $args->getOption('username');
 
-        if (is_null($username)) {
-            $continue = $io->askChoice('No admin username was provided. Continue anyway?', ['y', 'n'], 'n');
-            $this->abortIfNoContinue($continue, $io);
-
-            return;
-        }
-
         if (!EmailValidationRule::check($username)) {
             $io->error('The username should be a valid email.');
             $this->abort();
@@ -161,12 +160,13 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
             ->where(compact('username'))
             ->first();
 
+        // if the user has enabled the --no-verify option then we don't ask confirmation
         if (is_null($admin)) {
             $continue = $io->askChoice('The admin could not be found. Continue anyway?', ['y', 'n'], 'n');
             $this->abortIfNoContinue($continue, $io);
+        } else {
+            $io->success('The admin was successfully found.');
         }
-
-        $io->success('The admin was successfully found.');
     }
 
     /**
@@ -177,13 +177,6 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
     protected function processFingerprint(Arguments $args, ConsoleIo $io): void
     {
         $fingerprint = $args->getOption('fingerprint');
-
-        if (is_null($fingerprint)) {
-            $continue = $io->askChoice('No fingerprint was provided. Continue anyway?', ['y', 'n'], 'n');
-            $this->abortIfNoContinue($continue, $io);
-
-            return;
-        }
 
         $fingerprintValidationRule = new IsValidFingerprintValidationRule();
         if (!$fingerprintValidationRule->rule($fingerprint, null)) {
@@ -205,9 +198,9 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
                 'n'
             );
             $this->abortIfNoContinue($continue, $io);
+        } else {
+            $io->success('The fingerprint was successfully found.');
         }
-
-        $io->success('The fingerprint was successfully found.');
     }
 
     /**

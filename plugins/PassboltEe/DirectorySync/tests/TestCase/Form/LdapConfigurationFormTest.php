@@ -198,7 +198,7 @@ class LdapConfigurationFormTest extends AppTestCase
      *
      * @return array[]
      */
-    public function provideTestDirectoryLdapConfigurationFormValidateError_FieldsMapping(): array
+    public static function provideTestDirectoryLdapConfigurationFormValidateError_FieldsMapping(): array
     {
         return [
             [
@@ -707,36 +707,36 @@ class LdapConfigurationFormTest extends AppTestCase
      *
      * @return array
      */
-    public function fieldFallbacksDataProvider(): array
+    public static function fieldFallbacksDataProvider(): array
     {
         return [
             [
-                'value' => 1,
-                'errorRule' => 'array',
+                1, //value
+                'array', //error rule
             ],
             [
-                'value' => '',
-                'errorRule' => '_empty',
+                '',
+                '_empty',
             ],
             [
-                'value' => [],
-                'errorRule' => '_empty',
+                [],
+                '_empty',
             ],
             [
-                'value' => ['ad' => ''], // invalid type, should be an array
-                'errorRule' => 'ad.array',
+                ['ad' => ''], // invalid type, should be an array
+                'ad.array',
             ],
             [
-                'value' => ['ad' => ['username' => 'password']], // forbidden field for ad
-                'errorRule' => 'ad.username.forbiddenField',
+                ['ad' => ['username' => 'password']], // forbidden field for ad
+                'ad.username.forbiddenField',
             ],
             [
-                'value' => ['openldap' => ['username' => 'unixUserPassword']], // forbidden field for openldap
-                'errorRule' => 'openldap.username.forbiddenField',
+                ['openldap' => ['username' => 'unixUserPassword']], // forbidden field for openldap
+                'openldap.username.forbiddenField',
             ],
             [
-                'value' => ['foo' => ['username' => '']], // invalid ldap type
-                'errorRule' => 'invalidDirectoryType',
+                ['foo' => ['username' => '']], // invalid ldap type
+                'invalidDirectoryType',
             ],
         ];
     }

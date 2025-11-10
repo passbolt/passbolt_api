@@ -27,6 +27,11 @@ use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
+/**
+ * @deprecated the logic of this layer of service will be moved one level up
+ * @see \App\Service\Resources\ResourcesUpdateService
+ * @see \App\Service\Resources\ResourcesShareService
+ */
 class SecretsUpdateSecretsService
 {
     /**
@@ -57,6 +62,8 @@ class SecretsUpdateSecretsService
     /**
      * Update a resource's secrets.
      *
+     * This service is used only when sharing resources, not updating the secrets
+     *
      * @param \App\Utility\UserAccessControl $uac The operator.
      * @param string $resourceId The resource to update the secrets for.
      * @param array $data The list of secrets to add
@@ -78,7 +85,7 @@ class SecretsUpdateSecretsService
         $secrets = [];
         if (!empty($userIds)) {
             $secrets = $this->secretsTable
-                ->find()
+                ->find('notDeleted')
                 ->select(['id', 'user_id', 'resource_id', 'data'])
                 ->where([
                     'user_id IN' => $userIds,
@@ -91,6 +98,7 @@ class SecretsUpdateSecretsService
 
         foreach ($data as $rowIndex => $row) {
             if (array_key_exists($row['user_id'], $secrets)) {
+                $row['modified_by'] = $uac->getId();
                 $secret = $secrets[$row['user_id']];
                 $updatedSecret = $this->updateSecret($secret, $rowIndex, $row);
                 $entitiesChanges->pushUpdatedEntity($updatedSecret);
@@ -121,6 +129,8 @@ class SecretsUpdateSecretsService
         $patchEntityOptions = [
             'accessibleFields' => [
                 'data' => true,
+                'modified_by' => true,
+                'secret_revision_id' => true,
             ],
         ];
         $secret = $this->secretsTable->patchEntity($secret, $data, $patchEntityOptions);
@@ -166,6 +176,9 @@ class SecretsUpdateSecretsService
             'resource_id' => $resourceId,
             'user_id' => Hash::get($data, 'user_id', ''),
             'data' => Hash::get($data, 'data', ''),
+            'secret_revision_id' => Hash::get($data, 'secret_revision_id', null),
+            'created_by' => $uac->getId(),
+            'modified_by' => $uac->getId(),
         ];
 
         $secret = null;
@@ -216,6 +229,7 @@ class SecretsUpdateSecretsService
         $usersIdsHavingAccess = $this->accessService->getUsersIdsHavingAccessTo($resourceId);
         sort($usersIdsHavingAccess);
         $usersIdsHavingASecret = $this->secretsTable->findByResourceId($resourceId)
+            ->find('notDeleted')
             ->all()
             ->extract('user_id')
             ->toArray();

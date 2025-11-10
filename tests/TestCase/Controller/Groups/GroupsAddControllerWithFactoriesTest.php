@@ -141,26 +141,26 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
      *
      * @return array
      */
-    public function groupAddSuccessRequestDataProvider(): array
+    public static function groupAddSuccessRequestDataProvider(): array
     {
         return [
             'chinese' => [
-                'name' => '私人團體',
+                '私人團體', //name
                 /**
                  * We are using closure here because data providers run before the phpunit's setUp method.
                  * And in setUp we truncate all the dirty tables hence we don't get the data in the test case that was generated via data provider.
                  * Using closure here makes sure we generate data in the test case.
                  */
-                'groups_users' => function () {
+                function () {
                     return [
                         ['user_id' => UserFactory::make()->user()->persist()->id, 'is_admin' => 1],
                         ['user_id' => UserFactory::make()->user()->persist()->id],
                     ];
-                },
+                }, //group_users
             ],
             'slavic' => [
-                'name' => 'Частная группа',
-                'groups_users' => function () {
+                'Частная группа',
+                function () {
                     return [
                         ['user_id' => UserFactory::make()->user()->persist()->id, 'is_admin' => 1],
                         ['user_id' => UserFactory::make()->user()->persist()->id, 'is_admin' => 1],
@@ -169,8 +169,8 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
                 },
             ],
             'french' => [
-                'name' => 'Groupe privé',
-                'groups_users' => function () {
+                'Groupe privé',
+                function () {
                     return [
                         ['user_id' => UserFactory::make()->user()->persist()->id, 'is_admin' => 1],
                         ['user_id' => UserFactory::make()->user()->persist()->id],
@@ -178,8 +178,8 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
                 },
             ],
             'funny' => [
-                'name' => '😃',
-                'groups_users' => function () {
+                '😃',
+                function () {
                     return [
                         ['user_id' => UserFactory::make()->user()->persist()->id, 'is_admin' => 1],
                         ['user_id' => UserFactory::make()->user()->persist()->id],
@@ -189,26 +189,26 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
         ];
     }
 
-    public function invalidGroupDataProvider(): array
+    public static function invalidGroupDataProvider(): array
     {
         return [
             'group name is missing' => [
                 'data' => function () {
-                    return $this->getDummyPostData(['name' => '']);
+                    return self::getDummyPostData(['name' => '']);
                 },
                 'errorField' => 'name._empty',
                 'errorMessage' => 'The name should not be empty.',
             ],
             'group name already exist' => [
                 'data' => function () {
-                    return $this->getDummyPostData(['name' => GroupFactory::make(['name' => 'Freelancer'])->persist()->name]);
+                    return self::getDummyPostData(['name' => GroupFactory::make(['name' => 'Freelancer'])->persist()->name]);
                 },
                 'errorField' => 'name.group_unique',
                 'errorMessage' => 'The name is already used by another group.',
             ],
             'group name invalid' => [
                 'data' => function () {
-                    return $this->getDummyPostData(['name' => ['test']]);
+                    return self::getDummyPostData(['name' => ['test']]);
                 },
                 'errorField' => 'name.utf8Extended',
                 'errorMessage' => 'The name should be a valid UTF8 string.',
@@ -223,7 +223,7 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
                             ->admin()
                     )->persist();
 
-                    return $this->getDummyPostData([
+                    return self::getDummyPostData([
                         'name' => $group->name,
                         'groups_users' => [
                             $group->groups_users[0]->user_id,
@@ -244,7 +244,7 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
             ],
             'group user id not valid' => [
                 'data' => function () {
-                    return $this->getDummyPostData(['groups_users' => [
+                    return self::getDummyPostData(['groups_users' => [
                         ['user_id' => 'invalid-id'],
                     ]]);
                 },
@@ -254,7 +254,7 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
             ],
             'group user soft deleted' => [
                 'data' => function () {
-                    return $this->getDummyPostData([
+                    return self::getDummyPostData([
                         'groups_users' => [
                             ['user_id' => UserFactory::make()->user()->deleted()->persist()->id, 'is_admin' => true],
                         ],
@@ -266,7 +266,7 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
             ],
             'group user inactive' => [
                 'data' => function () {
-                    return $this->getDummyPostData(['groups_users' => [
+                    return self::getDummyPostData(['groups_users' => [
                         ['user_id' => UserFactory::make()->inactive()->user()->persist()->id, 'is_admin' => true],
                     ]]);
                 },
@@ -281,7 +281,7 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
     // Helper methods
     // ---------------------------
 
-    private function getDummyPostData(array $data = []): array
+    private static function getDummyPostData(array $data = []): array
     {
         $defaultData = [
             'name' => 'New group name',

@@ -68,10 +68,10 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertResponseOk();
     }
 
-    public function dataProviderForTestUsersRegisterController_Success(): array
+    public static function dataProviderForTestUsersRegisterController_Success(): array
     {
         return [
-            ['chinese_name' => [
+            'chinese_name' => [[
                 'username' => 'ping.fu@passbolt.com',
                 'profile' => [
                     'first_name' => '傅',
@@ -79,7 +79,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
                 ],
                 'timezone' => 'UTC',
             ]],
-            ['slavic_name' => [
+            'slavic_name' => [[
                 'username' => 'borka@passbolt.com',
                 'profile' => [
                     'first_name' => 'Borka',
@@ -87,7 +87,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
                 ],
                 'timezone' => 'UTC',
             ]],
-            ['french_name' => [
+            'french_name' => [[
                 'username' => 'aurore@passbolt.com',
                 'profile' => [
                     'first_name' => 'Aurore',

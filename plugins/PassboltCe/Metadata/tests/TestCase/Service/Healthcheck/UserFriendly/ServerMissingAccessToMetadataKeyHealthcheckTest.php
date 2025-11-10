@@ -14,25 +14,25 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         5.4.0
  */
-namespace Passbolt\Metadata\Test\TestCase\Service\Healthcheck;
+namespace Passbolt\Metadata\Test\TestCase\Service\Healthcheck\UserFriendly;
 
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\I18n\DateTime;
-use Passbolt\Metadata\Service\Healthcheck\ServeMissingAccessToMetadataKeyHealthcheck;
+use Passbolt\Metadata\Service\Healthcheck\UserFriendly\ServerMissingAccessToMetadataKeyHealthcheck;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
 /**
- * @covers \Passbolt\Metadata\Service\Healthcheck\ServeMissingAccessToMetadataKeyHealthcheck
+ * @covers \Passbolt\Metadata\Service\Healthcheck\UserFriendly\ServerMissingAccessToMetadataKeyHealthcheck
  */
-class ServeMissingAccessToMetadataKeyHealthcheckTest extends AppTestCaseV5
+class ServerMissingAccessToMetadataKeyHealthcheckTest extends AppTestCaseV5
 {
-    private ?ServeMissingAccessToMetadataKeyHealthcheck $sut;
+    private ?ServerMissingAccessToMetadataKeyHealthcheck $sut;
 
     /**
      * @inheritDoc
@@ -41,7 +41,7 @@ class ServeMissingAccessToMetadataKeyHealthcheckTest extends AppTestCaseV5
     {
         parent::setUp();
 
-        $this->sut = new ServeMissingAccessToMetadataKeyHealthcheck();
+        $this->sut = new ServerMissingAccessToMetadataKeyHealthcheck();
     }
 
     /**
@@ -73,7 +73,7 @@ class ServeMissingAccessToMetadataKeyHealthcheckTest extends AppTestCaseV5
         $this->assertSame('isServerHasAccessToMetadataKey', $this->sut->getLegacyArrayKey());
     }
 
-    public function testServeMissingAccessToMetadataKeyHealthcheck_Success_ZeroKnowledgeModeIsEnabled(): void
+    public function testServeMissingAccessToMetadataKeyHealthcheck_Success_SkippedWhenInZeroKnowledgeMode(): void
     {
         MetadataTypesSettingsFactory::make()->v5()->persist();
         MetadataKeysSettingsFactory::make()->enableZeroTrustKeySharing()->persist();
@@ -83,11 +83,7 @@ class ServeMissingAccessToMetadataKeyHealthcheckTest extends AppTestCaseV5
 
         $this->sut->check();
 
-        $this->assertTrue($this->sut->isPassed());
-        $this->assertSame(HealthcheckServiceCollector::DOMAIN_METADATA, $this->sut->domain());
-        $this->assertSame(HealthcheckServiceCollector::DOMAIN_METADATA, $this->sut->cliOption());
-        $this->assertSame(HealthcheckServiceCollector::LEVEL_ERROR, $this->sut->level());
-        $this->assertSame('isServerHasAccessToMetadataKey', $this->sut->getLegacyArrayKey());
+        $this->assertTrue($this->sut->isSkipped());
     }
 
     public function testServeMissingAccessToMetadataKeyHealthcheck_Error_NoMetadataPrivateKeys(): void

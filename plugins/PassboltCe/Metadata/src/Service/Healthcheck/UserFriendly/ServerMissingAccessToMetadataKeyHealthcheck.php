@@ -15,17 +15,18 @@ declare(strict_types=1);
  * @since         5.4.0
  */
 
-namespace Passbolt\Metadata\Service\Healthcheck;
+namespace Passbolt\Metadata\Service\Healthcheck\UserFriendly;
 
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use App\Service\Healthcheck\SkipHealthcheckInterface;
 use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query\SelectQuery;
 use Passbolt\Metadata\Service\MetadataKeysSettingsGetService;
 
-class ServeMissingAccessToMetadataKeyHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class ServerMissingAccessToMetadataKeyHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface, SkipHealthcheckInterface // phpcs:ignore
 {
     use LocatorAwareTrait;
     use OpenPGPCommonServerOperationsTrait;
@@ -43,13 +44,18 @@ class ServeMissingAccessToMetadataKeyHealthcheck implements HealthcheckServiceIn
     private ?string $errorMessage = null;
 
     /**
+     * @var bool
+     */
+    private bool $isSkipped = false;
+
+    /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
         $metadataKeysSettingsDto = MetadataKeysSettingsGetService::getSettings();
         if ($metadataKeysSettingsDto->isKeyShareZeroKnowledge()) {
-            $this->status = true;
+            $this->markAsSkipped();
 
             return $this;
         }
@@ -141,5 +147,21 @@ class ServeMissingAccessToMetadataKeyHealthcheck implements HealthcheckServiceIn
     public function getLegacyArrayKey(): string
     {
         return 'isServerHasAccessToMetadataKey';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function markAsSkipped(): void
+    {
+        $this->isSkipped = true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isSkipped(): bool
+    {
+        return $this->isSkipped;
     }
 }

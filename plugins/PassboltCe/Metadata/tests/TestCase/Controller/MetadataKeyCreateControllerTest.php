@@ -162,42 +162,42 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
         $this->assertForbiddenError('Access restricted to administrators.');
     }
 
-    public function invalidRequestDataProvider(): array
+    public static function invalidRequestDataProvider(): array
     {
-        $dummyKey = $this->getMetadataKeyInfo();
+        $dummyKey = static::getMetadataKeyInfo();
 
         return [
             [
-                 'request data' => [
+                 [
                     'armored_key' => ['foo' => 'bar'], // invalid
                     'fingerprint' => '&^#$%!', // invalid
                     'metadata_private_keys' => [
                         [
                             'user_id' => null, // valid - server key
-                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => self::getDummyPrivateKeyOpenPGPMessage(),
                         ],
                     ],
-                 ],
-                 'expected errors paths' => ['armored_key.ascii', 'fingerprint.alphaNumeric'],
+                 ], //data
+                 ['armored_key.ascii', 'fingerprint.alphaNumeric'], //expected errors paths
             ],
             [
-                'request data' => [
+                [
                     'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => 'foo', // invalid
                 ],
-                'expected errors paths' => ['metadata_private_keys.array', 'metadata_private_keys.hasAtLeast'],
+                ['metadata_private_keys.array', 'metadata_private_keys.hasAtLeast'],
             ],
             [
-                'request data' => [
+                [
                     'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => [], // empty metadata private keys
                 ],
-                'expected errors paths' => ['metadata_private_keys.hasAtLeast'],
+                ['metadata_private_keys.hasAtLeast'],
             ],
             [
-                'request data' => [
+                [
                     'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => 1000,
                     'metadata_private_keys' => [
@@ -208,7 +208,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
                         ],
                     ],
                 ],
-                'expected errors paths' => ['metadata_private_keys.{n}.user_id.uuid', 'metadata_private_keys.{n}.data.ascii'],
+                ['metadata_private_keys.{n}.user_id.uuid', 'metadata_private_keys.{n}.data.ascii'],
             ],
         ];
     }

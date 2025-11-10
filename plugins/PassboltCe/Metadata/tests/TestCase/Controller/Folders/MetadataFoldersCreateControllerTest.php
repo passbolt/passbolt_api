@@ -230,24 +230,24 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
      *
      * @return array[]
      */
-    public function invalidFolderDataProvider(): array
+    public static function invalidFolderDataProvider(): array
     {
         return [
             [
-                'data' => [
+                [
                     'metadata' => '',
                     'metadata_key_id' => 'foo-bar',
                     'metadata_key_type' => 12345,
-                ],
-                'expectedErrors' => ['metadata._empty', 'metadata_key_id.uuid', 'metadata_key_type.inList'],
+                ], //data
+                ['metadata._empty', 'metadata_key_id.uuid', 'metadata_key_type.inList'], //expected errors
             ],
             [
-                'data' => [
+                [
                     'metadata' => 'abcd',
                     'metadata_key_id' => UuidFactory::uuid(),
                     'metadata_key_type' => '🔥',
                 ],
-                'expectedErrors' => ['metadata.isMetadataParsable', 'metadata_key_type.inList'],
+                ['metadata.isMetadataParsable', 'metadata_key_type.inList'],
             ],
         ];
     }

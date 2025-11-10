@@ -17,8 +17,10 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Service\Groups;
 
+use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
+use App\Model\Entity\Secret;
 use App\Service\Groups\GroupsUpdateService;
 use App\Service\GroupsUsers\GroupsUsersAddService;
 use App\Service\GroupsUsers\GroupsUsersDeleteService;
@@ -33,6 +35,7 @@ use Cake\Event\EventList;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Exception;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 /**
  * \App\Service\Groups\GroupsUpdateService Test Case
@@ -80,9 +83,15 @@ class GroupsUpdateServiceTest extends AppTestCase
             ['resource_id' => $r2->id, 'user_id' => $u4->id, 'data' => Hash::get($this->getDummySecretData(), 'data')],
             ];
 
-        $this->service->update($uac, $g1->id, [], $changes, $secrets);
+        $changes = $this->service->update($uac, $g1->id, [], $changes, $secrets);
         $this->assertEventFired(GroupsUsersDeleteService::AFTER_GROUP_USER_DELETED_EVENT_NAME, $this->groupsUsersTable->getEventManager());
         $this->assertEventFired(GroupsUsersAddService::AFTER_GROUP_USER_ADDED_EVENT_NAME, $this->groupsUsersTable->getEventManager());
+
+        $secretsAdded = $changes->getAddedEntities(Secret::class);
+        foreach ($secretsAdded as $secret) {
+            $secretRevision = SecretRevisionFactory::firstOrFail(['resource_id' => $secret->resource_id]);
+            $this->assertSame($secretRevision->id, $secret->secret_revision_id);
+        }
     }
 
     /* ******************************************
@@ -392,6 +401,34 @@ class GroupsUpdateServiceTest extends AppTestCase
         }
     }
 
+    public function testUpdateError_Resource_Does_Not_Have_A_Secret_Revision()
+    {
+        [$user1, $user2] = UserFactory::make(2)->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$user1])->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$user1, $group])
+            ->withSecretsFor([$user1])
+            ->persist();
+
+        $uac = $this->makeUac($user1);
+
+        $changes = [
+            ['user_id' => $user2->id, 'is_admin' => true],
+        ];
+        $secrets = [[
+            'resource_id' => $resource->id,
+            'user_id' => $user2->id,
+            'data' => Hash::get($this->getDummySecretData(), 'data'),
+        ]];
+
+        try {
+            $this->service->update($uac, $group->id, [], $changes, $secrets);
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (CustomValidationException $e) {
+            $this->assertSame($e->getMessage(), "The resource with ID {$resource->id} does not have a secret revision.");
+        }
+    }
+
     /* ******************************************
      * Success - remove user from group
      ****************************************** */
@@ -467,6 +504,7 @@ class GroupsUpdateServiceTest extends AppTestCase
         [$r1, $r2] = ResourceFactory::make(2)
             ->withPermissionsFor([$u1, $g1])
             ->withSecretsFor([$u1, $u2, $u3])
+            ->withSecretRevisions()
             ->persist();
 
         return [$r1, $r2, $g1, $u1, $u2, $u3, $u4];
@@ -476,7 +514,7 @@ class GroupsUpdateServiceTest extends AppTestCase
     {
         [$u1, $u2, $u3, $u4] = UserFactory::make(4)->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2])->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretRevisions()->withSecretsFor([$u1, $u2])->persist();
 
         return [$r1, $g1, $u1, $u2, $u3, $u4];
     }
@@ -485,7 +523,7 @@ class GroupsUpdateServiceTest extends AppTestCase
     {
         [$u1, $u2] = UserFactory::make(2)->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
-        [$r1, $r2] = ResourceFactory::make(2)->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2])->persist();
+        [$r1, $r2] = ResourceFactory::make(2)->withSecretRevisions()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2])->persist();
 
         return [$r1, $r2, $g1, $u1, $u2];
     }
@@ -503,8 +541,8 @@ class GroupsUpdateServiceTest extends AppTestCase
     {
         [$u1, $u2] = UserFactory::make(2)->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2])->persist();
-        $r2 = ResourceFactory::make()->withPermissionsFor([$u1])->withSecretsFor([$u1])->persist();
+        $r1 = ResourceFactory::make()->withSecretRevisions()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2])->persist();
+        $r2 = ResourceFactory::make()->withSecretRevisions()->withPermissionsFor([$u1])->withSecretsFor([$u1])->persist();
 
         return [$r1, $r2, $g1, $u1, $u2];
     }

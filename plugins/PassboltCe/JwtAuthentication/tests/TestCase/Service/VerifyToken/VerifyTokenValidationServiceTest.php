@@ -115,7 +115,7 @@ class VerifyTokenValidationServiceTest extends TestCase
         $this->assertEventFired(ConsumedVerifyTokenAccessException::class);
     }
 
-    public function invalidExpiryDates(): array
+    public static function invalidExpiryDates(): array
     {
         return [
             [''],
@@ -123,7 +123,7 @@ class VerifyTokenValidationServiceTest extends TestCase
         ];
     }
 
-    public function expiredExpiryDates(): array
+    public static function expiredExpiryDates(): array
     {
         return [
             [DateTime::yesterday()->toUnixString()],
@@ -131,7 +131,7 @@ class VerifyTokenValidationServiceTest extends TestCase
         ];
     }
 
-    public function invalidFormats(): array
+    public static function invalidFormats(): array
     {
         return [
             [null],

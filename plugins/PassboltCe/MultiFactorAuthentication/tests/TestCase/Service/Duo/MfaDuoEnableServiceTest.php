@@ -27,6 +27,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Duo\DuoUniversal\Client;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
 use Passbolt\MultiFactorAuthentication\Model\Dto\MfaDuoCallbackDto;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoEnableService;
@@ -57,7 +58,7 @@ class MfaDuoEnableServiceTest extends TestCase
             'redirect' => '',
             'user_agent' => 'PassboltUA',
         ])->userId($user->id)->type(AuthenticationToken::TYPE_MFA_SETUP)->persist();
-        $duoSdkClientMock = DuoSdkClientMock::createDefault($this, $user)->getClient();
+        $duoSdkClientMock = DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
 
         $service = new MfaDuoEnableService($duoSdkClientMock);
         $resultAuthToken = $service->enable($uac, $mfaDuoCallbackDto, $authToken->token);
@@ -89,7 +90,7 @@ class MfaDuoEnableServiceTest extends TestCase
             'redirect' => '',
             'user_agent' => 'PassboltUA',
         ])->userId($user->id)->type(AuthenticationToken::TYPE_MFA_SETUP)->persist();
-        $duoSdkClientMock = DuoSdkClientMock::createDefault($this, $user)->getClient();
+        $duoSdkClientMock = DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
 
         $service = new MfaDuoEnableService($duoSdkClientMock);
         try {
@@ -123,7 +124,7 @@ class MfaDuoEnableServiceTest extends TestCase
             'redirect' => '',
             'user_agent' => 'PassboltUA',
         ])->userId($user->id)->type(AuthenticationToken::TYPE_MFA_SETUP)->persist();
-        $duoSdkClientMock = DuoSdkClientMock::createWithExchangeAuthorizationCodeFor2FAResultThrowingException($this);
+        $duoSdkClientMock = DuoSdkClientMock::createWithExchangeAuthorizationCodeFor2FAResultThrowingException($this->getMockBuilder(Client::class));
 
         $service = new MfaDuoEnableService($duoSdkClientMock->getClient());
 

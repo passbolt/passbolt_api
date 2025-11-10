@@ -24,6 +24,7 @@ use App\Test\Factory\GroupFactory;
 use App\Test\Factory\GroupsUserFactory;
 use App\Test\Factory\PermissionFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
@@ -259,7 +260,9 @@ hcciUFw5
             ->persist();
         [$userA, $userC, $userF] = UserFactory::make(3)->persist();
 
-        [$resourceC, $resourceF, $resourceG] = ResourceFactory::make(3)->withPermissionsFor([$group, $userC], Permission::UPDATE)
+        [$resourceC, $resourceF, $resourceG] = ResourceFactory::make(3)
+            ->withSecretRevisions()
+            ->withPermissionsFor([$group, $userC], Permission::UPDATE)
             ->withSecretsFor([$group, $userC])
             ->persist();
         PermissionFactory::make()
@@ -321,6 +324,7 @@ hcciUFw5
         // Update the group users.
         $this->logInAs($userJ);
         $this->putJson("/groups/$groupId.json", ['groups_users' => $changes, 'secrets' => $secrets]);
+
         $this->assertSuccess();
 
         // userJ and userN should still have access to the resources.
@@ -342,6 +346,25 @@ hcciUFw5
         $this->assertUserHasAccessResources($userC->id, $groupHasAccess);
         // Ada should have access to the group resources.
         $this->assertUserHasAccessResources($userA->id, $groupHasAccess);
+
+        // Assert entries of database
+        foreach ($groupHasAccess as $resourceGroupHasAccessId) {
+            /** @var \App\Model\Entity\Secret[] $secrets */
+            $secrets = SecretFactory::find()->where(['resource_id' => $resourceGroupHasAccessId])->all()->toArray();
+            foreach ($secrets as $secret) {
+                if ($secret->user_id === $userF->id) {
+                    $this->assertSame($userJ->id, $secret->created_by);
+                    $this->assertSame($userJ->id, $secret->modified_by);
+                } elseif ($secret->user_id === $userC->id) {
+                    // $userC already had permission to resources so it's not updated
+                    $this->assertSame($userC->id, $secret->created_by);
+                    $this->assertSame($userC->id, $secret->modified_by);
+                } elseif ($secret->user_id === $userA->id) {
+                    $this->assertSame($userJ->id, $secret->created_by);
+                    $this->assertSame($userJ->id, $secret->modified_by);
+                }
+            }
+        }
     }
 
     /*

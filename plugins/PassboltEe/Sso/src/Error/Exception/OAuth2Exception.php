@@ -16,11 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\Sso\Error\Exception;
 
-use Cake\Core\Exception\CakeException;
+use Cake\Http\Exception\HttpException;
 use Cake\Log\Log;
 use Throwable;
 
-class OAuth2Exception extends CakeException
+class OAuth2Exception extends HttpException
 {
     /**
      * Error.
@@ -35,6 +35,11 @@ class OAuth2Exception extends CakeException
      * @var string
      */
     protected string $errorDescription;
+
+    /**
+     * @inheritDoc
+     */
+    protected int $_defaultCode = 400;
 
     /**
      * @inheritDoc
