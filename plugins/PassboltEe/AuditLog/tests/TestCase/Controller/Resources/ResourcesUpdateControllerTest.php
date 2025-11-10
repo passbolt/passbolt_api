@@ -26,9 +26,7 @@ use App\Test\Lib\Model\SecretsModelTrait;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\SecretRevisions\SecretRevisionsPlugin;
-use Passbolt\SecretRevisions\Service\SecretRevisionsSettingsGetService;
 use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsFactory;
-use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsSettingsFactory;
 
 /**
  * @covers \App\Controller\Resources\ResourcesUpdateController
@@ -44,15 +42,8 @@ class ResourcesUpdateControllerTest extends LogIntegrationTestCase
         $this->enableFeaturePlugin(SecretRevisionsPlugin::class);
     }
 
-    public function tearDown(): void
-    {
-        SecretRevisionsSettingsGetService::clear();
-        parent::tearDown();
-    }
-
     public function testUpdateResourcesController_Success_UpdateResourceSecrets(): void
     {
-        SecretRevisionsSettingsFactory::make()->setMaxRevisions(2)->persist();
         RoleFactory::make()->guest()->persist();
         // Ada is OWNER of resource R1
         // Betty is OWNER of resource R1

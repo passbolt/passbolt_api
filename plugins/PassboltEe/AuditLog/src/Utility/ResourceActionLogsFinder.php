@@ -104,9 +104,9 @@ class ResourceActionLogsFinder extends BaseActionLogsFinder
             ->select(['ActionLogs__id' => 'ActionLogs.id', 'Actions__name' => 'Actions.name'])
             ->contain(['EntitiesHistory.SecretRevisions'])
             ->innerJoinWith('Actions')
-            ->innerJoinWith('EntitiesHistory.SecretRevisions')
+            ->innerJoinWith('EntitiesHistory.SecretRevisions.Resources')
             ->where([
-                'SecretRevisions.resource_id' => $resourceId,
+                'Resources.id' => $resourceId,
                 'ActionLogs.status' => 1,
             ])
             ->groupBy(['ActionLogs.id', 'Actions.name']);
