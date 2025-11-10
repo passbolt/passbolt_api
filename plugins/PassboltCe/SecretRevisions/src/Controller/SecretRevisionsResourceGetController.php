@@ -19,7 +19,6 @@ namespace Passbolt\SecretRevisions\Controller;
 use App\Controller\AppController;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\ResourcesTable;
-use Cake\Collection\CollectionInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
@@ -27,6 +26,7 @@ use Cake\ORM\Query;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Exception;
+use Passbolt\SecretRevisions\Service\SecretRevisionsSettingsGetService;
 
 class SecretRevisionsResourceGetController extends AppController
 {
@@ -71,43 +71,61 @@ class SecretRevisionsResourceGetController extends AppController
             throw new NotFoundException(__('The resource does not exist.'));
         }
 
-        $secretRevisions = $this->Resources->SecretRevisions
+        // Filter by secrets by userId and the revision by secret revision
+        $secretRevisionsBaseQuery = $this->Resources->SecretRevisions
             ->find()
             ->innerJoinWith('Secrets', function (Query $q) {
                 return $q->where(['Secrets.user_id' => $this->User->id()]);
             })
-            ->where(['SecretRevisions.resource_id' => $resourceId])
-            ->orderByDesc('SecretRevisions.created');
+            ->where(['SecretRevisions.resource_id' => $resourceId]);
 
         if ($options['contain']['secret'] ?? false) {
-            $secretRevisions->contain('Secrets', function (Query $q) {
+            $secretRevisionsBaseQuery->contain('Secrets', function (Query $q) {
                 return $q->where(['Secrets.user_id' => $this->User->id()]);
             });
         }
         if ($options['contain']['creator'] ?? false) {
-            $secretRevisions->contain('Creator');
+            $secretRevisionsBaseQuery->contain('Creator');
         }
         if ($options['contain']['creator.profile'] ?? false) {
-            $secretRevisions->contain([
+            $secretRevisionsBaseQuery->contain([
                 'Creator' => [
                     'Profiles' => AvatarsTable::addContainAvatar(),
                 ],
             ]);
         }
-        // Log secret access.
-        $this->_logSecretAccesses($secretRevisions->all(), $options);
 
-        $this->success(__('The operation was successful.'), $secretRevisions->all());
+        // Clone the base query to retrieve the deleted secret revisions if enabled in the settings
+        $deletedSecretRevisions = clone $secretRevisionsBaseQuery;
+
+        // This will retrieve the active non-deleted secret revision
+        $secretRevisions = $secretRevisionsBaseQuery->find('notDeleted')->toArray();
+
+        $maxNumberOfDeletedRevisionsToServe = SecretRevisionsSettingsGetService::getSettings()->getMaxRevisions() - 1;
+        // If past revisions should be served, union them to the active revision
+        if ($maxNumberOfDeletedRevisionsToServe > 0) {
+            $deletedSecretRevisions
+                ->whereNotNull('SecretRevisions.deleted')
+                ->limit($maxNumberOfDeletedRevisionsToServe)
+                ->orderByDesc('SecretRevisions.deleted');
+
+            $secretRevisions = array_merge($secretRevisions, $deletedSecretRevisions->toArray());
+        }
+
+        // Log secret access.
+        $this->_logSecretAccesses($secretRevisions, $options);
+
+        $this->success(__('The operation was successful.'), $secretRevisions);
     }
 
     /**
      * Log secrets accesses in secretAccesses table.
      *
-     * @param \Cake\Collection\CollectionInterface $secretRevisions resources
+     * @param array $secretRevisions resources
      * @param array $queryOptions The query options
      * @return void
      */
-    protected function _logSecretAccesses(CollectionInterface $secretRevisions, array $queryOptions)
+    protected function _logSecretAccesses(array $secretRevisions, array $queryOptions)
     {
         $containSecret = (bool)Hash::get($queryOptions, 'contain.secret');
         if (!$containSecret) {
