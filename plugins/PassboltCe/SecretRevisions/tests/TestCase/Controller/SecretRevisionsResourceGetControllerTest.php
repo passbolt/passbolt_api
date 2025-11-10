@@ -27,7 +27,9 @@ use Passbolt\Log\LogPlugin;
 use Passbolt\Log\Test\Factory\EntitiesHistoryFactory;
 use Passbolt\Log\Test\Factory\SecretAccessFactory;
 use Passbolt\SecretRevisions\SecretRevisionsPlugin;
+use Passbolt\SecretRevisions\Service\SecretRevisionsSettingsGetService;
 use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsSettingsFactory;
 
 /**
  * @covers \Passbolt\SecretRevisions\Controller\SecretRevisionsResourceGetController
@@ -42,40 +44,89 @@ class SecretRevisionsResourceGetControllerTest extends AppIntegrationTestCase
         parent::setUp();
         $this->enableFeaturePlugin(SecretRevisionsPlugin::class);
         $this->enableFeaturePlugin(LogPlugin::class);
+        SecretRevisionsSettingsGetService::clear();
+    }
+
+    public function tearDown(): void
+    {
+        SecretRevisionsSettingsGetService::clear();
+        parent::tearDown();
     }
 
     public function testSecretRevisionsResourceGetController_Success(): void
+    {
+        $maxRevision = 2;
+        SecretRevisionsSettingsFactory::make()->setMaxRevisions($maxRevision)->persist();
+
+        $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$user])
+            ->withSecretRevisions(SecretRevisionFactory::make([
+                [], // Active secret revision
+                ['deleted' => FrozenTime::yesterday()], // This one will be ignored as it won't have secrets associated to the user
+                ['deleted' => FrozenTime::today()->subDays(1)],
+                ['deleted' => FrozenTime::today()->subDays(2)], // This one wil be ignored as the secret revisions history returns only 2 deleted secret revision
+            ]))
+            ->persist();
+
+        $activeSecretRevision = $resource->secret_revisions[0];
+        $deletedSecretRevisionServed = $resource->secret_revisions[2];
+
+        $secretFactory = SecretFactory::make()
+            ->with('Resources', $resource)
+            ->with('Users', $user);
+
+        $secretFactory->with('SecretRevisions', $activeSecretRevision)->persist();
+        $secretFactory->with('SecretRevisions', $resource->secret_revisions[2])->persist();
+        $secretFactory->with('SecretRevisions', $resource->secret_revisions[3])->persist();
+
+        $this->getJson("/secret-revisions/resource/{$resource->id}.json");
+        $this->assertResponseOk();
+
+        $response = $this->getResponseBodyAsArray();
+        $this->assertCount($maxRevision, $response);
+        $this->assertSame($activeSecretRevision->id, $response[0]['id']);
+        $this->assertSame($activeSecretRevision->resource_id, $response[0]['resource_id']);
+        $this->assertEquals($activeSecretRevision->created->toAtomString(), $response[0]['created']);
+        $this->assertSame($activeSecretRevision->created_by, $response[0]['created_by']);
+
+        $this->assertSame($deletedSecretRevisionServed->id, $response[1]['id']);
+        $this->assertSame($deletedSecretRevisionServed->resource_id, $response[1]['resource_id']);
+        $this->assertEquals($deletedSecretRevisionServed->created->toAtomString(), $response[1]['created']);
+        $this->assertSame($deletedSecretRevisionServed->created_by, $response[1]['created_by']);
+
+        // Assert that no secret access were persisted
+        $this->assertSame(0, SecretAccessFactory::count());
+    }
+
+    public function testSecretRevisionsResourceGetController_Without_Setting_On_Threshold(): void
     {
         $user = $this->logInAsUser();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()
             ->withPermissionsFor([$user])
             ->withSecretRevisions(SecretRevisionFactory::make([
-                ['created' => FrozenTime::yesterday()],
-                ['created' => FrozenTime::today()->subDays(2)],
-                ['created' => FrozenTime::today()->subDays(3)], // This one will be ignored as it won't have secrets associated to the user
+                [],
+                ['deleted' => FrozenTime::today()->subDays(1)],
+                ['deleted' => FrozenTime::today()->subDays(3)], // This one will be ignored as it won't have secrets associated to the user
             ]))
             ->persist();
 
         $secretRevision = $resource->secret_revisions[0];
 
-        SecretFactory::make()
+        $secretFactory = SecretFactory::make()
             ->with('Resources', $resource)
-            ->with('Users', $user)
-            ->with('SecretRevisions', $secretRevision)
-            ->persist();
+            ->with('Users', $user);
 
-        SecretFactory::make()
-            ->with('Resources', $resource)
-            ->with('Users', $user)
-            ->with('SecretRevisions', $resource->secret_revisions[1])
-            ->persist();
+        $secretFactory->with('SecretRevisions', $secretRevision)->persist();
+        $secretFactory->with('SecretRevisions', $resource->secret_revisions[1])->persist();
 
         $this->getJson("/secret-revisions/resource/{$resource->id}.json");
         $this->assertResponseOk();
 
         $response = $this->getResponseBodyAsArray();
-        $this->assertCount(2, $response);
+        $this->assertCount(1, $response);
         $this->assertSame($secretRevision->id, $response[0]['id']);
         $this->assertSame($secretRevision->resource_id, $response[0]['resource_id']);
         $this->assertEquals($secretRevision->created->toAtomString(), $response[0]['created']);
@@ -87,6 +138,8 @@ class SecretRevisionsResourceGetControllerTest extends AppIntegrationTestCase
 
     public function testSecretRevisionsResourceGetController_Success_Contain_Secret(): void
     {
+        $maxRevision = 2;
+        SecretRevisionsSettingsFactory::make()->setMaxRevisions($maxRevision)->persist();
         $user = $this->logInAsUser();
 
         /** @var \App\Model\Entity\Resource $resource */
@@ -97,13 +150,6 @@ class SecretRevisionsResourceGetControllerTest extends AppIntegrationTestCase
 
         $secretRevision = $resource->secret_revisions[0];
 
-        /** @var \App\Model\Entity\Secret $secret */
-        $secret = SecretFactory::make()
-            ->with('Resources', $resource)
-            ->with('Users', $user)
-            ->with('SecretRevisions', $secretRevision)
-            ->persist();
-
         // Deleted secret revision
         /** @var \Passbolt\SecretRevisions\Model\Entity\SecretRevision $deletedSecretRevision */
         $deletedSecretRevision = SecretRevisionFactory::make()
@@ -111,13 +157,15 @@ class SecretRevisionsResourceGetControllerTest extends AppIntegrationTestCase
             ->with('Secrets', SecretFactory::make()->deleted())
             ->deleted()
             ->persist();
-        /** @var \App\Model\Entity\Secret $pastSecret */
-        $pastSecret = SecretFactory::make()
+
+        $secretFactory = SecretFactory::make()
             ->with('Resources', $resource)
-            ->with('Users', $user)
-            ->with('SecretRevisions', $deletedSecretRevision)
-            ->deleted()
-            ->persist();
+            ->with('Users', $user);
+
+        /** @var \App\Model\Entity\Secret $secret */
+        $secret = $secretFactory->with('SecretRevisions', $secretRevision)->persist();
+        /** @var \App\Model\Entity\Secret $pastSecret */
+        $pastSecret = $secretFactory->with('SecretRevisions', $deletedSecretRevision)->deleted()->persist();
 
         // Secret with the same secret revision and resource but another user should be ignored
         SecretFactory::make()
@@ -129,7 +177,7 @@ class SecretRevisionsResourceGetControllerTest extends AppIntegrationTestCase
         $this->getJson("/secret-revisions/resource/{$resource->id}.json?contain[secret]=1");
 
         $response = $this->getResponseBodyAsArray();
-        $this->assertCount(2, $response);
+        $this->assertCount($maxRevision, $response);
 
         // Assert on the active secret revision
         $this->assertSame($secretRevision->id, $response[0]['id']);
