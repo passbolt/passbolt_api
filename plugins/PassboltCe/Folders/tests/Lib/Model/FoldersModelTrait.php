@@ -36,7 +36,7 @@ trait FoldersModelTrait
         return $folder;
     }
 
-    public function getDummyFolderEntity(?array $data = [], ?array $options = [])
+    public static function getDummyFolderEntity(?array $data = [], ?array $options = [])
     {
         $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $defaultOptions = [
@@ -60,7 +60,7 @@ trait FoldersModelTrait
      * @return array
      * @throws \Exception If the create date is not correct.
      */
-    public function getDummyFolderData(?array $data = [])
+    public static function getDummyFolderData(?array $data = [])
     {
         $entityContent = [
             'name' => UuidFactory::uuid('folder.id.name'),
@@ -84,7 +84,7 @@ trait FoldersModelTrait
      * @param array|null $options The folder entity create options
      * @return \Passbolt\Folders\Model\Entity\Folder
      */
-    public function addFolderFor(?array $data = [], ?array $users = [], ?array $groups = [], ?array $options = [])
+    public static function addFolderFor(?array $data = [], ?array $users = [], ?array $groups = [], ?array $options = [])
     {
         $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         /** @var \App\Model\Table\UsersTable $usersTable */
@@ -102,11 +102,12 @@ trait FoldersModelTrait
             $data['modified_by'] = $userId;
         }
 
-        $folder = $this->getDummyFolderEntity($data, $options);
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = self::getDummyFolderEntity($data, $options);
         $foldersTable->saveOrFail($folder);
 
         foreach ($users as $userId => $permissionType) {
-            $this->addPermission('Folder', $folder->get('id'), null, $userId, $permissionType);
+            self::addPermission('Folder', $folder->get('id'), null, $userId, $permissionType);
             $folderParentId = $data['folder_parent_id'] ?? null;
             $folderRelationData = [
                 'foreign_model' => PermissionsTable::FOLDER_ACO,
@@ -114,11 +115,11 @@ trait FoldersModelTrait
                 'user_id' => $userId,
                 'folder_parent_id' => $folderParentId,
             ];
-            $this->addFolderRelation($folderRelationData);
+            self::addFolderRelation($folderRelationData);
         }
 
         foreach ($groups as $groupId => $permissionType) {
-            $this->addPermission('Folder', $folder->get('id'), null, $groupId, $permissionType);
+            self::addPermission('Folder', $folder->get('id'), null, $groupId, $permissionType);
             $folderParentId = $data['folder_parent_id'] ?? null;
             $groupUsersIds = $usersTable->Groups->GroupsUsers->findByGroupId($groupId)
                 ->all()
@@ -131,7 +132,7 @@ trait FoldersModelTrait
                     'user_id' => $groupUserId,
                     'folder_parent_id' => $folderParentId,
                 ];
-                $this->addFolderRelation($folderRelationData);
+                self::addFolderRelation($folderRelationData);
             }
         }
 

@@ -221,8 +221,9 @@ class PassboltCommand extends Command implements PassboltCommandInterface
             $this->abort();
         }
 
+        $displayNonWebUserWarning = Configure::read('passbolt.security.displayNonWebUserWarning');
         $isWebserverUser = in_array($processUserService->getName(), self::KNOWN_WEBSERVER_USERS);
-        if (!$isWebserverUser) {
+        if ($displayNonWebUserWarning && !$isWebserverUser) {
             $io->out();
             $io->warning(__('Passbolt commands should only be executed as the web server user.'));
             $io->out();

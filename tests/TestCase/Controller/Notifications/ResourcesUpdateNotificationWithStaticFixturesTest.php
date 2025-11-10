@@ -21,6 +21,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
+use Passbolt\SecretRevisions\SecretRevisionsPlugin;
 
 class ResourcesUpdateNotificationWithStaticFixturesTest extends AppIntegrationTestCase
 {
@@ -45,6 +46,7 @@ class ResourcesUpdateNotificationWithStaticFixturesTest extends AppIntegrationTe
     {
         parent::setUp();
         $this->loadNotificationSettings();
+        $this->enableFeaturePlugin(SecretRevisionsPlugin::class);
     }
 
     public function tearDown(): void

@@ -45,11 +45,15 @@ class ContentSecurityPolicyMiddleware implements MiddlewareInterface
             return $response;
         }
 
-        $defaultCsp = "default-src 'self'; ";
-        $defaultCsp .= "script-src 'self'; "; // eval needed by canjs for templates
-        $defaultCsp .= "style-src 'self' 'unsafe-inline'; "; // inline needed to perform extension iframe resizing
-        $defaultCsp .= "img-src 'self';";
-        $defaultCsp .= "frame-src 'self' https://*.duosecurity.com;";
+        $defaultCsp = [
+            "default-src 'self'",
+            "script-src 'self'", // eval needed by canjs for templates
+            "style-src 'self' 'unsafe-inline'", // inline needed to perform extension iframe resizing
+            "img-src 'self'",
+            "frame-src 'self' https://*.duosecurity.com",
+            "frame-ancestors 'none'",
+            "form-action 'self'",
+        ];
 
         if ($cspFromConfig === null || $cspFromConfig === true) {
             $csp = $defaultCsp;
@@ -59,8 +63,6 @@ class ContentSecurityPolicyMiddleware implements MiddlewareInterface
             throw new InternalErrorException('The CSP policy defined in settings is invalid.');
         }
 
-        $response = $response->withAddedHeader('Content-Security-Policy', $csp);
-
-        return $response;
+        return $response->withAddedHeader('Content-Security-Policy', $csp);
     }
 }

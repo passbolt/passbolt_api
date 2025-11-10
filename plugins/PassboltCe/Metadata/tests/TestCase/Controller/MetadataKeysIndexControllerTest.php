@@ -200,7 +200,7 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertAuthenticationError();
     }
 
-    public function invalidQueryParameterProvider(): array
+    public static function invalidQueryParameterProvider(): array
     {
         return [
             [

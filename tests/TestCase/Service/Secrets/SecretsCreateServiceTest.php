@@ -73,13 +73,16 @@ hcciUFw5
     {
         // create user and resource
         $user = UserFactory::make()->user()->persist();
-        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $resource = ResourceFactory::make()
+            ->withCreatorAndPermission($user)
+            ->withSecretRevisions()
+            ->persist();
 
         $data = [
             'resource_id' => $resource->id,
             'user_id' => $user->id,
             'data' => $this->OpenPGPMessage(),
-
+            'secret_revision_id' => $resource->secret_revisions[0]->id,
         ];
 
         $createdSecret = $this->service->create($data);
@@ -91,6 +94,7 @@ hcciUFw5
         $this->assertEquals($data['resource_id'], $secretData->resource_id);
         $this->assertEquals($data['user_id'], $secretData->user_id);
         $this->assertEquals($data['data'], $secretData->data);
+        $this->assertEquals($data['secret_revision_id'], $secretData->secret_revision_id);
     }
 
     /**

@@ -20,10 +20,12 @@ namespace App\Test\TestCase\Service\Secrets;
 use App\Error\Exception\CustomValidationException;
 use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 /**
  * \App\Test\TestCase\Service\Secrets\SecretsUpdateSecretsServiceTest Test Case
@@ -61,16 +63,27 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
     {
         [$userA, $userB] = UserFactory::make(2)->persist();
         // Add Betty's permission without secret.
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->withSecretsFor([$userA])->persist();
+        $r1 = ResourceFactory::make()
+            ->withPermissionsFor([$userA, $userB])
+            ->withSecretsFor([$userA])
+            ->withSecretRevisions()
+            ->persist();
 
+        $newSecretRevision = SecretRevisionFactory::make()->persist();
         $data = [
-            ['user_id' => $userB->id, 'data' => Hash::get(self::getDummySecretData(), 'data')],
+            [
+                'user_id' => $userB->id,
+                'data' => Hash::get(self::getDummySecretData(), 'data'),
+                'secret_revision_id' => $newSecretRevision->id,
+            ],
         ];
 
-        $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
+        $changes = $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
 
         // Assert secrets
         $secrets = $this->Secrets->findByResourceId($r1->id)->toArray();
+        $secretAdded = $changes->getAddedEntities()[0];
+        $this->assertSame($newSecretRevision->id, $secretAdded->secret_revision_id);
         $this->assertCount(2, $secrets);
         $this->assertSecretExists($r1->id, $userA->id);
         $this->assertSecretExists($r1->id, $userB->id);
@@ -82,7 +95,11 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
     {
         [$userA, $userB] = UserFactory::make(2)->persist();
         // Add Betty's permission without secret.
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->withSecretsFor([$userA])->persist();
+        $r1 = ResourceFactory::make()
+            ->withSecretRevisions()
+            ->withPermissionsFor([$userA, $userB])
+            ->withSecretsFor([$userA])
+            ->persist();
 
         $data = [];
 
@@ -97,9 +114,18 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
     public function testUpdateSecretsError_AddSecrets_ValidationExceptions_UserWithoutAccess()
     {
         [$userA, $userB] = UserFactory::make(2)->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withSecretsFor([$userA])->persist();
+        $r1 = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA])
+            ->withSecretRevisions()
+            ->persist();
+        $newSecretRevision = SecretRevisionFactory::make()->persist();
 
-        $data = [['user_id' => $userB->id, 'data' => Hash::get(self::getDummySecretData(), 'data')], ];
+        $data = [[
+            'user_id' => $userB->id,
+            'data' => Hash::get(self::getDummySecretData(), 'data'),
+            'secret_revision_id' => $newSecretRevision->id,
+        ]];
 
         try {
             $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
@@ -120,9 +146,18 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
     {
         $userA = UserFactory::make()->persist();
         $userB = UserFactory::make()->deleted()->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA,$userB])->withSecretsFor([$userA])->persist();
+        $r1 = ResourceFactory::make()
+            ->withSecretRevisions()
+            ->withPermissionsFor([$userA,$userB])
+            ->withSecretsFor([$userA])->persist();
 
-        $data = [['user_id' => $userB->id, 'data' => Hash::get(self::getDummySecretData(), 'data')], ];
+        $newSecretRevision = SecretRevisionFactory::make()->persist();
+
+        $data = [[
+            'user_id' => $userB->id,
+            'data' => Hash::get(self::getDummySecretData(), 'data'),
+            'secret_revision_id' => $newSecretRevision->id,
+        ]];
 
         try {
             $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
@@ -138,7 +173,11 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
     {
         [$userA, $userB] = UserFactory::make(2)->persist();
         // Betty has no permissions but has secret.
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withSecretsFor([$userA,$userB])->persist();
+        $r1 = ResourceFactory::make()
+            ->withSecretRevisions()
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA,$userB])->persist();
+        $secretToKeepId = $r1->secrets[0]->id;
 
         $data = [];
 
@@ -148,64 +187,60 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
         $secrets = $this->Secrets->findByResourceId($r1->id)->toArray();
         $this->assertCount(1, $secrets);
         $this->assertSecretExists($r1->id, $userA->id);
+        $this->assertSecretNotExist($r1->id, $userB->id);
+        $this->assertNull(SecretFactory::get($secretToKeepId)->get('deleted'));
     }
 
-    /* UPDATE SECRETS */
-
-    public function testUpdateSecretsSuccess_UpdateSecrets()
+    public function testUpdateSecretsSuccess_DeleteSecrets_Ignore_Deleted_Secrets()
     {
-        $userA = UserFactory::make()->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withSecretsFor([$userA])->persist();
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        // Betty has no permissions but has secret.
+        $r1 = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withSecretRevisions()
+            ->withSecretsFor([$userA,$userB])
+            ->persist();
+        $secretToKeepId = $r1->secrets[0]->id;
 
-        $encryptedSecret = '-----BEGIN PGP MESSAGE-----
+        // Deleted secret to be hard deleted too
+        SecretFactory::make()
+            ->with('Users', $userB)
+            ->with('Resources', $r1)
+            ->deleted()
+            ->persist();
+        $data = [];
 
-hQIMA+p38wQEIh7oARAA01hXtj/fXnMEbilhaL1xihs+2kjJXFROw24/W+GmUQgP
-cTr5zfM+CyFLwC2qDffhDnPoAlj8dLLBOyxlHk/+L3pvnLKTpdeDtXKizj/CG9Y1
-howFSiql00egivNikd/ZwUW94qXhLlm/0s8CXkKS5ogA3nS9ZE8rbRyO5Qn9GtsS
-LiE303+/UTcr5N9ul5zi0Bz1bbch3gaAJ7hYqzKNVveIQCwciZP2nCiBnTQkCUzb
-ucQ3lOeGxzpKXHwdGU2KufA+JB9gnGgpzTknxbzqfIjdvbmI0Lobol+sKPHlDtNl
-0guQljNcRxRC/I5e/DWVekyuE2IX042SDijgnV3B/thm0otVX5wB3mYiHqw068DK
-Cae/ef3jAxafzIb+gJBOyMjLh+ITVpYaleQDl2suR5EKEOmx4+k/ZFWtYsynj+h/
-RDIqqpCnEIty+txA4ssIuifBf5wXqRulgpVVdOXpYZBjGRvD7TCos2savhaG/2YH
-FQuz1IG9lCTYBWJPHp7iUvqUCiD6nzC20zC/qAn3AIp/mS+yOHceC71jXqKsVMkJ
-iOL8/FJm/SwPIgwYO7uYv8/lT+6OYjznXGqt6bwAJlX0MI6NxNYEePBBw9WKaqsY
-CyZ/m96d+zxfXDkSsje3cim1U7q6dA7qX3vZ1t3yoNyjM6sE4bL14P6jqDzP0enS
-QAEWx5cGIKOwYLS+HQA4w46JQUgJH3uqe8AK26+i20wLKtbWIF7MWW1nfKm9rDiG
-URIWI7R+VCewqviRfmezc4M=
-=50Mc
------END PGP MESSAGE-----';
-        $data = [
-            ['user_id' => $userA->id, 'data' => $encryptedSecret],
-        ];
-
-        try {
-            $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
-        } catch (CustomValidationException $validationException) {
-            $data = json_encode($data);
-            $errors = json_encode($validationException->getErrors());
-            $this->fail(__("Failed to update secret.\nData {0}\nErrors {1}", $data, $errors));
-        }
+        $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
 
         // Assert secrets
         $secrets = $this->Secrets->findByResourceId($r1->id)->toArray();
         $this->assertCount(1, $secrets);
         $this->assertSecretExists($r1->id, $userA->id);
-        $secret = $this->Secrets->findByResourceIdAndUserId($r1->id, $userA->id)->first();
-        $this->assertEquals($encryptedSecret, $secret->data);
+        $this->assertSecretNotExist($r1->id, $userB->id);
+        $this->assertNull(SecretFactory::get($secretToKeepId)->get('deleted'));
     }
 
-    public function testUpdateSecretsError_UpdateSecrets_ValidationExceptions_InvalidGpgMessage()
+    public function testUpdateSecrets_Error_If_Revision_Is_Deleted()
     {
         [$userA, $userB] = UserFactory::make(2)->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$userA])->withSecretsFor([$userA])->persist();
+        // Add Betty's permission without secret.
+        $r1 = ResourceFactory::make()
+            ->withPermissionsFor([$userA, $userB])
+            ->withSecretsFor([$userA])
+            ->withSecretRevisions()
+            ->persist();
 
-        $data = [['user_id' => $userB->id, 'data' => 'invalid-message']];
+        $newSecretRevision = SecretRevisionFactory::make()->deleted()->persist();
+        $data = [
+            [
+                'user_id' => $userB->id,
+                'data' => Hash::get(self::getDummySecretData(), 'data'),
+                'secret_revision_id' => $newSecretRevision->id,
+            ],
+        ];
 
-        try {
-            $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (CustomValidationException $e) {
-            $this->assertUpdateSecretsValidationException($e, '0.data.isValidOpenPGPMessage');
-        }
+        $this->expectException(CustomValidationException::class);
+        $this->expectExceptionMessage('Could not validate secrets data.');
+        $this->service->updateSecrets($this->makeUac($userA), $r1->id, $data);
     }
 }
