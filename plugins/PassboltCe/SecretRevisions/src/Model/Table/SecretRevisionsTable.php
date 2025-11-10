@@ -169,8 +169,11 @@ class SecretRevisionsTable extends Table
     }
 
     /**
-     * Get the SecretRevision settings and trim all the secret revisions
-     * above the threshold and their secrets
+     * Get the SecretRevision settings and trim all the secrets of the secret revisions
+     * above the threshold
+     *
+     * The secret revisions themselves are kept as they are used in the logs to retrieve information
+     * on secret modifications of a resource
      *
      * @param \Cake\Event\Event $event the event
      * @param \Passbolt\SecretRevisions\Model\Entity\SecretRevision $secretRevision entity
@@ -179,41 +182,34 @@ class SecretRevisionsTable extends Table
      */
     public function afterSave(Event $event, SecretRevision $secretRevision, ArrayObject $options): void
     {
-        $maxRevisions = SecretRevisionsSettingsGetService::getSettings()->getMaxRevisions();
         $resourceId = $secretRevision->resource_id;
-        $revisionsToKeep = $this->find('list')
-            ->select('id')
-            ->where(['resource_id' => $resourceId])
-            ->limit($maxRevisions)
-            ->orderByDesc($this->subquery()->newExpr()->isNull('deleted'))
-            ->orderByDesc('deleted')
-            ->disableHydration()
-            ->all()
-            ->toList();
-
-        // There is no reason for the list above to be empty, but just in case:
-        if (empty($revisionsToKeep)) {
-            return;
+        // The value in setting represent the number of past revisions to keep + the active one
+        // $maxDeletedRevisions is the number of revisions in the past that we want to keep the secrets of
+        $maxNumberOfDeletedRevisionsToKeep = SecretRevisionsSettingsGetService::getSettings()->getMaxRevisions() - 1;
+        $deletedRevisionsToKeepSecretsFor = [];
+        // If we are to keep some secret revisions
+        if ($maxNumberOfDeletedRevisionsToKeep > 0) {
+            $deletedRevisionsToKeepSecretsFor = $this
+                ->find('list')
+                ->select('id')
+                ->where(['resource_id' => $resourceId])
+                ->whereNotNull('deleted')
+                ->limit($maxNumberOfDeletedRevisionsToKeep)
+                ->orderByDesc('deleted')
+                ->disableHydration()
+                ->all()
+                ->toList();
         }
-        // In this case we know that the total number of revisions is smaller than the max allowed
-        if (count($revisionsToKeep) < $maxRevisions) {
-            return;
-        }
-
-        // Delete the revisions that are for that resource, but too old and thus not in the short list
-        // Ensure that only soft deleted revisions are flushed
-        $this->deleteQuery()->where([
-            'id NOT IN' => $revisionsToKeep,
-            'resource_id' => $resourceId,
-            'deleted IS NOT NULL',
-        ])->execute();
         // Delete the secrets that are for that resource, but not associated to the revisions kept
         // Ensure that only soft deleted secrets are flushed
-        $this->Secrets->deleteQuery()->where([
-            'secret_revision_id NOT IN' => $revisionsToKeep,
+        $secretConditionToDelete = [
             'resource_id' => $resourceId,
             'deleted IS NOT NULL',
-        ])->execute();
+        ];
+        if (!empty($deletedRevisionsToKeepSecretsFor)) {
+            $secretConditionToDelete['secret_revision_id NOT IN'] = $deletedRevisionsToKeepSecretsFor;
+        }
+        $this->Secrets->deleteQuery()->where($secretConditionToDelete)->execute();
     }
 
     /**

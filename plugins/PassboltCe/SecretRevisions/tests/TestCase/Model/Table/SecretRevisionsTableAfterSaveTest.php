@@ -19,7 +19,6 @@ namespace Passbolt\SecretRevisions\Test\TestCase\Model\Table;
 
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
-use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -74,6 +73,9 @@ class SecretRevisionsTableAfterSaveTest extends TestCase
             ->deleted()
             ->persist();
 
+        // Soft delete the actual secret revision
+        $this->SecretRevisions->softDelete($r1->get('id'));
+        // and create a new one
         $secretRevision = $this->SecretRevisions->newEntity([
             'resource_id' => $r1->get('id'),
             'resource_type_id' => $r1->get('resource_type_id'),
@@ -84,8 +86,8 @@ class SecretRevisionsTableAfterSaveTest extends TestCase
         $this->assertInstanceOf(SecretRevision::class, $this->SecretRevisions->get($activeSecretRevision->get('id')));
         // Assert that all the secrets of the active revision are not deleted
         $this->assertSame(10, $this->SecretRevisions->Secrets->find()->where(['secret_revision_id' => $activeSecretRevision->get('id')])->count());
-        // Assert that only $maxRevision secret revisions are left
-        $this->assertSame($maxRevision, $this->SecretRevisions->find()->where(['resource_id' => $r1->get('id')])->count());
+        // Assert that all secret revisions are left
+        $this->assertSame(12, $this->SecretRevisions->find()->where(['resource_id' => $r1->get('id')])->count());
         // Assert that only 10 * ($maxRevisions - 1) secrets are left for r1
         $this->assertSame(10 * ($maxRevision - 1), $this->SecretRevisions->Secrets->find()->where(['resource_id' => $r1->get('id')])->count());
 
@@ -95,29 +97,32 @@ class SecretRevisionsTableAfterSaveTest extends TestCase
         $this->assertSame(10 * 5, $this->SecretRevisions->Secrets->find()->where(['resource_id' => $r2->get('id')])->count());
     }
 
-    public function testSecretRevisionsTableAfterSave_Trim_Deleted_First(): void
+    public function testSecretRevisionsTableAfterSave_With_Max_Secret_Revision_To_One(): void
     {
-        $maxRevision = 4;
-        SecretRevisionsSettingsFactory::make()->setMaxRevisions($maxRevision)->persist();
+        $r1 = ResourceFactory::make()->persist();
 
-        $r = ResourceFactory::make()->persist();
-        $resourceId = $r->get('id');
-        $revisionNotDeleted1 = SecretRevisionsFactory::make()->with('Resources', $r)->persist();
-        $revisionNotDeleted2 = SecretRevisionsFactory::make()->with('Resources', $r)->persist();
-        SecretRevisionsFactory::make()->with('Resources', $r)->deleted(DateTime::yesterday())->persist();
-        $revisionDeletedToday = SecretRevisionsFactory::make()->with('Resources', $r)->deleted(DateTime::today())->persist();
+        SecretRevisionsFactory::make()
+            ->with('Resources', $r1)
+            ->with('Secrets', SecretFactory::make(10)->setField('resource_id', $r1->get('id')))
+            ->persist();
+        SecretRevisionsFactory::make(10)
+            ->with('Resources', $r1)
+            ->with('Secrets', SecretFactory::make(10)->setField('resource_id', $r1->get('id'))->deleted())
+            ->deleted()
+            ->persist();
 
-        $newSecretRevision = $this->SecretRevisions->newEntity([
-            'resource_id' => $resourceId,
-            'resource_type_id' => $r->get('resource_type_id'),
+        // Soft delete the actual secret revision
+        $this->SecretRevisions->softDelete($r1->get('id'));
+        // and create a new one
+        $secretRevision = $this->SecretRevisions->newEntity([
+            'resource_id' => $r1->get('id'),
+            'resource_type_id' => $r1->get('resource_type_id'),
         ], ['accessibleFields' => ['resource_id' => true, 'resource_type_id' => true]]);
-        $this->SecretRevisions->save($newSecretRevision);
+        $this->SecretRevisions->save($secretRevision);
 
-        $expectedRevisionIdsLeft = [$revisionNotDeleted1->get('id'), $revisionNotDeleted2->get('id'), $revisionDeletedToday->get('id'), $newSecretRevision->get('id')];
-
-        foreach ($expectedRevisionIdsLeft as $id) {
-            $this->SecretRevisions->exists(['id' => $id]);
-        }
-        $this->assertSame($maxRevision, SecretRevisionsFactory::count());
+        // Assert that all the soft deleted revisions were dropped
+        $this->assertSame(12, SecretRevisionsFactory::find()->where(['resource_id' => $r1->get('id')])->count());
+        // Since no secrets are associated to the new secret revision, no secret should be left in DB
+        $this->assertSame(0, SecretFactory::find()->where(['resource_id' => $r1->get('id')])->count());
     }
 }
