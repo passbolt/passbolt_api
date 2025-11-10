@@ -1,44 +1,29 @@
-Release song: https://www.youtube.com/watch?v=bu50DtPF1Ac
+Release song: TBD
 
-Passbolt 5.6.0 introduces standalone notes, shared metadata key rotation, and resizable sidebars. As usual, this version also brings important security hardening through dependency updates as well as a series of bug fixes and maintenance improvements.
+TBD
 
-## Standalone notes
-It is now possible to create notes as a standalone resource type, without attaching them to credentials or other elements. Import and export processes have been updated to recognize and support this new type. Any imported resources that contain only a description will now be created as standalone notes.
-
-## Shared metadata key rotation
-Administrators can now rotate the shared metadata key at any time from the organization settings. This improvement marks one of the final steps in meeting metadata encryption requirements. The rotation process can be performed while the instance remains operational, so availability is not disrupted.
-
-## Resizable sidebars
-Both main workspace and Users & Groups workspace now feature sidebars that can be resized. This allows users to improve readability when working with long folder names or deeply nested folder structures. After resizing, a double-click on the sidebar handle resets it to its default width.
-
-## Miscellaneous Improvements
-The export of account kits is now compatible with larger private keys. The group membership update process has been optimized to reduce request payload size and to avoid certain size limitations. Sorting of folder names has also been improved with natural number ordering, meaning for example that "folder2" now correctly appears before "folder10."
-
-Many thanks to everyone who shared feedback, reported issues, and helped refine these features.
-
-## [5.6.0] - 2025-10-08
+## [5.7.0-test.1] - 2025-11-11
 ### Added
-- PB-45058 Add datacheck to check for existing metadata key with no metadata private keys
-- PB-44187 As an admin I cannot delete a metadata key associated with a deleted resource
-- PB-44183 As a user that is sole owner of v4 resources when v4 resources types are disabled, v4 resources should be ignored on an ownership transfer request
-- PB-44770 As a user I want to configure the trusted_proxies list as an environment variable
-- PB-45471 Add new database migration to add standalone notes resource type
-- PB-45472 Update resource types endpoints tests to assert enable/disable is working for new standalone notes resource type
-- PB-45473 Update resources endpoints tests to accommodate new standalone notes resource type
+- PB-46107 As an administrator I can define the number of past secret revisions persisted in DB
+- PB-46109 As an administrator I can block the edition of the secret revisions settings with a configuration flag
+- PB-46110 As a logged-in user I can view the past secret revisions of a resource
+- PB-45059 As an administrator I can see in the healthcheck if zero knowledge is activated and the server has access to the key
+- PB-45496 As an administrator I can run a clean-up task to delete metadata private keys entries of soft & hard-deleted users
+- PB-45567 As an administrator I can run a passbolt user_index command to list all users
+- PB-45567 As an administrator I can run a passbolt user_promote_to_administrator command to promote users to administrators
+- PB-45567 As an administrator I can run a passbolt mfa_user_settings_disable command to disable MFA for a given user
+- PB-46146 As an administrator I can hide the warning on commands run as non web-user with a configuration flag
+
+### Security
+- PB-45158 Adds frame-ancestors:none and form-action:self to the CSP header
 
 ### Fixed
-- PB-45222 Fix EmailDigest not working for v5 resources
-- PB-45447 Fix PUT /metadata/keys/<uuid>.json endpoint returning 500 error with trailing data
-- PB-45436 As an administrator I can define the default cache engine with an environment variable
-- PB-45454 Fix 500 error due to MySQL deadlock on create resource endpoint
-- PB-45456 Allow editing of v4 resources even when v4 resource type creation is disabled
-- PB-45258 Fix grammatical errors in the resource update email content
-- PB-45057 Reduce memory consumption on the action logs endpoints
-- PB-45057 Reduce memory consumption on resources and folders index endpoints
+- PB-44623 The API should return a 400 instead of 500 on /auth/jwt/logout.json when refresh_token isn't a UUID
+- PB-45760 Fixes a translation in setup recover abort email reported by community
+- PB-45262 Prevent activity log from showing secret creation during resource share as a secret update
 
 ### Maintenance
-- PB-44813 Bring back DDEV ldap related services for development environment
-- PB-44593 Bump i18next version
-- PB-45161 Fix regularly failing UsersIndexControllerPaginationTest.php test
-- PB-45270 Add custom exception message with client IP in /healthcheck/error.json
-- PB-45062 Fix user_setup_complete.php template in LU folder instead of AD
+- PB-45731 As a developer I can ensure by unit tests that all Crowdin translations are parsable
+- PB-45788 Updates sessions.sql file as per the latest cakephp skeleton
+- PB-43742 Updates PHPUnit vendor to v11
+- PB-45829 Upgrades Passbolt API Web Installer to use OpenPGP.js version 6
