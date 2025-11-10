@@ -55,7 +55,6 @@ class ActionLogResultsParser
     public const TYPE_USER_CREATED = 'Users.created';
     public const TYPE_USER_UPDATED = 'Users.updated';
     public const TYPE_USER_DELETED = 'Users.deleted';
-    public const TYPE_SECRET_REVISION_CREATED = 'SecretRevisions.created';
 
     /**
      * ActionLogResultsParser constructor.
