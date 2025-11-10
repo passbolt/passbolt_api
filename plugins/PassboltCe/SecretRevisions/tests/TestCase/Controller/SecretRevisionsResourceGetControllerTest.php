@@ -23,6 +23,9 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
+use Passbolt\Log\LogPlugin;
+use Passbolt\Log\Test\Factory\EntitiesHistoryFactory;
+use Passbolt\Log\Test\Factory\SecretAccessFactory;
 use Passbolt\SecretRevisions\SecretRevisionsPlugin;
 use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
@@ -38,6 +41,7 @@ class SecretRevisionsResourceGetControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->enableFeaturePlugin(SecretRevisionsPlugin::class);
+        $this->enableFeaturePlugin(LogPlugin::class);
     }
 
     public function testSecretRevisionsResourceGetController_Success(): void
@@ -76,6 +80,9 @@ class SecretRevisionsResourceGetControllerTest extends AppIntegrationTestCase
         $this->assertSame($secretRevision->resource_id, $response[0]['resource_id']);
         $this->assertEquals($secretRevision->created->toAtomString(), $response[0]['created']);
         $this->assertSame($secretRevision->created_by, $response[0]['created_by']);
+
+        // Assert that no secret access were persisted
+        $this->assertSame(0, SecretAccessFactory::count());
     }
 
     public function testSecretRevisionsResourceGetController_Success_Contain_Secret(): void
@@ -97,6 +104,21 @@ class SecretRevisionsResourceGetControllerTest extends AppIntegrationTestCase
             ->with('SecretRevisions', $secretRevision)
             ->persist();
 
+        // Deleted secret revision
+        /** @var \Passbolt\SecretRevisions\Model\Entity\SecretRevision $deletedSecretRevision */
+        $deletedSecretRevision = SecretRevisionFactory::make()
+            ->with('Resources', $resource)
+            ->with('Secrets', SecretFactory::make()->deleted())
+            ->deleted()
+            ->persist();
+        /** @var \App\Model\Entity\Secret $pastSecret */
+        $pastSecret = SecretFactory::make()
+            ->with('Resources', $resource)
+            ->with('Users', $user)
+            ->with('SecretRevisions', $deletedSecretRevision)
+            ->deleted()
+            ->persist();
+
         // Secret with the same secret revision and resource but another user should be ignored
         SecretFactory::make()
             ->with('Resources', $resource)
@@ -107,16 +129,35 @@ class SecretRevisionsResourceGetControllerTest extends AppIntegrationTestCase
         $this->getJson("/secret-revisions/resource/{$resource->id}.json?contain[secret]=1");
 
         $response = $this->getResponseBodyAsArray();
-        $this->assertCount(1, $response);
+        $this->assertCount(2, $response);
+
+        // Assert on the active secret revision
         $this->assertSame($secretRevision->id, $response[0]['id']);
         $this->assertSame($secretRevision->resource_id, $response[0]['resource_id']);
         $this->assertEquals($secretRevision->created->toAtomString(), $response[0]['created']);
         $this->assertSame($secretRevision->created_by, $response[0]['created_by']);
 
-        // Assert on secrets
+        // Assert on the past secret revision
+        $this->assertSame($deletedSecretRevision->id, $response[1]['id']);
+        $this->assertSame($deletedSecretRevision->resource_id, $response[1]['resource_id']);
+        $this->assertEquals($deletedSecretRevision->created->toAtomString(), $response[1]['created']);
+        $this->assertSame($deletedSecretRevision->created_by, $response[1]['created_by']);
+
+        // Assert on the active secret
         $this->assertCount(1, $response[0]['secrets']);
         $this->assertSame($secret->id, $response[0]['secrets'][0]['id']);
         $this->assertSame($secretRevision->id, $response[0]['secrets'][0]['secret_revision_id']);
+
+        // Assert on the past secret
+        $this->assertCount(1, $response[1]['secrets']);
+        $this->assertSame($pastSecret->id, $response[1]['secrets'][0]['id']);
+        $this->assertSame($deletedSecretRevision->id, $response[1]['secrets'][0]['secret_revision_id']);
+
+        // Assert that 1 secret access is persisted (only for the active secret)
+        $this->assertSame(1, SecretAccessFactory::count());
+        $this->assertSame(1, EntitiesHistoryFactory::count());
+        $this->assertSame(1, SecretFactory::find()->where(['user_id' => $user->id, 'secret_revision_id' => $secretRevision->id, 'resource_id' => $resource->id])->count());
+        $this->assertSame(1, SecretFactory::find()->where(['user_id' => $user->id, 'secret_revision_id' => $deletedSecretRevision->id, 'resource_id' => $resource->id])->count());
     }
 
     public function testSecretRevisionsResourceGetController_Success_Contain_Creator(): void
