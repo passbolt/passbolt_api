@@ -243,21 +243,19 @@ class ActionLogResultsParser
                 // The secret revision might have been deleted if the amount of secret revisions in DB
                 // is above the threshold defined in the SecretRevisionsSettings
                 $secretRevision = $entityHistory->secret_revision;
-                if (!is_null($secretRevision)) {
-                    $data['resource'] = $secretRevision->resource;
-                    foreach ($secretRevision->secrets as $secret) {
-                        $data['secrets'][] = [
-                            'id' => $secret->id,
-                            'secrets_history_resource' => [
-                                'id' => $secretRevision->resource->id,
-                                'name' => $secretRevision->resource->name,
-                            ],
-                            'secrets_history_user' => [
-                                'id' => $secret->user->id,
-                                'username' => $secret->user->username,
-                            ],
-                        ];
-                    }
+                $data['resource'] = $secretRevision->resource;
+                foreach ($secretRevision->secrets as $secret) {
+                    $data['secrets'][] = [
+                        'id' => $secret->id,
+                        'secrets_history_resource' => [
+                            'id' => $secretRevision->resource->id,
+                            'name' => $secretRevision->resource->name,
+                        ],
+                        'secrets_history_user' => [
+                            'id' => $secret->user->id,
+                            'username' => $secret->user->username,
+                        ],
+                    ];
                 }
 
                 $this->_addEntry(self::TYPE_SECRETS_UPDATED, $data, $actionLog);
