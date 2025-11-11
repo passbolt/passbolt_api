@@ -44,7 +44,7 @@ class MetadataUsersDeleteControllerTest extends AppIntegrationTestCaseV5
         RoleFactory::make()->guest()->persist();
     }
 
-    public function dryRunProvider()
+    public static function dryRunProvider()
     {
         return [
             [false], // delete

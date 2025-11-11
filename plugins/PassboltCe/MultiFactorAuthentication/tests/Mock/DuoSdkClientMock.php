@@ -20,7 +20,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\Mock;
 use App\Model\Entity\User;
 use Duo\DuoUniversal\Client;
 use Duo\DuoUniversal\DuoException;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockBuilder;
 
 class DuoSdkClientMock
 {
@@ -48,16 +48,15 @@ class DuoSdkClientMock
     /**
      * Constructor.
      *
-     * @param \PHPUnit\Framework\TestCase $testCase Test case
+     * @param MockBuilder $stub
      */
-    public function __construct(TestCase $testCase)
+    public function __construct(MockBuilder $stub)
     {
         $this->apiHostname = 'api-45e9f2ca.duosecurity.com';
         $this->state = 'duo-not-so-random-state';
         $this->iss = "https://$this->apiHostname/oauth/v1/token";
         $this->duoAuthUrl = "https://$this->apiHostname/oauth/v1/authorize?sate=$this->state";
-        $this->stub = $testCase->getMockBuilder(Client::class)
-            ->disableOriginalConstructor()->getMock();
+        $this->stub = $stub->disableOriginalConstructor()->getMock();
     }
 
     /**
@@ -74,13 +73,13 @@ class DuoSdkClientMock
     }
 
     /**
-     * @param \PHPUnit\Framework\TestCase $testCase Test case
+     * @param MockBuilder $stub
      * @param User $user Test user
      * @return static
      */
-    public static function createDefault(TestCase $testCase, User $user): self
+    public static function createDefault(MockBuilder $stub, User $user): self
     {
-        $mock = new self($testCase);
+        $mock = new self($stub);
         $mock->mockSuccessGenerateState($mock->state);
         $mock->mockSuccessCreateAuthUrl($mock->apiHostname, $mock->state);
         $mock->mockSuccessHealthCheck();
@@ -90,64 +89,64 @@ class DuoSdkClientMock
     }
 
     /**
-     * @param \PHPUnit\Framework\TestCase $testCase Test case
+     * @param MockBuilder $stub
      * @return static
      */
-    public static function createWithSuccessHealthcheck(TestCase $testCase): self
+    public static function createWithSuccessHealthcheck(MockBuilder $stub): self
     {
-        $mock = new self($testCase);
+        $mock = new self($stub);
         $mock->mockSuccessHealthCheck();
 
         return $mock;
     }
 
     /**
-     * @param \PHPUnit\Framework\TestCase $testCase Test case
+     * @param MockBuilder $stub
      * @return static
      */
-    public static function createWithExchangeAuthorizationCodeFor2FAResultThrowingException(TestCase $testCase): self
+    public static function createWithExchangeAuthorizationCodeFor2FAResultThrowingException(MockBuilder $stub): self
     {
-        $mock = new self($testCase);
+        $mock = new self($stub);
         $mock->mockErrorExchangeAuthorizationCodeFor2FAResult();
 
         return $mock;
     }
 
     /**
-     * @param \PHPUnit\Framework\TestCase $testCase Test case
+     * @param MockBuilder $stub
      * @param User $user Test user
      * @return static
      */
-    public static function createWithWrongExchangeAuthorizationCodeFor2FAResultIss(TestCase $testCase, User $user): self
+    public static function createWithWrongExchangeAuthorizationCodeFor2FAResultIss(MockBuilder $stub, User $user): self
     {
         $iss = 'https://api-00f0f2ff.duosecurity.com/oauth/v1/token';
-        $mock = new self($testCase);
+        $mock = new self($stub);
         $mock->mockSuccessExchangeAuthorizationCodeFor2FAResult($iss, $user->username);
 
         return $mock;
     }
 
     /**
-     * @param \PHPUnit\Framework\TestCase $testCase Test case
+     * @param MockBuilder $stub
      * @return static
      */
-    public static function createWithWrongExchangeAuthorizationCodeFor2FAResultSub(TestCase $testCase): self
+    public static function createWithWrongExchangeAuthorizationCodeFor2FAResultSub(MockBuilder $stub): self
     {
         $username = 'wrong@passbolt.com';
-        $mock = new self($testCase);
+        $mock = new self($stub);
         $mock->mockSuccessExchangeAuthorizationCodeFor2FAResult($mock->iss, $username);
 
         return $mock;
     }
 
     /**
-     * @param \PHPUnit\Framework\TestCase $testCase Test case
+     * @param MockBuilder $stub
      * @param string $sub the sub to use
      * @return static
      */
-    public static function createWithExchangeAuthorizationCodeFor2FAResultSub(TestCase $testCase, string $sub): self
+    public static function createWithExchangeAuthorizationCodeFor2FAResultSub(MockBuilder $stub, string $sub): self
     {
-        $mock = new self($testCase);
+        $mock = new self($stub);
         $mock->mockSuccessExchangeAuthorizationCodeFor2FAResult($mock->iss, $sub);
 
         return $mock;

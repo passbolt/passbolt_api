@@ -31,10 +31,12 @@ use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Utility\UserAccessControl;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\Utility\Hash;
 
 class ResourcesShareService
 {
@@ -207,13 +209,37 @@ class ResourcesShareService
         $result = new EntitiesChangesDto();
 
         try {
+            $data = $this->setSecretRevisionInData($resource, $data);
             $result = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
         } catch (CustomValidationException $e) {
             $resource->setError('secrets', $e->getErrors());
+        } catch (RecordNotFoundException $e) {
+            $resource->setError('secrets', __('No secret revision were found for this resource.'));
+        } finally {
             $this->handleValidationErrors($resource);
         }
 
         return $result;
+    }
+
+    /**
+     * @param \App\Model\Entity\Resource $resource resource being shared
+     * @param array $data secrets to create during the share
+     * @return array
+     */
+    private function setSecretRevisionInData(Resource $resource, array $data): array
+    {
+        // If no secrets are created during the share, no need to fetch the revision
+        if (empty($data)) {
+            return $data;
+        }
+        $secretRevision = $this->Resources->SecretRevisions
+            ->find('notDeleted')
+            ->select('id')
+            ->where(['resource_id' => $resource->id])
+            ->firstOrFail();
+
+        return Hash::insert($data, '{n}.secret_revision_id', $secretRevision->id);
     }
 
     /**

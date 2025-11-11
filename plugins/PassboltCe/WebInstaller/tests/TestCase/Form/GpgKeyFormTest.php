@@ -38,7 +38,7 @@ class GpgKeyFormTest extends AppTestCase
         $this->assertFormFieldFormatValidation(GpgKeyForm::class, 'fingerprint', $this->getDummyGpgkey(), [$testName => $testCase]);
     }
 
-    public function dataForTestGpgKeyFormTestFieldFingerprint(): array
+    public static function dataForTestGpgKeyFormTestFieldFingerprint(): array
     {
         return [
             ['requirePresence', self::getRequirePresenceTestCases()],
@@ -46,7 +46,7 @@ class GpgKeyFormTest extends AppTestCase
             ['match_public_private_fingerprint', [
                 'rule_name' => 'match_public_private_fingerprints',
                 'test_cases' => [
-                    $this->getDummyGpgkey()['fingerprint'] => true,
+                    self::getDummyGpgkey()['fingerprint'] => true,
                     '2FC8945833C51946E937F9FED47B0811573EE67E' => false,
                 ],
             ]],
@@ -75,14 +75,14 @@ class GpgKeyFormTest extends AppTestCase
         $this->assertFormFieldFormatValidation(GpgKeyForm::class, 'public_key_armored', $this->getDummyGpgkey(), [$testName => $testCase]);
     }
 
-    public function dataForTestGpgKeyFormTestFieldPublicKeyArmored(): array
+    public static function dataForTestGpgKeyFormTestFieldPublicKeyArmored(): array
     {
         return [
             ['requirePresence', self::getRequirePresenceTestCases()],
             ['notEmpty', self::getNotEmptyTestCases()],
-            ['isPublicKey', $this->getServerKeyPublicArmoredTestCases()],
-            ['canEncrypt', $this->getServerKeyPublicArmoredCanEncryptTestCases()],
-            ['hasNoExpiry', $this->getServerKeyPublicArmoredHasNoExpiryTestCases()],
+            ['isPublicKey', self::getServerKeyPublicArmoredTestCases()],
+            ['canEncrypt', self::getServerKeyPublicArmoredCanEncryptTestCases()],
+            ['hasNoExpiry', self::getServerKeyPublicArmoredHasNoExpiryTestCases()],
         ];
     }
 
@@ -91,7 +91,7 @@ class GpgKeyFormTest extends AppTestCase
      *
      * @return array
      */
-    protected function getServerKeyPublicArmoredTestCases()
+    protected static function getServerKeyPublicArmoredTestCases()
     {
         return [
             'rule_name' => 'is_public_key',
@@ -147,8 +147,8 @@ XBF8VcSFRObz0gCy3eWHO1qGwPJZpl+nA16+gPMRMDqJvEnhp4NQxD305d/9Xm9c
 DTfTTCqwEieuLV9Rk0VlZMhc7ifSPClNM63oO+2p5HKOPDacrddRKIm7eLO+fTv3
 WXi2h/I=
 =L/Vu' => false,
-                $this->getDummyGpgkey()['private_key_armored'] => false,
-                $this->getDummyGpgkey()['public_key_armored'] => true,
+                self::getDummyGpgkey()['private_key_armored'] => false,
+                self::getDummyGpgkey()['public_key_armored'] => true,
             ],
         ];
     }
@@ -278,12 +278,12 @@ ybBiqwayCLB4UXGcUFHffj0mdjk8s/SvQyhZhA==
      *
      * @return array
      */
-    protected function getServerKeyPublicArmoredHasNoExpiryTestCases()
+    protected static function getServerKeyPublicArmoredHasNoExpiryTestCases()
     {
         return [
             'rule_name' => 'has_no_expiry',
             'test_cases' => [
-                $this->getDummyGpgkey()['public_key_armored'] => true,
+                self::getDummyGpgkey()['public_key_armored'] => true,
                 // Key with expiry date are not accepted
                 '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
@@ -469,12 +469,12 @@ LWN2IVKPj2mia4lQHLub9OTlGkkO+pcgU1wQ
      *
      * @return array
      */
-    protected function getServerKeyPublicArmoredCanEncryptTestCases()
+    protected static function getServerKeyPublicArmoredCanEncryptTestCases()
     {
         return [
             'rule_name' => 'can_encrypt',
             'test_cases' => [
-                $this->getDummyGpgkey()['public_key_armored'] => true,
+                self::getDummyGpgkey()['public_key_armored'] => true,
             ],
         ];
     }

@@ -132,7 +132,7 @@ trait ResourcesFindersTrait
         // If contains Secrets.
         if (isset($options['contain']['secret'])) {
             $query->contain('Secrets', function ($q) use ($userId) {
-                return $q->where(['Secrets.user_id' => $userId]);
+                return $q->find('notDeleted')->where(['Secrets.user_id' => $userId]);
             });
         }
 

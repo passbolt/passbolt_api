@@ -110,7 +110,7 @@ class MetadataBatchUpdateFormTest extends TestCase
         $this->assertArrayHasKey('metadata_key_deleted', $errors['metadata_key']['deleted']);
     }
 
-    public function metadataRotateKeyResourcesFormModifiedInvalidDateTimeFormat(): array
+    public static function metadataRotateKeyResourcesFormModifiedInvalidDateTimeFormat(): array
     {
         return [
             ['🔥'],

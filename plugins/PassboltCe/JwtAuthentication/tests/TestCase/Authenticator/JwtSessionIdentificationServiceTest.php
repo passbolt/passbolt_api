@@ -25,7 +25,7 @@ use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
 
 class JwtSessionIdentificationServiceTest extends TestCase
 {
-    public function dataProviderForAuthentication()
+    public static function dataProviderForAuthentication()
     {
         return [
             [true], [false],

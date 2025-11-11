@@ -98,7 +98,7 @@ abstract class RefreshTokenAbstractService
     /**
      * @param mixed $token Refresh token to be validated.
      * @return void
-     * @throws \InvalidArgumentException if the $token is not valid
+     * @throws \InvalidArgumentException If the token is not a valid UUID
      */
     public function validateRefreshToken(mixed $token): void
     {
@@ -122,6 +122,7 @@ abstract class RefreshTokenAbstractService
     /**
      * @param string|null $token Refresh token
      * @return \Cake\ORM\Query\SelectQuery
+     * @throws \InvalidArgumentException If the token is not a valid UUID
      */
     public function queryRefreshToken(?string $token): SelectQuery
     {
@@ -137,7 +138,7 @@ abstract class RefreshTokenAbstractService
      * @param string $token Refresh token
      * @param string $userId User ID
      * @return \Cake\ORM\Query\SelectQuery
-     * @throws \InvalidArgumentException if the $id is not valid
+     * @throws \InvalidArgumentException If the token or user identifier are not valid UUIDs
      */
     public function queryRefreshTokenWithUserId(string $token, string $userId): SelectQuery
     {
@@ -155,6 +156,7 @@ abstract class RefreshTokenAbstractService
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException if the token is not found
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException if the token was already consumed
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ExpiredRefreshTokenAccessException if the token is expired
+     * @throws \InvalidArgumentException If the given token or user identifier are not a valid UUIDs
      */
     public function getActiveRefreshToken(string $token, string $userId): AuthenticationToken
     {

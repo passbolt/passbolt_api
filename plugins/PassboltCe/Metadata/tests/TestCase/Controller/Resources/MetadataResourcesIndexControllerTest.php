@@ -91,7 +91,7 @@ class MetadataResourcesIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertArrayHasAttributes(MetadataResourceDto::V4_META_PROPS, $resourceV4);
     }
 
-    public function metadataKeyType()
+    public static function metadataKeyType()
     {
         return [
             ['user_key'],

@@ -122,7 +122,7 @@ class ActionLogsUsernameQueryStrategyTest extends LogIntegrationTestCase
     {
         [$user, $edith] = UserFactory::make(2)->user()->persist();
         /** @var \App\Model\Entity\Resource $resource */
-        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $resource = ResourceFactory::make()->withSecretRevisions()->withCreatorAndPermission($user)->persist();
         $resourceId = $resource->id;
         // Add an owner permission for the user Edith
         $data = [
@@ -130,6 +130,7 @@ class ActionLogsUsernameQueryStrategyTest extends LogIntegrationTestCase
                 ['aro' => 'User', 'aro_foreign_key' => $edith->id, 'type' => Permission::OWNER],
             ],
             'secrets' => [
+                ['user_id' => $user->id, 'data' => Hash::get(self::getDummySecretData(), 'data')],
                 ['user_id' => $edith->id, 'data' => Hash::get(self::getDummySecretData(), 'data')],
             ],
         ];
@@ -157,6 +158,7 @@ class ActionLogsUsernameQueryStrategyTest extends LogIntegrationTestCase
         $resource = ResourceFactory::make()
             ->v5Fields(true)
             ->withCreatorAndPermission($user)
+            ->withSecretRevisions()
             ->with('ResourceTypes', ResourceTypeFactory::make()->v5Default())
             ->persist();
         $resourceId = $resource->id;
@@ -166,6 +168,7 @@ class ActionLogsUsernameQueryStrategyTest extends LogIntegrationTestCase
                 ['aro' => 'User', 'aro_foreign_key' => $edith->id, 'type' => Permission::OWNER],
             ],
             'secrets' => [
+                ['user_id' => $user->id, 'data' => Hash::get(self::getDummySecretData(), 'data')],
                 ['user_id' => $edith->id, 'data' => Hash::get(self::getDummySecretData(), 'data')],
             ],
         ];

@@ -25,6 +25,7 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 class ShareControllerTest extends AppIntegrationTestCase
 {
@@ -60,7 +61,7 @@ class ShareControllerTest extends AppIntegrationTestCase
         $this->gpg = OpenPGPBackendFactory::get();
     }
 
-    protected function getValidSecret(): string
+    protected static function getValidSecret(): string
     {
         return '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
@@ -96,6 +97,8 @@ hcciUFw5
         $groupFId = UuidFactory::uuid('group.id.freelancer');
         $groupAId = UuidFactory::uuid('group.id.accounting');
 
+        SecretRevisionFactory::make(['resource_id' => $resourceId])->persist();
+
         // Expected results.
         $expectedAddedUsersIds = [];
         $expectedRemovedUsersIds = [];
@@ -111,7 +114,7 @@ hcciUFw5
         $expectedRemovedUsersIds[] = $userBId;
         // Add an owner permission for the user Edith
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
-        $data['secrets'][] = ['user_id' => $userEId, 'data' => $this->getValidSecret()];
+        $data['secrets'][] = ['user_id' => $userEId, 'data' => self::getValidSecret()];
         $expectedAddedUsersIds[] = $userEId;
 
         // Groups permissions changes.
@@ -122,15 +125,20 @@ hcciUFw5
         $expectedRemovedUsersIds = array_merge($expectedRemovedUsersIds, [$userJId, $userKId, $userLId, $userMId, $userNId]);
         // Add a read permission for the group Accounting.
         $data['permissions'][] = ['aro' => 'Group', 'aro_foreign_key' => $groupAId, 'type' => Permission::READ];
-        $data['secrets'][] = ['user_id' => $userFId, 'data' => $this->getValidSecret()];
-        $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
+        $data['secrets'][] = ['user_id' => $userFId, 'data' => self::getValidSecret()];
+        $expectedAddedUsersIds[] = $userFId;
 
         $this->authenticateAs('ada');
         $this->putJson("/share/resource/$resourceId.json", $data);
         $this->assertSuccess();
 
         // Load the resource.
-        $resource = ResourceFactory::get($resourceId, contain: ['Permissions', 'Secrets']);
+        $resource = ResourceFactory::find()
+            ->where(['Resources.id' => $resourceId,])
+            ->contain('Permissions')
+            ->contain('Secrets', function ($q) {
+                return $q->find('notDeleted');
+            })->firstOrFail();
 
         // Verify that all the allowed users have a secret for the resource.
         $secretsUsersIds = Hash::extract($resource->secrets, '{n}.user_id');
@@ -151,7 +159,7 @@ hcciUFw5
         }
     }
 
-    public function dataForTestErrorValidation(): array
+    public static function dataForTestErrorValidation(): array
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $resourceAprilId = UuidFactory::uuid('resource.id.april');
@@ -211,7 +219,7 @@ hcciUFw5
             ['cannot add a secret for a user who do not have access to the resource', [
                 'errorField' => 'secrets.0.resource_id.has_resource_access',
                 'data' => ['secrets' => [
-                    ['user_id' => $userEId, 'data' => $this->getValidSecret()],
+                    ['user_id' => $userEId, 'data' => self::getValidSecret()],
                 ]],
             ]],
         ];
@@ -223,6 +231,7 @@ hcciUFw5
     public function testShareController_Error_Validation($caseLabel, $case)
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
+        SecretRevisionFactory::make(['resource_id' => $resourceId])->persist();
         $this->authenticateAs('ada');
         $this->putJson("/share/resource/$resourceId.json", $case['data']);
         $this->assertError();

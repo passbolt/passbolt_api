@@ -101,6 +101,16 @@ trait ErrorIntegrationTestTrait
     }
 
     /**
+     * Perform assertions for not json error related test cases.
+     *
+     * @return void
+     */
+    public function assertNotJsonError(): void
+    {
+        $this->assertResponseCode(404, 'Please use .json extension in URL or accept application/json');
+    }
+
+    /**
      * Asserts that the json response is relative to a forbidden error.
      *
      * @param string $msg
