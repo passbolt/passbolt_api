@@ -148,7 +148,7 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
      *
      * @return array
      */
-    public function containWhitelistProvider(): array
+    public static function containWhitelistProvider(): array
     {
         return [
             [

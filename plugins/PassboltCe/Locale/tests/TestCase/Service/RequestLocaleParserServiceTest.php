@@ -48,7 +48,7 @@ class RequestLocaleParserServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function dataForTestRequestLocaleParserServiceGetLocale(): array
+    public static function dataForTestRequestLocaleParserServiceGetLocale(): array
     {
         return [
             ['fr-FR', 'fr-FR'],

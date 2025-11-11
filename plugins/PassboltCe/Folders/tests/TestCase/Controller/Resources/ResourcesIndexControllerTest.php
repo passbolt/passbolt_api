@@ -59,11 +59,11 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
      * @param array $childrenFolders Children folders
      * @param string $userId user id
      */
-    private function addFolderAndItsChildren(string $folderParentId, array $childrenFolders, string $userId)
+    private static function addFolderAndItsChildren(string $folderParentId, array $childrenFolders, string $userId)
     {
-        $this->addFolderFor(['id' => $folderParentId], [$userId => Permission::OWNER]);
+        self::addFolderFor(['id' => $folderParentId], [$userId => Permission::OWNER]);
         foreach ($childrenFolders as $childrenFolderId) {
-            $this->addResourceFor(
+            self::addResourceFor(
                 ['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId],
                 [$userId => Permission::OWNER]
             );
@@ -73,7 +73,7 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
     /**
      * @return array
      */
-    public function provideFoldersIndexFilterHasParentSuccessRelations()
+    public static function provideFoldersIndexFilterHasParentSuccessRelations()
     {
         $fixture = function () {
             // Relations are expressed as follow: folder_parent_id => [child_folder_id]
@@ -97,11 +97,11 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
             $userId = UuidFactory::uuid('user.id.ada');
 
             foreach ($folderRelations as $folderParentId => $childrenFolders) {
-                $this->addFolderAndItsChildren($folderParentId, $childrenFolders, $userId);
+                self::addFolderAndItsChildren($folderParentId, $childrenFolders, $userId);
             }
 
             foreach ($rootResources as $resourceId) {
-                $this->addResourceFor(['id' => $resourceId], [$userId => Permission::OWNER]);
+                self::addResourceFor(['id' => $resourceId], [$userId => Permission::OWNER]);
             }
         };
 

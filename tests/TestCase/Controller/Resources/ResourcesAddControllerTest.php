@@ -20,6 +20,7 @@ namespace App\Test\TestCase\Controller\Resources;
 use App\Model\Entity\Permission;
 use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
 use App\Service\Resources\ResourcesAddService;
+use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
@@ -32,6 +33,8 @@ use Passbolt\Folders\FoldersPlugin;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\SecretRevisions\SecretRevisionsPlugin;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 class ResourcesAddControllerTest extends AppIntegrationTestCase
 {
@@ -58,6 +61,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->enableFeaturePlugin(FoldersPlugin::class);
+        $this->enableFeaturePlugin(SecretRevisionsPlugin::class);
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
@@ -122,6 +126,13 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $this->assertEquals($user->id, $resource->permission->aro_foreign_key);
         $this->assertEquals(Permission::OWNER, $resource->permission->type);
 
+        // Check that the secret revision was created
+        $secretRevision = SecretRevisionFactory::firstOrFail();
+        $this->assertSame($resource->id, $secretRevision->resource_id);
+        $this->assertSame(ResourceFactory::get($resource->id)->resource_type_id, $secretRevision->resource_type_id);
+        $this->assertSame($resource->created_by, $secretRevision->created_by);
+        $this->assertSame($resource->created_by, $secretRevision->modified_by);
+
         // Check the secret attribute
         $this->assertNotEmpty($resource->secrets);
         $this->assertSecretAttributes($resource->secrets[0]);
@@ -129,6 +140,9 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $this->assertEquals($user->id, $resource->secrets[0]->user_id);
         $this->assertEquals($resource->id, $resource->secrets[0]->resource_id);
         $this->assertEquals($data['secrets'][0]['data'], $resource->secrets[0]->data);
+        $this->assertEquals($user->id, $resource->secrets[0]->created_by);
+        $this->assertEquals($user->id, $resource->secrets[0]->modified_by);
+        $this->assertEquals($secretRevision->id, $resource->secrets[0]->secret_revision_id);
 
         // Ensure that an email was sent
         $this->assertEmailIsInQueue([
@@ -238,37 +252,37 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $this->assertEmailQueueIsEmpty();
     }
 
-    public function dataFortestResourcesAddController_ValidationErrors(): array
+    public static function dataFortestResourcesAddController_ValidationErrors(): array
     {
         return [
             ['resource name is missing', [
                 'errorField' => 'name._empty',
-                'data' => $this->getDummyResourcesPostData(['name' => null]),
+                'data' => self::getDummyResourcesPostData(['name' => null]),
             ]],
             ['secret must be provided', [
                 'errorField' => 'secrets._empty',
-                'data' => $this->getDummyResourcesPostData(['secrets' => null]),
+                'data' => self::getDummyResourcesPostData(['secrets' => null]),
             ]],
             ['secret data must be provided', [
                 'errorField' => 'secrets.0.data._required',
-                'data' => $this->getDummyResourcesPostData(['secrets' => []]),
+                'data' => self::getDummyResourcesPostData(['secrets' => []]),
             ]],
             ['secret is invalid', [
                 'errorField' => 'secrets.0.data.isValidOpenPGPMessage',
-                'data' => $this->getDummyResourcesPostData(['secrets' => [
+                'data' => self::getDummyResourcesPostData(['secrets' => [
                     0 => ['data' => 'Invalid secret'],
                 ]]),
             ]],
             ['too many secrets provided', [
                 'errorField' => 'secrets.hasAtMost',
-                'data' => $this->getDummyResourcesPostData(['secrets' => [
-                    0 => ['data' => $this->getDummyGpgMessage()],
-                    1 => ['user_id' => UuidFactory::uuid('user.id.betty'), 'data' => $this->getDummyGpgMessage()],
+                'data' => self::getDummyResourcesPostData(['secrets' => [
+                    0 => ['data' => self::getDummyGpgMessage()],
+                    1 => ['user_id' => UuidFactory::uuid('user.id.betty'), 'data' => self::getDummyGpgMessage()],
                 ]]),
             ]],
             ['invalid resource type', [
                 'errorField' => 'resource_type_id',
-                'data' => $this->getDummyResourcesPostData([
+                'data' => self::getDummyResourcesPostData([
                     'name' => 'new resource name',
                     'username' => 'username@domain.com',
                     'uri' => 'https://www.domain.com',
@@ -279,12 +293,12 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         ];
     }
 
-    public function dataFortestResourcesAddController_BuildRulesErrors(): array
+    public static function dataFortestResourcesAddController_BuildRulesErrors(): array
     {
         return [
             ['non-existing resource type', [
                 'errorField' => 'resource_type_id',
-                'data' => $this->getDummyResourcesPostData([
+                'data' => self::getDummyResourcesPostData([
                     'name' => 'new resource name',
                     'username' => 'username@domain.com',
                     'uri' => 'https://www.domain.com',

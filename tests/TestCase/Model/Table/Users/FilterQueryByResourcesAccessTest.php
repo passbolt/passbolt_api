@@ -47,17 +47,17 @@ class FilterQueryByResourcesAccessTest extends TestCase
         unset($this->Users);
     }
 
-    public function role(): array
+    public static function role(): array
     {
         return [
-            'no role defined' => [0, 'roles' => []],
-            'readers only' => [1, 'roles' => [Permission::READ]],
-            'editors only' => [2, 'roles' => [Permission::UPDATE]],
-            'editors and readers' => [3, 'roles' => [Permission::READ, Permission::UPDATE]],
-            'owners only' => [4, 'roles' => [Permission::OWNER]],
-            'owners and readers' => [5, 'roles' => [Permission::READ, Permission::OWNER]],
-            'owners and editors' => [6, 'roles' => [Permission::OWNER, Permission::UPDATE]],
-            'all' => [7, 'roles' => [Permission::READ, Permission::UPDATE, Permission::OWNER]],
+            'no role defined' => [0, []],
+            'readers only' => [1, [Permission::READ]],
+            'editors only' => [2, [Permission::UPDATE]],
+            'editors and readers' => [3, [Permission::READ, Permission::UPDATE]],
+            'owners only' => [4, [Permission::OWNER]],
+            'owners and readers' => [5, [Permission::READ, Permission::OWNER]],
+            'owners and editors' => [6, [Permission::OWNER, Permission::UPDATE]],
+            'all' => [7, [Permission::READ, Permission::UPDATE, Permission::OWNER]],
         ];
     }
 

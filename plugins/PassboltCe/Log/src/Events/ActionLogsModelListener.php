@@ -83,6 +83,11 @@ class ActionLogsModelListener implements EventListenerInterface
                 ]);
             }
         }
+        if ($modelName == 'SecretRevisions') {
+            $table->belongsTo('Passbolt/Log.EntitiesHistory', [
+                'foreignKey' => 'foreign_key',
+            ]);
+        }
     }
 
     /**

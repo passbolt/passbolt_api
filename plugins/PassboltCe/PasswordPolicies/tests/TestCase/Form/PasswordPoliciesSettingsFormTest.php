@@ -265,7 +265,7 @@ class PasswordPoliciesSettingsFormTest extends AppTestCase
     /**
      * @return array
      */
-    public function maskFieldsDataProvider(): array
+    public static function maskFieldsDataProvider(): array
     {
         return [
             ['mask_upper'],

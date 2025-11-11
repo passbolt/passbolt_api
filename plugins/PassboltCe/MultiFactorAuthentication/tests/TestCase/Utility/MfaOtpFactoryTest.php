@@ -81,7 +81,7 @@ class MfaOtpFactoryTest extends MfaIntegrationTestCase
         $this->assertStringContainsString('ada%40passbolt.com', $otp);
     }
 
-    public function dataForTestGenerateTOTP()
+    public static function dataForTestGenerateTOTP()
     {
         return [
             [256], // legacy
@@ -114,7 +114,7 @@ class MfaOtpFactoryTest extends MfaIntegrationTestCase
         Configure::write(MfaOtpFactory::PASSBOLT_PLUGINS_MFA_TOTP_SECRET_LENGTH, $originalSecretLength);
     }
 
-    public function dataForTestGetAndSanitizeSecretLengthFromConfig()
+    public static function dataForTestGetAndSanitizeSecretLengthFromConfig()
     {
         return [
             [256, 256],

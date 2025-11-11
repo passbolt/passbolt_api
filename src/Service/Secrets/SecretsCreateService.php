@@ -17,11 +17,11 @@ declare(strict_types=1);
 
 namespace App\Service\Secrets;
 
+use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Secret;
 use App\Model\Table\SecretsTable;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 
 class SecretsCreateService
 {
@@ -67,18 +67,36 @@ class SecretsCreateService
      */
     private function buildEntity(array $data): Secret
     {
-        $data = [
-            'resource_id' => Hash::get($data, 'resource_id'),
-            'user_id' => Hash::get($data, 'user_id'),
-            'data' => Hash::get($data, 'data'),
-        ];
-        $accessibleFields = [
+        return $this->secretsTable->newEntity($data, ['accessibleFields' => [
             'resource_id' => true,
             'user_id' => true,
             'data' => true,
-        ];
+            'secret_revision_id' => true,
+            'created_by' => true,
+            'modified_by' => true,
+        ]]);
+    }
 
-        return $this->secretsTable->newEntity($data, ['accessibleFields' => $accessibleFields]);
+    /**
+     * Create a secret.
+     *
+     * @param array $data The secret data
+     * @return array<\App\Model\Entity\Secret>
+     * @throws \Exception
+     */
+    public function createMany(array $data): array
+    {
+        $secrets = [];
+        foreach ($data as $rowIndexRef => $row) {
+            try {
+                $secrets[$rowIndexRef] = $this->create($row);
+            } catch (ValidationException $e) {
+                $errors = [$rowIndexRef => $e->getEntity()->getErrors()];
+                throw new CustomValidationException(__('Could not validate secrets data.'), $errors);
+            }
+        }
+
+        return $secrets;
     }
 
     /**

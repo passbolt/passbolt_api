@@ -17,7 +17,9 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Service\Upgrade;
 
 use App\Utility\UserAccessControl;
+use Cake\Database\Expression\IdentifierExpression;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchUpgradeValidationService;
 use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
@@ -37,13 +39,19 @@ class MetadataUpgradeResourcesUpdateService extends MetadataRotateKeyResourcesUp
      */
     protected function updateData(UserAccessControl $uac, array $data, array $entitiesToUpdate): void
     {
+        $resourceIds = [];
+
         // Set mapped v5 resource type id
         foreach ($data as $i => $value) {
             $resource = $entitiesToUpdate[$value['id']];
             $data[$i]['resource_type_id'] = $this->getV5ResourceType($resource->get('resource_type_id'));
+
+            $resourceIds[] = $value['id'];
         }
 
         parent::updateData($uac, $data, $entitiesToUpdate);
+
+        $this->updateResourceTypeInSecretRevisions($resourceIds);
     }
 
     /**
@@ -59,5 +67,37 @@ class MetadataUpgradeResourcesUpdateService extends MetadataRotateKeyResourcesUp
         }
 
         return $mapping[$v4ResourceTypeId];
+    }
+
+    /**
+     * @param array $resourceIds Resource IDs to update.
+     * @return void
+     */
+    private function updateResourceTypeInSecretRevisions(array $resourceIds): void
+    {
+        if (empty($resourceIds)) {
+            return;
+        }
+
+        /** @var \App\Model\Table\ResourcesTable $resourcesTable */
+        $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
+        /** @var \Passbolt\SecretRevisions\Model\Table\SecretRevisionsTable $secretRevisionsTable */
+        $secretRevisionsTable = TableRegistry::getTableLocator()->get('Passbolt/SecretRevisions.SecretRevisions');
+
+        $secretRevisionsTableName = $secretRevisionsTable->getTable();
+
+        $subquery = $resourcesTable
+            ->find()
+            ->select(['resource_type_id'])
+            ->where(['Resources.id' => new IdentifierExpression("$secretRevisionsTableName.resource_id")])
+            ->limit(1);
+
+        $query = $secretRevisionsTable->updateQuery();
+        $query->set('resource_type_id', $subquery)
+            ->where([
+                $query->newExpr()->isNull('deleted'),
+                $query->newExpr()->in('resource_id', $resourceIds),
+            ])
+            ->execute();
     }
 }

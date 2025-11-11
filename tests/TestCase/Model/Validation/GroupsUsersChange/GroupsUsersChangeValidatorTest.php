@@ -131,7 +131,7 @@ class GroupsUsersChangeValidatorTest extends TestCase
         $this->assertEquals(GroupsUsersChangeValidator::isAddChange($change), $expected);
     }
 
-    public function isAddChangeDataProvider()
+    public static function isAddChangeDataProvider()
     {
         return [
             [
@@ -165,7 +165,7 @@ class GroupsUsersChangeValidatorTest extends TestCase
         $this->assertEquals(GroupsUsersChangeValidator::isUpdateChange($change), $expected);
     }
 
-    public function isUpdateChangeDataProvider()
+    public static function isUpdateChangeDataProvider()
     {
         return [
             [
@@ -199,7 +199,7 @@ class GroupsUsersChangeValidatorTest extends TestCase
         $this->assertEquals(GroupsUsersChangeValidator::isDeleteChange($change), $expected);
     }
 
-    public function isDeleteChangeDataProvider()
+    public static function isDeleteChangeDataProvider()
     {
         return [
             [

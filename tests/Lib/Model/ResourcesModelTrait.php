@@ -22,10 +22,13 @@ use App\Test\Factory\ResourceFactory;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 
 trait ResourcesModelTrait
 {
+    use FoldersRelationsModelTrait;
+
     /**
      * Add a dummy resource.
      *
@@ -33,7 +36,7 @@ trait ResourcesModelTrait
      * @param array|null $options The entity options
      * @return Resource
      */
-    public function addResource(?array $data = [], ?array $options = []): Resource
+    public static function addResource(?array $data = [], ?array $options = []): Resource
     {
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $resource = self::getDummyResourceEntity($data, $options);
@@ -51,7 +54,7 @@ trait ResourcesModelTrait
      * @param array $groups List of groups to add a resource for.
      * @return \Cake\Datasource\EntityInterface
      */
-    public function addResourceFor(array $data = [], array $users = [], array $groups = [])
+    public static function addResourceFor(array $data = [], array $users = [], array $groups = [])
     {
         reset($users);
         $userId = key($users);
@@ -62,20 +65,20 @@ trait ResourcesModelTrait
             $data['modified_by'] = $userId;
         }
 
-        $resource = $this->addResource($data);
+        $resource = self::addResource($data);
         /** @var UsersTable $usersTable */
         $usersTable = TableRegistry::getTableLocator()->get('Users');
 
         foreach ($users as $userId => $permissionType) {
-            $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, PermissionsTable::USER_ARO, $userId, $permissionType);
-            $this->addResourceForUserAssociatedData($resource, $userId, $data);
+            self::addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, PermissionsTable::USER_ARO, $userId, $permissionType);
+            self::addResourceForUserAssociatedData($resource, $userId, $data);
         }
 
         foreach ($groups as $groupId => $permissionType) {
-            $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, PermissionsTable::GROUP_ARO, $groupId, $permissionType);
+            self::addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, PermissionsTable::GROUP_ARO, $groupId, $permissionType);
             $groupUsersIds = $usersTable->Groups->GroupsUsers->findByGroupId($groupId)->all()->extract('user_id')->toArray();
             foreach ($groupUsersIds as $groupUserId) {
-                $this->addResourceForUserAssociatedData($resource, $groupUserId);
+                self::addResourceForUserAssociatedData($resource, $groupUserId);
             }
         }
 
@@ -91,13 +94,13 @@ trait ResourcesModelTrait
      * @param string $userId
      * @param array $data
      */
-    private function addResourceForUserAssociatedData(Resource $resource, string $userId, array $data = [])
+    private static function addResourceForUserAssociatedData(Resource $resource, string $userId, array $data = [])
     {
         $secretData = [
             'resource_id' => $resource->id,
             'user_id' => $userId,
         ];
-        $this->addSecret($secretData);
+        self::addSecret($secretData);
 
         if (Configure::read('passbolt.plugins.folders.enabled')) {
             $folderRelationData = [
@@ -106,7 +109,7 @@ trait ResourcesModelTrait
                 'user_id' => $userId,
                 'folder_parent_id' => $data['folder_parent_id'] ?? null,
             ];
-            $this->addFolderRelation($folderRelationData);
+            self::addFolderRelation($folderRelationData);
         }
     }
 
@@ -117,7 +120,7 @@ trait ResourcesModelTrait
      * @param array|null $options The new entity options.
      * @return Resource
      */
-    public function getDummyResourceEntity(?array $data = [], ?array $options = []): Resource
+    public static function getDummyResourceEntity(?array $data = [], ?array $options = []): Resource
     {
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $defaultOptions = [
@@ -190,7 +193,7 @@ trait ResourcesModelTrait
             $hasAccess = $this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resourceId, $userId);
             $this->assertFalse($hasAccess);
             // No secret for the resource.
-            $secret = $this->Resources->Secrets->find()
+            $secret = $this->Resources->Secrets->find('notDeleted')
                 ->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
             $this->assertNull($secret);
             // Not favorite for the resource.
@@ -213,7 +216,7 @@ trait ResourcesModelTrait
             $hasAccess = $this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resourceId, $userId);
             $this->assertTrue($hasAccess);
             // Secret existing.
-            $secret = $this->Resources->Secrets->find()
+            $secret = $this->Resources->Secrets->find('notDeleted')
                 ->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
             $this->assertNotNull($secret);
         }
@@ -241,7 +244,7 @@ trait ResourcesModelTrait
         $this->assertFalse($resource->deleted);
     }
 
-    protected function getDummyGpgMessage(): string
+    protected static function getDummyGpgMessage(): string
     {
         return '-----BEGIN PGP MESSAGE-----
 
@@ -262,7 +265,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
 -----END PGP MESSAGE-----';
     }
 
-    protected function getDummyResourcesPostData($data = []): array
+    protected static function getDummyResourcesPostData($data = []): array
     {
         $defaultData = [
             'name' => 'new resource name',
@@ -271,7 +274,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
             'description' => 'new resource description',
             'secrets' => [
                 [
-                    'data' => $this->getDummyGpgMessage(),
+                    'data' => self::getDummyGpgMessage(),
                 ],
             ],
         ];

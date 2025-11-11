@@ -85,22 +85,22 @@ class MetadataSessionKeyCreateControllerTest extends AppIntegrationTestCaseV5
         $this->assertResponseCode(400);
     }
 
-    public function invalidRequestDataProvider(): array
+    public static function invalidRequestDataProvider(): array
     {
-        $sessionKeyForServer = $this->getEncryptedMetadataSessionKeyForServerKey();
+        $sessionKeyForServer = self::getEncryptedMetadataSessionKeyForServerKey();
 
         return [
             [
-                 'request data' => ['data' => 'foo-bar'],
-                 'expected errors paths' => ['data.isValidOpenPGPMessage'],
+                 ['data' => 'foo-bar'], //request data
+                 ['data.isValidOpenPGPMessage'], //expected errors paths
             ],
             [
-                'request data' => ['data' => '😎😎😎'],
-                'expected errors paths' => ['data.ascii'],
+                ['data' => '😎😎😎'],
+                ['data.ascii'],
             ],
             [
-                'request data' => ['data' => $sessionKeyForServer],
-                'expected errors paths' => ['data.isValidEncryptedMetadataSessionKey'],
+                ['data' => $sessionKeyForServer],
+                ['data.isValidEncryptedMetadataSessionKey'],
             ],
         ];
     }

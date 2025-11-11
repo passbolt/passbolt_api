@@ -16,9 +16,12 @@ declare(strict_types=1);
  */
 namespace App\Test\Factory;
 
+use App\Model\Entity\User;
 use Cake\I18n\Date;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 /**
  * SecretFactory
@@ -26,7 +29,8 @@ use Faker\Generator;
  * @method \App\Model\Entity\Secret getEntity()
  * @method \App\Model\Entity\Secret[] getEntities()
  * @method \App\Model\Entity\Secret|\App\Model\Entity\Secret[] persist()
- * @static \App\Model\Entity\Secret get(mixed $primaryKey, array $options)
+ * @method static \App\Model\Entity\Secret get(mixed $primaryKey, array $options = [])
+ * @method static \App\Model\Entity\Secret firstOrFail($conditions = null)
  */
 class SecretFactory extends CakephpBaseFactory
 {
@@ -53,10 +57,21 @@ class SecretFactory extends CakephpBaseFactory
                 'user_id' => $faker->uuid(),
                 'resource_id' => $faker->uuid(),
                 'data' => $this->getValidSecret(),
+                'created_by' => $faker->uuid(),
+                'modified_by' => $faker->uuid(),
                 'created' => Date::now()->subDays($faker->randomNumber(4)),
                 'modified' => Date::now()->subDays($faker->randomNumber(4)),
             ];
         });
+    }
+
+    /**
+     * @param DateTime|null $deleted
+     * @return SecretFactory
+     */
+    public function deleted(?DateTime $deleted = null): SecretFactory
+    {
+        return $this->patchData(['deleted' => $deleted ?? DateTime::yesterday()]);
     }
 
     /**
@@ -79,5 +94,45 @@ P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
 hcciUFw5
 =TcQF
 -----END PGP MESSAGE-----";
+    }
+
+    /**
+     * @param User $factory User Factory class.
+     * @return SecretFactory
+     */
+    public function withCreator(User $factory): self
+    {
+        return $this->with('Creator', $factory);
+    }
+
+    /**
+     * @param User $factory User Factory class.
+     * @return SecretFactory
+     */
+    public function withModifier(User $factory): self
+    {
+        return $this->with('Creator', $factory);
+    }
+
+    /**
+     * @param User $user User to set as creator and modifier.
+     * @return SecretFactory
+     */
+    public function withCreatorAndModifier(User $user): self
+    {
+        return $this->withModifier($user)->withCreator($user);
+    }
+
+    /**
+     * @param SecretRevisionFactory|null $factory secret revision
+     * @return self
+     */
+    public function withSecretRevision(?SecretRevisionFactory $factory = null): self
+    {
+        if (is_null($factory)) {
+            $factory = SecretRevisionFactory::make();
+        }
+
+        return $this->with('SecretRevisions', $factory);
     }
 }
