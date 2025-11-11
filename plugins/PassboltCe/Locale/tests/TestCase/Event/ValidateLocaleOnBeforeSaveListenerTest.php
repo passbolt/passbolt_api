@@ -42,7 +42,7 @@ class ValidateLocaleOnBeforeSaveListenerTest extends TestCase
         parent::tearDown();
     }
 
-    public function dataForTestEmailLocaleServiceGetLocale(): array
+    public static function dataForTestEmailLocaleServiceGetLocale(): array
     {
         return [
             ['fr-FR'],

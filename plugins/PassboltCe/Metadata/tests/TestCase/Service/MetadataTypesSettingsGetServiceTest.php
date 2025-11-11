@@ -90,11 +90,12 @@ class MetadataTypesSettingsGetServiceTest extends AppTestCaseV5
      *
      * @return array[]
      */
-    public function creationAllowedMethodsDataProvider(): array
+    public static function creationAllowedMethodsDataProvider(): array
     {
         return [
             [
-                'input' => [
+                //input
+                [
                     MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES => MetadataTypesSettingsDto::V5,
                     MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE => MetadataTypesSettingsDto::V4,
                     MetadataTypesSettingsDto::DEFAULT_TAG_TYPE => MetadataTypesSettingsDto::V5,
@@ -105,7 +106,8 @@ class MetadataTypesSettingsGetServiceTest extends AppTestCaseV5
                     MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => false,
                     MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS => true,
                 ],
-                'expected' => [
+                //expected
+                [
                     'isV4ResourceCreationAllowed' => false,
                     'isV4FolderCreationAllowed' => true,
                     'isV4TagCreationAllowed' => true,

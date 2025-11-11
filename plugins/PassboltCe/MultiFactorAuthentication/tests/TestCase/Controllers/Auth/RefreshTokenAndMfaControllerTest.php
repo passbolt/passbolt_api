@@ -37,7 +37,7 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
  */
 class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
 {
-    public function dataProviderWithAndWithoutAccessToken(): array
+    public static function dataProviderWithAndWithoutAccessToken(): array
     {
         return [
             [true], [false],

@@ -67,13 +67,14 @@ class SsoSettingsSetServiceTest extends SsoTestCase
      * @see testSsoSettingsSetService_Success
      * @return array[]
      */
-    public function ssoSettingsValidDataProvider()
+    public static function ssoSettingsValidDataProvider()
     {
         $expiry = Chronos::now()->addDays(365);
 
         return [
             'Azure (default)' => [
-                'input' => [
+                //input
+                [
                     'provider' => SsoSetting::PROVIDER_AZURE,
                     'data' => [
                         'url' => 'https://login.microsoftonline.com',
@@ -83,7 +84,8 @@ class SsoSettingsSetServiceTest extends SsoTestCase
                         'client_secret_expiry' => $expiry,
                     ],
                 ],
-                'expected data' => [
+                //expected data
+                [
                     'url' => 'https://login.microsoftonline.com',
                     'client_id' => 'feca242d-0920-4b22-b4c1-592d4eb69953',
                     'tenant_id' => '49e49094-4fae-4400-85aa-f71e2cdd250b',
@@ -96,7 +98,7 @@ class SsoSettingsSetServiceTest extends SsoTestCase
                 ],
             ],
             'Azure (with advanced settings - optional)' => [
-                'input' => [
+                [
                     'provider' => SsoSetting::PROVIDER_AZURE,
                     'data' => [
                         'url' => 'https://login.microsoftonline.com',
@@ -109,7 +111,7 @@ class SsoSettingsSetServiceTest extends SsoTestCase
                         'login_hint' => SsoSettingsAzureDataForm::AZURE_LOGIN_HINT_DISABLED,
                     ],
                 ],
-                'expected data' => [
+                [
                     'url' => 'https://login.microsoftonline.com',
                     'client_id' => 'feca242d-0920-4b22-b4c1-592d4eb69953',
                     'tenant_id' => '49e49094-4fae-4400-85aa-f71e2cdd250b',

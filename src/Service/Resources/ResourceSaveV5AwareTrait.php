@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Service\Resources;
 
+use Cake\Core\Exception\CakeException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 
@@ -54,6 +55,8 @@ trait ResourceSaveV5AwareTrait
                     'accessibleFields' => [
                         'user_id' => true,
                         'data' => true,
+                        'created_by' => true,
+                        'modified_by' => true,
                     ],
                 ],
             ],
@@ -99,7 +102,13 @@ trait ResourceSaveV5AwareTrait
             $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
             /** @var \Cake\ORM\RulesChecker $rules */
             $rules = $ResourcesTable->rulesChecker();
-            $ResourcesTable->buildRulesV5($rules);
+            // In the case where the v5 rules where already defined on the table,
+            // the following line will throw an exception. There is no way for Cake to detect
+            // if a rule is already defined, so we need to catch the exception and continue.
+            try {
+                $ResourcesTable->buildRulesV5($rules);
+            } catch (CakeException $e) {
+            }
         } else {
             $validator = 'default';
         }

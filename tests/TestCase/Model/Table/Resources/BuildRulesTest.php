@@ -122,7 +122,7 @@ class BuildRulesTest extends AppTestCase
         /** @var \App\Model\Table\ResourcesTable $table */
         $table = TableRegistry::getTableLocator()->get('Resources');
         $entity = $table->newEntity($data, $this->getDefaultNewEntityOptions());
-        $save = $table->save($entity);
+        $save = $table->save($entity, ['isResourceAdded' => true]);
         $this->assertEquals([], $save->getErrors());
 
         // Check that the resource and its sub-models are saved as expected.

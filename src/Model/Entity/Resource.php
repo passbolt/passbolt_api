@@ -41,6 +41,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Permission|null $permission
  * @property \App\Model\Entity\Permission[] $permissions
  * @property \App\Model\Entity\Secret[] $secrets
+ * @property \Passbolt\SecretRevisions\Model\Entity\SecretRevision[] $secret_revisions
  * @property string|null $resource_type_id
  * @property \App\Model\Entity\Favorite|null $favorite
  * @property \Passbolt\ResourceTypes\Model\Entity\ResourceType|null $resource_type

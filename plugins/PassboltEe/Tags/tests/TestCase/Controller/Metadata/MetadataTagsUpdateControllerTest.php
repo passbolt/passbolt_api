@@ -52,11 +52,11 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
      *
      * @return array
      */
-    public function metadataTagsUpdatePersonalProvider(): array
+    public static function metadataTagsUpdatePersonalProvider(): array
     {
         return [
-            ['user key id' => true],
-            ['user key id' => false],
+            [true],
+            [false],
         ];
     }
 
@@ -390,16 +390,16 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
     }
 
-    public function metadataTagsUpdateControllerErrorDeletedOrExpiredValuesProvider(): array
+    public static function metadataTagsUpdateControllerErrorDeletedOrExpiredValuesProvider(): array
     {
         return [
             [
-                'input' => ['expired' => DateTime::yesterday()],
-                'expected response' => 'isMetadataKeyNotExpired',
+                ['expired' => DateTime::yesterday()], //input
+                'isMetadataKeyNotExpired', //expected response
             ],
             [
-                'input' => ['deleted' => DateTime::now()],
-                'expected response' => 'metadata_key_exists',
+                ['deleted' => DateTime::now()],
+                'metadata_key_exists',
             ],
         ];
     }

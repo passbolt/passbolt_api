@@ -52,7 +52,7 @@ class SubscriptionKeyAsciiFormTest extends TestCase
         } catch (Exception $e) {
             $this->fail('The license does not validate: ' . $e->getMessage());
         }
-        $expected = $this->getValidSubscription();
+        $expected = self::getValidSubscription();
         $actual = $licenseInfo->toArray();
 
         $this->assertSame($expected['customer_id'], $actual['customer_id']);
@@ -130,11 +130,11 @@ class SubscriptionKeyAsciiFormTest extends TestCase
      *
      * @return array[]
      */
-    public function dataForTestParse()
+    public static function dataForTestParse()
     {
         return [
-            ['subscription_dev', $this->getValidSubscription()],
-            ['subscription_expired', $this->getExpiredSubscription()],
+            ['subscription_dev', self::getValidSubscription()],
+            ['subscription_expired', self::getExpiredSubscription()],
             ['subscription_issuer_ada', Exception::class],
         ];
     }

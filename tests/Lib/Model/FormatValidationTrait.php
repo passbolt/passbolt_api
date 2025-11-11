@@ -344,6 +344,54 @@ trait FormatValidationTrait
     }
 
     /**
+     * Test cases for integer validation rule.
+     *
+     * @return array
+     */
+    public static function getIntegerTestCases(): array
+    {
+        return [
+            'rule_name' => 'integer',
+            'test_cases' => [
+                // valid
+                1 => true,
+                0 => true,
+                125 => true,
+                true => true, // PHP Magic! Coverts array key `true` to `1`, hence a duplicate
+                // invalid
+                '' => false,
+                'abcd' => false,
+                null => false,
+            ],
+        ];
+    }
+
+    /**
+     * Test cases for greaterThan validation rule.
+     *
+     * @param int|float $value Value to check.
+     * @return array
+     */
+    public static function getGreaterThanTestCases(int|float $value): array
+    {
+        return [
+            'rule_name' => 'integer',
+            'test_cases' => [
+                // valid
+                $value + 1 => true,
+                $value + 0.1 => true,
+                $value + 99 => true,
+                // invalid
+                $value - 1 => true,
+                $value - 0.1 => true,
+                $value => false,
+                'abcd' => false,
+                null => false,
+            ],
+        ];
+    }
+
+    /**
      * Test cases for inList validation rule.
      *
      * @param array $list test cases

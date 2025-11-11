@@ -120,7 +120,7 @@ class SmtpSettingsSetServiceTest extends TestCase
         $this->assertSame($data, $this->decryptSettings($settings));
     }
 
-    public function data_For_testSmtpSettingsSetServiceTest_Valid(): array
+    public static function data_For_testSmtpSettingsSetServiceTest_Valid(): array
     {
         return [
             [],

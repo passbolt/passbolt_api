@@ -30,7 +30,7 @@ class SaveTest extends AppTestCase
     use FormatValidationTrait;
     use GroupsModelTrait;
 
-    public $Groups;
+    public GroupsTable $Groups;
 
     public array $fixtures = [
         'app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Permissions',

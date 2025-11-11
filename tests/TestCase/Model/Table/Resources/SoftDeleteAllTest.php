@@ -18,9 +18,14 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Resources;
 
 use App\Model\Table\ResourcesTable;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 class SoftDeleteAllTest extends AppTestCase
 {
@@ -98,7 +103,7 @@ class SoftDeleteAllTest extends AppTestCase
      * @return array
      * @see ResourcesTable::softDeleteAll()
      */
-    public function dataForTestSoftDeleteAllSuccessWithAssociation()
+    public static function dataForTestSoftDeleteAllSuccessWithAssociation()
     {
         return [[true], [false]];
     }
@@ -137,5 +142,27 @@ class SoftDeleteAllTest extends AppTestCase
             $expect = $cascade ? 0 : $count[$association];
             $this->assertSame($expect, $count[$association]);
         }
+    }
+
+    public function testSoftDeleteAll_Secret_Revisions()
+    {
+        $resourcesToDelete = ResourceFactory::make(2)
+            ->withSecretRevisions()
+            ->withSecretsFor([UserFactory::make()->persist()])
+            ->persist();
+
+        ResourceFactory::make(2)
+            ->withSecretRevisions()
+            ->withSecretsFor([UserFactory::make()->persist()])
+            ->persist();
+
+        $resourcesId = Hash::extract($resourcesToDelete, '{n}.id');
+        $this->Resources->softDeleteAll($resourcesId);
+
+        $this->assertNotEmpty(SecretRevisionFactory::find()->all()->toArray());
+        $this->assertNotEmpty(SecretFactory::find()->all()->toArray());
+
+        $this->assertSame(0, SecretRevisionFactory::find()->where(['resource_id IN' => $resourcesId])->count());
+        $this->assertSame(0, SecretFactory::find()->where(['resource_id IN' => $resourcesId])->count());
     }
 }

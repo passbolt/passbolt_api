@@ -49,7 +49,7 @@ class ApiPaginationComponentTest extends TestCase
         $this->assertSame($expectedSort, $result);
     }
 
-    public function dataForTestParseQuery(): array
+    public static function dataForTestParseQuery(): array
     {
         return [
             ['/foo', []],

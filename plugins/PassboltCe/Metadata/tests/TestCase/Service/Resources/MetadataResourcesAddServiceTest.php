@@ -63,6 +63,8 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
 
     private ResourcesAddService $service;
 
+    private int $numberOfAttemptsAtPersistingEntity = 1;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -71,6 +73,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         $this->service = new ResourcesAddService();
         $this->enableFeaturePlugin(ResourceTypesPlugin::class);
         MetadataTypesSettingsFactory::make()->v5()->persist();
+        $this->numberOfAttemptsAtPersistingEntity = 1;
     }
 
     public function tearDown(): void
@@ -409,7 +412,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         }
     }
 
-    public function testMetadataResourceAddService_Success_After_PDOException_On_First_Attempt()
+    public function testMetadataResourceAddService_Success_After_PDOException_On_Resource_On_First_Attempt()
     {
         $user = UserFactory::make()->user()->persist();
         // Create two metadata keys to ensure that IsSharedMetadataKeyUniqueActiveRule is skipped
@@ -439,16 +442,59 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $ResourcesTable->getEventManager()->on('Model.beforeSave', function (Event $event, Resource $resource) {
             // Check if a first attempt at saving the resource was already made
-            $didFirstAttemptAlreadyFail = $resource->get('firstAttemptFailed') === true;
-            if (!$didFirstAttemptAlreadyFail) {
-                $resource->set('firstAttemptFailed', true);
+            if ($this->numberOfAttemptsAtPersistingEntity === 1) {
+                $this->numberOfAttemptsAtPersistingEntity++;
+
                 throw new PDOException('Unable to save the resource at first attempt.');
             }
         });
 
-        $resource = $this->service->add($uac, MetadataResourceDto::fromArray($payload));
+        $this->service->add($uac, MetadataResourceDto::fromArray($payload));
 
-        $this->assertTrue($resource->get('firstAttemptFailed'));
+        $this->assertSame(2, $this->numberOfAttemptsAtPersistingEntity);
+        $this->assertSame(1, ResourceFactory::count());
+        $this->assertSame(1, SecretFactory::count());
+    }
+
+    public function testMetadataResourceAddService_Success_After_PDOException_On_Secrets_On_First_Attempt()
+    {
+        $user = UserFactory::make()->user()->persist();
+        // Create two metadata keys to ensure that IsSharedMetadataKeyUniqueActiveRule is skipped
+        [$metadataKey] = MetadataKeyFactory::make(2)->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
+        $v4ResourceTypeId = ResourceTypeFactory::make()->default()->persist()->get('id');
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+        $metadataKeyId = $metadataKey->get('id');
+        $dummyResourceData = $this->getDummyResourcesPostData([
+            'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
+        ]);
+        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
+        $metadata = $this->encryptForMetadataKey($clearTextMetadata);
+        $metadataKeyType = 'shared_key';
+
+        $payload = [
+            MetadataResourceDto::METADATA_KEY_TYPE => $metadataKeyType,
+            MetadataResourceDto::METADATA => $metadata,
+            MetadataResourceDto::METADATA_KEY_ID => $metadataKeyId,
+            'resource_type_id' => $resourceTypeId,
+            'secrets' => [
+                ['data' => $this->getDummyGpgMessage()],
+            ],
+        ];
+        $uac = UserFactory::make()->persistedUAC();
+
+        $SecretsTable = TableRegistry::getTableLocator()->get('Secrets');
+        $SecretsTable->getEventManager()->on('Model.beforeSave', function (Event $event, Secret $secret) {
+            // Check if a first attempt at saving the secret was already made
+            if ($this->numberOfAttemptsAtPersistingEntity === 1) {
+                $this->numberOfAttemptsAtPersistingEntity++;
+
+                throw new PDOException('Unable to save the resource at first attempt.');
+            }
+        });
+
+        $this->service->add($uac, MetadataResourceDto::fromArray($payload));
+        $this->assertSame(2, $this->numberOfAttemptsAtPersistingEntity);
         $this->assertSame(1, ResourceFactory::count());
         $this->assertSame(1, SecretFactory::count());
     }

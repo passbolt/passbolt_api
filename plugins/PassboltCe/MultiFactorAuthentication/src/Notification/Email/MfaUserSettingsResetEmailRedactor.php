@@ -26,7 +26,7 @@ use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Locale\Service\LocaleService;
-use Passbolt\MultiFactorAuthentication\Controller\UserSettings\MfaUserSettingsDeleteController;
+use Passbolt\MultiFactorAuthentication\Service\MfaUserSettings\MfaUserSettingsDeleteService;
 
 /**
  * Class MfaUserSettingsResetEmailRedactor
@@ -162,7 +162,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     public function getSubscribedEvents(): array
     {
         return [
-            MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT,
+            MfaUserSettingsDeleteService::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT,
         ];
     }
 }

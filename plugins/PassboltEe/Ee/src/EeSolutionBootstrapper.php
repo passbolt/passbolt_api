@@ -104,5 +104,6 @@ class EeSolutionBootstrapper extends BaseSolutionBootstrapper
         }
         $this->addFeaturePluginIfEnabled($app, 'UserKeyPolicies');
         $this->addFeaturePluginIfEnabled($app, 'Scim');
+        $this->addFeaturePluginIfEnabled($app, 'SecretRevisions');
     }
 }

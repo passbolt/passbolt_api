@@ -32,7 +32,7 @@ class JwtTokenCreateServiceTest extends TestCase
 {
     use JwtTestTrait;
 
-    public function tokenExpiration(): array
+    public static function tokenExpiration(): array
     {
         return [
             ['5 minutes'],
@@ -60,7 +60,7 @@ class JwtTokenCreateServiceTest extends TestCase
         Configure::write(JwtTokenCreateService::JWT_EXPIRY_CONFIG_KEY, $backUp);
     }
 
-    public function dataForTestJwtTokenCreateService_createExpiryDate()
+    public static function dataForTestJwtTokenCreateService_createExpiryDate()
     {
         return [
             [null, 300],

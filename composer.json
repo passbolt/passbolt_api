@@ -92,7 +92,7 @@
         "psy/psysh": "@stable",
         "cakephp/debug_kit": "^5.0.0",
         "cakephp/bake": "^3.0.0",
-        "phpunit/phpunit": "^10.1.0",
+        "phpunit/phpunit": "^11.0",
         "cakephp/cakephp-codesniffer": "^5.0",
         "passbolt/passbolt-selenium-api": "dev-cakephp5#861bc4fe19b5ed58e50dd9a9c52909c997f2934a",
         "vierge-noire/cakephp-fixture-factories": "^v3.0",
@@ -140,6 +140,7 @@
             "Passbolt\\PasswordPoliciesUpdate\\": "./plugins/PassboltEe/PasswordPoliciesUpdate/src",
             "Passbolt\\UserPassphrasePolicies\\": "./plugins/PassboltEe/UserPassphrasePolicies/src",
             "Passbolt\\PasswordExpiryPolicies\\": "./plugins/PassboltEe/PasswordExpiryPolicies/src",
+            "Passbolt\\SecretRevisions\\": "./plugins/PassboltCe/SecretRevisions/src",
             "Passbolt\\Metadata\\": "./plugins/PassboltCe/Metadata/src",
             "Passbolt\\UserKeyPolicies\\": "./plugins/PassboltCe/UserKeyPolicies/src",
             "Passbolt\\Scim\\": "./plugins/PassboltEe/Scim/src"
@@ -183,6 +184,7 @@
             "Passbolt\\PasswordPoliciesUpdate\\Test\\": "./plugins/PassboltEe/PasswordPoliciesUpdate/tests",
             "Passbolt\\UserPassphrasePolicies\\Test\\": "./plugins/PassboltEe/UserPassphrasePolicies/tests",
             "Passbolt\\PasswordExpiryPolicies\\Test\\": "./plugins/PassboltEe/PasswordExpiryPolicies/tests",
+            "Passbolt\\SecretRevisions\\Test\\": "./plugins/PassboltCe/SecretRevisions/tests",
             "Passbolt\\Metadata\\Test\\": "./plugins/PassboltCe/Metadata/tests",
             "Passbolt\\UserKeyPolicies\\Test\\": "./plugins/PassboltCe/UserKeyPolicies/tests",
             "Passbolt\\Scim\\Test\\": "./plugins/PassboltEe/Scim/tests"

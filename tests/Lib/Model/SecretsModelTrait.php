@@ -30,7 +30,7 @@ trait SecretsModelTrait
      * @param array|null $options The entity options
      * @return Secret
      */
-    public function addSecret(?array $data = [], ?array $options = []): Secret
+    public static function addSecret(?array $data = [], ?array $options = []): Secret
     {
         $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
 
@@ -52,7 +52,7 @@ trait SecretsModelTrait
      * @param array|null $options The new entity options.
      * @return Secret
      */
-    public function getDummySecretEntity(?array $data = [], ?array $options = []): Secret
+    public static function getDummySecretEntity(?array $data = [], ?array $options = []): Secret
     {
         $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
         $defaultOptions = [
@@ -97,6 +97,7 @@ trait SecretsModelTrait
         $entityContent = [
             'resource_id' => UuidFactory::uuid('resource.id.april'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
+            'secret_revision_id' => UuidFactory::uuid('secret_revision.id.april'),
             'data' => '-----BEGIN PGP MESSAGE-----
 
 hQIMA1P90Qk1JHA+ARAAu3oaLzv/BfeukST6tYAkAID+xbt5dhsv4lxL3oSbo8Nm
@@ -127,7 +128,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
      */
     protected function assertSecretAttributes($secret)
     {
-        $attributes = ['id', 'user_id', 'resource_id', 'data', 'created', 'modified'];
+        $attributes = ['id', 'user_id', 'resource_id', 'created_by', 'modified_by', 'data', 'created', 'modified'];
         $this->assertObjectHasAttributes($attributes, $secret);
     }
 
@@ -137,10 +138,16 @@ W3AI8+rWjK8MGH2T88hCYI/6
      * @param $resourceId
      * @param $userId
      */
-    protected function assertSecretExists($resourceId, $userId)
+    protected function assertSecretExists($resourceId, $userId, bool $isDeleted = false)
     {
         $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
-        $secret = $secretsTable->find()->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
+        $secret = $secretsTable->find()->where(['resource_id' => $resourceId, 'user_id' => $userId]);
+        if ($isDeleted) {
+            $secret->where(['deleted IS NOT NULL']);
+        } else {
+            $secret->where(['deleted IS NULL']);
+        }
+        $secret = $secret->first();
         $this->assertNotEmpty($secret);
     }
 

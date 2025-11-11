@@ -51,7 +51,7 @@ class AvatarsCacheServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function dataForTestAvatarsCacheServiceStore(): array
+    public static function dataForTestAvatarsCacheServiceStore(): array
     {
         return [
             [file_get_contents(FIXTURES . 'Avatar' . DS . 'ada.png')],
@@ -60,7 +60,7 @@ class AvatarsCacheServiceTest extends TestCase
         ];
     }
 
-    public function dataForTestAvatarsCacheServiceStoreFail(): array
+    public static function dataForTestAvatarsCacheServiceStoreFail(): array
     {
         return [
             [null],

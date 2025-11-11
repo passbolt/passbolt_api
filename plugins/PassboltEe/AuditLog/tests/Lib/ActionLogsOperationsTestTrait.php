@@ -79,9 +79,23 @@ trait ActionLogsOperationsTestTrait
         $ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
         /** @var \Passbolt\Log\Model\Table\EntitiesHistoryTable $EntitiesHistory */
         $EntitiesHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.EntitiesHistory');
+        /** @var \Passbolt\Log\Model\Table\SecretsHistoryTable $SecretsHistory */
+        $SecretsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.SecretsHistory');
 
         if ($crud == EntityHistory::CRUD_CREATE) {
             $userAction = UserAction::getInstance($user, 'Resources.add', 'POST resources');
+            //If creating a resource, a secret creation will also be added
+            $secretsHistory = [
+                'resource_id' => $resourceId,
+                'user_id' => $user->getId(),
+            ];
+            $sh = $SecretsHistory->create($secretsHistory);
+            $entityHistory = [
+                'foreign_model' => 'SecretsHistory',
+                'foreign_key' => $sh->id,
+                'crud' => EntityHistory::CRUD_CREATE,
+            ];
+            $EntitiesHistory->create($entityHistory, $userAction);
         } else {
             $userAction = UserAction::getInstance($user, 'Resources.update', 'PUT resources');
         }

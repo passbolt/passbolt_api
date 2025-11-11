@@ -16,24 +16,20 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\UserSettings;
 
-use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
-use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Validation\Validation;
 use Passbolt\MultiFactorAuthentication\Controller\MfaController;
-use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
+use Passbolt\MultiFactorAuthentication\Service\MfaUserSettings\MfaUserSettingsDeleteService;
 
 /**
  * MfaUserSettingsDeleteController Class
  */
 class MfaUserSettingsDeleteController extends MfaController
 {
-    public const MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT = 'mfa.user_account.settings.delete';
-
     /**
      * @var \App\Model\Table\UsersTable
      */
@@ -82,13 +78,10 @@ class MfaUserSettingsDeleteController extends MfaController
 
         $message = __('No multi-factor authentication settings defined for the user.');
         try {
-            $mfaSettings = MfaAccountSettings::get(new UserAccessControl($user->role->name, $userId));
-
-            if ($mfaSettings->getEnabledProviders()) {
-                $mfaSettings->delete();
+            $mfaUserSettingsDisableService = new MfaUserSettingsDeleteService();
+            if ($mfaUserSettingsDisableService->disableUserSettings($user, $this->User->getAccessControl())) {
                 $message = __('The multi-factor authentication settings for the user were deleted.');
             }
-            $this->dispatchSettingsDeletedEvent($user);
         } catch (RecordNotFoundException $exception) {
             // No MFA settings found for user
         }
@@ -103,16 +96,5 @@ class MfaUserSettingsDeleteController extends MfaController
     private function isAllowed(?string $userId = null)
     {
         return isset($userId) && ($this->User->isAdmin() || $userId === $this->User->id());
-    }
-
-    /**
-     * @param \App\Model\Entity\User $user user
-     * @return void
-     */
-    private function dispatchSettingsDeletedEvent(User $user)
-    {
-        $eventData['target'] = $user;
-        $eventData['uac'] = $this->User->getAccessControl();
-        $this->dispatchEvent(self::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT, $eventData);
     }
 }

@@ -211,7 +211,7 @@ class QueryStringComponentTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function dataForTestQueryStringComponentFilters(): array
+    public static function dataForTestQueryStringComponentFilters(): array
     {
         $fooId = UuidFactory::uuid('foo');
         $barId = UuidFactory::uuid('bar');

@@ -85,7 +85,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
      *
      * @return array
      */
-    public function withAndWithoutDigestTemplate(): array
+    public static function withAndWithoutDigestTemplate(): array
     {
         return [[true], [false]];
     }

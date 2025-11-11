@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Service\GroupsUsers;
 
+use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\GroupsUser;
@@ -27,6 +28,7 @@ use App\Model\Table\SecretsTable;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 class GroupsUsersAddService
 {
@@ -98,7 +100,7 @@ class GroupsUsersAddService
             function () use ($uac, $groupUser, $secretsData, $missingAccessResourcesIds, $entitiesChangesDto) {
                 $this->saveGroupUser($groupUser);
                 $entitiesChangesDto->pushAddedEntity($groupUser);
-                $secrets = $this->buildSecretsEntities($groupUser, $missingAccessResourcesIds, $secretsData);
+                $secrets = $this->buildSecretsEntities($uac, $groupUser, $missingAccessResourcesIds, $secretsData);
                 $this->saveSecrets($groupUser, $secrets);
                 $entitiesChangesDto->pushAddedEntities($secrets);
                 $this->dispatchGroupUserAddedEvent($uac, $groupUser);
@@ -169,14 +171,22 @@ class GroupsUsersAddService
      * @throws \App\Error\Exception\ValidationException If too many secrets are provided (Duplicate)
      */
     private function buildSecretsEntities(
+        UserAccessControl $uac,
         GroupsUser $groupUser,
         array $missingAccessResourcesIds,
         array $secretsData = []
     ): array {
         $secrets = [];
+        $secretsData = $this->setSecretRevisionInData($secretsData);
 
         foreach ($secretsData as $secretRowRef => $secretData) {
-            $secrets[] = $this->buildSecretEntity($secretRowRef, $secretData, $groupUser, $missingAccessResourcesIds);
+            $secrets[] = $this->buildSecretEntity(
+                $uac,
+                $secretRowRef,
+                $secretData,
+                $groupUser,
+                $missingAccessResourcesIds
+            );
         }
 
         $countProvidedSecrets = count($secrets);
@@ -193,6 +203,42 @@ class GroupsUsersAddService
         }
 
         return $secrets;
+    }
+
+    /**
+     * Fetches the secret revision of the resources on which a secret is going to be created
+     * Adds the secret revision ID to the secrets' data accordingly
+     *
+     * @param array $secretsData secrets to create during the share
+     * @return array
+     */
+    private function setSecretRevisionInData(array $secretsData): array
+    {
+        $resourceIds = Hash::extract($secretsData, '{n}.resource_id');
+
+        // If no secrets are created, no need to fetch the revisions
+        if (empty($resourceIds)) {
+            return $secretsData;
+        }
+
+        $secretRevisions = $this->secretsTable->SecretRevisions
+            ->find('notDeleted')
+            ->disableHydration()
+            ->select(['id', 'resource_id'])
+            ->where(['resource_id IN' => $resourceIds])
+            ->all();
+
+        foreach ($secretsData as $secretRowRef => $row) {
+            $revision = $secretRevisions->firstMatch(['resource_id' => $row['resource_id']]);
+            if (is_null($revision)) {
+                throw new CustomValidationException(
+                    __('The resource with ID {0} does not have a secret revision.', $row['resource_id'])
+                );
+            }
+            $secretsData[$secretRowRef]['secret_revision_id'] = $revision['id'];
+        }
+
+        return $secretsData;
     }
 
     /**
@@ -228,15 +274,24 @@ class GroupsUsersAddService
      *  by being added to the group.
      */
     private function buildSecretEntity(
+        UserAccessControl $uac,
         int $secretRowRef,
         array $secretData,
         GroupsUser $groupUser,
         array $missingSecretsResourcesIds = []
     ): Secret {
+        $secretData = array_merge($secretData, [
+            'created_by' => $uac->getId(),
+            'modified_by' => $uac->getId(),
+        ]);
+
         $accessibleFields = [
             'resource_id' => true,
             'user_id' => true,
             'data' => true,
+            'secret_revision_id' => true,
+            'created_by' => true,
+            'modified_by' => true,
         ];
         $secret = $this->secretsTable->newEntity($secretData, ['accessibleFields' => $accessibleFields]);
 
