@@ -17,7 +17,9 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Service\RefreshToken;
 
 use App\Model\Entity\AuthenticationToken;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
+use InvalidArgumentException;
 
 class RefreshTokenLogoutService extends RefreshTokenAbstractService
 {
@@ -41,7 +43,12 @@ class RefreshTokenLogoutService extends RefreshTokenAbstractService
             );
         }
 
-        $token = $this->getActiveRefreshToken($token, $userId);
+        try {
+            $token = $this->getActiveRefreshToken($token, $userId);
+        } catch (InvalidArgumentException $e) {
+            throw new BadRequestException($e->getMessage(), null, $e);
+        }
+
         $this->consumeToken($token);
 
         return 1;

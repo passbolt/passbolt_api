@@ -73,12 +73,13 @@ class ResourcesAddAndShareControllerTest extends AppIntegrationTestCase
         $frenchUser2 = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 
         /** @var \App\Model\Entity\Resource $resource */
-        $resource = ResourceFactory::make()->withCreatorAndPermission($frenchUser)->persist();
+        $resource = ResourceFactory::make()->withSecretRevisions()->withCreatorAndPermission($frenchUser)->persist();
 
         $data = [];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $defaultUser->id, 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $englishUser->id, 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $frenchUser2->id, 'type' => Permission::OWNER];
+        $data['secrets'][] = ['user_id' => $frenchUser->get('id'), 'data' => SecretFactory::make()->getEntity()->data];
         $data['secrets'][] = ['user_id' => $defaultUser->id, 'data' => SecretFactory::make()->getEntity()->data];
         $data['secrets'][] = ['user_id' => $englishUser->id, 'data' => SecretFactory::make()->getEntity()->data];
         $data['secrets'][] = ['user_id' => $frenchUser2->id, 'data' => SecretFactory::make()->getEntity()->data];
@@ -87,7 +88,7 @@ class ResourcesAddAndShareControllerTest extends AppIntegrationTestCase
         $this->putJson("/share/resource/{$resource->id}.json?api-version=v2", $data);
         $this->assertResponseOk();
 
-        $this->assertEmailQueueCount(3);
+        $this->assertEmailQueueCount(4);
         $this->assertEmailLocale($defaultUser->username, $englishLocale);
         $this->assertEmailLocale($englishUser->username, $englishLocale);
         $this->assertEmailLocale($frenchUser2->username, $frenchLocale);

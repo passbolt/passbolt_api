@@ -17,15 +17,11 @@ declare(strict_types=1);
 
 namespace App\Service\Resources;
 
-use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
-use App\Model\Entity\Secret;
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
-use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
-use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Event\EventDispatcherTrait;
@@ -49,11 +45,6 @@ class ResourcesUpdateService
     public const UPDATE_SUCCESS_EVENT_NAME = 'ResourcesUpdateController.update.success';
 
     /**
-     * @var \App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService
-     */
-    private PermissionsGetUsersIdsHavingAccessToService $getUsersIdsHavingAccessToService;
-
-    /**
      * @var \App\Model\Table\PermissionsTable
      */
     private PermissionsTable $Permissions;
@@ -64,17 +55,10 @@ class ResourcesUpdateService
     private ResourcesTable $Resources;
 
     /**
-     * @var \App\Service\Secrets\SecretsUpdateSecretsService
-     */
-    private SecretsUpdateSecretsService $secretsUpdateSecretsService;
-
-    /**
      * Instantiate the service.
      */
     public function __construct()
     {
-        $this->getUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
-        $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();
         $this->Permissions = $this->fetchTable('Permissions');
         $this->Resources = $this->fetchTable('Resources');
     }
@@ -99,17 +83,16 @@ class ResourcesUpdateService
         if (empty($meta) && empty($secrets)) {
             return $resource;
         }
+        if (!empty($secrets)) {
+            $meta['secrets'] = $this->decorateSecretsData($uac, $resource, $secrets);
+        }
 
         $this->Resources->getConnection()->transactional(
-            function () use (&$resource, $uac, $meta, $secrets, $resourceDto): void {
-                $this->updateResourceMeta($uac, $resource, $meta, $resourceDto);
+            function () use (&$resource, $uac, $meta, $resourceDto): void {
+                $this->updateResource($uac, $resource, $meta, $resourceDto);
+                $createdSecrets = $resource->secrets ?? [];
 
-                $updatedSecrets = [];
-                if (!empty($secrets)) {
-                    $updatedSecrets = $this->updateResourceSecrets($uac, $resource, $secrets);
-                }
-
-                $this->postResourceUpdate($uac, $resource, $updatedSecrets, $resourceDto);
+                $this->postResourceUpdate($uac, $resource, $createdSecrets, $resourceDto);
             }
         );
 
@@ -198,7 +181,7 @@ class ResourcesUpdateService
      * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto Resource DTO.
      * @return void
      */
-    private function updateResourceMeta(
+    private function updateResource(
         UserAccessControl $uac,
         Resource $resource,
         array $data,
@@ -247,6 +230,7 @@ class ResourcesUpdateService
             'modified_by' => true,
             'resource_type_id' => true,
             'expired' => true,
+            'secrets' => true,
         ]);
 
         return $this->Resources->patchEntity($resource, $data, $options);
@@ -274,33 +258,15 @@ class ResourcesUpdateService
      * @param \App\Utility\UserAccessControl $uac The operator
      * @param \App\Model\Entity\Resource $resource The target resource
      * @param array $data The list of secrets to update
-     * @return array<\App\Model\Entity\Secret>
+     * @return array
      * @throws \Exception If an unexpected error occurred
      */
-    private function updateResourceSecrets(UserAccessControl $uac, Resource $resource, array $data): array
+    private function decorateSecretsData(UserAccessControl $uac, Resource $resource, array $data): array
     {
-        $secrets = [];
-        $usersIdsHavingAccess = $this->getUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($resource->id);
-        sort($usersIdsHavingAccess);
-        $usersIdsSecretsProvided = Hash::extract($data, '{n}.user_id');
-        sort($usersIdsSecretsProvided);
+        $data = Hash::insert($data, '{n}.modified_by', $uac->getId());
+        $data = Hash::insert($data, '{n}.created_by', $uac->getId());
 
-        if ($usersIdsHavingAccess !== $usersIdsSecretsProvided) {
-            $error = ['secrets_provided' => 'The secrets of all the users having access to the resource are required.'];
-            $resource->setError('secrets', $error);
-            $this->handleValidationErrors($resource);
-        }
-
-        try {
-            $entitiesChanges = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
-            /** @var array<\App\Model\Entity\Secret> $secrets */
-            $secrets = $entitiesChanges->getUpdatedEntities(Secret::class);
-        } catch (CustomValidationException $e) {
-            $resource->setError('secrets', $e->getErrors());
-            $this->handleValidationErrors($resource);
-        }
-
-        return $secrets;
+        return $data;
     }
 
     /**

@@ -92,11 +92,11 @@ class ResourcesAddService
 
         $this->attachListenerToAfterSaveEvent($uac, $resourceDto);
         $attempts = 1;
-        $resource = $this->buildEntity($uac->getId(), $resourceDto);
-        $this->handleValidationError($resource);
         do {
+            $resource = $this->buildEntity($uac->getId(), $resourceDto);
+            $this->handleValidationError($resource);
             try {
-                $this->Resources->save($resource);
+                $this->Resources->save($resource, ['isResourceAdded' => true]);
                 break;
             } catch (PDOException $e) {
                 Log::error(get_class($e) . ' --- attempt #' . $attempts . ' --- ' . $e->getMessage());
@@ -134,7 +134,10 @@ class ResourcesAddService
 
         // If no secrets given, the model will throw a validation error, no need to take care of it here.
         if (isset($data['secrets']) && is_array($data['secrets'])) {
+            // Add or update these array values
             $data['secrets'][0]['user_id'] = $userId;
+            $data['secrets'][0]['created_by'] = $userId;
+            $data['secrets'][0]['modified_by'] = $userId;
         }
 
         if (!isset($data['resource_type_id']) || !Configure::read('passbolt.plugins.resourceTypes.enabled')) {

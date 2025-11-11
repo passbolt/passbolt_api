@@ -18,14 +18,13 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Secrets;
 
 use App\Model\Table\SecretsTable;
+use App\Test\Factory\SecretFactory;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class FindByResourceUserTest extends AppTestCase
 {
-    public array $fixtures = ['app.Base/Secrets'];
-
     /**
      * Test subject
      *
@@ -47,14 +46,33 @@ class FindByResourceUserTest extends AppTestCase
 
     public function testSecretTableFindByResourceUserTestExists()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $secret = SecretFactory::make()
+            ->with('Users')
+            ->with('Resources')
+            ->persist();
+
+        $userId = $secret->user_id;
+        $resourceId = $secret->resource_id;
         $secrets = $this->Secrets->findByResourceUser($resourceId, $userId)->all();
         $this->assertCount(1, $secrets);
         $secret = $secrets->first();
         $this->assertSecretAttributes($secret);
         $this->assertEquals($resourceId, $secret->resource_id);
         $this->assertEquals($userId, $secret->user_id);
+    }
+
+    public function testSecretTableFindByResourceUser_deleted_should_be_ignored()
+    {
+        $secret = SecretFactory::make()
+            ->with('Users')
+            ->with('Resources')
+            ->deleted()
+            ->persist();
+
+        $userId = $secret->user_id;
+        $resourceId = $secret->resource_id;
+        $secrets = $this->Secrets->findByResourceUser($resourceId, $userId)->all();
+        $this->assertEmpty($secrets);
     }
 
     public function testSecretTableFindByResourceUserTestNotExist()

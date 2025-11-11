@@ -47,7 +47,7 @@ class AssertFullBaseUrlMiddlewareTest extends AppIntegrationTestCase
         $middleware->process((new ServerRequest()), new TestRequestHandler());
     }
 
-    public function invalidFullBaseUrlValuesProvider(): array
+    public static function invalidFullBaseUrlValuesProvider(): array
     {
         return [
             [false],

@@ -26,9 +26,17 @@ use Cake\Utility\Hash;
 use Passbolt\Log\Model\Entity\EntityHistory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\SecretRevisions\SecretRevisionsPlugin;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsFactory;
 
 class ResourcesControllerLogTest extends LogIntegrationTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(SecretRevisionsPlugin::class);
+    }
+
     /**
      * @dataProvider dataProviderForLoginType
      */
@@ -179,15 +187,23 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
 
         // Assert entityHistory is correct.
+        $this->assertOneEntityHistory(['foreign_model' => 'Resources']);
         $expectedEntityHistory = [
             'action_log_id' => $actionLog['id'],
             'foreign_model' => 'Resources',
             'foreign_key' => $resourceId,
             'crud' => EntityHistory::CRUD_UPDATE,
         ];
-        $this->assertOneEntityHistory(['foreign_model' => 'Resources']);
-        $this->assertEntitiesHistoryCount('4', ['foreign_model' => 'SecretsHistory']);
         $this->assertEntityHistoryExists($expectedEntityHistory);
+        $this->assertEntitiesHistoryCount(0, ['foreign_model' => 'SecretsHistory']);
+        // assert SecretRevision is present in entities_history
+        $secretRevisionId = SecretRevisionsFactory::find()->firstOrFail()->get('id');
+        $this->assertEntityHistoryExists([
+            'action_log_id' => $actionLog['id'],
+            'foreign_model' => 'SecretRevisions',
+            'foreign_key' => $secretRevisionId,
+            'crud' => EntityHistory::CRUD_CREATE,
+        ]);
     }
 
     public function testLogResourcesDeleteSuccess()

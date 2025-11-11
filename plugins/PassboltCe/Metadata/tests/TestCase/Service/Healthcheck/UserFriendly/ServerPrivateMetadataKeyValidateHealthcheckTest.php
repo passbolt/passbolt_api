@@ -14,14 +14,14 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         5.4.0
  */
-namespace Passbolt\Metadata\Test\TestCase\Service\Healthcheck;
+namespace Passbolt\Metadata\Test\TestCase\Service\Healthcheck\UserFriendly;
 
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\I18n\DateTime;
-use Passbolt\Metadata\Service\Healthcheck\ServerPrivateMetadataKeyValidateHealthcheck;
+use Passbolt\Metadata\Service\Healthcheck\UserFriendly\ServerPrivateMetadataKeyValidateHealthcheck;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
@@ -29,7 +29,7 @@ use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
- * @covers \Passbolt\Metadata\Service\Healthcheck\ServerPrivateMetadataKeyValidateHealthcheck
+ * @covers \Passbolt\Metadata\Service\Healthcheck\UserFriendly\ServerPrivateMetadataKeyValidateHealthcheck
  */
 class ServerPrivateMetadataKeyValidateHealthcheckTest extends AppTestCaseV5
 {

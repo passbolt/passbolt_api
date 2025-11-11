@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication;
 
+use App\Service\Command\ProcessUserService;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\BasePlugin;
@@ -26,6 +27,7 @@ use Cake\ORM\TableRegistry;
 use Duo\DuoUniversal\Client;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
 use Passbolt\MultiFactorAuthentication\Authenticator\MfaJwtArmoredChallengeService;
+use Passbolt\MultiFactorAuthentication\Command\MfaUserSettingsDisableCommand;
 use Passbolt\MultiFactorAuthentication\Event\AddIsMfaEnabledColumnToUsersGrid;
 use Passbolt\MultiFactorAuthentication\Event\AddMfaCookieOnSuccessfulRefreshTokenCreation;
 use Passbolt\MultiFactorAuthentication\Event\ClearMfaCookieOnSetupAndRecover;
@@ -110,5 +112,11 @@ class MultiFactorAuthenticationPlugin extends BasePlugin
             ->setConcrete(DefaultRememberAMonthSettingService::class);
 
         $container->add(Client::class)->setConcrete(null);
+
+        $container
+            ->add(MfaUserSettingsDisableCommand::class)
+            ->addArguments([
+                ProcessUserService::class,
+            ]);
     }
 }

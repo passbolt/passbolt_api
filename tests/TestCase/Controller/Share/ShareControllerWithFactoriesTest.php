@@ -18,7 +18,9 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Share;
 
 use App\Model\Entity\Permission;
+use App\Test\Factory\PermissionFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
@@ -42,6 +44,70 @@ class ShareControllerWithFactoriesTest extends AppIntegrationTestCase
 
         $this->Users = TableRegistry::getTableLocator()->get('Users');
         $this->gpg = OpenPGPBackendFactory::get();
+    }
+
+    public function testShareControllerWithFactories_Success(): void
+    {
+        [$userA, $userB, $userC, $userD, $userE] = UserFactory::make(5)->withValidGpgKey()->persist();
+        $resource = ResourceFactory::make()
+            ->withCreatorAndPermission($userA)
+            ->withSecretRevisions()
+            ->with('Secrets', [ // create associated secrets
+                [
+                    'user_id' => $userA->id,
+                    'created_by' => $userA->id,
+                    'modified_by' => $userA->id,
+                ],
+                [
+                    'user_id' => $userB->id,
+                    'created_by' => $userA->id,
+                    'modified_by' => $userA->id,
+                ],
+            ])
+            ->persist();
+        $permissionUserA = $resource->permission;
+        $permissionUserB = PermissionFactory::make()->acoResource($resource)->aroUser($userB)->typeOwner()->persist();
+        $permissionUserE = PermissionFactory::make()->acoResource($resource)->aroUser($userE)->typeUpdate()->persist();
+        // Prepare payload
+        $resourceId = $resource->id;
+        $encryptedSecretA = $this->encryptMessageFor($userA->id, 'secret for A');
+        $encryptedSecretB = $this->encryptMessageFor($userB->id, 'secret for B');
+        $encryptedSecretC = $this->encryptMessageFor($userC->id, 'secret for C');
+        $encryptedSecretD = $this->encryptMessageFor($userD->id, 'secret for D');
+
+        $this->logInAs($userB);
+        $this->putJson("/share/resource/$resourceId.json", [
+            'permissions' => [
+                ['id' => $permissionUserA->id, 'type' => Permission::READ], // downgrade permission
+                ['id' => $permissionUserB->id, 'type' => Permission::OWNER], // downgrade permission
+                ['id' => $permissionUserE->id, 'delete' => true], // remove permission
+                ['aro' => 'User', 'aro_foreign_key' => $userC->id, 'type' => Permission::OWNER], // add permission for user C
+                ['aro' => 'User', 'aro_foreign_key' => $userD->id, 'type' => Permission::UPDATE], // add permission for user D
+            ],
+            'secrets' => [
+                ['user_id' => $userA->id, 'data' => $encryptedSecretA],
+                ['user_id' => $userB->id, 'data' => $encryptedSecretB],
+                // share secrets with user C & D
+                ['user_id' => $userC->id, 'data' => $encryptedSecretC],
+                ['user_id' => $userD->id, 'data' => $encryptedSecretD],
+            ],
+        ]);
+
+        $this->assertSuccess();
+        $expectedResource = ResourceFactory::get($resourceId, contain: ['Permissions', 'Secrets']);
+        // assert secrets entries
+        $this->assertCount(4, $expectedResource->secrets);
+        foreach ($expectedResource->secrets as $expectedSecret) {
+            if (in_array($expectedSecret->user_id, [$userA->id, $userB->id])) {
+                $this->assertSame($userA->id, $expectedSecret->created_by);
+                $this->assertSame($userB->id, $expectedSecret->modified_by);
+            } else {
+                $this->assertSame($userB->id, $expectedSecret->created_by);
+                $this->assertSame($userB->id, $expectedSecret->modified_by);
+            }
+        }
+        // assert permissions entries
+        $this->assertCount(4, $expectedResource->permissions);
     }
 
     public function testShareController_Error_NotValidResourceId_WithFactories(): void

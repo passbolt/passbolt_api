@@ -36,6 +36,7 @@ use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 /**
  * @covers \Passbolt\Metadata\Service\Upgrade\MetadataUpgradeResourcesUpdateService
@@ -82,6 +83,15 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
         $resourceShared = ResourceFactory::make()->withPermissionsFor([$group])->persist();
         /** @var \App\Model\Entity\Resource $resourcePersonal */
         $resourcePersonal = ResourceFactory::make()->withPermissionsFor([$userWithPersonalResource])->persist();
+        // secret revisions
+        $secretRevisionForShared = SecretRevisionFactory::make()
+            ->resourceId($resourceShared->id)
+            ->resourceTypeId($resourceShared->resource_type_id)
+            ->persist();
+        $secretRevisionForPersonal = SecretRevisionFactory::make()
+            ->resourceId($resourcePersonal->id)
+            ->resourceTypeId($resourcePersonal->resource_type_id)
+            ->persist();
 
         $uac = $this->mockAdminAccessControl();
         $metadataForR1 = $this->encryptForUser(json_encode([]), $userWithPersonalResource, $this->getAdaNoPassphraseKeyInfo());
@@ -119,6 +129,9 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
         $this->assertSame(Chronos::now()->format('Y-m-d'), $updatedSharedResource->get('modified')->format('Y-m-d'));
         $this->assertSame($uac->getId(), $updatedSharedResource->get('modified_by'));
         $this->assertSame($expectedResourceType->get('id'), $updatedSharedResource->get('resource_type_id'));
+        // Assert resource_type_id is updated in secret_revisions table
+        $this->assertSame($expectedResourceType->get('id'), SecretRevisionFactory::get($secretRevisionForShared->get('id'))->get('resource_type_id'));
+        $this->assertSame($expectedResourceType->get('id'), SecretRevisionFactory::get($secretRevisionForPersonal->get('id'))->get('resource_type_id'));
     }
 
     public function testMetadataUpgradeResourcesUpdateService_Error_EmptyData(): void
@@ -135,7 +148,7 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
         $this->service->updateMany($uac, ['foo', 'bar', 'baz']);
     }
 
-    public function MetadataUpgradeResourcesUpdateServiceInvalidMetadataEncryptedMessage(): array
+    public static function MetadataUpgradeResourcesUpdateServiceInvalidMetadataEncryptedMessage(): array
     {
         return [
             ['🔥'],
