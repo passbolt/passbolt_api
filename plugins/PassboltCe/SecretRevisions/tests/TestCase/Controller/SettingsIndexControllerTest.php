@@ -33,6 +33,7 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         $this->logInAsUser();
         $this->getJson('/settings.json');
         $this->assertTrue($this->_responseJsonBody->passbolt->plugins->secretRevisions->enabled);
+        $this->assertTrue($this->_responseJsonBody->passbolt->plugins->secretRevisions->isInBeta);
     }
 
     public function testSettingsIndexController_SecretRevisionsPlugin_NotVisible_NotLoggedIn(): void

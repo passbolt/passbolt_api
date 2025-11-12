@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\SecretRevisions;
 
 use Cake\Core\BasePlugin;
+use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\SecretRevisions\Event\SecretRevisionsAfterResourceCreatedEventListener;
 
@@ -28,6 +29,7 @@ class SecretRevisionsPlugin extends BasePlugin
     public function bootstrap(PluginApplicationInterface $app): void
     {
         parent::bootstrap($app);
+        Configure::write('passbolt.plugins.secretRevisions.isInBeta', true);
 
         $app->getEventManager()->on(new SecretRevisionsAfterResourceCreatedEventListener());
     }
