@@ -36,7 +36,7 @@ class UsersTableDisableUserTest extends TestCase
         $this->Users = TableRegistry::getTableLocator()->get('Users');
     }
 
-    public function invalidDates(): array
+    public static function invalidDates(): array
     {
         return [
             [date('Y-m-d\TH:i:sP')],

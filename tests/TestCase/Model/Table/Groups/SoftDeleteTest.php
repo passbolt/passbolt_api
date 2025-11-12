@@ -18,13 +18,14 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Groups;
 
 use App\Model\Entity\Permission;
+use App\Model\Table\GroupsTable;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class SoftDeleteTest extends AppTestCase
 {
-    public $Groups;
+    public GroupsTable $Groups;
     public $GroupsUsers;
     public $Permissions;
     public $Resources;

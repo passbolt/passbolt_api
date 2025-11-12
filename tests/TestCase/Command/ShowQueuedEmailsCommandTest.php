@@ -45,7 +45,7 @@ class ShowQueuedEmailsCommandTest extends AppTestCase
      *
      * @return array
      */
-    public function invalidLimitOptionProvider(): array
+    public static function invalidLimitOptionProvider(): array
     {
         return [
             [-100],

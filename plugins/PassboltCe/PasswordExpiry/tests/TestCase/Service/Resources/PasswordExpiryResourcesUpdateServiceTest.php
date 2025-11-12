@@ -44,7 +44,7 @@ class PasswordExpiryResourcesUpdateServiceTest extends AppTestCase
         parent::tearDown();
     }
 
-    public function dataProvider()
+    public static function dataProvider()
     {
         return [
             [

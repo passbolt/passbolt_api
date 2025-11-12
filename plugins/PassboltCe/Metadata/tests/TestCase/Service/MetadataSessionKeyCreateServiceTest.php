@@ -95,7 +95,7 @@ class MetadataSessionKeyCreateServiceTest extends AppTestCaseV5
         $this->assertCount(2, $metadataSessionKeys);
     }
 
-    public function invalidDataFieldValueProvider(): array
+    public static function invalidDataFieldValueProvider(): array
     {
         return [
             [null],

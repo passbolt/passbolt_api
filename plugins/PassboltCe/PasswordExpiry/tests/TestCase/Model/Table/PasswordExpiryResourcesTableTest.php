@@ -41,7 +41,7 @@ class PasswordExpiryResourcesTableTest extends AppTestCase
         parent::tearDown();
     }
 
-    public function dataProviderForSuccess(): array
+    public static function dataProviderForSuccess(): array
     {
         return [
             [Date::tomorrow()->toAtomString()],

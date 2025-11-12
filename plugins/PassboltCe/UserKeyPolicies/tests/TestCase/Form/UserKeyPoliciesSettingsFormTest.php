@@ -176,41 +176,42 @@ class UserKeyPoliciesSettingsFormTest extends AppTestCase
     {
         return [
             [
-                'data' => [
+                //data
+                [
                     'preferred_key_type' => UserKeyPoliciesSettingsDto::KEY_TYPE_RSA,
                     'preferred_key_size' => null,
                 ],
-                'error key' => 'preferred_key_type.invalid_key_type_size_combination',
+                'preferred_key_type.invalid_key_type_size_combination', //error key
             ],
             [
-                'data' => [
+                [
                     'preferred_key_type' => UserKeyPoliciesSettingsDto::KEY_TYPE_CURVE,
                     'preferred_key_size' => UserKeyPoliciesSettingsDto::KEY_SIZE_3072,
                 ],
-                'error key' => 'preferred_key_type.invalid_key_type_size_combination',
+                'preferred_key_type.invalid_key_type_size_combination',
             ],
             [
-                'data' => [
+                [
                     'preferred_key_type' => UserKeyPoliciesSettingsDto::KEY_TYPE_CURVE,
                     'preferred_key_size' => UserKeyPoliciesSettingsDto::KEY_SIZE_4096,
                 ],
-                'error key' => 'preferred_key_type.invalid_key_type_size_combination',
+                'preferred_key_type.invalid_key_type_size_combination',
             ],
             [
-                'data' => [
+                [
                     'preferred_key_type' => UserKeyPoliciesSettingsDto::KEY_TYPE_CURVE,
                     'preferred_key_size' => null,
                     'preferred_key_curve' => null,
                 ],
-                'error key' => 'preferred_key_type.invalid_key_type_curve_combination',
+                'preferred_key_type.invalid_key_type_curve_combination',
             ],
             [
-                'data' => [
+                [
                     'preferred_key_type' => UserKeyPoliciesSettingsDto::KEY_TYPE_RSA,
                     'preferred_key_size' => UserKeyPoliciesSettingsDto::KEY_SIZE_4096,
                     'preferred_key_curve' => UserKeyPoliciesSettingsDto::KEY_CURVE_ED25519_LEGACY,
                 ],
-                'error key' => 'preferred_key_type.invalid_key_type_curve_combination',
+                'preferred_key_type.invalid_key_type_curve_combination',
             ],
         ];
     }

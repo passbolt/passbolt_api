@@ -38,7 +38,7 @@ trait GpgMetadataKeysTestTrait
      *
      * @return array
      */
-    public function getUserKeyInfo(): array
+    public static function getUserKeyInfo(): array
     {
         return [
             'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'maki_public.key'), // ecc, curve25519
@@ -54,7 +54,7 @@ trait GpgMetadataKeysTestTrait
      *
      * @return array
      */
-    public function getMetadataKeyInfo(): array
+    public static function getMetadataKeyInfo(): array
     {
         return [
             'public_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_public.key'), // ecc, curve25519
@@ -86,7 +86,7 @@ trait GpgMetadataKeysTestTrait
      *
      * @return array
      */
-    public function getExpiredKeyInfo(): array
+    public static function getExpiredKeyInfo(): array
     {
         return [
             'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'expired_public.key'),
@@ -100,7 +100,7 @@ trait GpgMetadataKeysTestTrait
      *
      * @return array
      */
-    public function getInvalidAlgKeyInfo(): array
+    public static function getInvalidAlgKeyInfo(): array
     {
         return [
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'elgamal_public.key'),
@@ -134,7 +134,7 @@ trait GpgMetadataKeysTestTrait
      *
      * @return false|string
      */
-    public function getEncryptedMetadataPrivateKeyForServerKey()
+    public static function getEncryptedMetadataPrivateKeyForServerKey()
     {
         return file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'msg_for_server_key.msg');
     }
@@ -144,7 +144,7 @@ trait GpgMetadataKeysTestTrait
      *
      * @return false|string
      */
-    public function getEncryptedMetadataSessionKeyForServerKey()
+    public static function getEncryptedMetadataSessionKeyForServerKey()
     {
         return file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_session_key_for_server_key.msg');
     }
@@ -292,7 +292,7 @@ qHRRyS/qHxm+91OQZ99KGhkYMNNE5Xa7HQKDTgY=
      * @deprecated NOT A VALID PRIVATE KEY MESSAGE
      * @return string
      */
-    public function getDummyPrivateKeyOpenPGPMessage(): string
+    public static function getDummyPrivateKeyOpenPGPMessage(): string
     {
         // Decrypted message: super secret message
         return "-----BEGIN PGP MESSAGE-----

@@ -493,7 +493,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         DateTime::setTestNow();
     }
 
-    public function invalidUserTokenProvider(): array
+    public static function invalidUserTokenProvider(): array
     {
         return [
             ['gpgauthv1.3.0|36|foo'],

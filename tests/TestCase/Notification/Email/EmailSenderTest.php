@@ -93,7 +93,7 @@ class EmailSenderTest extends AppTestCase
         $this->assertSame(self::APP_FULL_BASE_URL, $emailQueue->template_vars['body']['fullBaseUrl']);
     }
 
-    public function purifySubjectValueProvider(): array
+    public static function purifySubjectValueProvider(): array
     {
         return [
             [false], // purifier disabled
