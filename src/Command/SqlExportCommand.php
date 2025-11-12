@@ -196,7 +196,7 @@ class SqlExportCommand extends PassboltCommand
     protected function mariaDbDump(array $config, string $dir, string $file): int
     {
         // Build the dump command.
-        $cmd = 'mariadb-dump -h' . escapeshellarg($config['host']) . ' -u' . escapeshellarg($config['username']);
+        $cmd = 'mariadb-dump --skip_ssl -h' . escapeshellarg($config['host']) . ' -u' . escapeshellarg($config['username']);
         if (!empty($config['password'])) {
             $cmd .= ' -p' . escapeshellarg($config['password']);
         }
