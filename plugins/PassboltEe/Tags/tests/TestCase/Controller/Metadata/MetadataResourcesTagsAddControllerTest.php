@@ -571,16 +571,16 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
     }
 
-    public function metadataResourcesTagsAddControllerErrorDeletedOrExpiredValuesProvider(): array
+    public static function metadataResourcesTagsAddControllerErrorDeletedOrExpiredValuesProvider(): array
     {
         return [
             [
-                'input' => ['expired' => DateTime::yesterday()],
-                'expected response' => 'isMetadataKeyNotExpired',
+                ['expired' => DateTime::yesterday()], //input
+                'isMetadataKeyNotExpired', //expected response
             ],
             [
-                'input' => ['deleted' => DateTime::now()],
-                'expected response' => 'metadata_key_exists',
+                ['deleted' => DateTime::now()],
+                'metadata_key_exists',
             ],
         ];
     }

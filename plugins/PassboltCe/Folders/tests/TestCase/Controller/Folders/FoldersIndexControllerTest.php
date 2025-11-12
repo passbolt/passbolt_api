@@ -134,7 +134,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         }
     }
 
-    public function provideFoldersIndexFilterHasParentSuccessRelations()
+    public static function provideFoldersIndexFilterHasParentSuccessRelations()
     {
         return [
             'When has parent is false' => [

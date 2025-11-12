@@ -55,7 +55,7 @@ class SubscriptionKeyDtoFormTest extends TestCase
         ], $data);
     }
 
-    public function dataForSubscriptionKeyValidator()
+    public static function dataForSubscriptionKeyValidator()
     {
         $emoji = "\u{1F30F}";
 

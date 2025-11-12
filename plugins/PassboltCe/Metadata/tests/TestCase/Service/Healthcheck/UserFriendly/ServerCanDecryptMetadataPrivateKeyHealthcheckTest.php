@@ -14,18 +14,18 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.10.0
  */
-namespace Passbolt\Metadata\Test\TestCase\Service\Healthcheck;
+namespace Passbolt\Metadata\Test\TestCase\Service\Healthcheck\UserFriendly;
 
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Test\Lib\AppTestCaseV5;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
-use Passbolt\Metadata\Service\Healthcheck\ServerCanDecryptMetadataPrivateKeyHealthcheck;
+use Passbolt\Metadata\Service\Healthcheck\UserFriendly\ServerCanDecryptMetadataPrivateKeyHealthcheck;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
 /**
- * @covers \Passbolt\Metadata\Service\Healthcheck\ServerCanDecryptMetadataPrivateKeyHealthcheck
+ * @covers \Passbolt\Metadata\Service\Healthcheck\UserFriendly\ServerCanDecryptMetadataPrivateKeyHealthcheck
  */
 class ServerCanDecryptMetadataPrivateKeyHealthcheckTest extends AppTestCaseV5
 {

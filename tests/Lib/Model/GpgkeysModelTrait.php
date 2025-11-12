@@ -24,7 +24,7 @@ trait GpgkeysModelTrait
      * @param array|null $data Custom data that will be merged with the default content.
      * @return array
      */
-    public function getDummyGpgkey(?array $data = []): array
+    public static function getDummyGpgkey(?array $data = []): array
     {
         $dummy = [
             'public_key_armored' => '-----BEGIN PGP PUBLIC KEY BLOCK-----

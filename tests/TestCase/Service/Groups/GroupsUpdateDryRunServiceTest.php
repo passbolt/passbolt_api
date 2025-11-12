@@ -21,6 +21,7 @@ use App\Error\Exception\ValidationException;
 use App\Service\Groups\GroupsUpdateDryRunService;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\UserAccessControlTrait;
@@ -70,6 +71,13 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
             ->withPermissionsFor([$userA, $g1])
             ->withSecretsFor([$userA, $g1])
             ->persist();
+        $r3 = ResourceFactory::make()->withPermissionsFor([$g1])->persist();
+        // Additional secret to be ignored as it is soft deleted
+        SecretFactory::make()
+            ->deleted()
+            ->with('Resources', $r3)
+            ->with('Users', $userA)
+            ->persist();
 
         $userAGroupUserId = $g1->groups_users[0]['id'];
         $userBGroupUserId = $g1->groups_users[1]['id'];
@@ -93,7 +101,7 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
         $this->assertCount(2, $result['secrets']);
         $this->assertEquals($operatorSecret->data, $result['secrets'][0]['data']);
         $this->assertEquals($operatorSecret->data, $result['secrets'][1]['data']);
-        $this->assertCount(4, $result['secretsNeeded']);
+        $this->assertCount(6, $result['secretsNeeded']);
         $this->assertContains(['resource_id' => $r1->id, 'user_id' => $userC->id], $result['secretsNeeded']);
         $this->assertContains(['resource_id' => $r1->id, 'user_id' => $userD->id,], $result['secretsNeeded']);
         $this->assertContains(['resource_id' => $r2->id, 'user_id' => $userC->id,], $result['secretsNeeded']);

@@ -21,6 +21,7 @@ use App\Model\Entity\Permission;
 use App\Model\Table\ResourcesTable;
 use App\Test\Factory\FavoriteFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FavoritesModelTrait;
@@ -98,6 +99,34 @@ class FindIndexTest extends AppTestCase
         $this->assertObjectHasAttribute('secrets', $resource);
         $this->assertCount(1, $resource->secrets);
         $this->assertSecretAttributes($resource->secrets[0]);
+    }
+
+    public function testContainSecrets_WithSecretsDeleted()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$user])
+            ->withSecretsFor([$user])
+            ->persist();
+        $secret = $resource->secrets[0];
+        // Add five secrets associated to this resource, but deleted
+        SecretFactory::make(5)
+            ->with('Resources', $resource)
+            ->with('Users', $user)
+            ->deleted()
+            ->persist();
+
+        $options['contain']['secret'] = true;
+        $resources = $this->Resources->findIndex($user->id, $options);
+        $resource = $resources->first();
+
+        // Expected fields.
+        $this->assertResourceAttributes($resource);
+        $this->assertObjectHasAttribute('secrets', $resource);
+        $this->assertCount(1, $resource->secrets);
+        $this->assertSame($secret->id, $resource->secrets[0]['id']);
     }
 
     public function testContainCreator()

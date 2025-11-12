@@ -76,7 +76,7 @@ class FoldersRelationsFinderTraitTest extends FoldersTestCase
         $this->assertEmpty($missingFoldersRelations);
     }
 
-    public function noMissingResourcesFoldersRelationsDataProvider(): array
+    public static function noMissingResourcesFoldersRelationsDataProvider(): array
     {
         return [
             'No resources in database' => [
@@ -226,7 +226,7 @@ class FoldersRelationsFinderTraitTest extends FoldersTestCase
         $this->assertEmpty($missingFoldersRelations);
     }
 
-    public function noMissingFoldersFoldersRelationsDataProvider(): array
+    public static function noMissingFoldersFoldersRelationsDataProvider(): array
     {
         return [
             'No folders in database' => [

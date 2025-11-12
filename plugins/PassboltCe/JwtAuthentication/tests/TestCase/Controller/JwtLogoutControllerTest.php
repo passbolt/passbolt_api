@@ -26,7 +26,7 @@ use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase;
 
 /**
- * Class AuthJwtLogoutControllerTest
+ * @covers \Passbolt\JwtAuthentication\Controller\JwtLogoutController
  */
 class JwtLogoutControllerTest extends JwtAuthenticationIntegrationTestCase
 {
@@ -165,6 +165,26 @@ class JwtLogoutControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->postJson('/auth/jwt/logout.json');
         $this->assertResponseError('Authentication is required to continue');
     }
+
+    public function testAuthJwtLogoutController_Error_InvalidRefreshTokenValue()
+    {
+        $userId = UserFactory::make()->user()->persist()->get('id');
+        $this->createJwtTokenAndSetInHeader($userId);
+        AuthenticationTokenFactory::make(3)
+            ->active()
+            ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
+            ->userId($userId)
+            ->persist();
+
+        $payload = [RefreshTokenAbstractService::REFRESH_TOKEN_DATA_KEY => 'foo-bar']; // not a valid UUID
+        $this->postJson('/auth/jwt/logout.json', $payload);
+
+        $this->assertBadRequestError('The refresh token should be a valid UUID');
+    }
+
+    // ---------------------------
+    // Helper methods
+    // ---------------------------
 
     private function countActiveAuthenticationTokens(string $userId): int
     {

@@ -19,6 +19,7 @@ namespace Passbolt\Sso\Test\TestCase\Controller\Azure;
 
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
+use Passbolt\Sso\Error\Exception\AzureException;
 use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
@@ -191,5 +192,24 @@ class SsoAzureStage1DryRunControllerTest extends SsoIntegrationTestCase
         $this->logInAs($user);
         $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->get('id')]);
         $this->assertError(404);
+    }
+
+    public function testSsoAzureStage1DryRunController_Error_AzureExceptionThrows400(): void
+    {
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->persist();
+        $settings = SsoSettingsFactory::make()->azure()->draft()->persist();
+        // Mock provider
+        $mockAzureProvider = $this->getProviderMockForStage1(AzureProvider::class);
+        $mockAzureProvider->method('getAuthorizationUrl')->willThrowException(
+            new AzureException('invalid_tenant', 'Tenant ID xyz not found')
+        );
+        // Swap actual implementation
+        SsoProviderFactory::set($mockAzureProvider);
+
+        $this->logInAs($admin);
+        $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->get('id')]);
+
+        $this->assertError(400, 'Tenant ID xyz not found');
     }
 }

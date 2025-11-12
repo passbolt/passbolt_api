@@ -47,7 +47,7 @@ class PasswordExpiryGroupSyncActionDeleteGroupUserTest extends DirectorySyncDepr
         );
     }
 
-    public function userKeepsPermission(): array
+    public static function userKeepsPermission(): array
     {
         return [[false], [true],];
     }

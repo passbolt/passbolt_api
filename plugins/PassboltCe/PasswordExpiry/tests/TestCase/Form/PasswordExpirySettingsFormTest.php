@@ -48,40 +48,40 @@ class PasswordExpirySettingsFormTest extends TestCase
         parent::tearDown();
     }
 
-    public function passwordExpirySettingsFormDataProvider(): array
+    public static function passwordExpirySettingsFormDataProvider(): array
     {
         return [
             [
-                'inputData' => [],
-                'expectedResult' => false,
+                [], //input data
+                false, //expected result
             ],
             [
-                'inputData' => [
+                [
                     PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
                     PasswordExpirySettingsDto::AUTOMATIC_UPDATE => false,
                 ],
-                'expectedResult' => false,
+                false,
             ],
             [
-                'inputData' => [
+                [
                     PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => false,
                     PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
                 ],
-                'expectedResult' => false,
+                false,
             ],
             [
-                'inputData' => [
+                [
                     PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => false,
                     PasswordExpirySettingsDto::AUTOMATIC_UPDATE => false,
                 ],
-                'expectedResult' => false,
+                false,
             ],
             [
-                'inputData' => [
+                [
                     PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
                     PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
                 ],
-                'expectedResult' => true,
+                true,
             ],
         ];
     }

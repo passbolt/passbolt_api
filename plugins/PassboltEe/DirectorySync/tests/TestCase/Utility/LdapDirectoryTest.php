@@ -16,12 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Utility;
 
-use App\Test\Lib\AppTestCase;
 use Cake\Http\Exception\NotImplementedException;
 use Exception;
 use InvalidArgumentException;
 use LdapRecord\Query\Model\Builder;
-use Passbolt\DirectorySync\Test\Mock\LdapDirectoryMock;
+use Passbolt\DirectorySync\Test\Utility\LdapDirectoryTestCase;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 use Passbolt\DirectorySync\Utility\LdapDirectory;
@@ -30,7 +29,7 @@ use RuntimeException;
 /**
  * @covers \Passbolt\DirectorySync\Utility\LdapDirectory
  */
-class LdapDirectoryTest extends AppTestCase
+class LdapDirectoryTest extends LdapDirectoryTestCase
 {
     public const BASE_DN = 'dc=example,dc=org';
     public const TEST_DOMAIN = 'org_domain';
@@ -40,24 +39,11 @@ class LdapDirectoryTest extends AppTestCase
      */
     public $settings;
 
-    /**
-     * @var LdapDirectoryMock
-     */
-    public $Mock;
-
     public function setUp(): void
     {
         parent::setUp();
         $this->settings = new DirectoryOrgSettings(DirectoryOrgSettingsTest::getDummySettings());
-        $this->initLdap();
-    }
-
-    /**
-     * Init LDAP mock with default settings
-     */
-    private function initLdap()
-    {
-        $this->Mock = LdapDirectoryMock::createDefault($this, $this->settings);
+        $this->setUpLdap(['getConnection', 'fetchDirectoryData', 'getQuery', '_fetchAndInitializeQuery', '_fetchAndInitializeUsersQuery', '_fetchAndInitializeGroupsQuery'], $this->settings);
     }
 
     /**
@@ -134,10 +120,10 @@ class LdapDirectoryTest extends AppTestCase
      */
     public function testLdapDirectory_getDNFullPath()
     {
-        $userDNFullPath = $this->Mock->Ldap->getDNFullPath(DirectoryInterface::ENTRY_TYPE_USER);
+        $userDNFullPath = $this->Ldap->getDNFullPath(DirectoryInterface::ENTRY_TYPE_USER);
         $this->assertEquals(ltrim($this->settings->getObjectPath(DirectoryInterface::ENTRY_TYPE_USER) . ',' . self::BASE_DN, ','), $userDNFullPath);
 
-        $groupDNFullPath = $this->Mock->Ldap->getDNFullPath(DirectoryInterface::ENTRY_TYPE_GROUP);
+        $groupDNFullPath = $this->Ldap->getDNFullPath(DirectoryInterface::ENTRY_TYPE_GROUP);
         $this->assertEquals(ltrim($this->settings->getObjectPath(DirectoryInterface::ENTRY_TYPE_GROUP) . ',' . self::BASE_DN, ','), $groupDNFullPath);
     }
 
@@ -146,12 +132,12 @@ class LdapDirectoryTest extends AppTestCase
      */
     public function testLdapDirectory_getDirectoryTypeName()
     {
-        $this->Mock->Ldap->setDirectoryType(self::TEST_DOMAIN, DirectoryInterface::TYPE_OPENLDAP);
-        $this->assertEquals(DirectoryInterface::TYPE_NAME_OPENLDAP, $this->Mock->Ldap->getDirectoryTypeName());
-        $this->Mock->Ldap->setDirectoryType(self::TEST_DOMAIN, DirectoryInterface::TYPE_AD);
-        $this->assertEquals(DirectoryInterface::TYPE_NAME_AD, $this->Mock->Ldap->getDirectoryTypeName());
-        $this->Mock->Ldap->setDirectoryType(self::TEST_DOMAIN, DirectoryInterface::TYPE_FREEIPA);
-        $this->assertEquals(DirectoryInterface::TYPE_NAME_FREEIPA, $this->Mock->Ldap->getDirectoryTypeName());
+        $this->Ldap->setDirectoryType(self::TEST_DOMAIN, DirectoryInterface::TYPE_OPENLDAP);
+        $this->assertEquals(DirectoryInterface::TYPE_NAME_OPENLDAP, $this->Ldap->getDirectoryTypeName());
+        $this->Ldap->setDirectoryType(self::TEST_DOMAIN, DirectoryInterface::TYPE_AD);
+        $this->assertEquals(DirectoryInterface::TYPE_NAME_AD, $this->Ldap->getDirectoryTypeName());
+        $this->Ldap->setDirectoryType(self::TEST_DOMAIN, DirectoryInterface::TYPE_FREEIPA);
+        $this->assertEquals(DirectoryInterface::TYPE_NAME_FREEIPA, $this->Ldap->getDirectoryTypeName());
     }
 
     /**
@@ -160,7 +146,7 @@ class LdapDirectoryTest extends AppTestCase
     public function testLdapDirectory_setUsers()
     {
         $this->expectException(NotImplementedException::class);
-        $this->Mock->Ldap->setUsers([]);
+        $this->Ldap->setUsers([]);
     }
 
     /**
@@ -169,7 +155,7 @@ class LdapDirectoryTest extends AppTestCase
     public function testLdapDirectory_setGroups()
     {
         $this->expectException(NotImplementedException::class);
-        $this->Mock->Ldap->setGroups([]);
+        $this->Ldap->setGroups([]);
     }
 
     /**
@@ -186,8 +172,8 @@ class LdapDirectoryTest extends AppTestCase
      */
     public function testLdapDirectory_getMappingRules_Successful()
     {
-        $this->Mock->Ldap->setDirectoryType(self::TEST_DOMAIN, DirectoryInterface::TYPE_AD);
-        $this->assertEquals($this->settings->getFieldsMapping(), $this->Mock->Ldap->getMappingRules());
+        $this->Ldap->setDirectoryType(self::TEST_DOMAIN, DirectoryInterface::TYPE_AD);
+        $this->assertEquals($this->settings->getFieldsMapping(), $this->Ldap->getMappingRules());
     }
 
     /**
@@ -198,9 +184,9 @@ class LdapDirectoryTest extends AppTestCase
         $settings = DirectoryOrgSettingsTest::getDummySettings();
         unset($settings['fieldFallbacks']); // remove optional fields
         $settings = new DirectoryOrgSettings($settings);
-        $mockedLdapDirectory = LdapDirectoryMock::createDefault($this, $settings);
-        $mockedLdapDirectory->Ldap->setDirectoryType(self::TEST_DOMAIN, DirectoryInterface::TYPE_AD);
-        $this->assertEquals($settings->getFieldsMapping(), $this->Mock->Ldap->getMappingRules());
+        $this->setUpLdap(['getConnection', 'fetchDirectoryData', 'getQuery', '_fetchAndInitializeQuery', '_fetchAndInitializeUsersQuery', '_fetchAndInitializeGroupsQuery'], $settings);
+        $this->Ldap->setDirectoryType(self::TEST_DOMAIN, DirectoryInterface::TYPE_AD);
+        $this->assertEquals($settings->getFieldsMapping(), $this->Ldap->getMappingRules());
     }
 
     /**
@@ -210,8 +196,8 @@ class LdapDirectoryTest extends AppTestCase
     {
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches('/The directory type should be one of the following:.*/');
-        $this->Mock->Ldap->setDirectoryType(self::TEST_DOMAIN, 'invalid-ldap');
-        $this->Mock->Ldap->getMappingRules();
+        $this->Ldap->setDirectoryType(self::TEST_DOMAIN, 'invalid-ldap');
+        $this->Ldap->getMappingRules();
     }
 
     /**
@@ -219,13 +205,13 @@ class LdapDirectoryTest extends AppTestCase
      */
     public function testLdapDirectory_getFilteredDirectoryResults_emptyUsersParentGroupGroupsParentGroup()
     {
-        $directoryResults = $this->Mock->generateDirectoryResultsMock();
+        $directoryResults = $this->generateDirectoryResultsMock();
         [$expectedGroups, $expectedUsers] = $this->generateDirectoryResults();
-        $this->Mock->setDirectoryResultsUsersExpectation($directoryResults, $expectedUsers);
-        $this->Mock->setDirectoryResultsGroupsExpectation($directoryResults, $expectedGroups);
-        $this->Mock->setFetchDirectoryDataExpectation($directoryResults);
+        $this->setDirectoryResultsUsersExpectation($directoryResults, $expectedUsers);
+        $this->setDirectoryResultsGroupsExpectation($directoryResults, $expectedGroups);
+        $this->setFetchDirectoryDataExpectation($directoryResults);
 
-        $results = $this->Mock->Ldap->getFilteredDirectoryResults();
+        $results = $this->Ldap->getFilteredDirectoryResults();
         $this->assertEquals($expectedUsers, $results->getUsersAsArray());
         $this->assertEquals($expectedGroups, $results->getGroupsAsArray());
     }
@@ -238,21 +224,21 @@ class LdapDirectoryTest extends AppTestCase
         $settings = $this->settings->toArray();
         $settings['groupsParentGroup'] = 'group1';
         $this->settings->set($settings);
-        $directoryResults = $this->Mock->generateDirectoryResultsMock();
+        $directoryResults = $this->generateDirectoryResultsMock();
         [$groups, $expectedUsers] = $this->generateDirectoryResults();
         $expectedGroups = [$groups[0]];
 
-        $this->Mock->setDirectoryResultsUsersExpectation($directoryResults, $expectedUsers);
-        $this->Mock->setDirectoryResultsGroupsExpectation($directoryResults, $groups);
+        $this->setDirectoryResultsUsersExpectation($directoryResults, $expectedUsers);
+        $this->setDirectoryResultsGroupsExpectation($directoryResults, $groups);
 
-        $filteredGroups = $this->Mock->generateDirectoryResultsMock();
-        $this->Mock->setDirectoryResultsUsersExpectation($filteredGroups);
-        $this->Mock->setDirectoryResultsGroupsExpectation($filteredGroups, $expectedGroups);
-        $this->Mock->setDirectoryResultsRecursivelyFromParentGroupExpectation($directoryResults, DirectoryInterface::ENTRY_TYPE_GROUP, $this->settings->getGroupsParentGroup(), $filteredGroups);
+        $filteredGroups = $this->generateDirectoryResultsMock();
+        $this->setDirectoryResultsUsersExpectation($filteredGroups);
+        $this->setDirectoryResultsGroupsExpectation($filteredGroups, $expectedGroups);
+        $this->setDirectoryResultsRecursivelyFromParentGroupExpectation($directoryResults, DirectoryInterface::ENTRY_TYPE_GROUP, $this->settings->getGroupsParentGroup(), $filteredGroups);
 
-        $this->Mock->setFetchDirectoryDataExpectation($directoryResults);
+        $this->setFetchDirectoryDataExpectation($directoryResults);
 
-        $results = $this->Mock->Ldap->getFilteredDirectoryResults();
+        $results = $this->Ldap->getFilteredDirectoryResults();
         $this->assertEquals($expectedUsers, $results->getUsersAsArray());
         $this->assertEquals($expectedGroups, $results->getGroupsAsArray());
     }
@@ -265,19 +251,19 @@ class LdapDirectoryTest extends AppTestCase
         $settings = $this->settings->toArray();
         $settings['usersParentGroup'] = 'group1';
         $this->settings->set($settings);
-        $directoryResults = $this->Mock->generateDirectoryResultsMock();
+        $directoryResults = $this->generateDirectoryResultsMock();
         [$expectedGroups, $users] = $this->generateDirectoryResults();
         $expectedUsers = [$users[0]];
-        $this->Mock->setDirectoryResultsUsersExpectation($directoryResults, $users);
-        $this->Mock->setDirectoryResultsGroupsExpectation($directoryResults, $expectedGroups);
+        $this->setDirectoryResultsUsersExpectation($directoryResults, $users);
+        $this->setDirectoryResultsGroupsExpectation($directoryResults, $expectedGroups);
 
-        $filteredUsers = $this->Mock->generateDirectoryResultsMock();
-        $this->Mock->setDirectoryResultsUsersExpectation($filteredUsers, $expectedUsers);
-        $this->Mock->setDirectoryResultsGroupsExpectation($filteredUsers);
-        $this->Mock->setDirectoryResultsRecursivelyFromParentGroupExpectation($directoryResults, DirectoryInterface::ENTRY_TYPE_USER, $this->settings->getUsersParentGroup(), $filteredUsers);
+        $filteredUsers = $this->generateDirectoryResultsMock();
+        $this->setDirectoryResultsUsersExpectation($filteredUsers, $expectedUsers);
+        $this->setDirectoryResultsGroupsExpectation($filteredUsers);
+        $this->setDirectoryResultsRecursivelyFromParentGroupExpectation($directoryResults, DirectoryInterface::ENTRY_TYPE_USER, $this->settings->getUsersParentGroup(), $filteredUsers);
 
-        $this->Mock->setFetchDirectoryDataExpectation($directoryResults);
-        $results = $this->Mock->Ldap->getFilteredDirectoryResults();
+        $this->setFetchDirectoryDataExpectation($directoryResults);
+        $results = $this->Ldap->getFilteredDirectoryResults();
         $this->assertEquals($expectedUsers, $results->getUsersAsArray());
         $this->assertEquals($expectedGroups, $results->getGroupsAsArray());
     }
@@ -291,20 +277,20 @@ class LdapDirectoryTest extends AppTestCase
         $settings['usersParentGroup'] = 'group1';
         $settings['groupsParentGroup'] = 'group2';
         $this->settings->set($settings);
-        $directoryResults = $this->Mock->generateDirectoryResultsMock();
+        $directoryResults = $this->generateDirectoryResultsMock();
         [$groups, $users] = $this->generateDirectoryResults();
         $expectedUsers = [$users[0]];
         $expectedGroups = [$groups[0]];
-        $this->Mock->setDirectoryResultsUsersExpectation($directoryResults, $users);
-        $this->Mock->setDirectoryResultsGroupsExpectation($directoryResults, $groups);
+        $this->setDirectoryResultsUsersExpectation($directoryResults, $users);
+        $this->setDirectoryResultsGroupsExpectation($directoryResults, $groups);
 
-        $filteredUsers = $this->Mock->generateDirectoryResultsMock();
-        $filteredGroups = $this->Mock->generateDirectoryResultsMock();
+        $filteredUsers = $this->generateDirectoryResultsMock();
+        $filteredGroups = $this->generateDirectoryResultsMock();
 
-        $this->Mock->setDirectoryResultsUsersExpectation($filteredUsers, $expectedUsers);
-        $this->Mock->setDirectoryResultsGroupsExpectation($filteredGroups, $expectedGroups);
+        $this->setDirectoryResultsUsersExpectation($filteredUsers, $expectedUsers);
+        $this->setDirectoryResultsGroupsExpectation($filteredGroups, $expectedGroups);
 
-        $this->Mock->setDirectoryResultsRecursivelyFromParentGroupConsecutiveExpectation(
+        $this->setDirectoryResultsRecursivelyFromParentGroupConsecutiveExpectation(
             $directoryResults,
             [
                 [DirectoryInterface::ENTRY_TYPE_USER, $this->settings->getUsersParentGroup()],
@@ -313,8 +299,8 @@ class LdapDirectoryTest extends AppTestCase
             [$filteredUsers, $filteredGroups]
         );
 
-        $this->Mock->setFetchDirectoryDataExpectation($directoryResults);
-        $results = $this->Mock->Ldap->getFilteredDirectoryResults();
+        $this->setFetchDirectoryDataExpectation($directoryResults);
+        $results = $this->Ldap->getFilteredDirectoryResults();
         $this->assertEquals($expectedUsers, $results->getUsersAsArray());
         $this->assertEquals($expectedGroups, $results->getGroupsAsArray());
     }
@@ -324,14 +310,14 @@ class LdapDirectoryTest extends AppTestCase
      */
     public function testLdapDirectory_fetchDirectoryData_NoEnableConditionNoCustomQueries()
     {
-        $this->Mock = LdapDirectoryMock::createAllowingFetch($this, $this->settings);
-        $this->Mock->setGetQueryExpectation();
-        $directoryResults = $this->Mock->generateDirectoryResultsMock();
+        $this->setUpLdap(['getConnection', 'getQuery'], $this->settings);
+        $this->setGetQueryExpectation();
+        $directoryResults = $this->generateDirectoryResultsMock();
         $directoryResults->expects($this->once())
             ->method('initializeWithLdapResults');
         /** @psalm-suppress InvalidArgument argument is actually a mock of the expected type */
-        $this->Mock->Ldap->setDirectoryResults($directoryResults);
-        $this->Mock->Ldap->fetchDirectoryData();
+        $this->Ldap->setDirectoryResults($directoryResults);
+        $this->Ldap->fetchDirectoryData();
     }
 
     /**
@@ -342,14 +328,14 @@ class LdapDirectoryTest extends AppTestCase
         $settings = $this->settings->toArray();
         $settings['enabledUsersOnly'] = true;
         $this->settings->set($settings);
-        $this->Mock = LdapDirectoryMock::createAllowingFetch($this, $this->settings);
-        $this->Mock->setGetQueryExpectation();
-        $directoryResults = $this->Mock->generateDirectoryResultsMock();
+        $this->setUpLdap(['getConnection', 'getQuery'], $this->settings);
+        $this->setGetQueryExpectation();
+        $directoryResults = $this->generateDirectoryResultsMock();
         $directoryResults->expects($this->once())
             ->method('initializeWithLdapResults');
         /** @psalm-suppress InvalidArgument argument is actually a mock of the expected type */
-        $this->Mock->Ldap->setDirectoryResults($directoryResults);
-        $this->Mock->Ldap->fetchDirectoryData();
+        $this->Ldap->setDirectoryResults($directoryResults);
+        $this->Ldap->fetchDirectoryData();
     }
 
     /**
@@ -360,14 +346,14 @@ class LdapDirectoryTest extends AppTestCase
         $settings = $this->settings->toArray();
         $settings['userCustomFilters'] = '(usercustom=true)';
         $this->settings->set($settings);
-        $this->Mock = LdapDirectoryMock::createAllowingFetch($this, $this->settings);
-        $this->Mock->setGetQueryExpectation();
-        $directoryResults = $this->Mock->generateDirectoryResultsMock();
+        $this->setUpLdap(['getConnection', 'getQuery'], $this->settings);
+        $this->setGetQueryExpectation();
+        $directoryResults = $this->generateDirectoryResultsMock();
         $directoryResults->expects($this->once())
             ->method('initializeWithLdapResults');
         /** @psalm-suppress InvalidArgument argument is actually a mock of the expected type */
-        $this->Mock->Ldap->setDirectoryResults($directoryResults);
-        $this->Mock->Ldap->fetchDirectoryData();
+        $this->Ldap->setDirectoryResults($directoryResults);
+        $this->Ldap->fetchDirectoryData();
     }
 
     /**
@@ -378,14 +364,14 @@ class LdapDirectoryTest extends AppTestCase
         $settings = $this->settings->toArray();
         $settings['groupCustomFilters'] = '(groupcustom=true)';
         $this->settings->set($settings);
-        $this->Mock = LdapDirectoryMock::createAllowingFetch($this, $this->settings);
-        $this->Mock->setGetQueryExpectation();
-        $directoryResults = $this->Mock->generateDirectoryResultsMock();
+        $this->setUpLdap(['getConnection', 'getQuery'], $this->settings);
+        $this->setGetQueryExpectation();
+        $directoryResults = $this->generateDirectoryResultsMock();
         $directoryResults->expects($this->once())
             ->method('initializeWithLdapResults');
         /** @psalm-suppress InvalidArgument argument is actually a mock of the expected type */
-        $this->Mock->Ldap->setDirectoryResults($directoryResults);
-        $this->Mock->Ldap->fetchDirectoryData();
+        $this->Ldap->setDirectoryResults($directoryResults);
+        $this->Ldap->fetchDirectoryData();
     }
 
     /**
@@ -396,11 +382,11 @@ class LdapDirectoryTest extends AppTestCase
         $settings = $this->settings->toArray();
         $settings['userCustomFilters'] = '(usercustom=true';
         $this->settings->set($settings);
-        $this->Mock = LdapDirectoryMock::createAllowingFetch($this, $this->settings);
-        $this->Mock->setGetQueryExpectation();
+        $this->setUpLdap(['getConnection', 'getQuery'], $this->settings);
+        $this->setGetQueryExpectation();
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('An error has occurred parsing userCustomFilter: Unclosed filter group. Missing ")" parenthesis');
-        $this->Mock->Ldap->fetchDirectoryData();
+        $this->Ldap->fetchDirectoryData();
     }
 
     /**
@@ -411,11 +397,11 @@ class LdapDirectoryTest extends AppTestCase
         $settings = $this->settings->toArray();
         $settings['groupCustomFilters'] = '(groupcustom=true';
         $this->settings->set($settings);
-        $this->Mock = LdapDirectoryMock::createAllowingFetch($this, $this->settings);
-        $this->Mock->setGetQueryExpectation();
+        $this->setUpLdap(['getConnection', 'getQuery'], $this->settings);
+        $this->setGetQueryExpectation();
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('An error has occurred parsing groupCustomFilter: Unclosed filter group. Missing ")" parenthesis');
-        $this->Mock->Ldap->fetchDirectoryData();
+        $this->Ldap->fetchDirectoryData();
     }
 
     /**
@@ -428,11 +414,11 @@ class LdapDirectoryTest extends AppTestCase
             return $b->where(['usercustom' => true]);
         };
         $this->settings->set($settings);
-        $this->Mock = LdapDirectoryMock::createAllowingFetch($this, $this->settings);
-        $this->Mock->setGetQueryExpectation();
+        $this->setUpLdap(['getConnection', 'getQuery'], $this->settings);
+        $this->setGetQueryExpectation();
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Using callbacks for userCustomFilter is not supported anymore. Please use LDAP search filter instead.');
-        $this->Mock->Ldap->fetchDirectoryData();
+        $this->Ldap->fetchDirectoryData();
     }
 
     /**
@@ -445,11 +431,11 @@ class LdapDirectoryTest extends AppTestCase
             return $b->where(['groupcustom' => true]);
         };
         $this->settings->set($settings);
-        $this->Mock = LdapDirectoryMock::createAllowingFetch($this, $this->settings);
-        $this->Mock->setGetQueryExpectation();
+        $this->setUpLdap(['getConnection', 'getQuery'], $this->settings);
+        $this->setGetQueryExpectation();
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Using callbacks for groupCustomFilter is not supported anymore. Please use LDAP search filter instead.');
-        $this->Mock->Ldap->fetchDirectoryData();
+        $this->Ldap->fetchDirectoryData();
     }
 
     /**
@@ -461,14 +447,14 @@ class LdapDirectoryTest extends AppTestCase
         $settings['userCustomFilters'] = '(usercustom=true)';
         $settings['groupCustomFilters'] = '(groupcustom=true)';
         $this->settings->set($settings);
-        $this->Mock = LdapDirectoryMock::createAllowingFetch($this, $this->settings);
-        $this->Mock->setGetQueryExpectation();
-        $directoryResults = $this->Mock->generateDirectoryResultsMock();
+        $this->setUpLdap(['getConnection', 'getQuery'], $this->settings);
+        $this->setGetQueryExpectation();
+        $directoryResults = $this->generateDirectoryResultsMock();
         $directoryResults->expects($this->once())
             ->method('initializeWithLdapResults');
         /** @psalm-suppress InvalidArgument argument is actually a mock of the expected type */
-        $this->Mock->Ldap->setDirectoryResults($directoryResults);
-        $this->Mock->Ldap->fetchDirectoryData();
+        $this->Ldap->setDirectoryResults($directoryResults);
+        $this->Ldap->fetchDirectoryData();
     }
 
     /**
@@ -482,14 +468,14 @@ class LdapDirectoryTest extends AppTestCase
         $settings['groupCustomFilters'] = '(groupcustom=true)';
 
         $this->settings->set($settings);
-        $this->Mock = LdapDirectoryMock::createAllowingFetch($this, $this->settings);
-        $this->Mock->setGetQueryExpectation();
-        $directoryResults = $this->Mock->generateDirectoryResultsMock();
+        $this->setUpLdap(['getConnection', 'getQuery'], $this->settings);
+        $this->setGetQueryExpectation();
+        $directoryResults = $this->generateDirectoryResultsMock();
         $directoryResults->expects($this->once())
             ->method('initializeWithLdapResults');
         /** @psalm-suppress InvalidArgument argument is actually a mock of the expected type */
-        $this->Mock->Ldap->setDirectoryResults($directoryResults);
-        $this->Mock->Ldap->fetchDirectoryData();
+        $this->Ldap->setDirectoryResults($directoryResults);
+        $this->Ldap->fetchDirectoryData();
     }
 
     /**
@@ -497,13 +483,13 @@ class LdapDirectoryTest extends AppTestCase
      */
     public function testLdapDirectory_getUsers()
     {
-        $this->Mock = LdapDirectoryMock::createWithoutResultsProcessing($this, $this->settings);
-        $directoryResults = $this->Mock->generateDirectoryResultsMock();
+        $this->setUpLdap(['getConnection', 'getFilteredDirectoryResults'], $this->settings);
+        $directoryResults = $this->generateDirectoryResultsMock();
         [, $expectedUsers] = $this->generateDirectoryResults();
-        $this->Mock->setDirectoryResultsUsersExpectation($directoryResults, $expectedUsers);
-        $this->Mock->setDirectoryResultsGroupsExpectation($directoryResults);
-        $this->Mock->setFilteredDirectoryResultsExpectation($directoryResults);
-        $this->assertEquals($expectedUsers, $this->Mock->Ldap->getUsers());
+        $this->setDirectoryResultsUsersExpectation($directoryResults, $expectedUsers);
+        $this->setDirectoryResultsGroupsExpectation($directoryResults);
+        $this->setFilteredDirectoryResultsExpectation($directoryResults);
+        $this->assertEquals($expectedUsers, $this->Ldap->getUsers());
     }
 
     /**
@@ -511,13 +497,13 @@ class LdapDirectoryTest extends AppTestCase
      */
     public function testLdapDirectory_getGroups()
     {
-        $this->Mock = LdapDirectoryMock::createWithoutResultsProcessing($this, $this->settings);
-        $directoryResults = $this->Mock->generateDirectoryResultsMock();
+        $this->setUpLdap(['getConnection', 'getFilteredDirectoryResults'], $this->settings);
+        $directoryResults = $this->generateDirectoryResultsMock();
         [$expectedGroups,] = $this->generateDirectoryResults();
-        $this->Mock->setDirectoryResultsUsersExpectation($directoryResults);
-        $this->Mock->setDirectoryResultsGroupsExpectation($directoryResults, $expectedGroups);
-        $this->Mock->setFilteredDirectoryResultsExpectation($directoryResults);
-        $this->assertEquals($expectedGroups, $this->Mock->Ldap->getGroups());
+        $this->setDirectoryResultsUsersExpectation($directoryResults);
+        $this->setDirectoryResultsGroupsExpectation($directoryResults, $expectedGroups);
+        $this->setFilteredDirectoryResultsExpectation($directoryResults);
+        $this->assertEquals($expectedGroups, $this->Ldap->getGroups());
     }
 
     /**
@@ -525,8 +511,8 @@ class LdapDirectoryTest extends AppTestCase
      */
     public function testLdapDirectory_getUserFiltersAsString()
     {
-        $this->Mock->setFetchAndInitializeQueryExpectation(DirectoryInterface::ENTRY_TYPE_USER);
-        $this->assertEquals(DirectoryInterface::ENTRY_TYPE_USER, $this->Mock->Ldap->getUserFiltersAsString());
+        $this->setFetchAndInitializeQueryExpectation(DirectoryInterface::ENTRY_TYPE_USER);
+        $this->assertEquals(DirectoryInterface::ENTRY_TYPE_USER, $this->Ldap->getUserFiltersAsString());
     }
 
     /**
@@ -534,7 +520,7 @@ class LdapDirectoryTest extends AppTestCase
      */
     public function testLdapDirectory_getGroupFiltersAsString()
     {
-        $this->Mock->setFetchAndInitializeQueryExpectation(DirectoryInterface::ENTRY_TYPE_GROUP);
-        $this->assertEquals(DirectoryInterface::ENTRY_TYPE_GROUP, $this->Mock->Ldap->getGroupFiltersAsString());
+        $this->setFetchAndInitializeQueryExpectation(DirectoryInterface::ENTRY_TYPE_GROUP);
+        $this->assertEquals(DirectoryInterface::ENTRY_TYPE_GROUP, $this->Ldap->getGroupFiltersAsString());
     }
 }

@@ -28,6 +28,7 @@ use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 /**
  * ResourceFactory
@@ -105,7 +106,11 @@ class ResourceFactory extends CakephpBaseFactory
     {
         foreach ($users as $user) {
             if ($user instanceof User) {
-                $secretData = ['user_id' => $user->id];
+                $secretData = [
+                    'user_id' => $user->id,
+                    'created_by' => $user->id,
+                    'modified_by' => $user->id,
+                ];
                 $this->with('Secrets', $secretData);
             } elseif ($user instanceof Group) {
                 foreach ($user->groups_users as $groupUser) {
@@ -146,12 +151,13 @@ class ResourceFactory extends CakephpBaseFactory
     {
         $aco = PermissionsTable::RESOURCE_ACO;
         $aro_foreign_key = $creator->id;
+        $aro = PermissionsTable::USER_ARO;
 
         return $this
             ->patchData(['created_by' => $creator->id])
             ->with(
                 'Permission',
-                PermissionFactory::make(compact('aco', 'aro_foreign_key'))
+                PermissionFactory::make(compact('aco', 'aro', 'aro_foreign_key'))
             );
     }
 
@@ -189,5 +195,14 @@ class ResourceFactory extends CakephpBaseFactory
         ], $v5Fields);
 
         return $this->patchData($data)->with('ResourceTypes', ResourceTypeFactory::make()->v5Default());
+    }
+
+    public function withSecretRevisions(?SecretRevisionFactory $factory = null): self
+    {
+        if (is_null($factory)) {
+            $factory = SecretRevisionFactory::make();
+        }
+
+        return $this->with('SecretRevisions', $factory);
     }
 }

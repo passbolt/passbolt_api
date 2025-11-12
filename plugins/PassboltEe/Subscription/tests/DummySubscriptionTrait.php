@@ -89,7 +89,7 @@ trait DummySubscriptionTrait
         return $this->getDummySubscriptionKey('subscription_expired');
     }
 
-    protected function getValidSubscription(): array
+    protected static function getValidSubscription(): array
     {
         return [
             'customer_id' => '19AD6KUmxjkn08O',
@@ -101,7 +101,7 @@ trait DummySubscriptionTrait
         ];
     }
 
-    protected function getExpiredSubscription(): array
+    protected static function getExpiredSubscription(): array
     {
         return [
             'customer_id' => 'test',

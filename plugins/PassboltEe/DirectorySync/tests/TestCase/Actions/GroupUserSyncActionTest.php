@@ -586,19 +586,20 @@ class GroupUserSyncActionTest extends DirectorySyncDeprecatedIntegrationTestCase
         $this->assertEmailQueueCount(0);
     }
 
-    public function requestMembersAddToManagerProvider(): array
+    public static function requestMembersAddToManagerProvider(): array
     {
         return [
             [
-                'input' => false,
-                'expected' => [
+                false, //input
+                //expected
+                [
                     'subject' => 'Admin requested you to add members to Accounting',
                     'headerText' => 'Admin requested you to add members to Accounting',
                 ],
             ],
             [
-                'input' => true,
-                'expected' => [
+                true,
+                [
                     'subject' => 'You have been requested to add members to Accounting',
                     'headerText' => 'There was a change in the user directory',
                 ],

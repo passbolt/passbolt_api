@@ -261,7 +261,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(404);
     }
 
-    public function dataWithNumericKeys(): array
+    public static function dataWithNumericKeys(): array
     {
         return [
             [[1 => 'foo']],

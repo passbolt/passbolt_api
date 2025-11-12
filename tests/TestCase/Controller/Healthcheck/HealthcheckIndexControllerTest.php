@@ -223,6 +223,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'noActiveMetadataKey' => true,
                 'isServerHasAccessToMetadataKey' => true,
                 'canValidatePrivateMetadataKey' => true,
+                'isServerMetadataKeyAccessInZeroKnowledgeMode' => false,
             ],
         ];
         $this->assertArrayEqualsCanonicalizing($expectedResponse, $result);

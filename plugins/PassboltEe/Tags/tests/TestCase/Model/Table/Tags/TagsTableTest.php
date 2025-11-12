@@ -222,7 +222,7 @@ class TagsTableTest extends TagTestCase
         $this->assertSame(1, $tagsAccessibleToUser->all()->count());
     }
 
-    public function hydrateQueryProvider(): array
+    public static function hydrateQueryProvider(): array
     {
         return [[true], [false]];
     }

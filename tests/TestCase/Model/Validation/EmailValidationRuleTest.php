@@ -38,7 +38,7 @@ class EmailValidationRuleTest extends TestCase
         $this->rule = new EmailValidationRule();
     }
 
-    public function regexProvider(): array
+    public static function regexProvider(): array
     {
         return [
             [true, 'ab@test.test'],

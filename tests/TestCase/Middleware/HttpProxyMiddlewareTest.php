@@ -133,56 +133,56 @@ class HttpProxyMiddlewareTest extends TestCase
     {
         return [
             [
-                'request params' => [
+                [
                     'HTTP_X_FORWARDED_FOR' => '192.168.1.0, 192.168.1.2, 192.168.1.3',
                     'HTTP_X_REAL_IP' => '192.168.1.1',
                     'HTTP_CLIENT_IP' => '192.168.1.2',
                     'REMOTE_ADDR' => '192.168.1.4',
-                ],
-                'trusted proxies configuration' => '192.168.1.2, 192.168.1.3',
-                'real client IP (expected result)' => '192.168.1.0',
+                ], //request params
+                '192.168.1.2, 192.168.1.3', //trusted proxies configuration
+                '192.168.1.0', //real client IP (expected result)
             ],
             [
-                'request params' => [
+                [
                     'HTTP_X_FORWARDED_FOR' => '192.168.1.0, 192.168.1.2, 192.168.1.3',
                     'HTTP_X_REAL_IP' => '192.168.1.1',
                     'HTTP_CLIENT_IP' => '192.168.1.2',
                     'REMOTE_ADDR' => '192.168.1.4',
                 ],
-                'trusted proxies configuration' => [
+                [
                     '192.168.1.2',
                     '192.168.1.3',
                 ],
-                'real client IP (expected result)' => '192.168.1.0',
+                '192.168.1.0',
             ],
             [
-                'request params' => [
+                [
                     'HTTP_X_FORWARDED_FOR' => '192.168.1.0, 192.168.1.2, 192.168.1.3',
                     'HTTP_X_REAL_IP' => '192.168.1.1',
                     'HTTP_CLIENT_IP' => '192.168.1.2',
                     'REMOTE_ADDR' => '192.168.1.4',
                 ],
-                'trusted proxies configuration' => [
+                [
                     '192.168.1.0',
                     '192.168.1.2',
                     '192.168.1.3',
                 ],
-                'real client IP (expected result)' => '192.168.1.3',
+                '192.168.1.3',
             ],
             [
-                'request params' => [
+                [
                     'HTTP_X_FORWARDED_FOR' => '',
                     'HTTP_X_REAL_IP' => '192.168.1.1',
                     'HTTP_CLIENT_IP' => '192.168.1.2',
                     'REMOTE_ADDR' => '192.168.1.4',
                 ],
-                'trusted proxies configuration' => [
+                [
                     '192.168.1.0',
                     '192.168.1.1',
                     '192.168.1.2',
                     '192.168.1.3',
                 ],
-                'real client IP (expected result)' => '192.168.1.1',
+                '192.168.1.1',
             ],
         ];
     }

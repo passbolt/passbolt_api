@@ -59,7 +59,7 @@ class AvatarsCleanupTest extends TestCase
         parent::tearDown();
     }
 
-    public function hardDelete(): array
+    public static function hardDelete(): array
     {
         return [[false], [true]];
     }

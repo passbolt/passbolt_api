@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Command;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Core\Configure;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 /**
@@ -73,5 +74,14 @@ class PassboltCommandTest extends AppTestCase
         $this->assertExitSuccess();
         $this->assertOutputContains('The command should be executed with the same user as your web server. By instance:');
         $this->assertOutputContains('su -s /bin/bash -c "' . ROOT . '/bin/cake passbolt healthcheck" HTTP_USER');
+    }
+
+    public function testPassboltCommand_As_Unknown_Webserver_User_DisplayNonWebUserWarning_IsDisabled(): void
+    {
+        Configure::write('passbolt.security.displayNonWebUserWarning', false);
+        $this->mockProcessUserService('foo');
+        $this->exec('passbolt healthcheck --database');
+        $this->assertExitSuccess();
+        $this->assertOutputNotContains('Passbolt commands should only be executed as the web server user.');
     }
 }

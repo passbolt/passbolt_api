@@ -23,17 +23,23 @@ use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
+use App\Model\Validation\IsNullOnCreateRule;
 use App\Service\Secrets\SecretsCleanupHardDeletedPermissionsService;
+use Cake\Database\Expression\QueryExpression;
+use Cake\I18n\DateTime;
+use Cake\ORM\Query;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\SecretRevisions\Model\Rule\IsSecretRevisionNotSoftDeletedRule;
 
 /**
  * Secrets Model
  *
  * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \Passbolt\SecretRevisions\Model\Table\SecretRevisionsTable&\Cake\ORM\Association\BelongsTo $SecretRevisions
  * @method \App\Model\Entity\Secret get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\Secret newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\Secret[] newEntities(array $data, array $options = [])
@@ -76,6 +82,19 @@ class SecretsTable extends Table
 
         $this->belongsTo('Resources');
         $this->belongsTo('Users');
+        $this->belongsTo('Creator', [
+            'className' => 'Users',
+            'bindingKey' => 'created_by',
+            'foreignKey' => 'id',
+        ]);
+        $this->belongsTo('Modifier', [
+            'className' => 'Users',
+            'bindingKey' => 'modified_by',
+            'foreignKey' => 'id',
+        ]);
+        $this->belongsTo('SecretRevisions', [
+            'className' => 'Passbolt/SecretRevisions.SecretRevisions',
+        ]);
 
         $this->addBehavior('Timestamp');
     }
@@ -103,10 +122,20 @@ class SecretsTable extends Table
             ->notEmptyString('user_id', __('The user identifier should not be empty.'));
 
         $validator
+            ->uuid('secret_revision_id', __('The secret revision identifier should be a valid UUID.'))
+            ->requirePresence('secret_revision_id', 'create', __('A secret revision identifier is required.'))
+            ->notEmptyString('secret_revision_id', __('The secret revision identifier should not be empty.'));
+
+        $validator
             ->ascii('data', __('The message should be a valid ASCII string.'))
             ->requirePresence('data', 'create', __('A message is required.'))
             ->notEmptyString('data', __('The message should not be empty.'))
             ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
+
+        $validator
+            ->dateTime('deleted')
+            ->allowEmptyDateTime('deleted')
+            ->add('deleted', 'isNullOnCreate', new IsNullOnCreateRule());
 
         return $validator;
     }
@@ -123,6 +152,8 @@ class SecretsTable extends Table
 
         // The resource_id is added by cake after the resource is created.
         $validator->remove('resource_id');
+        // The secret_revision_id is added after the resource was created.
+        $validator->remove('secret_revision_id');
 
         return $validator;
     }
@@ -136,16 +167,33 @@ class SecretsTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
+        // Only one non-deleted secret for the couple (user_id, resource_id)
         $rules->addCreate(
             $rules->isUnique(
-                ['user_id', 'resource_id'],
-                __('A secret already exists for the given user and resource.')
+                ['user_id', 'resource_id', 'deleted'],
+                [
+                    'message' => __('A secret already exists for the given user and resource.'),
+                    'allowMultipleNulls' => false,
+                ]
             ),
             'secret_unique'
+        );
+        // Only one secret for the combination (user_id, resource_id, secret_revision_id)
+        $rules->addCreate(
+            $rules->isUnique(
+                ['user_id', 'resource_id', 'secret_revision_id'],
+                __('A secret already exists for the given user, resource and secret revision.')
+            ),
+            'secret_revision_unique'
         );
         $rules->addCreate($rules->existsIn(['user_id'], 'Users'), 'user_exists', [
             'errorField' => 'user_id',
             'message' => __('The user does not exist.'),
+        ]);
+        $rules->addCreate(new IsSecretRevisionNotSoftDeletedRule(), 'secret_revision_is_not_soft_deleted', [
+            'table' => 'Passbolt/SecretRevisions.SecretRevisions',
+            'errorField' => 'secret_revision_id',
+            'message' => __('The secret revision does not exist or is deleted.'),
         ]);
         $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
             'table' => 'Users',
@@ -180,11 +228,34 @@ class SecretsTable extends Table
      */
     public function findByResourceUser(string $resourceId, string $userId): SelectQuery
     {
-        return $this->find()
+        return $this->find('notDeleted')
             ->where([
                 'resource_id' => $resourceId,
                 'user_id' => $userId,
             ]);
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query query
+     * @return \Cake\ORM\Query
+     */
+    public function findNotDeleted(Query $query): Query
+    {
+        return $query->where(function (QueryExpression $exp) {
+            return $exp->isNull($this->aliasField('deleted'));
+        });
+    }
+
+    /**
+     * @param string $resourceId resource ID of the secrets to soft-delete
+     * @return int
+     */
+    public function softDeleteMany(string $resourceId): int
+    {
+        return $this->updateAll(['deleted' => DateTime::now()], [
+            'resource_id' => $resourceId,
+            'deleted IS NULL',
+        ]);
     }
 
     /**

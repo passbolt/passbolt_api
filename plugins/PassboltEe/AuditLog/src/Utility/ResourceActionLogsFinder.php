@@ -92,6 +92,27 @@ class ResourceActionLogsFinder extends BaseActionLogsFinder
     }
 
     /**
+     * Find ActionLog ids for a given SecretRevisions resource id
+     *
+     * @param string $resourceId resource id
+     * @return \Cake\ORM\Query query
+     */
+    protected function _findActionLogIdsForResourcesSecretRevisions(string $resourceId): Query
+    {
+        return $this->ActionLogs
+            ->find()
+            ->select(['ActionLogs__id' => 'ActionLogs.id', 'Actions__name' => 'Actions.name'])
+            ->contain(['EntitiesHistory.SecretRevisions'])
+            ->innerJoinWith('Actions')
+            ->innerJoinWith('EntitiesHistory.SecretRevisions.Resources')
+            ->where([
+                'Resources.id' => $resourceId,
+                'ActionLogs.status' => 1,
+            ])
+            ->groupBy(['ActionLogs.id', 'Actions.name']);
+    }
+
+    /**
      * Find ActionLog ids for a given Secret History resource id
      *
      * @param string $resourceId resource id
@@ -126,6 +147,7 @@ class ResourceActionLogsFinder extends BaseActionLogsFinder
         $subQuery = $this->_findActionLogIdsForPermissionHistoryResources($resourceId)
             ->union($this->_findActionLogIdsForResources($resourceId))
             ->union($this->_findActionLogIdsForResourcesSecretAccesses($resourceId))
+            ->union($this->_findActionLogIdsForResourcesSecretRevisions($resourceId))
             ->union($this->_findActionLogIdsForResourcesSecretHistory($resourceId));
 
         return $query->join([

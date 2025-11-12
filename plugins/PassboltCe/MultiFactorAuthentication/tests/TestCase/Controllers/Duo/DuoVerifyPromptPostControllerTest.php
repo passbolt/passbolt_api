@@ -72,7 +72,7 @@ class DuoVerifyPromptPostControllerTest extends MfaIntegrationTestCase
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaDuoScenario::class, $user, true, 'Bar');
         $this->mockService(Client::class, function () use ($user) {
-            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
         });
         $redirect = '/app/users';
 
@@ -94,7 +94,7 @@ class DuoVerifyPromptPostControllerTest extends MfaIntegrationTestCase
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaDuoScenario::class, $user, true, 'Bar');
         $this->mockService(Client::class, function () use ($user) {
-            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
         });
 
         $this->post('/mfa/verify/duo/prompt');

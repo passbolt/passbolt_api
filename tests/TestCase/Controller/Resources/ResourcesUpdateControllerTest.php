@@ -22,6 +22,7 @@ use App\Service\Resources\ResourcesUpdateService;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\RoleFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
@@ -30,11 +31,30 @@ use App\Utility\UuidFactory;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\SecretRevisions\SecretRevisionsPlugin;
+use Passbolt\SecretRevisions\Service\SecretRevisionsSettingsGetService;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsSettingsFactory;
 
+/**
+ * @covers \App\Controller\Resources\ResourcesUpdateController
+ */
 class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 {
     use GroupsModelTrait;
     use SecretsModelTrait;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(SecretRevisionsPlugin::class);
+    }
+
+    public function tearDown(): void
+    {
+        SecretRevisionsSettingsGetService::clear();
+        parent::tearDown();
+    }
 
     public function testUpdateResourcesController_Success_UpdateResourceMeta(): void
     {
@@ -51,6 +71,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
             ->withCreatorAndPermission($userA)
             ->withPermissionsFor([$userB])
             ->withSecretsFor([$userA, $userB])
+            ->withSecretRevisions()
             ->persist();
 
         $this->logInAs($userB);
@@ -91,6 +112,18 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertObjectHasAttribute('secrets', $resource);
         $this->assertCount(1, $resource->secrets);
         $this->assertSecretAttributes($resource->secrets[0]);
+
+        // Secret revision checks
+        // Assert no new secrets were persisted
+        $this->assertSame(2, SecretFactory::count());
+        // Assert that the previous secrets were not soft deleted
+        foreach ($r1->secrets as $secret) {
+            $secret = SecretFactory::get($secret->id);
+            $this->assertNull($secret->deleted);
+        }
+        // Assert that no new revision is persisted
+        $this->assertSame(1, SecretRevisionFactory::count());
+
         // assert event
         $this->assertEventFiredWith(
             ResourcesUpdateService::UPDATE_SUCCESS_EVENT_NAME,
@@ -101,6 +134,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 
     public function testUpdateResourcesController_Success_UpdateResourceSecrets(): void
     {
+        SecretRevisionsSettingsFactory::make()->setMaxRevisions(2)->persist();
         RoleFactory::make()->guest()->persist();
         // Ada is OWNER of resource R1
         // Betty is OWNER of resource R1
@@ -113,7 +147,11 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $r1 = ResourceFactory::make()
             ->withCreatorAndPermission($userA)
             ->withPermissionsFor([$userB, $g1])
+            ->withSecretsFor([$userA])
+            ->withSecretRevisions()
             ->persist();
+
+        $initialSecretRevision = $r1->secret_revisions[0];
 
         $this->logInAs($userB);
         $r1EncryptedSecretA = $this->encryptMessageFor($userA->id, 'R1 secret updated');
@@ -157,6 +195,42 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertCount(1, $resourceUpdated->secrets);
         $this->assertSecretAttributes($resourceUpdated->secrets[0]);
         $this->assertEquals($r1EncryptedSecretB, $resourceUpdated->secrets[0]->data);
+        $this->assertSame($userB->id, $resourceUpdated->secrets[0]->created_by);
+        $this->assertSame($userB->id, $resourceUpdated->secrets[0]->modified_by);
+
+        // Assert that one secret has been added to revision, and not hard deleted
+        // while two new secrets for userB and userC were created
+        $this->assertSame(4, SecretFactory::count());
+        // Assert secret records in the database
+        /** @var \App\Model\Entity\Secret[] $expectedSecrets */
+        $expectedSecrets = SecretFactory::find('notDeleted')->where(['resource_id' => $r1->id])->all()->toArray();
+        $this->assertCount(3, $expectedSecrets);
+        foreach ($expectedSecrets as $expectedSecret) {
+            if ($expectedSecret->user_id === $userA->id) {
+                $this->assertSame($r1EncryptedSecretA, $expectedSecret->data);
+                $this->assertSame($userB->id, $expectedSecret->created_by);
+                $this->assertSame($userB->id, $expectedSecret->modified_by);
+            } elseif ($expectedSecret->user_id === $userB->id) {
+                $this->assertSame($r1EncryptedSecretB, $expectedSecret->data);
+                $this->assertSame($userB->id, $expectedSecret->created_by);
+                $this->assertSame($userB->id, $expectedSecret->modified_by);
+            } elseif ($expectedSecret->user_id === $userC->id) {
+                $this->assertSame($r1EncryptedSecretC, $expectedSecret->data);
+                $this->assertSame($userB->id, $expectedSecret->created_by);
+                $this->assertSame($userB->id, $expectedSecret->modified_by);
+            }
+        }
+
+        // Secret revision checks
+        // Assert that the previous secrets were soft deleted
+        foreach ($r1->secrets as $secret) {
+            $secret = SecretFactory::get($secret->id);
+            $this->assertNotNull($secret->deleted);
+        }
+        // Assert that a new revision is persisted
+        $this->assertSame(2, SecretRevisionFactory::count());
+        // Assert that the previous secret revision is soft deleted
+        $this->assertNotNull(SecretRevisionFactory::firstOrFail(['id' => $initialSecretRevision->id]));
     }
 
     public function testUpdateResourcesController_Error_NotValidId(): void

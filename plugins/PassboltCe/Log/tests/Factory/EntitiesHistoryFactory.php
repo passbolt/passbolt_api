@@ -17,11 +17,16 @@ declare(strict_types=1);
 
 namespace Passbolt\Log\Test\Factory;
 
+use App\Model\Entity\Resource;
 use App\Test\Factory\ResourceFactory;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\Log\Model\Entity\ActionLog;
 use Passbolt\Log\Model\Entity\EntityHistory;
+use Passbolt\Log\Model\Entity\SecretHistory;
+use Passbolt\SecretRevisions\Model\Entity\SecretRevision;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsFactory;
 
 /**
  * ActionLogFactory
@@ -63,21 +68,21 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param \Passbolt\Log\Test\Factory\ActionLogFactory|array $actionLogFactory ActionLog factory
+     * @param \Passbolt\Log\Test\Factory\ActionLogFactory|array $actionLog ActionLog factory
      * @return $this
      */
-    public function withActionLog(array|ActionLogFactory $actionLogFactory = [])
+    public function withActionLog(array|ActionLogFactory|ActionLog $actionLog = [])
     {
-        return $this->with('ActionLogs', $actionLogFactory);
+        return $this->with('ActionLogs', $actionLog);
     }
 
     /**
-     * @param \Passbolt\Folders\Test\Factory\ResourceFactory|array $resourceFactory Resource factory
+     * @param \Passbolt\Folders\Test\Factory\ResourceFactory|array $resource Resource
      * @return $this
      */
-    public function withResource(array|ResourceFactory $resourceFactory = [])
+    public function withResource(array|ResourceFactory|Resource $resource = [])
     {
-        return $this->resources()->with('Resources', $resourceFactory);
+        return $this->resources()->with('Resources', $resource);
     }
 
     /**
@@ -87,6 +92,24 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
     public function withSecretAccessOnResource(array|ResourceFactory $resourceFactory = [])
     {
         return $this->secretAccesses()->with('SecretAccesses.Resources', $resourceFactory);
+    }
+
+    /**
+     * @param \Passbolt\Log\Test\Factory\SecretsHistoryFactory|SecretHistory|array $secretHistory Secret history factory
+     * @return $this
+     */
+    public function withSecretsHistory(array|SecretsHistoryFactory|SecretHistory $secretHistory = [])
+    {
+        return $this->secretsHistory()->with('SecretsHistory', $secretHistory);
+    }
+
+    /**
+     * @param \Passbolt\SecretRevisions\Test\Factory\SecretRevisionsFactory|SecretRevision|array $secretRevisions Secret revisions.
+     * @return $this
+     */
+    public function withSecretRevisions(array|SecretRevisionsFactory|SecretRevision $secretRevisions = [])
+    {
+        return $this->secretRevisions()->with('SecretRevisions', $secretRevisions);
     }
 
     /**
@@ -116,8 +139,32 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
     /**
      * @return $this
      */
+    public function secretsHistory()
+    {
+        return $this->setField('foreign_model', 'SecretsHistory');
+    }
+
+    /**
+     * @return $this
+     */
+    public function secretRevisions()
+    {
+        return $this->setField('foreign_model', 'SecretRevisions');
+    }
+
+    /**
+     * @return $this
+     */
     public function create()
     {
         return $this->setField('crud', EntityHistory::CRUD_CREATE);
+    }
+
+    /**
+     * @return $this
+     */
+    public function update()
+    {
+        return $this->setField('crud', EntityHistory::CRUD_UPDATE);
     }
 }
