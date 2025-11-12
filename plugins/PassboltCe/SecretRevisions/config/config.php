@@ -21,6 +21,11 @@ return [
                 'version' => '1.0.0',
                 'maxRevisionsLimit' => filter_var(env('PASSBOLT_PLUGINS_SECRET_REVISIONS_MAX_REVISIONS_LIMIT', '10'), FILTER_VALIDATE_INT), // phpcs:ignore
                 'enableAllowSharingRevisions' => filter_var(env('PASSBOLT_PLUGINS_SECRET_REVISIONS_ENABLE_ALLOW_SHARING_REVISIONS', false), FILTER_VALIDATE_BOOLEAN), // phpcs:ignore
+                'settingsVisibility' => [
+                    'whiteList' => [
+                        'isInBeta',
+                    ],
+                ],
             ],
         ],
     ],
