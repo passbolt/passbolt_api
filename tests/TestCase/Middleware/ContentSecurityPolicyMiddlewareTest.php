@@ -43,7 +43,7 @@ class ContentSecurityPolicyMiddlewareTest extends TestCase
             "img-src 'self'",
             "frame-src 'self' https://*.duosecurity.com",
             "frame-ancestors 'none'",
-            "form-action 'self'",
+            "form-action 'self' https://*.duosecurity.com",
         ];
         $this->assertSame($expectedHeaders, $cspHeaders);
     }
