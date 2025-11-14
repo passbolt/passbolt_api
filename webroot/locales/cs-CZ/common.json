@@ -1805,7 +1805,7 @@
   "You should inform your users not to store personal passwords.": "Měli byste informovat své uživatele, aby neukládali osobní hesla.",
   "You should keep it offline in a safe place.": "Měli byste ho udržovat offline na bezpečném místě.",
   "You sign in to passbolt just like you normally do.": "Přihlaste se k passboltu, stejně jako jste to dělali běžně.",
-  "You susccessfully signed in with your {{providerName}} account. You can safely save your configuration.": "Úspěšně jste se přihlásili pomocí účtu {{providerName}}. Vaši konfiguraci můžete bezpečně uložit.",
+  "You successfully signed in with your {{providerName}} account. You can safely save your configuration.": "Úspěšně jste se přihlásili pomocí účtu {{providerName}}. Vaši konfiguraci můžete bezpečně uložit.",
   "You will be able to save it after submitting": "Uložení bude možné po odeslání",
   "You will need this recovery kit later to access your account (for example on a new device).": "Tento recovery kit budete potřebovat později pro přístup k vašemu účtu (například na novém zařízení).",
   "you@organization.com": "jméno@organizace.cz",

@@ -1805,7 +1805,7 @@
   "You should inform your users not to store personal passwords.": "U moet uw gebruikers informeren geen persoonlijke wachtwoorden op te slaan.",
   "You should keep it offline in a safe place.": "Je moet het offline houden op een veilige plek.",
   "You sign in to passbolt just like you normally do.": "Je meldt je aan bij Passbolt, net zoals je dat normaal doet.",
-  "You susccessfully signed in with your {{providerName}} account. You can safely save your configuration.": "U bent succesvol aangemeld met uw {{providerName}}-account. U kunt uw configuratie veilig opslaan.",
+  "You successfully signed in with your {{providerName}} account. You can safely save your configuration.": "U bent succesvol aangemeld met uw {{providerName}}-account. U kunt uw configuratie veilig opslaan.",
   "You will be able to save it after submitting": "Je kunt het na verzending opslaan",
   "You will need this recovery kit later to access your account (for example on a new device).": "U heeft dit herstelpakket later nodig om toegang tot uw account te krijgen (bijvoorbeeld op een nieuw apparaat).",
   "you@organization.com": "jij@organisatie.com",

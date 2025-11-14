@@ -1871,7 +1871,7 @@
   "You should inform your users not to store personal passwords.": "You should inform your users not to store personal passwords.",
   "You should keep it offline in a safe place.": "You should keep it offline in a safe place.",
   "You sign in to passbolt just like you normally do.": "You sign in to passbolt just like you normally do.",
-  "You susccessfully signed in with your {{providerName}} account. You can safely save your configuration.": "You susccessfully signed in with your {{providerName}} account. You can safely save your configuration.",
+  "You successfully signed in with your {{providerName}} account. You can safely save your configuration.": "You successfully signed in with your {{providerName}} account. You can safely save your configuration.",
   "You will be able to save it after submitting": "You will be able to save it after submitting",
   "You will need this recovery kit later to access your account (for example on a new device).": "You will need this recovery kit later to access your account (for example on a new device).",
   "you@organization.com": "you@organization.com",

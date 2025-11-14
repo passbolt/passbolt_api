@@ -1805,7 +1805,7 @@
   "You should inform your users not to store personal passwords.": "Ar trebui să vă informați utilizatorii să nu stocheze parole personale.",
   "You should keep it offline in a safe place.": "Ar trebui să o păstrați offline într-un loc sigur.",
   "You sign in to passbolt just like you normally do.": "Vă autentificați in Passbolt ca de obicei.",
-  "You susccessfully signed in with your {{providerName}} account. You can safely save your configuration.": "V-ați conectat cu succes la contul {{providerName}}. Puteți salva configurația în siguranță.",
+  "You successfully signed in with your {{providerName}} account. You can safely save your configuration.": "V-ați conectat cu succes la contul {{providerName}}. Puteți salva configurația în siguranță.",
   "You will be able to save it after submitting": "Veți putea să o salvați după trimitere",
   "You will need this recovery kit later to access your account (for example on a new device).": "Veți avea nevoie de acest kit de recuperare mai târziu pentru a accesa contul (de exemplu, pe un dispozitiv nou).",
   "you@organization.com": "tu@organization.com",
