@@ -1805,7 +1805,7 @@
   "You should inform your users not to store personal passwords.": "Sie sollten Ihre Benutzer darüber informieren, dass sie keine persönlichen Passwörter speichern.",
   "You should keep it offline in a safe place.": "Sie sollten sie an einem sicheren offline Ort absichern.",
   "You sign in to passbolt just like you normally do.": "Sie melden sich bei Passbolt an, genau wie Sie es normalerweise tun.",
-  "You susccessfully signed in with your {{providerName}} account. You can safely save your configuration.": "Sie haben sich mit Ihrem {{providerName}} -Konto angemeldet. Sie können Ihre Konfiguration sicher speichern.",
+  "You successfully signed in with your {{providerName}} account. You can safely save your configuration.": "Sie haben sich mit Ihrem {{providerName}} -Konto angemeldet. Sie können Ihre Konfiguration sicher speichern.",
   "You will be able to save it after submitting": "Sie können es nach dem Absenden speichern",
   "You will need this recovery kit later to access your account (for example on a new device).": "Sie benötigen dieses Wiederherstellungskit später, um auf Ihr Konto zuzugreifen (z. B. auf einem neuen Gerät).",
   "you@organization.com": "sie@organisation.com",

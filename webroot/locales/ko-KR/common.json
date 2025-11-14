@@ -1805,7 +1805,7 @@
   "You should inform your users not to store personal passwords.": "사용자에게 개인 비밀번호를 저장하지 않도록 알려야 합니다.",
   "You should keep it offline in a safe place.": "안전한 장소에 오프라인으로 보관해야 합니다.",
   "You sign in to passbolt just like you normally do.": "평소와 마찬가지로 Passbolt에 로그인합니다.",
-  "You susccessfully signed in with your {{providerName}} account. You can safely save your configuration.": "{{providerName}} 계정으로 성공적으로 로그인했습니다. 구성을 안전하게 저장할 수 있습니다.",
+  "You successfully signed in with your {{providerName}} account. You can safely save your configuration.": "{{providerName}} 계정으로 성공적으로 로그인했습니다. 구성을 안전하게 저장할 수 있습니다.",
   "You will be able to save it after submitting": "제출 후 저장하면 됩니다.",
   "You will need this recovery kit later to access your account (for example on a new device).": "나중에 계정(예: 새 기기)에 접근하려면 이 복구 키트가 필요합니다.",
   "you@organization.com": "you@organization.com",
