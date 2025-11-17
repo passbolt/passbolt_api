@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.7.2] - 2025-11-17
+### Fixed
+- PB-46826 As an administrator running the cleanup task, the server metadata private key entry should not be deleted
+
 ## [5.7.2-test.1] - 2025-11-17
 ### Fixed
 - PB-46826 As an administrator running the cleanup task, the server metadata private key entry should not be deleted
