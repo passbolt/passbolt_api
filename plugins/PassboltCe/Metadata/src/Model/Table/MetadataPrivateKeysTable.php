@@ -160,7 +160,18 @@ class MetadataPrivateKeysTable extends Table
      */
     public function cleanupHardDeletedUsers(?bool $dryRun = false): int
     {
-        return $this->cleanupHardDeleted('Users', $dryRun);
+        $association = 'Users';
+
+        $query = $this->selectQuery();
+        $query = $query
+            ->select(['id'])
+            ->leftJoinWith($association)
+            ->where([
+                $query->newExpr()->isNull($this->getModelNameFromAssociation($association) . '.id'),
+                $query->newExpr()->isNotNull($this->aliasField('user_id')), // Do not remove metadata server key
+            ]);
+
+        return $this->cleanupHardDeleted('Users', $dryRun, $query);
     }
 
     /**
@@ -171,6 +182,17 @@ class MetadataPrivateKeysTable extends Table
      */
     public function cleanupSoftDeletedUsers(?bool $dryRun = false): int
     {
-        return $this->cleanupSoftDeleted('Users', $dryRun);
+        $association = 'Users';
+
+        $query = $this->selectQuery();
+        $query = $query
+            ->select(['id'])
+            ->leftJoinWith($association)
+            ->where([
+                $this->getModelNameFromAssociation($association) . '.deleted' => true,
+                $query->newExpr()->isNotNull($this->aliasField('user_id')), // Do not remove metadata server key
+            ]);
+
+        return $this->cleanupSoftDeleted('Users', $dryRun, $query);
     }
 }

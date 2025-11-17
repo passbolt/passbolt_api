@@ -359,6 +359,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
         $john = UserFactory::make()->user()->persist();
         // metadata key
         $metadataKey = MetadataKeyFactory::make()->withServerKey()->withCreatorAndModifier($john)->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->serverKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($john)->persist();
         $jane = UserFactory::make()->user()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($jane)->persist();
@@ -369,7 +370,8 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
         $result = $this->MetadataPrivateKeys->cleanupHardDeletedUsers();
 
         $this->assertSame($noOfUsers, $result);
-        $this->assertSame(2, MetadataPrivateKeyFactory::find()->count());
+        $this->assertSame(3, MetadataPrivateKeyFactory::find()->count());
+        $this->assertSame(1, MetadataPrivateKeyFactory::find()->where(['user_id IS NULL'])->count());
     }
 
     /**
@@ -381,6 +383,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
         $john = UserFactory::make()->user()->persist();
         // metadata key
         $metadataKey = MetadataKeyFactory::make()->withServerKey()->withCreatorAndModifier($john)->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->serverKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($john)->persist();
         $jane = UserFactory::make()->user()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($jane)->persist();
@@ -394,7 +397,8 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
         $result = $this->MetadataPrivateKeys->cleanupSoftDeletedUsers();
 
         $this->assertSame($noOfUsers, $result);
-        $this->assertSame(2, MetadataPrivateKeyFactory::find()->count());
+        $this->assertSame(3, MetadataPrivateKeyFactory::find()->count());
+        $this->assertSame(1, MetadataPrivateKeyFactory::find()->where(['user_id IS NULL'])->count());
     }
 
     /**
