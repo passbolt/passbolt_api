@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.7.1] - 2025-11-14
+### Fixed
+- PB-46680 Fix DUO authentication form blocked by CSP header
+
 ## [5.7.1-test.1] - 2025-11-14
 ### Fixed
 - PB-46680 Fix DUO authentication form blocked by CSP header
@@ -22,9 +26,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-45158 Adds frame-ancestors:none and form-action:self to the CSP header
 
 ### Fixed
-- PB-45479 Azure SSO providing an invalid_tenant id should not trigger a 500
-- PB-45567 The arguments --username and --fingerprint of the passbolt truncate_account_recovery_tables command are now mandatory but their validation can be skipped with --no-verify
-- PB-44259 Users directory synchronisation should synchronise group memberships of suspended users
 - PB-44623 The API should return a 400 instead of 500 on /auth/jwt/logout.json when refresh_token isn't a UUID
 - PB-45760 Fixes a translation in setup recover abort email reported by community
 - PB-45262 Prevent activity log from showing secret creation during resource share as a secret update
