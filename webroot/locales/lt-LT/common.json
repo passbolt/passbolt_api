@@ -1805,7 +1805,7 @@
   "You should inform your users not to store personal passwords.": "Turėtumėte informuoti savo vartotojus, kad jie nesaugotų asmeninių slaptažodžių.",
   "You should keep it offline in a safe place.": "Jį reikėtų laikyti neprijungtame prie interneto saugioje vietoje.",
   "You sign in to passbolt just like you normally do.": "Prisijungiate prie „Passbolt“ kaip įprastai.",
-  "You susccessfully signed in with your {{providerName}} account. You can safely save your configuration.": "Sėkmingai prisijungėte naudodami savo {{providerName}} paskyrą. Galite saugiai išsaugoti konfigūraciją.",
+  "You successfully signed in with your {{providerName}} account. You can safely save your configuration.": "Sėkmingai prisijungėte naudodami savo {{providerName}} paskyrą. Galite saugiai išsaugoti konfigūraciją.",
   "You will be able to save it after submitting": "Pateikę galėsite išsaugoti",
   "You will need this recovery kit later to access your account (for example on a new device).": "Vėliau jums reikės šio atkūrimo rinkinio, kad galėtumėte pasiekti savo paskyrą (pavyzdžiui, naujame įrenginyje).",
   "you@organization.com": "jūs@organization.com ",
