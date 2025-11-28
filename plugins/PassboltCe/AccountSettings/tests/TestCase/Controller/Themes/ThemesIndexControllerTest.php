@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountSettings\Test\TestCase\Controller\Themes;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\ORM\Locator\LocatorAwareTrait;
 
@@ -32,10 +33,6 @@ class ThemesIndexControllerTest extends AppIntegrationTestCase
      */
     protected $AccountSettings;
 
-    public array $fixtures = [
-        'plugin.Passbolt/AccountSettings.AccountSettings',
-    ];
-
     public function setUp(): void
     {
         parent::setUp();
@@ -44,8 +41,8 @@ class ThemesIndexControllerTest extends AppIntegrationTestCase
 
     public function testThemesIndexSuccess()
     {
-        // Authenticate as ada and list the themes
-        $this->logInAsUser();
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
         $this->get('/account/settings/themes.json?api-version=v2');
         $this->assertResponseOk();
     }
