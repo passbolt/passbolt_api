@@ -30,7 +30,7 @@ use Passbolt\Log\Test\Factory\ActionFactory;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 use Passbolt\Log\Test\Factory\EntitiesHistoryFactory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
-use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsFactory;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
@@ -97,7 +97,7 @@ class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
             ->withResource($resourceWithNewFormat)
             ->update()
             ->persist();
-        $secretRevision = SecretRevisionsFactory::make([
+        $secretRevision = SecretRevisionFactory::make([
             'resource_id' => $resourceNewFormatId,
             'created_by' => $uac->getId(),
             'modified_by' => $uac->getId(),
