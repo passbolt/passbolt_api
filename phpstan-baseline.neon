@@ -136,11 +136,6 @@ parameters:
 			path: src/Authenticator/GpgAuthenticator.php
 
 		-
-			message: "#^Variable \\$user might not be defined\\.$#"
-			count: 1
-			path: src/Controller/Component/UserComponent.php
-
-		-
 			message: "#^Dead catch \\- Cake\\\\Datasource\\\\Exception\\\\RecordNotFoundException is never thrown in the try block\\.$#"
 			count: 1
 			path: src/Controller/Resources/ResourcesDeleteController.php

@@ -25,7 +25,7 @@ class FullBaseUrlReachableCoreHealthcheckTest extends TestCase
 {
     public function testFullBaseUrlReachableCoreHealthcheck_On_Unresolved_Host_Should_Not_Throw_Exception(): void
     {
-        $request = $this->getMockForAbstractClass(RequestInterface::class);
+        $request = $this->getMockBuilder(RequestInterface::class)->getMock();
         $client = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
         $client->method('get')
             ->willThrowException(new Client\Exception\NetworkException('NetworkException not caught', $request));

@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Command;
 use App\Command\PassboltCommand;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Model\Table\AvatarsTable;
 use App\Model\Table\UsersTable;
 use App\Model\Validation\EmailValidationRule;
 use App\Service\Command\ProcessUserService;
@@ -120,7 +121,7 @@ class MfaUserSettingsDisableCommand extends PassboltCommand
         }
 
         try {
-            $userToUpdate = $this->GetUserWithLocaleAndMfaIsEnabledInfo($providedUsername);
+            $userToUpdate = $this->getUserWithLocaleAndMfaIsEnabledInfo($providedUsername);
         } catch (RecordNotFoundException) {
             $io->out(__('No user matching the username "{0}" was found.', $providedUsername));
 
@@ -154,7 +155,7 @@ class MfaUserSettingsDisableCommand extends PassboltCommand
         }
 
         // Now we ensure that the user has its MFA disabled
-        $userToUpdate = $this->GetUserWithLocaleAndMfaIsEnabledInfo($providedUsername);
+        $userToUpdate = $this->getUserWithLocaleAndMfaIsEnabledInfo($providedUsername);
         if ($isMfaEnabledService->isEnabledForUser($userToUpdate)) {
             $io->out(__('An unknown error hapened. The MFA for user "{0}" is still ACTIVE.', $providedUsername));
 
@@ -171,22 +172,21 @@ class MfaUserSettingsDisableCommand extends PassboltCommand
      * @return \App\Model\Entity\User
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no metadata key record.
      */
-    private function GetUserWithLocaleAndMfaIsEnabledInfo(string $username): User
+    private function getUserWithLocaleAndMfaIsEnabledInfo(string $username): User
     {
         $findUserQuery = $this->UsersTable->find()
             ->select(['Users.role_id','Users.username', 'Roles.name'])
             ->contain(['MfaSettings', 'Roles'])
+            ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
             ->where([ 'Users.username' => $username])->find('locale');
 
-        if ($this->isFeaturePluginEnabled('MultiFactorAuthentication')) {
-            $mfaQ = (new IsMfaEnabledQueryService());
-            $simulatedUuid = UuidFactory::uuid(); // need the uuid to be set because decorateForView will verify it
-            $mfaQ->decorateForView(
-                $findUserQuery,
-                new UserAccessControl(ROLE::ADMIN, $simulatedUuid),
-                $simulatedUuid
-            );
-        }
+        $mfaQ = (new IsMfaEnabledQueryService());
+        $simulatedUuid = UuidFactory::uuid(); // need the uuid to be set because decorateForView will verify it
+        $mfaQ->decorateForView(
+            $findUserQuery,
+            new UserAccessControl(ROLE::ADMIN, $simulatedUuid),
+            $simulatedUuid
+        );
 
         return $findUserQuery->firstOrFail();
     }

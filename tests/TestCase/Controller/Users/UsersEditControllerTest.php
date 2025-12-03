@@ -120,7 +120,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertBadRequestError('Could not validate user data.');
-        $this->assertResponseContains('The user role ID must be one of the admin or user roles.');
+        $this->assertResponseContains('The user role ID must not be of the guest role.');
     }
 
     public function testUsersEditController_Error_MissingCsrfToken(): void

@@ -22,9 +22,10 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Avatar;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
-use App\Model\Rule\User\IsAdminOrUserRoleIdRule;
+use App\Model\Rule\User\IsNotGuestRoleIdRule;
 use App\Model\Traits\Users\UsersFindersTrait;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\UserAccessControl;
@@ -240,7 +241,17 @@ class UsersTable extends Table
             'message' => __('The username is already in use.'),
         ]);
 
-        $rules->add(new IsAdminOrUserRoleIdRule(), 'validRole', ['errorField' => 'role_id']);
+        $rules->add(new IsNotGuestRoleIdRule(), 'validRole', ['errorField' => 'role_id']);
+
+        $rules->add($rules->existsIn('role_id', 'Roles'), [
+            'message' => __('The role does not exist.'),
+        ]);
+
+        $rules->addCreate(new IsNotSoftDeletedRule(), 'roleIsNotSoftDeleted', [
+            'table' => 'Roles',
+            'errorField' => 'role_id',
+            'message' => __('The role does not exist.'),
+        ]);
 
         // Delete rules
         $msg = __('The user should not be sole owner of shared content, transfer the ownership to other users.');

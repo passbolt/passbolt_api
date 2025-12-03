@@ -51,7 +51,8 @@ class RbacsIndexController extends AppController
         $this->User->assertIsAdmin();
 
         $rbacs = $this->Rbacs->find()
-            ->contain('UiAction');
+            ->contain('UiAction')
+            ->contain('Action');
         $this->paginate($rbacs);
 
         $this->success(__('The operation was successful.'), $rbacs);

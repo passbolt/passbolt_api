@@ -58,7 +58,7 @@ class Rbac extends Entity
 
     public const ALLOWED_FOREIGN_MODELS = [
         self::FOREIGN_MODEL_UI_ACTION,
-        //self::FOREIGN_MODEL_ACTION // TODO API endpoints level RBAC
+        self::FOREIGN_MODEL_ACTION,
     ];
 
     /**

@@ -201,7 +201,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('dame');
         $postData = [];
         $this->postJson('/groups.json', $postData);
-        $this->assertForbiddenError();
+        $this->assertForbiddenError('You are not authorized to access that location.');
     }
 
     public function testGroupsAddErrorNotAuthenticated(): void

@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Auth;
 
-use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
@@ -31,10 +30,10 @@ class AuthIsAuthenticatedControllerTest extends AppIntegrationTestCase
     {
         $this->enableFeaturePlugin('Log');
 
-        $this->logInAsUser();
+        $user = $this->logInAsUser();
         $this->getJson('/auth/is-authenticated.json');
         $this->assertResponseOk();
-        $this->assertInstanceOf(User::class, $this->getSession()->read('Auth.user'));
+        $this->assertSame(['id' => $user->get('id')], $this->getSession()->read('Auth.user'));
         $this->assertTextContains('success', $this->_responseJsonHeader->status);
 
         $this->assertSame(0, ActionLogFactory::count());

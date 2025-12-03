@@ -1564,11 +1564,6 @@
       <code><![CDATA[$data['options']['maxLimit'] ?? $data['defaults']['maxLimit']]]></code>
     </InvalidArgument>
   </file>
-  <file src="src/Middleware/UacAwareMiddlewareTrait.php">
-    <InvalidArgument>
-      <code><![CDATA['name']]></code>
-    </InvalidArgument>
-  </file>
   <file src="src/Model/Table/AuthenticationTokensTable.php">
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\App\Model\Entity\AuthenticationToken get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>

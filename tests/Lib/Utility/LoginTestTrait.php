@@ -29,7 +29,7 @@ trait LoginTestTrait
      */
     public function logInAs(User $user): void
     {
-        $this->session(['Auth' => compact('user')]);
+        $this->session(['Auth' => ['user' => ['id' => $user->id]]]);
     }
 
     /**

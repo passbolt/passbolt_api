@@ -17,6 +17,9 @@ declare(strict_types=1);
 
 namespace Passbolt\Rbacs\Test\TestCase\Controller\Rbacs;
 
+use Passbolt\Log\Test\Factory\ActionFactory;
+use Passbolt\Rbacs\Test\Factory\RbacFactory;
+use Passbolt\Rbacs\Test\Factory\UiActionFactory;
 use Passbolt\Rbacs\Test\Lib\RbacsIntegrationTestCase;
 
 /**
@@ -31,9 +34,24 @@ class RbacsIndexControllerTest extends RbacsIntegrationTestCase
      */
     public function testRbacsIndexController_Success(): void
     {
+        $uiAction = UiActionFactory::make()->persist();
+        $action = ActionFactory::make()->persist();
+        RbacFactory::make()->setUiAction($uiAction)->persist();
+        RbacFactory::make()->setAction($action)->persist();
+
         $this->logInAsAdmin();
         $this->getJson('/rbacs.json');
         $this->assertSuccess();
+        $response = $this->getResponseBodyAsArray();
+        $this->assertCount(2, $response);
+        foreach ($response as $item) {
+            if (is_null($item['action'])) {
+                $this->assertSame(['id' => $uiAction->get('id'), 'name' => $uiAction->get('name')], $item['ui_action']);
+            } else {
+                $this->assertNull($item['ui_action']);
+                $this->assertSame(['id' => $action->get('id'), 'name' => $action->get('name')], $item['action']);
+            }
+        }
     }
 
     /**

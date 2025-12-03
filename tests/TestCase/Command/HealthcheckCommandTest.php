@@ -238,7 +238,7 @@ class HealthcheckCommandTest extends AppTestCase
 
     public function testHealthcheckCommand_Database_Happy_Path()
     {
-        RoleFactory::make(RolesTable::ALLOWED_ROLE_NAMES)->persist();
+        RoleFactory::make(RolesTable::DEFAULT_ROLE_NAMES)->persist();
 
         $this->exec('passbolt healthcheck --database');
         $this->assertExitSuccess();

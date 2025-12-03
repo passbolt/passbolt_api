@@ -12,43 +12,47 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         5.4.0
+ * @since         5.8.0
  */
 
-namespace App\Model\Rule\User;
+namespace App\Model\Rule;
 
-use App\Model\Entity\Role;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
+use Exception;
 
-class IsAdminOrUserRoleIdRule
+class IsUniqueCaseInsensitive
 {
     /**
-     * Performs the check
+     * Performs the check.
      *
      * @param \Cake\Datasource\EntityInterface $entity The entity to check
      * @param array $options Options passed to the check
-     * @return string|bool
+     * @return bool
      */
-    public function __invoke(EntityInterface $entity, array $options): bool|string
+    public function __invoke(EntityInterface $entity, array $options): bool
     {
-        $roleId = $entity['role_id'] ?? null;
-        if (!is_string($roleId)) {
+        if (!isset($options['errorField']) || !isset($options['table'])) {
             return false;
         }
-        $roleId = strtolower($roleId);
-        /** @var \App\Model\Table\RolesTable $RolesTable */
-        $RolesTable = TableRegistry::getTableLocator()->get('Roles');
 
-        $roleIdIsAdminOrUser = $RolesTable->find()
-            ->where(['id' => $roleId])
-            ->whereInList('name', [Role::USER, Role::ADMIN])
-            ->count() > 0;
-
-        if ($roleIdIsAdminOrUser) {
+        $field = $options['errorField'];
+        // Only apply check if field is "dirty"
+        if (!empty($options['checkDirty']) && !$entity->isDirty($field)) {
             return true;
         }
 
-        return __('The user role ID must be one of the admin or user roles.');
+        try {
+            $table = TableRegistry::getTableLocator()->get($options['table']);
+            $alias = $table->getAlias();
+            $value = $entity->get($field);
+
+            $conditions["LOWER({$alias}.{$field}) IS"] = strtolower($value);
+
+            return !$table->exists($conditions);
+        } catch (Exception $e) {
+        }
+
+        return false;
     }
 }

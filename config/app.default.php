@@ -119,7 +119,8 @@ return [
          * If you set 'className' => 'Null' core cache will be disabled.
          */
         '_cake_translations_' => [
-            'className' => env('CACHE_CAKECORE_CLASSNAME', FileEngine::class),
+            // Fallback on CACHE_CAKECORE_CLASSNAME environment variable to keep BC
+            'className' => env('CACHE_CAKETRANSLATIONS_CLASSNAME', env('CACHE_CAKECORE_CLASSNAME', FileEngine::class)),
             'prefix' => 'myapp_cake_translations_',
             'path' => CACHE . 'persistent' . DS,
             'serialize' => true,
