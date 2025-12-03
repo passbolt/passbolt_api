@@ -28,6 +28,9 @@ use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryPrivateKeyPasswordFacto
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryResponseFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
+use Passbolt\Log\Test\Factory\ActionFactory;
+use Passbolt\Rbacs\RbacsPlugin;
+use Passbolt\Rbacs\Test\Factory\RbacFactory;
 
 class AccountRecoveryRequestsViewControllerTest extends AccountRecoveryIntegrationTestCase
 {
@@ -77,6 +80,24 @@ class AccountRecoveryRequestsViewControllerTest extends AccountRecoveryIntegrati
         $this->assertTrue(!isset($r1->armored_key));
         $this->assertTrue(!isset($r1->account_recovery_private_key));
         $this->assertTrue(!isset($r1->account_recovery_responses));
+    }
+
+    public function testAccountRecoveryRequestsViewController_Success_With_Rbacs()
+    {
+        $this->enableFeaturePlugin(RbacsPlugin::class);
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+        $this->logInAs($user);
+
+        // Give via RBACS permission to this user's role for this action
+        $action = ActionFactory::make()->name('AccountRecoveryRequestsView.view')->persist();
+        RbacFactory::make()->setAction($action)->setField('role_id', $user->role_id)->persist();
+
+        $request = AccountRecoveryRequestFactory::make()->persist();
+
+        $this->getJson('/account-recovery/requests/' . $request->get('id') . '.json');
+        $this->assertSuccess();
+        $this->assertNotNull($this->_responseJsonBody);
     }
 
     public function testAccountRecoveryRequestsViewController_SuccessContain()

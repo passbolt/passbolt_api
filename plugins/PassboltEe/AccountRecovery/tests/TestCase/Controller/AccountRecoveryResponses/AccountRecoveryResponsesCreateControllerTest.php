@@ -27,6 +27,9 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 use Passbolt\AccountRecovery\Test\Scenario\Request\ResponseCreateScenario;
+use Passbolt\Log\Test\Factory\ActionFactory;
+use Passbolt\Rbacs\RbacsPlugin;
+use Passbolt\Rbacs\Test\Factory\RbacFactory;
 
 class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegrationTestCase
 {
@@ -111,6 +114,31 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
 
         // Assert that the status of the previous approved request is unchanged
         $this->assertTrue(AccountRecoveryRequestFactory::get($oldApprovedRequest->id)->isApproved());
+    }
+
+    public function testAccountRecoveryResponsesCreateController_Success_Approved_With_Rbacs()
+    {
+        $this->enableFeaturePlugin(RbacsPlugin::class);
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+        $this->logInAs($user);
+
+        // Give via RBACS permission to this user's role for this action
+        $action = ActionFactory::make()->name('AccountRecoveryResponsesCreate.post')->persist();
+        RbacFactory::make()->setAction($action)->setField('role_id', $user->role_id)->persist();
+
+        [$request, $policy] = $this->loadFixtureScenario(ResponseCreateScenario::class);
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => AccountRecoveryResponse::RESPONDER_FOREIGN_MODEL_ORGANIZATION_KEY,
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        $this->postJson('/account-recovery/responses.json', $data);
+        $this->assertResponseOk();
     }
 
     /**

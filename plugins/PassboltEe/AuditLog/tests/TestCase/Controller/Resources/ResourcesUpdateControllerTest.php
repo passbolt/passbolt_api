@@ -26,7 +26,7 @@ use App\Test\Lib\Model\SecretsModelTrait;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\SecretRevisions\SecretRevisionsPlugin;
-use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsFactory;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 /**
  * @covers \App\Controller\Resources\ResourcesUpdateController
@@ -73,7 +73,7 @@ class ResourcesUpdateControllerTest extends LogIntegrationTestCase
         $this->putJson("/resources/$r1->id.json", $data);
         $this->assertSuccess();
 
-        $this->assertSame(2, SecretRevisionsFactory::count());
+        $this->assertSame(2, SecretRevisionFactory::count());
 
         // Assert User Action Logs
         $this->getJson("/actionlog/resource/{$r1->get('id')}.json");

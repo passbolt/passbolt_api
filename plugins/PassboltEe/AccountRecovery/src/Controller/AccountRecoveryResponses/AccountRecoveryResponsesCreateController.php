@@ -18,9 +18,10 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Controller\AccountRecoveryResponses;
 
 use App\Controller\AppController;
+use App\Utility\UserAction;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\ForbiddenException;
 use Passbolt\AccountRecovery\Service\AccountRecoveryResponses\AccountRecoveryResponsesCreateService;
+use Passbolt\Rbacs\Service\ActionAccessControl\RoleActionAccessControlServiceInterface;
 
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable $AccountRecoveryOrganizationPolicy
@@ -31,14 +32,16 @@ class AccountRecoveryResponsesCreateController extends AppController
      * Creates an account recovery response
      * Sends an email to the requesting user and the admins on success
      *
+     * @param \Passbolt\Rbacs\Service\ActionAccessControl\RoleActionAccessControlServiceInterface $accessControlService service assessing if the user's role has access to this action
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the data provided is not valid
      */
-    public function post(): void
+    public function post(RoleActionAccessControlServiceInterface $accessControlService): void
     {
-        if (!$this->User->isAdmin()) {
-            throw new ForbiddenException(__('Only admin are allowed to create an account recovery request.'));
-        }
+        $accessControlService->controlUserRoleActionAccess(
+            $this->User->getRoleEntity(),
+            UserAction::getInstance()->getActionId()
+        );
 
         $data = $this->getRequest()->getData();
         if (!isset($data) || !is_array($data) || empty($data)) {
