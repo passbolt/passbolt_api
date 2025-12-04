@@ -10,34 +10,33 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.4.0
+ * @since         5.8.0
  *
- * @see \App\Notification\Email\Redactor\User\UserAdminRoleRevokedEmailRedactor
- * @var \App\View\AppView $this
- * @var array $body
  * @var string $title
  */
 
+use App\Notification\Email\Redactor\User\UserAdminRoleRevokedEmailRedactor;
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
+use Cake\Core\Configure;
 use Cake\Routing\Router;
 
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
-/** @var array $recipient */
-$recipient = $body['recipient'];
+/** @var array $user */
+$user = $body['recipient'];
 /** @var array $operator */
 $operator = $body['operator'];
-/** @var array $user */
-$user = $body['user'];
 /** @var string $userAgent */
 $userAgent = $body['user_agent'];
 /** @var string $clientIp */
 $clientIp = $body['ip'];
-$userFullName = Purifier::clean($user['profile']['first_name'] . ' ' . $user['profile']['last_name']);
+/** @var bool $isAdminRoleRevoked */
+$isAdminRoleRevoked = $body['isAdminRoleRevoked'];
+
+$recipientFullName = Purifier::clean($user['profile']['first_name'] . ' ' . $user['profile']['last_name']);
 $operatorFullName = Purifier::clean($operator['profile']['first_name'] . ' ' . $operator['profile']['last_name']);
-$roleChanged = Purifier::clean($user['role']['name']);
 
 echo $this->element('Email/module/avatar', [
     'url' => AvatarHelper::getAvatarUrl($operator['profile']['avatar']),
@@ -48,9 +47,12 @@ echo $this->element('Email/module/avatar', [
     ]),
 ]);
 
-$text = __('{0} changed the role of {1} to {2}.', $operatorFullName, $userFullName, $roleChanged);
-$text .= ' ';
-$text .= __('{0} can no longer perform administration tasks.', $userFullName);
+$text = __('{0} changed your role to {1}.', $operatorFullName, $user['role']['name']);
+
+if (Configure::read(UserAdminRoleRevokedEmailRedactor::CONFIG_KEY_SEND_USER_EMAIL) && $isAdminRoleRevoked) {
+    $text .= ' ';
+    $text .= __('You can no longer perform administration tasks.');
+}
 
 echo $this->element('Email/module/text', ['text' => $text]);
 

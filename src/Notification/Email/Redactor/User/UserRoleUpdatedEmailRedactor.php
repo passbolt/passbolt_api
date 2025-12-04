@@ -12,13 +12,12 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.4.0
+ * @since         5.8.0
  */
 
 namespace App\Notification\Email\Redactor\User;
 
 use App\Controller\Users\UsersEditController;
-use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Table\AvatarsTable;
 use App\Notification\Email\Email;
@@ -28,19 +27,15 @@ use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\ExtendedUserAccessControl;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
 use Passbolt\Locale\Service\LocaleService;
 
-class UserAdminRoleRevokedEmailRedactor implements SubscribedEmailRedactorInterface
+class UserRoleUpdatedEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
     use LocatorAwareTrait;
 
-    public const CONFIG_KEY_EMAIL_ENABLED = 'passbolt.email.send.admin.user.adminRoleRevoked.admin';
-    public const CONFIG_KEY_SEND_USER_EMAIL = 'passbolt.email.send.admin.user.adminRoleRevoked.user';
-
-    public const TEMPLATE = 'AD/admin_role_revoked';
+    public const TEMPLATE = 'LU/user_role_updated';
 
     /**
      * @inheritDoc
@@ -81,52 +76,54 @@ class UserAdminRoleRevokedEmailRedactor implements SubscribedEmailRedactorInterf
         }
 
         // No need to send email if role is not changed
-        if (!self::isAdminRoleRevoked($user)) {
+        if (!$this->isUserRoleUpdated($user)) {
             return $emailCollection;
         }
 
+        $isAdminRoleRevoked = UserAdminRoleRevokedEmailRedactor::isAdminRoleRevoked($user);
         $clientIp = $uac->getUserIp();
         $userAgent = $uac->getUserAgent();
 
         /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = $this->fetchTable('Users');
-        $recipients = $usersTable
-            ->findAdmins()
-            ->find('notDisabled')
-            ->find('locale')
-            ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
-            ->where(['Users.id !=' => $user->id])
-            ->toArray();
-        $operator = $usersTable->findFirstForEmail($uac->getId());
-        // Get fresh copy of user now to get the updated details (especially role)
-        $user = $usersTable->find()->contain(['Roles', 'Profiles'])->where(['Users.id' => $user->id])->firstOrFail();
 
-        foreach ($recipients as $admin) {
-            $emailCollection->addEmail($this->createEmail($admin, $operator, $user, $clientIp, $userAgent));
-        }
+        $recipient = $usersTable
+            ->find('locale')
+            ->contain([
+                'Roles',
+                'Profiles' => AvatarsTable::addContainAvatar(),
+            ])
+            ->where(['Users.id' => $user->id])
+            ->firstOrFail();
+
+        $operator = $usersTable->findFirstForEmail($uac->getId());
+
+        $emailCollection->addEmail(
+            $this->createEmail($operator, $recipient, $clientIp, $userAgent, $isAdminRoleRevoked)
+        );
 
         return $emailCollection;
     }
 
     /**
-     * @param \App\Model\Entity\User $recipient The recipient(admin) to send email to.
-     * @param \App\Model\Entity\User $operator The user who changed to role.
-     * @param \App\Model\Entity\User $user The user whose role got changed.
+     * @param \App\Model\Entity\User $operator The user who updated the role.
+     * @param \App\Model\Entity\User $recipient The user and recipient whose role got updated.
      * @param string $clientIp Operator's IP.
      * @param string $userAgent Operator's user agent.
+     * @param bool $isAdminRoleRevoked If admin role is revoked or not.
      * @return \App\Notification\Email\Email
      */
     private function createEmail(
-        User $recipient,
         User $operator,
-        User $user,
+        User $recipient,
         string $clientIp,
-        string $userAgent
+        string $userAgent,
+        bool $isAdminRoleRevoked = false
     ): Email {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            function () use ($user) {
-                return __('{0}\'s admin role has been revoked', $user->profile->full_name);
+            function () {
+                return __('Your role has been updated');
             }
         );
 
@@ -137,9 +134,9 @@ class UserAdminRoleRevokedEmailRedactor implements SubscribedEmailRedactorInterf
                 'body' => [
                     'recipient' => $recipient,
                     'operator' => $operator,
-                    'user' => $user,
                     'ip' => $clientIp,
                     'user_agent' => $userAgent,
+                    'isAdminRoleRevoked' => $isAdminRoleRevoked,
                 ],
                 'title' => $subject,
             ],
@@ -151,25 +148,15 @@ class UserAdminRoleRevokedEmailRedactor implements SubscribedEmailRedactorInterf
      * @param \App\Model\Entity\User $user User entity.
      * @return bool
      */
-    public static function isAdminRoleRevoked(User $user): bool
+    private function isUserRoleUpdated(User $user): bool
     {
         if (!$user->isDirty('role_id')) {
             return false;
         }
 
-        /** @var \App\Model\Table\RolesTable $rolesTable */
-        $rolesTable = TableRegistry::getTableLocator()->get('Roles');
-        /** @var \App\Model\Entity\Role $roleAdmin */
-        $roleAdmin = $rolesTable
-            ->find()
-            ->select(['id', 'name'])
-            ->where(['name' => Role::ADMIN])
-            ->firstOrFail();
+        $previousValue = $user->getOriginal('role_id');
+        $value = $user->role_id;
 
-        if ($user->getOriginal('role_id') === $roleAdmin->id && $user->role_id !== $roleAdmin->id) {
-            return true;
-        }
-
-        return false;
+        return $previousValue !== $value;
     }
 }
