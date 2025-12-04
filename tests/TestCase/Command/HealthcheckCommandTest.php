@@ -322,6 +322,33 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('<error>[FAIL] The server key fingerprint doesn\'t match the one defined in ');
     }
 
+    public function testHealthcheckCommand_PosixMode_HappyPath()
+    {
+        $this->exec('passbolt healthcheck -d test --environment --posix');
+
+        $this->assertExitSuccess();
+
+        $this->assertOutputContains('<success>[PASS]</success> The logs directory');
+    }
+
+    public function testHealthcheckCommand_PosixMode_WithErrors()
+    {
+        /**
+         * Simulate a PHP with min version not matching the minimal requirements to raise a warning
+         */
+        Configure::write(PhpVersionHealthcheck::PHP_MIN_VERSION_CONFIG, '40');
+        Configure::write(NextMinPhpVersionHealthcheck::PHP_NEXT_MIN_VERSION_CONFIG, '50');
+        $this->exec('passbolt healthcheck -d test --environment --posix');
+
+        $this->assertExitError();
+
+        $this->assertOutputContains('<success>[PASS]</success> Mbstring extension is installed.');
+        $this->assertErrorContains('[FAIL] PHP version is too low, passbolt need PHP 40 or higher.');
+        $this->assertErrorContains('[WARN] PHP version less than 50 will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment.');
+
+        $this->assertErrorContains('1 error(s) found. Hang in there');
+    }
+
     /**
      * @return void
      */

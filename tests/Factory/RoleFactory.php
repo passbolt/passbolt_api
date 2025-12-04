@@ -26,6 +26,7 @@ use Faker\Generator;
 /**
  * RoleFactory
  *
+ * @method static self make(mixed $makeParameter = [], int $times = 1)
  * @method \App\Model\Entity\Role|\App\Model\Entity\Role[] persist()
  * @method \App\Model\Entity\Role getEntity()
  * @method \App\Model\Entity\Role[] getEntities()

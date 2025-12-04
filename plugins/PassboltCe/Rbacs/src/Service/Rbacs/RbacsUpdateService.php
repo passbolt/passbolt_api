@@ -75,7 +75,7 @@ class RbacsUpdateService
         // Get updated entities
         $rbacs = $this->rbacsTable->find()
             ->where(['Rbacs.id IN' => $dtoCollection->getIds()])
-            ->contain('UiAction')
+            ->contain(['UiAction', 'Action'])
             ->all();
 
         return $rbacs;

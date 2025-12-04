@@ -39,6 +39,7 @@ use App\Notification\Email\Redactor\User\UserAdminRoleRevokedEmailRedactor;
 use App\Notification\Email\Redactor\User\UserDeleteEmailRedactor;
 use App\Notification\Email\Redactor\User\UserDisableEmailRedactor;
 use App\Notification\Email\Redactor\User\UserRegisterEmailRedactor;
+use App\Notification\Email\Redactor\User\UserRoleUpdatedEmailRedactor;
 use Cake\Core\Configure;
 use Passbolt\SelfRegistration\Notification\Email\Redactor\User\SelfRegistrationUserEmailRedactor;
 
@@ -69,6 +70,7 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
         $redactors[] = new GroupUserDeleteEmailRedactor();
         $redactors[] = new GroupUpdateAdminSummaryEmailRedactor();
         $redactors[] = new GroupUserAddRequestEmailRedactor();
+        $redactors[] = new UserRoleUpdatedEmailRedactor();
         if (Configure::read('passbolt.plugins.log.enabled')) {
             $redactors[] = new AdminUserSetupCompleteEmailRedactor();
         }
