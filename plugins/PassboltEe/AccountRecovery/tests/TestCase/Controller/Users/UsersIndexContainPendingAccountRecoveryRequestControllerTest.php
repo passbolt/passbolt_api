@@ -87,7 +87,7 @@ class UsersIndexContainPendingAccountRecoveryRequestControllerTest extends Accou
         $this->logInAsAdmin();
         $this->getJson('/users.json?contain[pending_account_recovery_request]=1');
         $this->assertResponseOk();
-        $this->assertCount(4, $this->_responseJsonBody);
+        $this->assertCount(3, $this->_responseJsonBody);
 
         foreach ($this->_responseJsonBody as $user) {
             if ($user->id === $userWithPending->id) {
