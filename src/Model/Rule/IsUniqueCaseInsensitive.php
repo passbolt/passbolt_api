@@ -49,6 +49,16 @@ class IsUniqueCaseInsensitive
 
             $conditions["LOWER({$alias}.{$field}) IS"] = strtolower($value);
 
+            // Exclude soft-deleted records from uniqueness check
+            if ($table->getSchema()->hasColumn('deleted')) {
+                $columnType = $table->getSchema()->getColumnType('deleted');
+                if ($columnType === 'boolean') {
+                    $conditions["{$alias}.deleted"] = false;
+                } else {
+                    $conditions["{$alias}.deleted IS"] = null;
+                }
+            }
+
             return !$table->exists($conditions);
         } catch (Exception $e) {
         }
