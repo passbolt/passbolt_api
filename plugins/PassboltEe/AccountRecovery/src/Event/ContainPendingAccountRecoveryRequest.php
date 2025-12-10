@@ -20,9 +20,12 @@ use App\Controller\Users\UsersIndexController;
 use App\Middleware\UacAwareMiddlewareTrait;
 use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\UsersTable;
+use App\Utility\UuidFactory;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\Query;
+use Passbolt\Rbacs\Service\ActionAccessControl\RoleActionAccessControlServiceInterface;
 
 class ContainPendingAccountRecoveryRequest implements EventListenerInterface
 {
@@ -33,12 +36,15 @@ class ContainPendingAccountRecoveryRequest implements EventListenerInterface
      */
     private bool $isContained = false;
 
+    private RoleActionAccessControlServiceInterface $roleActionAccessControlService;
+
     /**
      * @inheritDoc
      */
     public function implementedEvents(): array
     {
         return [
+            'Application.buildContainer' => 'setRoleActionAccessControlServiceInterface',
             'Controller.initialize' => 'setIsContained',
             TableFindIndexBefore::EVENT_NAME => 'containPendingAccountRecoveryRequest',
         ];
@@ -52,15 +58,33 @@ class ContainPendingAccountRecoveryRequest implements EventListenerInterface
      */
     public function setIsContained(EventInterface $event): void
     {
-        $isContained = false;
         $controller = $event->getSubject();
-        if ($controller instanceof UsersIndexController) {
-            $isAdmin = $this->getUacInRequest($controller->getRequest())->isAdmin();
-            $isContained = $isAdmin && (bool)$controller
-                ->getRequest()
-                ->getQuery('contain.pending_account_recovery_request');
+        if (!($controller instanceof UsersIndexController)) {
+            return;
         }
-        $this->isContained = $isContained;
+        $isContainInRequest = (bool)$controller
+            ->getRequest()
+            ->getQuery('contain.pending_account_recovery_request');
+        if (!$isContainInRequest) {
+            return;
+        }
+        /** @var \App\Model\Entity\User $identity */
+        $identity = $controller->getRequest()->getAttribute('identity');
+        if ($identity->role->isAdmin()) {
+            $this->isContained = true;
+
+            return;
+        }
+
+        try {
+            $this->roleActionAccessControlService->controlUserRoleActionAccess(
+                $identity->role,
+                UuidFactory::uuid('AccountRecoveryRequestsView.view')
+            );
+            $this->isContained = true;
+        } catch (ForbiddenException) {
+            // Do nothing, $this->isContained remains false
+        }
     }
 
     /**
@@ -88,5 +112,17 @@ class ContainPendingAccountRecoveryRequest implements EventListenerInterface
                 'PendingAccountRecoveryRequests.status',
             ]);
         });
+    }
+
+    /**
+     * @param \Cake\Event\EventInterface $event event triggered when the container is built
+     * @return void
+     */
+    public function setRoleActionAccessControlServiceInterface(EventInterface $event): void
+    {
+        /** @var \Cake\Core\Container $container */
+        $container = $event->getData('container');
+        $roleActionAccessControlService = $container->get(RoleActionAccessControlServiceInterface::class);
+        $this->roleActionAccessControlService = $roleActionAccessControlService;
     }
 }

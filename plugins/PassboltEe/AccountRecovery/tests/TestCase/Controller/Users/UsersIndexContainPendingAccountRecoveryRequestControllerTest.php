@@ -22,6 +22,9 @@ use App\Test\Factory\UserFactory;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
+use Passbolt\Log\Test\Factory\ActionFactory;
+use Passbolt\Rbacs\RbacsPlugin;
+use Passbolt\Rbacs\Test\Factory\RbacFactory;
 
 class UsersIndexContainPendingAccountRecoveryRequestControllerTest extends AccountRecoveryIntegrationTestCase
 {
@@ -31,7 +34,38 @@ class UsersIndexContainPendingAccountRecoveryRequestControllerTest extends Accou
         RoleFactory::make()->guest()->persist();
     }
 
-    public function testUsersIndexGetSuccess_ContainPendingAccountRecoveryRequest()
+    public function testUsersIndexGetSuccess_ContainPendingAccountRecoveryRequest_As_User()
+    {
+        ### Login as non admin
+        $this->logInAsUser();
+        $this->getJson('/users.json?contain[pending_account_recovery_request]=1');
+        $this->assertResponseOk();
+        $this->assertCount(1, $this->_responseJsonBody);
+        foreach ($this->_responseJsonBody as $user) {
+            $this->assertObjectNotHasAttribute('pending_account_recovery_request', $user);
+        }
+    }
+
+    public function testUsersIndexGetSuccess_ContainPendingAccountRecoveryRequest_As_User_With_Rbac_View_Requests_Rights()
+    {
+        $this->enableFeaturePlugin(RbacsPlugin::class);
+        $user = UserFactory::make()->user()->persist();
+        $action = ActionFactory::make()->name('AccountRecoveryRequestsView.view')->persist();
+        RbacFactory::make()
+            ->setAction($action)
+            ->setField('role_id', $user->get('role_id'))
+            ->persist();
+        ### Login as non admin
+        $this->logInAs($user);
+        $this->getJson('/users.json?contain[pending_account_recovery_request]=1');
+        $this->assertResponseOk();
+        $this->assertCount(1, $this->_responseJsonBody);
+        foreach ($this->_responseJsonBody as $user) {
+            $this->assertObjectHasAttribute('pending_account_recovery_request', $user);
+        }
+    }
+
+    public function testUsersIndexGetSuccess_ContainPendingAccountRecoveryRequest_As_Admin()
     {
         [$userWithPending, $userWithCompleted] = UserFactory::make(2)
             ->active()
@@ -48,19 +82,6 @@ class UsersIndexContainPendingAccountRecoveryRequestControllerTest extends Accou
             ->withUser($userWithCompleted->id)
             ->completed()
             ->persist();
-
-        ### Login as non admin
-        $this->logInAsUser();
-        $this->getJson('/users.json?contain[pending_account_recovery_request]=1');
-        $this->assertResponseOk();
-        $this->assertCount(3, $this->_responseJsonBody);
-        foreach ($this->_responseJsonBody as $user) {
-            $this->assertObjectNotHasAttribute('pending_account_recovery_request', $user);
-        }
-
-        // Required to clear up associations
-        $this->clearPlugins();
-        $this->getTableLocator()->clear();
 
         ### Login as admin
         $this->logInAsAdmin();
