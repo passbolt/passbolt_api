@@ -128,6 +128,7 @@ class PopulateSecretRevisionsForExistingSecretsService
         $connection = ConnectionManager::get('default');
         $totalRowsAdded = 0;
         $batchCount = 0;
+        $maxExecutionTime = (int)ini_get('max_execution_time');
 
         $connection->begin();
         foreach ($resourcesSelectQuery as $resource) {
@@ -150,7 +151,7 @@ class PopulateSecretRevisionsForExistingSecretsService
                 $connection->begin();
                 $batchCount = 0;
                 // reset limit
-                set_time_limit(30);
+                set_time_limit($maxExecutionTime);
             }
         }
         $connection->commit();
