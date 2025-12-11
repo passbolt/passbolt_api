@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Model\Table;
 
 use App\Error\Exception\CustomValidationException;
+use App\Model\Table\TableCleanupProviderInterface;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
@@ -50,7 +51,7 @@ use Phinx\Db\Adapter\MysqlAdapter;
  * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class AccountRecoveryPrivateKeyPasswordsTable extends Table
+class AccountRecoveryPrivateKeyPasswordsTable extends Table implements TableCleanupProviderInterface
 {
     use TableCleanupTrait;
     use TableTruncateTrait;
@@ -266,5 +267,17 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
     public function cleanupHardDeletedAccountRecoveryPrivateKeys(?bool $dryRun = false): int
     {
         return $this->cleanupHardDeleted('AccountRecoveryPrivateKeys', $dryRun);
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        return [
+            $this->cleanupHardDeletedAccountRecoveryPrivateKeys(...),
+        ];
     }
 }

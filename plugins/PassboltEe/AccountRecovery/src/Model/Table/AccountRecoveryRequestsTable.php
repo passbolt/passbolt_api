@@ -21,6 +21,7 @@ use App\Error\Exception\ValidationException;
 use App\Model\Rule\IsNotUserKeyFingerprintRule;
 use App\Model\Rule\User\IsActiveUserRule;
 use App\Model\Table\AvatarsTable;
+use App\Model\Table\TableCleanupProviderInterface;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
@@ -61,7 +62,7 @@ use Phinx\Db\Adapter\MysqlAdapter;
  * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class AccountRecoveryRequestsTable extends Table
+class AccountRecoveryRequestsTable extends Table implements TableCleanupProviderInterface
 {
     use TableCleanupTrait;
     use UsersCleanupTrait;
@@ -476,5 +477,18 @@ class AccountRecoveryRequestsTable extends Table
         }
 
         throw new BadRequestException(__('Invalid response status. Not supported.'));
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        return [
+            $this->cleanupHardDeletedUsers(...),
+            // We keep soft deleted users requests in the trail
+        ];
     }
 }
