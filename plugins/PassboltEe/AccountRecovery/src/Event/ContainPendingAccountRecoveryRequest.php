@@ -17,26 +17,25 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Event;
 
 use App\Controller\Users\UsersIndexController;
-use App\Middleware\UacAwareMiddlewareTrait;
 use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\UsersTable;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\UuidFactory;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\Query;
-use Passbolt\Rbacs\Service\ActionAccessControl\RoleActionAccessControlServiceInterface;
+use Passbolt\Rbacs\RbacsPlugin;
+use Passbolt\Rbacs\Service\ActionAccessControl\RbacsRoleActionAccessControlService;
 
 class ContainPendingAccountRecoveryRequest implements EventListenerInterface
 {
-    use UacAwareMiddlewareTrait;
+    use FeaturePluginAwareTrait;
 
     /**
      * @var bool
      */
     private bool $isContained = false;
-
-    private RoleActionAccessControlServiceInterface $roleActionAccessControlService;
 
     /**
      * @inheritDoc
@@ -44,7 +43,6 @@ class ContainPendingAccountRecoveryRequest implements EventListenerInterface
     public function implementedEvents(): array
     {
         return [
-            'Application.buildContainer' => 'setRoleActionAccessControlServiceInterface',
             'Controller.initialize' => 'setIsContained',
             TableFindIndexBefore::EVENT_NAME => 'containPendingAccountRecoveryRequest',
         ];
@@ -76,8 +74,12 @@ class ContainPendingAccountRecoveryRequest implements EventListenerInterface
             return;
         }
 
+        if (!$this->isFeaturePluginEnabled(RbacsPlugin::class)) {
+            return;
+        }
+
         try {
-            $this->roleActionAccessControlService->controlUserRoleActionAccess(
+            (new RbacsRoleActionAccessControlService())->controlUserRoleActionAccess(
                 $identity->role,
                 UuidFactory::uuid('AccountRecoveryRequestsView.view')
             );
@@ -112,17 +114,5 @@ class ContainPendingAccountRecoveryRequest implements EventListenerInterface
                 'PendingAccountRecoveryRequests.status',
             ]);
         });
-    }
-
-    /**
-     * @param \Cake\Event\EventInterface $event event triggered when the container is built
-     * @return void
-     */
-    public function setRoleActionAccessControlServiceInterface(EventInterface $event): void
-    {
-        /** @var \Cake\Core\Container $container */
-        $container = $event->getData('container');
-        $roleActionAccessControlService = $container->get(RoleActionAccessControlServiceInterface::class);
-        $this->roleActionAccessControlService = $roleActionAccessControlService;
     }
 }
