@@ -17,8 +17,13 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Roles;
 
+use App\Service\Roles\RolesUpdateService;
 use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
 use Passbolt\Rbacs\Test\Lib\RbacsIntegrationTestCase;
 
 /**
@@ -26,10 +31,17 @@ use Passbolt\Rbacs\Test\Lib\RbacsIntegrationTestCase;
  */
 class RolesUpdateControllerTest extends RbacsIntegrationTestCase
 {
+    use EmailQueueTrait;
+
     public function testRolesUpdateController_Success(): void
     {
+        // Enable event tracking, required to test events.
+        EventManager::instance()->setEventList(new EventList());
+
         $role = RoleFactory::make(['name' => 'sales'])->persist();
 
+        /** @var \App\Model\Entity\User $anotherAdmin */
+        $anotherAdmin = UserFactory::make()->admin()->persist();
         $admin = $this->logInAsAdmin();
         $this->putJson("/roles/$role->id.json", ['name' => 'growth']);
 
@@ -49,6 +61,13 @@ class RolesUpdateControllerTest extends RbacsIntegrationTestCase
         $expectedRole = RoleFactory::get($role->id);
         $this->assertSame('growth', $expectedRole->name);
         $this->assertSame($admin->id, $expectedRole->modified_by);
+        // Assert event fired
+        $this->assertEventFired(RolesUpdateService::AFTER_ROLE_UPDATE_SUCCESS_EVENT_NAME);
+        $this->assertEmailQueueCount(1);
+        $this->assertEmailInBatchContains([
+            $admin->profile->full_name . ' updated the role sales',
+            'The role sales has been renamed to growth.',
+        ], $anotherAdmin->username);
     }
 
     public function testRolesUpdateController_Success_Post(): void
@@ -70,6 +89,18 @@ class RolesUpdateControllerTest extends RbacsIntegrationTestCase
             'created',
             'modified',
         ], $response);
+    }
+
+    public function testRolesUpdateController_Success_SameName(): void
+    {
+        $role = RoleFactory::make(['name' => 'sales'])->persist();
+
+        UserFactory::make()->admin()->persist();
+        $this->logInAsAdmin();
+        $this->putJson("/roles/$role->id.json", ['name' => 'sales']);
+
+        $this->assertSuccess();
+        $this->assertEmailQueueCount(0);
     }
 
     public function testRolesUpdateController_Error_NotLoggedIn(): void

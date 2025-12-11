@@ -21,8 +21,10 @@ use App\Model\Rule\IsUniqueCaseInsensitive;
 use App\Model\Rule\Role\HasNoActiveUserAssociatedRule;
 use App\Model\Rule\Role\IsReservedRoleRule;
 use App\Model\Rule\Role\MaximumNumberOfRolesAllowedRule;
+use ArrayObject;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
+use Cake\Event\EventInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -81,6 +83,21 @@ class RolesTable extends Table
     }
 
     /**
+     * Trim whitespace from the role name before validation.
+     *
+     * @param \Cake\Event\EventInterface $event Event instance.
+     * @param \ArrayObject $data Data to be marshaled.
+     * @param \ArrayObject $options Options.
+     * @return void
+     */
+    public function beforeMarshal(EventInterface $event, ArrayObject $data, ArrayObject $options): void
+    {
+        if (isset($data['name']) && is_string($data['name'])) {
+            $data['name'] = trim($data['name']);
+        }
+    }
+
+    /**
      * Default validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
@@ -93,7 +110,7 @@ class RolesTable extends Table
             ->allowEmptyString('id', 'create');
 
         $validator
-            ->ascii('name', __('The name should be a valid ASCII string.'))
+            ->utf8('name', __('The name should be a valid BMP-UTF8 string.'))
             ->requirePresence('name', 'create')
             ->notEmptyString('name')
             ->maxLength('name', 50, __('The name should not be greater than 50 characters.'))

@@ -18,8 +18,12 @@ declare(strict_types=1);
 namespace Passbolt\Rbacs\Test\TestCase\Controller\Rbacs;
 
 use App\Test\Factory\RoleFactory;
+use Cake\Utility\Hash;
+use Passbolt\Log\Test\Factory\ActionFactory;
+use Passbolt\Rbacs\Model\Entity\Rbac;
 use Passbolt\Rbacs\Service\Rbacs\RbacsInsertDefaultsService;
 use Passbolt\Rbacs\Service\UiActions\UiActionsInsertDefaultsService;
+use Passbolt\Rbacs\Test\Factory\RbacFactory;
 use Passbolt\Rbacs\Test\Lib\RbacsIntegrationTestCase;
 
 /**
@@ -67,14 +71,22 @@ class RbacsViewControllerTest extends RbacsIntegrationTestCase
      */
     public function testRbacsViewController_Success_AsUser_Updated(): void
     {
-        RoleFactory::make()->user()->persist();
+        $user = $this->logInAsUser();
         RoleFactory::make()->admin()->persist();
         (new UiActionsInsertDefaultsService())->insertDefaultsIfNotExist();
         (new RbacsInsertDefaultsService())->allowAllUiActionsForUsers();
-        $this->logInAsUser();
+        $action = ActionFactory::make()->name('GroupsAdd.addPost')->persist();
+        RbacFactory::make()
+            ->setAction($action)
+            ->setField('role_id', $user->role_id)
+            ->persist();
         $this->getJson('/rbacs/me.json');
         $this->assertSuccess();
-        $this->assertTrue(count($this->_responseJsonBody) > 1);
+        $response = $this->getResponseBodyAsArray();
+        $this->assertTrue(count($response) > 1);
+        $foreignModels = Hash::extract($response, '{n}.foreign_model');
+        $this->assertContains(Rbac::FOREIGN_MODEL_ACTION, $foreignModels);
+        $this->assertContains(Rbac::FOREIGN_MODEL_UI_ACTION, $foreignModels);
     }
 
     /**

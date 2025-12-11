@@ -16,9 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\SecretRevisions;
 
+use App\Service\Command\ProcessUserService;
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
+use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
+use Passbolt\SecretRevisions\Command\PopulateCreatedByAndModifiedByInSecretsCommand;
+use Passbolt\SecretRevisions\Command\PopulateSecretRevisionsForExistingSecretsCommand;
 use Passbolt\SecretRevisions\Event\SecretRevisionsAfterResourceCreatedEventListener;
 
 class SecretRevisionsPlugin extends BasePlugin
@@ -32,5 +36,16 @@ class SecretRevisionsPlugin extends BasePlugin
         Configure::write('passbolt.plugins.secretRevisions.isInBeta', true);
 
         $app->getEventManager()->on(new SecretRevisionsAfterResourceCreatedEventListener());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        $container->add(PopulateCreatedByAndModifiedByInSecretsCommand::class)
+            ->addArgument(ProcessUserService::class);
+        $container->add(PopulateSecretRevisionsForExistingSecretsCommand::class)
+            ->addArgument(ProcessUserService::class);
     }
 }

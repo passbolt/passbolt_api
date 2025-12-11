@@ -19,6 +19,8 @@ namespace App\Test\TestCase\Controller\Roles;
 
 use App\Service\Roles\RolesAddService;
 use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
+use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Passbolt\Rbacs\Test\Lib\RbacsIntegrationTestCase;
@@ -28,12 +30,16 @@ use Passbolt\Rbacs\Test\Lib\RbacsIntegrationTestCase;
  */
 class RolesAddControllerTest extends RbacsIntegrationTestCase
 {
+    use EmailQueueTrait;
+
     public function testRolesAddController_Success(): void
     {
         // Enable event tracking, required to test events.
         EventManager::instance()->setEventList(new EventList());
 
-        $this->logInAsAdmin();
+        /** @var \App\Model\Entity\User $anotherAdmin */
+        $anotherAdmin = UserFactory::make()->admin()->persist();
+        $admin = $this->logInAsAdmin();
         $this->postJson('/roles.json', ['name' => 'sales']);
 
         $this->assertSuccess();
@@ -47,6 +53,11 @@ class RolesAddControllerTest extends RbacsIntegrationTestCase
         ], $response);
         // Assert event fired
         $this->assertEventFired(RolesAddService::AFTER_ROLE_CREATE_SUCCESS_EVENT_NAME);
+        $this->assertEmailQueueCount(1);
+        $this->assertEmailInBatchContains([
+            $admin->profile->full_name . ' created a new role sales',
+            'A new role sales has been created.',
+        ], $anotherAdmin->username);
     }
 
     public function testRolesAddController_Error_NotLoggedIn(): void

@@ -71,7 +71,7 @@ class ResourcesUpdateController extends AppController
         }
         /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = $this->fetchTable('Resources');
-        $resource = $resourcesTable->findView($this->User->id(), $resource->id, $options)->first();
+        $resource = $resourcesTable->findView($this->User->id(), $resource->id, $options)->firstOrFail();
         $resource = FolderizableBehavior::unsetPersonalPropertyIfNull($resource->toArray());
         $resource = (new MetadataResourcesRenderService())->renderResource($resource, $resourceDto->isV5());
 

@@ -47,7 +47,7 @@ echo $this->element('Email/module/avatar', [
     ]),
 ]);
 
-$text = __('{0} changed your role to {1}.', $operatorFullName, $user['role']['name']);
+$text = __('{0} changed your role to {1}.', $operatorFullName, Purifier::clean($user['role']['name']));
 
 if (Configure::read(UserAdminRoleRevokedEmailRedactor::CONFIG_KEY_SEND_USER_EMAIL) && $isAdminRoleRevoked) {
     $text .= ' ';
