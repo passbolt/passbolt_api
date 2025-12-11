@@ -93,12 +93,8 @@ class RolesUpdateServiceTest extends AppTestCase
                 'name._empty',
             ],
             [
-                ['name' => '👍'], // name not ascii
-                'name.ascii',
-            ],
-            [
                 ['name' => []], // name not a string
-                'name.ascii',
+                'name.utf8',
             ],
             [
                 ['name' => 'admin'], // name is not unique

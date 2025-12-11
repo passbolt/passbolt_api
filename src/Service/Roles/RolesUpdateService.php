@@ -34,6 +34,8 @@ class RolesUpdateService
 {
     use EventDispatcherTrait;
 
+    public const AFTER_ROLE_UPDATE_SUCCESS_EVENT_NAME = 'Role.afterUpdate.success';
+
     private ?RolesTable $Roles;
 
     /**
@@ -55,6 +57,7 @@ class RolesUpdateService
         $uac->assertIsAdmin();
 
         $role = $this->getRole($roleId);
+        $oldName = $role->name;
         $role = $this->patchRoleEntity($role, $data, $uac);
 
         try {
@@ -69,6 +72,12 @@ class RolesUpdateService
         } catch (Exception $e) {
             throw new InternalErrorException(__('Could not update the role, please try again later.'), null, $e);
         }
+
+        $this->dispatchEvent(self::AFTER_ROLE_UPDATE_SUCCESS_EVENT_NAME, [
+            'uac' => $uac,
+            'role' => $result,
+            'oldName' => $oldName,
+        ]);
 
         return $result;
     }
