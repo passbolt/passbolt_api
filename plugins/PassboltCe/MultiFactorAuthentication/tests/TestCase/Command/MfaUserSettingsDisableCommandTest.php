@@ -16,12 +16,14 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Command;
 
+use App\Model\Table\UsersTable;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use App\Utility\UserAccessControl;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Core\Configure;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\MultiFactorAuthentication\MultiFactorAuthenticationPlugin;
@@ -64,6 +66,19 @@ class MfaUserSettingsDisableCommandTest extends AppTestCase
     }
 
     /**
+     * @Given the MFA plugin is disabled
+     * @When I run "passbolt MfaUserSettingsDisableCommand"
+     * @Then the command is not found
+     */
+    public function testMfaUserSettingsDisableCommandErrorPluginDisabled()
+    {
+        $this->disableFeaturePlugin(MultiFactorAuthenticationPlugin::class);
+        $this->exec('passbolt mfa_user_settings_disable --user-username john.doe@passbolt.com');
+        $this->assertExitError();
+        $this->assertErrorContains('Error: Unknown option `user-username`.');
+    }
+
+    /**
      * @Given I am root
      * @When I run "passbolt MfaUserSettingsDisableCommand"
      * @Then the command cannot be run.
@@ -83,7 +98,7 @@ class MfaUserSettingsDisableCommandTest extends AppTestCase
     public function testMfaUserSettingsDisableCommandAsNonRoot()
     {
         /** @var \App\Model\Entity\User $user */
-        $user = UserFactory::make()->user()->active()->persist();
+        $user = UserFactory::make()->user()->active()->withProfileName('John', 'Doe')->persist();
 
         // MFA org settings
         $orgSettings = ['providers' => [MfaSettings::PROVIDER_TOTP => true]];
@@ -116,8 +131,77 @@ class MfaUserSettingsDisableCommandTest extends AppTestCase
 
         // an email should be in the queue
         $this->assertEmailQueueCount(1);
-        $this->assertEmailWithRecipientIsInQueue($user->get('username'));
-        $this->assertEmailInBatchContains(['Your multi-factor authentication settings were reset by you']);
+        $this->assertEmailInBatchContains([ 'John Doe', 'Your multi-factor authentication settings were reset by you', ], $user->get('username'));
+    }
+
+    /**
+     * @Given username case sensitivity is enabled
+     * @When two users exist with the same username but different casing
+     * @And I run the disable command for one of them
+     * @Then the correct user's MFA is disabled
+     */
+    public function testMfaUserSettingsDisableCommandCaseSensitiveUserSelection()
+    {
+        Configure::write(UsersTable::PASSBOLT_SECURITY_USERNAME_CASE_SENSITIVE, true);
+
+        // 2 users with same username but different case
+        /** @var \App\Model\Entity\User $userUpper */
+        $userUpper = UserFactory::make()->setField('username', 'John.Doe@passbolt.com')->user()->active()->persist();
+        /** @var \App\Model\Entity\User $userLower */
+        $userLower = UserFactory::make()->setField('username', 'john.doe@passbolt.com')->user()->active()->persist();
+
+        // MFA org settings
+        $orgSettings = ['providers' => [MfaSettings::PROVIDER_TOTP => true]];
+        $this->mockMfaOrgSettings($orgSettings, 'configure');
+        $accountSettingsUpper = [
+            MfaSettings::PROVIDERS => [
+                MfaSettings::PROVIDER_TOTP,
+            ],
+            MfaSettings::PROVIDER_TOTP => [
+                MfaAccountSettings::VERIFIED => DateTime::now(),
+                MfaAccountSettings::OTP_PROVISIONING_URI => MfaOtpFactory::generateTOTP(
+                    new UserAccessControl(
+                        $userUpper->get('role')->get('name'),
+                        $userUpper->get('id'),
+                        $userUpper->get('username'),
+                    )
+                ),
+            ],
+        ];
+        $accountSettingsLower = [
+            MfaSettings::PROVIDERS => [
+                MfaSettings::PROVIDER_TOTP,
+            ],
+            MfaSettings::PROVIDER_TOTP => [
+                MfaAccountSettings::VERIFIED => DateTime::now(),
+                MfaAccountSettings::OTP_PROVISIONING_URI => MfaOtpFactory::generateTOTP(
+                    new UserAccessControl(
+                        $userLower->get('role')->get('name'),
+                        $userLower->get('id'),
+                        $userLower->get('username'),
+                    )
+                ),
+            ],
+        ];
+        $dataUpper = json_encode($accountSettingsUpper);
+        $dataLower = json_encode($accountSettingsLower);
+        /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */
+        $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
+        $AccountSettings->createOrUpdateSetting($userUpper->get('id'), MfaSettings::MFA, $dataUpper);
+        $AccountSettings->createOrUpdateSetting($userLower->get('id'), MfaSettings::MFA, $dataLower);
+
+        $options = " --user-username $userUpper->username";
+        $this->exec('passbolt mfa_user_settings_disable' . $options);
+        $this->assertExitSuccess();
+
+        $this->assertOutputContains('has been disabled');
+
+        // Assert that upper user is disabled and lower is not in the DB
+        $upperMfa = $AccountSettings->getByProperty($userUpper->get('id'), MfaSettings::MFA);
+        $this->assertNull($upperMfa, 'Expected the MFA settings to be deleted for the upper-case user.');
+
+        $lowerMfa = $AccountSettings->getByProperty($userLower->get('id'), MfaSettings::MFA);
+        $this->assertNotNull($lowerMfa, 'Expected the MFA settings to not be deleted for the lower-case user.');
     }
 
     /**

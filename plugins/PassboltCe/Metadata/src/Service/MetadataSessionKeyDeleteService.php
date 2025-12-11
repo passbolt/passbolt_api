@@ -51,11 +51,23 @@ class MetadataSessionKeyDeleteService
                 ->where(['id' => $id, 'user_id' => $uac->getId()])
                 ->firstOrFail();
         } catch (RecordNotFoundException $e) {
-            throw new NotFoundException(__('The metadata session key does not exist or does not belong to this user.'));
+            throw new NotFoundException(__('The metadata session key does not exist or does not belong to this user.')); // phpcs:ignore
         }
 
-        if (!$metadataSessionKeysTable->delete($metadataSessionKey)) {
-            throw new InternalErrorException(__('The metadata session key could not be deleted.'));
+        if ($metadataSessionKeysTable->delete($metadataSessionKey)) {
+            return;
         }
+
+        // In scenarios where requests are sent twice delete can fail.
+        // Check for the record again and if it doesn't exist then throw 404. If present and delete fail then throw a 500.
+        $exists = $metadataSessionKeysTable
+            ->find()
+            ->select(['id'])
+            ->where(['id' => $id, 'user_id' => $uac->getId()])
+            ->first();
+
+        $exists
+            ? throw new InternalErrorException(__('The metadata session key could not be deleted.'))
+            : throw new NotFoundException(__('The metadata session key does not exist or does not belong to this user.')); // phpcs:ignore
     }
 }

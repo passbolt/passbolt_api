@@ -17,6 +17,7 @@ namespace Passbolt\Log\Test\Factory;
  * @since         4.0.0
  */
 
+use App\Utility\UuidFactory;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -53,5 +54,16 @@ class ActionFactory extends CakephpBaseFactory
                 'name' => $faker->text(100),
             ];
         });
+    }
+
+    /**
+     * @return self
+     */
+    public function name(string $name): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid($name),
+            'name' => $name,
+        ]);
     }
 }

@@ -21,11 +21,16 @@ trait RolesModelTrait
     /**
      * Asserts that an object has all the attributes a role should have.
      *
-     * @param object $roles
+     * @param object|array $roles
      */
     protected function assertRoleAttributes($roles)
     {
-        $attributes = ['id', 'name', 'description', 'created', 'modified'];
-        $this->assertObjectHasAttributes($attributes, $roles);
+        $attributes = ['id', 'name', 'description', 'created', 'modified', 'deleted', 'created_by', 'modified_by', 'deleted_by'];
+
+        if (is_array($roles)) {
+            $this->assertArrayHasAttributes($attributes, $roles);
+        } else {
+            $this->assertObjectHasAttributes($attributes, $roles);
+        }
     }
 }

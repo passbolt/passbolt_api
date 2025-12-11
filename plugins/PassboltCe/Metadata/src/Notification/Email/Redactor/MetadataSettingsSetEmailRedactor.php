@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Notification\Email\Redactor;
 
 use App\Model\Entity\User;
 use App\Model\Table\AvatarsTable;
+use App\Model\Table\ResourcesTable;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
@@ -46,11 +47,17 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
     protected UsersTable $Users;
 
     /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected ResourcesTable $Resources;
+
+    /**
      * MetadataSettingsSetEmailRedactor constructor.
      */
     public function __construct()
     {
         $this->Users = $this->fetchTable('Users');
+        $this->Resources = $this->fetchTable('Resources');
     }
 
     /**
@@ -86,14 +93,20 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
         /** @var \Passbolt\Metadata\Model\Dto\MetadataSettingsDto $dto */
         $dto = $event->getData('dto');
 
-        $modifier = $this->Users->findFirstForEmail($uac->getId());
-        /** @var array<\App\Model\Entity\User> $admins */
-        $admins = $this->Users
-            ->findAdmins()
+        $admins = $this->Users->findAdmins();
+        $resourcesCount = $this->Resources->find()->count();
+        // Do not send email if metadata is enabled on the first setup
+        if ($admins->count() === 1 && $resourcesCount === 0) {
+            return $emailCollection;
+        }
+
+        $admins = $admins
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
             ->find('notDisabled')
             ->find('locale');
+        $modifier = $this->Users->findFirstForEmail($uac->getId());
 
+        /** @var array<\App\Model\Entity\User> $admins */
         foreach ($admins as $recipient) {
             $email = $this->createEmail($recipient, $modifier, $dto);
             $emailCollection->addEmail($email);

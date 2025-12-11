@@ -289,7 +289,7 @@ class SaveTest extends AppTestCase
         $errors = $entity->getErrors();
 
         $this->assertNotEmpty($errors);
-        $this->assertNotNull($errors['role_id']['validRole']);
+        $this->assertSame('The role does not exist.', $errors['role_id']['_existsIn']);
     }
 
     public function testRuleRoleIdShouldNotBeGuest()
@@ -311,5 +311,26 @@ class SaveTest extends AppTestCase
 
         $this->assertNotEmpty($errors);
         $this->assertNotNull($errors['role_id']['validRole']);
+    }
+
+    public function testRuleRoleIdShouldNotBeSoftDeleted()
+    {
+        $deletedRole = RoleFactory::make()->deleted()->persist();
+        $data = self::getDummyUser([
+            'role_id' => $deletedRole->get('id'),
+        ]);
+
+        $options = self::getEntityDefaultOptions();
+
+        $entity = $this->Users->newEntity($data, $options);
+
+        $save = $this->Users->save($entity);
+
+        $this->assertFalse($save);
+
+        $errors = $entity->getErrors();
+
+        $this->assertNotEmpty($errors);
+        $this->assertSame('The role does not exist.', $errors['role_id']['roleIsNotSoftDeleted']);
     }
 }

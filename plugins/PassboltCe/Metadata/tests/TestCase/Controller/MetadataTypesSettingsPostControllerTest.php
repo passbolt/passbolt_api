@@ -85,6 +85,27 @@ class MetadataTypesSettingsPostControllerTest extends AppIntegrationTestCaseV5
         $this->assertEmailInBatchContains($loggedInUser->profile->last_name . ' edited the metadata settings', $otherAdmin->username);
     }
 
+    public function testMetadataTypesSettingsPostController_Success_InitialSetupShouldNotTriggerEmail(): void
+    {
+        // Create an active metadata key
+        MetadataKeyFactory::make()->persist();
+        $loggedInUser = UserFactory::make()->admin()->persist();
+
+        $this->logInAs($loggedInUser);
+        $data = array_merge(MetadataTypesSettingsFactory::getDefaultDataV4(), [
+            MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE => 'v5',
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => true,
+            MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE => true,
+        ]);
+        $this->postJson('/metadata/types/settings.json', $data);
+
+        $this->assertSuccess();
+        $this->assertEquals(1, OrganizationSettingFactory::count());
+        // Assert that no email sent on first setup
+        $this->assertEmailQueueCount(0);
+    }
+
     public function testMetadataTypesSettingsPostController_Error_AuthenticationNeeded()
     {
         $this->postJson('/metadata/types/settings.json', []);

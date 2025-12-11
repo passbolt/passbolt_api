@@ -31,10 +31,9 @@ class RbacsUpdateController extends AppController
         $this->assertJson();
         $this->User->assertIsAdmin();
         $this->assertNotEmptyArrayData();
-        $collection = new RbacsUpdateDtoCollection($this->getRequest()->getData());
 
-        $results = (new RbacsUpdateService())
-            ->update($this->User->getAccessControl(), $collection);
+        $collection = new RbacsUpdateDtoCollection($this->getRequest()->getData());
+        $results = (new RbacsUpdateService())->update($this->User->getAccessControl(), $collection);
 
         $this->success(__('The operation was successful.'), $results);
     }

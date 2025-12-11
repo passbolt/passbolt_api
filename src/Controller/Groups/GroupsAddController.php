@@ -18,8 +18,9 @@ declare(strict_types=1);
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
-use Cake\Http\Exception\ForbiddenException;
+use App\Utility\UserAction;
 use Cake\Utility\Hash;
+use Passbolt\Rbacs\Service\ActionAccessControl\RoleActionAccessControlServiceInterface;
 
 /**
  * GroupsAddController Class
@@ -35,13 +36,13 @@ class GroupsAddController extends AppController
      * @throws \Cake\Http\Exception\InternalErrorException if the group can't be saved for some reason
      * @return void
      */
-    public function addPost()
+    public function addPost(RoleActionAccessControlServiceInterface $accessControlService)
     {
         $this->assertJson();
-
-        if (!$this->User->isAdmin()) {
-            throw new ForbiddenException();
-        }
+        $accessControlService->controlUserRoleActionAccess(
+            $this->User->getRoleEntity(),
+            UserAction::getInstance()->getActionId()
+        );
 
         $data = $this->_formatRequestData();
         /** @var \App\Model\Table\GroupsTable $GroupsTable */

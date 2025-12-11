@@ -24,6 +24,10 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string $name
  * @property string|null $description
+ * @property string|null $created_by
+ * @property string|null $modified_by
+ * @property string|null $deleted_by
+ * @property \Cake\I18n\DateTime|null $deleted
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
  *
@@ -36,6 +40,7 @@ class Role extends Entity
     public const GUEST = 'guest';
     public const USER = 'user';
     public const ADMIN = 'admin';
+    public const ROOT = 'root';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -50,6 +55,10 @@ class Role extends Entity
         'id' => false,
         'name' => false,
         'description' => false,
+        'deleted' => false,
+        'created_by' => false,
+        'modified_by' => false,
+        'deleted_by' => false,
         'created' => false,
         'modified' => false,
     ];

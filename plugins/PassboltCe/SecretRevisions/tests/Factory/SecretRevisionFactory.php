@@ -16,9 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\SecretRevisions\Test\Factory;
 
+use App\Utility\UuidFactory;
+use Cake\Chronos\Chronos;
 use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * SecretRevisionFactory
@@ -48,14 +52,16 @@ class SecretRevisionFactory extends CakephpBaseFactory
         $this->setDefaultData(function (Generator $faker) {
             return [
                 'resource_id' => $faker->uuid(),
-                'resource_type_id' => $faker->uuid(),
+                'resource_type_id' => UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_PASSWORD_AND_DESCRIPTION),
                 'deleted' => null,
-                'created_id' => $faker->uuid(),
-                'modified_id' => $faker->uuid(),
-                'created' => DateTime::now()->subDays($faker->randomNumber(4)),
-                'modified' => DateTime::now()->subDays($faker->randomNumber(4)),
+                'created_by' => $faker->uuid(),
+                'modified_by' => $faker->uuid(),
+                'created' => Chronos::now(),
+                'modified' => Chronos::now(),
             ];
         });
+
+        $this->with('ResourceTypes', ResourceTypeFactory::make()->passwordAndDescription());
     }
 
     /**

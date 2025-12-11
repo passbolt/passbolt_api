@@ -21,6 +21,7 @@ use App\Test\Factory\GroupFactory;
 use App\Test\Factory\GroupsUserFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
 
@@ -29,12 +30,14 @@ use Cake\Utility\Hash;
  */
 class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
 {
+    use EmailQueueTrait;
+
     /**
      * @dataProvider groupAddSuccessRequestDataProvider
      */
     public function testGroupsAddController_Success($name, $groupsUsers): void
     {
-        $this->logInAsAdmin();
+        $admin = $this->logInAsAdmin();
 
         $data = ['name' => $name, 'groups_users' => $groupsUsers()];
         $this->postJson('/groups.json', $data);
@@ -55,6 +58,11 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
             $isAdmin = Hash::get((array)$dataGroupUser, 'is_admin', false);
             $this->assertEquals($isAdmin, $groupUser[0]->is_admin);
         }
+
+        $this->assertEmailQueueCount(count($groupsUsers()));
+        $this->assertEmailInBatchContains([
+            $admin->profile->first_name . ' added you to the group ' . $group->name,
+        ]);
     }
 
     public function testGroupAddController_Success_Legacy(): void
@@ -99,7 +107,7 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
     {
         $this->logInAsUser();
         $this->postJson('/groups.json', []);
-        $this->assertForbiddenError();
+        $this->assertForbiddenError('You are not authorized to access that location.');
     }
 
     public function testGroupAddController_Error_NotAuthenticated(): void

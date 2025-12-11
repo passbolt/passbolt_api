@@ -30,7 +30,7 @@ class SelfRegistrationBaseSettingsFormTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->form = $this->getMockForAbstractClass(SelfRegistrationBaseSettingsForm::class);
+        $this->form = new SelfRegistrationBaseSettingsForm();
     }
 
     public function tearDown(): void

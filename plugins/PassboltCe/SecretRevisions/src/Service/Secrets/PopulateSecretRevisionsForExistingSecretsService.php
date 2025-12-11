@@ -19,6 +19,7 @@ namespace Passbolt\SecretRevisions\Service\Secrets;
 use App\Model\Table\ResourcesTable;
 use App\Model\Table\SecretsTable;
 use Cake\Database\Expression\IdentifierExpression;
+use Cake\Datasource\ConnectionManager;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Text;
@@ -27,6 +28,11 @@ use Passbolt\SecretRevisions\Model\Table\SecretRevisionsTable;
 
 class PopulateSecretRevisionsForExistingSecretsService
 {
+    /**
+     * Default number of records to process per batch to limit memory usage.
+     */
+    public const DEFAULT_BATCH_SIZE = 1000;
+
     private ResourcesTable $ResourcesTable;
 
     private EntitiesHistoryTable $EntitiesHistoryTable;
@@ -35,15 +41,20 @@ class PopulateSecretRevisionsForExistingSecretsService
 
     private SecretsTable $SecretsTable;
 
+    private int $batchSize;
+
     /**
      * Constructor.
+     *
+     * @param int|null $batchSize Number of records to process per batch. Defaults to DEFAULT_BATCH_SIZE.
      */
-    public function __construct()
+    public function __construct(?int $batchSize = null)
     {
         $this->ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $this->EntitiesHistoryTable = TableRegistry::getTableLocator()->get('Passbolt/Log.EntitiesHistory');
         $this->SecretRevisions = TableRegistry::getTableLocator()->get('Passbolt/SecretRevisions.SecretRevisions');
         $this->SecretsTable = TableRegistry::getTableLocator()->get('Secrets');
+        $this->batchSize = $batchSize ?? self::DEFAULT_BATCH_SIZE;
     }
 
     /**
@@ -88,10 +99,11 @@ class PopulateSecretRevisionsForExistingSecretsService
             ->orderByDesc('EntitiesHistory.created')
             ->limit(1);
 
-        // Select resources to insert
+        // Select resources to insert - use cursor-based iteration instead of loading all into memory
         $fn = $this->ResourcesTable->find()->func();
         $resourcesSelectQuery = $this->ResourcesTable
             ->find()
+            ->disableHydration()
             ->select([
                 'Resources.id',
                 'Resources.resource_type_id',
@@ -110,31 +122,41 @@ class PopulateSecretRevisionsForExistingSecretsService
                 'Resources.deleted' => false,
                 // Only select resources without secret revisions
                 $this->ResourcesTable->find()->newExpr()->isNull('SecretRevisions.resource_id'),
-            ])
-            ->all();
+            ]);
 
-        if ($resourcesSelectQuery->count() < 1) {
-            return 0;
-        }
+        /** @var \Cake\Database\Connection $connection */
+        $connection = ConnectionManager::get('default');
+        $totalRowsAdded = 0;
+        $batchCount = 0;
+        $maxExecutionTime = (int)ini_get('max_execution_time');
 
-        // Insert secret revisions
-        $insertQuery = $this->SecretRevisions->insertQuery();
-        $insertQuery = $insertQuery
-            ->insert(['id', 'resource_id', 'resource_type_id', 'created', 'modified', 'created_by', 'modified_by']);
-
+        $connection->begin();
         foreach ($resourcesSelectQuery as $resource) {
-            $insertQuery->values([
+            $connection->insert('secret_revisions', [
                 'id' => Text::uuid(),
-                'resource_id' => $resource->get('id'),
-                'resource_type_id' => $resource->get('resource_type_id'),
+                'resource_id' => $resource['id'],
+                'resource_type_id' => $resource['resource_type_id'],
                 'created' => DateTime::now()->format('Y-m-d H:i:s'),
                 'modified' => DateTime::now()->format('Y-m-d H:i:s'),
-                'created_by' => $resource->get('created_by'),
-                'modified_by' => $resource->get('modified_by'),
+                'created_by' => $resource['created_by'],
+                'modified_by' => $resource['modified_by'],
             ]);
-        }
 
-        return $insertQuery->execute()->rowCount();
+            $totalRowsAdded++;
+            $batchCount++;
+
+            // Commit and restart transaction every "batchSize" no. of rows
+            if ($batchCount >= $this->batchSize) {
+                $connection->commit();
+                $connection->begin();
+                $batchCount = 0;
+                // reset limit
+                set_time_limit($maxExecutionTime);
+            }
+        }
+        $connection->commit();
+
+        return $totalRowsAdded;
     }
 
     /**

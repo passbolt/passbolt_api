@@ -240,11 +240,6 @@ trait UsersFindersTrait
 
         $query = $event->getQuery();
 
-        // Options must contain a role
-        if (!$this->Roles->isValidRoleName($role)) {
-            throw new InvalidArgumentException('The role name is not valid.');
-        }
-
         // Default associated data
         $containDefault = [
             'gpgkey' => true, 'profile' => true, 'groups_users' => true, 'role' => true,
@@ -330,9 +325,6 @@ trait UsersFindersTrait
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
-        if (!$this->Roles->isValidRoleName($roleName)) {
-            throw new InvalidArgumentException('The role name is not valid.');
-        }
 
         // Same rule than index apply with a specific id requested
         return $this->findIndex($roleName)->where(['Users.id' => $userId]);
@@ -350,9 +342,6 @@ trait UsersFindersTrait
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
-        }
-        if (!$this->Roles->isValidRoleName($roleName)) {
-            throw new InvalidArgumentException('The role name is not valid.');
         }
 
         return $this->findIndex($roleName)->where(['Users.id' => $userId]);
@@ -382,6 +371,27 @@ trait UsersFindersTrait
     }
 
     /**
+     * Active, non-deleted and not disables users only with role contained
+     * This finder is used to retrieve the user from the user ID stored in session
+     *
+     * @param \Cake\ORM\Query\SelectQuery $query Query to carve.
+     * @return \Cake\ORM\Query\SelectQuery
+     */
+    public function findAuthIdentifier(SelectQuery $query): SelectQuery
+    {
+        return $query
+            ->find('activeNotDeletedContainRole')
+            ->find('notDisabled')
+            ->select([
+                'Users.id',
+                'Users.role_id',
+                'Users.username',
+                'Roles.id',
+                'Roles.name',
+            ]);
+    }
+
+    /**
      * Build the query that fetches a user by username
      * including role and profile
      *
@@ -398,7 +408,7 @@ trait UsersFindersTrait
 
         // show active first and do not count deleted ones
         return $this->findByUsernameCaseAware($username)
-            ->where(['deleted' => false])
+            ->where([$this->aliasField('deleted') => false])
             ->contain([
                 'Roles',
                 'Profiles' => AvatarsTable::addContainAvatar(),
@@ -458,7 +468,7 @@ trait UsersFindersTrait
             ->find()
             // MAX() here is just to make MySQL happy without that query breaks in MySQL(especially in 5.7)
             ->select(['lower_username' => 'MAX(LOWER(Users.username))'])
-            ->where(['deleted' => false])
+            ->where([$this->aliasField('deleted') => false])
             ->groupBy('LOWER(Users.username)')
             ->having('count(*) > 1');
 
@@ -467,7 +477,7 @@ trait UsersFindersTrait
             ->select(['id', 'username'])
             ->where([
                 'LOWER(username) IN' => $subQueryOfLowerCasedUsernameDuplicates,
-                'deleted' => false,
+                $this->aliasField('deleted') => false,
             ])
             ->orderByAsc('LOWER(username)');
     }
@@ -657,8 +667,8 @@ trait UsersFindersTrait
     public function findActiveNotDeleted(SelectQuery $query): SelectQuery
     {
         return $query->where([
-            $this->aliasField('active') => true,
-            $this->aliasField('deleted') => false,
+            $this->aliasField($this->aliasField('active')) => true,
+            $this->aliasField($this->aliasField('deleted')) => false,
         ]);
     }
 

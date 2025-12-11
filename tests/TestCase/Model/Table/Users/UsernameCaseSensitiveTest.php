@@ -89,13 +89,14 @@ class UsernameCaseSensitiveTest extends TestCase
 
     public function testUsernameCaseSensitive_Case_Insensitive_Same_Username_And_User_Deleted_Should_Succeed()
     {
+        $role = RoleFactory::make()->persist();
         /** @var \App\Model\Entity\User $user1 */
-        $user1 = UserFactory::make()->user()->deleted()->persist();
-        $role = $user1->role;
+        $user1 = UserFactory::make(['role_id' => $role->id])->deleted()->persist();
         $user2 = UserFactory::make()
             ->setField('role_id', $role->id)
-            ->setField('username', $user1->username)->getEntity();
-
+            ->setField('username', $user1->username)
+            ->getEntity();
+        unset($user2->role);
         $result = $this->Users->save($user2);
         $this->assertUserSaveSuccess($result);
     }
@@ -109,7 +110,7 @@ class UsernameCaseSensitiveTest extends TestCase
         $user2 = UserFactory::make()
             ->setField('role_id', $role->id)
             ->setField('username', strtoupper($user1->username))->getEntity();
-
+        unset($user2->role);
         $result = $this->Users->save($user2);
         $this->assertUserSaveSuccess($result);
     }

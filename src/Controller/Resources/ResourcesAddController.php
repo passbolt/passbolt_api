@@ -69,7 +69,7 @@ class ResourcesAddController extends AppController
 
         /** @var \App\Model\Table\ResourcesTable $Resources */
         $Resources = $this->fetchTable('Resources');
-        $resource = $Resources->findView($this->User->id(), $resource->id, $options)->first();
+        $resource = $Resources->findView($this->User->id(), $resource->id, $options)->firstOrFail();
         $resource = FolderizableBehavior::unsetPersonalPropertyIfNull($resource->toArray());
         $resource = (new MetadataResourcesRenderService())->renderResource($resource, $resourceDto->isV5());
 

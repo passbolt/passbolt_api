@@ -142,6 +142,52 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
         $this->assertSuccess();
     }
 
+    public function testMetadataKeyCreateController_Success_InitialSetupShouldNotTriggerEmail(): void
+    {
+        $keyInfo = $this->getUserKeyInfo();
+        $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', $gpgkey)
+            ->admin()
+            ->active()
+            ->persist();
+        $this->logInAs($user);
+
+        $dummyKey = $this->getMetadataKeyInfo();
+        $fingerprint = $dummyKey['fingerprint'];
+        $this->postJson('/metadata/keys.json', [
+            'armored_key' => $dummyKey['public_key'],
+            'fingerprint' => $fingerprint,
+            'metadata_private_keys' => [
+                [
+                    'user_id' => null, // server key
+                    'data' => $this->getEncryptedMetadataPrivateKeyForServerKey(),
+                ],
+                [
+                    'user_id' => $user['id'],
+                    'data' => $this->getEncryptedMetadataPrivateKeyForUser(),
+                ],
+            ],
+        ]);
+
+        $this->assertSuccess();
+        $response = $this->getResponseBodyAsArray();
+        $this->assertArrayHasAttributes([
+            'id',
+            'fingerprint',
+            'armored_key',
+            'created_by',
+            'modified_by',
+            'created',
+            'modified',
+            'metadata_private_keys',
+        ], $response);
+        $this->assertSame(1, MetadataKeyFactory::find()->count());
+        // Assert that no email sent on first setup
+        $this->assertEmailQueueCount(0);
+    }
+
     public function testMetadataKeyCreateController_Error_AuthenticationRequired()
     {
         $this->postJson('/metadata/keys.json');

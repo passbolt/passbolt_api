@@ -35,9 +35,8 @@ class UsersAddControllerTest extends AppIntegrationTestCase
     {
         RoleFactory::make()->guest()->persist();
         RoleFactory::make()->user()->persist();
-        $admin = UserFactory::make()->admin()->persist();
 
-        $this->logInAs($admin);
+        $this->loginAsAdmin();
         $roles = TableRegistry::getTableLocator()->get('Roles');
         $adminRoleId = $roles->getIdByName(Role::ADMIN);
         $userRoleId = $roles->getIdByName(Role::USER);
@@ -98,9 +97,8 @@ class UsersAddControllerTest extends AppIntegrationTestCase
     {
         RoleFactory::make()->guest()->persist();
         RoleFactory::make()->user()->persist();
-        $admin = UserFactory::make()->admin()->persist();
 
-        $this->logInAs($admin);
+        $this->loginAsAdmin();
         $date = '1983-04-01 23:34:45';
         $userId = UuidFactory::uuid('user.id.aurore');
 
@@ -135,9 +133,8 @@ class UsersAddControllerTest extends AppIntegrationTestCase
     {
         RoleFactory::make()->guest()->persist();
         RoleFactory::make()->user()->persist();
-        $admin = UserFactory::make()->admin()->persist();
 
-        $this->logInAs($admin);
+        $this->loginAsAdmin();
         $data = [
             'username' => 'aurore@passbolt.com',
             'profile' => [
@@ -157,9 +154,6 @@ class UsersAddControllerTest extends AppIntegrationTestCase
 
     public function testUsersAddController_Error_NotLoggedIn(): void
     {
-        RoleFactory::make()->guest()->persist();
-        RoleFactory::make()->user()->persist();
-        UserFactory::make()->admin()->persist();
         $data = [
             'username' => 'notallowed@passbolt.com',
             'profile' => [
@@ -192,9 +186,8 @@ class UsersAddControllerTest extends AppIntegrationTestCase
     {
         $this->disableCsrfToken();
         RoleFactory::make()->guest()->persist();
-        $admin = UserFactory::make()->admin()->persist();
 
-        $this->logInAs($admin);
+        $this->loginAsAdmin();
         $this->post('/users.json');
         $this->assertResponseCode(403);
     }
@@ -202,8 +195,6 @@ class UsersAddControllerTest extends AppIntegrationTestCase
     public function testUsersAddController_Error_Role_ID_Is_Guest(): void
     {
         $guest = RoleFactory::make()->guest()->persist();
-        RoleFactory::make()->user()->persist();
-        UserFactory::make()->admin()->persist();
         $data = [
             'username' => 'john@passbolt.com',
             'role_id' => $guest->get('id'),
@@ -215,16 +206,15 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->logInAsAdmin();
         $this->postJson('/users.json', $data);
         $this->assertBadRequestError('Could not validate user data.');
-        $this->assertResponseContains('The user role ID must be one of the admin or user roles.');
+        $this->assertResponseContains('The user role ID must not be of the guest role.');
     }
 
     public function testUsersAddController_Error_RequestDataApiUserExist(): void
     {
         RoleFactory::make()->guest()->persist();
         $user = RoleFactory::make()->user()->persist();
-        $admin = UserFactory::make()->admin()->persist();
 
-        $this->logInAs($admin);
+        $this->loginAsAdmin();
         $data = [
             'username' => $user->username,
             'profile' => [
@@ -243,9 +233,8 @@ class UsersAddControllerTest extends AppIntegrationTestCase
     {
         RoleFactory::make()->guest()->persist();
         RoleFactory::make()->user()->persist();
-        $admin = UserFactory::make()->admin()->persist();
 
-        $this->logInAs($admin);
+        $this->loginAsAdmin();
         $data = [
             'username' => 'ada@passbolt.com',
             'profile' => [
@@ -255,5 +244,45 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         ];
         $this->post('/users', $data);
         $this->assertResponseCode(404);
+    }
+
+    public function testUsersAddController_Custom_Role_Success(): void
+    {
+        RoleFactory::make()->guest()->persist();
+        $role = RoleFactory::make()->persist();
+
+        $this->logInAsAdmin();
+        $data = [
+            'username' => 'ada@passbolt.com',
+            'profile' => [
+                'first_name' => 'ada',
+                'last_name' => 'lovelace',
+            ],
+            'role_id' => $role->get('id'),
+        ];
+        $this->post('/users.json', $data);
+        $this->assertResponseSuccess();
+
+        $user = UserFactory::find()->where(['username' => 'ada@passbolt.com'])->firstOrFail();
+        $this->assertSame($role->get('id'), $user->role_id);
+    }
+
+    public function testUsersAddController_Deleted_Role_Error(): void
+    {
+        RoleFactory::make()->guest()->persist();
+        $role = RoleFactory::make()->deleted()->persist();
+
+        $this->logInAsAdmin();
+        $data = [
+            'username' => 'ada@passbolt.com',
+            'profile' => [
+                'first_name' => 'ada',
+                'last_name' => 'lovelace',
+            ],
+            'role_id' => $role->get('id'),
+        ];
+        $this->postJson('/users.json', $data);
+        $this->assertBadRequestError('Could not validate user data.');
+        $this->assertResponseContains('The role does not exist.');
     }
 }

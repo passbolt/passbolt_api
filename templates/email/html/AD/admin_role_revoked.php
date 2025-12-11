@@ -37,6 +37,7 @@ $userAgent = $body['user_agent'];
 $clientIp = $body['ip'];
 $userFullName = Purifier::clean($user['profile']['first_name'] . ' ' . $user['profile']['last_name']);
 $operatorFullName = Purifier::clean($operator['profile']['first_name'] . ' ' . $operator['profile']['last_name']);
+$roleChanged = Purifier::clean($user['role']['name']);
 
 echo $this->element('Email/module/avatar', [
     'url' => AvatarHelper::getAvatarUrl($operator['profile']['avatar']),
@@ -47,17 +48,9 @@ echo $this->element('Email/module/avatar', [
     ]),
 ]);
 
-if ($user['id'] === $recipient['id']) {
-    $text = __('{0} changed your role to user.', $operatorFullName);
-} else {
-    $text = __('{0} changed the role of {1} to user.', $operatorFullName, $userFullName);
-}
-
+$text = __('{0} changed the role of {1} to {2}.', $operatorFullName, $userFullName, $roleChanged);
 $text .= ' ';
-$text .= __(
-    '{0} can no longer perform administration tasks.',
-    $user['id'] === $recipient['id'] ? __('You') : $userFullName
-);
+$text .= __('{0} can no longer perform administration tasks.', $userFullName);
 
 echo $this->element('Email/module/text', ['text' => $text]);
 

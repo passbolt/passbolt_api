@@ -28,7 +28,9 @@ class FindAllThemesTest extends TestCase
      */
     public function testFindAllThemes()
     {
-        $table = $this->getObjectForTrait(ThemeSettingsTrait::class);
+        $table = new class {
+            use ThemeSettingsTrait;
+        };
 
         $expected = [[
             'id' => '9a5ecc88-f4df-5cc2-b152-6ca310127a67',

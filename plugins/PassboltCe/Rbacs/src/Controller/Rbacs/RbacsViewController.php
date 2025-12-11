@@ -64,7 +64,8 @@ class RbacsViewController extends AppController
         $roleId = $this->User->roleId();
         $rbacs = $this->Rbacs->find()
             ->where(['role_id' => $roleId])
-            ->contain('UiAction');
+            ->contain('UiAction')
+            ->contain('Action');
 
         $this->paginate($rbacs);
 
