@@ -1,6 +1,6 @@
 Release song: TBD
 
-## [5.8.0-test.1] - 2025-12-11
+## [5.8.0-test.2] - 2025-12-12
 ### Added
 - PB-46972 As an administrator I can create a new custom role
 - PB-46973 As an administrator I can update a custom role
