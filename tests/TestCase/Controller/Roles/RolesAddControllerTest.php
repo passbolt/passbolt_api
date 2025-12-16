@@ -60,6 +60,29 @@ class RolesAddControllerTest extends RbacsIntegrationTestCase
         ], $anotherAdmin->username);
     }
 
+    public function testRolesAddController_Success_Name_Already_Deleted(): void
+    {
+        $deletedRole = RoleFactory::make()->deleted()->persist();
+
+        $this->logInAsAdmin();
+        $this->postJson('/roles.json', ['name' => $deletedRole->name]);
+
+        $this->assertSuccess();
+        $response = $this->getResponseBodyAsArray();
+        $this->assertSame($deletedRole->name, $response['name']);
+        $this->assertSame(2, RoleFactory::find()->where(['name' => $deletedRole->name])->count());
+    }
+
+    public function testRolesAddController_Success_Name_Reserved_Case_Insensitive_With_Spaces(): void
+    {
+        $this->logInAsAdmin();
+        $this->postJson('/roles.json', ['name' => ' User ']);
+
+        $this->assertBadRequestError('The role could not be saved.');
+        $response = $this->getResponseBodyAsArray();
+        $this->assertSame($response['name']['reservedRole'], 'The name should not be reserved role.');
+    }
+
     public function testRolesAddController_Error_NotLoggedIn(): void
     {
         RoleFactory::make()->guest()->persist();

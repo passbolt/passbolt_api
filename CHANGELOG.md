@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.8.0-test.3] - 2025-12-17
+### Added
+- PB-47665 As a user with account recovery view permissions I can see pending requests in users.json
+
+### Fixed
+- PB-47625 As an administrator I cannot recreate a role deleted previously
+
 ## [5.8.0-test.2] - 2025-12-12
 ### Added
 - PB-46972 As an administrator I can create a new custom role

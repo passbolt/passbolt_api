@@ -117,8 +117,7 @@ class RolesTable extends Table
             ->add('name', 'reservedRole', [
                 'rule' => [$this, 'isReservedRole'],
                 'message' => __('The name should not be reserved role.'),
-            ])
-            ->add('name', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ]);
 
         $validator
             ->utf8('description', __('The description should be a valid BMP-UTF8 string.'))
@@ -167,12 +166,18 @@ class RolesTable extends Table
     /**
      * Checks if given value is from reserved role.
      *
+     * Compare string lowered as the comparison should not be case-sensitive
+     *
      * @param mixed $value Value to check.
      * @param array $context Data.
      * @return bool
      */
     public function isReservedRole(mixed $value, array $context): bool
     {
+        if (is_string($value)) {
+            $value = strtolower($value);
+        }
+
         return !in_array($value, self::RESERVED_ROLE_NAMES);
     }
 
