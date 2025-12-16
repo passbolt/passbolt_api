@@ -35,6 +35,7 @@ class V580InsertRbacsForActions extends AbstractMigration
             (new InsertRbacsForActionsService())->add([
                 // actions to add
                 RbacsControlledActionsInsertService::NAME_GROUPS_ADD,
+                RbacsControlledActionsInsertService::NAME_ACCOUNT_RECOVERY_REQUESTS_INDEX,
                 RbacsControlledActionsInsertService::NAME_ACCOUNT_RECOVERY_REQUESTS_VIEW,
                 RbacsControlledActionsInsertService::NAME_ACCOUNT_RECOVERY_RESPONSES_CREATE,
             ]);
