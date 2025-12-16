@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Test\TestCase\Controller\AccountRecoveryRequests;
 
+use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use Cake\Validation\Validation;
@@ -28,6 +29,9 @@ use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryPrivateKeyPasswordFacto
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryResponseFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
+use Passbolt\Log\Test\Factory\ActionFactory;
+use Passbolt\Rbacs\RbacsPlugin;
+use Passbolt\Rbacs\Test\Factory\RbacFactory;
 
 class AccountRecoveryRequestsIndexControllerTest extends AccountRecoveryIntegrationTestCase
 {
@@ -194,5 +198,23 @@ class AccountRecoveryRequestsIndexControllerTest extends AccountRecoveryIntegrat
         $this->logInAsUser();
         $this->getJson('/account-recovery/requests.json');
         $this->assertError(403);
+    }
+
+    public function testAccountRecoveryRequestsIndexController_Success_With_Rbacs()
+    {
+        $this->enableFeaturePlugin(RbacsPlugin::class);
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+        $this->logInAs($user);
+        AccountRecoveryRequestFactory::make(5)->persist();
+
+        // Give via RBACS permission to this user's role for this action
+        $action = ActionFactory::make()->name('AccountRecoveryRequestsIndex.index')->persist();
+        RbacFactory::make()->setAction($action)->setField('role_id', $user->role_id)->persist();
+
+        $this->getJson('/account-recovery/requests.json');
+        $this->assertSuccess();
+        $response = $this->getResponseBodyAsArray();
+        $this->assertSame(5, count($response));
     }
 }
