@@ -17,7 +17,7 @@ use Migrations\AbstractMigration;
  * @since         5.8.0
  */
 
-class RemoveUniqueIndexOnRolesName extends AbstractMigration
+class V580RemoveUniqueIndexOnRolesName extends AbstractMigration
 {
     /**
      * Change Method.
