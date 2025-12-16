@@ -27,10 +27,15 @@ class RbacsControlledActionsInsertService
      * Available RBACS actions
      */
     public const NAME_GROUPS_ADD = 'GroupsAdd.addPost';
+    public const NAME_ACCOUNT_RECOVERY_REQUESTS_INDEX = 'AccountRecoveryRequestsIndex.index';
     public const NAME_ACCOUNT_RECOVERY_REQUESTS_VIEW = 'AccountRecoveryRequestsView.view';
     public const NAME_ACCOUNT_RECOVERY_RESPONSES_CREATE = 'AccountRecoveryResponsesCreate.post';
     public const RBACS_CONTROLLED_ACTIONS = [
         self::NAME_GROUPS_ADD => [
+            Rbac::CONTROL_FUNCTION_ALLOW,
+            Rbac::CONTROL_FUNCTION_DENY,
+        ],
+        self::NAME_ACCOUNT_RECOVERY_REQUESTS_INDEX => [
             Rbac::CONTROL_FUNCTION_ALLOW,
             Rbac::CONTROL_FUNCTION_DENY,
         ],
