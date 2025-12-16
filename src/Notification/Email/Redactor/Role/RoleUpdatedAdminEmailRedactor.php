@@ -144,6 +144,7 @@ class RoleUpdatedAdminEmailRedactor implements SubscribedEmailRedactorInterface
                     'operator' => $operator,
                     'oldName' => $oldName,
                 ],
+                'title' => $subject,
             ],
             self::TEMPLATE
         );
