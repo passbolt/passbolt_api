@@ -18,8 +18,9 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Controller\AccountRecoveryRequests;
 
 use App\Controller\AppController;
-use Cake\Http\Exception\ForbiddenException;
+use App\Utility\UserAction;
 use Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable;
+use Passbolt\Rbacs\Service\ActionAccessControl\RoleActionAccessControlServiceInterface;
 
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable $AccountRecoveryRequests
@@ -51,14 +52,16 @@ class AccountRecoveryRequestsIndexController extends AppController
     /**
      * List all the account recovery requests
      *
+     * @param \Passbolt\Rbacs\Service\ActionAccessControl\RoleActionAccessControlServiceInterface $accessControlService service assessing if the user's role has access to this action
      * @return void
-     * @throws \Cake\Http\Exception\ForbiddenException if the user is not an admin
+     * @throws \Cake\Http\Exception\ForbiddenException if the user is not an admin or their role does not give them access to the endpoint
      */
-    public function index(): void
+    public function index(RoleActionAccessControlServiceInterface $accessControlService): void
     {
-        if (!$this->User->isAdmin()) {
-            throw new ForbiddenException(__('You are not authorized to access that location.'));
-        }
+        $accessControlService->controlUserRoleActionAccess(
+            $this->User->getRoleEntity(),
+            UserAction::getInstance()->getActionId()
+        );
 
         // Whitelisted filters and contain parameters
         $options = $this->QueryString->get([
