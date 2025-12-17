@@ -58,7 +58,7 @@ use InvalidArgumentException;
  * @method \Cake\ORM\Query\SelectQuery findByGroupIdAndIsAdmin(string $groupId, bool $isAdmin)
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class GroupsUsersTable extends Table
+class GroupsUsersTable extends Table implements TableCleanupProviderInterface
 {
     use GroupsCleanupTrait;
     use TableCleanupTrait;
@@ -439,5 +439,21 @@ class GroupsUsersTable extends Table
         $keys = ['group_id', 'user_id'];
 
         return $this->cleanupDuplicates($keys, $dryRun);
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        return [
+            $this->cleanupSoftDeletedUsers(...),
+            $this->cleanupHardDeletedUsers(...),
+            $this->cleanupSoftDeletedGroups(...),
+            $this->cleanupHardDeletedGroups(...),
+            $this->cleanupDuplicatedGroupsUsers(...),
+        ];
     }
 }

@@ -47,7 +47,7 @@ use Cake\Validation\Validator;
  * @method iterable<\App\Model\Entity\Favorite>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Favorite>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  */
-class FavoritesTable extends Table
+class FavoritesTable extends Table implements TableCleanupProviderInterface
 {
     use ResourcesCleanupTrait;
     use TableCleanupTrait;
@@ -193,5 +193,21 @@ class FavoritesTable extends Table
         $keys = ['user_id', 'foreign_key', 'foreign_model'];
 
         return $this->cleanupDuplicates($keys, $dryRun);
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        return [
+            $this->cleanupSoftDeletedUsers(...),
+            $this->cleanupHardDeletedUsers(...),
+            $this->cleanupSoftDeletedResources(...),
+            $this->cleanupHardDeletedResources(...),
+            $this->cleanupDuplicatedFavorites(...),
+        ];
     }
 }

@@ -97,8 +97,8 @@ class RolesUpdateServiceTest extends AppTestCase
                 'name.utf8',
             ],
             [
-                ['name' => 'admin'], // name is not unique
-                'name.unique',
+                ['name' => 'admin'], // name is reserved
+                'name.reservedRole',
             ],
             [
                 ['name' => 'a loooooooooooooooooooooooong naaaaaaaaaaaaaaaaaame'], // name too long

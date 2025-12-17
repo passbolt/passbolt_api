@@ -59,7 +59,7 @@ use Cake\Validation\Validator;
  * @method \Cake\ORM\Query\SelectQuery findById(string $id)
  * @method \Cake\ORM\Query\SelectQuery findByIdAndGroupId(string $id, string $groupId)
  */
-class GroupsTable extends Table
+class GroupsTable extends Table implements TableCleanupProviderInterface
 {
     use GroupsFindersTrait;
     use TableCleanupTrait;
@@ -393,5 +393,17 @@ class GroupsTable extends Table
             ->where([$this->aliasField('deleted') => 0]);
 
         return $this->cleanupHardDeleted('GroupsUsers', $dryRun, $query);
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        return [
+            $this->cleanupWithNoMembers(...),
+        ];
     }
 }

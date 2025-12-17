@@ -153,4 +153,47 @@ class InsertRbacsForActionsServiceTest extends RbacsTestCase
                 ->count()
         );
     }
+
+    public function testInsertRbacsForActionsService_SkipSoftDeletedRoles(): void
+    {
+        RoleFactory::make()->guest()->persist();
+        RoleFactory::make()->admin()->persist();
+        $userRole = RoleFactory::make()->user()->persist();
+        $customRole = RoleFactory::make(['name' => 'marketing'])->persist();
+        $deletedRole = RoleFactory::make(['name' => 'deleted-role'])->deleted()->persist();
+        // actions
+        $fixtureActions = [
+            RbacsControlledActionsInsertService::NAME_GROUPS_ADD,
+            RbacsControlledActionsInsertService::NAME_ACCOUNT_RECOVERY_REQUESTS_VIEW,
+        ];
+        foreach ($fixtureActions as $fixtureAction) {
+            ActionFactory::make()->name($fixtureAction)->persist();
+        }
+
+        $result = $this->service->add([
+            RbacsControlledActionsInsertService::NAME_GROUPS_ADD,
+            RbacsControlledActionsInsertService::NAME_ACCOUNT_RECOVERY_REQUESTS_VIEW,
+        ]);
+
+        // 2 actions x 2 roles (user + custom) = 4 rbacs (deleted role should be skipped)
+        $this->assertSame(4, $result);
+        $this->assertSame(
+            0,
+            RbacFactory::find()
+                ->where(['role_id' => $deletedRole->get('id'), 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION])
+                ->count()
+        );
+        $this->assertSame(
+            2,
+            RbacFactory::find()
+                ->where(['role_id' => $userRole->id, 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION])
+                ->count()
+        );
+        $this->assertSame(
+            2,
+            RbacFactory::find()
+                ->where(['role_id' => $customRole->get('id'), 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION])
+                ->count()
+        );
+    }
 }

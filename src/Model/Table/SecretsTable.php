@@ -60,7 +60,7 @@ use Passbolt\SecretRevisions\Model\Rule\IsSecretRevisionNotSoftDeletedRule;
  * @method \Cake\ORM\Query\SelectQuery findByResourceIdAndUserId(string $resourceId, string $userId)
  * @method \Cake\ORM\Query\SelectQuery findByUserId(string $id)
  */
-class SecretsTable extends Table
+class SecretsTable extends Table implements TableCleanupProviderInterface
 {
     use ResourcesCleanupTrait;
     use TableCleanupTrait;
@@ -267,5 +267,21 @@ class SecretsTable extends Table
     public function cleanupHardDeletedPermissions(?bool $dryRun = false): int
     {
         return (new SecretsCleanupHardDeletedPermissionsService())->cleanupHardDeletedPermissions($dryRun);
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        return [
+            $this->cleanupSoftDeletedUsers(...),
+            $this->cleanupHardDeletedUsers(...),
+            $this->cleanupSoftDeletedResources(...),
+            $this->cleanupHardDeletedResources(...),
+            $this->cleanupHardDeletedPermissions(...),
+        ];
     }
 }
