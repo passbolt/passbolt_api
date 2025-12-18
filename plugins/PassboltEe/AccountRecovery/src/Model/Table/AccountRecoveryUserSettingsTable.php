@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Model\Table;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Table\TableCleanupProviderInterface;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use App\Utility\UserAccessControl;
@@ -46,7 +47,7 @@ use Passbolt\AccountRecovery\Model\Table\Traits\TableTruncateTrait;
  * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class AccountRecoveryUserSettingsTable extends Table
+class AccountRecoveryUserSettingsTable extends Table implements TableCleanupProviderInterface
 {
     use TableCleanupTrait;
     use TableTruncateTrait;
@@ -217,5 +218,18 @@ class AccountRecoveryUserSettingsTable extends Table
         }
 
         return $setting;
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        return [
+            $this->cleanupHardDeletedUsers(...),
+            $this->cleanupSoftDeletedUsers(...),
+        ];
     }
 }

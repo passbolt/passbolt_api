@@ -20,31 +20,10 @@ Configure::load('Passbolt/AccountRecovery.config', 'default', true);
 
 // Add cleanup tasks jobs.
 if (PHP_SAPI === 'cli') {
-    $cleanups = [
-        'Passbolt/AccountRecovery.AccountRecoveryPrivateKeys' => [
-            'Hard Deleted Users',
-            'Soft Deleted Users',
-        ],
-        'Passbolt/AccountRecovery.AccountRecoveryRequests' => [
-            'Hard Deleted Users',
-            // We keep soft deleted users requests in the trail
-        ],
-        'Passbolt/AccountRecovery.AccountRecoveryUserSettings' => [
-            'Hard Deleted Users',
-            'Soft Deleted Users',
-        ],
-        'Passbolt/AccountRecovery.AccountRecoveryResponses' => [
-            'Hard Deleted AccountRecoveryRequests',
-        ],
-        'Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords' => [
-            'Hard Deleted AccountRecoveryPrivateKeys',
-        ],
-        'Passbolt/Tags.ResourcesTags' => [
-            /**
-             * @see \Passbolt\Tags\Model\Table\ResourcesTagsTable::cleanupDuplicatedResourcesTags()
-             */
-            'Duplicated ResourcesTags',
-        ],
-    ];
-    CleanupCommand::addCleanups($cleanups);
+    CleanupCommand::registerCleanableTable('Passbolt/AccountRecovery.AccountRecoveryPrivateKeys');
+    CleanupCommand::registerCleanableTable('Passbolt/AccountRecovery.AccountRecoveryRequests');
+    CleanupCommand::registerCleanableTable('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
+    CleanupCommand::registerCleanableTable('Passbolt/AccountRecovery.AccountRecoveryResponses');
+    CleanupCommand::registerCleanableTable('Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords');
+    CleanupCommand::registerCleanableTable('Passbolt/Tags.ResourcesTags');
 }
