@@ -27,7 +27,7 @@ use Passbolt\Log\Model\Entity\EntityHistory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\SecretRevisions\SecretRevisionsPlugin;
-use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsFactory;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 class ResourcesControllerLogTest extends LogIntegrationTestCase
 {
@@ -197,7 +197,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
         $this->assertEntityHistoryExists($expectedEntityHistory);
         $this->assertEntitiesHistoryCount(0, ['foreign_model' => 'SecretsHistory']);
         // assert SecretRevision is present in entities_history
-        $secretRevisionId = SecretRevisionsFactory::find()->firstOrFail()->get('id');
+        $secretRevisionId = SecretRevisionFactory::find()->firstOrFail()->get('id');
         $this->assertEntityHistoryExists([
             'action_log_id' => $actionLog['id'],
             'foreign_model' => 'SecretRevisions',

@@ -21,6 +21,7 @@ use App\Test\Factory\RoleFactory;
 use App\Utility\UuidFactory;
 use Passbolt\Rbacs\Model\Entity\Rbac;
 use Passbolt\Rbacs\Model\Entity\UiAction;
+use Passbolt\Rbacs\Service\Actions\RbacsControlledActionsInsertService;
 use Passbolt\Rbacs\Service\Rbacs\RbacsInsertDefaultsService;
 use Passbolt\Rbacs\Service\UiActions\UiActionsInsertDefaultsService;
 use Passbolt\Rbacs\Test\Factory\RbacFactory;
@@ -28,9 +29,7 @@ use Passbolt\Rbacs\Test\Factory\UiActionFactory;
 use Passbolt\Rbacs\Test\Lib\RbacsIntegrationTestCase;
 
 /**
- * Passbolt\Rbacs\Controller\Rbacs\RbacsUpdateController Test Case
- *
- * @uses \Passbolt\Rbacs\Controller\Rbacs\RbacsUpdateController
+ * @covers \Passbolt\Rbacs\Controller\Rbacs\RbacsUpdateController
  */
 class RbacsUpdateControllerTest extends RbacsIntegrationTestCase
 {
@@ -43,8 +42,17 @@ class RbacsUpdateControllerTest extends RbacsIntegrationTestCase
         RoleFactory::make()->guest()->persist();
         RoleFactory::make()->user()->persist();
         RoleFactory::make()->admin()->persist();
+        // UiAction - model
         (new UiActionsInsertDefaultsService())->insertDefaultsIfNotExist();
         $rbacs = (new RbacsInsertDefaultsService())->allowAllUiActionsForUsers();
+        // Action - model
+        $actions = (new RbacsControlledActionsInsertService())->insertRbacsControlledActions();
+        foreach ($actions as $action) {
+            RbacFactory::make()
+                ->setField('foreign_id', $action->get('id'))
+                ->setField('foreign_model', Rbac::FOREIGN_MODEL_ACTION)
+                ->persist();
+        }
 
         /** @var \Passbolt\Rbacs\Model\Entity\Rbac $rbac */
         $rbac = $rbacs[0];
@@ -70,16 +78,44 @@ class RbacsUpdateControllerTest extends RbacsIntegrationTestCase
 
     public function testRbacsUpdateController_Success(): void
     {
-        $rbac = $this->setupDefaultRbacs();
-        $this->logInAsAdmin();
-        $this->putJson('/rbacs.json', [[
-            'id' => $rbac->id,
-            'control_function' => Rbac::CONTROL_FUNCTION_DENY,
-        ]]);
-        $this->assertSuccess();
+        $this->setupDefaultRbacs();
+        $uiActionRbac = RbacFactory::find()->where(['foreign_model' => Rbac::FOREIGN_MODEL_UI_ACTION])->firstOrFail();
+        $actionRbac = RbacFactory::find()->where(['foreign_model' => Rbac::FOREIGN_MODEL_ACTION])->firstOrFail();
 
-        $c = RbacFactory::find()->where(['control_function' => Rbac::CONTROL_FUNCTION_DENY])->all()->count();
-        $this->assertEquals(1, $c);
+        $this->logInAsAdmin();
+        $this->putJson('/rbacs.json', [
+            // UiAction
+            [
+                'id' => $uiActionRbac->id,
+                'control_function' => Rbac::CONTROL_FUNCTION_DENY,
+            ],
+            // Action
+            [
+                'id' => $actionRbac->id,
+                'control_function' => Rbac::CONTROL_FUNCTION_DENY,
+            ],
+        ]);
+
+        $this->assertSuccess();
+        // Assert response
+        $response = $this->getResponseBodyAsArray();
+        $this->assertCount(2, $response);
+        foreach ($response as $item) {
+            if ($item['foreign_model'] === Rbac::FOREIGN_MODEL_UI_ACTION) {
+                $this->assertNotEmpty($item['ui_action']);
+                $this->assertArrayHasAttributes(['id', 'name'], $item['ui_action']);
+                $this->assertNull($item['action']);
+            } else {
+                $this->assertNotEmpty($item['action']);
+                $this->assertArrayHasAttributes(['id', 'name'], $item['action']);
+                $this->assertNull($item['ui_action']);
+            }
+        }
+        // Assert db entries
+        $expectedUiActionRbac = RbacFactory::get($uiActionRbac->id);
+        $this->assertSame(Rbac::CONTROL_FUNCTION_DENY, $expectedUiActionRbac->control_function);
+        $expectedActionRbac = RbacFactory::get($actionRbac->id);
+        $this->assertSame(Rbac::CONTROL_FUNCTION_DENY, $expectedActionRbac->control_function);
     }
 
     public function testRbacsUpdateController_Success_AllowIfGroupManager(): void

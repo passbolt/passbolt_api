@@ -18,9 +18,10 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Controller\AccountRecoveryRequests;
 
 use App\Controller\AppController;
+use App\Utility\UserAction;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\ForbiddenException;
 use Cake\Validation\Validation;
+use Passbolt\Rbacs\Service\ActionAccessControl\RoleActionAccessControlServiceInterface;
 
 class AccountRecoveryRequestsViewController extends AppController
 {
@@ -28,16 +29,18 @@ class AccountRecoveryRequestsViewController extends AppController
      * List the details of one account recovery request
      *
      * @param string $id uuid of the request
+     * @param \Passbolt\Rbacs\Service\ActionAccessControl\RoleActionAccessControlServiceInterface $accessControlService service assessing if the user's role has access to this action
      * @throws \Cake\Http\Exception\ForbiddenException if the user is not an admin
      * @throws \Cake\Http\Exception\NotFoundException if request id could not be found
      * @throws \Cake\Http\Exception\BadRequestException if the id is not a uuid
      * @return void
      */
-    public function view(string $id): void
+    public function view(string $id, RoleActionAccessControlServiceInterface $accessControlService): void
     {
-        if (!$this->User->isAdmin()) {
-            throw new ForbiddenException(__('You are not authorized to access that location.'));
-        }
+        $accessControlService->controlUserRoleActionAccess(
+            $this->User->getRoleEntity(),
+            UserAction::getInstance()->getActionId()
+        );
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('Please provide a valid request id.'));
         }

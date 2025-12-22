@@ -26,6 +26,7 @@ use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\HttpProxyMiddleware;
 use App\Middleware\SessionAuthPreventDeletedOrDisabledUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
+use App\Middleware\SetUserIdentityInRequestMiddleware;
 use App\Middleware\SslForceMiddleware;
 use App\Middleware\UuidParserMiddleware;
 use App\Middleware\ValidCookieNameMiddleware;
@@ -67,6 +68,7 @@ class ApplicationTest extends TestCase
             BodyParserMiddleware::class,
             SessionAuthPreventDeletedOrDisabledUsersMiddleware::class,
             AuthenticationMiddleware::class,
+            SetUserIdentityInRequestMiddleware::class,
             GpgAuthHeadersMiddleware::class,
             CsrfProtectionMiddleware::class,
             HttpProxyMiddleware::class,

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-10-01 06:24+0000\n"
-"PO-Revision-Date: 2025-10-01 10:39\n"
+"PO-Revision-Date: 2025-12-12 18:40\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -398,7 +398,7 @@ msgid "Invalid expiry time {0}."
 msgstr "Neteisingas galiojimo laikas {0}.\n"
 
 msgid "The user role ID must be one of the admin or user roles."
-msgstr ""
+msgstr "Vartotojo vaidmens ID turi būti vienas iš administratoriaus arba vartotojo vaidmenų."
 
 msgid "The identifier should not be empty."
 msgstr "Identifikatorius neturėtų būti tuščias."
@@ -911,7 +911,7 @@ msgid "The metadata key is marked as expired."
 msgstr "Metaduomenų raktas pažymėtas kaip pasibaigęs."
 
 msgid "The shared metadata key should be unique."
-msgstr ""
+msgstr "Bendras metaduomenų raktas turėtų būti unikalus."
 
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Draudžiama kurti v5-password-string išteklių tipus."
@@ -932,7 +932,7 @@ msgid "The user cannot delete this resource."
 msgstr "Vartotojas negali ištrinti šio šaltinio."
 
 msgid "The resource type for this resource does not exist."
-msgstr ""
+msgstr "Šio ištekliaus tipas neegzistuoja."
 
 msgid "The name should be a valid ASCII string."
 msgstr "Pavadinimas turi būti tinkama ASCII eilutė."
@@ -1115,7 +1115,7 @@ msgid "{0} deleted the password {1}"
 msgstr "{0} ištrynė slaptažodį {1}"
 
 msgid "{0} deleted a password"
-msgstr ""
+msgstr "{0} ištrynė slaptažodį"
 
 msgid "You edited a resource"
 msgstr "Redagavote išteklį"
@@ -1472,13 +1472,13 @@ msgid "Cache is NOT working."
 msgstr "Podėlis NEveikia."
 
 msgid "Deprecated `_cake_core_` cache configuration found."
-msgstr ""
+msgstr "Aptikta pasenusi `_cake_core_` talpyklos konfigūracija."
 
 msgid "Check the settings in {0}"
 msgstr "Patikrinkite nustatymus faile {0}"
 
 msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
-msgstr ""
+msgstr "Pakeiskite `_cake_core_` į `_cake_translations_` savo {0} konfigūracijos faile."
 
 msgid "Debug mode is off."
 msgstr "Derinimo režimas išjungtas."
@@ -1607,10 +1607,10 @@ msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "Žr.: https://secure.php.net/manual/en/book.intl.php"
 
 msgid "The logs directory {0} and its content are writable."
-msgstr ""
+msgstr "Žurnalų katalogui {0} ir jo turiniui suteiktos rašymo teisės."
 
 msgid "The logs directory {0} and its content are not writable."
-msgstr ""
+msgstr "Žurnalų katalogui {0} ir jo turiniui nesuteiktos rašymo teisės."
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
 msgstr "Įsitikinkite, kad žurnalų katalogą ir jo turinį gali įrašyti žiniatinklio serverio naudotojas."
@@ -2018,10 +2018,10 @@ msgid "Validation success for permission {0}"
 msgstr "Sėkmingai patvirtintas leidimas {0}"
 
 msgid "The permissions data must be an array."
-msgstr ""
+msgstr "Leidimų duomenys turi būti masyvas."
 
 msgid "The permissions data array keys must be integers."
-msgstr ""
+msgstr "Leidimų duomenų masyvo raktai turi būti sveikieji skaičiai."
 
 msgid "Could not validate permissions data."
 msgstr "Nepavyko patvirtinti leidimų duomenų."
@@ -2048,13 +2048,13 @@ msgid "Validation success for resource {0}"
 msgstr "Sėkmingas ištekliaus {0} patvirtinimas"
 
 msgid "Metadata key exist and present for resource {0}."
-msgstr ""
+msgstr "Metaduomenų raktas egzistuoja ir yra priskirtas ištekliui {0}."
 
 msgid "Metadata key does not exists or soft-deleted for resource {0}."
-msgstr ""
+msgstr "Metaduomenų raktas ištekliui {0} neegzistuoja arba yra pažymėtas kaip ištrintas."
 
 msgid "The resource types associated to this resource does not exist."
-msgstr ""
+msgstr "Su šiuo ištekliumi susieti išteklių tipai neegzistuoja."
 
 msgid "You are not allowed to update this resource."
 msgstr "Jums neleidžiama atnaujinti šio šaltinio."
@@ -2378,7 +2378,7 @@ msgid "The metadata key does not exist."
 msgstr "Metaduomenų raktas neegzistuoja."
 
 msgid "The folder metadata provided cannot be decrypted."
-msgstr ""
+msgstr "Pateiktų aplanko metaduomenų nepavyko iššifruoti."
 
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Asmeninio tipo aplanko negalima bendrinti su kitais naudotojais ar grupe."
@@ -2798,10 +2798,10 @@ msgid "The data should be a valid ASCII string."
 msgstr "Duomenys turi būti tinkama ASCII eilutė.\n"
 
 msgid "The expired field value should be a valid ISO 80601 date."
-msgstr ""
+msgstr "Lauko \"expired\" reikšmė turėtų būti galiojanti ISO 80601 data."
 
 msgid "The expired field value should be parseable."
-msgstr ""
+msgstr "Lauko \"expired\" reikšmė turėtų būti išskaitoma."
 
 msgid "The setting should be a valid boolean."
 msgstr "Nustatymas turi būti tinkamas loginis dydis."
@@ -2810,13 +2810,13 @@ msgid "The setting is required."
 msgstr "Nustatymas yra privalomas."
 
 msgid "The metadata private keys is required."
-msgstr ""
+msgstr "Reikalingi metaduomenų privatūs raktai."
 
 msgid "The metadata private keys should not be empty."
-msgstr ""
+msgstr "Metaduomenų privatūs raktai neturėtų būti tušti."
 
 msgid "Need at most one metadata private key."
-msgstr ""
+msgstr "Reikia ne daugiau kaip vieno metaduomenų privataus rakto."
 
 msgid "A metadata key identifier is required."
 msgstr "Reikalingas metaduomenų rakto identifikatorius."
@@ -2825,7 +2825,7 @@ msgid "The metadata key identifier should be a valid UUID."
 msgstr "Metaduomenų rakto identifikatorius turi būti galiojantis UUID."
 
 msgid "The user identifier should be null."
-msgstr ""
+msgstr "Vartotojo identifikatorius turėtų būti null."
 
 msgid "The data is required."
 msgstr "Reikalingi duomenys."
@@ -3020,28 +3020,28 @@ msgid "You edited the metadata settings"
 msgstr "Redagavote metaduomenų nustatymus"
 
 msgid "No metadata private keys found for metadata key {0}."
-msgstr ""
+msgstr "Nerasta metaduomenų privačių raktų metaduomenų raktui {0}."
 
 msgid "Metadata keys present for metadata key {0}"
-msgstr ""
+msgstr "Metaduomenų raktai egzistuoja metaduomenų raktui {0}."
 
 msgid "No active metadata key found."
-msgstr ""
+msgstr "Aktyvaus metaduomenų rakto nerasta."
 
 msgid "Active metadata key found or not required."
-msgstr ""
+msgstr "Aktyvus metaduomenų raktas rastas arba nereikalingas."
 
 msgid "The server has access to the metadata keys or does not require access to it."
-msgstr ""
+msgstr "Serveris turi prieigą prie metaduomenų raktų arba jam jos nereikia."
 
 msgid "The server does not have access to metadata key."
-msgstr ""
+msgstr "Serveris neturi prieigos prie metaduomenų rakto."
 
 msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
-msgstr ""
+msgstr "Kai nulinės žinios režimas išjungtas, serveris privalo turėti prieigą prie metaduomenų rakto."
 
 msgid "Without having access, the server won't be able to share the metadata private key with the users."
-msgstr ""
+msgstr "Neturėdamas prieigos serveris negalės bendrinti metaduomenų privataus rakto su vartotojais."
 
 msgid "No server metadata private key found."
 msgstr "Nerastas serverio metaduomenų privatus raktas."
@@ -3056,22 +3056,22 @@ msgid "Unable to decrypt the metadata private key."
 msgstr "Nepavyko iššifruoti metaduomenų privataus rakto."
 
 msgid "Unable to decrypt the metadata private key (id: {0}) data."
-msgstr ""
+msgstr "Nepavyko iššifruoti metaduomenų privataus rakto (id: {0}) duomenų."
 
 msgid "The metadata private key (id: {0}) cleartext data should be in JSON format."
-msgstr ""
+msgstr "Metaduomenų privataus rakto (id: {0}) atviro teksto duomenys turėtų būti JSON formato."
 
 msgid "The metadata private key (id: {0}) cleartext data should not be empty."
-msgstr ""
+msgstr "Metaduomenų privataus rakto (id: {0}) atviro teksto duomenys neturėtų būti tušti."
 
 msgid "Unable to validate metadata private key (id: {0}) cleartext data."
-msgstr ""
+msgstr "Nepavyko patvirtinti metaduomenų privataus rakto (id: {0}) atviro teksto duomenų."
 
 msgid "The server metadata private key is valid."
-msgstr ""
+msgstr "Serverio metaduomenų privatus raktas galioja."
 
 msgid "The server metadata private key is not valid."
-msgstr ""
+msgstr "Serverio metaduomenų privatus raktas negalioja."
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "Metaduomenų raktas neegzistuoja arba buvo ištrintas."
@@ -3134,7 +3134,7 @@ msgid "Could not validate the settings."
 msgstr "Nepavyko patvirtinti nustatymų."
 
 msgid "The server metadata private keys data are invalid."
-msgstr ""
+msgstr "Serverio metaduomenų privačių raktų duomenys negalioja."
 
 msgid "The server metadata private key is required to enable these settings."
 msgstr "Norint įjungti šiuos nustatymus, reikalingas serverio metaduomenų privatus raktas."
@@ -3200,10 +3200,10 @@ msgid "Could not save the metadata session keys, please try again later."
 msgstr "Nepavyko išsaugoti metaduomenų sesijos raktų. Bandykite dar kartą vėliau."
 
 msgid "Unable to save the metadata settings."
-msgstr ""
+msgstr "Nepavyksta išsaugoti metaduomenų nustatymų."
 
 msgid "An active metadata key could not be found, create a key first."
-msgstr ""
+msgstr "Aktyvaus metaduomenų rakto rasti nepavyko, pirmiausia sukurkite raktą."
 
 msgid "Could not prepare private key for server key."
 msgstr "Nepavyko paruošti privataus rakto serverio raktui."
@@ -3290,7 +3290,7 @@ msgid "The provided modified by does not match."
 msgstr "Nurodyta 'modified by' reikšmė nesutampa."
 
 msgid "The folder metadata key data could not be updated."
-msgstr ""
+msgstr "Nepavyko atnaujinti aplanko metaduomenų rakto duomenų."
 
 msgid "The resource metadata key data could not be updated."
 msgstr "Nepavyko atnaujinti išteklių metaduomenų rakto duomenų."
@@ -3317,13 +3317,13 @@ msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr "Draudžiama kurti / redaguoti žymas su užšifruotais metaduomenimis."
 
 msgid "Resource creation with cleartext metadata not allowed."
-msgstr ""
+msgstr "Ištekliaus kūrimas su atviro teksto metaduomenimis neleidžiamas."
 
 msgid "Folder creation with cleartext metadata not allowed."
-msgstr ""
+msgstr "Aplanko kūrimas su atviro teksto metaduomenimis neleidžiamas."
 
 msgid "Tag creation with cleartext metadata not allowed."
-msgstr ""
+msgstr "Žymos kūrimas su atviro teksto metaduomenimis neleidžiamas."
 
 msgid "You created a new metadata key."
 msgstr "Sukūrėte naują metaduomenų raktą."
@@ -3365,7 +3365,7 @@ msgid "You have created a new password."
 msgstr "Sukūrėte naują slaptažodį."
 
 msgid "{0} deleted a password."
-msgstr ""
+msgstr "{0} ištrynė slaptažodį."
 
 msgid "{0} shared a resource with you"
 msgstr "{0} pasidalino ištekliumi su jumis"
@@ -3377,7 +3377,7 @@ msgid "You have edited a resource."
 msgstr "Redagavote šaltinį."
 
 msgid "{0} has edited a resource."
-msgstr ""
+msgstr "{0} redagavo išteklių."
 
 msgid "Information about the transfer is required."
 msgstr "Reikalinga informacija apie perkėlimą."
@@ -3905,7 +3905,7 @@ msgid "You have passwords requiring your attention"
 msgstr "Turite slaptažodžių, kuriems reikia jūsų dėmesio"
 
 msgid "Some of your passwords are expiring today."
-msgstr ""
+msgstr "Kai kurių jūsų slaptažodžių galiojimo laikas baigiasi šiandien."
 
 msgid "{0} marked the password {1} as expired"
 msgstr "{0} pažymėjo slaptažodį {1} kaip nebegaliojantį"
@@ -4526,58 +4526,58 @@ msgid "Errors: "
 msgstr "Klaidos: "
 
 msgid "Could not retrieve the user key policies."
-msgstr ""
+msgstr "Nepavyko gauti vartotojo rakto politikų."
 
 msgid "Conflicting authentication parameters, provide user_id/token only when the user is not already signed in."
-msgstr ""
+msgstr "Autentifikavimo parametrų konfliktas, user_id ir prieigos raktą pateikite tik tuo atveju, jei vartotojas dar nėra prisijungęs."
 
 msgid "You are not authorized to access this location."
-msgstr ""
+msgstr "Jūs neturite teisės pasiekti šios vietos."
 
 msgid "Sign-in to passbolt, or provide a valid user ID and authentication token."
-msgstr ""
+msgstr "Prisijunkite prie passbolt arba pateikite galiojantį vartotojo ID ir autentifikavimo prieigos raktą."
 
 msgid "The user ID must be a valid UUID."
-msgstr ""
+msgstr "Vartotojo ID turi būti galiojantis UUID."
 
 msgid "The authentication token must be a valid UUID."
-msgstr ""
+msgstr "Autentifikavimo prieigos raktas turi būti galiojantis UUID."
 
 msgid "Unable to authenticate the guest user with the provided credentials."
-msgstr ""
+msgstr "Nepavyko autentifikuoti svečio vartotojo pateiktais prisijungimo duomenimis."
 
 msgid "No registration authentication token found for the given user."
-msgstr ""
+msgstr "Nerasta registracijos autentifikavimo prieigos rakto nurodytam vartotojui."
 
 msgid "The registration authentication token is expired."
-msgstr ""
+msgstr "Baigėsi registracijos autentifikavimo prieigos rakto galiojimo laikas."
 
 msgid "The preferred key type is required."
-msgstr ""
+msgstr "Reikalingas pageidaujamas rakto tipas."
 
 msgid "The preferred key type should not be empty."
-msgstr ""
+msgstr "Pageidaujamas rakto tipas neturi būti tuščias."
 
 msgid "The preferred key type should be one of the following: {0}."
-msgstr ""
+msgstr "Pageidaujamas rakto tipas turėtų būti vienas iš šių: {0}."
 
 msgid "The preferred key type and size combination does not match."
-msgstr ""
+msgstr "Pageidaujamo rakto tipo ir dydžio derinys nesutampa."
 
 msgid "The preferred key type and curve combination does not match."
-msgstr ""
+msgstr "Pageidaujamo rakto tipo ir kreivės derinys nesutampa."
 
 msgid "The preferred key size is required."
-msgstr ""
+msgstr "Reikalingas pageidaujamas rakto dydis."
 
 msgid "The preferred key size should be one of the following: {0}."
-msgstr ""
+msgstr "Pageidaujamas rakto dydis turėtų būti vienas iš šių: {0}."
 
 msgid "The preferred key curve is required."
-msgstr ""
+msgstr "Reikalinga pageidaujama rakto kreivė."
 
 msgid "The preferred key curve should be one of the following: {0}."
-msgstr ""
+msgstr "Pageidaujama rakto kreivė turėtų būti viena iš šių: {0}."
 
 msgid "The data entered are not correct"
 msgstr "Įvesti duomenys neteisingi"
@@ -5114,7 +5114,7 @@ msgid "You cannot reuse account recovery organization public keys."
 msgstr "Negalite pakartotinai naudoti paskyros atkūrimo organizacijos viešųjų raktų."
 
 msgid "You cannot reuse the metadata keys."
-msgstr ""
+msgstr "Negalite pakartotinai naudoti metaduomenų raktų."
 
 msgid "Could not validate public key data."
 msgstr "Nepavyko patvirtinti viešojo rakto duomenų."
@@ -5603,7 +5603,7 @@ msgid "The directory {0} {1} was not deleted because it is ignored."
 msgstr "Katalogas {0} {1} nebuvo ištrintas, nes jo nepaisoma."
 
 msgid "The directory user {0} was already suspended in passbolt."
-msgstr ""
+msgstr "Katalogo naudotojas {0} jau buvo sustabdytas \"passbolt'e\"."
 
 msgid "The directory {0} {1} was already deleted in passbolt."
 msgstr "Katalogas {0} {1} jau buvo ištrintas \"passbolt'e\"."
@@ -5615,7 +5615,7 @@ msgid "The {0} {1} could not be deleted because they are the only manager of one
 msgstr "{0} {1} nepavyko ištrinti, nes jie yra vieninteliai vienos ar kelių grupių valdytojai."
 
 msgid "The user {0} was successfully suspended."
-msgstr ""
+msgstr "Naudotojas {0} sėkmingai sustabdytas."
 
 msgid "The {0} {1} was successfully deleted."
 msgstr "{0} {1} sėkmingai ištrinta."
@@ -6026,7 +6026,7 @@ msgid "Directory Sync"
 msgstr "Katalogo sinchronizavimas"
 
 msgid "SCIM"
-msgstr ""
+msgstr "SCIM"
 
 msgid "Only administrators are allowed to create/update MFA policies settings."
 msgstr "Tik administratoriams leidžiama kurti/atnaujinti kelių veiksnių autentifikavimo MFA politikos nustatymus."
@@ -6113,37 +6113,37 @@ msgid "view it in passbolt"
 msgstr "peržiūrėkite jį „passbolt'e“."
 
 msgid "The SCIM setting id should be a valid UUID."
-msgstr ""
+msgstr "SCIM nustatymo identifikatorius turi būti galiojantis UUID."
 
 msgid "The identifier of the default user should be a valid UUID."
-msgstr ""
+msgstr "Numatytojo naudotojo identifikatorius turi būti galiojantis UUID."
 
 msgid "The user is not active, disabled or does not exist."
-msgstr ""
+msgstr "Naudotojas neaktyvus, išjungtas arba neegzistuoja."
 
 msgid "The Setting ID cannot be passed on update."
-msgstr ""
+msgstr "Nustatymo ID negali būti perduodamas atnaujinant."
 
 msgid "The secret token should not be empty."
-msgstr ""
+msgstr "Slaptas prieigos tokenas neturėtų būti tuščias."
 
 msgid "The ID for the SCIM settings should not be empty."
-msgstr ""
+msgstr "SCIM nustatymų ID neturėtų būti tuščias."
 
 msgid "The ID for the SCIM settings should be a valid UUID."
-msgstr ""
+msgstr "SCIM nustatymų ID turi būti galiojantis UUID."
 
 msgid "Simultaneous SCIM and session authentication is not permitted."
-msgstr ""
+msgstr "Simultaniškas SCIM ir sesijos autentifikavimas neleidžiamas."
 
 msgid "SCIM settings endpoints are disabled."
-msgstr ""
+msgstr "SCIM nustatymų galiniai taškai išjungti."
 
 msgid "An entry for the same related entity already exists"
-msgstr ""
+msgstr "Įrašas tai pačiai susijusiai esybei jau egzistuoja."
 
 msgid "An entry with the same `scim_name` and ResourceType already exist."
-msgstr ""
+msgstr "Įrašas su tuo pačiu `scim_name` ir ResourceType jau egzistuoja."
 
 msgid "Users"
 msgstr "Vartotojai"
@@ -6152,49 +6152,49 @@ msgid "Groups"
 msgstr "Grupės"
 
 msgid "The secret token format is incorrect."
-msgstr ""
+msgstr "Slapto prieigos tokeno formatas neteisingas."
 
 msgid "SCIM plugin is enabled."
-msgstr ""
+msgstr "SCIM papildinys įjungtas."
 
 msgid "SCIM plugin is disabled."
-msgstr ""
+msgstr "SCIM papildinys išjungtas."
 
 msgid "The SCIM settings could not be decrypted with the server gpg key."
-msgstr ""
+msgstr "Nepavyko iššifruoti SCIM nustatymų naudojant serverio GPG raktą."
 
 msgid "The SCIM settings could not be encrypted with the server gpg key."
-msgstr ""
+msgstr "Nepavyko užšifruoti SCIM nustatymų naudojant serverio GPG raktą."
 
 msgid "Could not validate the SCIM settings found in database."
-msgstr ""
+msgstr "Nepavyko patvirtinti duomenų bazėje rastų SCIM nustatymų."
 
 msgid "The SCIM setting identifier should be a valid UUID."
-msgstr ""
+msgstr "SCIM nustatymo identifikatorius turi būti galiojantis UUID."
 
 msgid "Could not validate the SCIM settings."
-msgstr ""
+msgstr "Nepavyko patvirtinti SCIM nustatymų."
 
 msgid "The SCIM plugin is disabled."
-msgstr ""
+msgstr "SCIM papildinys išjungtas."
 
 msgid "Please delete previous settings before creating again."
-msgstr ""
+msgstr "Prieš sukurdami iš naujo, ištrinkite ankstesnius nustatymus."
 
 msgid "The uuid in the url doesn't match any known setting record."
-msgstr ""
+msgstr "URL esantis uuid nesutampa su jokiu žinomu nustatymo įrašu."
 
 msgid "Email"
 msgstr "Elektroninis paštas"
 
 msgid "External id"
-msgstr ""
+msgstr "Išorinis ID"
 
 msgid "Invalid Schema"
-msgstr ""
+msgstr "Netinkama schema"
 
 msgid "Invalid ResourceType"
-msgstr ""
+msgstr "Netinkamas ResourceType"
 
 msgid "SsoRecover plugin is disabled."
 msgstr "SsoRecover įskiepis išjungtas."
@@ -6332,7 +6332,7 @@ msgid "The prompt should be one of the following: {0}."
 msgstr "Raginimas turi būti vienas iš šių: {0}."
 
 msgid "The login hint should be a boolean."
-msgstr ""
+msgstr "Prisijungimo užuomina turi būti loginė reikšmė."
 
 msgid "The client id is too large."
 msgstr "Kliento ID per didelis."
@@ -6362,7 +6362,7 @@ msgid "The scope is too large."
 msgstr "Reikšmė „scope“ per didelė."
 
 msgid "SSO settings edit endpoints are disabled."
-msgstr ""
+msgstr "SSO nustatymų redagavimo galiniai taškai išjungti."
 
 msgid "The user is not active."
 msgstr "Vartotojas neaktyvus."
@@ -6482,16 +6482,16 @@ msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
 msgstr "Arba nustatykite passbolt.security.sso.sslVerify į true faile {0}."
 
 msgid "The endpoints for updating the SSO configurations are disabled."
-msgstr ""
+msgstr "SSO konfigūracijų atnaujinimo galiniai taškai yra išjungti."
 
 msgid "The endpoints for updating the SSO configurations are enabled."
-msgstr ""
+msgstr "SSO konfigūracijų atnaujinimo galiniai taškai yra įjungti."
 
 msgid "It is recommended to disable endpoints for updating the SSO configurations."
-msgstr ""
+msgstr "Rekomenduojama išjungti SSO konfigūracijų atnaujinimo galinius taškus."
 
 msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
-msgstr ""
+msgstr "Nustatykite aplinkos kintamąjį PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED į true."
 
 msgid "The user is missing for the SSO state."
 msgstr "SSO būsenai trūksta vartotojo."
@@ -6683,7 +6683,7 @@ msgid "All users can now use Single Sign-on to perform authentication."
 msgstr "Dabar visi vartotojai gali naudoti vieno prisijungimo funkciją autentifikacijai."
 
 msgid "Viewq  it in passbolt"
-msgstr ""
+msgstr "Peržiūrėkite „passbolt'e“"
 
 msgid "The SSO setting has been deleted by {0}."
 msgstr "SSO nustatymą ištrynė {0}."
@@ -6899,7 +6899,7 @@ msgid "The is shared should be a boolean type."
 msgstr "Parametras \"is shared\" turi būti loginio tipo."
 
 msgid "The tags plugin is in read-only mode."
-msgstr ""
+msgstr "Žymių papildinys yra tik skaitymo režime."
 
 msgid "The tag should not be empty."
 msgstr "Žyma neturi būti tuščia."
@@ -6947,7 +6947,7 @@ msgid "Unable to migrate tag id: {0} to V5."
 msgstr "Nepavyko perkelti žymos su id: {0} į V5."
 
 msgid "The tag metadata key data could not be updated."
-msgstr ""
+msgstr "Nepavyko atnaujinti žymos metaduomenų rakto duomenų."
 
 msgid "Could not save the tags, try again later."
 msgstr "Nepavyko išsaugoti žymų, bandykite dar kartą vėliau."
@@ -7139,7 +7139,7 @@ msgid "This user is missing the encryption key for the shared resource metadata.
 msgstr "Šiam naudotojui trūksta šifravimo rakto bendrinamų išteklių metaduomenims. Prisijunkite ir eikite į naudotojo erdvę, kad rankiniu būdu pasidalintumėte raktu."
 
 msgid "View users"
-msgstr ""
+msgstr "Peržiūrėti vartotojus"
 
 msgid "Welcome back!"
 msgstr "Sveiki sugrįžę!"

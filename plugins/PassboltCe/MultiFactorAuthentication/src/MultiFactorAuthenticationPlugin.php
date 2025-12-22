@@ -16,9 +16,9 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication;
 
+use App\Middleware\SetUserIdentityInRequestMiddleware;
 use App\Service\Command\ProcessUserService;
 use App\Utility\Application\FeaturePluginAwareTrait;
-use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
@@ -59,7 +59,7 @@ class MultiFactorAuthenticationPlugin extends BasePlugin
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         return $middlewareQueue
-            ->insertAfter(AuthenticationMiddleware::class, MfaRequiredCheckMiddleware::class)
+            ->insertAfter(SetUserIdentityInRequestMiddleware::class, MfaRequiredCheckMiddleware::class)
             ->insertAfter(MfaRequiredCheckMiddleware::class, InjectMfaFormMiddleware::class);
     }
 

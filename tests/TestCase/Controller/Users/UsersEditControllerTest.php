@@ -16,17 +16,24 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Controller\Users\UsersEditController;
 use App\Model\Entity\Role;
+use App\Notification\Email\Redactor\User\UserAdminRoleRevokedEmailRedactor;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AvatarsIntegrationTestTrait;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
 use Cake\I18n\DateTime;
 
 class UsersEditControllerTest extends AppIntegrationTestCase
 {
     use AvatarsIntegrationTestTrait;
+    use EmailQueueTrait;
 
     public function setUp(): void
     {
@@ -120,7 +127,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertBadRequestError('Could not validate user data.');
-        $this->assertResponseContains('The user role ID must be one of the admin or user roles.');
+        $this->assertResponseContains('The user role ID must not be of the guest role.');
     }
 
     public function testUsersEditController_Error_MissingCsrfToken(): void
@@ -292,5 +299,36 @@ class UsersEditControllerTest extends AppIntegrationTestCase
 
         $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertResponseOk();
+    }
+
+    public function testUsersEditController_NotifyUserWhoseRoleIsChanged(): void
+    {
+        // Enable event tracking for emails
+        EventManager::instance()->setEventList(new EventList());
+        $jane = UserFactory::make(['username' => 'jane@passbolt.test'])
+            ->user()
+            ->with('Profiles', ['first_name' => 'Jane', 'last_name' => 'Doe'])
+            ->persist();
+        /** @var \App\Model\Entity\User $john */
+        $john = UserFactory::make(['username' => 'john@passbolt.test'])->admin()->persist();
+        UserFactory::make()->user()->persist();
+        $adminRole = RoleFactory::find()->where(['name' => Role::ADMIN])->firstOrFail();
+        // Enable sending email to user
+        Configure::write(UserAdminRoleRevokedEmailRedactor::CONFIG_KEY_SEND_USER_EMAIL, true);
+
+        $this->logInAs($john);
+        $data = [
+            'id' => $jane->id,
+            'role_id' => $adminRole->id,
+        ];
+        $this->putJson("/users/{$jane->id}.json", $data);
+
+        $this->assertSuccess();
+        $this->assertSame(Role::ADMIN, $this->_responseJsonBody->role->name);
+        // Email assertions
+        $this->assertEventFired(UsersEditController::EVENT_USER_AFTER_UPDATE);
+        $this->assertEmailQueueCount(1);
+        $this->assertEmailInBatchContains('Your role has been updated', $jane->username);
+        $this->assertEmailInBatchNotContains('You can no longer perform administration tasks.', $jane->username);
     }
 }

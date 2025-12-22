@@ -17,8 +17,13 @@ declare(strict_types=1);
 namespace Passbolt\Rbacs;
 
 use Cake\Core\BasePlugin;
+use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Cake\ORM\TableRegistry;
+use Passbolt\Rbacs\Event\ClearRbacsOnRoleDeleteListener;
+use Passbolt\Rbacs\Event\CreateRbacsOnRoleCreateListener;
+use Passbolt\Rbacs\Service\ActionAccessControl\RbacsRoleActionAccessControlService;
+use Passbolt\Rbacs\Service\ActionAccessControl\RoleActionAccessControlServiceInterface;
 
 class RbacsPlugin extends BasePlugin
 {
@@ -34,6 +39,16 @@ class RbacsPlugin extends BasePlugin
     }
 
     /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        $container
+            ->extend(RoleActionAccessControlServiceInterface::class)
+            ->setConcrete(RbacsRoleActionAccessControlService::class);
+    }
+
+    /**
      * Register Tags related listeners.
      *
      * @param \Cake\Core\PluginApplicationInterface $app App
@@ -41,9 +56,11 @@ class RbacsPlugin extends BasePlugin
      */
     public function registerListeners(PluginApplicationInterface $app): void
     {
-//        $app->getEventManager()
-//            ->on(new RbacsNotificationSettingsDefinition())
-//            ->on(new RbacsEmailRedactorPool());
+        $eventManager = $app->getEventManager();
+
+        $eventManager
+            ->on(new CreateRbacsOnRoleCreateListener())
+            ->on(new ClearRbacsOnRoleDeleteListener());
     }
 
     /**

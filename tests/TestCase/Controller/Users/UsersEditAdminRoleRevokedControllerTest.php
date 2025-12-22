@@ -74,7 +74,8 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
         $this->assertSame(Role::USER, $this->_responseJsonBody->role->name);
         // Email assertions
         $this->assertEventFired(UsersEditController::EVENT_USER_AFTER_UPDATE);
-        $this->assertEmailQueueCount(2);
+        $this->assertEmailQueueCount(3);
+        // Assert role revoked email sent to other users
         $emailText = Purifier::clean(sprintf('%s\'s admin role has been revoked', $jane->profile->full_name));
         foreach ([$john, $ada] as $admin) {
             $this->assertEmailInBatchContains($emailText, $admin->username, '', false);
@@ -83,6 +84,8 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
                 $admin->username
             );
         }
+        // Make sure role changed email sent to the user whose role got changed
+        $this->assertEmailInBatchContains('Your role has been updated', $jane->username, '', false);
     }
 
     public function testUsersEditAdminRoleRevokedController_NotificationDisabled(): void
@@ -105,10 +108,12 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
 
         $this->assertSuccess();
         $this->assertSame(Role::USER, $this->_responseJsonBody->role->name);
-        $this->assertEmailQueueCount(0);
+        $this->assertEmailQueueCount(1);
+        $emailText = Purifier::clean(sprintf('%s changed your role to %s', $john->profile->full_name, $userRole->name));
+        $this->assertEmailInBatchContains($emailText, $jane->username, '', false);
     }
 
-    public function testUsersEditAdminRoleRevokedController_NotifyUserWhoseRoleIsChanged(): void
+    public function testUsersEditAdminRoleRevokedController_NotifyUserWhoseRoleIsDowngraded(): void
     {
         $jane = UserFactory::make(['username' => 'jane@passbolt.test'])
             ->admin()
@@ -118,7 +123,7 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
         $john = UserFactory::make(['username' => 'john@passbolt.test'])->admin()->persist();
         $ada = UserFactory::make(['username' => 'ada@passbolt.test'])->admin()->persist();
         UserFactory::make()->user()->persist();
-        $userRole = RoleFactory::find()->where(['name' => Role::USER])->firstOrFail();
+        $customRole = RoleFactory::make(['name' => 'custom role'])->persist();
         // Enable sending email to user
         Configure::write(UserAdminRoleRevokedEmailRedactor::CONFIG_KEY_SEND_USER_EMAIL, true);
 
@@ -126,32 +131,29 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
         $this->logInAs($john);
         $data = [
             'id' => $jane->id,
-            'role_id' => $userRole->id,
+            'role_id' => $customRole->id,
         ];
         $this->putJson("/users/{$jane->id}.json", $data);
 
         $this->assertSuccess();
-        $this->assertSame(Role::USER, $this->_responseJsonBody->role->name);
+        $this->assertSame('custom role', $this->_responseJsonBody->role->name);
         // Email assertions
         $this->assertEventFired(UsersEditController::EVENT_USER_AFTER_UPDATE);
         $this->assertEmailQueueCount(3);
-        $this->assertEmailInBatchContains([
-            'Your admin role has been revoked',
-            'You can no longer perform administration tasks.',
-            $john->profile->full_name . ' changed your role to user.',
-            Router::url('/app/users/view/' . $jane->id, true),
-        ], $jane->username);
         $userFullName = Purifier::clean($jane->profile->first_name . ' ' . $jane->profile->last_name);
         $title = Purifier::clean(sprintf('%s\'s admin role has been revoked', $jane->profile->full_name));
         foreach ([$john, $ada] as $admin) {
             $this->assertEmailInBatchContains($title, $admin->username, '', false);
             $this->assertEmailInBatchContains(
                 [
-                    "{$john->profile->full_name} changed the role of {$userFullName} to user.",
+                    "{$john->profile->full_name} changed the role of {$userFullName} to custom role.",
                     Router::url('/app/users/view/' . $jane->id, true),
                 ],
                 $admin->username
             );
         }
+        // Role changed notification sent to the user
+        $this->assertEmailInBatchContains('Your role has been updated', $jane->username);
+        $this->assertEmailInBatchContains('You can no longer perform administration tasks.', $jane->username);
     }
 }

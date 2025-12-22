@@ -17,18 +17,21 @@ declare(strict_types=1);
 namespace App\Test\Factory;
 
 use App\Model\Entity\Role;
+use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
+use Cake\I18n\Date;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
 /**
  * RoleFactory
  *
+ * @method static self make(mixed $makeParameter = [], int $times = 1)
  * @method \App\Model\Entity\Role|\App\Model\Entity\Role[] persist()
  * @method \App\Model\Entity\Role getEntity()
  * @method \App\Model\Entity\Role[] getEntities()
  * @method static \App\Model\Entity\Role get($primaryKey, array $options = [])
- * @method static \App\Model\Entity\Role firstOrFail($conditions = null)
+ * @method \App\Model\Entity\Role firstOrFail($conditions = null)
  */
 class RoleFactory extends CakephpBaseFactory
 {
@@ -55,8 +58,17 @@ class RoleFactory extends CakephpBaseFactory
     protected function setDefaultTemplate(): void
     {
         $this->setDefaultData(function (Generator $faker) {
+            $name = $faker->name();
+            $id = UuidFactory::uuid5($name);
+
             return [
-                'name' => $faker->name(),
+                'id' => $id,
+                'name' => $name,
+                'description' => null,
+                'deleted' => null,
+                'created_by' => null,
+                'modified_by' => null,
+                'deleted_by' => null,
                 'created' => Chronos::now()->subDays($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDays($faker->randomNumber(4)),
             ];
@@ -65,17 +77,41 @@ class RoleFactory extends CakephpBaseFactory
 
     public function guest()
     {
-        return $this->patchData(['name' => Role::GUEST]);
+        $role = Role::GUEST;
+
+        return $this->patchData(['id' => UuidFactory::uuid5($role), 'name' => $role]);
     }
 
     public function user()
     {
-        return $this->patchData(['name' => Role::USER]);
+        $role = Role::USER;
+
+        return $this->patchData(['id' => UuidFactory::uuid5($role), 'name' => $role]);
     }
 
     public function admin()
     {
-        return $this->patchData(['name' => Role::ADMIN]);
+        $role = Role::ADMIN;
+
+        return $this->patchData(['id' => UuidFactory::uuid5($role), 'name' => $role]);
+    }
+
+    public function root()
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid5('root'),
+            'name' => 'root',
+            'description' => 'Super Administrator',
+        ]);
+    }
+
+    public function deleted(?Date $deleted = null): self
+    {
+        if (is_null($deleted)) {
+            $deleted = Date::yesterday();
+        }
+
+        return $this->setField('deleted', $deleted);
     }
 
     public function findOrCreate(): Role

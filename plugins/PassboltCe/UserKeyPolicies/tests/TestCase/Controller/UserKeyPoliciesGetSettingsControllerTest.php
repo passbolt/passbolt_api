@@ -229,7 +229,7 @@ class UserKeyPoliciesGetSettingsControllerTest extends AppIntegrationTestCase
 
     public function testUserKeyPoliciesGetSettingsController_Error_SessionConfusion(): void
     {
-        $user = UserFactory::make()->user()->inactive()->persist();
+        $user = UserFactory::make()->user()->persist();
         /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = AuthenticationTokenFactory::make()
             ->expired()

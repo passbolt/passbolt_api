@@ -21,7 +21,7 @@ use App\Model\Entity\Role;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 
-class IsAdminOrUserRoleIdRule
+class IsNotGuestRoleIdRule
 {
     /**
      * Performs the check
@@ -40,15 +40,15 @@ class IsAdminOrUserRoleIdRule
         /** @var \App\Model\Table\RolesTable $RolesTable */
         $RolesTable = TableRegistry::getTableLocator()->get('Roles');
 
-        $roleIdIsAdminOrUser = $RolesTable->find()
-            ->where(['id' => $roleId])
-            ->whereInList('name', [Role::USER, Role::ADMIN])
-            ->count() > 0;
+        $roleIdIsGuest = $RolesTable->exists([
+                'id' => $roleId,
+                'name' => Role::GUEST,
+            ]);
 
-        if ($roleIdIsAdminOrUser) {
-            return true;
+        if ($roleIdIsGuest) {
+            return __('The user role ID must not be of the guest role.');
         }
 
-        return __('The user role ID must be one of the admin or user roles.');
+        return true;
     }
 }

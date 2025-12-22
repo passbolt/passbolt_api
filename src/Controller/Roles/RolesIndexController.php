@@ -17,18 +17,12 @@ declare(strict_types=1);
 namespace App\Controller\Roles;
 
 use App\Controller\AppController;
-use App\Model\Table\RolesTable;
 
 /**
  * RolesIndexController Class
  */
 class RolesIndexController extends AppController
 {
-    /**
-     * @var \App\Model\Table\RolesTable
-     */
-    protected RolesTable $Roles;
-
     /**
      * Roles Index action
      *
@@ -38,8 +32,20 @@ class RolesIndexController extends AppController
     {
         $this->assertJson();
 
-        $this->Roles = $this->fetchTable('Roles');
-        $roles = $this->Roles->find('all');
-        $this->success(__('The operation was successful.'), $roles);
+        $options = [];
+        if ($this->User->isAdmin()) {
+            $whitelist = [
+                'filter' => ['is-deleted'],
+                'contain' => ['user_count'],
+            ];
+            $options = $this->QueryString->get($whitelist);
+        }
+
+        /** @var \App\Model\Table\RolesTable $rolesTable */
+        $rolesTable = $this->fetchTable('Roles');
+        $query = $rolesTable->find();
+        $results = $rolesTable->findIndex($query, $options)->all();
+
+        $this->success(__('The operation was successful.'), $results);
     }
 }

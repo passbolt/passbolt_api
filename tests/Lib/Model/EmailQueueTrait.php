@@ -144,15 +144,17 @@ trait EmailQueueTrait
      * @param int|string $i Email position in the queue (start with 0), default 0, or the username of the recipient
      * @param string $message Error message
      * @param bool $htmlSpecialChar Convert string to html special characters (useful when searching names)
+     * @param string|null $template Email template to find (along with username of the recipient)
      */
     protected function assertEmailInBatchContains(
         $string,
         $i = 0,
         string $message = '',
-        bool $htmlSpecialChar = true
+        bool $htmlSpecialChar = true,
+        ?string $template = null
     ): void {
         $strings = (array)$string;
-        $renderedEmail = $this->renderEmail($i);
+        $renderedEmail = $this->renderEmail($i, $template);
         foreach ($strings as $string) {
             if ($htmlSpecialChar) {
                 $string = h($string);
@@ -187,14 +189,19 @@ trait EmailQueueTrait
 
     /**
      * @param int|string $i Email position in batch or recipient
+     * @param string|null $template Template.
      * @return string
      */
-    protected function renderEmail($i = 0): string
+    protected function renderEmail(int|string $i = 0, ?string $template = null): string
     {
         if (is_int($i)) {
             $email = EmailQueueFactory::find()->orderBy('id')->offset($i)->first();
         } else {
-            $email = EmailQueueFactory::find()->where(['email' => $i])->first();
+            $conditions = ['email' => $i];
+            if (!is_null($template)) {
+                $conditions['template'] = $template;
+            }
+            $email = EmailQueueFactory::find()->where($conditions)->first();
         }
         if (empty($email)) {
             $this->fail("The email queue does not have an email at index $i");

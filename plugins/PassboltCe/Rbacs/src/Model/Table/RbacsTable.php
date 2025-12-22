@@ -201,4 +201,19 @@ class RbacsTable extends Table
 
         return $rules;
     }
+
+    /**
+     * @param string $roleId role ID
+     * @param string $actionId action ID
+     * @return bool
+     */
+    public function isActionAllowedForRole(string $roleId, string $actionId): bool
+    {
+        return $this->exists([
+            'role_id' => $roleId,
+            'foreign_model' => Rbac::FOREIGN_MODEL_ACTION,
+            'foreign_id' => $actionId,
+            'control_function' => Rbac::CONTROL_FUNCTION_ALLOW,
+        ]);
+    }
 }

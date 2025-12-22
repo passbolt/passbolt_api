@@ -26,7 +26,7 @@ use Passbolt\Log\Model\Entity\ActionLog;
 use Passbolt\Log\Model\Entity\EntityHistory;
 use Passbolt\Log\Model\Entity\SecretHistory;
 use Passbolt\SecretRevisions\Model\Entity\SecretRevision;
-use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsFactory;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 /**
  * ActionLogFactory
@@ -104,10 +104,10 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param \Passbolt\SecretRevisions\Test\Factory\SecretRevisionsFactory|SecretRevision|array $secretRevisions Secret revisions.
+     * @param \Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory|SecretRevision|array $secretRevisions Secret revisions.
      * @return $this
      */
-    public function withSecretRevisions(array|SecretRevisionsFactory|SecretRevision $secretRevisions = [])
+    public function withSecretRevisions(array|SecretRevisionFactory|SecretRevision $secretRevisions = [])
     {
         return $this->secretRevisions()->with('SecretRevisions', $secretRevisions);
     }

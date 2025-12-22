@@ -65,6 +65,13 @@ class HealthcheckCommand extends PassboltCommand
     private Arguments $args;
 
     /**
+     * Adjusts the command exit codes and redirects warnings/errors to STDERR.
+     *
+     * @var bool
+     */
+    private bool $posixModeIsEnabled = false;
+
+    /**
      * @var \App\Service\Command\ProcessUserService
      */
     protected ProcessUserService $processUserService;
@@ -100,7 +107,7 @@ class HealthcheckCommand extends PassboltCommand
     {
         $parser = parent::buildOptionParser($parser);
 
-        // Display options
+        // Display options and posix mode
         $parser
             ->addOption('hide-pass', [
                 'help' => __d('cake_console', 'Hide passing checks.'),
@@ -120,6 +127,13 @@ class HealthcheckCommand extends PassboltCommand
             ])
             ->addOption('hide-notice', [
                 'help' => __d('cake_console', 'Hide info messages.'),
+                'boolean' => true,
+            ])
+            ->addOption('posix', [
+                'help' => __d(
+                    'cake_console',
+                    'Set the exit status to 1 when errors or warnings are detected, and print them to STDERR.'
+                ),
                 'boolean' => true,
             ]);
 
@@ -156,6 +170,8 @@ class HealthcheckCommand extends PassboltCommand
         foreach ($displayOptions as $option) {
             $this->_displayOptions[$option] = $args->getOption($option);
         }
+
+        $this->posixModeIsEnabled = $args->getOption('posix');
 
         // If user only want to run one check
         $paramChecks = [];
@@ -208,7 +224,7 @@ class HealthcheckCommand extends PassboltCommand
         $io->out();
         $this->summary();
 
-        return $this->successCode();
+        return $this->posixModeIsEnabled && $this->__errorCount > 0 ? $this->errorCode() : $this->successCode();
     }
 
     /**
@@ -372,26 +388,30 @@ class HealthcheckCommand extends PassboltCommand
                     return;
                 }
                 $msg = ' <success>[' . __('PASS') . ']</success> ' . $msg;
+                $this->io->out($msg);
                 break;
             case 'fail':
                 $msg = ' <error>[' . __('FAIL') . '] ' . $msg . '</error>';
+                $this->posixModeIsEnabled ? $this->io->err($msg) : $this->io->out($msg);
                 break;
             case 'warn':
                 $msg = ' <warning>[' . __('WARN') . '] ' . $msg . '</warning>';
+                $this->posixModeIsEnabled ? $this->io->err($msg) : $this->io->out($msg);
                 break;
             case 'info':
                 if ($this->_displayOptions['hide-help']) {
                     return;
                 }
                 $msg = ' <info>[' . __('HELP') . ']</info> ' . $msg;
+                $this->io->out($msg);
                 break;
             case 'notice':
                 $msg = ' <info>[' . __('INFO') . ']</info> ' . $msg;
+                $this->io->out($msg);
                 break;
             default:
                 throw new Exception('Task output case not defined: ' . $case . ' ' . $msg);
         }
-        $this->io->out($msg);
     }
 
     /**

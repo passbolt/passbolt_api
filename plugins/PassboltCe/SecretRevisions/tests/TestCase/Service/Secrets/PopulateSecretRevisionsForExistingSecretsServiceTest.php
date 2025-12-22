@@ -29,7 +29,7 @@ use Passbolt\Log\Test\Factory\ActionLogFactory;
 use Passbolt\Log\Test\Factory\EntitiesHistoryFactory;
 use Passbolt\Log\Test\Factory\SecretsHistoryFactory;
 use Passbolt\SecretRevisions\Service\Secrets\PopulateSecretRevisionsForExistingSecretsService;
-use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsFactory;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 /**
  * @covers \Passbolt\SecretRevisions\Service\Secrets\PopulateSecretRevisionsForExistingSecretsService
@@ -83,7 +83,7 @@ class PopulateSecretRevisionsForExistingSecretsServiceTest extends TestCase
         $resource2 = ResourceFactory::make()
             ->withCreatorAndPermission($user2)
             ->persist();
-        $secretRevisionOfR2 = SecretRevisionsFactory::make([
+        $secretRevisionOfR2 = SecretRevisionFactory::make([
             'resource_id' => $resource2->id,
             'resource_type_id' => $resource2->resource_type_id,
             'created' => DateTime::now()->subDays(2),
@@ -96,9 +96,9 @@ class PopulateSecretRevisionsForExistingSecretsServiceTest extends TestCase
 
         $this->service->populate();
 
-        $this->assertSame(2, SecretRevisionsFactory::count());
+        $this->assertSame(2, SecretRevisionFactory::count());
         /** @var \Passbolt\SecretRevisions\Model\Entity\SecretRevision[] $secretRevisions */
-        $secretRevisions = SecretRevisionsFactory::find()->orderByDesc('created')->toArray();
+        $secretRevisions = SecretRevisionFactory::find()->orderByDesc('created')->toArray();
         $secretRevisionCreated = $secretRevisions[0];
         $this->assertSame($resource->id, $secretRevisionCreated->resource_id);
         $this->assertSame($resource->resource_type_id, $secretRevisionCreated->resource_type_id);
@@ -181,7 +181,7 @@ class PopulateSecretRevisionsForExistingSecretsServiceTest extends TestCase
         $this->service->populate();
 
         /** @var \Passbolt\SecretRevisions\Model\Entity\SecretRevision[] $secretRevisions */
-        $secretRevisions = SecretRevisionsFactory::find()->all()->toArray();
+        $secretRevisions = SecretRevisionFactory::find()->all()->toArray();
         $this->assertCount(1, $secretRevisions);
         $secretRevision = $secretRevisions[0];
         $this->assertSame($resource->id, $secretRevision->resource_id);
@@ -250,7 +250,7 @@ class PopulateSecretRevisionsForExistingSecretsServiceTest extends TestCase
         $this->service->populate();
 
         /** @var \Passbolt\SecretRevisions\Model\Entity\SecretRevision[] $secretRevisions */
-        $secretRevisions = SecretRevisionsFactory::find()->all()->toArray();
+        $secretRevisions = SecretRevisionFactory::find()->all()->toArray();
         $this->assertCount(1, $secretRevisions);
         $secretRevision = $secretRevisions[0];
         $this->assertSame($resource->id, $secretRevision->resource_id);
@@ -326,7 +326,7 @@ class PopulateSecretRevisionsForExistingSecretsServiceTest extends TestCase
         $this->service->populate();
 
         /** @var \Passbolt\SecretRevisions\Model\Entity\SecretRevision[] $secretRevisions */
-        $secretRevisions = SecretRevisionsFactory::find()->all()->toArray();
+        $secretRevisions = SecretRevisionFactory::find()->all()->toArray();
         $this->assertCount(1, $secretRevisions);
         $secretRevision = $secretRevisions[0];
         $this->assertSame($resource->id, $secretRevision->resource_id);
@@ -355,7 +355,7 @@ class PopulateSecretRevisionsForExistingSecretsServiceTest extends TestCase
         $this->service->populate();
 
         /** @var \Passbolt\SecretRevisions\Model\Entity\SecretRevision[] $secretRevisions */
-        $secretRevisions = SecretRevisionsFactory::find()->all()->toArray();
+        $secretRevisions = SecretRevisionFactory::find()->all()->toArray();
         $this->assertCount(1, $secretRevisions);
         $secretRevision = $secretRevisions[0];
         $this->assertSame($resource->id, $secretRevision->resource_id);
@@ -367,5 +367,52 @@ class PopulateSecretRevisionsForExistingSecretsServiceTest extends TestCase
         /** @var \App\Model\Entity\Secret $secret */
         $secret = SecretFactory::find()->where(['id' => $secretOfAda->id])->firstOrFail();
         $this->assertSame($secretRevision->id, $secret->secret_revision_id);
+    }
+
+    /**
+     * Test that batch processing works correctly when the number of resources
+     * exceeds the batch size, ensuring all resources are processed across multiple batches.
+     */
+    public function testPopulateSecretRevisionsForExistingSecretsService_BatchProcessing(): void
+    {
+        // Create 5 resources to test batch processing with a batch size of 2
+        $batchSize = 2;
+        $totalResources = 5;
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->withValidGpgKey()->persist();
+
+        // Create multiple resources without secret revisions
+        /** @var \App\Model\Entity\Resource[] $resources */
+        $resources = ResourceFactory::make($totalResources)
+            ->withCreatorAndPermission($user)
+            ->with('Secrets', ['user_id' => $user->id])
+            ->persist();
+
+        // Use a small batch size to test multiple batch iterations
+        $service = new PopulateSecretRevisionsForExistingSecretsService($batchSize);
+        $service->populate();
+
+        // Assert all resources have secret revisions created
+        $this->assertSame($totalResources, SecretRevisionFactory::count());
+
+        // Verify each resource has a corresponding secret revision
+        foreach ($resources as $resource) {
+            /** @var \Passbolt\SecretRevisions\Model\Entity\SecretRevision|null $secretRevision */
+            $secretRevision = SecretRevisionFactory::find()
+                ->where(['resource_id' => $resource->id])
+                ->first();
+            $this->assertNotNull($secretRevision, "Secret revision not found for resource {$resource->id}");
+            $this->assertSame($resource->resource_type_id, $secretRevision->resource_type_id);
+            $this->assertSame($user->id, $secretRevision->created_by);
+            $this->assertSame($user->id, $secretRevision->modified_by);
+
+            // Verify the secret is linked to the revision
+            /** @var \App\Model\Entity\Secret $secret */
+            $secret = SecretFactory::find()
+                ->where(['resource_id' => $resource->id, 'user_id' => $user->id])
+                ->firstOrFail();
+            $this->assertSame($secretRevision->id, $secret->secret_revision_id);
+        }
     }
 }

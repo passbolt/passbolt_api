@@ -26,7 +26,7 @@ use Passbolt\SecretRevisions\Model\Entity\SecretRevision;
 use Passbolt\SecretRevisions\Model\Table\SecretRevisionsTable;
 use Passbolt\SecretRevisions\SecretRevisionsPlugin;
 use Passbolt\SecretRevisions\Service\SecretRevisionsSettingsGetService;
-use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsFactory;
+use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 use Passbolt\SecretRevisions\Test\Factory\SecretRevisionsSettingsFactory;
 
 /**
@@ -58,16 +58,16 @@ class SecretRevisionsTableAfterSaveTest extends TestCase
 
         $maxRevision = 3;
         SecretRevisionsSettingsFactory::make()->setMaxRevisions($maxRevision)->persist();
-        $activeSecretRevision = SecretRevisionsFactory::make()
+        $activeSecretRevision = SecretRevisionFactory::make()
             ->with('Resources', $r1)
             ->with('Secrets', SecretFactory::make(10)->setField('resource_id', $r1->get('id')))
             ->persist();
-        SecretRevisionsFactory::make(10)
+        SecretRevisionFactory::make(10)
             ->with('Resources', $r1)
             ->with('Secrets', SecretFactory::make(10)->setField('resource_id', $r1->get('id'))->deleted())
             ->deleted()
             ->persist();
-        SecretRevisionsFactory::make(5)
+        SecretRevisionFactory::make(5)
             ->with('Resources', $r2)
             ->with('Secrets', SecretFactory::make(10)->setField('resource_id', $r2->get('id'))->deleted())
             ->deleted()
@@ -101,11 +101,11 @@ class SecretRevisionsTableAfterSaveTest extends TestCase
     {
         $r1 = ResourceFactory::make()->persist();
 
-        SecretRevisionsFactory::make()
+        SecretRevisionFactory::make()
             ->with('Resources', $r1)
             ->with('Secrets', SecretFactory::make(10)->setField('resource_id', $r1->get('id')))
             ->persist();
-        SecretRevisionsFactory::make(10)
+        SecretRevisionFactory::make(10)
             ->with('Resources', $r1)
             ->with('Secrets', SecretFactory::make(10)->setField('resource_id', $r1->get('id'))->deleted())
             ->deleted()
@@ -121,7 +121,7 @@ class SecretRevisionsTableAfterSaveTest extends TestCase
         $this->SecretRevisions->save($secretRevision);
 
         // Assert that all the soft deleted revisions were dropped
-        $this->assertSame(12, SecretRevisionsFactory::find()->where(['resource_id' => $r1->get('id')])->count());
+        $this->assertSame(12, SecretRevisionFactory::find()->where(['resource_id' => $r1->get('id')])->count());
         // Since no secrets are associated to the new secret revision, no secret should be left in DB
         $this->assertSame(0, SecretFactory::find()->where(['resource_id' => $r1->get('id')])->count());
     }

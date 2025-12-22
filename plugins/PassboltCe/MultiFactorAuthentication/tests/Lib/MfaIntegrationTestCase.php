@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\Lib;
 
-use App\Authenticator\AbstractSessionIdentificationService;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\UserAccessControlTrait;
@@ -113,8 +112,9 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
     public function mockSessionId(string $sessionId)
     {
         $this->mockService(SessionIdentificationServiceInterface::class, function () use ($sessionId) {
-            $stubSessionIdentifier = $this->getMockForAbstractClass(AbstractSessionIdentificationService::class);
+            $stubSessionIdentifier = $this->createStub(SessionIdentificationServiceInterface::class);
             $stubSessionIdentifier->method('getSessionIdentifier')->willReturn($sessionId);
+            $stubSessionIdentifier->method('checkAuthenticationToken')->willReturn(true);
 
             return $stubSessionIdentifier;
         });

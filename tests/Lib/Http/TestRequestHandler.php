@@ -32,6 +32,8 @@ class TestRequestHandler implements RequestHandlerInterface
 {
     public $callable;
 
+    protected ServerRequestInterface $request;
+
     public function __construct(?callable $callable = null)
     {
         $this->callable = $callable ?: function ($request) {
@@ -41,6 +43,16 @@ class TestRequestHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return ($this->callable)($request);
+        $this->request = $request;
+
+        return ($this->callable)($this->request);
+    }
+
+    /**
+     * @return \Psr\Http\Message\ServerRequestInterface
+     */
+    public function getRequest(): ServerRequestInterface
+    {
+        return $this->request;
     }
 }

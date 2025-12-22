@@ -21,8 +21,10 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Passbolt\Log\Test\Factory\ActionFactory;
 use Passbolt\Rbacs\Model\Entity\Rbac;
 use Passbolt\Rbacs\Model\Entity\UiAction;
+use Passbolt\Rbacs\Service\Actions\RbacsControlledActionsInsertService;
 use Passbolt\Rbacs\Test\Factory\RbacFactory;
 use Passbolt\Rbacs\Test\Factory\UiActionFactory;
 use Passbolt\Rbacs\Test\Lib\RbacsTestCase;
@@ -138,6 +140,59 @@ class RbacsTableTest extends RbacsTestCase
         $this->assertInstanceOf(Rbac::class, $result);
     }
 
+    public function testRbacsTable_BuildRules_AllowedControlFunctionForAction_Valid(): void
+    {
+        $role = RoleFactory::make()->persist();
+        $action = ActionFactory::make()->name(RbacsControlledActionsInsertService::NAME_GROUPS_ADD)->persist();
+
+        $data = [
+            'role_id' => $role->get('id'),
+            'control_function' => Rbac::CONTROL_FUNCTION_ALLOW,
+            'foreign_model' => Rbac::FOREIGN_MODEL_ACTION,
+            'foreign_id' => $action->get('id'),
+        ];
+        $rbac = $this->Rbacs->newEntity($data, [
+            'accessibleFields' => [
+                'role_id' => true,
+                'control_function' => true,
+                'foreign_model' => true,
+                'foreign_id' => true,
+            ],
+        ]);
+
+        $result = $this->Rbacs->save($rbac);
+
+        $this->assertInstanceOf(Rbac::class, $result);
+    }
+
+    public function testRbacsTable_BuildRules_AllowedControlFunctionForAction_Invalid(): void
+    {
+        $role = RoleFactory::make()->persist();
+
+        $data = [
+            'role_id' => $role->get('id'),
+            'control_function' => Rbac::CONTROL_FUNCTION_ALLOW,
+            'foreign_model' => Rbac::FOREIGN_MODEL_ACTION,
+            'foreign_id' => UuidFactory::uuid(),
+        ];
+        $rbac = $this->Rbacs->newEntity($data, [
+            'accessibleFields' => [
+                'role_id' => true,
+                'control_function' => true,
+                'foreign_model' => true,
+                'foreign_id' => true,
+            ],
+        ]);
+
+        $result = $this->Rbacs->save($rbac);
+
+        $this->assertFalse($result);
+        $this->assertSame(
+            'The control function is not allowed for this Action.',
+            $rbac->getErrors()['control_function']['isControlFunctionAllowed']
+        );
+    }
+
     public function testRbacsTable_BuildRules_AllowedControlFunctionForUiAction_Invalid(): void
     {
         $userRole = RoleFactory::make()->user()->persist();
@@ -190,5 +245,24 @@ class RbacsTableTest extends RbacsTestCase
         $errors = $rbac->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertArrayHasKey('isControlFunctionAllowed', $errors['control_function']);
+    }
+
+    public function testRbacsTable_isActionAllowedForRole(): void
+    {
+        $actionId = UuidFactory::uuid();
+        $roleId = UuidFactory::uuid();
+        $factory = RbacFactory::make();
+
+        $factory->persist();
+        $this->assertFalse($this->Rbacs->isActionAllowedForRole($roleId, $actionId));
+
+        $factory->setField('foreign_id', $actionId)->persist();
+        $this->assertFalse($this->Rbacs->isActionAllowedForRole($roleId, $actionId));
+
+        $factory->setField('foreign_model', Rbac::FOREIGN_MODEL_ACTION)->persist();
+        $this->assertFalse($this->Rbacs->isActionAllowedForRole($roleId, $actionId));
+
+        $factory->setField('role_id', $roleId)->persist();
+        $this->assertTrue($this->Rbacs->isActionAllowedForRole($roleId, $actionId));
     }
 }

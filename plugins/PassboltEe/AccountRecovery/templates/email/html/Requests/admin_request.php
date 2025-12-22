@@ -34,7 +34,7 @@ echo $this->element('Email/module/avatar',[
 
 $text = '<h3>' . __('Recovery request') . '</h3><br/>';
 $text .= __('{0} has initiated an account recovery request.', $name);
-$text .= ' ' . __('Since you are an administrator, you are requested to help them.');
+$text .= ' ' . __('Since you’re authorized to handle account recovery requests, please process this one.');
 $text .= ' ' . __('You will need your organization recovery key to continue.');
 echo $this->element('Email/module/text', [
     'text' => $text

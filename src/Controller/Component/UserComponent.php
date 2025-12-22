@@ -23,7 +23,6 @@ use Cake\Controller\Component;
 use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 use donatj\UserAgent\UserAgentParser;
 use Exception;
 
@@ -90,6 +89,22 @@ class UserComponent extends Component
     public function role(): ?string
     {
         return $this->getAuthenticatedUserProperty('role.name', Role::GUEST);
+    }
+
+    /**
+     * @return \App\Model\Entity\Role
+     */
+    public function getRoleEntity(): Role
+    {
+        $role = $this->Authentication->getIdentity()->getOriginalData()['role'] ?? null;
+        if (is_null($role)) {
+            /** @var \App\Model\Table\RolesTable $Roles */
+            $Roles = TableRegistry::getTableLocator()->get('Roles');
+
+            return $Roles->find()->where(['name' => Role::GUEST])->first();
+        }
+
+        return $role;
     }
 
     /**
@@ -163,21 +178,11 @@ class UserComponent extends Component
      */
     protected function getAuthenticatedUserProperty(string $property, ?string $default = null): ?string
     {
-        try {
-            // Get the user delivered by the authentication result.
-            $data = $this->Authentication->getResult()->getData() ?? null;
-            if (!isset($data)) {
-                $user = [];
-            } elseif (!isset($data['user'])) {
-                $user = $data;
-            } else {
-                $user = $data['user'];
-            }
-        } catch (Exception $e) {
-            $user = [];
-        } finally {
-            return Hash::get($user, $property, $default);
+        if ($this->Authentication->getIdentity() === null) {
+            return $default;
         }
+
+        return $this->Authentication->getIdentityData($property) ?? $default;
     }
 
     /**

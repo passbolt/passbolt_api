@@ -19,6 +19,7 @@ namespace Passbolt\Log\Service\ActionLogs;
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
+use Cake\Database\Expression\IdentifierExpression;
 use Cake\I18n\Date;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
@@ -78,8 +79,7 @@ class ActionLogsPurgeService
                 'count' => 'COUNT(*)',
                 'action_id',
             ])
-            ->groupBy('ActionLogs.action_id')
-            ->orderByDesc('count');
+            ->groupBy('ActionLogs.action_id');
 
         $total->formatResults(function (CollectionInterface $results) {
             $actionsToPurge = $this->getActionUuidsToPurge();
@@ -106,13 +106,23 @@ class ActionLogsPurgeService
     private function getActionLogsToPurge(int $retentionInDays): SelectQuery
     {
         $createdBefore = Date::now()->subDays($retentionInDays);
-        $ActionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+        $actionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
 
-        return $ActionLogsTable->find()
-            ->leftJoinWith('EntitiesHistory')
+        $entitiesHistoryTable = TableRegistry::getTableLocator()->get('Passbolt/Log.EntitiesHistory');
+        $tableAlias = $actionLogsTable->getAlias();
+        $subquery = $entitiesHistoryTable
+            ->find()
+            ->select([1])
+            ->where([$entitiesHistoryTable->aliasField('action_log_id') => new IdentifierExpression("$tableAlias.id")]);
+
+        $actionLogsQuery = $actionLogsTable->find();
+
+        return $actionLogsQuery
             ->whereInList('ActionLogs.action_id', array_keys($this->getActionUuidsToPurge()))
-            ->whereNull('EntitiesHistory.id')
-            ->where(['ActionLogs.created < ' => $createdBefore]);
+            ->where([
+                'ActionLogs.created < ' => $createdBefore,
+                $actionLogsQuery->newExpr()->notExists($subquery),
+            ]);
     }
 
     /**

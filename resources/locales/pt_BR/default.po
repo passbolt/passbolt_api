@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-10-01 06:24+0000\n"
-"PO-Revision-Date: 2025-10-01 10:39\n"
+"PO-Revision-Date: 2025-12-12 18:41\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -2048,10 +2048,10 @@ msgid "Validation success for resource {0}"
 msgstr "Sucesso na validação para o recurso {0}"
 
 msgid "Metadata key exist and present for resource {0}."
-msgstr ""
+msgstr "A chave de metadados existe e está presente para o recurso {0}."
 
 msgid "Metadata key does not exists or soft-deleted for resource {0}."
-msgstr ""
+msgstr "A chave de metadados não existe ou foi removida logicamente para o recurso {0}."
 
 msgid "The resource types associated to this resource does not exist."
 msgstr "Os tipos de recursos associados a este recurso não existem"
@@ -2798,10 +2798,10 @@ msgid "The data should be a valid ASCII string."
 msgstr "Os dados devem ser uma string ASCII válida."
 
 msgid "The expired field value should be a valid ISO 80601 date."
-msgstr ""
+msgstr "O valor do campo expired deve ser uma data ISO 80601 válida."
 
 msgid "The expired field value should be parseable."
-msgstr ""
+msgstr "O valor do campo expired deve ser interpretável."
 
 msgid "The setting should be a valid boolean."
 msgstr "A configuração deve ser um booleano válido."
@@ -2810,13 +2810,13 @@ msgid "The setting is required."
 msgstr "A configuração é necessária."
 
 msgid "The metadata private keys is required."
-msgstr ""
+msgstr "Uma chave privada de metadados é necessária."
 
 msgid "The metadata private keys should not be empty."
-msgstr ""
+msgstr "A chave privada de metadados não deve estar vazia."
 
 msgid "Need at most one metadata private key."
-msgstr ""
+msgstr "É necessário no máximo uma chave privada de metadados."
 
 msgid "A metadata key identifier is required."
 msgstr "Um identificador de chave de metadados é obrigatório."
@@ -2825,7 +2825,7 @@ msgid "The metadata key identifier should be a valid UUID."
 msgstr "O identificador da chave de metadados deve ser um UUID válido."
 
 msgid "The user identifier should be null."
-msgstr ""
+msgstr "O identificador de usuário deve ser nulo."
 
 msgid "The data is required."
 msgstr "Os dados são obrigatórios."
@@ -3020,10 +3020,10 @@ msgid "You edited the metadata settings"
 msgstr "Você editou as configurações de metadados"
 
 msgid "No metadata private keys found for metadata key {0}."
-msgstr ""
+msgstr "Nenhuma chave privada de metadados encontrada para a chave de metadados {0}."
 
 msgid "Metadata keys present for metadata key {0}"
-msgstr ""
+msgstr "Chaves de metadados presentes para a chave de metadados {0}."
 
 msgid "No active metadata key found."
 msgstr "Nenhuma chave de metadados ativa encontrada."
@@ -3134,7 +3134,7 @@ msgid "Could not validate the settings."
 msgstr "Não foi possível validar as configurações."
 
 msgid "The server metadata private keys data are invalid."
-msgstr ""
+msgstr "Os dados das chaves privadas de metadados do servidor são inválidos."
 
 msgid "The server metadata private key is required to enable these settings."
 msgstr "A chave privada de metadados do servidor é necessária para habilitar essas configurações."
@@ -3317,13 +3317,13 @@ msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr "A criação/modificação de tag com metadados criptografados não é permitida."
 
 msgid "Resource creation with cleartext metadata not allowed."
-msgstr ""
+msgstr "Criação de recurso com metadados em texto claro não permitida."
 
 msgid "Folder creation with cleartext metadata not allowed."
-msgstr ""
+msgstr "Criação de pasta com metadados em texto claro não permitida."
 
 msgid "Tag creation with cleartext metadata not allowed."
-msgstr ""
+msgstr "Criação de tag com metadados em texto claro não permitida."
 
 msgid "You created a new metadata key."
 msgstr "Você criou uma nova chave de metadados."
@@ -3377,7 +3377,7 @@ msgid "You have edited a resource."
 msgstr "Você editou um recurso."
 
 msgid "{0} has edited a resource."
-msgstr ""
+msgstr "{0} editou um recurso."
 
 msgid "Information about the transfer is required."
 msgstr "Informações sobre a transferência são necessárias."
@@ -6026,7 +6026,7 @@ msgid "Directory Sync"
 msgstr "Sincronização de Diretório"
 
 msgid "SCIM"
-msgstr ""
+msgstr "SCIM"
 
 msgid "Only administrators are allowed to create/update MFA policies settings."
 msgstr "Somente administradores têm permissão para criar/atualizar configurações de políticas de MFA."
@@ -6113,37 +6113,37 @@ msgid "view it in passbolt"
 msgstr "visualize no passbolt"
 
 msgid "The SCIM setting id should be a valid UUID."
-msgstr ""
+msgstr "O identificador da configuração do SCIM deve ser um UUID válido."
 
 msgid "The identifier of the default user should be a valid UUID."
-msgstr ""
+msgstr "O identificador do usuário padrão deve ser um UUID válido."
 
 msgid "The user is not active, disabled or does not exist."
-msgstr ""
+msgstr "O usuário não está ativo, está desabilitado ou não existe."
 
 msgid "The Setting ID cannot be passed on update."
-msgstr ""
+msgstr "O ID da configuração não pode ser passado na atualização."
 
 msgid "The secret token should not be empty."
-msgstr ""
+msgstr "O token secreto não deve estar vazio."
 
 msgid "The ID for the SCIM settings should not be empty."
-msgstr ""
+msgstr "O ID das configurações do SCIM não deve estar vazio."
 
 msgid "The ID for the SCIM settings should be a valid UUID."
-msgstr ""
+msgstr "O ID das configurações do SCIM deve ser um UUID válido."
 
 msgid "Simultaneous SCIM and session authentication is not permitted."
-msgstr ""
+msgstr "A autenticação simultânea via SCIM e sessão não é permitida."
 
 msgid "SCIM settings endpoints are disabled."
-msgstr ""
+msgstr "Endpoints de configurações de SCIM desativados."
 
 msgid "An entry for the same related entity already exists"
-msgstr ""
+msgstr "Uma entrada para a mesma entidade relacionada já existe."
 
 msgid "An entry with the same `scim_name` and ResourceType already exist."
-msgstr ""
+msgstr "Já existe uma entrada com o mesmo `scim_name` e ResourceType."
 
 msgid "Users"
 msgstr "Usuários"
@@ -6152,49 +6152,49 @@ msgid "Groups"
 msgstr "Grupos"
 
 msgid "The secret token format is incorrect."
-msgstr ""
+msgstr "O formato do token secreto está incorreto."
 
 msgid "SCIM plugin is enabled."
-msgstr ""
+msgstr "O plugin SCIM está ativado."
 
 msgid "SCIM plugin is disabled."
-msgstr ""
+msgstr "O plugin SCIM está desativado."
 
 msgid "The SCIM settings could not be decrypted with the server gpg key."
-msgstr ""
+msgstr "Não foi possível descriptografar as configurações do SCIM com a chave GPG do servidor."
 
 msgid "The SCIM settings could not be encrypted with the server gpg key."
-msgstr ""
+msgstr "Não foi possível criptografar as configurações do SCIM com a chave GPG do servidor."
 
 msgid "Could not validate the SCIM settings found in database."
-msgstr ""
+msgstr "Não foi possível validar as configurações de SCIM encontradas na base de dados."
 
 msgid "The SCIM setting identifier should be a valid UUID."
-msgstr ""
+msgstr "O identificador da configuração do SCIM deve ser um UUID válido."
 
 msgid "Could not validate the SCIM settings."
-msgstr ""
+msgstr "Não foi possível validar as configurações de SCIM."
 
 msgid "The SCIM plugin is disabled."
-msgstr ""
+msgstr "O plugin SCIM está desativado."
 
 msgid "Please delete previous settings before creating again."
-msgstr ""
+msgstr "Exclua as configurações anteriores antes de criar novamente."
 
 msgid "The uuid in the url doesn't match any known setting record."
-msgstr ""
+msgstr "O UUID na URL não corresponde a nenhum registro de configuração conhecido."
 
 msgid "Email"
 msgstr "E-mail"
 
 msgid "External id"
-msgstr ""
+msgstr "ID externo"
 
 msgid "Invalid Schema"
-msgstr ""
+msgstr "Esquema inválido"
 
 msgid "Invalid ResourceType"
-msgstr ""
+msgstr "ResourceType inválido"
 
 msgid "SsoRecover plugin is disabled."
 msgstr "O plugin SsoRecover está desativado."
