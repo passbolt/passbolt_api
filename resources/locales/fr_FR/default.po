@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-10-01 06:24+0000\n"
-"PO-Revision-Date: 2025-10-17 07:18\n"
+"PO-Revision-Date: 2025-12-12 18:40\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -398,7 +398,7 @@ msgid "Invalid expiry time {0}."
 msgstr "Délai d'expiration invalide {0}."
 
 msgid "The user role ID must be one of the admin or user roles."
-msgstr ""
+msgstr "L'identifiant du rôle utilisateur doit être celui d'un rôle administrateur ou utilisateur."
 
 msgid "The identifier should not be empty."
 msgstr "L'identifiant ne doit pas être vide."
@@ -1472,13 +1472,13 @@ msgid "Cache is NOT working."
 msgstr "Le cache ne fonctionne pas."
 
 msgid "Deprecated `_cake_core_` cache configuration found."
-msgstr ""
+msgstr "Une configuration de cache obsolète `_cake_core_` a été trouvée."
 
 msgid "Check the settings in {0}"
 msgstr "Vérifier les paramètres dans {0}"
 
 msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
-msgstr ""
+msgstr "Remplacez `_cake_core_` par `_cake_translations_` dans votre fichier de configuration {0}."
 
 msgid "Debug mode is off."
 msgstr "Le mode débogage est désactivé."
@@ -2018,10 +2018,10 @@ msgid "Validation success for permission {0}"
 msgstr "Validation de la permission {0} réussie"
 
 msgid "The permissions data must be an array."
-msgstr ""
+msgstr "Les données d'autorisation doivent être un tableau."
 
 msgid "The permissions data array keys must be integers."
-msgstr ""
+msgstr "Les clés du tableau des données d'autorisation doivent être des entiers."
 
 msgid "Could not validate permissions data."
 msgstr "Impossible de valider les données des permissions."
@@ -2048,13 +2048,13 @@ msgid "Validation success for resource {0}"
 msgstr "Validation de la ressource {0} réussie"
 
 msgid "Metadata key exist and present for resource {0}."
-msgstr ""
+msgstr "La clé de métadonnées existe et est présente pour la ressource {0}."
 
 msgid "Metadata key does not exists or soft-deleted for resource {0}."
-msgstr ""
+msgstr "La clé de métadonnées n'existe pas ou a été supprimée pour la ressource {0}."
 
 msgid "The resource types associated to this resource does not exist."
-msgstr ""
+msgstr "Les types de ressource associés à cette ressource n'existent pas."
 
 msgid "You are not allowed to update this resource."
 msgstr "Vous n'êtes pas autorisé à mettre à jour cette ressource."
@@ -2378,7 +2378,7 @@ msgid "The metadata key does not exist."
 msgstr "La clé de métadonnées n'existe pas."
 
 msgid "The folder metadata provided cannot be decrypted."
-msgstr ""
+msgstr "Les métadonnées de dossier fournies ne peuvent pas être déchiffrées."
 
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Un dossier de type personnel ne peut pas être partagé avec d'autres utilisateurs ou un groupe."
@@ -2798,10 +2798,10 @@ msgid "The data should be a valid ASCII string."
 msgstr "Les données doivent être une chaîne ASCII valide."
 
 msgid "The expired field value should be a valid ISO 80601 date."
-msgstr ""
+msgstr "La valeur du champ expired doit être une date ISO 80601 valide."
 
 msgid "The expired field value should be parseable."
-msgstr ""
+msgstr "La valeur du champ expired doit être analysable."
 
 msgid "The setting should be a valid boolean."
 msgstr "Le paramètre doit être un booléen valide."
@@ -2810,13 +2810,13 @@ msgid "The setting is required."
 msgstr "Un paramètre est requis."
 
 msgid "The metadata private keys is required."
-msgstr ""
+msgstr "Les clés privées de métadonnées sont requises."
 
 msgid "The metadata private keys should not be empty."
-msgstr ""
+msgstr "Les clés privées de métadonnées ne doivent pas être vides."
 
 msgid "Need at most one metadata private key."
-msgstr ""
+msgstr "Une seule clé privée de métadonnées est requise au maximum."
 
 msgid "A metadata key identifier is required."
 msgstr "Un identifiant de clé de métadonnées est requis."
@@ -2825,7 +2825,7 @@ msgid "The metadata key identifier should be a valid UUID."
 msgstr "L'identifiant de la clé de métadonnées doit être un UUID valide."
 
 msgid "The user identifier should be null."
-msgstr ""
+msgstr "L'identifiant d'utilisateur doit être null."
 
 msgid "The data is required."
 msgstr "Les données sont requises."
@@ -3020,28 +3020,28 @@ msgid "You edited the metadata settings"
 msgstr "Vous avez modifié les paramètres de métadonnées"
 
 msgid "No metadata private keys found for metadata key {0}."
-msgstr ""
+msgstr "Aucune clé privée de métadonnées trouvée pour la clé de métadonnées {0}."
 
 msgid "Metadata keys present for metadata key {0}"
-msgstr ""
+msgstr "Des clés de métadonnées sont présentes pour la clé de métadonnées {0}"
 
 msgid "No active metadata key found."
-msgstr ""
+msgstr "Aucune clé de métadonnées active trouvée."
 
 msgid "Active metadata key found or not required."
-msgstr ""
+msgstr "Une clé de métadonnées active a été trouvée ou n'est pas nécessaire."
 
 msgid "The server has access to the metadata keys or does not require access to it."
-msgstr ""
+msgstr "Le serveur a accès aux clés de métadonnées ou n'a pas besoin d'y accéder."
 
 msgid "The server does not have access to metadata key."
-msgstr ""
+msgstr "Le serveur n'a pas accès à la clé de métadonnées."
 
 msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
-msgstr ""
+msgstr "Lorsque le mode zéro connaissance est désactivé, le serveur doit avoir accès à la clé de métadonnées."
 
 msgid "Without having access, the server won't be able to share the metadata private key with the users."
-msgstr ""
+msgstr "Sans cet accès, le serveur ne pourra pas partager la clé privée de métadonnées avec les utilisateurs."
 
 msgid "No server metadata private key found."
 msgstr "Aucune clé privée de métadonnées serveur trouvée."
@@ -3056,22 +3056,22 @@ msgid "Unable to decrypt the metadata private key."
 msgstr "Impossible de déchiffrer la clé privée de métadonnées."
 
 msgid "Unable to decrypt the metadata private key (id: {0}) data."
-msgstr ""
+msgstr "Impossible de déchiffrer les données de la clé privée de métadonnées (id : {0})."
 
 msgid "The metadata private key (id: {0}) cleartext data should be in JSON format."
-msgstr ""
+msgstr "Les données en clair de la clé privée de métadonnées (id : {0}) doivent être au format JSON."
 
 msgid "The metadata private key (id: {0}) cleartext data should not be empty."
-msgstr ""
+msgstr "Les données en clair de la clé privée de métadonnées (id : {0}) ne doivent pas être vides."
 
 msgid "Unable to validate metadata private key (id: {0}) cleartext data."
-msgstr ""
+msgstr "Impossible de valider les données en clair de la clé privée de métadonnées (id : {0})."
 
 msgid "The server metadata private key is valid."
-msgstr ""
+msgstr "La clé privée de métadonnées du serveur est valide."
 
 msgid "The server metadata private key is not valid."
-msgstr ""
+msgstr "La clé privée de métadonnées du serveur n'est pas valide."
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "La clé de métadonnées n'existe pas ou a été supprimée."
@@ -3134,7 +3134,7 @@ msgid "Could not validate the settings."
 msgstr "Impossible de valider les paramètres."
 
 msgid "The server metadata private keys data are invalid."
-msgstr ""
+msgstr "Les données des clés privées de métadonnées du serveur sont invalides."
 
 msgid "The server metadata private key is required to enable these settings."
 msgstr "La clé privée de métadonnées serveur est requise pour activer ces paramètres."
@@ -3200,10 +3200,10 @@ msgid "Could not save the metadata session keys, please try again later."
 msgstr "Impossible d'enregistrer les clés de session de métadonnées, veuillez réessayer plus tard."
 
 msgid "Unable to save the metadata settings."
-msgstr ""
+msgstr "Impossible d'enregistrer les paramètres de métadonnées."
 
 msgid "An active metadata key could not be found, create a key first."
-msgstr ""
+msgstr "Aucune clé de métadonnées active n'a pu être trouvée, créez d'abord une clé."
 
 msgid "Could not prepare private key for server key."
 msgstr "Impossible de préparer la clé privée pour la clé serveur."
@@ -3290,7 +3290,7 @@ msgid "The provided modified by does not match."
 msgstr "La personne ayant modifié fournie ne correspond pas."
 
 msgid "The folder metadata key data could not be updated."
-msgstr ""
+msgstr "Les données de clé des métadonnées du dossier n'ont pas pu être mises à jour."
 
 msgid "The resource metadata key data could not be updated."
 msgstr "Les données de la clé de métadonnées de la ressource n'ont pas pu être mises à jour."
@@ -3317,13 +3317,13 @@ msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr "La création/modification de tag avec des métadonnées chiffrées n'est pas autorisée."
 
 msgid "Resource creation with cleartext metadata not allowed."
-msgstr ""
+msgstr "La création de ressource avec des métadonnées en clair n'est pas autorisée."
 
 msgid "Folder creation with cleartext metadata not allowed."
-msgstr ""
+msgstr "La création de dossier avec des métadonnées en clair n'est pas autorisée."
 
 msgid "Tag creation with cleartext metadata not allowed."
-msgstr ""
+msgstr "La création de tag avec des métadonnées en clair n'est pas autorisée."
 
 msgid "You created a new metadata key."
 msgstr "Vous avez créé une nouvelle clé de métadonnées."
@@ -3365,7 +3365,7 @@ msgid "You have created a new password."
 msgstr "Vous avez créé un nouveau mot de passe."
 
 msgid "{0} deleted a password."
-msgstr ""
+msgstr "{0} a supprimé un mot de passe."
 
 msgid "{0} shared a resource with you"
 msgstr "{0} a partagé une ressource avec vous"
@@ -3377,7 +3377,7 @@ msgid "You have edited a resource."
 msgstr "Vous avez modifié une ressource."
 
 msgid "{0} has edited a resource."
-msgstr ""
+msgstr "{0} a modifié une ressource."
 
 msgid "Information about the transfer is required."
 msgstr "Les informations sur le transfert sont requises."
@@ -3905,7 +3905,7 @@ msgid "You have passwords requiring your attention"
 msgstr "Vous avez des mots de passe qui nécessitent votre attention"
 
 msgid "Some of your passwords are expiring today."
-msgstr ""
+msgstr "Certains de vos mots de passe expirent aujourd'hui."
 
 msgid "{0} marked the password {1} as expired"
 msgstr "{0} a marqué le mot de passe {1} comme expiré"
@@ -4526,58 +4526,58 @@ msgid "Errors: "
 msgstr "Erreurs : "
 
 msgid "Could not retrieve the user key policies."
-msgstr ""
+msgstr "Impossible de récupérer les politiques de clés utilisateur."
 
 msgid "Conflicting authentication parameters, provide user_id/token only when the user is not already signed in."
-msgstr ""
+msgstr "Paramètres d'authentification en conflit, fournissez user_id/jeton uniquement lorsque l'utilisateur n'est pas déjà connecté."
 
 msgid "You are not authorized to access this location."
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à accéder à cet emplacement."
 
 msgid "Sign-in to passbolt, or provide a valid user ID and authentication token."
-msgstr ""
+msgstr "Connectez-vous à passbolt ou fournissez un identifiant utilisateur et un jeton d'authentification valides."
 
 msgid "The user ID must be a valid UUID."
-msgstr ""
+msgstr "L'identifiant de l'utilisateur doit être un UUID valide."
 
 msgid "The authentication token must be a valid UUID."
-msgstr ""
+msgstr "Le jeton d'authentification doit être un UUID valide."
 
 msgid "Unable to authenticate the guest user with the provided credentials."
-msgstr ""
+msgstr "Impossible d'authentifier l'utilisateur invité avec les informations d'identification fournies."
 
 msgid "No registration authentication token found for the given user."
-msgstr ""
+msgstr "Aucun jeton d'authentification d'enregistrement trouvé pour l'utilisateur spécifié."
 
 msgid "The registration authentication token is expired."
-msgstr ""
+msgstr "Le jeton d'authentification d'enregistrement a expiré."
 
 msgid "The preferred key type is required."
-msgstr ""
+msgstr "Le type de clé préféré est requis."
 
 msgid "The preferred key type should not be empty."
-msgstr ""
+msgstr "Le type de clé préféré ne doit pas être vide."
 
 msgid "The preferred key type should be one of the following: {0}."
-msgstr ""
+msgstr "Le type de clé préféré doit être l'un des suivants : {0}."
 
 msgid "The preferred key type and size combination does not match."
-msgstr ""
+msgstr "La combinaison du type et de la taille de clé préférés ne correspond pas."
 
 msgid "The preferred key type and curve combination does not match."
-msgstr ""
+msgstr "La combinaison du type de clé préféré et de la courbe ne correspond pas."
 
 msgid "The preferred key size is required."
-msgstr ""
+msgstr "La taille de clé préférée est requise."
 
 msgid "The preferred key size should be one of the following: {0}."
-msgstr ""
+msgstr "La taille de clé préférée doit être l'une des suivantes : {0}."
 
 msgid "The preferred key curve is required."
-msgstr ""
+msgstr "La courbe de clé préférée est requise."
 
 msgid "The preferred key curve should be one of the following: {0}."
-msgstr ""
+msgstr "La courbe de clé préférée doit être l'une des suivantes : {0}."
 
 msgid "The data entered are not correct"
 msgstr "Les données saisies sont incorrectes"
@@ -5114,7 +5114,7 @@ msgid "You cannot reuse account recovery organization public keys."
 msgstr "Vous ne pouvez pas réutiliser les clés publiques de récupération de compte de l'organisation."
 
 msgid "You cannot reuse the metadata keys."
-msgstr ""
+msgstr "Vous ne pouvez pas réutiliser les clés de métadonnées."
 
 msgid "Could not validate public key data."
 msgstr "Impossible de valider les données de la clé publique."
@@ -5603,7 +5603,7 @@ msgid "The directory {0} {1} was not deleted because it is ignored."
 msgstr "Le répertoire {0} {1} n'a pas été supprimé parce qu'il est ignoré."
 
 msgid "The directory user {0} was already suspended in passbolt."
-msgstr ""
+msgstr "L'utilisateur de l'annuaire {0} a déjà été suspendu dans passbolt."
 
 msgid "The directory {0} {1} was already deleted in passbolt."
 msgstr "Le répertoire {0} {1} a déjà été supprimé dans Passbolt."
@@ -5615,7 +5615,7 @@ msgid "The {0} {1} could not be deleted because they are the only manager of one
 msgstr "Le {0} {1} n'a pas pu être supprimé parce qu'il est le seul gestionnaire d'un ou plusieurs groupes."
 
 msgid "The user {0} was successfully suspended."
-msgstr ""
+msgstr "L'utilisateur {0} a été suspendu avec succès."
 
 msgid "The {0} {1} was successfully deleted."
 msgstr "Le {0} {1} a été supprimé avec succès."
@@ -6026,7 +6026,7 @@ msgid "Directory Sync"
 msgstr "Synchronisation des répertoires"
 
 msgid "SCIM"
-msgstr ""
+msgstr "SCIM"
 
 msgid "Only administrators are allowed to create/update MFA policies settings."
 msgstr "Seuls les administrateurs sont autorisés à créer/mettre à jour les paramètres de la politique MFA."
@@ -6113,37 +6113,37 @@ msgid "view it in passbolt"
 msgstr "le voir dans Passbolt"
 
 msgid "The SCIM setting id should be a valid UUID."
-msgstr ""
+msgstr "L'identifiant du paramètre SCIM doit être un UUID valide."
 
 msgid "The identifier of the default user should be a valid UUID."
-msgstr ""
+msgstr "L'identifiant de l'utilisateur par défaut doit être un UUID valide."
 
 msgid "The user is not active, disabled or does not exist."
-msgstr ""
+msgstr "L'utilisateur n'est pas actif, est désactivé ou n'existe pas."
 
 msgid "The Setting ID cannot be passed on update."
-msgstr ""
+msgstr "L'ID du paramètre ne peut pas être transmis lors de la mise à jour."
 
 msgid "The secret token should not be empty."
-msgstr ""
+msgstr "Le jeton secret ne doit pas être vide."
 
 msgid "The ID for the SCIM settings should not be empty."
-msgstr ""
+msgstr "L'ID des paramètres SCIM ne doit pas être vide."
 
 msgid "The ID for the SCIM settings should be a valid UUID."
-msgstr ""
+msgstr "L'ID des paramètres SCIM doit être un UUID valide."
 
 msgid "Simultaneous SCIM and session authentication is not permitted."
-msgstr ""
+msgstr "L'authentification simultanée SCIM et par session n'est pas autorisée."
 
 msgid "SCIM settings endpoints are disabled."
-msgstr ""
+msgstr "Les points de terminaison des paramètres SCIM sont désactivés."
 
 msgid "An entry for the same related entity already exists"
-msgstr ""
+msgstr "Une entrée pour la même entité associée existe déjà."
 
 msgid "An entry with the same `scim_name` and ResourceType already exist."
-msgstr ""
+msgstr "Une entrée avec le même `scim_name` et le même ResourceType existe déjà."
 
 msgid "Users"
 msgstr "Utilisateurs"
@@ -6152,49 +6152,49 @@ msgid "Groups"
 msgstr "Groupes"
 
 msgid "The secret token format is incorrect."
-msgstr ""
+msgstr "Le format du jeton secret est incorrect."
 
 msgid "SCIM plugin is enabled."
-msgstr ""
+msgstr "Le plugin SCIM est activé."
 
 msgid "SCIM plugin is disabled."
-msgstr ""
+msgstr "Le plugin SCIM est désactivé."
 
 msgid "The SCIM settings could not be decrypted with the server gpg key."
-msgstr ""
+msgstr "Les paramètres SCIM n'ont pas pu être déchiffrés avec la clé GPG du serveur."
 
 msgid "The SCIM settings could not be encrypted with the server gpg key."
-msgstr ""
+msgstr "Les paramètres SCIM n'ont pas pu être chiffrés avec la clé GPG du serveur."
 
 msgid "Could not validate the SCIM settings found in database."
-msgstr ""
+msgstr "Échec de la validation des paramètres SCIM stockés dans la base de données."
 
 msgid "The SCIM setting identifier should be a valid UUID."
-msgstr ""
+msgstr "L'identifiant du paramètre SCIM doit être un UUID valide."
 
 msgid "Could not validate the SCIM settings."
-msgstr ""
+msgstr "Impossible de valider les paramètres SCIM."
 
 msgid "The SCIM plugin is disabled."
-msgstr ""
+msgstr "Le plugin SCIM est désactivé."
 
 msgid "Please delete previous settings before creating again."
-msgstr ""
+msgstr "Veuillez supprimer les paramètres précédents avant de les recréer."
 
 msgid "The uuid in the url doesn't match any known setting record."
-msgstr ""
+msgstr "L'UUID dans l'URL ne correspond à aucun enregistrement de paramètre connu."
 
 msgid "Email"
 msgstr "E-mail"
 
 msgid "External id"
-msgstr ""
+msgstr "Identifiant externe"
 
 msgid "Invalid Schema"
-msgstr ""
+msgstr "Schéma invalide"
 
 msgid "Invalid ResourceType"
-msgstr ""
+msgstr "Type de ressource invalide"
 
 msgid "SsoRecover plugin is disabled."
 msgstr "Le plugin SsoRecover est désactivé."
@@ -6332,7 +6332,7 @@ msgid "The prompt should be one of the following: {0}."
 msgstr "L'invite devrait être l'une des suivantes : {0}."
 
 msgid "The login hint should be a boolean."
-msgstr ""
+msgstr "L'indication de connexion doit être un booléen."
 
 msgid "The client id is too large."
 msgstr "L'identifiant client est trop long."
@@ -6362,7 +6362,7 @@ msgid "The scope is too large."
 msgstr "La portée est trop grande."
 
 msgid "SSO settings edit endpoints are disabled."
-msgstr ""
+msgstr "Les points de terminaison d'édition des paramètres SSO sont désactivés."
 
 msgid "The user is not active."
 msgstr "L'utilisateur n'est pas actif."
@@ -6482,16 +6482,16 @@ msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
 msgstr "Ou définissez passbolt.security.sso.sslVerify sur true dans {0}."
 
 msgid "The endpoints for updating the SSO configurations are disabled."
-msgstr ""
+msgstr "Les points de terminaison pour la mise à jour des configurations SSO sont désactivés."
 
 msgid "The endpoints for updating the SSO configurations are enabled."
-msgstr ""
+msgstr "Les points de terminaison pour la mise à jour des configurations SSO sont activés."
 
 msgid "It is recommended to disable endpoints for updating the SSO configurations."
-msgstr ""
+msgstr "Il est recommandé de désactiver les points de terminaison pour la mise à jour des configurations SSO."
 
 msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
-msgstr ""
+msgstr "Définissez la variable d'environnement PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED à true."
 
 msgid "The user is missing for the SSO state."
 msgstr "L'utilisateur est manquant pour l'état SSO."
@@ -6683,7 +6683,7 @@ msgid "All users can now use Single Sign-on to perform authentication."
 msgstr "Tous les utilisateurs peuvent maintenant utiliser l'authentification unique Single-Sign On pour s'authentifier."
 
 msgid "Viewq  it in passbolt"
-msgstr ""
+msgstr "Le voir dans Passbolt"
 
 msgid "The SSO setting has been deleted by {0}."
 msgstr "Les paramètres SSO ont été supprimés par {0}."
@@ -6899,7 +6899,7 @@ msgid "The is shared should be a boolean type."
 msgstr "\"is shared\" doit être un booléen."
 
 msgid "The tags plugin is in read-only mode."
-msgstr ""
+msgstr "Le plugin tags est en mode lecture seule."
 
 msgid "The tag should not be empty."
 msgstr "Le tag ne doit pas être vide."
@@ -6947,7 +6947,7 @@ msgid "Unable to migrate tag id: {0} to V5."
 msgstr "Impossible de migrer le tag d'ID : {0} vers V5."
 
 msgid "The tag metadata key data could not be updated."
-msgstr ""
+msgstr "Les données de la clé de métadonnées de tag n'ont pas pu être mises à jour."
 
 msgid "Could not save the tags, try again later."
 msgstr "Impossible d'enregistrer les tags, réessayez plus tard."
@@ -7139,7 +7139,7 @@ msgid "This user is missing the encryption key for the shared resource metadata.
 msgstr "Cet utilisateur n'a pas la clé de chiffrement pour les métadonnées de la ressource partagée. Veuillez vous connecter, accéder à l'espace de travail utilisateur et partager la clé manuellement."
 
 msgid "View users"
-msgstr ""
+msgstr "Voir les utilisateurs"
 
 msgid "Welcome back!"
 msgstr "Bienvenue à nouveau!"
