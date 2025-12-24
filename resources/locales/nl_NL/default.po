@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-10-01 06:24+0000\n"
-"PO-Revision-Date: 2025-10-01 10:39\n"
+"PO-Revision-Date: 2025-12-12 18:40\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -398,7 +398,7 @@ msgid "Invalid expiry time {0}."
 msgstr "Ongeldige vervaltijd {0}."
 
 msgid "The user role ID must be one of the admin or user roles."
-msgstr ""
+msgstr "De gebruikersrol-ID moet een van de beheerder- of gebruikersrollen zijn."
 
 msgid "The identifier should not be empty."
 msgstr "De ID moet ingevuld worden."
@@ -911,7 +911,7 @@ msgid "The metadata key is marked as expired."
 msgstr "De metadata-sleutel is gemarkeerd als verlopen."
 
 msgid "The shared metadata key should be unique."
-msgstr ""
+msgstr "De gedeelde metadata-sleutel moet uniek zijn."
 
 msgid "It is not allowed to create v5-password-string resource types."
 msgstr "Het is niet toegestaan om resourcetypes van het type v5-password-string te maken."
@@ -932,7 +932,7 @@ msgid "The user cannot delete this resource."
 msgstr "De gebruiker kan dit middel niet verwijderen."
 
 msgid "The resource type for this resource does not exist."
-msgstr ""
+msgstr "Het type middel voor deze resource bestaat niet."
 
 msgid "The name should be a valid ASCII string."
 msgstr "De naam moet een geldige ASCII-tekenreeks zijn."
@@ -1115,7 +1115,7 @@ msgid "{0} deleted the password {1}"
 msgstr "{0} heeft het wachtwoord {1} verwijderd"
 
 msgid "{0} deleted a password"
-msgstr ""
+msgstr "{0} heeft een wachtwoord verwijderd"
 
 msgid "You edited a resource"
 msgstr "Je hebt een resource bewerkt"
@@ -1472,13 +1472,13 @@ msgid "Cache is NOT working."
 msgstr "Cache werkt NIET."
 
 msgid "Deprecated `_cake_core_` cache configuration found."
-msgstr ""
+msgstr "Verouderde `_cake_core_` cacheconfiguratie gevonden."
 
 msgid "Check the settings in {0}"
 msgstr "Controleer de instellingen in {0}"
 
 msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
-msgstr ""
+msgstr "Vervang `_cake_core_` door `_cake_translations_` in je {0}-configuratiebestand."
 
 msgid "Debug mode is off."
 msgstr "Debugmodus is uitgeschakeld."
@@ -1607,10 +1607,10 @@ msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "Zie: https://secure.php.net/manual/en/book.intl.php"
 
 msgid "The logs directory {0} and its content are writable."
-msgstr ""
+msgstr "De logdirectory {0} en de inhoud ervan zijn beschrijfbaar."
 
 msgid "The logs directory {0} and its content are not writable."
-msgstr ""
+msgstr "De logdirectory {0} en de inhoud ervan zijn niet beschrijfbaar."
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
 msgstr "Zorg ervoor dat de webservergebruiker schrijfrechten heeft op de logdirectory en de inhoud ervan."
@@ -2018,10 +2018,10 @@ msgid "Validation success for permission {0}"
 msgstr "Validatie van machtiging {0} is gelukt"
 
 msgid "The permissions data must be an array."
-msgstr ""
+msgstr "De machtigingengegevens moeten een array zijn."
 
 msgid "The permissions data array keys must be integers."
-msgstr ""
+msgstr "De sleutels van de machtigingengegevens-array moeten gehele getallen zijn."
 
 msgid "Could not validate permissions data."
 msgstr "De machtigingsgegevens konden niet gevalideerd worden."
@@ -2048,13 +2048,13 @@ msgid "Validation success for resource {0}"
 msgstr "Validatie van middel {0} is geslaagd"
 
 msgid "Metadata key exist and present for resource {0}."
-msgstr ""
+msgstr "Metadata-sleutel bestaat en is aanwezig voor resource {0}."
 
 msgid "Metadata key does not exists or soft-deleted for resource {0}."
-msgstr ""
+msgstr "Metadata-sleutel bestaat niet of is soft-verwijderd voor resource {0}."
 
 msgid "The resource types associated to this resource does not exist."
-msgstr ""
+msgstr "De typen middelen die aan deze resource zijn gekoppeld, bestaan niet."
 
 msgid "You are not allowed to update this resource."
 msgstr "Je bent niet bevoegd om dit middel bij te werken."
@@ -2378,7 +2378,7 @@ msgid "The metadata key does not exist."
 msgstr "De metadata-sleutel bestaat niet."
 
 msgid "The folder metadata provided cannot be decrypted."
-msgstr ""
+msgstr "De opgegeven mapmetadata kan niet worden ontsleuteld."
 
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Een map van het type persoonlijk kan niet met andere gebruikers of een groep worden gedeeld."
@@ -2798,10 +2798,10 @@ msgid "The data should be a valid ASCII string."
 msgstr "De gegevens moeten een geldige ASCII-tekenreeks zijn."
 
 msgid "The expired field value should be a valid ISO 80601 date."
-msgstr ""
+msgstr "De waarde van het veld \"expired\" moet een geldige ISO 80601-datum zijn."
 
 msgid "The expired field value should be parseable."
-msgstr ""
+msgstr "De waarde van het veld \"expired\" moet ontleedbaar zijn."
 
 msgid "The setting should be a valid boolean."
 msgstr "De instelling moet een geldige boolean zijn."
@@ -2810,13 +2810,13 @@ msgid "The setting is required."
 msgstr "De instelling is vereist."
 
 msgid "The metadata private keys is required."
-msgstr ""
+msgstr "De private metadata-sleutels zijn vereist."
 
 msgid "The metadata private keys should not be empty."
-msgstr ""
+msgstr "De private metadata-sleutels mogen niet leeg zijn."
 
 msgid "Need at most one metadata private key."
-msgstr ""
+msgstr "Er is maximaal één private metadata-sleutel nodig."
 
 msgid "A metadata key identifier is required."
 msgstr "Een metadata-sleutel-ID is vereist."
@@ -2825,7 +2825,7 @@ msgid "The metadata key identifier should be a valid UUID."
 msgstr "De ID van de metadata-sleutel moet een geldige UUID zijn."
 
 msgid "The user identifier should be null."
-msgstr ""
+msgstr "De gebruikers-ID moet null zijn."
 
 msgid "The data is required."
 msgstr "De gegevens zijn vereist."
@@ -3020,28 +3020,28 @@ msgid "You edited the metadata settings"
 msgstr "Je hebt de metadata-instellingen gewijzigd"
 
 msgid "No metadata private keys found for metadata key {0}."
-msgstr ""
+msgstr "Geen private metadata-sleutels gevonden voor metadata-sleutel {0}."
 
 msgid "Metadata keys present for metadata key {0}"
-msgstr ""
+msgstr "Metadata-sleutels aanwezig voor metadata-sleutel {0}"
 
 msgid "No active metadata key found."
-msgstr ""
+msgstr "Geen actieve metadata-sleutel gevonden."
 
 msgid "Active metadata key found or not required."
-msgstr ""
+msgstr "Actieve metadata-sleutel gevonden of niet vereist."
 
 msgid "The server has access to the metadata keys or does not require access to it."
-msgstr ""
+msgstr "De server heeft toegang tot de metadata-sleutels of heeft geen toegang nodig."
 
 msgid "The server does not have access to metadata key."
-msgstr ""
+msgstr "De server heeft geen toegang tot de metadata-sleutel."
 
 msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
-msgstr ""
+msgstr "Wanneer de zero-knowledge-modus is uitgeschakeld, moet de server toegang hebben tot de metadata-sleutel."
 
 msgid "Without having access, the server won't be able to share the metadata private key with the users."
-msgstr ""
+msgstr "Zonder toegang kan de server de private metadata-sleutel niet met de gebruikers delen."
 
 msgid "No server metadata private key found."
 msgstr "Geen server-metadata privésleutel gevonden."
@@ -3056,22 +3056,22 @@ msgid "Unable to decrypt the metadata private key."
 msgstr "Het is niet mogelijk om de metadata privésleutel te ontsleutelen."
 
 msgid "Unable to decrypt the metadata private key (id: {0}) data."
-msgstr ""
+msgstr "Kan de gegevens van de private metadata-sleutel (id: {0}) niet ontsleutelen."
 
 msgid "The metadata private key (id: {0}) cleartext data should be in JSON format."
-msgstr ""
+msgstr "De cleartextgegevens van de private metadata-sleutel (id: {0}) moeten in JSON-formaat zijn."
 
 msgid "The metadata private key (id: {0}) cleartext data should not be empty."
-msgstr ""
+msgstr "De cleartextgegevens van de private metadata-sleutel (id: {0}) mogen niet leeg zijn."
 
 msgid "Unable to validate metadata private key (id: {0}) cleartext data."
-msgstr ""
+msgstr "Kan de cleartextgegevens van de private metadata-sleutel (id: {0}) niet valideren."
 
 msgid "The server metadata private key is valid."
-msgstr ""
+msgstr "De private metadata-sleutel van de server is geldig."
 
 msgid "The server metadata private key is not valid."
-msgstr ""
+msgstr "De private metadata-sleutel van de server is ongeldig."
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "De metadata-sleutel bestaat niet of is verwijderd."
@@ -3134,7 +3134,7 @@ msgid "Could not validate the settings."
 msgstr "De instellingen konden niet worden gevalideerd."
 
 msgid "The server metadata private keys data are invalid."
-msgstr ""
+msgstr "De gegevens van de private metadata-sleutels van de server zijn ongeldig."
 
 msgid "The server metadata private key is required to enable these settings."
 msgstr "De server-metadata privésleutel is vereist om deze instellingen in te schakelen."
@@ -3200,10 +3200,10 @@ msgid "Could not save the metadata session keys, please try again later."
 msgstr "De metadata-sessiesleutels konden niet worden opgeslagen. Probeer het later opnieuw."
 
 msgid "Unable to save the metadata settings."
-msgstr ""
+msgstr "Kan de metadata-instellingen niet opslaan."
 
 msgid "An active metadata key could not be found, create a key first."
-msgstr ""
+msgstr "Er is geen actieve metadata-sleutel gevonden, maak eerst een sleutel aan."
 
 msgid "Could not prepare private key for server key."
 msgstr "Kon persoonlijke sleutel niet voorbereiden voor serversleutel."
@@ -3290,7 +3290,7 @@ msgid "The provided modified by does not match."
 msgstr "'Modified by' komt niet overeen met de opgegeven waarde."
 
 msgid "The folder metadata key data could not be updated."
-msgstr ""
+msgstr "De gegevens van de mapmetadata-sleutel konden niet worden bijgewerkt."
 
 msgid "The resource metadata key data could not be updated."
 msgstr "De resourcemetadata-sleutelgegevens konden niet worden bijgewerkt."
@@ -3317,13 +3317,13 @@ msgid "Tag creation/modification with encrypted metadata not allowed."
 msgstr "Het maken/wijzigen van labels met versleutelde metadata is niet toegestaan."
 
 msgid "Resource creation with cleartext metadata not allowed."
-msgstr ""
+msgstr "Het aanmaken van een resource met cleartextmetadata is niet toegestaan."
 
 msgid "Folder creation with cleartext metadata not allowed."
-msgstr ""
+msgstr "Het aanmaken van een map met cleartextmetadata is niet toegestaan."
 
 msgid "Tag creation with cleartext metadata not allowed."
-msgstr ""
+msgstr "Het aanmaken van een tag met cleartextmetadata is niet toegestaan."
 
 msgid "You created a new metadata key."
 msgstr "Je hebt een nieuwe metadata-sleutel aangemaakt."
@@ -3365,7 +3365,7 @@ msgid "You have created a new password."
 msgstr "Je hebt een nieuw wachtwoord aangemaakt."
 
 msgid "{0} deleted a password."
-msgstr ""
+msgstr "{0} heeft een wachtwoord verwijderd."
 
 msgid "{0} shared a resource with you"
 msgstr "{0} heeft een middel met je gedeeld"
@@ -3377,7 +3377,7 @@ msgid "You have edited a resource."
 msgstr "Je hebt een middel bewerkt."
 
 msgid "{0} has edited a resource."
-msgstr ""
+msgstr "{0} heeft een resource bewerkt."
 
 msgid "Information about the transfer is required."
 msgstr "Informatie over de overdracht is vereist."
@@ -3905,7 +3905,7 @@ msgid "You have passwords requiring your attention"
 msgstr "Je hebt wachtwoorden die je aandacht vereisen"
 
 msgid "Some of your passwords are expiring today."
-msgstr ""
+msgstr "Een aantal van je wachtwoorden verloopt vandaag."
 
 msgid "{0} marked the password {1} as expired"
 msgstr "{0} heeft het wachtwoord {1} als verlopen gemarkeerd"
@@ -4526,58 +4526,58 @@ msgid "Errors: "
 msgstr "Foutmeldingen: "
 
 msgid "Could not retrieve the user key policies."
-msgstr ""
+msgstr "De gebruikerssleutelbeleidsregels konden niet worden opgehaald."
 
 msgid "Conflicting authentication parameters, provide user_id/token only when the user is not already signed in."
-msgstr ""
+msgstr "Conflicterende authenticatieparameters, geef alleen user_id/token op wanneer de gebruiker nog niet is aangemeld."
 
 msgid "You are not authorized to access this location."
-msgstr ""
+msgstr "Je hebt geen toegang tot deze locatie."
 
 msgid "Sign-in to passbolt, or provide a valid user ID and authentication token."
-msgstr ""
+msgstr "Meld je aan bij passbolt of geef een geldige gebruikers-ID en een geldig authenticatietoken op."
 
 msgid "The user ID must be a valid UUID."
-msgstr ""
+msgstr "De gebruikers-ID moet een geldig UUID zijn."
 
 msgid "The authentication token must be a valid UUID."
-msgstr ""
+msgstr "Het authenticatietoken moet een geldige UUID zijn."
 
 msgid "Unable to authenticate the guest user with the provided credentials."
-msgstr ""
+msgstr "Kan de gastgebruiker niet authenticeren met de opgegeven referenties."
 
 msgid "No registration authentication token found for the given user."
-msgstr ""
+msgstr "Geen registratie-authenticatietoken gevonden voor de opgegeven gebruiker."
 
 msgid "The registration authentication token is expired."
-msgstr ""
+msgstr "Het registratie-authenticatietoken is verlopen."
 
 msgid "The preferred key type is required."
-msgstr ""
+msgstr "Het voorkeurssleuteltype is vereist."
 
 msgid "The preferred key type should not be empty."
-msgstr ""
+msgstr "Het voorkeurssleuteltype mag niet leeg zijn."
 
 msgid "The preferred key type should be one of the following: {0}."
-msgstr ""
+msgstr "Het voorkeurssleuteltype moet een van de volgende zijn: {0}."
 
 msgid "The preferred key type and size combination does not match."
-msgstr ""
+msgstr "De combinatie van voorkeurssleuteltype en -grootte komt niet overeen."
 
 msgid "The preferred key type and curve combination does not match."
-msgstr ""
+msgstr "De combinatie van voorkeurssleuteltype en -curve komt niet overeen."
 
 msgid "The preferred key size is required."
-msgstr ""
+msgstr "De voorkeurssleutellengte is vereist."
 
 msgid "The preferred key size should be one of the following: {0}."
-msgstr ""
+msgstr "De voorkeurssleutellengte moet een van de volgende zijn: {0}."
 
 msgid "The preferred key curve is required."
-msgstr ""
+msgstr "De voorkeurssleutelcurve is vereist."
 
 msgid "The preferred key curve should be one of the following: {0}."
-msgstr ""
+msgstr "De voorkeurssleutelcurve moet een van de volgende zijn: {0}."
 
 msgid "The data entered are not correct"
 msgstr "De ingevoerde gegevens zijn niet juist"
@@ -5114,7 +5114,7 @@ msgid "You cannot reuse account recovery organization public keys."
 msgstr "De openbare sleutels voor het herstel van de organisatieaccount kunnen niet opnieuw gebruikt worden."
 
 msgid "You cannot reuse the metadata keys."
-msgstr ""
+msgstr "Je kunt de metadata-sleutels niet opnieuw gebruiken."
 
 msgid "Could not validate public key data."
 msgstr "De gegevens van de openbare sleutel konden niet worden gevalideerd."
@@ -5603,7 +5603,7 @@ msgid "The directory {0} {1} was not deleted because it is ignored."
 msgstr "De {0}sdirectory {1} is niet verwijderd, omdat deze genegeerd werd."
 
 msgid "The directory user {0} was already suspended in passbolt."
-msgstr ""
+msgstr "De directorygebruiker {0} is al opgeschort in Passbolt."
 
 msgid "The directory {0} {1} was already deleted in passbolt."
 msgstr "De {0}sdirectory {1} is al verwijderd in Passbolt."
@@ -5615,7 +5615,7 @@ msgid "The {0} {1} could not be deleted because they are the only manager of one
 msgstr "De {0} {1} kon niet worden verwijderd, omdat deze de enige beheerder is van één of meer groepen."
 
 msgid "The user {0} was successfully suspended."
-msgstr ""
+msgstr "De gebruiker {0} is met succes opgeschort."
 
 msgid "The {0} {1} was successfully deleted."
 msgstr "De {0} {1} is met succes verwijderd."
@@ -6026,7 +6026,7 @@ msgid "Directory Sync"
 msgstr "Directory-synchronisatie"
 
 msgid "SCIM"
-msgstr ""
+msgstr "SCIM"
 
 msgid "Only administrators are allowed to create/update MFA policies settings."
 msgstr "Alleen beheerders kunnen MFA-beleidsinstellingen maken/bijwerken."
@@ -6113,37 +6113,37 @@ msgid "view it in passbolt"
 msgstr "bekijk het in Passbolt"
 
 msgid "The SCIM setting id should be a valid UUID."
-msgstr ""
+msgstr "De SCIM-instellings-ID moet een geldig UUID zijn."
 
 msgid "The identifier of the default user should be a valid UUID."
-msgstr ""
+msgstr "De ID van de standaardgebruiker moet een geldig UUID zijn."
 
 msgid "The user is not active, disabled or does not exist."
-msgstr ""
+msgstr "De gebruiker is niet actief, is uitgeschakeld of bestaat niet."
 
 msgid "The Setting ID cannot be passed on update."
-msgstr ""
+msgstr "De instellings-ID kan niet worden meegegeven bij een update."
 
 msgid "The secret token should not be empty."
-msgstr ""
+msgstr "Het geheime token mag niet leeg zijn."
 
 msgid "The ID for the SCIM settings should not be empty."
-msgstr ""
+msgstr "De ID voor de SCIM-instellingen mag niet leeg zijn."
 
 msgid "The ID for the SCIM settings should be a valid UUID."
-msgstr ""
+msgstr "De ID voor de SCIM-instellingen moet een geldig UUID zijn."
 
 msgid "Simultaneous SCIM and session authentication is not permitted."
-msgstr ""
+msgstr "Gelijktijdige SCIM- en sessie-authenticatie is niet toegestaan."
 
 msgid "SCIM settings endpoints are disabled."
-msgstr ""
+msgstr "Endpoints voor SCIM-instellingen zijn uitgeschakeld."
 
 msgid "An entry for the same related entity already exists"
-msgstr ""
+msgstr "Er bestaat al een item voor dezelfde gerelateerde entiteit."
 
 msgid "An entry with the same `scim_name` and ResourceType already exist."
-msgstr ""
+msgstr "Er bestaat al een item met dezelfde `scim_name` en ResourceType."
 
 msgid "Users"
 msgstr "Gebruikers"
@@ -6152,49 +6152,49 @@ msgid "Groups"
 msgstr "Groepen"
 
 msgid "The secret token format is incorrect."
-msgstr ""
+msgstr "Het formaat van het geheime token is onjuist."
 
 msgid "SCIM plugin is enabled."
-msgstr ""
+msgstr "SCIM-plugin is ingeschakeld."
 
 msgid "SCIM plugin is disabled."
-msgstr ""
+msgstr "SCIM-plugin is uitgeschakeld."
 
 msgid "The SCIM settings could not be decrypted with the server gpg key."
-msgstr ""
+msgstr "De SCIM-instellingen konden niet worden ontsleuteld met de server-GPG-sleutel."
 
 msgid "The SCIM settings could not be encrypted with the server gpg key."
-msgstr ""
+msgstr "De SCIM-instellingen konden niet worden versleuteld met de server-GPG-sleutel."
 
 msgid "Could not validate the SCIM settings found in database."
-msgstr ""
+msgstr "De SCIM-instellingen die in de database staan, konden niet worden gevalideerd."
 
 msgid "The SCIM setting identifier should be a valid UUID."
-msgstr ""
+msgstr "De ID van de SCIM-instelling moet een geldig UUID zijn."
 
 msgid "Could not validate the SCIM settings."
-msgstr ""
+msgstr "De SCIM-instellingen konden niet worden gevalideerd."
 
 msgid "The SCIM plugin is disabled."
-msgstr ""
+msgstr "SCIM-plugin is uitgeschakeld."
 
 msgid "Please delete previous settings before creating again."
-msgstr ""
+msgstr "Verwijder eerst de vorige instellingen voordat je opnieuw creëert."
 
 msgid "The uuid in the url doesn't match any known setting record."
-msgstr ""
+msgstr "De UUID in de URL komt niet overeen met een bekende instellingsrecord."
 
 msgid "Email"
 msgstr "E-mailadres"
 
 msgid "External id"
-msgstr ""
+msgstr "Externe ID"
 
 msgid "Invalid Schema"
-msgstr ""
+msgstr "Ongeldig schema"
 
 msgid "Invalid ResourceType"
-msgstr ""
+msgstr "Ongeldig ResourceType"
 
 msgid "SsoRecover plugin is disabled."
 msgstr "SsoRecover-plugin is uitgeschakeld."
@@ -6332,7 +6332,7 @@ msgid "The prompt should be one of the following: {0}."
 msgstr "De prompt moet een van de volgende zijn: {0}."
 
 msgid "The login hint should be a boolean."
-msgstr ""
+msgstr "De loginhint moet een Boolean zijn."
 
 msgid "The client id is too large."
 msgstr "De client-ID is te groot."
@@ -6362,7 +6362,7 @@ msgid "The scope is too large."
 msgstr "De scope is te groot."
 
 msgid "SSO settings edit endpoints are disabled."
-msgstr ""
+msgstr "Bewerkingsendpoints voor SSO-instellingen zijn uitgeschakeld."
 
 msgid "The user is not active."
 msgstr "De gebruiker is niet actief."
@@ -6482,16 +6482,16 @@ msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
 msgstr "Of stel passbolt.security.sso.sslVerify in op true in {0}."
 
 msgid "The endpoints for updating the SSO configurations are disabled."
-msgstr ""
+msgstr "De endpoints voor het bijwerken van de SSO-configuraties zijn uitgeschakeld."
 
 msgid "The endpoints for updating the SSO configurations are enabled."
-msgstr ""
+msgstr "De endpoints voor het bijwerken van de SSO-configuraties zijn ingeschakeld."
 
 msgid "It is recommended to disable endpoints for updating the SSO configurations."
-msgstr ""
+msgstr "Het wordt aanbevolen de endpoints voor het bijwerken van de SSO-configuraties uit te schakelen."
 
 msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
-msgstr ""
+msgstr "Stel de omgevingsvariabele PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED in op true."
 
 msgid "The user is missing for the SSO state."
 msgstr "De gebruiker ontbreekt voor de SSO-status."
@@ -6683,7 +6683,7 @@ msgid "All users can now use Single Sign-on to perform authentication."
 msgstr "Alle gebruikers kunnen nu Single Sign-on gebruiken voor authenticatie."
 
 msgid "Viewq  it in passbolt"
-msgstr ""
+msgstr "Bekijk het in Passbolt"
 
 msgid "The SSO setting has been deleted by {0}."
 msgstr "De SSO-instelling is verwijderd door {0}."
@@ -6899,7 +6899,7 @@ msgid "The is shared should be a boolean type."
 msgstr "De 'is shared' moet een booleaanse waarde zijn."
 
 msgid "The tags plugin is in read-only mode."
-msgstr ""
+msgstr "De tags-plugin staat in read-only-modus."
 
 msgid "The tag should not be empty."
 msgstr "Het label moet ingevuld worden."
@@ -6947,7 +6947,7 @@ msgid "Unable to migrate tag id: {0} to V5."
 msgstr "Kan label-ID: {0} niet migreren naar V5."
 
 msgid "The tag metadata key data could not be updated."
-msgstr ""
+msgstr "De metadata-sleutelgegevens van de tag konden niet worden bijgewerkt."
 
 msgid "Could not save the tags, try again later."
 msgstr "De labels konden niet worden opgeslagen, probeer het later opnieuw."
@@ -7139,7 +7139,7 @@ msgid "This user is missing the encryption key for the shared resource metadata.
 msgstr "Deze gebruiker mist de versleutelingssleutel voor de gedeelde resource-metadata. Log in, ga naar de gebruikerswerkruimte en deel de sleutel handmatig met hen."
 
 msgid "View users"
-msgstr ""
+msgstr "Bekijk gebruikers"
 
 msgid "Welcome back!"
 msgstr "Welkom terug!"
