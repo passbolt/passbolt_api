@@ -61,6 +61,34 @@ class ChangelogFileTest extends TestCase
         $this->assertEmpty($this->errors);
     }
 
+    public function testChangelogFile_Compare_Release_Notes_With_Changelog(): void
+    {
+        $changelog = $this->getFile(ROOT . DS . 'CHANGELOG');
+        $releaseNotes = $this->getFile(ROOT . DS . 'RELEASE_NOTES');
+        if (!isset($changelog[4])) {
+            $this->markTestSkipped('No valid CHANGELOG.md file could be found');
+        }
+        if (!isset($releaseNotes[4])) {
+            $this->markTestSkipped('No valid RELEASE_NOTES.md file could be found');
+        }
+
+        $changelogOfLatestRelease = $this->getLatestChanges($changelog);
+        $releaseNotes = $this->getLatestChanges($releaseNotes);
+
+        $this->assertSame($changelogOfLatestRelease, $releaseNotes);
+    }
+
+    public function testChangelogFile_Compare_Release_Notes_With_Different_Changelog(): void
+    {
+        $changelog = $this->getFile(FIXTURES . 'Changelog' . DS . 'valid');
+        $releaseNotes = $this->getFile(FIXTURES . 'ReleaseNotes' . DS . 'valid');
+
+        $changelogOfLatestRelease = $this->getLatestChanges($changelog);
+        $releaseNotes = $this->getLatestChanges($releaseNotes);
+
+        $this->assertNotSame($changelogOfLatestRelease, $releaseNotes);
+    }
+
     public function testChangelogFile_Valid_Fixture_File(): void
     {
         $file = $this->getFile(FIXTURES . 'Changelog' . DS . 'valid');
@@ -145,6 +173,28 @@ class ChangelogFileTest extends TestCase
         $position++;
 
         return $position;
+    }
+
+    private function getLatestChanges(array $file): array
+    {
+        $pointer = 0;
+        // Iterate until the first version
+        while (substr($file[$pointer], 0, 4) !== '## [') {
+            $pointer++;
+        }
+        $result[] = $file[$pointer];
+        $pointer++;
+        // Iterate until the next version
+        while (isset($file[$pointer]) && substr($file[$pointer], 0, 4) !== '## [') {
+            $result[] = $file[$pointer];
+            $pointer++;
+        }
+        // Unset last line if it is empty
+        if (empty($result[count($result) - 1])) {
+            unset($result[count($result) - 1]);
+        }
+
+        return $result;
     }
 
     protected function appendErrorIf(bool $condition, string $msg, int $pointer): void
