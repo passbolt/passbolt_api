@@ -101,11 +101,16 @@ class ResourcesHealthcheckService extends AbstractHealthcheckService
     /**
      * Checks given resource has metadata key present and is active.
      *
+     * Deleted resources are ignored as they might not be associated with an active metadata key
+     *
      * @param \App\Model\Entity\Resource $resource resource
      * @return void
      */
     private function isMetadataKeyExistAndActive(Resource $resource, array $metadataKeys): void
     {
+        if ($resource->deleted) {
+            return;
+        }
         $metadataResourceDto = MetadataResourceDto::fromArray($resource->toArray());
         if (!$metadataResourceDto->isV5() || $resource->metadata_key_type !== MetadataKey::TYPE_SHARED_KEY) {
             return;

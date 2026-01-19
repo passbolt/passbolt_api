@@ -458,4 +458,33 @@ class SendEmailBatchServiceUnitTest extends TestCase
         $this->assertMailContainsAt(1, $fullBaseUrl2);
         $this->assertMailContainsAt(1, $fullBaseUrl2 . '/img/logo/logo.png');
     }
+
+    public function testSendEmailBatchService_getEmailQueueCounts(): void
+    {
+        $recipient = 'test@passbolt.com';
+        $operator = UserFactory::make()->withAvatarNull()->persist();
+        ResourceDeleteEmailQueueFactory::make(2)
+            ->setRecipient($recipient)
+            ->setOperator($operator)
+            ->persist();
+        GroupUserDeleteEmailQueueFactory::make(3)
+            ->setRecipient($recipient)
+            ->setOperator($operator)
+            ->persist();
+        ResourceDeleteEmailQueueFactory::make(3)
+            ->setRecipient($recipient)
+            ->setOperator($operator)
+            ->locked()
+            ->persist();
+        GroupUserDeleteEmailQueueFactory::make(2)
+            ->setRecipient($recipient)
+            ->setOperator($operator)
+            ->sent()
+            ->persist();
+
+        $queueCounts = $this->service->getEmailQueueCounts();
+
+        $this->assertSame(5, $queueCounts->get('not_sent'));
+        $this->assertSame(3, $queueCounts->get('locked'));
+    }
 }

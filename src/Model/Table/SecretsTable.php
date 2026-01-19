@@ -159,6 +159,21 @@ class SecretsTable extends Table implements TableCleanupProviderInterface
     }
 
     /**
+     * Validation used by the data-check
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     * @see SecretsHealthcheckService
+     */
+    public function validationHealthcheck(Validator $validator): Validator
+    {
+        $validator = $this->validationDefault($validator);
+        $validator->remove('deleted', 'isNullOnCreate');
+
+        return $validator;
+    }
+
+    /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *

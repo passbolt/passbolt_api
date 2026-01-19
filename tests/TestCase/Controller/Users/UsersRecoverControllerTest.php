@@ -80,18 +80,14 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $user = UserFactory::make()->deleted()->persist();
         $data = ['username' => $user->username];
         $this->postJson('/users/recover.json', $data);
-        $this->assertResponseCode(404);
-        $result = $this->_getBodyAsString();
-        $this->assertStringContainsString('deleted', $result);
+        $this->assertSuccess();
     }
 
     public function testUsersRecoverController_Post_Error_UserNotExist(): void
     {
         $data = ['username' => 'notauser@passbolt.com'];
         $this->postJson('/users/recover.json', $data);
-        $this->assertResponseCode(404);
-        $result = $this->_getBodyAsString();
-        $this->assertStringContainsString('not exist', $result);
+        $this->assertSuccess();
     }
 
     public function testUsersRecoverController_Post_Error_UserDisabled(): void
@@ -99,9 +95,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $user = UserFactory::make()->disabled()->persist();
         $data = ['username' => $user->username];
         $this->postJson('/users/recover.json', $data);
-        $this->assertResponseCode(404);
-        $result = $this->_getBodyAsString();
-        $this->assertStringContainsString('disabled', $result);
+        $this->assertSuccess();
     }
 
     public function testUsersRecoverController_Post_FalseSuccess_UserNotExist_PreventEnum(): void
