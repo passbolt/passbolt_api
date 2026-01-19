@@ -18,11 +18,14 @@ declare(strict_types=1);
 namespace Passbolt\EmailDigest\Service;
 
 use Cake\Core\Configure;
+use Cake\Datasource\EntityInterface;
+use Cake\I18n\FrozenTime;
 use Cake\Mailer\Mailer;
 use Cake\Network\Exception\SocketException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\EmailTrait;
 use EmailQueue\Model\Table\EmailQueueTable;
+use Passbolt\EmailDigest\Utility\Digest\EmailBatchResult;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 
 /**
@@ -40,22 +43,25 @@ class SendEmailBatchService
      */
     private EmailQueueTable $emailQueueTable;
 
+    private EmailBatchResult $result;
+
     /**
      * SendEmailBatchService construct
      */
     public function __construct()
     {
         $this->emailQueueTable = TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
+        $this->result = new EmailBatchResult();
     }
 
     /**
      * Get and send the next emails batch from the email queue. The size of the email batch is determined by $limit.
      *
      * @param array<\Cake\ORM\Entity> $emailQueues array of emails.
-     * @return void
+     * @return \Passbolt\EmailDigest\Utility\Digest\EmailBatchResult
      * @throws \Exception
      */
-    public function sendNextEmailsBatch(array $emailQueues): void
+    public function sendNextEmailsBatch(array $emailQueues): EmailBatchResult
     {
         Configure::write('App.baseUrl', '/');
 
@@ -64,6 +70,8 @@ class SendEmailBatchService
         foreach ($emailDigests as $digest) {
             $this->sendDigest($digest);
         }
+
+        return $this->result;
     }
 
     /**
@@ -77,8 +85,10 @@ class SendEmailBatchService
         try {
             $email->send();
             $this->flagEmailsFromDigestAsSentWithSuccess($emailDigest);
+            $this->result->recordSent(count($emailDigest->getEmailIds()));
         } catch (SocketException $exception) {
             $this->flagEmailsFromDigestAsFailedWithError($emailDigest, $exception->getMessage());
+            $this->result->recordFailed(count($emailDigest->getEmailIds()));
         } finally {
             // We use finally to guarantee that even if an exception occurred
             // while flagging the emails, locks are released
@@ -152,5 +162,39 @@ class SendEmailBatchService
         $this->prepareEmailToBeSend($email, $emailDigest);
 
         return $email;
+    }
+
+    /**
+     * Retrieves the counts of emails in the queue, categorized as 'not_sent' and 'locked'.
+     *
+     * @return \Cake\Datasource\EntityInterface An entity containing the counts of 'not_sent' and 'locked' emails.
+     */
+    public function getEmailQueueCounts(): EntityInterface
+    {
+        $query = $this->emailQueueTable->selectQuery();
+
+        return $query
+            ->select([
+                'not_sent' => $query->func()->count(
+                    $query
+                        ->expr()
+                        ->case()
+                        ->when([
+                            $this->emailQueueTable->aliasField('sent') => false,
+                            $this->emailQueueTable->aliasField('locked') => false,
+                            $this->emailQueueTable->aliasField('send_tries') . ' <=' => 3,
+                            $this->emailQueueTable->aliasField('send_at') . ' <=' => new FrozenTime('now'),
+                        ])
+                        ->then($query->newExpr('TRUE'), 'boolean')
+                ),
+                'locked' => $query->func()->count(
+                    $query
+                        ->expr()
+                        ->case()
+                        ->when([$this->emailQueueTable->aliasField('locked') => true])
+                        ->then($query->newExpr('TRUE'), 'boolean')
+                ),
+            ])
+            ->firstOrFail();
     }
 }

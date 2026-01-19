@@ -17,12 +17,15 @@ declare(strict_types=1);
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Role;
 use App\Service\Users\UserRecoverServiceInterface;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Utility\Hash;
+use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
@@ -66,13 +69,16 @@ class UsersRecoverController extends AppController
      * Register user action POST
      *
      * @param \App\Service\Users\UserRecoverServiceInterface $userRecoverService User recover service
+     * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $dryRunService Service to detect if the user can self register
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the username is not valid
      * @throws \Cake\Http\Exception\BadRequestException if the username is not provided
      * @throws \Cake\Http\Exception\InternalErrorException if the self registration settings in the DB are not valid
      */
-    public function recoverPost(UserRecoverServiceInterface $userRecoverService)
-    {
+    public function recoverPost(
+        UserRecoverServiceInterface $userRecoverService,
+        SelfRegistrationDryRunServiceInterface $dryRunService
+    ) {
         $this->assertJson();
 
         // Do not allow logged-in user to recover
@@ -83,11 +89,42 @@ class UsersRecoverController extends AppController
         try {
             $userRecoverService->recover($this->User->getAccessControl());
         } catch (NotFoundException $exception) {
-            // Pretend everything is fine to prevent user enumeration
-            if (!Configure::read(self::PREVENT_EMAIL_ENUMERATION_CONFIG_KEY)) {
+            $this->handleException($exception, $dryRunService, $this->request->getData());
+        }
+        $this->success(__('Recovery process started, check your email.'));
+    }
+
+    /**
+     * Only throw exception if email is from allowed list of self-registration,
+     * otherwise pretend everything is fine to prevent user enumeration using email.
+     *
+     * @param \Cake\Http\Exception\NotFoundException $exception Exception to handle.
+     * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $dryRunService Service to detect if the user can self register
+     * @param array $requestData Request data.
+     * @return void
+     */
+    private function handleException(
+        NotFoundException $exception,
+        SelfRegistrationDryRunServiceInterface $dryRunService,
+        array $requestData
+    ): void {
+        if (!$dryRunService->isSelfRegistrationOpen()) {
+            return;
+        }
+
+        $result = false;
+        try {
+            $result = $dryRunService->canGuestSelfRegister(['email' => $requestData['username']]);
+        } catch (CustomValidationException $exception) {
+            // Do not throw email domain not allowed exception
+            $errors = $exception->getErrors();
+            if (!Hash::check($errors, 'email.checkEmailDomainIsAllowed')) {
                 throw $exception;
             }
         }
-        $this->success(__('Recovery process started, check your email.'));
+
+        if ($result) {
+            throw $exception;
+        }
     }
 }

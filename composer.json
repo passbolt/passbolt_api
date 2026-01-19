@@ -83,7 +83,7 @@
         "spomky-labs/otphp": "^11.3.0",
         "bacon/bacon-qr-code": "^3.0.1",
         "enygma/yubikey": "^3.8",
-        "duosecurity/duo_universal_php": "^1.0.2",
+        "duosecurity/duo_universal_php": "^1.1.0",
         "league/oauth2-client": "^2.6",
         "directorytree/ldaprecord": "^3.0"
     },
