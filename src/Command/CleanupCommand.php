@@ -17,11 +17,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Model\Table\AuthenticationTokensTable;
-use App\Model\Table\GroupsUsersTable;
-use App\Model\Table\PermissionsTable;
-use App\Model\Table\ResourcesTable;
-use App\Model\Table\RolesTable;
+use App\Model\Table\TableCleanupProviderInterface;
 use App\Model\Table\UsersTable;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
@@ -29,6 +25,7 @@ use Cake\Console\ConsoleOptionParser;
 use Cake\Datasource\ConnectionManager;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
+use ReflectionFunction;
 
 /**
  * CleanupCommand class
@@ -38,62 +35,21 @@ class CleanupCommand extends PassboltCommand
     /**
      * @var array|null The list of cleanup jobs to perform.
      */
-    private static ?array $cleanups = null;
+    private static ?array $cleanableTables = null;
 
     /**
      * @var array The list of default cleanup jobs to perform.
      */
-    private static array $defaultCleanups = [
-        'Groups' => [
-            'With No Members',
-        ],
-        'GroupsUsers' => [
-            'Soft Deleted Users',
-            'Hard Deleted Users',
-            'Soft Deleted Groups',
-            'Hard Deleted Groups',
-            'Duplicated Groups Users',
-        ],
-        'Favorites' => [
-            'Soft Deleted Users',
-            'Hard Deleted Users',
-            'Soft Deleted Resources',
-            'Hard Deleted Resources',
-            'Duplicated Favorites',
-        ],
-        'Comments' => [
-            'Soft Deleted Users',
-            'Hard Deleted Users',
-            'Soft Deleted Resources',
-            'Hard Deleted Resources',
-        ],
-        'Permissions' => [
-            'Soft Deleted Users',
-            'Hard Deleted Users',
-            'Soft Deleted Groups',
-            'Hard Deleted Groups',
-            'Soft Deleted Resources',
-            'Hard Deleted Resources',
-            'Duplicated Permissions',
-        ],
-        'Secrets' => [
-            'Soft Deleted Users',
-            'Hard Deleted Users',
-            'Soft Deleted Resources',
-            'Hard Deleted Resources',
-            'Hard Deleted Permissions',
-        ],
-        'Resources' => [
-            'Missing ResourceType Id',
-        ],
-        'Avatars' => [
-            'Soft Deleted Users',
-            'Hard Deleted Users',
-            'Hard Deleted Profiles',
-        ],
-        'Users' => [
-            'Inactive Users With Duplicated Username',
-        ],
+    private static array $defaultCleanableTables = [
+        'Groups',
+        'GroupsUsers',
+        'Favorites',
+        'Comments',
+        'Permissions',
+        'Secrets',
+        'Resources',
+        'Avatars',
+        'Users',
     ];
 
     /**
@@ -102,52 +58,18 @@ class CleanupCommand extends PassboltCommand
     protected UsersTable $Users;
 
     /**
-     * @var \App\Model\Table\RolesTable
-     */
-    protected RolesTable $Roles;
-
-    /**
-     * @var \App\Model\Table\ResourcesTable
-     */
-    protected ResourcesTable $Resources;
-
-    /**
-     * @var \App\Model\Table\GroupsUsersTable
-     */
-    protected GroupsUsersTable $GroupsUsers;
-
-    /**
-     * @var \App\Model\Table\PermissionsTable
-     */
-    protected PermissionsTable $Permissions;
-
-    /**
-     * @var \App\Model\Table\AuthenticationTokensTable
-     */
-    protected AuthenticationTokensTable $AuthenticationTokens;
-
-    /**
-     * Add cleanups jobs.
+     * Register tables having cleanup capabilities
      *
-     * @param array $cleanups The cleanups jobs to add
-     * [
-     *   MODEL_NAME => List of jobs to perform on this model,
-     *   ...
-     * ]
+     * @param string $cleanableTable The class of the table to cleanup
      * @return void
      */
-    public static function addCleanups(array $cleanups): void
+    public static function registerCleanableTable(string $cleanableTable): void
     {
-        if (!isset(self::$cleanups)) {
+        if (!isset(self::$cleanableTables)) {
             self::resetCleanups();
         }
 
-        foreach ($cleanups as $modelName => $modelCleanups) {
-            if (!array_key_exists($modelName, self::$cleanups)) {
-                self::$cleanups[$modelName] = [];
-            }
-            self::$cleanups[$modelName] = array_merge(self::$cleanups[$modelName], $cleanups[$modelName]);
-        }
+        self::$cleanableTables[] = $cleanableTable;
     }
 
     /**
@@ -159,7 +81,7 @@ class CleanupCommand extends PassboltCommand
      */
     public static function resetCleanups(): void
     {
-        self::$cleanups = self::$defaultCleanups;
+        self::$cleanableTables = self::$defaultCleanableTables;
     }
 
     /**
@@ -174,13 +96,8 @@ class CleanupCommand extends PassboltCommand
     {
         parent::initialize();
         $this->Users = $this->fetchTable('Users');
-        $this->Roles = $this->fetchTable('Roles');
-        $this->Resources = $this->fetchTable('Resources');
-        $this->GroupsUsers = $this->fetchTable('GroupsUsers');
-        $this->Permissions = $this->fetchTable('Permissions');
-        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
 
-        if (!isset(self::$cleanups)) {
+        if (!isset(self::$cleanableTables)) {
             self::resetCleanups();
         }
     }
@@ -235,27 +152,42 @@ class CleanupCommand extends PassboltCommand
         }
 
         $totalErrorCount = 0;
-        foreach (self::$cleanups as $tableName => $tableCleanup) {
-            $table = TableRegistry::getTableLocator()->get($tableName);
-            foreach ($tableCleanup as $cleanupName) {
+        foreach (self::$cleanableTables as $cleanableTableName) {
+            $table = TableRegistry::getTableLocator()->get($cleanableTableName);
+            if (!$table instanceof TableCleanupProviderInterface) {
+                continue;
+            }
+            $tableCleanupCallables = $table->getCleanupMethods();
+            foreach ($tableCleanupCallables as $tableCleanupCallable) {
                 $timeStart = microtime(true);
-                $cleanupMethod = 'cleanup' . str_replace(' ', '', $cleanupName);
+                $funcRef = new ReflectionFunction($tableCleanupCallable);
+                $cleanupMethodName = $funcRef->getName();
+                $cleanupName = $this->methodNameToCleanupName($funcRef->getName());
+                $io->verbose("Clean up start: $cleanableTableName:$cleanupMethodName");
 
-                $io->verbose("Clean up start: $tableName:$cleanupMethod");
-                $recordCount = $table->{$cleanupMethod}($dryRun);
+                $recordCount = $tableCleanupCallable($dryRun);
                 $totalErrorCount += $recordCount;
                 if ($recordCount) {
-                    $cleanupName = strtolower($cleanupName);
                     if ($dryRun) {
-                        $io->out(__('{0} issues found in table {1} ({2})', $recordCount, $tableName, $cleanupName));
+                        $io->out(__(
+                            '{0} issues found in table {1} ({2})',
+                            $recordCount,
+                            $cleanableTableName,
+                            $cleanupName
+                        ));
                     } else {
-                        $io->out(__('{0} issues fixed in table {1} ({2})', $recordCount, $tableName, $cleanupName));
+                        $io->out(__(
+                            '{0} issues fixed in table {1} ({2})',
+                            $recordCount,
+                            $cleanableTableName,
+                            $cleanupName
+                        ));
                     }
                 }
 
                 $timeEnd = microtime(true);
                 $timeExecuted = round($timeEnd - $timeStart, 2);
-                $io->verbose("Cleanup up end ({$timeExecuted}s): $tableName:$cleanupMethod");
+                $io->verbose("Cleanup up end ({$timeExecuted}s): $cleanableTableName:$cleanupMethodName");
             }
         }
 
@@ -298,5 +230,24 @@ class CleanupCommand extends PassboltCommand
                 __('Cleanup command cannot be executed on an instance having no active administrator.')
             );
         }
+    }
+
+    /**
+     * Convert the method name to a human readeable string. eg. "cleanupMethodName" become "Method Name".
+     *
+     * @param string $methodName Method name
+     * @return string
+     */
+    private function methodNameToCleanupName(string $methodName): string
+    {
+        // Remove the "cleanup" prefix if present
+        $name = preg_replace('/^cleanup/i', '', $methodName);
+        if ($name === '' || $name === null) {
+            $name = $methodName;
+        }
+        // Add a space before each uppercase letter except the first one
+        $name = preg_replace('/(?<!^)([A-Z])/', ' $1', $name);
+
+        return strtolower($name);
     }
 }

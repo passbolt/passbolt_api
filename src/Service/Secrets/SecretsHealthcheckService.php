@@ -72,7 +72,7 @@ class SecretsHealthcheckService extends AbstractHealthcheckService
      */
     private function canValidate(Secret $secret): void
     {
-        $copy = $this->table->newEntity($secret->toArray());
+        $copy = $this->table->newEntity($secret->toArray(), ['validate' => 'healthcheck']);
         if ($copy->getErrors()) {
             $msg = __('Validation failed for secret {0}. {1}', $secret->id, json_encode($copy->getErrors()));
             $this->checks[self::CHECK_VALIDATES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);

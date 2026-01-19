@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -10,15 +12,17 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.13.0
+ * @since         5.9.0
  */
 
-use App\Command\CleanupCommand;
-use Cake\Core\Configure;
+namespace App\Model\Table;
 
-Configure::load('Passbolt/Folders.config', 'default', true);
-
-// Add cleanup tasks jobs.
-if (PHP_SAPI === 'cli') {
-    CleanupCommand::registerCleanableTable('Passbolt/Folders.FoldersRelations');
+interface TableCleanupProviderInterface
+{
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array;
 }

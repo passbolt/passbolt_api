@@ -37,7 +37,7 @@ class SelfRegistrationUsersRecoverControllerTest extends AppIntegrationTestCase
     {
         $this->setSelfRegistrationSettingsData();
         $this->postJson('/users/recover.json', ['username' => 'john@some-url.com']);
-        $this->assertNotFoundError('This user does not exist or has been deleted. Please contact your administrator.');
+        $this->assertSuccess();
     }
 
     public function testSelfRegistrationUsersRecoverController_SelfRegistrationOpen_UserNotFound_Domain_Supported()

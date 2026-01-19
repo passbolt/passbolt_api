@@ -56,7 +56,7 @@ use InvalidArgumentException;
  * @method iterable<\App\Model\Entity\Comment>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Comment>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  */
-class CommentsTable extends Table
+class CommentsTable extends Table implements TableCleanupProviderInterface
 {
     use ResourcesCleanupTrait;
     use TableCleanupTrait;
@@ -318,5 +318,20 @@ class CommentsTable extends Table
         }
 
         return true;
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        return [
+            $this->cleanupSoftDeletedUsers(...),
+            $this->cleanupHardDeletedUsers(...),
+            $this->cleanupSoftDeletedResources(...),
+            $this->cleanupHardDeletedResources(...),
+        ];
     }
 }

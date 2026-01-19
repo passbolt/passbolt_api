@@ -54,7 +54,7 @@ use Cake\Validation\Validator;
  * @method \Cake\ORM\Query\SelectQuery findByIdAndAcoForeignKey(string $id, string $acoForeignKey)
  * @method \Cake\ORM\Query\SelectQuery findByAcoForeignKeyAndAroForeignKey(string $acoForeignKey, string $aroForeignKey)
  */
-class PermissionsTable extends Table
+class PermissionsTable extends Table implements TableCleanupProviderInterface
 {
     use PermissionsFindersTrait;
     use TableCleanupTrait;
@@ -465,5 +465,38 @@ class PermissionsTable extends Table
         $keys = ['aco', 'aco_foreign_key', 'aro', 'aro_foreign_key', 'type'];
 
         return $this->cleanupDuplicates($keys, $dryRun);
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        $callablesMethods = [
+            $this->cleanupSoftDeletedUsers(...),
+            $this->cleanupHardDeletedUsers(...),
+            $this->cleanupSoftDeletedGroups(...),
+            $this->cleanupHardDeletedGroups(...),
+            $this->cleanupSoftDeletedResources(...),
+            $this->cleanupHardDeletedResources(...),
+            $this->cleanupDuplicatedPermissions(...),
+        ];
+
+        // Some plugins requires to cleanup the permissions table
+        // they register themselves via behaviors
+        foreach ($this->behaviors()->loaded() as $behaviorName) {
+            $behavior = $this->behaviors()->get($behaviorName);
+
+            if ($behavior instanceof TableCleanupProviderInterface) {
+                $callablesMethods = array_merge(
+                    $callablesMethods,
+                    $behavior->getCleanupMethods()
+                );
+            }
+        }
+
+        return $callablesMethods;
     }
 }

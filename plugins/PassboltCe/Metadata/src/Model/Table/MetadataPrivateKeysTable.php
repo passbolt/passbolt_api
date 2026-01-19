@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Model\Table;
 
+use App\Model\Table\TableCleanupProviderInterface;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use Cake\ORM\RulesChecker;
@@ -47,7 +48,7 @@ use Passbolt\Metadata\Model\Rule\UserIsActiveAndNotDeletedIfPresent;
  * @method \Passbolt\Metadata\Model\Entity\MetadataPrivateKey[]|iterable<mixed, \Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class MetadataPrivateKeysTable extends Table
+class MetadataPrivateKeysTable extends Table implements TableCleanupProviderInterface
 {
     use TableCleanupTrait;
 
@@ -194,5 +195,18 @@ class MetadataPrivateKeysTable extends Table
             ]);
 
         return $this->cleanupSoftDeleted('Users', $dryRun, $query);
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        return [
+            $this->cleanupHardDeletedUsers(...),
+            $this->cleanupSoftDeletedUsers(...),
+        ];
     }
 }

@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Model\Table;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Table\TableCleanupProviderInterface;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Utility\UserAccessControl;
@@ -48,7 +49,7 @@ use Phinx\Db\Adapter\MysqlAdapter;
  * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class AccountRecoveryResponsesTable extends Table
+class AccountRecoveryResponsesTable extends Table implements TableCleanupProviderInterface
 {
     use TableCleanupTrait;
 
@@ -274,5 +275,17 @@ class AccountRecoveryResponsesTable extends Table
     public function cleanupHardDeletedAccountRecoveryRequests(?bool $dryRun = false): int
     {
         return $this->cleanupHardDeleted('AccountRecoveryRequests', $dryRun);
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        return [
+            $this->cleanupHardDeletedAccountRecoveryRequests(...),
+        ];
     }
 }

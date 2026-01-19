@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Model\Behavior;
 
+use App\Model\Table\TableCleanupProviderInterface;
 use Cake\ORM\Behavior;
 
 /**
@@ -24,7 +25,7 @@ use Cake\ORM\Behavior;
  *
  * @method \App\Model\Table\PermissionsTable table()
  */
-class PermissionsCleanupBehavior extends Behavior
+class PermissionsCleanupBehavior extends Behavior implements TableCleanupProviderInterface
 {
     /**
      * Delete all records where associated folders are deleted
@@ -35,5 +36,17 @@ class PermissionsCleanupBehavior extends Behavior
     public function cleanupHardDeletedFolders(?bool $dryRun = false): int
     {
         return $this->table()->cleanupHardDeletedAco('Folders', $dryRun);
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        return [
+            $this->cleanupHardDeletedFolders(...),
+        ];
     }
 }
