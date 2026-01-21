@@ -69,6 +69,11 @@ class ResourcesTagsAddService
     {
         $this->patchTagsEntities($uac, $resource, $data);
 
+        // Mark modified as dirty to prevent TimestampBehavior from updating it.
+        // Tags are not part of the resource itself and should not affect the resource's modified timestamp.
+        // @see https://book.cakephp.org/5/en/orm/behaviors/timestamp.html#using-the-timestamp-behavior
+        $resource->setDirty('modified');
+
         $saveOptions = ['associated' => ['Tags', 'Tags._joinData']];
         try {
             $this->Resources->saveOrFail($resource, $saveOptions);
