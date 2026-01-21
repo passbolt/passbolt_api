@@ -35,6 +35,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\NotFoundException;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 
@@ -117,6 +118,17 @@ class ResourcesShareService
             function () use ($uac, $resource, $changes, $secrets): void {
                 $entitiesChanges = $this->updatePermissions($uac, $resource, $changes);
                 $entitiesChanges->merge($this->updateSecrets($uac, $resource, $secrets));
+
+                // Update resource modified timestamp when secrets change
+                $hasSecretChanges = !empty($entitiesChanges->getAddedEntities(Secret::class))
+                    || !empty($entitiesChanges->getUpdatedEntities(Secret::class))
+                    || !empty($entitiesChanges->getDeletedEntities(Secret::class));
+                if ($hasSecretChanges) {
+                    $resource->modified = new DateTime();
+                    $resource->modified_by = $uac->getId();
+                    $this->Resources->saveOrFail($resource, ['checkRules' => false]);
+                }
+
                 $this->postAccessesGranted($uac, $entitiesChanges->getAddedEntities(Permission::class));
                 $this->postAccessesRevoked($uac, $resource, $entitiesChanges->getDeletedEntities(Permission::class));
                 $this->resourcesExpireResourcesService->expireResourcesForSecrets(

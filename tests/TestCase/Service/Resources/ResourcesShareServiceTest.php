@@ -31,6 +31,7 @@ use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -600,5 +601,136 @@ hcciUFw5
         } catch (ValidationException $e) {
             $this->assertValidationException($e, 'Could not validate resource data.', 'secrets');
         }
+    }
+
+    /**
+     * Test that resource.modified and modified_by are updated when secrets are added during sharing.
+     */
+    public function testResourceShareService_UpdatesResourceModifiedWhenSecretsAdded()
+    {
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $uac = $this->makeUac($userA);
+
+        // Create a resource with a past modified date
+        $pastDate = new DateTime('2020-01-01 00:00:00');
+        $resource = ResourceFactory::make()
+            ->withSecretsFor([$userA])
+            ->withPermissionsFor([$userA])
+            ->withSecretRevisions()
+            ->patchData(['modified' => $pastDate, 'modified_by' => $userA->id])
+            ->persist();
+
+        $originalModified = $resource->modified;
+
+        // Share with userB - this adds a secret
+        $changes = [['aro' => 'User', 'aro_foreign_key' => $userB->id, 'type' => Permission::READ]];
+        $secrets = [['user_id' => $userB->id, 'data' => $this->getValidSecret()]];
+
+        $this->service->share($uac, $resource->id, $changes, $secrets);
+
+        // Reload the resource to verify the modified timestamp was updated
+        $updatedResource = ResourceFactory::find()->where(['id' => $resource->id])->firstOrFail();
+
+        $this->assertGreaterThan($originalModified, $updatedResource->modified);
+        $this->assertTrue($updatedResource->modified->isToday());
+        $this->assertEquals($uac->getId(), $updatedResource->modified_by);
+    }
+
+    /**
+     * Test that resource.modified and modified_by are updated when secrets are deleted during sharing.
+     */
+    public function testResourceShareService_UpdatesResourceModifiedWhenSecretsDeleted()
+    {
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $uac = $this->makeUac($userA);
+
+        // Create a resource with a past modified date
+        $pastDate = new DateTime('2020-01-01 00:00:00');
+        $resource = ResourceFactory::make()
+            ->withSecretsFor([$userA, $userB])
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->patchData(['modified' => $pastDate, 'modified_by' => $userB->id])
+            ->persist();
+
+        $permissionUserBId = $resource->permissions[1]->id;
+        $originalModified = $resource->modified;
+
+        // Remove userB's permission - this deletes their secret
+        $changes = [['id' => $permissionUserBId, 'delete' => true]];
+
+        $this->service->share($uac, $resource->id, $changes, []);
+
+        // Reload the resource to verify the modified timestamp was updated
+        $updatedResource = ResourceFactory::find()->where(['id' => $resource->id])->firstOrFail();
+
+        $this->assertGreaterThan($originalModified, $updatedResource->modified);
+        $this->assertTrue($updatedResource->modified->isToday());
+        $this->assertEquals($uac->getId(), $updatedResource->modified_by);
+    }
+
+    /**
+     * Test that resource.modified is NOT updated when only permissions change (no secret changes).
+     */
+    public function testResourceShareService_DoesNotUpdateResourceModifiedWhenOnlyPermissionsChange()
+    {
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $uac = $this->makeUac($userA);
+
+        // Create a resource with two owners (so we can change one's permission without violating "at_least_one_owner")
+        $pastDate = new DateTime('2020-01-01 00:00:00');
+        $resource = ResourceFactory::make()
+            ->withSecretsFor([$userA, $userB])
+            ->withPermissionsFor([$userA]) // userA is owner
+            ->withPermissionsFor([$userB]) // userB is also owner
+            ->patchData(['modified' => $pastDate, 'modified_by' => $userA->id])
+            ->persist();
+
+        $permissionUserBId = $resource->permissions[1]->id;
+        $originalModified = $resource->modified;
+        $originalModifiedBy = $resource->modified_by;
+
+        // Only update userB's permission type from owner to read (no secret changes since userB already has a secret)
+        $changes = [['id' => $permissionUserBId, 'type' => Permission::READ]];
+
+        $this->service->share($uac, $resource->id, $changes, []);
+
+        // Reload the resource to verify the modified timestamp was NOT updated
+        $updatedResource = ResourceFactory::find()->where(['id' => $resource->id])->firstOrFail();
+
+        $this->assertEquals($originalModified->toDateTimeString(), $updatedResource->modified->toDateTimeString());
+        $this->assertEquals($originalModifiedBy, $updatedResource->modified_by);
+    }
+
+    /**
+     * Test that resource.modified_by is set to the operator's ID, not the resource owner.
+     */
+    public function testResourceShareService_SetsModifiedByToOperator()
+    {
+        [$owner, $operator, $newUser] = UserFactory::make(3)->user()->persist();
+        // Operator has owner permission so they can share
+        $uac = $this->makeUac($operator);
+
+        // Create a resource owned by $owner but with operator having owner permission
+        $pastDate = new DateTime('2020-01-01 00:00:00');
+        $resource = ResourceFactory::make()
+            ->withSecretsFor([$owner, $operator])
+            ->withPermissionsFor([$owner])
+            ->withPermissionsFor([$operator])
+            ->withSecretRevisions()
+            ->patchData(['modified' => $pastDate, 'modified_by' => $owner->id])
+            ->persist();
+
+        // Operator shares with newUser
+        $changes = [['aro' => 'User', 'aro_foreign_key' => $newUser->id, 'type' => Permission::READ]];
+        $secrets = [['user_id' => $newUser->id, 'data' => $this->getValidSecret()]];
+
+        $this->service->share($uac, $resource->id, $changes, $secrets);
+
+        // Reload the resource to verify modified_by is set to the operator, not the owner
+        $updatedResource = ResourceFactory::find()->where(['id' => $resource->id])->firstOrFail();
+
+        $this->assertEquals($operator->id, $updatedResource->modified_by);
+        $this->assertNotEquals($owner->id, $updatedResource->modified_by);
     }
 }
