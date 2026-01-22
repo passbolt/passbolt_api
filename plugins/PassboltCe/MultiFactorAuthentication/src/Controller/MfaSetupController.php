@@ -90,10 +90,17 @@ abstract class MfaSetupController extends MfaController
                 ->setTemplate('setupSuccess');
         }
 
-        $verified = $this->mfaSettings
-            ->getAccountSettings(true)
-            ->getVerifiedFrozenTime($provider);
-        $msg = __('Multi Factor Authentication is configured!');
+        $mfaAccountSettings = $this->mfaSettings->getAccountSettings(true);
+        if (is_null($mfaAccountSettings)) {
+            $verified = false;
+        } else {
+            $verified = $mfaAccountSettings->getVerifiedFrozenTime($provider);
+        }
+
+        $msg = $verified
+            ? __('Multi Factor Authentication is configured!')
+            : __('Unable to configure Multi Factor Authentication.') . ' ' . __('Please contact your administrator.');
+
         $this->success($msg, ['verified' => $verified]);
     }
 }
