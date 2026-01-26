@@ -25,12 +25,5 @@ Configure::write('passbolt.plugins.metadata', $newConfig);
 
 // Add cleanup tasks for Metadata plugin
 if (PHP_SAPI === 'cli') {
-    $cleanups = [
-        'Passbolt/Metadata.MetadataPrivateKeys' => [
-            // Clean up all metadata private keys of soft and/or hard deleted users
-            'Hard Deleted Users',
-            'Soft Deleted Users',
-        ],
-    ];
-    CleanupCommand::addCleanups($cleanups);
+    CleanupCommand::registerCleanableTable('Passbolt/Metadata.MetadataPrivateKeys');
 }

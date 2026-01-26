@@ -253,18 +253,18 @@ seq-php8.2-mysql8-testsuite-2-of-2:
 #    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
 #    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
 
-seq-php8.2-postgres15-testsuite-1-of-2:
+seq-php8.5-postgres15-testsuite-1-of-2:
   variables:
-    PHP_VERSION: "8.2"
+    PHP_VERSION: "8.5"
     DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/postgres:15-alpine"
     TEST_SUITE_GROUP: "1"
   extends:
     - .postgres-template
     - .test-template
 
-seq-php8.2-postgres15-testsuite-2-of-2:
+seq-php8.5-postgres15-testsuite-2-of-2:
   variables:
-    PHP_VERSION: "8.2"
+    PHP_VERSION: "8.5"
     DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/postgres:15-alpine"
     TEST_SUITE_GROUP: "2"
   extends:

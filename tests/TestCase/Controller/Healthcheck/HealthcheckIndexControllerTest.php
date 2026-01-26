@@ -24,6 +24,7 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
 use Cake\Core\Configure;
+use Cake\Database\Driver\Mysql;
 use Cake\Datasource\ConnectionManager;
 use Cake\Http\Client;
 use Cake\Http\TestSuite\HttpClientTrait;
@@ -107,6 +108,13 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
         $connection = ConnectionManager::get('default');
         $tableCount = count($connection->getSchemaCollection()->listTables());
+        $dbDriver = $connection->getDriver();
+        $dbVersionCheck = true;
+        if ($dbDriver instanceof Mysql) {
+            $dbVersionCheck = $connection->getDriver()->isMariaDb()
+                ? version_compare($connection->getDriver()->version(), '10.6', '>=')
+                : version_compare($connection->getDriver()->version(), '8.0', '>=');
+        }
         $result = $this->getResponseBodyAsArray();
         $https = strpos((string)Configure::read('App.fullBaseUrl'), 'https') === 0;
         $uid = posix_getuid();
@@ -125,6 +133,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'connect' => true,
                 'supportedBackend' => true,
                 'defaultContent' => true,
+                'mariadbMysqlVersionDeprecate' => $dbVersionCheck,
             ],
             'application' => [
                 'info' => [

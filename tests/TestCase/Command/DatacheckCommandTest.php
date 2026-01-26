@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Command;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\FavoriteFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
@@ -78,6 +79,8 @@ class DatacheckCommandTest extends AppTestCase
         foreach ($checks as $check) {
             $this->assertOutputContains("Data integrity for $check.");
         }
+
+        $this->assertOutputNotContains('Validation failed for secret');
     }
 
     public function testDatacheckCommand_Users_Username_Validation()
@@ -102,5 +105,17 @@ class DatacheckCommandTest extends AppTestCase
         $this->assertOutputContains('[FAIL] Validation failed for user ' . $duplicateInvalidUsernames[0]->id);
         $this->assertOutputContains('[FAIL] Validation failed for user ' . $duplicateInvalidUsernames[1]->id);
         $this->assertOutputContains('{"username":{"email":"The username should be a valid email address.","uniqueUsername":"The username ' . $duplicateInvalidUsernames[0]->username . ' is a duplicate."}}');
+    }
+
+    public function testDatacheckCommand_Secrets_Check()
+    {
+        SecretFactory::make()->withSecretRevision()->persist();
+        SecretFactory::make()->withSecretRevision()->deleted()->persist();
+        $this->exec('passbolt datacheck');
+        $this->assertExitSuccess();
+        $this->assertOutputContains('PASS');
+        $this->assertOutputNotContains('FAIL');
+
+        $this->assertOutputContains('Data integrity for Secrets.');
     }
 }

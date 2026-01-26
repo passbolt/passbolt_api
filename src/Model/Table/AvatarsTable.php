@@ -55,7 +55,7 @@ use Throwable;
  * @method \Cake\ORM\Query\SelectQuery findById(string $id)
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class AvatarsTable extends Table
+class AvatarsTable extends Table implements TableCleanupProviderInterface
 {
     use AvatarsCleanupTrait;
 
@@ -330,5 +330,19 @@ class AvatarsTable extends Table
         if (!Configure::check('FileStorage')) {
             (new AvatarsConfigurationService())->loadConfiguration();
         }
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        return [
+            $this->cleanupSoftDeletedUsers(...),
+            $this->cleanupHardDeletedUsers(...),
+            $this->cleanupHardDeletedProfiles(...),
+        ];
     }
 }

@@ -22,11 +22,24 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
+use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Passbolt\EmailDigest\Service\SendEmailBatchService;
 
 class SenderCommand extends PassboltCommand
 {
+    private ?SendEmailBatchService $sendEmailBatchService;
+
+    /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+
+        $this->sendEmailBatchService = new SendEmailBatchService();
+    }
+
     /**
      * @inheritDoc
      */
@@ -57,10 +70,19 @@ class SenderCommand extends PassboltCommand
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
         $limit = (int)$args->getOption('limit');
-        /** @var \EmailQueue\Model\Table\EmailQueueTable $EmailQueueTable */
-        $EmailQueueTable = TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
-        $emails = $EmailQueueTable->getBatch($limit);
-        (new SendEmailBatchService())->sendNextEmailsBatch($emails);
+        /** @var \EmailQueue\Model\Table\EmailQueueTable $emailQueueTable */
+        $emailQueueTable = TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
+        $emails = $emailQueueTable->getBatch($limit);
+        $result = $this->sendEmailBatchService->sendNextEmailsBatch($emails);
+        $emailQueueCounts = $this->sendEmailBatchService->getEmailQueueCounts();
+
+        Log::info(json_encode([
+            'message' => 'Email digest sender command',
+            'sent' => $result->sent(), // no of emails sent
+            'failed' => $result->failed(), // no of emails failed
+            'pending' => $emailQueueCounts['not_sent'],
+            'locked' => $emailQueueCounts['locked'],
+        ]));
 
         return $this->successCode();
     }

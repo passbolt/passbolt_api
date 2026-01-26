@@ -21,6 +21,7 @@ use App\Test\Factory\GroupFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Migrations\TestSuite\Migrator;
@@ -135,5 +136,77 @@ class CleanupCommandTest extends AppTestCase
         $this->assertOutputContains('Cleanup shell');
         $this->assertOutputContains('(fix mode)');
         $this->assertErrorContains('Cleanup command cannot be executed on an instance having no users table');
+    }
+
+    public function testCleanupCommand_SelfRegisteringCore_IntegrationTest()
+    {
+        $verboseMethodCallPrints = [
+            'Groups:cleanupWithNoMembers',
+            'GroupsUsers:cleanupSoftDeletedUsers',
+            'GroupsUsers:cleanupHardDeletedUsers',
+            'GroupsUsers:cleanupSoftDeletedGroups',
+            'GroupsUsers:cleanupHardDeletedGroups',
+            'GroupsUsers:cleanupDuplicatedGroupsUsers',
+            'Favorites:cleanupSoftDeletedUsers',
+            'Favorites:cleanupHardDeletedUsers',
+            'Favorites:cleanupSoftDeletedResources',
+            'Favorites:cleanupHardDeletedResources',
+            'Favorites:cleanupDuplicatedFavorites',
+            'Comments:cleanupSoftDeletedUsers',
+            'Comments:cleanupHardDeletedUsers',
+            'Comments:cleanupSoftDeletedResources',
+            'Comments:cleanupHardDeletedResources',
+            'Permissions:cleanupSoftDeletedUsers',
+            'Permissions:cleanupHardDeletedUsers',
+            'Permissions:cleanupSoftDeletedGroups',
+            'Permissions:cleanupHardDeletedGroups',
+            'Permissions:cleanupSoftDeletedResources',
+            'Permissions:cleanupHardDeletedResources',
+            'Permissions:cleanupDuplicatedPermissions',
+            'Secrets:cleanupSoftDeletedUsers',
+            'Secrets:cleanupHardDeletedUsers',
+            'Secrets:cleanupSoftDeletedResources',
+            'Secrets:cleanupHardDeletedResources',
+            'Secrets:cleanupHardDeletedPermissions',
+            'Resources:cleanupMissingResourceTypeId',
+            'Avatars:cleanupSoftDeletedUsers',
+            'Avatars:cleanupHardDeletedUsers',
+            'Avatars:cleanupHardDeletedProfiles',
+            'Users:cleanupInactiveUsersWithDuplicatedUsername',
+        ];
+
+        UserFactory::make()->admin()->persist();
+        $this->exec('passbolt cleanup --dry-run --verbose');
+        $this->assertExitSuccess();
+        foreach ($verboseMethodCallPrints as $methodCallPrint) {
+            $this->assertOutputContains($methodCallPrint);
+        }
+    }
+
+    public function testCleanupCommand_SelfRegisteringPluginsCE_IntegrationTest()
+    {
+        Configure::write('passbolt.plugins.folders', ['enabled' => true]);
+
+        $verboseMethodCallPrints = [
+            'Passbolt/Metadata.MetadataPrivateKeys:cleanupHardDeletedUsers',
+            'Passbolt/Metadata.MetadataPrivateKeys:cleanupSoftDeletedUsers',
+            'Passbolt/Folders.FoldersRelations:cleanupHardDeletedUsers',
+            'Passbolt/Folders.FoldersRelations:cleanupSoftDeletedUsers',
+            'Passbolt/Folders.FoldersRelations:cleanupHardDeletedResources',
+            'Passbolt/Folders.FoldersRelations:cleanupSoftDeletedResources',
+            'Passbolt/Folders.FoldersRelations:cleanupHardDeletedFolders',
+            'Passbolt/Folders.FoldersRelations:cleanupHardDeletedFoldersParents',
+            'Passbolt/Folders.FoldersRelations:cleanupMissingFoldersFoldersRelations',
+            'Passbolt/Folders.FoldersRelations:cleanupMissingResourcesFoldersRelations',
+            'Passbolt/Folders.FoldersRelations:cleanupDuplicatedFoldersRelations',
+            'Permissions:cleanupHardDeletedFolders', // injected into Permissions table via a behavior from Folders
+        ];
+
+        UserFactory::make()->admin()->persist();
+        $this->exec('passbolt cleanup --dry-run --verbose');
+        $this->assertExitSuccess();
+        foreach ($verboseMethodCallPrints as $methodCallPrint) {
+            $this->assertOutputContains($methodCallPrint);
+        }
     }
 }

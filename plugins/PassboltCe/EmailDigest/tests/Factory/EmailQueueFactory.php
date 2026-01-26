@@ -137,6 +137,16 @@ class EmailQueueFactory extends CakephpBaseFactory
     }
 
     /**
+     * Mark the email as locked.
+     *
+     * @return $this
+     */
+    public function locked()
+    {
+        return $this->setField('locked', true);
+    }
+
+    /**
      * @param string $fullBaseUrl full base url
      * @return EmailQueueFactory
      */

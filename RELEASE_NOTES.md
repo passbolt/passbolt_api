@@ -1,64 +1,60 @@
-Release song: https://www.youtube.com/watch?v=F5uXomY94w8
+Release song: https://www.youtube.com/watch?v=QNa5o85Q-FE
 
-Passbolt 5.8.0 introduces dynamic role management, allowing organizations to define additional roles that better align with internal policies, compliance requirements, and operational needs. This release also adds drag & drop user assignment to groups, simplifying day-to-day user and group management.
+Passbolt 5.9 is designed to keep upgrades predictable and everyday use reliable. It expands runtime compatibility with PHP 8.5,
+makes environment risks easier to spot earlier through health checks, and closes a couple of security gaps that could otherwise be
+used to probe accounts or mislead users during navigation.
 
-**Warning**: Ensure that all users have updated their browser extension to at least version 5.8 before assigning new roles. Otherwise, they will not be able to connect to Passbolt.
+**Warning:** If you run MariaDB 10.3 or 10.5, or MySQL 5, pay particular attention to the environment section below.
+Support for these versions is planned to stop in January 2027, and this release starts flagging them proactively so you can schedule upgrades before they become urgent.
 
-## Dynamic role management
+## Environment support and deprecation signals you can act on early
+Passbolt 5.9 adds PHP 8.5 support, helping administrators and platform teams validate upcoming runtime upgrades in advance.
+Moreover, while PHP 8.2 is still supported until 2027, it has entered security maintenance, and administrators should plan its upgrade this year.
 
-As was already the case with the default User role, Passbolt allows administrators to restrict what users can do by limiting access to specific capabilities. With version 5.8, this model is extended beyond the default Admin and User roles, making it possible to create additional roles and assign them to users for more granular control.
+At the same time, this release improves environment health checks to surface database versions that have reached end of life. MariaDB 10.3 and 10.5, and MySQL 5,
+are now flagged as deprecated allowing administrators to identify risky deployments during routine maintenance rather than responding under time pressure.
+These notices are explicitly tied to a planned end of support in January 2027, giving teams  a clear runway to align database upgrades with regular change windows and internal upgrade policies.
 
-Dynamic roles also enable the delegation of administrative responsibilities. Rather than granting full administrative access, administrators can now assign selected capabilities to custom roles and distribute operational tasks across multiple users. Initial support covers group creation, as well as handling account recovery requests in Passbolt Pro.
+## Safer account recovery responses to reduce email enumeration risk
+Account recovery endpoints can reveal whether a user exists, which makes targeted attacks easier. In Passbolt 5.9, the recover endpoint no longer leaks information when a user does
+not exist in the database, reducing the signal attackers rely on for email or username enumeration.
 
-At this stage, dynamic role management comes with a defined scope and set of constraints.
+## Stronger protection against clickjacking and deceptive overlays
+Clickjacking and overlay techniques aim to trick users into clicking something different from what they believe they are interacting with. Passbolt 5.9 reinforces defenses against
+these UI-level attacks in edge-case conditions, including scenarios where a compromised website tries to influence user interactions when a password could be suggested.
 
-- The default Admin and User roles keep fixed names and cannot be renamed or deleted.
-- As before, the User role can be restricted, but it cannot be assigned delegated administrative responsibilities.
-- The Admin role, by contrast, always retains access to all capabilities and cannot be restricted.
-- Custom roles are currently limited to two per instance and support a first set of administrative capabilities.
+In practice, this extra layer of strengthening helps ensure users cannot be guided into interacting with sensitive Passbolt components when those components are not fully visible and clearly presented to them.
 
-This scope will be expanded progressively as additional needs and use cases are identified by the community.
+## Better visibility and efficiency around email digest operations
+Large folder operations can generate a lot of email activity and can be difficult  to reason about as  queues grow. Passbolt 5.9 improves digest handling related to folder operations,
+helping reduce unnecessary mail churn in workspaces where folder structure and permissions evolve frequently.
 
-## Drag & drop users to groups
+In addition, the passbolt _email_digest_ command now reports how many emails were sent and how many remain in the queue. This makes it easier for administrators to confirm progress,
+anticipate bursts, and troubleshoot queue behavior using logs.
 
-Managing group membership often requires repetitive actions when working with large teams or frequently changing group structures. With Passbolt 5.8, administrators can now add users to a group by dragging them directly onto it from the Users & Groups workspace. This removes the need to open and edit each group individually and makes day-to-day group management faster and more fluid.
+## Maintenance work that improves stability over time
+Passbolt 5.9 continues the migration work of its UI framework for authentication-related applications. The first applications have been migrated as part of a larger foundation effort
+aimed at improving stability and long-term performance as more areas move to the new framework.
 
-## Miscellaneous improvements
+## Conclusion
+This release also includes additional fixes and improvements beyond the highlights above. Check out the release notes to learn more. Thanks to the community members and teams who
+reported issues and helped validate fixes.
 
-As usual, this release includes fixes and smaller improvements intended to improve the overall experience. For the full list of changes, please refer to the changelog.
-
-Many thanks to everyone who provided feedback and helped refine these features.
-
-## [5.8.0] - 2025-12-22
+## [5.9.0] - 2026-01-26
 ### Added
-- PB-46972 As an administrator I can create a new custom role
-- PB-46973 As an administrator I can update a custom role
-- PB-46968 As an administrator I can soft delete custom roles
-- PB-46971 As an administrator I can list roles including deleted ones via filter
-- PB-47169 As a user I receive an email notification when my role is changed
-- PB-47345 As an administrator I receive an email notification when a role is created or updated
-- PB-46975 As an administrator I can list RBACs including Actions
-- PB-46976 As an administrator I can update RBACs for Actions
-- PB-47006 As a logged-in user my role is fetched on every request to reflect role changes immediately
-- PB-47083 As a user with appropriate RBAC permissions I can create groups
-- PB-47171 As a user with appropriate RBAC permissions I can manage account recovery requests
-- PB-47338 As a user with account recovery view permissions I can see pending requests in users.json
-- PB-47196 As an administrator I can run the healthcheck command in POSIX mode
-- PB-47274 As an administrator I can run a command to populate created_by and modified_by fields in secrets
-- PB-47275 As an administrator I can run a command to populate secret revisions for existing secrets
+- PB-44749 As an administrator I should get notified in the healthcheck about the deprecation of the database type and version
+- PB-47893 As an administrator running the bin/cron command, I can see in the logs the number of emails left to send
+- PB-46111 As a user I should receive a single email digest when more than one folders are created, updated or deleted
 
 ### Fixed
-- PB-46374 As first admin I should not receive emails regarding encrypted metadata enablement during the first setup
-- PB-46613 Fix web installer not working in HTTP when not in secure context
-- PB-46640 Fix warnings in mfa_user_settings_reset_self.php email template
-- PB-46645 Optimize action logs purge command dry run query
-- PB-46913 Fix MfaUserSettingsDisableCommand to support case sensitive username comparison
-- PB-46935 Fix 500 error on /metadata/session-keys/{uuid}.json endpoint when the request is sent twice
-- PB-47236 Reduce the PHP memory load of the V570PopulateSecretRevisionsForExistingSecrets migration
+- PB-47991 As an administrator I should not get a data-check error for deleted resources with no active metadata keys
+- PB-47987 As an administrator I should not get a data-check error for deleted secrets
+- PB-47986 As a logged-in user tagging a resource I should not update the modified date of the resource
+- PB-47070 As an administrator I can use the --no-verify option when truncating the account recovery tables
 
 ### Security
-- PB-46890 Upgrade js-yaml dependency (Medium severity)
+- PB-47276 As a non-logged in user I cannot enumerate user emails using the recover endpoint
 
 ### Maintenance
-- PB-45979 Add CACHE_CAKETRANSLATIONS_CLASSNAME environment variable for _cake_translations_ cache config
-- PB-46388 Fix PHPUnit 11 deprecations
+- PB-47701 Specify 1.1.0 version as minimum duo universal SDK package version in composer.json
+- PB-47794 Update composer/composer to fix security-check job due to CVE-2025-67746

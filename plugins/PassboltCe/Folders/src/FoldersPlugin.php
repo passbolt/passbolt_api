@@ -22,10 +22,12 @@ use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
 use Passbolt\Folders\EventListener\AddFolderizableBehavior;
 use Passbolt\Folders\EventListener\GroupsUsersEventListener;
 use Passbolt\Folders\EventListener\PermissionsModelInitializeEventListener;
 use Passbolt\Folders\EventListener\ResourcesEventListener;
+use Passbolt\Folders\Notification\DigestTemplate\FolderChangesDigestTemplate;
 use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
 use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
 
@@ -38,6 +40,8 @@ class FoldersPlugin extends BasePlugin
     {
         parent::bootstrap($app);
         $this->registerListeners($app);
+        // Folders email digests
+        DigestTemplateRegistry::getInstance()->addTemplate(new FolderChangesDigestTemplate());
         $this->addAssociationsToResourcesTable(TableRegistry::getTableLocator()->get('Resources'));
         $this->addAssociationsToPermissionsTable(TableRegistry::getTableLocator()->get('Permissions'));
     }

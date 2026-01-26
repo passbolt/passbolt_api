@@ -19,6 +19,7 @@ namespace Passbolt\Folders\Model\Table;
 
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
+use App\Model\Table\TableCleanupProviderInterface;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
@@ -62,7 +63,7 @@ use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemsToUserTree
  * @method  \Cake\ORM\Query\SelectQuery findMissingFoldersRelations(string $foreignModel)
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class FoldersRelationsTable extends Table
+class FoldersRelationsTable extends Table implements TableCleanupProviderInterface
 {
     use FoldersRelationsFindersTrait;
     use TableCleanupTrait;
@@ -555,5 +556,26 @@ class FoldersRelationsTable extends Table
             'user_id IN' => $forUsersIds,
         ];
         $this->updateAll($fields, $conditions);
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        return [
+            $this->cleanupHardDeletedUsers(...),
+            $this->cleanupSoftDeletedUsers(...),
+            $this->cleanupHardDeletedResources(...),
+            $this->cleanupSoftDeletedResources(...),
+            $this->cleanupHardDeletedFolders(...),
+            $this->cleanupHardDeletedFoldersParents(...),
+            $this->cleanupMissingFoldersFoldersRelations(...), // Ensure this cleanup is run before 'Missing Resources Folders Relations'
+            $this->cleanupMissingResourcesFoldersRelations(...),
+            $this->cleanupDuplicatedFoldersRelations(...),
+            // @todo missing Hard Delete Permissions
+        ];
     }
 }

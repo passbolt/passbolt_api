@@ -78,7 +78,7 @@ use Throwable;
  * @method iterable<\App\Model\Entity\Resource>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @method \Cake\ORM\Query\SelectQuery findByIdAndDeleted(string $id, bool $delete)
  */
-class ResourcesTable extends Table
+class ResourcesTable extends Table implements TableCleanupProviderInterface
 {
     use ResourcesFindersTrait;
     use FeaturePluginAwareTrait;
@@ -718,5 +718,17 @@ class ResourcesTable extends Table
         }
 
         return $this->updateAll(['resource_type_id' => ResourceTypesTable::getDefaultTypeId()], $condition);
+    }
+
+    /**
+     * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
+     *
+     * @return array<int, callable> List of callables
+     */
+    public function getCleanupMethods(): array
+    {
+        return [
+            $this->cleanupMissingResourceTypeId(...),
+        ];
     }
 }

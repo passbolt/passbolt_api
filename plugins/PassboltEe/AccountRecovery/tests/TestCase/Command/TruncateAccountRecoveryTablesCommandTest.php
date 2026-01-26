@@ -118,12 +118,12 @@ class TruncateAccountRecoveryTablesCommandTest extends TestCase
         }
     }
 
-    public function testTruncateAccountRecoveryTablesCommand_Fails_With_No_Parameters()
+    public function testTruncateAccountRecoveryTablesCommand_With_No_Parameters()
     {
         $this->exec('passbolt truncate_account_recovery_tables');
         $this->assertExitError();
 
-        $this->assertErrorContains('Missing required option');
+        $this->assertErrorContains('<error>The username should be a valid email.</error>');
     }
 
     public function testTruncateAccountRecoveryTablesCommand_Success_With_Valid_Parameters_But_Not_In_DB()
@@ -158,7 +158,7 @@ class TruncateAccountRecoveryTablesCommandTest extends TestCase
         }
 
         $this->exec(
-            'passbolt truncate_account_recovery_tables --no-verify -u foo@bar.com -f 8FF56AE5DFCEE142949B7826FD986838F4F9AB31',
+            'passbolt truncate_account_recovery_tables --no-verify',
             ['y',]
         );
 
