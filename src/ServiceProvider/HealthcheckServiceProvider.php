@@ -38,6 +38,7 @@ use App\Service\Healthcheck\Core\SaltCoreHealthcheck;
 use App\Service\Healthcheck\Core\ValidFullBaseUrlCoreHealthcheck;
 use App\Service\Healthcheck\Database\ConnectDatabaseHealthcheck;
 use App\Service\Healthcheck\Database\DefaultContentDatabaseHealthcheck;
+use App\Service\Healthcheck\Database\MariadbMysqlVersionDeprecateHealthcheck;
 use App\Service\Healthcheck\Database\SchemaUpToDateApplicationHealthcheck;
 use App\Service\Healthcheck\Database\TablesCountDatabaseHealthcheck;
 use App\Service\Healthcheck\Environment\DistributionHealthcheck;
@@ -214,6 +215,7 @@ class HealthcheckServiceProvider extends ServiceProvider
         $container->add(ConnectDatabaseHealthcheck::class);
         $container->add(TablesCountDatabaseHealthcheck::class);
         $container->add(DefaultContentDatabaseHealthcheck::class);
+        $container->add(MariadbMysqlVersionDeprecateHealthcheck::class);
         $container->add(SchemaUpToDateApplicationHealthcheck::class);
 
         // Append core health checks to service collector
@@ -274,6 +276,7 @@ class HealthcheckServiceProvider extends ServiceProvider
             ->addMethodCall('addService', [ConnectDatabaseHealthcheck::class])
             ->addMethodCall('addService', [TablesCountDatabaseHealthcheck::class])
             ->addMethodCall('addService', [DefaultContentDatabaseHealthcheck::class])
+            ->addMethodCall('addService', [MariadbMysqlVersionDeprecateHealthcheck::class])
             ->addMethodCall('addService', [SchemaUpToDateApplicationHealthcheck::class]);
 
         // Required for Healthcheck endpoint

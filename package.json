@@ -25,10 +25,11 @@
     "jquery": "^3.5.1",
     "lockfile-lint": "^4.14.1",
     "openpgp": "^5.11.3",
-    "passbolt-styleguide": "^5.8.2"
+    "passbolt-styleguide": "^5.9.1"
   },
   "overrides": {
-    "brace-expansion": "^1.1.12"
+    "brace-expansion": "^1.1.12",
+    "qs": "6.14.1"
   },
   "scripts": {
     "lint": "npm run lint:lockfile",

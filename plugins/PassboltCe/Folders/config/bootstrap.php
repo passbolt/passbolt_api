@@ -20,22 +20,5 @@ Configure::load('Passbolt/Folders.config', 'default', true);
 
 // Add cleanup tasks jobs.
 if (PHP_SAPI === 'cli') {
-    $cleanups = [
-        'Permissions' => [
-            'Hard Deleted Folders',
-        ],
-        'Passbolt/Folders.FoldersRelations' => [
-            'Hard Deleted Users',
-            'Soft Deleted Users',
-            'Hard Deleted Resources',
-            'Soft Deleted Resources',
-            'Hard Deleted Folders',
-            'Hard Deleted Folders Parents',
-            'Missing Folders Folders Relations', // Ensure this cleanup is run before 'Missing Resources Folders Relations'
-            'Missing Resources Folders Relations',
-            'Duplicated Folders Relations',
-            // @todo missing Hard Delete Permissions
-        ],
-    ];
-    CleanupCommand::addCleanups($cleanups);
+    CleanupCommand::registerCleanableTable('Passbolt/Folders.FoldersRelations');
 }

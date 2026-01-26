@@ -78,6 +78,7 @@ class SenderCommandTest extends AppIntegrationTestCase
     {
         $sender = Mailer::getConfig('default')['from'];
         $email = EmailQueueFactory::make()->persist();
+        EmailQueueFactory::make()->locked()->persist();
 
         $this->exec('passbolt email_digest send');
 
@@ -88,6 +89,12 @@ class SenderCommandTest extends AppIntegrationTestCase
         // Assert <head> tag is not duplicated/present only once in the email HTML
         $this->assertMailBodyStringCount(1, '<head>');
         $this->assertMailBodyStringCount(1, '</head>');
+        // Assert log written
+        $this->assertOutputContains('"message":"Email digest sender command"');
+        $this->assertOutputContains('"sent":1');
+        $this->assertOutputContains('"failed":0');
+        $this->assertOutputContains('"pending":0');
+        $this->assertOutputContains('"locked":1');
     }
 
     /**
