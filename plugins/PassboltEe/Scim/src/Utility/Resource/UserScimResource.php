@@ -339,6 +339,7 @@ class UserScimResource implements ScimResourceInterface
             }
         } else {
             // Update profile if user exit but entry dont
+            /** @var \App\Model\Entity\Profile $profile */
             $profile = $user->profile;
             $this->Users->Profiles->patchEntity($profile, $profileData, [
                 'accessibleFields' => [
