@@ -878,11 +878,6 @@
       <code><![CDATA[\Passbolt\ResourceTypes\Model\Entity\ResourceType get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="plugins/PassboltCe/ResourceTypes/src/Model/Table/ResourceTypesTable.php">
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\ResourceTypes\Model\Entity\ResourceType get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
-    </MoreSpecificImplementedParamType>
-  </file>
   <file src="plugins/PassboltCe/ResourceTypes/tests/Factory/ResourceTypeFactory.php">
     <MethodSignatureMismatch>
       <code><![CDATA[ResourceTypeFactory]]></code>
@@ -938,36 +933,106 @@
     </InvalidPropertyFetch>
   </file>
   <file src="plugins/PassboltEe/AccountRecovery/src/Model/Table/AccountRecoveryOrganizationPoliciesTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy[]]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/AccountRecovery/src/Model/Table/AccountRecoveryOrganizationPublicKeysTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey[]]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/AccountRecovery/src/Model/Table/AccountRecoveryPrivateKeyPasswordsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[]]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/AccountRecovery/src/Model/Table/AccountRecoveryPrivateKeysTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey[]]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/AccountRecovery/src/Model/Table/AccountRecoveryRequestsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[]]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/AccountRecovery/src/Model/Table/AccountRecoveryResponsesTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse[]]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/AccountRecovery/src/Model/Table/AccountRecoveryUserSettingsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting[]]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
@@ -1285,26 +1350,76 @@
     </InvalidPropertyFetch>
   </file>
   <file src="plugins/PassboltEe/DirectorySync/src/Model/Table/DirectoryEntriesTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryEntry]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryEntry]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryEntry[]]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryEntry|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryEntry>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryEntry>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryEntry>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryEntry>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryEntry get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/DirectorySync/src/Model/Table/DirectoryIgnoreTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[]]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/DirectorySync/src/Model/Table/DirectoryRelationsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryRelation]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryRelation]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryRelation[]]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryRelation|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryRelation>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryRelation>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryRelation>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryRelation>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryRelation newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/DirectorySync/src/Model/Table/DirectoryReportsItemsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[]]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/DirectorySync/src/Model/Table/DirectoryReportsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReport]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReport]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReport[]]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReport|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReport>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReport>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReport>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReport>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReport get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
     </MoreSpecificImplementedParamType>
@@ -1315,17 +1430,59 @@
       <code><![CDATA[$john->username]]></code>
     </InvalidPropertyFetch>
   </file>
+  <file src="plugins/PassboltEe/Scim/src/Model/Table/ScimEntriesTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\Scim\Model\Entity\ScimEntry]]></code>
+      <code><![CDATA[\Passbolt\Scim\Model\Entity\ScimEntry]]></code>
+      <code><![CDATA[\Passbolt\Scim\Model\Entity\ScimEntry|false]]></code>
+      <code><![CDATA[array<\Passbolt\Scim\Model\Entity\ScimEntry>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Scim\Model\Entity\ScimEntry>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Scim\Model\Entity\ScimEntry>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Scim\Model\Entity\ScimEntry>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Scim\Model\Entity\ScimEntry>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+  </file>
   <file src="plugins/PassboltEe/Sso/src/Model/Table/SsoKeysTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoKey]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoKey]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoKey[]]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoKey|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoKey>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoKey>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoKey>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoKey>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoKey get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/Sso/src/Model/Table/SsoSettingsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoSetting]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoSetting]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoSetting[]]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoSetting|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoSetting>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoSetting>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoSetting>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoSetting>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/Sso/src/Model/Table/SsoStatesTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoState]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoState]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoState[]]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoState|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoState>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoState>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoState>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoState>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoState newEmptyEntity()]]></code>
     </MoreSpecificImplementedParamType>
@@ -1712,11 +1869,31 @@
     </TypeDoesNotContainType>
   </file>
   <file src="plugins/PassboltEe/Tags/src/Model/Table/ResourcesTagsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\ResourcesTag]]></code>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\ResourcesTag]]></code>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\ResourcesTag[]]]></code>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\ResourcesTag|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\ResourcesTag>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\ResourcesTag>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\ResourcesTag>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\ResourcesTag>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\Tags\Model\Entity\ResourcesTag get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/Tags/src/Model/Table/TagsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\Tag]]></code>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\Tag]]></code>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\Tag[]]]></code>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\Tag|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\Tag>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\Tag>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\Tag>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\Tag>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\Tags\Model\Entity\Tag get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
     </MoreSpecificImplementedParamType>
