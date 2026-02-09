@@ -32,8 +32,8 @@ class RbacsInsertDefaultsService
     {
         $Roles = TableRegistry::getTableLocator()->get('roles');
 
-        /** @var \App\Model\Entity\Role $role */
-        $role = $Roles->find()->where(['name' => Role::USER])->firstOrFail();
+        /** @var \App\Model\Entity\Role $userRole */
+        $userRole = $Roles->find()->select('id')->where(['name' => Role::USER])->firstOrFail();
 
         $Rbacs = TableRegistry::getTableLocator()->get('Passbolt/Rbacs.Rbacs');
         $alreadyExistingRbacUiActionIds = $Rbacs->find()->select('foreign_id');
@@ -47,7 +47,7 @@ class RbacsInsertDefaultsService
 
         foreach ($uiactions as $uiaction) {
             $entities[] = $Rbacs->newEntity([
-                'role_id' => $role->id,
+                'role_id' => $userRole->id,
                 'foreign_id' => $uiaction->id,
                 'foreign_model' => Rbac::FOREIGN_MODEL_UI_ACTION,
                 'control_function' => Rbac::CONTROL_FUNCTION_ALLOW,

@@ -47,7 +47,10 @@ class InsertRbacsForActionsService
     public function add(array $actionNames): int
     {
         // Find all roles apart from admin & guest (excluding soft deleted roles)
-        $roles = $this->Roles->find('notDeleted')->where(['name NOT IN' => [Role::GUEST, Role::ADMIN]])->all();
+        $roles = $this->Roles->find('notDeleted')
+            ->select('id')
+            ->where(['name NOT IN' => [Role::GUEST, Role::ADMIN]])
+            ->all();
 
         if ($roles->isEmpty()) {
             return 0;

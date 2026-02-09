@@ -118,13 +118,13 @@ class RbacsUpdateService
      * @param \App\Utility\UserAccessControl $uac user access control
      * @param \Cake\Datasource\ResultSetInterface $rbacs collection of rbac entities
      * @param \Passbolt\Rbacs\Model\Dto\RbacsUpdateDtoCollection $dtoCollection update set
-     * @return array
+     * @return iterable<\Cake\Datasource\EntityInterface>
      */
     protected function patchEntities(
         UserAccessControl $uac,
         ResultSetInterface $rbacs,
         RbacsUpdateDtoCollection $dtoCollection
-    ): array {
+    ): iterable {
         $updateEntities = [];
 
         foreach ($rbacs as $i => $rbac) {
