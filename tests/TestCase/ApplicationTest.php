@@ -58,6 +58,7 @@ class ApplicationTest extends TestCase
             ValidCookieNameMiddleware::class,
             ContentSecurityPolicyMiddleware::class,
             ErrorHandlerMiddleware::class,
+            HttpProxyMiddleware::class,
             AssertFullBaseUrlMiddleware::class,
             SslForceMiddleware::class,
             AssetMiddleware::class,
@@ -71,7 +72,6 @@ class ApplicationTest extends TestCase
             SetUserIdentityInRequestMiddleware::class,
             GpgAuthHeadersMiddleware::class,
             CsrfProtectionMiddleware::class,
-            HttpProxyMiddleware::class,
         ];
 
         foreach ($middlewareClassesInOrder as $midClass) {
