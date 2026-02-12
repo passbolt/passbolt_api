@@ -114,6 +114,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->prepend(new ContainerInjectorMiddleware($this->getContainer()))
             ->add(new ContentSecurityPolicyMiddleware())
             ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
+            ->add(new HttpProxyMiddleware())
             ->add(new AssertFullBaseUrlMiddleware())
             ->add(SslForceMiddleware::class)
             ->add(new AssetMiddleware(['cacheTime' => Configure::read('Asset.cacheTime')]))
@@ -129,8 +130,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             )
             ->insertAfter(AuthenticationMiddleware::class, SetUserIdentityInRequestMiddleware::class)
             ->add(new GpgAuthHeadersMiddleware())
-            ->add($csrf)
-            ->add(new HttpProxyMiddleware());
+            ->add($csrf);
 
         /*
          * Additional security headers
