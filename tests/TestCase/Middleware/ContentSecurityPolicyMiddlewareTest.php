@@ -36,16 +36,19 @@ class ContentSecurityPolicyMiddlewareTest extends TestCase
         $response = $middleware->process(new ServerRequest(), new TestRequestHandler());
 
         $cspHeaders = $response->getHeader('Content-Security-Policy');
-        $expectedHeaders = [
-            "default-src 'self'",
-            "script-src 'self'",
-            "style-src 'self' 'unsafe-inline'",
-            "img-src 'self' data:",
-            "frame-src 'self' https://*.duosecurity.com",
-            "frame-ancestors 'none'",
-            "form-action 'self' https://*.duosecurity.com",
-        ];
-        $this->assertSame($expectedHeaders, $cspHeaders);
+        $expectedHeader = "default-src 'none';"
+            . ' ' . "script-src 'self';"
+            . ' ' . "style-src 'self';"
+            . ' ' . "img-src 'self';"
+            . ' ' . "font-src 'self';"
+            . ' ' . "connect-src 'self';"
+            . ' ' . "base-uri 'self';"
+            . ' ' . "frame-src 'self';"
+            . ' ' . "frame-ancestors 'none';"
+            . ' ' . "form-action 'self' https://*.duosecurity.com";
+        // CSP header should be in single line
+        $this->assertCount(1, $cspHeaders);
+        $this->assertSame($expectedHeader, $cspHeaders[0]);
     }
 
     public function testContentSecurityPolicyMiddleware_Config_Overwrite()

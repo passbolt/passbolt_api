@@ -66,8 +66,8 @@
         "ext-curl": "*",
         "ext-ldap": "*",
         "ext-iconv": "*",
-        "composer/composer": "^2.9.3",
-        "cakephp/cakephp": "^5.2.9",
+        "composer/composer": "^2.9.5",
+        "cakephp/cakephp": "^5.2.12",
         "cakephp/migrations": "^4.0.0",
         "cakephp/plugin-installer": "^2.0",
         "mobiledetect/mobiledetectlib": "^4.8.03",
@@ -79,11 +79,11 @@
         "league/flysystem": "^3.29.1",
         "cakephp/authentication": "^3.0",
         "bcrowe/cakephp-api-pagination": "dev-cakephp5#b103542e1b02c2a000862d91a804ecde6d4669b0",
-        "firebase/php-jwt": "^6.2.0",
+        "firebase/php-jwt": "^7.0.0",
         "spomky-labs/otphp": "^11.3.0",
         "bacon/bacon-qr-code": "^3.0.1",
         "enygma/yubikey": "^3.8",
-        "duosecurity/duo_universal_php": "^1.1.0",
+        "duosecurity/duo_universal_php": "^1.1.2",
         "league/oauth2-client": "^2.6",
         "directorytree/ldaprecord": "^3.0"
     },
@@ -92,7 +92,7 @@
         "psy/psysh": "@stable",
         "cakephp/debug_kit": "^5.0.0",
         "cakephp/bake": "^3.0.0",
-        "phpunit/phpunit": "^11.0",
+        "phpunit/phpunit": "^11.5.50",
         "cakephp/cakephp-codesniffer": "^5.0",
         "passbolt/passbolt-selenium-api": "dev-cakephp5#861bc4fe19b5ed58e50dd9a9c52909c997f2934a",
         "vierge-noire/cakephp-fixture-factories": "^v3.0",
@@ -143,6 +143,7 @@
             "Passbolt\\SecretRevisions\\": "./plugins/PassboltCe/SecretRevisions/src",
             "Passbolt\\Metadata\\": "./plugins/PassboltCe/Metadata/src",
             "Passbolt\\UserKeyPolicies\\": "./plugins/PassboltCe/UserKeyPolicies/src",
+            "Passbolt\\ExportPolicies\\": "./plugins/PassboltCe/ExportPolicies/src",
             "Passbolt\\Scim\\": "./plugins/PassboltEe/Scim/src"
         }
     },
@@ -187,6 +188,7 @@
             "Passbolt\\SecretRevisions\\Test\\": "./plugins/PassboltCe/SecretRevisions/tests",
             "Passbolt\\Metadata\\Test\\": "./plugins/PassboltCe/Metadata/tests",
             "Passbolt\\UserKeyPolicies\\Test\\": "./plugins/PassboltCe/UserKeyPolicies/tests",
+            "Passbolt\\ExportPolicies\\Test\\": "./plugins/PassboltCe/ExportPolicies/tests",
             "Passbolt\\Scim\\Test\\": "./plugins/PassboltEe/Scim/tests"
         }
     },

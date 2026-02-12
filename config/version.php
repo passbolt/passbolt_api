@@ -1,8 +1,8 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '5.9.0',
-        'name' => 'Flight Facilities',
+        'version' => '5.10.0-test.1',
+        'name' => 'TBD',
     ],
     'php' => [
         'minVersion' => '8.2',

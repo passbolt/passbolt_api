@@ -322,6 +322,7 @@ class GroupsTable extends Table implements TableCleanupProviderInterface
         $groupUsersIds = $this->GroupsUsers->findByGroupId($group->id)
             ->select('user_id')->all()->extract('user_id')->toArray();
         $secretsFindSecretsAccessibleViaGroupOnlyService = new SecretsFindSecretsAccessibleViaGroupOnlyService();
+        /** @var iterable<\Cake\ORM\Entity> $secretsToDelete */
         $secretsToDelete = $secretsFindSecretsAccessibleViaGroupOnlyService->find(
             $group->id,
             $groupUsersIds,

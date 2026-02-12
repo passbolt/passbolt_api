@@ -86,6 +86,14 @@ class GpgAuthenticator extends SessionAuthenticator
     protected ?User $_user;
 
     /**
+     * @return \App\Model\Entity\User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->_user;
+    }
+
+    /**
      * When an unauthenticated user tries to access a protected page this method is called
      *
      * @param \Cake\Http\ServerRequest $request interface for accessing request parameters
@@ -126,7 +134,7 @@ class GpgAuthenticator extends SessionAuthenticator
      */
     private function authenticationSuccessResult(): ResultInterface
     {
-        return new Result(['user' => $this->_user->toArray()], Result::SUCCESS, $this->headers);
+        return new Result(['user' => ['id' => $this->_user->id]], Result::SUCCESS, $this->headers);
     }
 
     /**
