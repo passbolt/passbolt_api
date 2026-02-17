@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.10.0-test.2] - 2026-02-17
+### Added
+- PB-49193 Updates passbolt styleguide version
+
 ## [5.10.0-test.1] - 2026-02-12
 ### Added
 - PB-48415 As an administrator, I can define the export policies to prevent CSV Export RCE
