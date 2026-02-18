@@ -110,9 +110,12 @@ class ScimSetSettingsService extends ScimBaseSettingsService
      */
     public static function generateToken(): string
     {
-        $prefix = self::SCIM_SECRET_TOKEN_PREFIX;
-        $token = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(random_bytes(3600)));
+        // Generate 256-bit entropy token
+        $bin = random_bytes(32);
+        // Base64 gives exact 43 characters (cutting "==" from last)
+        $token = rtrim(strtr(base64_encode($bin), '+/', '-_'), '=');
 
-        return $prefix . substr($token, mt_rand(0, strlen($token) - 43), 43);
+        // Including prefix total length becomes 46
+        return self::SCIM_SECRET_TOKEN_PREFIX . $token;
     }
 }
