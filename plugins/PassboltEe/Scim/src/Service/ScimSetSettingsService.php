@@ -18,6 +18,7 @@ namespace Passbolt\Scim\Service;
 
 use App\Error\Exception\FormValidationException;
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
@@ -100,6 +101,36 @@ class ScimSetSettingsService extends ScimBaseSettingsService
         );
 
         return $renderedSettings;
+    }
+
+    /**
+     * Rehash a SCIM bearer token from legacy SHA-256 to bcrypt.
+     *
+     * Called transparently during authentication when a legacy token
+     * format is detected. This ensures all tokens converge to bcrypt
+     * over time without requiring admin intervention.
+     *
+     * @param string $rawToken The plaintext bearer token.
+     * @return void
+     */
+    public function rehashToken(string $rawToken): void
+    {
+        /** @var \Passbolt\Scim\Model\Table\ScimSettingsTable $scimSettingsTable */
+        $scimSettingsTable = $this->fetchTable('Passbolt/Scim.ScimSettings');
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting|null $settings */
+        $settings = $scimSettingsTable->find()->first();
+        if (!$settings) {
+            return;
+        }
+
+        /** @var int $cost */
+        $cost = Configure::read('passbolt.plugins.scim.security.secretToken.cost', 12);
+
+        $scimConfig = $this->decryptSettings($settings);
+        $scimConfig['secret_token'] = password_hash($rawToken, PASSWORD_BCRYPT, ['cost' => $cost]);
+
+        $settings->set('value', $this->encryptSettings($scimConfig));
+        $scimSettingsTable->save($settings);
     }
 
     /**

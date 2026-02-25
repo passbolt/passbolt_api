@@ -35,6 +35,11 @@ return [
                             'ScimDelete' => 'delete',
                         ],
                     ],
+                    'secretToken' => [
+                        'cost' => filter_var(env('PASSBOLT_SCIM_SECURITY_SECRET_TOKEN_COST', '12'), FILTER_VALIDATE_INT), // phpcs:ignore
+                        // Disable in the cloud
+                        'legacyHashAllowed' => filter_var(env('PASSBOLT_SCIM_SECURITY_SECRET_TOKEN_LEGACY_HASH_ALLOWED', true), FILTER_VALIDATE_BOOLEAN), // phpcs:ignore
+                    ],
                 ],
             ],
         ],
