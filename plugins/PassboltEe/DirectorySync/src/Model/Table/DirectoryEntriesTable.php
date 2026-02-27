@@ -203,8 +203,8 @@ class DirectoryEntriesTable extends Table
      */
     public function buildEntityFromData(array $data): DirectoryEntry
     {
-        if (strlen($data['directory_name']) > self::DN_MAX_LENGTH) {
-            $data['directory_name'] = substr($data['directory_name'], 0, self::DN_MAX_LENGTH - 1);
+        if (mb_strlen($data['directory_name'], 'UTF-8') > self::DN_MAX_LENGTH) {
+            $data['directory_name'] = mb_substr($data['directory_name'], 0, self::DN_MAX_LENGTH - 1, 'UTF-8');
         }
 
         $directoryEntry = $this->buildEntity($data);
@@ -254,8 +254,8 @@ class DirectoryEntriesTable extends Table
         try {
             $entry = $this->get($data['id'], contain: [$model]);
             if (is_string($data['directory_name']) && $entry->directory_name !== $data['directory_name']) {
-                if (strlen($data['directory_name']) > self::DN_MAX_LENGTH) {
-                    $data['directory_name'] = substr($data['directory_name'], 0, self::DN_MAX_LENGTH - 1);
+                if (mb_strlen($data['directory_name'], 'UTF-8') > self::DN_MAX_LENGTH) {
+                    $data['directory_name'] = mb_substr($data['directory_name'], 0, self::DN_MAX_LENGTH - 1, 'UTF-8');
                 }
                 $entry->directory_name = $data['directory_name'];
                 $this->save($entry);
