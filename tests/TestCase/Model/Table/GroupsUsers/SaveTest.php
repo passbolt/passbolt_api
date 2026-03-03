@@ -18,22 +18,19 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\GroupsUsers;
 
 use App\Model\Table\GroupsUsersTable;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\GroupsUserFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
-use App\Test\Lib\Model\GroupsModelTrait;
-use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class SaveTest extends AppTestCase
 {
     use FormatValidationTrait;
-    use GroupsModelTrait;
-    use GroupsUsersModelTrait;
 
     public $GroupsUsers;
-
-    public array $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
 
     public function setUp(): void
     {
@@ -61,6 +58,21 @@ class SaveTest extends AppTestCase
         ];
     }
 
+    /**
+     * Build default group user data using factories.
+     */
+    private function generateDummyGroupUserData(array $data = []): array
+    {
+        $group = GroupFactory::make()->persist();
+        $user = UserFactory::make()->persist();
+
+        return array_merge([
+            'group_id' => $group->id,
+            'user_id' => $user->id,
+            'is_admin' => true,
+        ], $data);
+    }
+
     /* FORMAT VALIDATION TESTS */
 
     public function testValidationGroupId()
@@ -70,7 +82,7 @@ class SaveTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->GroupsUsers, 'group_id', self::getDummyGroupUserData(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->GroupsUsers, 'group_id', $this->generateDummyGroupUserData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationUserId()
@@ -80,7 +92,7 @@ class SaveTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->GroupsUsers, 'user_id', self::getDummyGroupUserData(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->GroupsUsers, 'user_id', $this->generateDummyGroupUserData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationIsAdmin()
@@ -89,14 +101,14 @@ class SaveTest extends AppTestCase
             'boolean' => self::getBooleanTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->GroupsUsers, 'is_admin', self::getDummyGroupUserData(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->GroupsUsers, 'is_admin', $this->generateDummyGroupUserData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     /* LOGIC VALIDATION TESTS */
 
     public function testSuccess()
     {
-        $data = self::getDummyGroupUserData();
+        $data = $this->generateDummyGroupUserData();
         $options = self::getEntityDefaultOptions();
         $entity = $this->GroupsUsers->newEntity($data, $options);
         $save = $this->GroupsUsers->save($entity);
@@ -114,9 +126,11 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleGroupUserUnique()
     {
-        $data = self::getDummyGroupUserData();
-        $data['group_id'] = UuidFactory::uuid('group.id.freelancer');
-        $data['user_id'] = UuidFactory::uuid('user.id.jean');
+        $existingGroupUser = GroupsUserFactory::make()->persist();
+        $data = $this->generateDummyGroupUserData([
+            'group_id' => $existingGroupUser->group_id,
+            'user_id' => $existingGroupUser->user_id,
+        ]);
         $options = self::getEntityDefaultOptions();
         $entity = $this->GroupsUsers->newEntity($data, $options);
         $save = $this->GroupsUsers->save($entity);
@@ -128,7 +142,7 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleGroupExists()
     {
-        $data = self::getDummyGroupUserData();
+        $data = $this->generateDummyGroupUserData();
         $data['group_id'] = UuidFactory::uuid();
         $options = self::getEntityDefaultOptions();
         $entity = $this->GroupsUsers->newEntity($data, $options);
@@ -141,8 +155,8 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleGroupIsNotSoftDeleted()
     {
-        $data = self::getDummyGroupUserData();
-        $data['group_id'] = UuidFactory::uuid('group.id.deleted');
+        $deletedGroup = GroupFactory::make()->deleted()->persist();
+        $data = $this->generateDummyGroupUserData(['group_id' => $deletedGroup->id]);
         $options = self::getEntityDefaultOptions();
         $entity = $this->GroupsUsers->newEntity($data, $options);
         $save = $this->GroupsUsers->save($entity);
@@ -154,7 +168,7 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleUserExists()
     {
-        $data = self::getDummyGroupUserData();
+        $data = $this->generateDummyGroupUserData();
         $data['user_id'] = UuidFactory::uuid();
         $options = self::getEntityDefaultOptions();
         $entity = $this->GroupsUsers->newEntity($data, $options);
@@ -167,8 +181,8 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleUserIsNotSoftDeleted()
     {
-        $data = self::getDummyGroupUserData();
-        $data['user_id'] = UuidFactory::uuid('user.id.sofia');
+        $deletedUser = UserFactory::make()->deleted()->persist();
+        $data = $this->generateDummyGroupUserData(['user_id' => $deletedUser->id]);
         $options = self::getEntityDefaultOptions();
         $entity = $this->GroupsUsers->newEntity($data, $options);
         $save = $this->GroupsUsers->save($entity);
@@ -180,8 +194,8 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleUserIsActive()
     {
-        $data = self::getDummyGroupUserData();
-        $data['user_id'] = UuidFactory::uuid('user.id.ruth');
+        $inactiveUser = UserFactory::make()->inactive()->persist();
+        $data = $this->generateDummyGroupUserData(['user_id' => $inactiveUser->id]);
         $options = self::getEntityDefaultOptions();
         $entity = $this->GroupsUsers->newEntity($data, $options);
         $save = $this->GroupsUsers->save($entity);

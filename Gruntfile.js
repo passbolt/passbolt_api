@@ -119,6 +119,7 @@ module.exports = function(grunt) {
             'third_party/FirefoxAMO_white.svg',
             'third_party/ChromeWebStore_black.svg',
             'third_party/ChromeWebStore_white.svg',
+            'third_party/appstore.svg',
             'third_party/edge-addon-black.svg',
             'third_party/edge-addon-white.svg',
             'third_party/chosen-sprite.png',
@@ -128,6 +129,7 @@ module.exports = function(grunt) {
             'third_party/edge.svg',
             'third_party/brave.svg',
             'third_party/vivaldi.svg',
+            'third_party/safari.svg',
 
             // Smtp provider 3rd party logo
             'third_party/aws-ses.svg',

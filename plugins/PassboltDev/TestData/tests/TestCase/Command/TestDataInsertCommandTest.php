@@ -86,7 +86,7 @@ class TestDataInsertCommandTest extends TestCase
         // Resources
         $this->assertEquals(50, ResourceFactory::count());
         // Resources Types
-        $this->assertEquals(9, ResourceTypeFactory::count());
+        $this->assertEquals(10, ResourceTypeFactory::count());
         // Permissions
         $this->assertEquals(861, PermissionFactory::count());
         // 32 of Permissions are Folders Permissions
@@ -141,7 +141,7 @@ class TestDataInsertCommandTest extends TestCase
         // Resources
         $this->assertEquals(32, ResourceFactory::count());
         // Resources Types
-        $this->assertEquals(9, ResourceTypeFactory::count());
+        $this->assertEquals(10, ResourceTypeFactory::count());
         // Permissions
         $this->assertEquals(60, PermissionFactory::count());
 
@@ -190,7 +190,7 @@ class TestDataInsertCommandTest extends TestCase
         // Resources
         $this->assertEquals(3050, ResourceFactory::count());
         // Resources Types
-        $this->assertEquals(9, ResourceTypeFactory::count());
+        $this->assertEquals(10, ResourceTypeFactory::count());
         // Permissions
         $this->assertEquals(3050, PermissionFactory::count());
 
