@@ -12,57 +12,131 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         5.5.0
+ * @since         5.11.0
  */
 
 namespace Passbolt\Scim\Test\TestCase\Model\Table;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use Cake\ORM\TableRegistry;
-use Passbolt\Scim\ScimPlugin;
-use Passbolt\Scim\Test\Factory\ScimEntryFactory;
+use Cake\ORM\Locator\LocatorAwareTrait;
+use Passbolt\Scim\Model\Table\ScimUsersTable;
 
 /**
- * ScimUsersTableTest class
+ * @covers \Passbolt\Scim\Model\Table\ScimUsersTable
  */
 class ScimUsersTableTest extends AppTestCase
 {
-    public function testScimUsersTable_SoftDelete_ScimEntries_Plugin_Loaded(): void
+    use LocatorAwareTrait;
+
+    private ScimUsersTable $ScimUsers;
+
+    public function setUp(): void
     {
-        $this->loadPlugins([ScimPlugin::class]);
-        /** @var \Passbolt\Scim\Model\Entity\ScimEntry[] $scimEntries */
-        $scimEntries = ScimEntryFactory::make(2)->withUser()->persist();
-        $userToDelete = $scimEntries[0]->user;
-
-        /** @var \App\Model\Table\UsersTable $UsersTable */
-        $UsersTable = TableRegistry::getTableLocator()->get('Users');
-        $UsersTable->softDelete($userToDelete);
-
-        $deletedUser = $UsersTable->get($scimEntries[0]->user->id);
-        $this->assertTrue($deletedUser->isDeleted());
-
-        $deletedEntry = ScimEntryFactory::get($scimEntries[0]->id);
-        $nonDeletedEntry = ScimEntryFactory::get($scimEntries[1]->id);
-        $this->assertNotNull($deletedEntry->get('deleted'));
-        $this->assertNull($nonDeletedEntry->get('deleted'));
+        parent::setUp();
+        /** @var \Passbolt\Scim\Model\Table\ScimUsersTable $table */
+        $table = $this->fetchTable('Passbolt/Scim.ScimUsers');
+        $this->ScimUsers = $table;
     }
 
-    public function testScimUsersTable_SoftDelete_ScimEntries_Plugin_Not_Loaded(): void
+    public function tearDown(): void
     {
-        /** @var \Passbolt\Scim\Model\Entity\ScimEntry[] $scimEntries */
-        $scimEntries = ScimEntryFactory::make(2)->withUser()->persist();
-        $userToDelete = $scimEntries[0]->user;
+        unset($this->ScimUsers);
+        parent::tearDown();
+    }
 
-        /** @var \App\Model\Table\UsersTable $UsersTable */
-        $UsersTable = TableRegistry::getTableLocator()->get('Users');
-        $UsersTable->softDelete($userToDelete);
+    public function testFindByEmailForScim_FindsActiveUser(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->persist();
 
-        $deletedUser = $UsersTable->get($scimEntries[0]->user->id);
-        $this->assertTrue($deletedUser->isDeleted());
+        $result = $this->ScimUsers
+            ->findByEmailForScim($user->username)
+            ->first();
 
-        $deletedEntry = ScimEntryFactory::get($scimEntries[0]->id);
-        $nonDeletedEntry = ScimEntryFactory::get($scimEntries[1]->id);
-        $this->assertNull($deletedEntry->get('deleted'));
-        $this->assertNull($nonDeletedEntry->get('deleted'));
+        $this->assertNotNull($result);
+        $this->assertEquals($user->id, $result->id);
+    }
+
+    public function testFindByEmailForScim_ExcludesDeletedUser(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->deleted()->persist();
+
+        $result = $this->ScimUsers
+            ->findByEmailForScim($user->username)
+            ->first();
+
+        $this->assertNull($result);
+    }
+
+    public function testFindByEmailForScim_ReturnsNullWhenNotFound(): void
+    {
+        $result = $this->ScimUsers
+            ->findByEmailForScim('nonexistent@example.com')
+            ->first();
+
+        $this->assertNull($result);
+    }
+
+    public function testFindByEmailForScim_DoesNotContainForUpdateByDefault(): void
+    {
+        UserFactory::make()->user()->persist();
+
+        $query = $this->ScimUsers->findByEmailForScim('test@example.com');
+        $sql = $query->sql();
+
+        $this->assertTextNotContains('FOR UPDATE', $sql);
+    }
+
+    public function testFindByEmailForScim_ContainsForUpdateWhenRequested(): void
+    {
+        UserFactory::make()->user()->persist();
+
+        $query = $this->ScimUsers->findByEmailForScim('test@example.com', forUpdate: true);
+        $sql = $query->sql();
+
+        $this->assertTextContains('FOR UPDATE', $sql);
+    }
+
+    public function testFindForScim_FindsActiveUser(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->persist();
+
+        $result = $this->ScimUsers
+            ->findForScim([$this->ScimUsers->aliasField('id') => $user->id])
+            ->first();
+
+        $this->assertNotNull($result);
+        $this->assertEquals($user->id, $result->id);
+    }
+
+    public function testFindForScim_ExcludesDeletedByDefault(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->deleted()->persist();
+
+        $result = $this->ScimUsers
+            ->findForScim([$this->ScimUsers->aliasField('id') => $user->id])
+            ->first();
+
+        $this->assertNull($result);
+    }
+
+    public function testFindForScim_IncludesDeletedWhenRequested(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->deleted()->persist();
+
+        $result = $this->ScimUsers
+            ->findForScim(
+                [$this->ScimUsers->aliasField('id') => $user->id],
+                findDeleted: true
+            )
+            ->first();
+
+        $this->assertNotNull($result);
+        $this->assertEquals($user->id, $result->id);
     }
 }
