@@ -3,37 +3,33 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Groups;
 
-use App\Model\Table\GroupsTable;
+use App\Test\Factory\GroupFactory;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Exception;
 
 class FindViewTest extends AppTestCase
 {
-    public array $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
-
     public $Groups;
 
     public function setUp(): void
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Groups') ? [] : ['className' => GroupsTable::class];
-        $this->Groups = TableRegistry::getTableLocator()->get('Groups', $config);
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
     }
 
     public function testSuccess()
     {
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $groups = $this->Groups->findView($groupId);
+        // Create group
+        $group = GroupFactory::make()->persist();
 
         // Expected fields.
-        $group = $groups->first();
-        $this->assertGroupAttributes($group);
-        $this->assertEquals($groupId, $group->id);
+        $result = $this->Groups->findView($group->id)->first();
+        $this->assertGroupAttributes($result);
+        $this->assertEquals($group->id, $result->id);
         // Not expected fields.
-        $this->assertObjectNotHasAttribute('modifier', $group);
-        $this->assertObjectNotHasAttribute('users', $group);
+        $this->assertObjectNotHasAttribute('modifier', $result);
+        $this->assertObjectNotHasAttribute('users', $result);
     }
 
     public function testErrorInvalidGroupIdParameter()

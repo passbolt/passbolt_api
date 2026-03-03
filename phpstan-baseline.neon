@@ -136,11 +136,6 @@ parameters:
 			path: src/Authenticator/GpgAuthenticator.php
 
 		-
-			message: "#^Dead catch \\- Cake\\\\Datasource\\\\Exception\\\\RecordNotFoundException is never thrown in the try block\\.$#"
-			count: 1
-			path: src/Controller/Resources/ResourcesDeleteController.php
-
-		-
 			message: "#^PHPDoc tag @var for constant App\\\\Controller\\\\Settings\\\\SettingsIndexController\\:\\:SETTINGS_VISIBILITY_KEY with type array is incompatible with value 'settingsVisibility'\\.$#"
 			count: 1
 			path: src/Controller/Settings/SettingsIndexController.php
