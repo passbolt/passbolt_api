@@ -58,6 +58,7 @@ class ScimPlugin extends BasePlugin
         Configure::write('passbolt.plugins.scim.isInBeta', true);
         $this->attachListeners($app->getEventManager());
         $this->addScimAssociationToUsers();
+        $this->addScimAssociationToScimUsers();
     }
 
     /**
@@ -139,6 +140,24 @@ class ScimPlugin extends BasePlugin
             return;
         }
         $UsersTable->hasOne('ScimEntries', [
+            'className' => 'Passbolt/Scim.ScimEntries',
+            'foreignKey' => 'foreign_key',
+            'conditions' => [
+                'ScimEntries.foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
+            ],
+        ]);
+    }
+
+    /**
+     * @return void
+     */
+    protected function addScimAssociationToScimUsers(): void
+    {
+        $ScimUsersTable = TableRegistry::getTableLocator()->get('Passbolt/Scim.ScimUsers');
+        if ($ScimUsersTable->hasAssociation('ScimEntries')) {
+            return;
+        }
+        $ScimUsersTable->hasOne('ScimEntries', [
             'className' => 'Passbolt/Scim.ScimEntries',
             'foreignKey' => 'foreign_key',
             'conditions' => [
