@@ -18,8 +18,11 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Utility\Resource;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\DateTime;
 use Cake\Log\Log;
@@ -676,6 +679,45 @@ class UserScimResource implements ScimResourceInterface
     }
 
     /**
+     * Assert that the user being disabled is not an administrator.
+     *
+     * @param array $userPatchData The patch data being applied.
+     * @return void
+     * @throws \Cake\Http\Exception\ForbiddenException If trying to disable an admin and the config flag is not set.
+     */
+    protected function assertAdminSuspendAllowed(array $userPatchData): void
+    {
+        // Only check when user is being disabled (disabled field is being set to a non-null value)
+        if (!array_key_exists('disabled', $userPatchData) || $userPatchData['disabled'] === null) {
+            return;
+        }
+
+        // If already disabled, no change — skip guard
+        if ($this->userEntity->disabled) {
+            return;
+        }
+
+        // Check if the config allows suspending administrators
+        if (Configure::read('passbolt.plugins.scim.security.allowSuspendAdministrators')) {
+            return;
+        }
+
+        // Check if the user is an admin
+        $isAdmin = $this->Users
+            ->find()
+            ->contain(['Roles'])
+            ->where([
+                $this->Users->aliasField('id') => $this->userEntity->id,
+                'Roles.name' => Role::ADMIN,
+            ])
+            ->count() > 0;
+
+        if ($isAdmin) {
+            throw new ForbiddenException(__('An administrator user cannot be suspended via SCIM.'));
+        }
+    }
+
+    /**
      * Update the user information in the database
      *
      * @param array $userPatchData
@@ -686,6 +728,8 @@ class UserScimResource implements ScimResourceInterface
      */
     protected function updateDatabaseUser(array $userPatchData, array $scimEntryPatchData, mixed $requestData): bool
     {
+        $this->assertAdminSuspendAllowed($userPatchData);
+
         return $this->Users
             ->getConnection()
             ->transactional(function () use ($userPatchData, $scimEntryPatchData, $requestData) {

@@ -104,6 +104,36 @@ trait ScimTestUsersTrait
     }
 
     /**
+     * Create the SCIM test admin user
+     *
+     * @return \Passbolt\Scim\Model\Entity\ScimEntry
+     */
+    public function createScimAdminUser(): ScimEntry
+    {
+        $factory = ScimEntryFactory::make([
+            'external_identifier' => '7a23c9d1-5f42-4b8e-a1d3-c9e52f8b3a17',
+            'scim_name' => 'admin-scim@username.com',
+            'created' => DateTime::now(),
+            'modified' => DateTime::now(),
+        ])->withUser(
+            UserFactory::make([
+                'username' => 'admin-scim@email.com',
+                'created' => DateTime::now(),
+                'modified' => DateTime::now(),
+                'profile' => [
+                    'first_name' => 'Admin',
+                    'last_name' => 'Scim',
+                ],
+            ])->admin()
+        );
+
+        /** @var \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry */
+        $scimEntry = $factory->persist();
+
+        return $scimEntry;
+    }
+
+    /**
      * Create the SCIM test user 2
      *
      * @return \Passbolt\Scim\Model\Entity\ScimEntry|iterable<\Passbolt\Scim\Model\Entity\ScimEntry>
