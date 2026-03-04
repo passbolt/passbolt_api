@@ -20,8 +20,10 @@ use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Utility\UuidFactory;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\FailingUserSyncActionTestUtility;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertUsersTrait;
 use Passbolt\DirectorySync\Utility\Alias;
+use RuntimeException;
 
 class UserSyncActionDeleteTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
@@ -671,5 +673,39 @@ class UserSyncActionDeleteTest extends DirectorySyncDeprecatedIntegrationTestCas
         $this->assertOneDirectoryEntry();
         $this->assertDirectoryIgnoreEmpty();
         $this->assertUserExist(UuidFactory::uuid('user.id.thelma'), ['deleted' => false]);
+    }
+
+    /**
+     * Scenario: Production sync fails midway through deleting multiple users.
+     * Expected result: All changes are rolled back — no users are deleted.
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testProductionSyncRollsBackOnFailure()
+    {
+        // Set up two users for deletion (both deletable, no sole-owner constraints)
+        $this->mockDirectoryEntryUser(['fname' => 'thelma', 'lname' => 'estrin']);
+        $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'allen']);
+
+        // Use the FailingUserSyncAction which throws after the first successful deletion
+        $this->action = new FailingUserSyncActionTestUtility(
+            new ResourcesExpireResourcesFallbackServiceService()
+        );
+        $this->action->getDirectory()->setGroups([]);
+
+        $exceptionCaught = false;
+        try {
+            $this->action->execute();
+        } catch (RuntimeException $e) {
+            $exceptionCaught = true;
+            $this->assertSame('Simulated sync interruption', $e->getMessage());
+        }
+        $this->assertTrue($exceptionCaught, 'Expected RuntimeException was not thrown');
+
+        // Both users should still exist and NOT be deleted — proving rollback occurred
+        $this->assertUserExist(UuidFactory::uuid('user.id.thelma'), ['deleted' => false]);
+        $this->assertUserExist(UuidFactory::uuid('user.id.frances'), ['deleted' => false]);
     }
 }
