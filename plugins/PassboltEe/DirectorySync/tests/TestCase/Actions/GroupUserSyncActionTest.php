@@ -29,6 +29,7 @@ use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\FailingDirectoryRelationsTableTestUtility;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryRelationsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupUsersTrait;
@@ -1031,5 +1032,55 @@ class GroupUserSyncActionTest extends DirectorySyncDeprecatedIntegrationTestCase
             'The user frances@passbolt.com was successfully added to the group Marketing',
             $result->getMessage()
         );
+    }
+
+    /**
+     * Scenario: PB-49159 Adding a user to a group fails during DirectoryRelation creation.
+     * Expected result: The GroupUser creation should be rolled back (no orphaned GroupUser).
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroupUser
+     * @group DirectorySyncGroupUserAdd
+     */
+    public function testAddGroupUsers_RollsBackGroupUserOnDirectoryRelationFailure()
+    {
+        $userEntry = $this->mockDirectoryEntryUser([
+            'fname' => 'frances',
+            'lname' => 'frances',
+            'foreign_key' => UuidFactory::uuid('user.id.frances'),
+        ]);
+        $this->mockDirectoryEntryGroup('marketing');
+        $this->mockDirectoryUserData('frances', 'frances', 'frances@passbolt.com');
+        $this->mockDirectoryGroupData('marketing', [
+            'group_users' => [
+                $userEntry->directory_name,
+            ],
+        ]);
+
+        // Replace DirectoryRelations with a version that fails on createFromGroupUser
+        $this->action->DirectoryRelations = new FailingDirectoryRelationsTableTestUtility();
+
+        $reports = $this->action->execute();
+
+        // The error report should be generated for the group user add failure
+        $this->assertReportNotEmpty($reports);
+        $groupUserReport = null;
+        foreach ($reports as $report) {
+            if ($report->getModel() === Alias::MODEL_GROUPS_USERS) {
+                $groupUserReport = $report;
+                break;
+            }
+        }
+        $this->assertNotNull($groupUserReport);
+        $this->assertSame(Alias::STATUS_ERROR, $groupUserReport->getStatus());
+
+        // GroupUser should NOT exist — the transaction rolled it back
+        $this->assertGroupUserNotExist(null, [
+            'group_id' => UuidFactory::uuid('group.id.marketing'),
+            'user_id' => UuidFactory::uuid('user.id.frances'),
+        ]);
+
+        // DirectoryRelation should NOT exist either
+        $this->assertDirectoryRelationEmpty();
     }
 }

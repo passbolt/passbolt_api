@@ -468,14 +468,20 @@ class GroupSyncAction extends SyncAction
             ];
 
             try {
-                $entitiesChangesDto = $groupsUsersAddService->add($uac, $groupUserData);
+                $entitiesChangesDto = $this->Groups->getConnection()->transactional(
+                    function () use ($uac, $groupsUsersAddService, $groupUserData) {
+                        $entitiesChangesDto = $groupsUsersAddService->add($uac, $groupUserData);
+                        /** @var \App\Model\Entity\GroupsUser|null $groupUser */
+                        $groupUser = $entitiesChangesDto->getAddedEntities(GroupsUser::class)[0] ?? null;
+                        if (is_null($groupUser)) {
+                            throw new Exception('A GroupUser entity should be present in the DTO');
+                        }
+                        $this->DirectoryRelations->createFromGroupUser($groupUser);
+
+                        return $entitiesChangesDto;
+                    }
+                );
                 $this->entitiesChangesDto->merge($entitiesChangesDto);
-                /** @var \App\Model\Entity\GroupsUser|null $groupUser */
-                $groupUser = $entitiesChangesDto->getAddedEntities(GroupsUser::class)[0] ?? null;
-                if (is_null($groupUser)) {
-                    throw new Exception('A GroupUser entity should be present in the DTO');
-                }
-                $this->DirectoryRelations->createFromGroupUser($groupUser);
                 $this->addReportItem(new ActionReport(
                     __('The user {0} was successfully added to the group {1}.', $user->username, $group->name),
                     Alias::MODEL_GROUPS_USERS,
@@ -598,11 +604,17 @@ class GroupSyncAction extends SyncAction
             $username = $groupUserToDelete->get('user')->username;
 
             try {
-                $entitiesChanges = $groupUserDeleteService->delete($uac, $groupUserToDelete->id);
+                $entitiesChanges = $this->Groups->getConnection()->transactional(
+                    function () use ($uac, $groupUserDeleteService, $groupUserToDelete, $groupUserId) {
+                        $entitiesChanges = $groupUserDeleteService->delete($uac, $groupUserToDelete->id);
+                        // Delete relation
+                        $directoryRelation = $this->DirectoryRelations->get($groupUserId);
+                        $this->DirectoryRelations->delete($directoryRelation);
+
+                        return $entitiesChanges;
+                    }
+                );
                 $this->entitiesChangesDto->merge($entitiesChanges);
-                // Delete relation
-                $directoryRelation = $this->DirectoryRelations->get($groupUserId);
-                $this->DirectoryRelations->delete($directoryRelation);
                 // Send report.
                 $this->addReportItem(new ActionReport(
                     __('The user {0} was successfully removed from the group {1}.', $username, $group->name),
