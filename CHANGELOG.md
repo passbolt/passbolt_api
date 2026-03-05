@@ -2,6 +2,82 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.10.0-test.2] - 2026-02-17
+### Added
+- PB-49193 Updates passbolt styleguide version
+
+## [5.10.0-test.1] - 2026-02-12
+### Added
+- PB-48415 As an administrator, I can define the export policies to prevent CSV Export RCE
+- PB-45576 As a logged-in user, the user ID only should be stored in session
+- PB-24273 GET /auth/logout endpoint is now disabled by default
+
+### Fixed
+- PB-48092 Fixes incorrect client IP in error logs by moving HttpProxyMiddleware upper in the middlewares chain
+- PB-48208 POST /mfa/verify/yubikey should not trigger 500
+
+### Maintenance
+- PB-48556 Fixes CVE-2026-25129 security vulnerability advisory for psy/psysh package
+- PB-47677 Upgrades firebase/php-jwt to version v7.0.0
+- PB-47628 Upgrades cakephp/cakephp to v5.2.12
+- PB-48555 Fix CVE-2026-24765 security vulnerability advisory for phpunit/phpunit package
+- PB-48396 Update composer/composer package to 2.9.5 to fix CVE CVE-2026-24739 in symfony/process package
+
+## [5.9.0] - 2026-01-22
+### Added
+- PB-44749 As an administrator I should get notified in the healthcheck about the deprecation of the database type and version
+- PB-47893 As an administrator running the bin/cron command, I can see in the logs the number of emails left to send
+- PB-46111 As a user I should receive a single email digest when more than one folders are created, updated or deleted
+
+### Fixed
+- PB-47991 As an administrator I should not get a data-check error for deleted resources with no active metadata keys
+- PB-47987 As an administrator I should not get a data-check error for deleted secrets
+- PB-47986 As a logged-in user tagging a resource I should not update the modified date of the resource
+- PB-47070 As an administrator I can use the --no-verify option when truncating the account recovery tables
+
+### Security
+- PB-47276 As a non-logged in user I cannot enumerate user emails using the recover endpoint
+
+### Maintenance
+- PB-47701 Specify 1.1.0 version as minimum duo universal SDK package version in composer.json
+- PB-47794 Update composer/composer to fix security-check job due to CVE-2025-67746
+
+## [5.9.0-test.2] - 2026-01-21
+### Added
+- PB-44749 As an administrator I should get notified in the healthcheck about the deprecation of the database type and version
+- PB-47893 As an administrator running the bin/cron command, I can see in the logs the number of emails left to send
+- PB-46111 As a user I should receive a single email digest when more than one folders are created, updated or deleted
+
+### Fixed
+- PB-47991 As an administrator I should not get a data-check error for deleted resources with no active metadata keys
+- PB-47987 As an administrator I should not get a data-check error for deleted secrets
+- PB-47986 As a logged-in user tagging a resource I should not update the modified date of the resource
+- PB-47070 As an administrator I can use the --no-verify option when truncating the account recovery tables
+
+### Security
+- PB-47276 As a non-logged in user I cannot enumerate user emails using the recover endpoint
+
+### Maintenance
+- PB-47701 Specify 1.1.0 version as minimum duo universal SDK package version in composer.json
+- PB-47794 Update composer/composer to fix security-check job due to CVE-2025-67746
+
+## [5.9.0-test.1] - 2026-01-19
+### Added
+- PB-44749 As an administrator I should get notified in the healthcheck about the deprecation of the database type and version
+- PB-47893 As an administrator running the bin/cron command, I can see in the logs the number of emails left to send
+- PB-46111 As a user I should receive a single email digest when more than one folders are created, updated or deleted
+
+### Fixed
+- PB-47991 As an administrator I should not get a data-check error for deleted resources with no active metadata keys
+- PB-47987 As an administrator I should not get a data-check error for deleted secrets
+
+### Security
+- PB-47276 As a non-logged in user I cannot enumerate user emails using the recover endpoint
+
+### Maintenance
+- PB-47701 Specify 1.1.0 version as minimum duo universal SDK package version in composer.json
+- PB-47794 Update composer/composer to fix security-check job due to CVE-2025-67746
+
 ## [5.8.0] - 2025-12-22
 ### Added
 - PB-46972 As an administrator I can create a new custom role
