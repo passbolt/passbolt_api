@@ -1,7 +1,7 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '5.10.0-test.4',
+        'version' => '5.10.0-test.5',
         'name' => 'TBD',
     ],
     'php' => [

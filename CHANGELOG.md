@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.10.0-test.5] - 2026-05-05
+### Fixed
+- PB-49846 Fixes web installer CSS
+
 ## [5.10.0-test.4] - 2026-05-05
 ### Fixed
 - PB-43183 Improve folders cascade delete performance by refactoring code using iterative BFS and batch operations
