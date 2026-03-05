@@ -18,14 +18,14 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Permissions;
 
 use App\Model\Table\PermissionsTable;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class FindResourcesOnlyGroupCanAccessTest extends AppTestCase
 {
-    public array $fixtures = ['app.Alt0/Permissions', 'app.Alt0/GroupsUsers'];
-
     /**
      * Test subject
      *
@@ -46,29 +46,33 @@ class FindResourcesOnlyGroupCanAccessTest extends AppTestCase
 
     public function testFindOnlyGroupCanAccessSuccess()
     {
-        // Creative is sole owner of apache
-        $groupId = UuidFactory::uuid('group.id.creative');
-        $resources = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $groupId)->all()->extract('aco_foreign_key')->toArray();
+        // Group C is sole owner of Resource C
+        $groupC = GroupFactory::make()->persist();
+        $resourceC = ResourceFactory::make()->withPermissionsFor([$groupC])->persist();
+        $resources = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $groupC->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
-        $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.composer'));
+        $this->assertEquals($resources[0], $resourceC->id);
 
-        // Developer is sole owner of debian
-        $groupId = UuidFactory::uuid('group.id.developer');
-        $resources = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $groupId)->all()->extract('aco_foreign_key')->toArray();
+        // Group D is sole owner of Resource D
+        $groupD = GroupFactory::make()->persist();
+        $resourceD = ResourceFactory::make()->withPermissionsFor([$groupD])->persist();
+        $resources = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $groupD->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
-        $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.debian'));
+        $this->assertEquals($resources[0], $resourceD->id);
     }
 
     public function testFindOnlyGroupCanAccessNoResult()
     {
-        // freelancer not owner of anything
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $resources = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $groupId)->all()->extract('aco_foreign_key')->toArray();
+        // Group F not owner of anything
+        $groupF = GroupFactory::make()->persist();
+        $resources = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $groupF->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
 
-        // ergonom is owner of of some resources but never alone
-        $groupId = UuidFactory::uuid('group.id.ergonom');
-        $resources = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $groupId)->all()->extract('aco_foreign_key')->toArray();
+        // Group E is owner of some resources but never sole owner
+        $groupE = GroupFactory::make()->persist();
+        $user = UserFactory::make()->persist();
+        ResourceFactory::make(3)->withPermissionsFor([$groupE, $user])->persist();
+        $resources = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $groupE->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 }

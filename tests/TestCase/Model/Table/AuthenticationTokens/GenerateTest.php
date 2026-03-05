@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Model\Table\AuthenticationTokens;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
@@ -29,8 +30,6 @@ class GenerateTest extends AppTestCase
     use AuthenticationTokenModelTrait;
 
     public $AuthenticationTokens;
-
-    public array $fixtures = [ 'app.Base/Users'];
 
     public function setUp(): void
     {
@@ -60,33 +59,29 @@ class GenerateTest extends AppTestCase
 
     public function testAuthenticationTokensLoginGenerateDeletedUserIdError()
     {
-        // Sofia is deleted it should not be possible to create a token
         $this->expectException(ValidationException::class);
-        $userId = UuidFactory::uuid('user.id.sofia');
-        $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_LOGIN);
+        $user = UserFactory::make()->deleted()->persist();
+        $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_LOGIN);
     }
 
     public function testAuthenticationTokensRegisterGenerateDeletedUserIdError()
     {
-        // Sofia is deleted it should not be possible to create a token
         $this->expectException(ValidationException::class);
-        $userId = UuidFactory::uuid('user.id.sofia');
-        $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
+        $user = UserFactory::make()->deleted()->persist();
+        $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
     }
 
     public function testAuthenticationTokensGenerateActiveUserIdSuccess()
     {
-        // Ada is active it should be possible to create a token (e.g. login token)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $token = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_LOGIN);
+        $user = UserFactory::make()->active()->persist();
+        $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_LOGIN);
         $this->assertAuthTokenAttributes($token);
     }
 
     public function testAuthenticationTokensGenerateInactiveUserIdSuccess()
     {
-        // Ruth is inactive it should be possible to create a token (e.g. setup token)
-        $userId = UuidFactory::uuid('user.id.ruth');
-        $token = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
+        $user = UserFactory::make()->inactive()->persist();
+        $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
         $this->assertAuthTokenAttributes($token);
     }
 }

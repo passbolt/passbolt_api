@@ -21,11 +21,11 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
 use App\Test\Factory\AuthenticationTokenFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UserAccessControl;
-use App\Utility\UuidFactory;
 use Cake\Http\Exception\ForbiddenException;
 use Exception;
 use Passbolt\Mobile\Model\Entity\Transfer;
@@ -43,15 +43,6 @@ class TransfersUpdateServiceTest extends AppTestCase
     use AuthenticationTokenModelTrait;
     use UserAccessControlTrait;
     use TransfersModelTrait;
-
-    /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public array $fixtures = [
-        'app.Base/Users',
-    ];
 
     public function testMobileTransfersUpdateService_Success()
     {
@@ -84,10 +75,11 @@ class TransfersUpdateServiceTest extends AppTestCase
 
     public function testMobileTransfersUpdateService_Success_TestTransitions()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($user);
         $transfer = $this->insertTransferFixture($this->getDummyTransfer(
-            $userId,
+            $user->id,
             Transfer::TRANSFER_STATUS_START,
             1,
             2
@@ -126,8 +118,10 @@ class TransfersUpdateServiceTest extends AppTestCase
     public function testMobileTransfersCreateService_Error_TransitionsNotAllowed()
     {
         $service = new TransfersUpdateService();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->persist();
         $transfer = $service->Transfers->newEntity($this->getDummyTransfer(
-            UuidFactory::uuid('user.id.ada'),
+            $user->id,
             Transfer::TRANSFER_STATUS_START,
             0,
             2
@@ -180,10 +174,10 @@ class TransfersUpdateServiceTest extends AppTestCase
 
     public function testMobileTransfersCreateService_Error_TransitionsNotAllowed_CurrentPageBiggerThanTotal()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->persist();
         $transfer = $this->insertTransferFixture($this->getDummyTransfer(
-            $userId,
+            $user->id,
             Transfer::TRANSFER_STATUS_START,
             1,
             2
@@ -197,7 +191,7 @@ class TransfersUpdateServiceTest extends AppTestCase
             'current_page' => 2,
         ];
         $this->expectException(ValidationException::class);
-        $service->update($transfer, $data, $uac);
+        $service->update($transfer, $data, $this->makeUac($user));
     }
 
     public function testMobileTransfersUpdateService_Error_ValidationError()
@@ -214,25 +208,25 @@ class TransfersUpdateServiceTest extends AppTestCase
 
     public function testMobileTransfersUpdateService_Error_ExpiredAuthToken()
     {
-        $userId = UuidFactory::uuid();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->persist();
         $transfer = TransferFactory::make()
             ->status(Transfer::TRANSFER_STATUS_IN_PROGRESS)
-            ->userId($userId)
+            ->userId($user->id)
             ->withAuthenticationToken(
                 AuthenticationTokenFactory::make()
                     ->type(AuthenticationToken::TYPE_MOBILE_TRANSFER)
-                    ->userId($userId)
+                    ->userId($user->id)
                     ->active()
                     ->expired()
             )
             ->persist();
 
         $service = new TransfersUpdateService();
-        $uac = new UserAccessControl(Role::USER, $transfer->user_id);
         $data = [];
 
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage('The authentication token is expired.');
-        $service->update($transfer, $data, $uac);
+        $service->update($transfer, $data, $this->makeUac($user));
     }
 }

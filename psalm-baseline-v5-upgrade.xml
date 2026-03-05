@@ -590,7 +590,6 @@
     <InvalidPropertyFetch>
       <code><![CDATA[$transfer->user_id]]></code>
       <code><![CDATA[$transfer->user_id]]></code>
-      <code><![CDATA[$transfer->user_id]]></code>
     </InvalidPropertyFetch>
   </file>
   <file src="plugins/PassboltCe/MultiFactorAuthentication/src/Controller/Duo/DuoSetupPostController.php">

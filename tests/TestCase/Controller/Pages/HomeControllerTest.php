@@ -22,11 +22,6 @@ use Passbolt\MultiFactorAuthentication\MultiFactorAuthenticationPlugin;
 
 class HomeControllerTest extends AppIntegrationTestCase
 {
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'plugin.Passbolt/AccountSettings.AccountSettings',
-    ];
-
     public function testHomeNotLoggedInError(): void
     {
         $this->get('/app/passwords');

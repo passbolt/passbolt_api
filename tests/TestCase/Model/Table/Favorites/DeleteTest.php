@@ -18,16 +18,16 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Favorites;
 
 use App\Model\Table\FavoritesTable;
+use App\Test\Factory\FavoriteFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UuidFactory;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 
 class DeleteTest extends AppTestCase
 {
     public $Favorites;
-
-    public array $fixtures = ['app.Base/Users', 'app.Base/Favorites'];
 
     public function setUp(): void
     {
@@ -45,9 +45,12 @@ class DeleteTest extends AppTestCase
 
     public function testSuccess()
     {
-        $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $favorite = FavoriteFactory::make()->setUser($user)->setResource($resource)->persist();
+        $favoriteId = $favorite->get('id');
         $favorite = $this->Favorites->get($favoriteId);
-        $delete = $this->Favorites->delete($favorite, ['Favorites.user_id' => UuidFactory::uuid('user.id.dame')]);
+        $delete = $this->Favorites->delete($favorite, ['Favorites.user_id' => $user->id]);
         $this->assertTrue($delete);
         // Check the favorite is well deleted in db.
         try {
@@ -60,9 +63,13 @@ class DeleteTest extends AppTestCase
 
     public function testErrorIsOwnerRule()
     {
-        $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
+        $user = UserFactory::make()->user()->persist();
+        $owner = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($owner)->persist();
+        $favorite = FavoriteFactory::make()->setUser($owner)->setResource($resource)->persist();
+        $favoriteId = $favorite->get('id');
         $favorite = $this->Favorites->get($favoriteId);
-        $delete = $this->Favorites->delete($favorite, ['Favorites.user_id' => UuidFactory::uuid('user.id.ada')]);
+        $delete = $this->Favorites->delete($favorite, ['Favorites.user_id' => $user->id]);
         $this->assertFalse($delete);
         $errors = $favorite->getErrors();
         $this->assertNotEmpty($errors);

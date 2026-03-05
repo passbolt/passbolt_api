@@ -17,9 +17,9 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Secrets;
 
+use App\Test\Factory\SecretFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class UpdateTest extends AppTestCase
@@ -27,8 +27,6 @@ class UpdateTest extends AppTestCase
     use FormatValidationTrait;
 
     public $Secrets;
-
-    public array $fixtures = ['app.Base/Resources', 'app.Base/Secrets', 'app.Base/Users'];
 
     public function setUp(): void
     {
@@ -79,9 +77,8 @@ hcciUFw5
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
 
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $userId = UuidFactory::uuid('user.id.ada');
-        $entityData = ['id' => UuidFactory::uuid("secret.id.$resourceId-$userId")];
+        $secret = SecretFactory::make()->persist();
+        $entityData = ['id' => $secret->id];
         $this->assertFieldFormatValidation($this->Secrets, 'data', $entityData, self::getEntityDefaultOptions(), $testCases);
     }
 
@@ -89,9 +86,7 @@ hcciUFw5
 
     public function testSuccess()
     {
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $userId = UuidFactory::uuid('user.id.ada');
-        $secret = $this->Secrets->get(UuidFactory::uuid("secret.id.$resourceId-$userId"));
+        $secret = SecretFactory::make()->persist();
         $data = ['data' => $this->_getValidGpgMessage()];
         $options = self::getEntityDefaultOptions();
 
