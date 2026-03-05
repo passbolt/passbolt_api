@@ -17,14 +17,13 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\GroupsUsers;
 
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class FindNonEmptyGroupsWhereUserIsSoleManagerTest extends AppTestCase
 {
-    public array $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
-
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
@@ -45,8 +44,8 @@ class FindNonEmptyGroupsWhereUserIsSoleManagerTest extends AppTestCase
     public function testNotAManager()
     {
         // Ada is not manager of any group
-        $userId = UuidFactory::uuid('user.id.ada');
-        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)
+        $ada = UserFactory::make()->persist();
+        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($ada->id)
             ->all()
             ->extract('group_id')
             ->toArray();
@@ -56,8 +55,9 @@ class FindNonEmptyGroupsWhereUserIsSoleManagerTest extends AppTestCase
     public function testOtherManagersPresent()
     {
         // Ursula is manager of it_support group where ping is also manager
-        $userId = UuidFactory::uuid('user.id.ursula');
-        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)
+        [$ursula, $ping] = UserFactory::make(2)->persist();
+        GroupFactory::make()->withGroupsManagersFor([$ursula, $ping])->persist();
+        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($ursula->id)
             ->all()
             ->extract('group_id')
             ->toArray();
@@ -67,16 +67,18 @@ class FindNonEmptyGroupsWhereUserIsSoleManagerTest extends AppTestCase
     public function testOnlyManagerButEmptyGroup()
     {
         // Admin is manager of a lot of empty groups and no active groups
-        $userId = UuidFactory::uuid('user.id.admin');
-        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)
+        $admin = UserFactory::make()->persist();
+        GroupFactory::make(5)->withGroupsManagersFor([$admin])->persist();
+        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($admin->id)
             ->all()
             ->extract('group_id')
             ->toArray();
         $this->assertEmpty($result);
 
         // Same for hedy but only 1 group
-        $userId = UuidFactory::uuid('user.id.hedy');
-        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)
+        $hedy = UserFactory::make()->persist();
+        GroupFactory::make()->withGroupsManagersFor([$hedy])->persist();
+        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($hedy->id)
             ->all()
             ->extract('group_id')
             ->toArray();
@@ -86,21 +88,26 @@ class FindNonEmptyGroupsWhereUserIsSoleManagerTest extends AppTestCase
     public function testOnlyManagerInNonEmptyGroup()
     {
         // Frances is admin of the accounting group where grace is also a user
-        $userId = UuidFactory::uuid('user.id.frances');
-        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)
+        [$frances, $grace] = UserFactory::make(2)->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$frances])->withGroupsUsersFor([$grace])->persist();
+        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($frances->id)
             ->all()
             ->extract('group_id')
             ->toArray();
         $this->assertNotEmpty($result);
-        $this->assertEquals($result[0], UuidFactory::uuid('group.id.accounting'));
+        $this->assertEquals($result[0], $group->id);
 
         // Same for jean with freelancer group but with more members
-        $userId = UuidFactory::uuid('user.id.jean');
-        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)
+        $jean = UserFactory::make()->persist();
+        $group2 = GroupFactory::make()
+            ->withGroupsManagersFor([$jean])
+            ->withGroupsUsersFor(UserFactory::make(5)->persist())
+            ->persist();
+        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($jean->id)
             ->all()
             ->extract('group_id')
             ->toArray();
         $this->assertNotEmpty($result);
-        $this->assertEquals($result[0], UuidFactory::uuid('group.id.freelancer'));
+        $this->assertEquals($result[0], $group2->id);
     }
 }

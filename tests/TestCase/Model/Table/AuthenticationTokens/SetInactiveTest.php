@@ -18,9 +18,9 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\AuthenticationTokens;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
 
@@ -29,8 +29,6 @@ class SetInactiveTest extends AppTestCase
     use AuthenticationTokenModelTrait;
 
     public $AuthenticationTokens;
-
-    public array $fixtures = [ 'app.Base/Users'];
 
     public function setUp(): void
     {
@@ -56,7 +54,8 @@ class SetInactiveTest extends AppTestCase
      */
     public function testAuthenticationTokensSetInactiveAlreadyInactiveToken()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_REGISTER);
+        $user = UserFactory::make()->persist();
+        $t = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
         $t->active = false;
         $this->AuthenticationTokens->save($t);
         $result = $this->AuthenticationTokens->setInactive($t->token);
@@ -70,7 +69,8 @@ class SetInactiveTest extends AppTestCase
      */
     public function testAuthenticationTokensSetInactiveTokenSuccess()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_REGISTER);
+        $user = UserFactory::make()->persist();
+        $t = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
         $result = $this->AuthenticationTokens->setInactive($t->token);
         $this->assertTrue($result);
         $t = $this->AuthenticationTokens->get($t->id);

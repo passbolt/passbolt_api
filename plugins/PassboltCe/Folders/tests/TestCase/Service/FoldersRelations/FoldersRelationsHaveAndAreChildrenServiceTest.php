@@ -18,14 +18,10 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Service\FoldersRelations;
 
 use App\Test\Factory\UserFactory;
-use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\Utility\FixtureProviderTrait;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsHaveAndAreChildrenService;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
-use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * Passbolt\Folders\Service\FoldersRelations\FoldersRelationsHaveOrAreChildrenService Test Case
@@ -34,14 +30,6 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class FoldersRelationsHaveAndAreChildrenServiceTest extends FoldersTestCase
 {
-    use FixtureProviderTrait;
-    use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-
-    public array $fixtures = [
-        UsersFixture::class,
-    ];
-
     /**
      * @var FoldersRelationsHaveAndAreChildrenService
      */

@@ -22,7 +22,6 @@ use App\Test\Factory\UserFactory;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\Utility\Security;
 use Passbolt\Scim\Middleware\ScimSettingsSecurityMiddleware;
 use Passbolt\Scim\Model\Entity\ScimSetting;
 use Passbolt\Scim\ScimPlugin;
@@ -168,7 +167,66 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
         $gpg = $this->setDecryptKeyWithServerKey($gpg);
         $values = json_decode($gpg->decrypt($this->current->value), associative: true);
 
-        $this->assertSame(Security::hash($data['secret_token'], 'sha256'), $values['secret_token']);
+        $this->assertTrue(password_verify($data['secret_token'], $values['secret_token']));
+    }
+
+    /**
+     * Test that the bcrypt cost factor is configurable.
+     */
+    public function testScimSetSettingsController_Create_CustomCostFactor(): void
+    {
+        Configure::write('passbolt.plugins.scim.security.secretToken.cost', 10);
+        $this->logInAsAdmin();
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $data = [
+            'setting_id' => UuidFactory::uuid(),
+            'scim_user_id' => $user->id,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+        $this->postJson('/scim/settings.json', $data);
+        $this->assertSuccess();
+
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $settings */
+        $settings = ScimSettingFactory::find()->firstOrFail();
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $values = json_decode($gpg->decrypt($settings->value), associative: true);
+
+        // Verify cost=10 is embedded in the bcrypt hash ($2y$10$...)
+        $this->assertStringStartsWith('$2y$10$', $values['secret_token']);
+        $this->assertTrue(password_verify($data['secret_token'], $values['secret_token']));
+    }
+
+    /**
+     * Test that default bcrypt cost factor is 12.
+     */
+    public function testScimSetSettingsController_Create_DefaultCostFactor(): void
+    {
+        $this->logInAsAdmin();
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $data = [
+            'setting_id' => UuidFactory::uuid(),
+            'scim_user_id' => $user->id,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+        $this->postJson('/scim/settings.json', $data);
+        $this->assertSuccess();
+
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $settings */
+        $settings = ScimSettingFactory::find()->firstOrFail();
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $values = json_decode($gpg->decrypt($settings->value), associative: true);
+
+        // Default cost is 12
+        $this->assertStringStartsWith('$2y$12$', $values['secret_token']);
+        $this->assertTrue(password_verify($data['secret_token'], $values['secret_token']));
     }
 
     /**
@@ -302,7 +360,7 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
         $gpg = $this->setDecryptKeyWithServerKey($gpg);
         $newValues = json_decode($gpg->decrypt($this->current->value), associative: true);
 
-        $this->assertSame(Security::hash($data['secret_token'], 'sha256'), $newValues['secret_token']);
+        $this->assertTrue(password_verify($data['secret_token'], $newValues['secret_token']));
     }
 
     /**

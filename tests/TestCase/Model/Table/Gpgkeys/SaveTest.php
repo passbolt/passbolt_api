@@ -17,16 +17,15 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Gpgkeys;
 
+use App\Test\Factory\GpgkeyFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UuidFactory;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 
 class SaveTest extends AppTestCase
 {
     public $Gpgkeys;
-
-    public array $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
 
     public function setUp(): void
     {
@@ -224,10 +223,12 @@ class SaveTest extends AppTestCase
 
     public function testGpgkeysRulesUniqueFingerprint()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $user = UserFactory::make()->persist();
+        GpgkeyFactory::make()->withAdaKey()->setField('user_id', $user->id)->persist();
+
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
 
-        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
+        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $user->id);
         $this->Gpgkeys->save($k);
         $error = $k->getErrors();
         $this->assertNotEmpty($error);
@@ -236,10 +237,10 @@ class SaveTest extends AppTestCase
 
     public function testGpgkeysSaveECCSuccess()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $user = UserFactory::make()->persist();
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'ecc_nistp521_public.key');
 
-        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
+        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $user->id);
         $this->Gpgkeys->save($k);
 
         $k = $this->Gpgkeys->find()->where(['fingerprint' => 'AEE8E22ACFBF70527C1BD918F571FEB3B15105EE'])->firstOrFail();
@@ -249,10 +250,10 @@ class SaveTest extends AppTestCase
 
     public function testGpgkeysSaveECCSuccess2()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $user = UserFactory::make()->persist();
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'ecc_curve25519_public.key');
 
-        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
+        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $user->id);
         $this->Gpgkeys->save($k);
 
         $k = $this->Gpgkeys->find()->where(['fingerprint' => '21DB3781A35DFDA802A9B17557800F30009B7B46'])->firstOrFail();
@@ -262,10 +263,10 @@ class SaveTest extends AppTestCase
 
     public function testGpgkeysSaveECCSuccess3()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $user = UserFactory::make()->persist();
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'ecc_brainpoolp384_public.key');
 
-        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
+        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $user->id);
         $this->Gpgkeys->save($k);
 
         $k = $this->Gpgkeys->find()->where(['fingerprint' => 'AB78E1897CAF279A1A255DF63B5C02FB8C17837B'])->firstOrFail();

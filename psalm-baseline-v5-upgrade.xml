@@ -590,7 +590,6 @@
     <InvalidPropertyFetch>
       <code><![CDATA[$transfer->user_id]]></code>
       <code><![CDATA[$transfer->user_id]]></code>
-      <code><![CDATA[$transfer->user_id]]></code>
     </InvalidPropertyFetch>
   </file>
   <file src="plugins/PassboltCe/MultiFactorAuthentication/src/Controller/Duo/DuoSetupPostController.php">
@@ -2133,9 +2132,6 @@
       <code><![CDATA[iterable<\App\Model\Entity\User>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
       <code><![CDATA[iterable<\App\Model\Entity\User>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
     </ImplementedReturnTypeMismatch>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[\App\Model\Entity\User get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
-    </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Model/Traits/Resources/ResourcesFindersTrait.php">
     <TypeDoesNotContainType>

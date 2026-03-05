@@ -16,6 +16,9 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Model\Table\Comments;
 
+use App\Test\Factory\CommentFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\CleanupTrait;
 use App\Utility\UuidFactory;
@@ -26,24 +29,11 @@ class CleanupTest extends AppTestCase
     use CleanupTrait;
 
     public $Comments;
-    public $Groups;
-    public array $fixtures = [
-        'app.Base/Users', 'app.Alt0/Permissions', 'app.Base/Resources', 'app.Base/Comments',
-    ];
-    public $options;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->Comments = TableRegistry::getTableLocator()->get('Comments');
-        $this->options = ['accessibleFields' => [
-            'user_id' => true,
-            'foreign_model' => true,
-            'foreign_key' => true,
-            'content' => true,
-            'created_by' => true,
-            'modified_by' => true,
-        ]];
     }
 
     public function tearDown(): void
@@ -54,61 +44,47 @@ class CleanupTest extends AppTestCase
 
     public function testCleanupCommentsSoftDeletedUsersSuccess()
     {
+        $resource = ResourceFactory::make()->persist();
+        $softDeletedUser = UserFactory::make()->deleted()->persist();
+
         $originalCount = $this->Comments->find()->all()->count();
-        $fav = $this->Comments->newEntity([
-            'user_id' => UuidFactory::uuid('user.id.sofia'),
-            'foreign_model' => 'Resource',
-            'foreign_key' => UuidFactory::uuid('resource.id.april'),
-            'content' => 'test comment',
-            'created_by' => UuidFactory::uuid('user.id.sofia'),
-            'modified_by' => UuidFactory::uuid('user.id.sofia'),
-        ], $this->options);
-        $this->Comments->save($fav, ['checkRules' => false]);
+
+        CommentFactory::make()->withUser($softDeletedUser)->withResource($resource)->persist();
+
         $this->runCleanupChecks('Comments', 'cleanupSoftDeletedUsers', $originalCount);
     }
 
     public function testCleanupCommentsHardDeletedUsersSuccess()
     {
+        $resource = ResourceFactory::make()->persist();
+
         $originalCount = $this->Comments->find()->all()->count();
-        $fav = $this->Comments->newEntity([
-            'user_id' => UuidFactory::uuid('user.id.nope'),
-            'foreign_model' => 'Resource',
-            'foreign_key' => UuidFactory::uuid('resource.id.april'),
-            'content' => 'test comment',
-            'created_by' => UuidFactory::uuid('user.id.nope'),
-            'modified_by' => UuidFactory::uuid('user.id.nope'),
-        ], $this->options);
-        $this->Comments->save($fav, ['checkRules' => false]);
+
+        CommentFactory::make(['user_id' => UuidFactory::uuid('user.id.nope')])->withResource($resource)->persist();
+
         $this->runCleanupChecks('Comments', 'cleanupHardDeletedUsers', $originalCount);
     }
 
     public function testCleanupCommentsSoftDeletedResourcesSuccess()
     {
+        $resourceSoftDeleted = ResourceFactory::make()->deleted()->persist();
+        $user = UserFactory::make()->persist();
+
         $originalCount = $this->Comments->find()->all()->count();
-        $fav = $this->Comments->newEntity([
-            'user_id' => UuidFactory::uuid('user.id.ada'),
-            'foreign_model' => 'Resource',
-            'foreign_key' => UuidFactory::uuid('resource.id.jquery'),
-            'content' => 'test comment',
-            'created_by' => UuidFactory::uuid('user.id.ada'),
-            'modified_by' => UuidFactory::uuid('user.id.ada'),
-        ], $this->options);
-        $this->Comments->save($fav, ['checkRules' => false]);
+
+        CommentFactory::make()->withUser($user)->withResource($resourceSoftDeleted)->persist();
+
         $this->runCleanupChecks('Comments', 'cleanupSoftDeletedResources', $originalCount);
     }
 
     public function testCleanupCommentsHardDeletedResourcesSuccess()
     {
+        $user = UserFactory::make()->persist();
+
         $originalCount = $this->Comments->find()->all()->count();
-        $fav = $this->Comments->newEntity([
-            'user_id' => UuidFactory::uuid('user.id.ada'),
-            'foreign_model' => 'Resource',
-            'foreign_key' => UuidFactory::uuid('resource.id.nope'),
-            'content' => 'test comment',
-            'created_by' => UuidFactory::uuid('user.id.ada'),
-            'modified_by' => UuidFactory::uuid('user.id.ada'),
-        ], $this->options);
-        $this->Comments->save($fav, ['checkRules' => false]);
+
+        CommentFactory::make(['foreign_key' => UuidFactory::uuid('resource.id.nope')])->withUser($user)->persist();
+
         $this->runCleanupChecks('Comments', 'cleanupHardDeletedResources', $originalCount);
     }
 }

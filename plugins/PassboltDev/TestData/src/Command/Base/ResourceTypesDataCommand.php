@@ -314,6 +314,15 @@ class ResourceTypesDataCommand extends DataCommand
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
             ],
+            [
+                'id' => UuidFactory::uuid('resource-types.id.v5-note'),
+                'slug' => ResourceType::SLUG_V5_NOTE,
+                'name' => 'Standalone note',
+                'description' => 'A resource with standalone notes.',
+                'definition' => json_encode([]),
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
+            ],
         ];
     }
 }

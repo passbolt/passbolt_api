@@ -32,14 +32,11 @@ class ThemesIndexControllerTest extends AppIntegrationTestCase
      */
     protected $AccountSettings;
 
-    public array $fixtures = [
-        'plugin.Passbolt/AccountSettings.AccountSettings',
-    ];
-
     public function setUp(): void
     {
         parent::setUp();
-        $this->AccountSettings = $this->fetchTable('AccountSettings');
+        /** @phpstan-ignore-next-line */
+        $this->AccountSettings = $this->fetchTable('Passbolt/AccountSettings.AccountSettings');
     }
 
     public function testThemesIndexSuccess()

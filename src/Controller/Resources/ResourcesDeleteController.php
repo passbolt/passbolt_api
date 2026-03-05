@@ -83,7 +83,10 @@ class ResourcesDeleteController extends AppController
 
         // Retrieve the resource to delete.
         try {
-            $resource = $this->Resources->get($id);
+            $resource = $this->Resources->find()
+                ->contain(['ResourceTypes'])
+                ->where(['Resources.id' => $id])
+                ->firstOrFail();
             $originalResource = clone $resource;
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The resource does not exist.'));

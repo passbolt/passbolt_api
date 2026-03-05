@@ -16,10 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\Scim\Form\Settings;
 
+use Cake\Core\Configure;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Security;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\Scim\Model\Validation\ScimTokenFormatRule;
@@ -136,7 +136,13 @@ class ScimSettingsForm extends Form
     protected function _execute(array $data): bool
     {
         if (isset($data['secret_token'])) {
-            $this->_data['secret_token'] = Security::hash($data['secret_token'], 'sha256');
+            /** @var int $cost */
+            $cost = Configure::read('passbolt.plugins.scim.security.secretToken.cost', 12);
+            $this->_data['secret_token'] = password_hash(
+                $data['secret_token'],
+                PASSWORD_BCRYPT,
+                ['cost' => $cost]
+            );
         }
 
         return true;

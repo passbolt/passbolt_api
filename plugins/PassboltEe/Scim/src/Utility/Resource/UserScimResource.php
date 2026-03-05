@@ -19,7 +19,6 @@ namespace Passbolt\Scim\Utility\Resource;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\User;
-use App\Model\Table\UsersTable;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\DateTime;
@@ -38,6 +37,7 @@ use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Log\ScimLog;
 use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Model\Table\ScimEntriesTable;
+use Passbolt\Scim\Model\Table\ScimUsersTable;
 use Passbolt\Scim\Service\ScimGetSettingsService;
 use Passbolt\Scim\Utility\Object\Operation;
 use Passbolt\Scim\Utility\Object\PatchRequest;
@@ -57,9 +57,9 @@ class UserScimResource implements ScimResourceInterface
     use LocatorAwareTrait;
 
     /**
-     * @var \App\Model\Table\UsersTable
+     * @var \Passbolt\Scim\Model\Table\ScimUsersTable
      */
-    protected UsersTable $Users;
+    protected ScimUsersTable $Users;
 
     /**
      * @var \Passbolt\Scim\Model\Table\ScimEntriesTable
@@ -132,7 +132,9 @@ class UserScimResource implements ScimResourceInterface
      */
     public function __construct()
     {
-        $this->Users = $this->fetchTable('Users');
+        /** @var \Passbolt\Scim\Model\Table\ScimUsersTable $scimUsersTable */
+        $scimUsersTable = $this->fetchTable('Passbolt/Scim.ScimUsers');
+        $this->Users = $scimUsersTable;
         $this->ScimEntries = $this->fetchTable('Passbolt/Scim.ScimEntries');
     }
 
@@ -218,10 +220,10 @@ class UserScimResource implements ScimResourceInterface
         if (!Validation::uuid($internalId)) {
             throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
-        $this->userEntity = $this->findExistingUserEntity(
-            [$this->Users->aliasField('id') => $internalId],
-            findDeleted: true
-        );
+        $this->userEntity = $this->Users
+            ->findForScim([$this->Users->aliasField('id') => $internalId], findDeleted: true)
+            ->contain(['Profiles', 'ScimEntries'])
+            ->first();
         if (!$this->userEntity) {
             throw new ResourceNotFoundException(
                 sprintf('The %s resource with id `%s` was not found', $this->getType(), $internalId)
@@ -245,41 +247,39 @@ class UserScimResource implements ScimResourceInterface
     }
 
     /**
-     * Find existing User entity
-     *
-     * @param array $conditions
-     * @param bool $findDeleted
-     * @return \App\Model\Entity\User|null
-     */
-    protected function findExistingUserEntity(array $conditions = [], bool $findDeleted = false): ?User
-    {
-        if ($conditions === []) {
-            if (!$this->email) {
-                return null;
-            }
-
-            $conditions = [
-                $this->Users->aliasField('username') => $this->email,
-            ];
-        }
-        if (!$findDeleted) {
-            $conditions[$this->Users->aliasField('deleted')] = false;
-        }
-
-        /** @var \App\Model\Entity\User|null $user */
-        $user = $this->Users
-            ->find()
-            ->contain(['Profiles', 'ScimEntries'])
-            ->where($conditions)
-            ->first();
-
-        return $user;
-    }
-
-    /**
      * @inheritDoc
      */
     public function create(): static
+    {
+        $this->validateCreatePreconditions();
+
+        $user = $this->Users->getConnection()->transactional(
+            function (): User {
+                $user = $this->findAndLockExistingUser();
+
+                $this->assertNoScimEntryConflict($user);
+
+                $user = $user
+                    ? $this->updateExistingUserProfile($user)
+                    : $this->registerNewUser();
+
+                $this->createScimEntry($user);
+
+                return $user;
+            }
+        );
+
+        $this->setFromDatabase($user->id);
+
+        return $this;
+    }
+
+    /**
+     * Validate preconditions before attempting user creation.
+     *
+     * @throws \Passbolt\Scim\Exception\ConflictException
+     */
+    private function validateCreatePreconditions(): void
     {
         if (!$this->email) {
             throw new ConflictException(
@@ -290,71 +290,136 @@ class UserScimResource implements ScimResourceInterface
         if ($this->id) {
             throw new ConflictException(
                 sprintf(
-                    'The %s resource with userName `%s` already exist with id `%s`',
+                    'The %s resource with id `%s` could not be created due to a uniqueness conflict',
                     $this->getType(),
-                    $this->userName,
                     $this->id
                 ),
                 scimType: ScimException::SCIM_TYPE_UNIQUENESS,
             );
         }
-        $user = $this->findExistingUserEntity();
+    }
+
+    /**
+     * Find an existing user by email with a FOR UPDATE lock, loading associations.
+     *
+     * @return \App\Model\Entity\User|null
+     */
+    private function findAndLockExistingUser(): ?User
+    {
+        // Atomic locking between the uniqueness check and user insertion.
+        // SELECT ... FOR UPDATE acquires gap locks on the username index range,
+        // blocking concurrent INSERTs of the same username until this transaction commits.
+        /** @var \App\Model\Entity\User|null $user */
+        $user = $this->Users
+            ->findByEmailForScim($this->email, forUpdate: true)
+            ->first();
+
+        if ($user !== null) {
+            // Load associations separately so that FOR UPDATE works with postgres/mysql both.
+            $this->Users->loadInto($user, ['Profiles', 'ScimEntries']);
+        }
+
+        return $user;
+    }
+
+    /**
+     * Throw if the existing user already has a SCIM entry.
+     *
+     * @param \App\Model\Entity\User|null $user
+     * @throws \Passbolt\Scim\Exception\ConflictException
+     */
+    private function assertNoScimEntryConflict(?User $user): void
+    {
         if (!empty($user->scim_entry)) {
             throw new ConflictException(
                 sprintf(
-                    'The %s resource with userName `%s` already exist with id `%s`',
+                    'The %s resource with id `%s` could not be created due to a uniqueness conflict',
                     $this->getType(),
-                    $this->userName,
                     $user->id
                 ),
                 scimType: ScimException::SCIM_TYPE_UNIQUENESS,
             );
         }
+    }
 
-        $profileData = [
-            'first_name' => $this->firstName,
-            'last_name' => $this->lastName,
-        ];
-        if (!$user) {
-            $scimUser = $this->getScimSettingsSelectedUser();
-            if (!$scimUser) {
-                throw new ConflictException('Missing or invalid SCIM user in configuration settings');
-            }
-            $uac = new UserAccessControl($scimUser->role->name, $scimUser->id);
-            try {
-                $user = $this->Users->register([
-                    'username' => $this->email,
-                    'disabled' => $this->getDisabledValue($this->active),
-                    'profile' => $profileData,
-                ], $uac);
-            } catch (ValidationException $exception) {
-                throw new ConflictException(
-                    $this->getValidationErrorMessage($exception->getEntity()),
-                    scimType: ScimException::SCIM_TYPE_INVALID_VALUE
-                );
-            } catch (InternalErrorException $exception) {
-                ScimLog::error($exception->getMessage());
-                ScimLog::error($exception->getTraceAsString());
-                throw new ConflictException('Unexpected error', scimType: ScimException::SCIM_TYPE_INVALID_VALUE);
-            }
-        } else {
-            // Update profile if user exit but entry dont
-            /** @var \App\Model\Entity\Profile $profile */
-            $profile = $user->profile;
-            $this->Users->Profiles->patchEntity($profile, $profileData, [
-                'accessibleFields' => [
-                    'first_name' => true,
-                    'last_name' => true,
-                ],
-            ]);
-            if (!$this->Users->Profiles->save($profile)) {
-                throw new ConflictException(
-                    $this->getValidationErrorMessage($profile),
-                    scimType: ScimException::SCIM_TYPE_INVALID_VALUE
-                );
-            }
+    /**
+     * Register a brand-new user via the Users table.
+     *
+     * @return \App\Model\Entity\User
+     * @throws \Passbolt\Scim\Exception\ConflictException
+     */
+    private function registerNewUser(): User
+    {
+        $scimUser = $this->getScimSettingsSelectedUser();
+        if (!$scimUser) {
+            throw new ConflictException(__('Missing or invalid SCIM user in configuration settings'));
         }
 
+        $uac = new UserAccessControl($scimUser->role->name, $scimUser->id);
+
+        try {
+            return $this->Users->register([
+                'username' => $this->email,
+                'disabled' => $this->getDisabledValue($this->active),
+                'profile' => [
+                    'first_name' => $this->firstName,
+                    'last_name' => $this->lastName,
+                ],
+            ], $uac);
+        } catch (ValidationException $exception) {
+            throw new ConflictException(
+                $this->getValidationErrorMessage($exception->getEntity()),
+                scimType: ScimException::SCIM_TYPE_INVALID_VALUE
+            );
+        } catch (InternalErrorException $exception) {
+            ScimLog::error($exception->getMessage());
+            ScimLog::error($exception->getTraceAsString());
+            throw new ConflictException(
+                'Unexpected error',
+                scimType: ScimException::SCIM_TYPE_INVALID_VALUE
+            );
+        }
+    }
+
+    /**
+     * Update the profile of an existing user (user exists but has no SCIM entry yet).
+     *
+     * @param \App\Model\Entity\User $user
+     * @return \App\Model\Entity\User
+     * @throws \Passbolt\Scim\Exception\ConflictException
+     */
+    private function updateExistingUserProfile(User $user): User
+    {
+        /** @var \App\Model\Entity\Profile $profile */
+        $profile = $user->profile;
+        $this->Users->Profiles->patchEntity($profile, [
+            'first_name' => $this->firstName,
+            'last_name' => $this->lastName,
+        ], [
+            'accessibleFields' => [
+                'first_name' => true,
+                'last_name' => true,
+            ],
+        ]);
+
+        if (!$this->Users->Profiles->save($profile)) {
+            throw new ConflictException(
+                $this->getValidationErrorMessage($profile),
+                scimType: ScimException::SCIM_TYPE_INVALID_VALUE
+            );
+        }
+
+        return $user;
+    }
+
+    /**
+     * Create a ScimEntry linking the user to the SCIM resource.
+     *
+     * @param \App\Model\Entity\User $user
+     * @throws \Passbolt\Scim\Exception\ConflictException
+     */
+    private function createScimEntry(User $user): void
+    {
         /** @var \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry */
         $scimEntry = $this->ScimEntries->buildEntity([
             'scim_name' => $this->userName,
@@ -367,14 +432,10 @@ class UserScimResource implements ScimResourceInterface
             Log::error(print_r($this->$scimEntry, return: true));
 
             throw new ConflictException(
-                'An unexpected error occurred while creating the user in the database',
-                scimType:ScimException::SCIM_TYPE_INVALID_VALUE,
+                __('An unexpected error occurred while creating the user in the database'),
+                scimType: ScimException::SCIM_TYPE_INVALID_VALUE,
             );
         }
-
-        $this->setFromDatabase($user->id);
-
-        return $this;
     }
 
     /**

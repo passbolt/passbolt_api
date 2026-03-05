@@ -189,6 +189,16 @@ class ResourcesAddServiceTest extends TestCase
         $this->service->add($uac, new MetadataResourceDto($data));
     }
 
+    public function testResourceAddService_Secret_Is_An_Array_With_A_String()
+    {
+        $data = $this->getDummyResourcesPostData(['secrets' => ['data']]);
+        $uac = UserFactory::make()->persistedUAC();
+
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('Could not validate resource data.');
+        $this->service->add($uac, new MetadataResourceDto($data));
+    }
+
     public function testResourceAddServiceSoftDeletedUser()
     {
         $data = $this->getDummyResourcesPostData();

@@ -24,7 +24,6 @@ class ScimAuthenticationService extends AuthenticationService
             'resolver' => [
                 'className' => 'Passbolt/Scim.Scim',
             ],
-            'hashAlgorithm' => 'sha256',
             'tokenField' => 'secret_token',
         ]);
 

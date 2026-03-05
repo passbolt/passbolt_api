@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Notifications;
 
+use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
@@ -28,8 +29,6 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
     use EmailQueueTrait;
     use SelfRegistrationTestTrait;
 
-    public array $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
-
     public function setUp(): void
     {
         parent::setUp();
@@ -38,6 +37,7 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
 
     public function testUserRegisterNotificationDisabled(): void
     {
+        RoleFactory::make()->user()->persist();
         $this->setSelfRegistrationSettingsData();
         $this->setEmailNotificationSetting('send.user.create', false);
 
@@ -56,6 +56,7 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
 
     public function testUserRegisterNotificationSuccess(): void
     {
+        RoleFactory::make()->user()->persist();
         $this->setSelfRegistrationSettingsData();
         $this->setEmailNotificationSetting('send.user.create', true);
 
