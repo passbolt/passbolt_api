@@ -30,10 +30,6 @@ class SaveTest extends AppTestCase
 
     public $Transfers;
 
-    public array $fixtures = [
-        'app.Base/Users',
-    ];
-
     public function setUp(): void
     {
         parent::setUp();

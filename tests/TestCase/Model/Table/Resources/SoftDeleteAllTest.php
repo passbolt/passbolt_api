@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Resources;
 
 use App\Model\Table\ResourcesTable;
+use App\Test\Factory\FavoriteFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
@@ -32,13 +33,6 @@ class SoftDeleteAllTest extends AppTestCase
     use FormatValidationTrait;
 
     public $Resources;
-
-    public array $fixtures = [
-        'app.Base/Favorites',
-        'app.Base/Permissions',
-        'app.Base/Resources',
-        'app.Base/Secrets',
-    ];
 
     public function setUp(): void
     {
@@ -59,15 +53,8 @@ class SoftDeleteAllTest extends AppTestCase
      */
     public function testSoftDeleteAllSuccess()
     {
-        // Fetch the resources non deleted and with populated fields
-        $resourcesId = $this->Resources
-            ->find('list', valueField: 'id')
-            ->where([
-                'username IS NOT NULL',
-                'uri IS NOT NULL',
-                'description IS NOT NULL',
-                'deleted IS FALSE',
-            ])->toArray();
+        $resources = ResourceFactory::make(4)->persist();
+        $resourcesId = Hash::extract($resources, '{n}.id');
 
         // We'll make sure that at least two Resources are found in the fixtures
         $this->assertTrue(count($resourcesId) > 2);
@@ -80,15 +67,19 @@ class SoftDeleteAllTest extends AppTestCase
 
         // Fetch soft deleted resources
         $deletedResources = $this->Resources
-            ->find('list', valueField: 'id')
+            ->find()
+            ->select('id')
             ->where([
                 'username IS NULL',
                 'uri IS NULL',
                 'description IS NULL',
                 'deleted IS TRUE',
-            ])->toArray();
+            ])
+            ->all()
+            ->extract('id')
+            ->toArray();
 
-        $this->assertSame($resourcesId, $deletedResources);
+        $this->assertEqualsCanonicalizing($resourcesId, $deletedResources);
 
         $unchangedResource = $this->Resources->get($id1);
         $this->assertTrue(strlen($unchangedResource->username) > 0);
@@ -114,15 +105,14 @@ class SoftDeleteAllTest extends AppTestCase
      */
     public function testSoftDeleteAllSuccessWithAssociation(bool $cascade)
     {
+        $user = UserFactory::make()->persist();
+        $resources = ResourceFactory::make(3)
+            ->withPermissionsFor([$user])
+            ->withSecretsFor([$user])
+            ->persist();
+        FavoriteFactory::make()->setUser($user)->setResource($resources[0])->persist();
         // Fetch the non deleted resources with populated fields
-        $resourcesId = $this->Resources
-            ->find('list', valueField: 'id')
-            ->where([
-                'username IS NOT NULL',
-                'uri IS NOT NULL',
-                'description IS NOT NULL',
-                'deleted IS FALSE',
-            ])->toArray();
+        $resourcesId = Hash::extract($resources, '{n}.id');
 
         $associations = ['Favorites', 'Secrets', 'Permissions'];
 

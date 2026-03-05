@@ -17,9 +17,10 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Gpgkeys;
 
+use App\Test\Factory\GpgkeyFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\GpgkeysModelTrait;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
 
@@ -27,7 +28,6 @@ class GetByFingerprintAndUserIdTest extends AppTestCase
 {
     use GpgkeysModelTrait;
 
-    public array $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
     public $fingerprint;
     public $Gpgkeys;
 
@@ -46,31 +46,42 @@ class GetByFingerprintAndUserIdTest extends AppTestCase
 
     public function testGetByFingerPrintAndUserIdInvalidFingerprint()
     {
+        $user = UserFactory::make()->persist();
+
         $this->expectException(InvalidArgumentException::class);
-        $this->Gpgkeys->getByFingerPrintAndUserId('nope', UuidFactory::uuid('user.id.ada'));
+        $this->Gpgkeys->getByFingerPrintAndUserId('nope', $user->id);
     }
 
     public function testGetByFingerPrintAndUserIdWrongUser()
     {
+        [$ada, $betty] = UserFactory::make(2)->persist();
+        GpgkeyFactory::make()->withAdaKey()->setField('user_id', $ada->id)->persist();
+
         $k = $this->Gpgkeys->getByFingerPrintAndUserId(
             $this->fingerprint,
-            UuidFactory::uuid('user.id.betty')
+            $betty->id
         );
         $this->assertEmpty($k);
     }
 
     public function testGetByFingerPrintAndUserIdWrongFingerprint()
     {
+        $ada = UserFactory::make()->persist();
+        GpgkeyFactory::make()->withAdaKey()->setField('user_id', $ada->id)->persist();
+
         $k = $this->Gpgkeys->getByFingerPrintAndUserId(
             '03F60E958F4CB29723ACDF761353B5B15D9B054C',
-            UuidFactory::uuid('user.id.ada')
+            $ada->id
         );
         $this->assertEmpty($k);
     }
 
     public function testGetByFingerPrintAndUserIdSuccess()
     {
-        $k = $this->Gpgkeys->getByFingerPrintAndUserId($this->fingerprint, UuidFactory::uuid('user.id.ada'));
+        $ada = UserFactory::make()->persist();
+        GpgkeyFactory::make()->withAdaKey()->setField('user_id', $ada->id)->persist();
+
+        $k = $this->Gpgkeys->getByFingerPrintAndUserId($this->fingerprint, $ada->id);
         $this->assertNotEmpty($k);
         $this->assertGpgkeyAttributes($k);
     }

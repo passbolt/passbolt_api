@@ -18,9 +18,9 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Gpgkeys;
 
 use App\Error\Exception\CustomValidationException;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\GpgkeysModelTrait;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
 
@@ -29,8 +29,6 @@ class BuildFromArmoredKeyTest extends AppTestCase
     use GpgkeysModelTrait;
 
     public $Gpgkeys;
-
-    public array $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
 
     public function setUp(): void
     {
@@ -52,14 +50,18 @@ class BuildFromArmoredKeyTest extends AppTestCase
 
     public function testbuildEntityFromArmoredKeyWrongKey()
     {
+        $user = UserFactory::make()->persist();
+
         $this->expectException(CustomValidationException::class);
-        $this->Gpgkeys->buildEntityFromArmoredKey('nope', UuidFactory::uuid('user.id.ada'));
+        $this->Gpgkeys->buildEntityFromArmoredKey('nope', $user->id);
     }
 
     public function testbuildEntityFromArmoredKeySuccess()
     {
+        $user = UserFactory::make()->persist();
+
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
-        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, UuidFactory::uuid('user.id.ada'));
+        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $user->id);
         $this->assertNotEmpty($k);
         $attributes = [
             // id, user_id, created, modified are not present yet, will be added on save
@@ -71,6 +73,8 @@ class BuildFromArmoredKeyTest extends AppTestCase
 
     public function testbuildEntityFromArmoredKeyInvalidKeyError()
     {
+        $user = UserFactory::make()->persist();
+
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
 
         // mess up the key a little bit
@@ -79,6 +83,6 @@ class BuildFromArmoredKeyTest extends AppTestCase
         $armoredKey = str_replace('A', '1', $armoredKey);
 
         $this->expectException(CustomValidationException::class);
-        $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, UuidFactory::uuid('user.id.ada'));
+        $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $user->id);
     }
 }
