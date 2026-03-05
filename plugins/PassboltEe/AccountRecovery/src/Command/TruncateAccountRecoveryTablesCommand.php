@@ -69,12 +69,12 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
             ])
             ->addOption('username', [
                 'short' => 'u',
-                'required' => true,
+                'required' => false,
                 'help' => 'The adminstrator user name (email)',
             ])
             ->addOption('fingerprint', [
                 'short' => 'f',
-                'required' => true,
+                'required' => false,
                 'help' => 'Organization public key\'s fingerprint',
             ])
             ->addOption('no-verify', [

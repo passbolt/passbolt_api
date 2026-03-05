@@ -66,6 +66,8 @@ class ResourcesTagsAddServiceTest extends TagTestCase
             $resource->id,
             ['contain' => ['all_tags' => 1, 'permission' => 1]]
         )->first();
+        $modified = $resource->modified;
+        $modifiedBy = $resource->modified_by;
 
         $uac = $this->makeUac($user1);
 
@@ -80,6 +82,9 @@ class ResourcesTagsAddServiceTest extends TagTestCase
         TagFactory::get($tagUser2->id);
         $this->assertSame(1, TagFactory::count());
         $this->assertSame(1, ResourcesTagFactory::count());
+        $resourceAfterTag = ResourceFactory::get($resource->id);
+        $this->assertSame($modifiedBy, $resourceAfterTag->modified_by);
+        $this->assertEquals($modified, $resourceAfterTag->modified);
     }
 
     /**
