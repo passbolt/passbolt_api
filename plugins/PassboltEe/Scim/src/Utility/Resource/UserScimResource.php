@@ -688,7 +688,7 @@ class UserScimResource implements ScimResourceInterface
     protected function assertAdminSuspendAllowed(array $userPatchData): void
     {
         // Only check when user is being disabled (disabled field is being set to a non-null value)
-        if (!array_key_exists('disabled', $userPatchData) || $userPatchData['disabled'] === null) {
+        if (empty($userPatchData['disabled'])) {
             return;
         }
 
@@ -703,14 +703,17 @@ class UserScimResource implements ScimResourceInterface
         }
 
         // Check if the user is an admin
-        $isAdmin = $this->Users
+        $query = $this->Users
             ->find()
+            ->select(['existing' => 1])
             ->contain(['Roles'])
             ->where([
                 $this->Users->aliasField('id') => $this->userEntity->id,
                 'Roles.name' => Role::ADMIN,
             ])
-            ->count() > 0;
+            ->limit(1)
+            ->epilog('FOR UPDATE');
+        $isAdmin = (bool)count($query->disableHydration()->toArray());
 
         if ($isAdmin) {
             throw new ForbiddenException(__('An administrator user cannot be suspended via SCIM.'));
@@ -728,11 +731,11 @@ class UserScimResource implements ScimResourceInterface
      */
     protected function updateDatabaseUser(array $userPatchData, array $scimEntryPatchData, mixed $requestData): bool
     {
-        $this->assertAdminSuspendAllowed($userPatchData);
-
         return $this->Users
             ->getConnection()
             ->transactional(function () use ($userPatchData, $scimEntryPatchData, $requestData) {
+                $this->assertAdminSuspendAllowed($userPatchData);
+
                 if ($userPatchData) {
                     $this->Users->patchEntity($this->userEntity, $userPatchData, [
                         'accessibleFields' => [
