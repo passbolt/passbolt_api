@@ -40,6 +40,7 @@ return [
                         // Disable in the cloud
                         'legacyHashAllowed' => filter_var(env('PASSBOLT_SCIM_SECURITY_SECRET_TOKEN_LEGACY_HASH_ALLOWED', true), FILTER_VALIDATE_BOOLEAN), // phpcs:ignore
                     ],
+                    'allowSuspendAdministrators' => filter_var(env('PASSBOLT_PLUGINS_SCIM_SECURITY_ALLOW_SUSPEND_ADMINISTRATORS', false), FILTER_VALIDATE_BOOLEAN), // phpcs:ignore
                 ],
             ],
         ],

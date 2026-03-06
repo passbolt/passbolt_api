@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
+use Cake\Core\Configure;
 use Passbolt\Scim\Test\Utility\ScimApiIntegrationTestCase;
 
 /**
@@ -91,6 +92,73 @@ class ScimPatchControllerTest extends ScimApiIntegrationTestCase
         $this->assertSame('First name replaced', $scimEntry->user->profile->first_name);
         // Last name did not change because `Add` operation do not change not empty values
         $this->assertSame('Scim', $scimEntry->user->profile->last_name);
+        $this->assertNotNull($scimEntry->user->disabled);
+    }
+
+    /**
+     * Test case for PATCH /Users/<user_id> - cannot disable admin user
+     */
+    public function testScimControllerUsersPatch_CannotDisableAdmin()
+    {
+        $this->setTestNow();
+        $scimEntry = $this->createScimAdminUser();
+
+        $this->configScimAuth();
+        $this->patch($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key), $this->getPatchOpData([
+            [
+                'op' => 'Replace',
+                'path' => 'active',
+                'value' => 'False',
+            ],
+        ]));
+        $this->assertResponseCode(403);
+
+        $scimEntry = $this->getScimEntryByName('admin-scim@username.com', addUser: true);
+        $this->assertNull($scimEntry->user->disabled);
+    }
+
+    /**
+     * Test case for PATCH /Users/<user_id> - can disable admin when config allows
+     */
+    public function testScimControllerUsersPatch_CanDisableAdminWhenConfigAllows()
+    {
+        $this->setTestNow();
+        Configure::write('passbolt.plugins.scim.security.allowSuspendAdministrators', true);
+        $scimEntry = $this->createScimAdminUser();
+
+        $this->configScimAuth();
+        $this->patch($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key), $this->getPatchOpData([
+            [
+                'op' => 'Replace',
+                'path' => 'active',
+                'value' => 'False',
+            ],
+        ]));
+        $this->assertResponseCode(200);
+
+        $scimEntry = $this->getScimEntryByName('admin-scim@username.com', addUser: true);
+        $this->assertNotNull($scimEntry->user->disabled);
+    }
+
+    /**
+     * Test case for PATCH /Users/<user_id> - can disable regular user
+     */
+    public function testScimControllerUsersPatch_CanDisableRegularUser()
+    {
+        $this->setTestNow();
+        $scimEntry = $this->createScimUser1();
+
+        $this->configScimAuth();
+        $this->patch($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key), $this->getPatchOpData([
+            [
+                'op' => 'Replace',
+                'path' => 'active',
+                'value' => 'False',
+            ],
+        ]));
+        $this->assertResponseCode(200);
+
+        $scimEntry = $this->getScimEntryByName(self::USER_1_SCIM_NAME, addUser: true);
         $this->assertNotNull($scimEntry->user->disabled);
     }
 

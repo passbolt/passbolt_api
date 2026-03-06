@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
+use Cake\Core\Configure;
 use Passbolt\Scim\Test\Utility\ScimApiIntegrationTestCase;
 
 /**
@@ -55,6 +56,47 @@ class ScimPutControllerTest extends ScimApiIntegrationTestCase
         $this->assertSame('updated first name', $scimEntry->user->profile->first_name);
         $this->assertSame('updated last name', $scimEntry->user->profile->last_name);
         $this->assertSame(self::DATETIME_TEST_NOW, $scimEntry->user->disabled->format('Y-m-d H:i:s'));
+    }
+
+    /**
+     * Test case for PUT /Users/<user_id> - cannot disable admin user
+     */
+    public function testScimControllerUsersPut_CannotDisableAdmin()
+    {
+        $this->setTestNow();
+        $scimEntry = $this->createScimAdminUser();
+
+        $putData = $this->getUserPostData('admin-scim@username.com', '7a23c9d1-5f42-4b8e-a1d3-c9e52f8b3a17', 'admin-scim@email.com', 'Admin');
+        $putData['active'] = false;
+        $putData['name']['familyName'] = 'Scim';
+
+        $this->configScimAuth();
+        $this->put($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key), $putData);
+        $this->assertResponseCode(403);
+
+        $scimEntry = $this->getScimEntryByName('admin-scim@username.com', addUser: true);
+        $this->assertNull($scimEntry->user->disabled);
+    }
+
+    /**
+     * Test case for PUT /Users/<user_id> - can disable admin when config allows
+     */
+    public function testScimControllerUsersPut_CanDisableAdminWhenConfigAllows()
+    {
+        $this->setTestNow();
+        Configure::write('passbolt.plugins.scim.security.allowSuspendAdministrators', true);
+        $scimEntry = $this->createScimAdminUser();
+
+        $putData = $this->getUserPostData('admin-scim@username.com', '7a23c9d1-5f42-4b8e-a1d3-c9e52f8b3a17', 'admin-scim@email.com', 'Admin');
+        $putData['active'] = false;
+        $putData['name']['familyName'] = 'Scim';
+
+        $this->configScimAuth();
+        $this->put($this->getScimEndpoint('Users' . DS . $scimEntry->foreign_key), $putData);
+        $this->assertResponseCode(200);
+
+        $scimEntry = $this->getScimEntryByName('admin-scim@username.com', addUser: true);
+        $this->assertNotNull($scimEntry->user->disabled);
     }
 
     /**
