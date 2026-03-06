@@ -683,7 +683,7 @@ class UserSyncActionDeleteTest extends DirectorySyncDeprecatedIntegrationTestCas
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testProductionSyncRollsBackOnFailure()
+    public function testDirectorySyncUserDelete_execute_ProductionSyncRollsBackOnFailure(): void
     {
         // Set up two users for deletion (both deletable, no sole-owner constraints)
         $this->mockDirectoryEntryUser(['fname' => 'thelma', 'lname' => 'estrin']);
