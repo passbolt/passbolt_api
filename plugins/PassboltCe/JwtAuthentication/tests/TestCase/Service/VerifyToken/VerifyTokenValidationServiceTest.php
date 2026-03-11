@@ -78,7 +78,7 @@ class VerifyTokenValidationServiceTest extends TestCase
     {
         $this->expectException(InvalidVerifyTokenException::class);
         $this->expectExceptionMessage('Invalid verify token expiry.');
-        $this->service->validateToken($expiry, 'Foo', 'Bar');
+        $this->service->validateToken($expiry, UuidFactory::uuid(), 'Bar');
     }
 
     /**
@@ -88,7 +88,7 @@ class VerifyTokenValidationServiceTest extends TestCase
     {
         $this->expectException(ExpiredVerifyTokenAccessException::class);
         $this->expectExceptionMessage('Attempt to access an expired verify token.');
-        $this->service->validateToken($expiry, 'Foo', 'Bar');
+        $this->service->validateToken($expiry, UuidFactory::uuid(), 'Bar');
         $this->assertEventFired(ExpiredVerifyTokenAccessException::class);
     }
 

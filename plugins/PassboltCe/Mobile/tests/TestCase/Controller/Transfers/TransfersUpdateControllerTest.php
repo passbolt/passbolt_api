@@ -35,12 +35,6 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
     use TransfersModelTrait;
     use UsersModelTrait;
 
-    public array $fixtures = [
-        'app.Base/Users',
-        'app.Base/Profiles',
-        'app.Base/Roles',
-    ];
-
     public function setUp(): void
     {
         parent::setUp();
@@ -142,14 +136,15 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
 
     public function testMobileTransfersUpdateController_ErrorTransferFordbidden_TokenInactive()
     {
+        $user = UserFactory::make()->user()->persist();
         $transfer = $this->insertTransferFixture([
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'user_id' => $user->id,
             'current_page' => 1,
             'status' => Transfer::TRANSFER_STATUS_IN_PROGRESS,
             'total_pages' => 2,
             'hash' => Security::hash('test', 'sha512', true),
             'authentication_token' => [
-                'user_id' => UuidFactory::uuid('user.id.ada'),
+                'user_id' => $user->id,
                 'token' => UuidFactory::uuid(),
                 'active' => false,
                 'type' => AuthenticationToken::TYPE_MOBILE_TRANSFER,
@@ -227,6 +222,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
      */
     public function testMobileTransfersUpdateController_NoSession_Success()
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->user()->persist();
         $transfer = $this->insertTransferFixture($this->getDummyTransfer($user->id));
         $id = $transfer->id;

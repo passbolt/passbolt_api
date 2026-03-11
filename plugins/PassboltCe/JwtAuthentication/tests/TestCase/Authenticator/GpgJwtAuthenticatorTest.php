@@ -183,6 +183,46 @@ class GpgJwtAuthenticatorTest extends TestCase
         $this->assertEquals(Result::FAILURE_CREDENTIALS_INVALID, $result->getStatus());
     }
 
+    public static function invalidChallengeVerifyTokenExpiryValueProvider(): array
+    {
+        return [
+            ['nope'],
+            [''],
+            [null],
+            [22],
+            [0.01],
+            ['😎'],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidChallengeVerifyTokenExpiryValueProvider
+     * @param mixed $invalidVerifyTokenExpiry Invalid verify token expiry value.
+     * @return void
+     * @throws Exception
+     */
+    public function testGpgJwtAuthenticatorAuthenticateError_InvalidVerifyTokenExpiry(mixed $invalidVerifyTokenExpiry)
+    {
+        $this->gpgSetup();
+        $request = new ServerRequest();
+
+        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
+        $this->gpg->setSignKeyFromFingerprint($this->adaKeyId, '');
+        $challenge = [
+            'version' => '1.0.0',
+            'domain' => Router::url('/', true),
+            'verify_token' => UuidFactory::uuid(),
+            'verify_token_expiry' => $invalidVerifyTokenExpiry,
+        ];
+        $msg = $this->gpg->encryptSign(json_encode($challenge));
+
+        $request = $request->withData('user_id', UuidFactory::uuid('user.id.ada'));
+        $request = $request->withData('challenge', $msg);
+        $result = $this->sut->authenticate($request);
+
+        $this->assertEquals(Result::FAILURE_CREDENTIALS_INVALID, $result->getStatus());
+    }
+
     public function testGpgJwtAuthenticatorAuthenticateError_ExpiredToken()
     {
         $this->gpgSetup();
@@ -205,7 +245,25 @@ class GpgJwtAuthenticatorTest extends TestCase
         $this->assertEquals(Result::FAILURE_CREDENTIALS_INVALID, $result->getStatus());
     }
 
-    public function testGpgJwtAuthenticatorAuthenticateError_WrongVerifyToken()
+    public static function invalidChallengeVerifyTokenValueProvider(): array
+    {
+        return [
+            ['nope'],
+            [''],
+            [null],
+            [22],
+            [0.01],
+            ['😎'],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidChallengeVerifyTokenValueProvider
+     * @param mixed $invalidValue Invalid verify token value.
+     * @return void
+     * @throws Exception
+     */
+    public function testGpgJwtAuthenticatorAuthenticateError_WrongVerifyToken(mixed $invalidValue)
     {
         $this->gpgSetup();
         $request = new ServerRequest();
@@ -215,7 +273,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $challenge = [
             'version' => '1.0.0',
             'domain' => Router::url('/', true),
-            'verify_token' => 'nope',
+            'verify_token' => $invalidValue,
             'verify_token_expiry' => time() + 60,
         ];
         $msg = $this->gpg->encryptSign(json_encode($challenge));

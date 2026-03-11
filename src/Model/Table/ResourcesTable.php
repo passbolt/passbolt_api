@@ -527,10 +527,11 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
      *
      * @param string $userId The user who perform the delete.
      * @param \App\Model\Entity\Resource $resource The resource to delete.
+     * @param bool $checkPermission Whether to check for permission or not.
      * @throws \InvalidArgumentException if the user id is not a uuid
      * @return bool true if success
      */
-    public function softDelete(string $userId, Resource $resource): bool
+    public function softDelete(string $userId, Resource $resource, bool $checkPermission = true): bool
     {
         // The softDelete will perform an update to the entity to soft delete it.
         if (!Validation::uuid($userId)) {
@@ -545,7 +546,10 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
         }
 
         $acoType = PermissionsTable::RESOURCE_ACO;
-        if (!$this->Permissions->hasAccess($acoType, $resource->id, $userId, Permission::UPDATE)) {
+        if (
+            $checkPermission
+            && !$this->Permissions->hasAccess($acoType, $resource->id, $userId, Permission::UPDATE)
+        ) {
             $resource->setError('id', [
                 'has_access' => __('The user cannot delete this resource.'),
             ]);
@@ -553,8 +557,6 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
             return false;
         }
 
-        /** @var \App\Model\Entity\Resource $resource */
-        $resource = $this->loadInto($resource, ['ResourceTypes']);
         if (empty($resource->resource_type) || !is_null($resource->resource_type->deleted)) {
             $resource->setError('resource_type_id', [
                 'resource_type_not_exists' => __('The resource type for this resource does not exist.'),

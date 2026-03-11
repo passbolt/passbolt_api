@@ -80,7 +80,27 @@ class ScimSettingFactory extends OrganizationSettingFactory
         return [
             'setting_id' => self::SCIM_TEST_SETTING_ID,
             'scim_user_id' => UserFactory::make()->admin()->persist()->get('id'),
+            // Use minimum bcrypt cost (4) in tests to keep test suite fast
+            'secret_token' => password_hash(self::SCIM_TEST_SECRET_TOKEN, PASSWORD_BCRYPT, ['cost' => 4]),
+        ];
+    }
+
+    /**
+     * Create settings with a legacy SHA-256 hashed token for migration tests.
+     *
+     * @return $this
+     */
+    public function legacySecretTokenFormat()
+    {
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setEncryptKeyWithServerKey($gpg);
+
+        $value = [
+            'setting_id' => self::SCIM_TEST_SETTING_ID,
+            'scim_user_id' => UserFactory::make()->admin()->persist()->get('id'),
             'secret_token' => Security::hash(self::SCIM_TEST_SECRET_TOKEN, 'sha256'),
         ];
+
+        return $this->setField('value', $gpg->encrypt(json_encode($value)));
     }
 }

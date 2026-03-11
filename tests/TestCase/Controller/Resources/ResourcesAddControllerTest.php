@@ -263,6 +263,10 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
                 'errorField' => 'secrets._empty',
                 'data' => self::getDummyResourcesPostData(['secrets' => null]),
             ]],
+            ['secret is not an array of values', [
+                'errorField' => 'secrets.0.data._required',
+                'data' => self::getDummyResourcesPostData(['secrets' => ['data']]),
+            ]],
             ['secret data must be provided', [
                 'errorField' => 'secrets.0.data._required',
                 'data' => self::getDummyResourcesPostData(['secrets' => []]),

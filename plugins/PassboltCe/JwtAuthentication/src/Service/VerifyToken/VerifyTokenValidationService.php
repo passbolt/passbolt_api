@@ -33,13 +33,13 @@ class VerifyTokenValidationService
      * A validate token should be a Uuid, with a valid expiry date.
      * It should not be present in the authentication_tokens table.
      *
-     * @param string|int $verifyTokenExpiry Verify Token Expiry
-     * @param string|null $verifyToken Verify Token
+     * @param mixed $verifyTokenExpiry Verify Token Expiry
+     * @param mixed $verifyToken Verify Token
      * @param string $userId User ID
      * @return void
      * @throws \Passbolt\JwtAuthentication\Error\Exception\VerifyToken\InvalidVerifyTokenException if version is not supported
      */
-    public function validateToken(string|int $verifyTokenExpiry, ?string $verifyToken, string $userId): void
+    public function validateToken(mixed $verifyTokenExpiry, mixed $verifyToken, string $userId): void
     {
         $this->validateTokenExpiry($verifyTokenExpiry);
         $this->validateFormat($verifyToken);

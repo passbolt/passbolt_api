@@ -20,6 +20,7 @@ namespace Passbolt\Mobile\Test\TestCase\Service\Transfers;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
@@ -35,15 +36,6 @@ use Passbolt\Mobile\Service\Transfers\TransfersCreateService;
  */
 class TransfersCreateServiceTest extends AppTestCase
 {
-    /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public array $fixtures = [
-        'app.Base/Users',
-    ];
-
     public function testMobileTransfersCreateService_Success()
     {
         $service = new TransfersCreateService();
@@ -52,11 +44,12 @@ class TransfersCreateServiceTest extends AppTestCase
             'hash' => Security::hash('test', 'sha512', true),
         ];
 
-        $accessControl = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
-        $transfer = $service->create($data, $accessControl);
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->persist();
+        $transfer = $service->create($data, $this->makeUac($user));
 
         // Check transfer entity
-        $this->assertEquals($transfer->user_id, UuidFactory::uuid('user.id.ada'));
+        $this->assertEquals($transfer->user_id, $user->id);
         $this->assertNotEmpty(Validation::uuid($transfer->id));
         $this->assertEquals($transfer->total_pages, 1);
         $this->assertEquals($transfer->current_page, 0);
@@ -66,7 +59,7 @@ class TransfersCreateServiceTest extends AppTestCase
 
         // Check associated auth token
         $this->assertTrue(Validation::uuid($transfer->authentication_token->id));
-        $this->assertEquals($transfer->authentication_token->user_id, UuidFactory::uuid('user.id.ada'));
+        $this->assertEquals($transfer->authentication_token->user_id, $user->id);
         $this->assertEquals($transfer->authentication_token->type, AuthenticationToken::TYPE_MOBILE_TRANSFER);
         $this->assertTrue($transfer->authentication_token->active);
         $this->assertNotEmpty($transfer->authentication_token->created);
@@ -82,9 +75,9 @@ class TransfersCreateServiceTest extends AppTestCase
             'current_page' => -1,
             'hash' => 'nope',
         ];
-        $accessControl = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
+        $user = UserFactory::make()->user()->persist();
         try {
-            $service->create($data, $accessControl);
+            $service->create($data, $this->makeUac($user));
             $this->fail('Expect an exception');
         } catch (ValidationException $exception) {
             $errors = $exception->getErrors();
