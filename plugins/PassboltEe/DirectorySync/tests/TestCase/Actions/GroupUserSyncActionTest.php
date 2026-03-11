@@ -27,9 +27,10 @@ use Cake\Core\Configure;
 use Cake\Event\EventManager;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
+use Passbolt\DirectorySync\Model\Table\DirectoryRelationsTable;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
-use Passbolt\DirectorySync\Test\Utility\FailingDirectoryRelationsTableTestUtility;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryRelationsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupUsersTrait;
@@ -1035,14 +1036,14 @@ class GroupUserSyncActionTest extends DirectorySyncDeprecatedIntegrationTestCase
     }
 
     /**
-     * Scenario: PB-49159 Adding a user to a group fails during DirectoryRelation creation.
+     * Scenario: PB-49286 Adding a user to a group fails during DirectoryRelation creation.
      * Expected result: The GroupUser creation should be rolled back (no orphaned GroupUser).
      *
      * @group DirectorySync
      * @group DirectorySyncGroupUser
      * @group DirectorySyncGroupUserAdd
      */
-    public function testAddGroupUsers_RollsBackGroupUserOnDirectoryRelationFailure()
+    public function testDirectorySyncGroupUser_RollsBackGroupUserOnDirectoryRelationFailure()
     {
         $userEntry = $this->mockDirectoryEntryUser([
             'fname' => 'frances',
@@ -1057,8 +1058,15 @@ class GroupUserSyncActionTest extends DirectorySyncDeprecatedIntegrationTestCase
             ],
         ]);
 
+        $directoryRelation = $this->getMockBuilder(DirectoryRelationsTable::class)
+            ->onlyMethods(['createFromGroupUser'])->getMock();
+        $directoryRelation
+            ->setAlias('DirectoryRelations')
+            ->method('createFromGroupUser')
+            ->willThrowException(new Exception('Simulated createFromGroupUser failure'));
+
         // Replace DirectoryRelations with a version that fails on createFromGroupUser
-        $this->action->DirectoryRelations = new FailingDirectoryRelationsTableTestUtility();
+        $this->action->DirectoryRelations = $directoryRelation;
 
         $reports = $this->action->execute();
 
