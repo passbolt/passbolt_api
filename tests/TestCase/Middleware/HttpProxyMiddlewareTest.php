@@ -247,6 +247,8 @@ class HttpProxyMiddlewareTest extends TestCase
 
     public function testHttpProxyMiddleware_TrustedProxiesConfigurationDisabled(): void
     {
+        Configure::write(HttpProxyMiddleware::PASSBOLT_SECURITY_PROXIES_ACTIVE_CONFIG_NAME, false);
+
         $request = ServerRequestFactory::fromGlobals([
             'HTTP_X_FORWARDED_FOR' => '192.168.1.0, 192.168.1.2, 192.168.1.3',
             'HTTP_X_REAL_IP' => '192.168.1.1',

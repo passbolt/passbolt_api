@@ -203,8 +203,8 @@ class DirectoryEntriesTable extends Table
      */
     public function buildEntityFromData(array $data): DirectoryEntry
     {
-        if (strlen($data['directory_name']) > self::DN_MAX_LENGTH) {
-            $data['directory_name'] = substr($data['directory_name'], 0, self::DN_MAX_LENGTH - 1);
+        if (mb_strlen($data['directory_name'], 'UTF-8') > self::DN_MAX_LENGTH) {
+            $data['directory_name'] = mb_substr($data['directory_name'], 0, self::DN_MAX_LENGTH - 1, 'UTF-8');
         }
 
         $directoryEntry = $this->buildEntity($data);
@@ -252,16 +252,32 @@ class DirectoryEntriesTable extends Table
     public function updateOrCreate(array $data, string $model): array|bool|DirectoryEntry
     {
         try {
-            $entry = $this->get($data['id'], contain: [$model]);
-            if (is_string($data['directory_name']) && $entry->directory_name !== $data['directory_name']) {
-                if (strlen($data['directory_name']) > self::DN_MAX_LENGTH) {
-                    $data['directory_name'] = substr($data['directory_name'], 0, self::DN_MAX_LENGTH - 1);
-                }
-                $entry->directory_name = $data['directory_name'];
-                $this->save($entry);
-            }
+            return $this->getConnection()->transactional(
+                function () use ($data, $model): DirectoryEntry|bool {
+                    /** @var \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry */
+                    $entry = $this->find()
+                        ->where([$this->aliasField('id') => $data['id']])
+                        ->epilog('FOR UPDATE')
+                        ->firstOrFail();
 
-            return $entry;
+                    $this->loadInto($entry, [$model]);
+
+                    if (is_string($data['directory_name']) && $entry->directory_name !== $data['directory_name']) {
+                        if (mb_strlen($data['directory_name'], 'UTF-8') > self::DN_MAX_LENGTH) {
+                            $data['directory_name'] = mb_substr(
+                                $data['directory_name'],
+                                0,
+                                self::DN_MAX_LENGTH - 1,
+                                'UTF-8'
+                            );
+                        }
+                        $entry->directory_name = $data['directory_name'];
+                        $entry = $this->save($entry);
+                    }
+
+                    return $entry;
+                }
+            );
         } catch (RecordNotFoundException $exception) {
             $data['foreign_model'] = $model;
             $data['foreign_key'] = null;

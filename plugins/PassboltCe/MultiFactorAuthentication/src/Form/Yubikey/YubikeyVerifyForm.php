@@ -106,9 +106,15 @@ class YubikeyVerifyForm extends MfaForm
     public function isSameYubikeyId(string $value): bool
     {
         $yubikeyId = substr($value, 0, 12);
+
+        $mfaAccountSettings = $this->settings->getAccountSettings();
+        if (is_null($mfaAccountSettings)) {
+            return false;
+        }
+
         try {
-            $yubikeyIdInSettings = $this->settings->getAccountSettings()->getYubikeyId();
-        } catch (RecordNotFoundException $exception) {
+            $yubikeyIdInSettings = $mfaAccountSettings->getYubikeyId();
+        } catch (RecordNotFoundException) {
             return false;
         }
 

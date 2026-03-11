@@ -24,12 +24,6 @@ use Laminas\Diactoros\Response\RedirectResponse;
 
 class AuthLogoutControllerTest extends AppIntegrationTestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, true);
-    }
-
     /**
      * Check if a redirection is of type ZendRedirect
      * Usefull for high level routes redirections / route alias testing
@@ -78,6 +72,7 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
 
     public function testAuthLogoutController_Success_GetMethod_Json_SignedIn(): void
     {
+        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, true);
         $this->get('/auth/logout.json');
         $this->assertNoRedirect();
         $this->assertResponseContains('You are successfully logged out.');
@@ -85,6 +80,7 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
 
     public function testAuthLogoutController_Success_GetMethod_Json_NotSignedIn(): void
     {
+        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, true);
         $this->logInAsUser();
         $this->get('/auth/logout.json');
         $this->assertResponseContains('You are successfully logged out.');
@@ -93,6 +89,7 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
 
     public function testAuthLogoutController_Success_GetMethod_NotJson(): void
     {
+        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, true);
         $this->get('/auth/logout');
         $this->assertRedirect('/auth/login');
     }
@@ -103,9 +100,8 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
         $this->assertZendRedirect('/auth/logout');
     }
 
-    public function testAuthLogoutController_Error_GetMethod_GetLogoutEndpointDisabled()
+    public function testAuthLogoutController_Error_GetMethod_GetLogoutEndpointDisabled_ByDefault()
     {
-        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, false);
         $this->get('/auth/logout');
         $this->assertResponseError('The logout route should only be accessed with POST method.');
 

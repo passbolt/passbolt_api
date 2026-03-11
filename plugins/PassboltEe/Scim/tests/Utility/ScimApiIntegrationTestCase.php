@@ -151,6 +151,7 @@ abstract class ScimApiIntegrationTestCase extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
+
         $this->enableFeaturePlugin('Scim');
         $this->enableFeaturePlugin('JwtAuthentication');
 

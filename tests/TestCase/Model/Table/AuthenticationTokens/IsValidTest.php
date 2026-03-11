@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Model\Table\AuthenticationTokens;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
@@ -29,7 +30,6 @@ class IsValidTest extends AppTestCase
     use AuthenticationTokenModelTrait;
 
     public $AuthenticationTokens;
-    public array $fixtures = [ 'app.Base/Users'];
 
     public function setUp(): void
     {
@@ -66,7 +66,8 @@ class IsValidTest extends AppTestCase
      */
     public function testAuthenticationTokensIsValidTokenDoesNotExistFail()
     {
-        $result = $this->AuthenticationTokens->isValid(UuidFactory::uuid(), UuidFactory::uuid('user.id.ada'));
+        $user = UserFactory::make()->persist();
+        $result = $this->AuthenticationTokens->isValid(UuidFactory::uuid(), $user->id);
         $this->assertFalse($result);
     }
 
@@ -77,7 +78,8 @@ class IsValidTest extends AppTestCase
      */
     public function testAuthenticationTokensIsValidUserDoesNotExistFail()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_REGISTER);
+        $user = UserFactory::make()->persist();
+        $t = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
         $result = $this->AuthenticationTokens->isValid($t->token, UuidFactory::uuid());
         $this->assertFalse($result);
     }
@@ -89,8 +91,9 @@ class IsValidTest extends AppTestCase
      */
     public function testAuthenticationTokensIsValidNotSameUserFail()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_REGISTER);
-        $result = $this->AuthenticationTokens->isValid($t->token, UuidFactory::uuid('user.id.betty'));
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $t = $this->AuthenticationTokens->generate($userA->id, AuthenticationToken::TYPE_REGISTER);
+        $result = $this->AuthenticationTokens->isValid($t->token, $userB->id);
         $this->assertFalse($result);
     }
 
@@ -101,14 +104,14 @@ class IsValidTest extends AppTestCase
      */
     public function testAuthenticationTokensIsValidTokenInactiveFail()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $user = UserFactory::make()->persist();
         $tokenInactive = AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_LOGIN)
-            ->userId($userId)
+            ->userId($user->id)
             ->inactive()
             ->persist();
 
-        $result = $this->AuthenticationTokens->isValid($tokenInactive->token, UuidFactory::uuid('user.id.ada'));
+        $result = $this->AuthenticationTokens->isValid($tokenInactive->token, $user->id);
 
         $this->assertFalse($result);
     }
@@ -120,15 +123,15 @@ class IsValidTest extends AppTestCase
      */
     public function testAuthenticationTokensIsValidTokenExpiredFail()
     {
-        $userId = UuidFactory::uuid('user.id.ruth');
+        $user = UserFactory::make()->persist();
         $tokenInactive = AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_REGISTER)
-            ->userId($userId)
+            ->userId($user->id)
             ->expired()
             ->active()
             ->persist();
 
-        $result = $this->AuthenticationTokens->isValid($tokenInactive->token, $userId);
+        $result = $this->AuthenticationTokens->isValid($tokenInactive->token, $user->id);
 
         $this->assertFalse($result);
 
@@ -144,8 +147,9 @@ class IsValidTest extends AppTestCase
      */
     public function testAuthenticationTokensIsValidTokenSuccess()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_LOGIN);
-        $result = $this->AuthenticationTokens->isValid($t->token, UuidFactory::uuid('user.id.ada'));
+        $user = UserFactory::make()->persist();
+        $t = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_LOGIN);
+        $result = $this->AuthenticationTokens->isValid($t->token, $user->id);
         $this->assertTrue($result);
     }
 }

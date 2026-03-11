@@ -117,10 +117,10 @@ class EntitiesChangesDto
     /**
      * Push an array of deleted entities.
      *
-     * @param array<\Cake\ORM\Entity> $entities The array of entities.
+     * @param iterable<\Cake\ORM\Entity> $entities The array of entities.
      * @return void
      */
-    public function pushDeletedEntities(array $entities = []): void
+    public function pushDeletedEntities(iterable $entities = []): void
     {
         $this->pushEntities($this->deleted, $entities);
     }

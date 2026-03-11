@@ -152,7 +152,7 @@ class FoldersDeleteService
     private function deleteFolder(UserAccessControl $uac, Folder $folder, bool $cascade): void
     {
         if ($cascade) {
-            $this->deleteFolderChildrenOrMoveToRoot($uac, $folder);
+            $this->deleteFolderContentCascade($uac, $folder);
         } else {
             $this->moveFolderContentToRoot($folder);
         }
@@ -163,80 +163,158 @@ class FoldersDeleteService
     }
 
     /**
-     * Delete the content of a folder if possible, otherwise move it to the root.
+     * Delete the content of a folder recursively using iterative BFS and batch operations.
+     *
+     * Collects all descendants level by level, checks permissions in batch, then executes
+     * bulk delete/move operations instead of recursive per-item queries.
      *
      * @param \App\Utility\UserAccessControl $uac The current user.
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @return void
-     * @throws \Exception
      */
-    private function deleteFolderChildrenOrMoveToRoot(UserAccessControl $uac, Folder $folder): void
-    {
-        /** @var array<\Passbolt\Folders\Model\Entity\FoldersRelation> $children */
-        $children = $this->foldersRelationsTable->findByFolderParentId($folder->id);
-
-        foreach ($children as $folderRelation) {
-            $this->deleteFolderChildOrMoveToRoot(
-                $uac,
-                $folderRelation->foreign_model,
-                $folderRelation->foreign_id,
-                $folder->id
-            );
-        }
-    }
-
-    /**
-     * Delete a folder child if possible, otherwise move it to the root.
-     *
-     * @param \App\Utility\UserAccessControl $uac The operator
-     * @param string $foreignModel The type of child
-     * @param string $foreignId The child identifier
-     * @param string $folderParentId The parent folder identifier
-     * @return void
-     * @throws \Exception
-     */
-    private function deleteFolderChildOrMoveToRoot(
-        UserAccessControl $uac,
-        string $foreignModel,
-        string $foreignId,
-        string $folderParentId
-    ): void {
-        $canDelete = $this->checkUserCanDelete($uac, $foreignModel, $foreignId);
-        if ($canDelete) {
-            switch ($foreignModel) {
-                case FoldersRelation::FOREIGN_MODEL_FOLDER:
-                    $folder = $this->getFolder($foreignId);
-                    $this->deleteFolder($uac, $folder, true);
-                    break;
-                case FoldersRelation::FOREIGN_MODEL_RESOURCE:
-                    $this->deleteResource($uac, $foreignId);
-                    break;
-            }
-        } else {
-            $this->foldersRelationsTable->moveItemFrom($foreignId, [$folderParentId], null);
-        }
-    }
-
-    /**
-     * Delete a child resource
-     *
-     * @param \App\Utility\UserAccessControl $uac The current user.
-     * @param string $resourceId The resource to delete
-     * @return void
-     */
-    private function deleteResource(UserAccessControl $uac, string $resourceId): void
+    private function deleteFolderContentCascade(UserAccessControl $uac, Folder $folder): void
     {
         $userId = $uac->getId();
-        $canDelete = $this->userHasPermissionService
-            ->check(PermissionsTable::RESOURCE_ACO, $resourceId, $userId, Permission::UPDATE);
-        if (!$canDelete) {
-            throw new ForbiddenException(__('You cannot delete this resource'));
+        $deletableFolderIds = [];
+        $deletableResourceIds = [];
+        $nonDeletableItemIds = [];
+        $seenItemIds = [];
+        $currentFolderIds = [$folder->id];
+
+        // Phase 1: BFS collection — traverse the tree level by level.
+        while (!empty($currentFolderIds)) {
+            $children = $this->foldersRelationsTable->find()
+                ->select(['foreign_model', 'foreign_id'])
+                ->where(['folder_parent_id IN' => $currentFolderIds])
+                ->distinct(['foreign_model', 'foreign_id'])
+                ->disableHydration()
+                ->all()
+                ->toArray();
+
+            if (empty($children)) {
+                break;
+            }
+
+            $childFolderIds = [];
+            $childResourceIds = [];
+            foreach ($children as $child) {
+                $foreignId = $child['foreign_id'];
+                if (isset($seenItemIds[$foreignId])) {
+                    continue;
+                }
+                $seenItemIds[$foreignId] = true;
+
+                if ($child['foreign_model'] === FoldersRelation::FOREIGN_MODEL_FOLDER) {
+                    $childFolderIds[] = $foreignId;
+                } else {
+                    $childResourceIds[] = $foreignId;
+                }
+            }
+
+            $allChildIds = array_merge($childFolderIds, $childResourceIds);
+            if (empty($allChildIds)) {
+                break;
+            }
+
+            $deletableItemIds = array_flip($this->batchCheckDeletable($userId, $allChildIds));
+
+            $nextLevelFolderIds = [];
+            foreach ($childFolderIds as $folderId) {
+                if (isset($deletableItemIds[$folderId])) {
+                    $deletableFolderIds[] = $folderId;
+                    $nextLevelFolderIds[] = $folderId;
+                } else {
+                    $nonDeletableItemIds[] = $folderId;
+                }
+            }
+
+            foreach ($childResourceIds as $resourceId) {
+                if (isset($deletableItemIds[$resourceId])) {
+                    $deletableResourceIds[] = $resourceId;
+                } else {
+                    $nonDeletableItemIds[] = $resourceId;
+                }
+            }
+
+            $currentFolderIds = $nextLevelFolderIds;
         }
 
-        $resource = $this->resourcesTable->get($resourceId);
-        // The soft delete function will trigger an event that once caught will remove the resource from the users
-        // folders trees.
-        $this->resourcesTable->softDelete($uac->getId(), $resource);
+        // Phase 2: Batch execution.
+
+        // Move non-deletable items from deleted folders to root.
+        if (!empty($nonDeletableItemIds)) {
+            $allDeletedFolderIds = array_merge([$folder->id], $deletableFolderIds);
+            $this->foldersRelationsTable->updateAll(
+                ['folder_parent_id' => null],
+                [
+                    'foreign_id IN' => $nonDeletableItemIds,
+                    'folder_parent_id IN' => $allDeletedFolderIds,
+                ]
+            );
+        }
+
+        // Soft-delete resources individually to preserve afterSoftDelete event chain
+        // which cleans up each resource's folder relations.
+        if (!empty($deletableResourceIds)) {
+            $resources = $this->resourcesTable->find()
+                ->select(['Resources.id', 'Resources.resource_type_id', 'ResourceTypes.id', 'ResourceTypes.deleted'])
+                ->contain(['ResourceTypes'])
+                ->where(['Resources.id IN' => $deletableResourceIds])
+                ->all();
+            foreach ($resources as $resource) {
+                // Cost here is massive:
+                // 1 UPDATE (soft-delete the resource),
+                // 4 DELETE queries (secrets, secret_revisions, permissions, favorites)
+                // 1 event dispatch triggering ResourcesAfterSoftDeleteService::afterSoftDelete()
+                // That's 6 queries per resource. For 100 resources, this is 600 queries inside the transaction.
+                $this->resourcesTable->softDelete($userId, $resource, checkPermission: false);
+            }
+        }
+
+        // Bulk delete descendant folders, their relations, and permissions.
+        if (!empty($deletableFolderIds)) {
+            $this->foldersRelationsTable->deleteAll(['foreign_id IN' => $deletableFolderIds]);
+            $this->permissionsTable->deleteAll(['aco_foreign_key IN' => $deletableFolderIds]);
+            $this->foldersTable->deleteAll(['id IN' => $deletableFolderIds]);
+        }
+    }
+
+    /**
+     * Batch check which items the user can delete (has UPDATE or higher permission).
+     *
+     * Uses the same permission resolution pattern as PermissionsFindersTrait::findAllByAro(),
+     * checking both direct user permissions and inherited group permissions.
+     *
+     * @param string $userId The user identifier.
+     * @param array<string> $itemIds The item IDs to check permissions for.
+     * @return array<string> The subset of item IDs the user can delete.
+     */
+    private function batchCheckDeletable(string $userId, array $itemIds): array
+    {
+        if (empty($itemIds)) {
+            return [];
+        }
+
+        // Subquery: user's group IDs + user ID (mirrors findAllByAro pattern).
+        $aroForeignKeys = $this->permissionsTable->Groups->GroupsUsers->find()
+            ->select('group_id')
+            ->where(['user_id' => $userId])
+            ->epilog('UNION SELECT :aroForeignKey')
+            ->bind(':aroForeignKey', $userId);
+
+        return $this->permissionsTable
+            ->find()
+            ->select(['aco_foreign_key'])
+            ->distinct('aco_foreign_key')
+            ->where([
+                'aro_foreign_key IN' => $aroForeignKeys,
+                'aco_foreign_key IN' => $itemIds,
+                'type >=' => Permission::UPDATE,
+            ])
+            ->disableHydration()
+            ->all()
+            ->extract('aco_foreign_key')
+            ->toArray();
     }
 
     /**

@@ -18,8 +18,8 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Test\TestCase\Controller;
 
 use App\Model\Entity\OrganizationSetting;
-use App\Model\Entity\Role;
 use App\Test\Factory\OrganizationSettingFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
@@ -40,11 +40,6 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
 {
     use UserAccessControlTrait;
 
-    public array $fixtures = [
-        'app.Base/Users',
-        'app.Base/Roles',
-    ];
-
     public function setUp(): void
     {
         parent::setUp();
@@ -61,7 +56,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
     public function testDirectorySync_DirectorySettingsController_ViewEmpty_Success()
     {
         $this->disableDirectoryIntegration();
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->getJson('/directorysync/settings.json?api-version=2');
         $this->assertSuccess();
         $settings = $this->_responseJsonBody;
@@ -77,12 +72,13 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
     public function testDirectorySync_DirectorySettingsController_View_Success()
     {
         // Populate the settings for the test
-        $uac = $this->mockUserAccessControl('admin', Role::ADMIN);
+        $admin = UserFactory::make()->admin()->persist();
+        $uac = $this->makeUac($admin);
         $settings = DirectoryOrgSettingsTest::getDummySettings();
         $directoryOrgSettings = new DirectoryOrgSettings($settings);
         $directoryOrgSettings->save($uac);
 
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->getJson('/directorysync/settings.json?api-version=2');
         $this->assertSuccess();
         $settings = $this->_responseJsonBody;
@@ -99,7 +95,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
      */
     public function testDirectorySync_DirectorySettingsController_View_AccessDenied()
     {
-        $this->authenticateAs('dame');
+        $this->logInAsUser();
         $this->getJson('/directorysync/settings.json?api-version=2');
         $this->assertError(403);
     }
@@ -116,7 +112,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
         $this->assertFalse($directoryOrgSettings->isEnabled());
 
         $formData = LdapConfigurationTestUtility::getDummyFormData();
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->putJson('/directorysync/settings.json?api-version=2', $formData);
         $this->assertSuccess();
 
@@ -149,7 +145,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
         $formData = LdapConfigurationTestUtility::getDummyFormData();
         $formData['domains']['org_domain']['username'] = '';
         $formData['domains']['org_domain']['password'] = '';
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->putJson('/directorysync/settings.json?api-version=2', $formData);
         $this->assertSuccess();
 
@@ -177,7 +173,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
     {
         $formData = LdapConfigurationTestUtility::getDummyFormData();
         $formData['domains']['org_domain']['domain_name'] = '';
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->putJson('/directorysync/settings.json?api-version=2', $formData);
         $this->assertError(400);
         $errors = $this->getResponseBodyAsArray();
@@ -192,7 +188,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
      */
     public function testDirectorySync_DirectorySettingsController_Update_AccessDenied()
     {
-        $this->authenticateAs('dame');
+        $this->logInAsUser();
         $this->putJson('/directorysync/settings.json?api-version=2', []);
         $this->assertError(403);
     }
@@ -222,7 +218,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
      */
     public function testDirectorySync_DirectorySettingsController_Disable_Success()
     {
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
 
         // Enable the directory integration
         $formData = LdapConfigurationTestUtility::getDummyFormData();
@@ -247,7 +243,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
      */
     public function testDirectorySync_DirectorySettingsController_Disable_AccessDenied()
     {
-        $this->authenticateAs('dame');
+        $this->logInAsUser();
         $this->deleteJson('/directorysync/settings.json?api-version=2');
         $this->assertError(403);
     }
@@ -262,7 +258,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
     {
         $formData = LdapConfigurationTestUtility::getDummyFormData();
         $formData['domains']['org_domain']['domain_name'] = '';
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->postJson('/directorysync/settings/test.json?api-version=2', $formData);
         $this->assertError(400);
         $errors = $this->getResponseBodyAsArray();
@@ -281,7 +277,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
         $this->assertFalse($directoryOrgSettings->isEnabled());
 
         $formData = LdapConfigurationTestUtility::getDummyFormData();
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->postJson('/directorysync/settings/test.json?api-version=2', $formData);
         $this->assertSuccess();
         $this->assertTrue(isset($this->_responseJsonBody->users));

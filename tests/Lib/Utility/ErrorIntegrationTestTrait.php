@@ -90,7 +90,7 @@ trait ErrorIntegrationTestTrait
     }
 
     /**
-     * Asserts that the json response is relative to a forbidden error.
+     * Asserts that the json response is relative to a not found error.
      *
      * @param string $msg
      * @return void

@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Utility;
 
-use App\Model\Entity\Role;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use Cake\ORM\TableRegistry;
@@ -27,11 +27,6 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 class DirectoryOrgSettingsTest extends AppTestCase
 {
     use UserAccessControlTrait;
-
-    public array $fixtures = [
-        'app.Base/Users',
-        'app.Base/Roles',
-    ];
 
     /**
      * Get dummy test settings data
@@ -112,7 +107,8 @@ class DirectoryOrgSettingsTest extends AppTestCase
      */
     public function testDirectoryOrgSettings_SaveSuccess()
     {
-        $uac = $this->mockUserAccessControl('admin', Role::ADMIN);
+        $admin = UserFactory::make()->admin()->persist();
+        $uac = $this->makeUac($admin);
         $settings = self::getDummySettings(true);
         $directoryOrgSettings = new DirectoryOrgSettings($settings);
         $directoryOrgSettings->save($uac);
@@ -132,7 +128,8 @@ class DirectoryOrgSettingsTest extends AppTestCase
      */
     public function testDirectoryOrgSettings_SaveAndGetSuccess()
     {
-        $uac = $this->mockUserAccessControl('admin', Role::ADMIN);
+        $admin = UserFactory::make()->admin()->persist();
+        $uac = $this->makeUac($admin);
         $settings = self::getDummySettings();
         $directoryOrgSettings = new DirectoryOrgSettings($settings);
         $directoryOrgSettings->save($uac);

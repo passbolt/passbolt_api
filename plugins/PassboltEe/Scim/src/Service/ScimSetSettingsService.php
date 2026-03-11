@@ -18,6 +18,7 @@ namespace Passbolt\Scim\Service;
 
 use App\Error\Exception\FormValidationException;
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
@@ -103,6 +104,36 @@ class ScimSetSettingsService extends ScimBaseSettingsService
     }
 
     /**
+     * Rehash a SCIM bearer token from legacy SHA-256 to bcrypt.
+     *
+     * Called transparently during authentication when a legacy token
+     * format is detected. This ensures all tokens converge to bcrypt
+     * over time without requiring admin intervention.
+     *
+     * @param string $rawToken The plaintext bearer token.
+     * @return void
+     */
+    public function rehashToken(string $rawToken): void
+    {
+        /** @var \Passbolt\Scim\Model\Table\ScimSettingsTable $scimSettingsTable */
+        $scimSettingsTable = $this->fetchTable('Passbolt/Scim.ScimSettings');
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting|null $settings */
+        $settings = $scimSettingsTable->find()->first();
+        if (!$settings) {
+            return;
+        }
+
+        /** @var int $cost */
+        $cost = Configure::read('passbolt.plugins.scim.security.secretToken.cost', 12);
+
+        $scimConfig = $this->decryptSettings($settings);
+        $scimConfig['secret_token'] = password_hash($rawToken, PASSWORD_BCRYPT, ['cost' => $cost]);
+
+        $settings->set('value', $this->encryptSettings($scimConfig));
+        $scimSettingsTable->save($settings);
+    }
+
+    /**
      * Generate crypto-secure token for authentication
      *
      * @return string
@@ -110,9 +141,12 @@ class ScimSetSettingsService extends ScimBaseSettingsService
      */
     public static function generateToken(): string
     {
-        $prefix = self::SCIM_SECRET_TOKEN_PREFIX;
-        $token = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(random_bytes(3600)));
+        // Generate 256-bit entropy token
+        $bin = random_bytes(32);
+        // Base64 gives exact 43 characters (cutting "==" from last)
+        $token = rtrim(strtr(base64_encode($bin), '+/', '-_'), '=');
 
-        return $prefix . substr($token, mt_rand(0, strlen($token) - 43), 43);
+        // Including prefix total length becomes 46
+        return self::SCIM_SECRET_TOKEN_PREFIX . $token;
     }
 }

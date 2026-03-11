@@ -83,9 +83,9 @@ class ResourceFactory extends CakephpBaseFactory
      *
      * @param array $aros Array of users or groups to create a permission for
      * @param mixed $permissionsType (Optional) The permission type, default OWNER
-     * @return ResourceFactory
+     * @return static
      */
-    public function withPermissionsFor(array $aros, $permissionsType = Permission::OWNER): ResourceFactory
+    public function withPermissionsFor(array $aros, $permissionsType = Permission::OWNER): static
     {
         foreach ($aros as $aro) {
             $aroType = $aro instanceof User ? PermissionsTable::USER_ARO : PermissionsTable::GROUP_ARO;
@@ -100,9 +100,9 @@ class ResourceFactory extends CakephpBaseFactory
      * Define the secrets for the given users
      *
      * @param array $users Array of users to create a secret for
-     * @return ResourceFactory
+     * @return static
      */
-    public function withSecretsFor(array $users): ResourceFactory
+    public function withSecretsFor(array $users): static
     {
         foreach ($users as $user) {
             if ($user instanceof User) {
