@@ -22,10 +22,12 @@ use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
 use Authentication\Authenticator\Result;
+use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
+use Cake\Http\Exception\HttpException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 
@@ -72,18 +74,39 @@ class AuthLoginController extends AppController
     }
 
     /**
+     * Maximum failed login attempts before rate-limiting kicks in.
+     */
+    private const LOGIN_MAX_ATTEMPTS = 10;
+
+    /**
+     * Sliding window duration in seconds for failed attempt tracking.
+     */
+    private const LOGIN_ATTEMPT_WINDOW = 300;
+
+    /**
      * User login post action
      *
      * @return void
+     * @throws \Cake\Http\Exception\HttpException when the client has exceeded the login attempt limit
      */
     public function loginPost()
     {
         $this->assertJson();
 
+        $ip = (string)$this->request->clientIp();
+        $cacheKey = 'auth_fail_' . sha1($ip);
+
+        $attempts = (int)Cache::read($cacheKey);
+        if ($attempts >= self::LOGIN_MAX_ATTEMPTS) {
+            throw new HttpException(__('Too many failed login attempts. Please try again later.'), 429);
+        }
+
         // Custom X-GpgAuth-* http headers are stored in $result->getErrors
         // They are translated into actual http headers as part of GpgAuthHeadersMiddleware::process
         $result = $this->Authentication->getResult();
         if ($result->isValid()) {
+            Cache::delete($cacheKey);
+
             /** @var \App\Authenticator\GpgAuthenticator $authenticator */
             $authenticator = $this->Authentication->getAuthenticationService()->getAuthenticationProvider();
             $user = $authenticator->getUser();
@@ -105,9 +128,11 @@ class AuthLoginController extends AppController
                     $this->error($message, null, 200);
                     break;
                 case Result::FAILURE_IDENTITY_NOT_FOUND:
+                    Cache::write($cacheKey, $attempts + 1, self::LOGIN_ATTEMPT_WINDOW);
                     $this->error($message);
                     break;
                 case Result::FAILURE_CREDENTIALS_INVALID:
+                    Cache::write($cacheKey, $attempts + 1, self::LOGIN_ATTEMPT_WINDOW);
                     $this->error($message);
                     break;
                 case Result::FAILURE_OTHER:
