@@ -2,7 +2,7 @@
 return [
     'passbolt' => [
         'version' => '5.10.0',
-        'name' => 'TBD',
+        'name' => "You've Got the Love",
     ],
     'php' => [
         'minVersion' => '8.2',
