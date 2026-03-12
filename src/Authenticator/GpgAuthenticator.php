@@ -461,7 +461,7 @@ class GpgAuthenticator extends SessionAuthenticator
         if ($version != 'gpgauthv1.3.0') {
             return $this->_error($errorMsg . __('wrong version number.'));
         }
-        if ($version != Validation::uuid($uuid)) {
+        if (!Validation::uuid($uuid)) {
             return $this->_error($errorMsg . __('it is not a UUID.'));
         }
         if ($length != 36) {
