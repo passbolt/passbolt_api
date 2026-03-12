@@ -1389,9 +1389,6 @@
       <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryRelation>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
       <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryRelation>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
     </ImplementedReturnTypeMismatch>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryRelation newEmptyEntity()]]></code>
-    </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/PassboltEe/DirectorySync/src/Model/Table/DirectoryReportsItemsTable.php">
     <ImplementedReturnTypeMismatch>
