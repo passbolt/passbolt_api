@@ -430,7 +430,7 @@ class UserScimResource implements ScimResourceInterface
             'foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
             'foreign_key' => $user->id,
         ]);
-        if (!$this->ScimEntries->save($scimEntry)) {
+        if (!$this->ScimEntries->save($scimEntry, ['lockForUpdate' => true])) {
             Log::error('Unable to save the scim entity');
             Log::error(print_r($this->$scimEntry, return: true));
 
@@ -777,7 +777,12 @@ class UserScimResource implements ScimResourceInterface
                             'scim_name' => true,
                         ],
                     ]);
-                    if (!$this->Users->ScimEntries->save($scimEntry, ['atomic' => false])) {
+                    if (
+                        !$this->Users->ScimEntries->save($scimEntry, [
+                        'atomic' => false,
+                        'lockForUpdate' => true,
+                        ])
+                    ) {
                         ScimLog::error('Unable to update the scim entry from the request data');
                         ScimLog::error(print_r($requestData, return: true));
                         ScimLog::error(print_r($scimEntry, return: true));
