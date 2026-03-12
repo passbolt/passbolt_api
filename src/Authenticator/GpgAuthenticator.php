@@ -27,6 +27,7 @@ use Authentication\Authenticator\SessionAuthenticator;
 use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\Log\Log;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
@@ -342,9 +343,12 @@ class GpgAuthenticator extends SessionAuthenticator
                 $this->_gpg->importServerKeyInKeyring();
                 $this->_gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
             } catch (Exception $exception) {
-                $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
-                $msg .= $exception->getMessage();
-                throw new InternalErrorException($msg, 500, $exception);
+                Log::error('GpgAuthenticator: ' . $exception->getMessage());
+                throw new InternalErrorException(
+                    __('The OpenPGP server key defined in the config cannot be used to decrypt.'),
+                    500,
+                    $exception
+                );
             }
         }
     }
