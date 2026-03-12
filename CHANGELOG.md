@@ -14,14 +14,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-48208 POST /mfa/verify/yubikey should not trigger 500
 - PB-43183 Improve folders cascade delete performance by refactoring code using iterative BFS and batch operations
 - PB-49323 As a user creating a resource, I should not get a 500 if the secret passed is not an array of secrets
-- [PRO] PB-47973 As an administrator I can synchronize with active directory longer entries in order to support 2 or more bytes alphabets
-- [PRO] PB-49152 PBL-15-004 WP1: Fixes unsalted SHA256 hashing of bearer tokens in SCIM
-- [PRO] PB-49148 PBL-15-002 WP3: Fixes suboptimal token generation randomness of SCIM bearer token
-- [PRO] PB-49153 PBL-15-005 WP2: Fixes race condition in SCIM user creation endpoint
-- [PRO] PB-49158 PBL-15-010 WP4: Fixes directory entry foreign key race condition
+- PB-47973 As an administrator I can synchronize with active directory longer entries in order to support 2 or more bytes alphabets
+- PB-49152 PBL-15-004 WP1: Fixes unsalted SHA256 hashing of bearer tokens in SCIM
+- PB-49148 PBL-15-002 WP3: Fixes suboptimal token generation randomness of SCIM bearer token
+- PB-49153 PBL-15-005 WP2: Fixes race condition in SCIM user creation endpoint
+- PB-49158 PBL-15-010 WP4: Fixes directory entry foreign key race condition
 
 ### Security
-- [PRO] PB-49154 PBL-15-006 WP2: Disable user enumeration via error messages on SCIM user creation endpoint
+- PB-49154 PBL-15-006 WP2: Disable user enumeration via error messages on SCIM user creation endpoint
 
 ### Maintenance
 - PB-48556 Fixes CVE-2026-25129 security vulnerability advisory for psy/psysh package
