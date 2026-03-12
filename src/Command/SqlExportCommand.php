@@ -179,7 +179,7 @@ class SqlExportCommand extends PassboltCommand
         if (!empty($config['password'])) {
             $cmd .= ' -p' . escapeshellarg($config['password']);
         }
-        $cmd .= ' ' . escapeshellarg($config['database']) . ' > ' . $dir . $file;
+        $cmd .= ' ' . escapeshellarg($config['database']) . ' > ' . escapeshellarg($dir . $file);
         exec($cmd, $output, $status);
 
         return $status;
@@ -200,7 +200,7 @@ class SqlExportCommand extends PassboltCommand
         if (!empty($config['password'])) {
             $cmd .= ' -p' . escapeshellarg($config['password']);
         }
-        $cmd .= ' ' . escapeshellarg($config['database']) . ' > ' . $dir . $file;
+        $cmd .= ' ' . escapeshellarg($config['database']) . ' > ' . escapeshellarg($dir . $file);
         exec($cmd, $output, $status);
 
         return $status;
@@ -219,7 +219,7 @@ class SqlExportCommand extends PassboltCommand
         // Build the dump command.
         $cmd = 'PGPASSWORD=' . escapeshellarg($config['password']) . ' pg_dump -h ' . escapeshellarg($config['host']);
         $cmd .= ' -U ' . escapeshellarg($config['username']);
-        $cmd .= ' -d ' . escapeshellarg($config['database']) . ' > ' . $dir . $file;
+        $cmd .= ' -d ' . escapeshellarg($config['database']) . ' > ' . escapeshellarg($dir . $file);
         exec($cmd, $output, $status);
 
         return $status;
