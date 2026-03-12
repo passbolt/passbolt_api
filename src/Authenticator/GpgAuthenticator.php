@@ -451,20 +451,20 @@ class GpgAuthenticator extends SessionAuthenticator
 
         $result = explode('|', $nonce);
         $errorMsg = __('Invalid verify token format, ');
-        if (count($result) != 4) {
+        if (count($result) !== 4) {
             return $this->_error($errorMsg . __('sections are missing or using wrong delimiters.'));
         }
         [$version, $length, $uuid, $version2] = $result;
-        if ($version != $version2) {
+        if ($version !== $version2) {
             return $this->_error($errorMsg . __('the version numbers do not match.'));
         }
-        if ($version != 'gpgauthv1.3.0') {
+        if ($version !== 'gpgauthv1.3.0') {
             return $this->_error($errorMsg . __('wrong version number.'));
         }
-        if ($version != Validation::uuid($uuid)) {
+        if (!Validation::uuid($uuid)) {
             return $this->_error($errorMsg . __('it is not a UUID.'));
         }
-        if ($length != 36) {
+        if ($length !== '36') {
             return $this->_error($errorMsg . __('wrong token data length.'));
         }
 
