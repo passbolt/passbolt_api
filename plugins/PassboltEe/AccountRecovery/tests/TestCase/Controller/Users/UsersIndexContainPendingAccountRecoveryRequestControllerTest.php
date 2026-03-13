@@ -34,6 +34,13 @@ class UsersIndexContainPendingAccountRecoveryRequestControllerTest extends Accou
         RoleFactory::make()->guest()->persist();
     }
 
+    public function testUsersIndexGetSuccess_ContainPendingAccountRecoveryRequest_As_Guest()
+    {
+        ### Login as guest
+        $this->getJson('/users.json?contain[pending_account_recovery_request]=1');
+        $this->assertAuthenticationError();
+    }
+
     public function testUsersIndexGetSuccess_ContainPendingAccountRecoveryRequest_As_User()
     {
         ### Login as non admin
