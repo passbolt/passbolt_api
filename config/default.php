@@ -1,4 +1,9 @@
 <?php
+// =================================================================
+// ⚠ WARNING
+// This file is patched while building official packages.
+// If you do any changes make sure to notify the SRE/packaging team.
+// =================================================================
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)

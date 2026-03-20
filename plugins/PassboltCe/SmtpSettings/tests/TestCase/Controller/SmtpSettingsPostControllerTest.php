@@ -18,10 +18,14 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Cake\Utility\Text;
 use Passbolt\SmtpSettings\SmtpSettingsPlugin;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
+/**
+ * @covers \Passbolt\SmtpSettings\Controller\SmtpSettingsPostController
+ */
 class SmtpSettingsPostControllerTest extends AppIntegrationTestCase
 {
     use SmtpSettingsTestTrait;
@@ -99,5 +103,66 @@ class SmtpSettingsPostControllerTest extends AppIntegrationTestCase
         $this->assertForbiddenError('SMTP settings endpoints disabled.');
 
         $this->enableSmtpSettingsEndpoints();
+    }
+
+    public function testSmtpSettingsPostController_Success_NoAuthenticationMethodField(): void
+    {
+        $this->gpgSetup();
+        $data = $this->getSmtpSettingsData(); // No authentication_method key
+
+        $this->logInAsAdmin();
+        $this->postJson('/smtp/settings.json', $data);
+
+        $this->assertSuccess();
+        $this->assertSame(1, SmtpSettingFactory::count());
+    }
+
+    public function testSmtpSettingsPostController_Success_WithOauth2Fields(): void
+    {
+        $this->gpgSetup();
+        $data = $this->getSmtpSettingsData();
+        $data = array_merge($data, [
+            'authentication_method' => 'oauth2_client_credentials',
+            'tenant_id' => Text::uuid(),
+            'client_id' => Text::uuid(),
+            'client_secret' => 'my-client-secret',
+            'oauth_username' => 'user@example.com',
+            // other non-oauth2 specific fields set to null
+            'username' => null,
+            'password' => null,
+        ]);
+
+        $this->logInAsAdmin();
+        $this->postJson('/smtp/settings.json', $data);
+
+        $this->assertSuccess();
+        $this->assertSame(1, SmtpSettingFactory::count());
+        // assert response
+        $response = $this->getResponseBodyAsArray();
+        $this->assertSame($data['tenant_id'], $response['tenant_id']);
+        $this->assertSame($data['client_id'], $response['client_id']);
+        $this->assertSame($data['client_secret'], $response['client_secret']);
+        $this->assertSame($data['oauth_username'], $response['oauth_username']);
+        // username and password should be null in OAuth2 mode
+        $this->assertNull($response['username']);
+        $this->assertNull($response['password']);
+    }
+
+    public function testSmtpSettingsPostController_Oauth2_MissingRequiredField(): void
+    {
+        $this->gpgSetup();
+        $data = $this->getSmtpSettingsData();
+        $data = array_merge($data, [
+            'authentication_method' => 'oauth2_client_credentials',
+            // tenant_id is missing
+            'client_id' => Text::uuid(),
+            'client_secret' => 'my-client-secret',
+            'oauth_username' => 'user@example.com',
+        ]);
+
+        $this->logInAsAdmin();
+        $this->postJson('/smtp/settings.json', $data);
+
+        $this->assertBadRequestError('Could not validate the smtp settings.');
     }
 }

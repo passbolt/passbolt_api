@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Setup;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\ORM\TableRegistry;
@@ -28,11 +29,6 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
     use SelfRegistrationTestTrait;
-
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions', 'app.Base/Favorites',
-        'app.Base/Gpgkeys',
-    ];
 
     public function setUp(): void
     {
@@ -58,6 +54,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
      */
     public function testAPCanRegisterAndRecoverAndReachSetup()
     {
+        RoleFactory::make()->user()->persist();
         $this->setSelfRegistrationSettingsData();
         // Register using signup form
         $email = 'integration@passbolt.com';

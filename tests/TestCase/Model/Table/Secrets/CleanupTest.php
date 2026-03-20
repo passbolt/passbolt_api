@@ -17,7 +17,9 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Secrets;
 
+use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\CleanupTrait;
 use App\Utility\UuidFactory;
@@ -26,34 +28,12 @@ class CleanupTest extends AppTestCase
 {
     use CleanupTrait;
 
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Permissions',
-        'app.Base/Resources', 'app.Base/Secrets',
-    ];
-    public $options;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->options = ['accessibleFields' => [
-           'resource_id' => true,
-           'user_id' => true,
-           'data' => true,
-        ]];
-    }
-
-    public function tearDown(): void
-    {
-        unset($this->Secrets);
-        parent::tearDown();
-    }
-
     public function testCleanupSecretsSoftDeletedResourcesSuccess()
     {
         $originalCount = SecretFactory::count();
-        SecretFactory::make(self::getDummySecretData([
-            'resource_id' => UuidFactory::uuid('resource.id.jquery'),
-            'user_id' => UuidFactory::uuid('user.id.ada')]))
+        $softDeletedResource = ResourceFactory::make()->setDeleted()->persist();
+        $user = UserFactory::make()->persist();
+        SecretFactory::make(['resource_id' => $softDeletedResource->id, 'user_id' => $user->id])
             ->withSecretRevision()
             ->persist();
 
@@ -63,9 +43,10 @@ class CleanupTest extends AppTestCase
     public function testCleanupSecretsHardDeletedResourcesSuccess()
     {
         $originalCount = SecretFactory::count();
-        SecretFactory::make(self::getDummySecretData([
-            'resource_id' => UuidFactory::uuid('resource.id.nope'),
-            'user_id' => UuidFactory::uuid('user.id.ada')]))
+        $user = UserFactory::make()->persist();
+        // Resource hard deleted therefore does not exist and we use random uuid
+        SecretFactory::make([
+            'resource_id' => UuidFactory::uuid('resource.id.nope'), 'user_id' => $user->id])
             ->withSecretRevision()
             ->persist();
         $this->runCleanupChecks('Secrets', 'cleanupHardDeletedResources', $originalCount);
@@ -74,9 +55,9 @@ class CleanupTest extends AppTestCase
     public function testCleanupSecretsSoftDeletedUsersSuccess()
     {
         $originalCount = SecretFactory::count();
-        SecretFactory::make(self::getDummySecretData([
-            'resource_id' => UuidFactory::uuid('resource.id.jquery'),
-            'user_id' => UuidFactory::uuid('user.id.sofia')]))
+        $resource = ResourceFactory::make()->persist();
+        $softDeletedUser = UserFactory::make()->deleted()->persist();
+        SecretFactory::make(['resource_id' => $resource->id, 'user_id' => $softDeletedUser->id])
             ->withSecretRevision()
             ->persist();
         $this->runCleanupChecks('Secrets', 'cleanupSoftDeletedUsers', $originalCount);
@@ -85,9 +66,9 @@ class CleanupTest extends AppTestCase
     public function testCleanupSecretsHardDeletedUsersSuccess()
     {
         $originalCount = SecretFactory::count();
-        SecretFactory::make(self::getDummySecretData([
-            'resource_id' => UuidFactory::uuid('resource.id.jquery'),
-            'user_id' => UuidFactory::uuid('user.id.nope')]))
+        $resource = ResourceFactory::make()->persist();
+        SecretFactory::make([
+            'resource_id' => $resource->id, 'user_id' => UuidFactory::uuid('user.id.nope')])
             ->withSecretRevision()
             ->persist();
         $this->runCleanupChecks('Secrets', 'cleanupHardDeletedUsers', $originalCount);
@@ -96,9 +77,9 @@ class CleanupTest extends AppTestCase
     public function testCleanupSecretsHardDeletedPermissionsSuccess()
     {
         $originalCount = SecretFactory::count();
-        SecretFactory::make(self::getDummySecretData([
-            'resource_id' => UuidFactory::uuid('resource.id.apache'),
-            'user_id' => UuidFactory::uuid('user.id.frances')]))
+        $resource = ResourceFactory::make()->persist();
+        $user = UserFactory::make()->persist();
+        SecretFactory::make(['resource_id' => $resource->id, 'user_id' => $user->id])
             ->withSecretRevision()
             ->persist();
         $this->runCleanupChecks('Secrets', 'cleanupHardDeletedPermissions', $originalCount);

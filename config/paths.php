@@ -1,4 +1,9 @@
 <?php
+// =================================================================
+// ⚠ WARNING
+// This file is patched while building official packages.
+// If you do any changes make sure to notify the SRE/packaging team.
+// =================================================================
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
