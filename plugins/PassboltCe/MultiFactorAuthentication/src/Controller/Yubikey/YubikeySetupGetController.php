@@ -48,15 +48,6 @@ class YubikeySetupGetController extends MfaSetupController
      */
     protected function _handleGetNewSettings(MfaFormInterface $setupForm)
     {
-        if (!$this->request->is('json')) {
-            $this->set('yubikeySetupForm', $setupForm);
-            $this->set('theme', $this->User->theme());
-            $this->viewBuilder()
-                ->setLayout('mfa_setup')
-                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_YUBIKEY))
-                ->setTemplate('setupForm');
-        } else {
-            $this->success(__('Please setup the Yubikey settings.'));
-        }
+        $this->success(__('Please setup the Yubikey settings.'));
     }
 }

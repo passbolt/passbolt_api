@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 
 use App\Authenticator\SessionIdentificationServiceInterface;
-use App\Error\Exception\CustomValidationException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
@@ -44,26 +43,7 @@ class YubikeyVerifyPostController extends MfaVerifyController
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_YUBIKEY);
 
         // Verify hotp
-        try {
-            $verifyForm->execute($this->request->getData());
-        } catch (CustomValidationException $exception) {
-            $this->request = $this->request
-                ->withData('hotp', '');
-
-            if ($this->request->is('json')) {
-                throw $exception;
-            }
-            // Display form with error msg
-            $this->set('providers', $this->mfaSettings->getEnabledProviders());
-            $this->set('verifyForm', $verifyForm);
-            $this->set('isRememberMeForAMonthEnabled', $rememberMeForAMonthSetting->isEnabled());
-            $this->viewBuilder()
-                ->setLayout('mfa_verify')
-                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_YUBIKEY))
-                ->setTemplate('verifyForm');
-
-            return;
-        }
+        $verifyForm->execute($this->request->getData());
 
         // Build verified proof token and associated cookie and add it to request
         $this->_generateMfaToken(

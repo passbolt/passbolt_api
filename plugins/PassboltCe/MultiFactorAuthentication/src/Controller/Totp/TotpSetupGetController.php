@@ -64,13 +64,6 @@ class TotpSetupGetController extends MfaSetupController
      */
     protected function _handleGetStart()
     {
-        if (!$this->request->is('json')) {
-            $this->set('theme', $this->User->theme());
-            $this->viewBuilder()
-                ->setLayout('mfa_setup')
-                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_TOTP))
-                ->setTemplate('setupStart');
-        }
         $this->success(__('Please setup the TOTP application.'));
     }
 
@@ -88,22 +81,10 @@ class TotpSetupGetController extends MfaSetupController
         $uri = MfaOtpFactory::generateTOTP($uac);
         $qrCode = MfaOtpFactory::getQrCodeInlineSvg($uri);
 
-        if (!$this->request->is('json')) {
-            $this->set('totpSetupForm', $totpSetupForm);
-            $this->set('theme', $this->User->theme());
-            $this->request = $this->request
-                ->withData('otpQrCodeSvg', $qrCode)
-                ->withData('otpProvisioningUri', $uri);
-            $this->viewBuilder()
-                ->setLayout('mfa_setup')
-                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_TOTP))
-                ->setTemplate('setupForm');
-        } else {
-            $data = [
-                'otpQrCodeSvg' => $qrCode,
-                'otpProvisioningUri' => $uri,
-            ];
-            $this->success(__('Please setup the TOTP application.'), $data);
-        }
+        $data = [
+            'otpQrCodeSvg' => $qrCode,
+            'otpProvisioningUri' => $uri,
+        ];
+        $this->success(__('Please setup the TOTP application.'), $data);
     }
 }

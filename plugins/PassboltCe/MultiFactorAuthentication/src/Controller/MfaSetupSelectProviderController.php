@@ -35,15 +35,6 @@ class MfaSetupSelectProviderController extends MfaController
             }
         }
 
-        if (!$this->request->is('json')) {
-            $this->set('theme', $this->User->theme());
-            $this->viewBuilder()
-                ->setLayout('mfa_setup')
-                ->setTemplatePath(ucfirst(MfaSettings::MFA))
-                ->setTemplate('select');
-        }
-
-        $this->set(compact('isMfaPossible'));
         $this->success(__('The operation was successful.'), $body);
     }
 }

@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 
 use App\Authenticator\SessionIdentificationServiceInterface;
-use App\Error\Exception\CustomValidationException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -38,22 +37,7 @@ class YubikeySetupPostController extends MfaSetupController
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_YUBIKEY);
         $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_YUBIKEY);
 
-        try {
-            $setupForm->execute($this->request->getData());
-        } catch (CustomValidationException $exception) {
-            if ($this->request->is('json')) {
-                throw $exception;
-            } else {
-                $this->set('yubikeySetupForm', $setupForm);
-                $this->set('theme', $this->User->theme());
-                $this->viewBuilder()
-                    ->setLayout('mfa_setup')
-                    ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_YUBIKEY))
-                    ->setTemplate('setupForm');
-            }
-
-            return;
-        }
+        $setupForm->execute($this->request->getData());
         $this->_handlePostSuccess(MfaSettings::PROVIDER_YUBIKEY, $sessionIdentificationService);
     }
 }

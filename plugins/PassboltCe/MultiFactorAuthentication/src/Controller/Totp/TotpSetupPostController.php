@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 
 use App\Authenticator\SessionIdentificationServiceInterface;
-use App\Error\Exception\CustomValidationException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -38,24 +37,7 @@ class TotpSetupPostController extends MfaSetupController
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
         $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
 
-        try {
-            $totpSetupForm->execute($this->request->getData());
-        } catch (CustomValidationException $exception) {
-            if ($this->request->is('json')) {
-                throw $exception;
-            } else {
-                $this->set('totpSetupForm', $totpSetupForm);
-                $this->set('theme', $this->User->theme());
-                $this->request = $this->request
-                    ->withData('otpQrCodeSvg', $this->request->getData('otpQrCodeSvg'));
-                $this->viewBuilder()
-                    ->setLayout('mfa_setup')
-                    ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_TOTP))
-                    ->setTemplate('setupForm');
-            }
-
-            return;
-        }
+        $totpSetupForm->execute($this->request->getData());
 
         // Build verified proof token and associated cookie and add it to request
         $this->_handlePostSuccess(MfaSettings::PROVIDER_TOTP, $sessionIdentificationService);
