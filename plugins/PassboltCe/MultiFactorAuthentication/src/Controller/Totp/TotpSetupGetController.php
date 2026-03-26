@@ -32,6 +32,7 @@ class TotpSetupGetController extends MfaSetupController
      */
     public function get(MfaFormInterface $setupForm)
     {
+        $this->_assertRequestIsJson();
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
         try {
             $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
@@ -39,32 +40,6 @@ class TotpSetupGetController extends MfaSetupController
         } catch (BadRequestException $exception) {
             $this->_handleGetExistingSettings(MfaSettings::PROVIDER_TOTP);
         }
-    }
-
-    /**
-     * Display start page (with how to diagram)
-     *
-     * @return void
-     */
-    public function start()
-    {
-        $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
-        try {
-            $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
-            $this->_handleGetStart();
-        } catch (BadRequestException $exception) {
-            $this->_handleGetExistingSettings(MfaSettings::PROVIDER_TOTP);
-        }
-    }
-
-    /**
-     * Display start page
-     *
-     * @return void
-     */
-    protected function _handleGetStart()
-    {
-        $this->success(__('Please setup the TOTP application.'));
     }
 
     /**

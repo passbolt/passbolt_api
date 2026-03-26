@@ -53,7 +53,20 @@ class TotpVerifyPostController extends MfaVerifyController
             $verifyForm->execute($this->request->getData());
         } catch (CustomValidationException $exception) {
             $this->_handleMaxFailedAttempts();
-            throw $exception;
+
+            if ($this->request->is('json')) {
+                throw $exception;
+            }
+            // Display form with error msg
+            $this->set('providers', $this->mfaSettings->getEnabledProviders());
+            $this->set('verifyForm', $verifyForm);
+            $this->set('isRememberMeForAMonthEnabled', $rememberMeForAMonthSetting->isEnabled());
+            $this->viewBuilder()
+                ->setLayout('mfa_verify')
+                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_TOTP))
+                ->setTemplate('verifyForm');
+
+            return;
         }
 
         // Build verified proof token and associated cookie and add it to request
@@ -84,6 +97,11 @@ class TotpVerifyPostController extends MfaVerifyController
 
         if (!$isFailedAttemptExceeded) {
             return null;
+        }
+
+        if (!$this->request->is('json')) {
+            // Logout and redirect
+            return $this->redirect($this->Authentication->logout());
         }
 
         if ($isJwtAuth) {

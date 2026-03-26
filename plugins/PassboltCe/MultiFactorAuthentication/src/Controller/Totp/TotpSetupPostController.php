@@ -34,6 +34,7 @@ class TotpSetupPostController extends MfaSetupController
         SessionIdentificationServiceInterface $sessionIdentificationService,
         MfaFormInterface $totpSetupForm
     ) {
+        $this->_assertRequestIsJson();
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
         $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
 

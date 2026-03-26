@@ -43,6 +43,19 @@ class YubikeyVerifyGetController extends MfaVerifyController
         $this->_handleVerifiedNotRequired($sessionIdentificationService);
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_YUBIKEY);
 
-        $this->success(__('Please provide the one-time password.'));
+        // Build and return some URI and QR code to work from
+        // even though they can be set manually in the post as well
+        if (!$this->request->is('json')) {
+            $this->set('providers', $this->mfaSettings->getEnabledProviders());
+            $this->set('verifyForm', $verifyForm);
+            $this->set('theme', $this->User->theme());
+            $this->set('isRememberMeForAMonthEnabled', $rememberMeForAMonthSetting->isEnabled());
+            $this->viewBuilder()
+                ->setLayout('mfa_verify')
+                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_YUBIKEY))
+                ->setTemplate('verifyForm');
+        } else {
+            $this->success(__('Please provide the one-time password.'));
+        }
     }
 }

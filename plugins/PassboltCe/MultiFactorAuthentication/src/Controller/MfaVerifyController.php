@@ -20,6 +20,7 @@ use App\Authenticator\SessionIdentificationServiceInterface;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\I18n\DateTime;
+use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
@@ -48,6 +49,8 @@ abstract class MfaVerifyController extends MfaController
     public function beforeRender(EventInterface $event): void
     {
         parent::beforeRender($event);
+        $redirect = $this->SanitizeUrl->sanitizeRedirect('/mfa/verify');
+        $this->set('redirect', $redirect);
     }
 
     /**
@@ -71,21 +74,31 @@ abstract class MfaVerifyController extends MfaController
 
     /**
      * Trigger an error if current MFA settings do not allow verify for the given provider
+     * Redirect to password workspace if not JSON
      *
-     * @throws \Cake\Http\Exception\BadRequestException if there is no MFA settings for the user or provider
+     * @throws \Cake\Http\Exception\InternalErrorException if there is no MFA settings for the user
+     * @throws \Cake\Http\Exception\BadRequestException if there is no MFA settings for this provider
      * @param string $provider name of the provider
-     * @return void
+     * @return \Cake\Http\Response|void
      */
     protected function _handleInvalidSettings(string $provider)
     {
         if ($this->mfaSettings->getAccountSettings() === null) {
-            throw new BadRequestException(__('No valid multi-factor authentication settings found.'));
+            if ($this->getRequest()->is('json')) {
+                throw new BadRequestException(__('No valid multi-factor authentication settings found.'));
+            } else {
+                return $this->redirect('/');
+            }
         }
         if (!$this->mfaSettings->isProviderEnabled($provider)) {
             // for example a user is trying to force a check on a provider that is not set for the org
-            throw new BadRequestException(
-                __('No valid multi-factor authentication settings found for this provider.')
-            );
+            if ($this->getRequest()->is('json')) {
+                throw new BadRequestException(
+                    __('No valid multi-factor authentication settings found for this provider.')
+                );
+            } else {
+                return $this->redirect('/');
+            }
         }
     }
 
@@ -126,6 +139,12 @@ abstract class MfaVerifyController extends MfaController
      */
     protected function _handleVerifySuccess()
     {
-        $this->success(__('The multi-factor authentication was a success.'));
+        // Success response depends on request type
+        if ($this->request->is('json')) {
+            $this->success(__('The multi-factor authentication was a success.'));
+        } else {
+            $redirect = $this->SanitizeUrl->sanitizeRedirect('/mfa/verify');
+            $this->redirect(Router::url($redirect, true));
+        }
     }
 }
