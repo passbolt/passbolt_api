@@ -21,6 +21,7 @@ use App\Model\Entity\Role;
 use ArrayAccess;
 use Authentication\Identifier\Resolver\ResolverInterface;
 use Cake\Core\Configure;
+use Cake\I18n\Date;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Exception;
@@ -62,6 +63,8 @@ class ScimResolver implements ResolverInterface
             return null;
         }
 
+        $this->warnIfTokenExpired($scimConfig);
+
         // Rehash legacy tokens to bcrypt so they don't stay as unsalted SHA-256 indefinitely.
         // If rehashing fails, auth still succeeds — rehash retries on next request.
         if ($this->needsRehash($storedHash)) {
@@ -78,6 +81,24 @@ class ScimResolver implements ResolverInterface
         return $Users->findIndex(Role::GUEST)->where([
             $Users->aliasField('id') => $scimConfig['scim_user_id'],
         ])->first();
+    }
+
+    /**
+     * Log a warning if the SCIM secret token has expired.
+     *
+     * @param array $scimConfig The decrypted SCIM settings.
+     * @return void
+     */
+    private function warnIfTokenExpired(array $scimConfig): void
+    {
+        $expired = $scimConfig['expired'] ?? null;
+        if ($expired === null) {
+            return;
+        }
+
+        if (Date::now()->greaterThan(new Date($expired))) {
+            Log::warning(__('The SCIM secret token is expired, you are requested to rotate it.'));
+        }
     }
 
     /**
