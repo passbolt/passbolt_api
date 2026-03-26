@@ -22,6 +22,7 @@ use App\Test\Factory\UserFactory;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\I18n\Date;
 use Passbolt\Scim\Middleware\ScimSettingsSecurityMiddleware;
 use Passbolt\Scim\Model\Entity\ScimSetting;
 use Passbolt\Scim\ScimPlugin;
@@ -401,5 +402,107 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
         $newValues = json_decode($gpg->decrypt($this->current->value), associative: true);
 
         $this->assertSame($previousValues['secret_token'], $newValues['secret_token']);
+    }
+
+    public function testScimSetSettingsController_Create_SetsExpiredDate(): void
+    {
+        $this->logInAsAdmin();
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $data = [
+            'setting_id' => UuidFactory::uuid(),
+            'scim_user_id' => $user->id,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+        $this->postJson('/scim/settings.json', $data);
+
+        $this->assertSuccess();
+        $response = $this->_responseJsonBody;
+        $expectedExpired = Date::now()->modify('+1 year')->format('Y-m-d');
+        $this->assertSame($expectedExpired, $response->expired);
+
+        // Verify persisted in encrypted blob
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $settings */
+        $settings = ScimSettingFactory::find()->firstOrFail();
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $values = json_decode($gpg->decrypt($settings->value), associative: true);
+        $this->assertSame($expectedExpired, $values['expired']);
+    }
+
+    public function testScimSetSettingsController_Update_TokenRotation_RecomputesExpired(): void
+    {
+        $this->setupUpdate();
+        $this->logInAsAdmin();
+
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $previousValues = json_decode($gpg->decrypt($this->current->value), associative: true);
+
+        // Use a different expiry to confirm recomputation
+        Configure::write('passbolt.plugins.scim.security.secretToken.expiry', '6 months');
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $data = [
+            'scim_user_id' => $user->id,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+        $this->putJson("/scim/settings/{$this->current->id}.json", $data);
+
+        $this->assertSuccess();
+        $response = $this->_responseJsonBody;
+        $expectedExpired = Date::now()->modify('+6 months')->format('Y-m-d');
+        $this->assertSame($expectedExpired, $response->expired);
+        $this->assertNotSame($previousValues['expired'], $response->expired);
+    }
+
+    public function testScimSetSettingsController_Update_NoTokenSent_PreservesExpired(): void
+    {
+        $this->setupUpdate();
+        $this->logInAsAdmin();
+
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $previousValues = json_decode($gpg->decrypt($this->current->value), associative: true);
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        $data = [
+            'scim_user_id' => $user->id,
+        ];
+        $this->putJson("/scim/settings/{$this->current->id}.json", $data);
+
+        $this->assertSuccess();
+        $response = $this->_responseJsonBody;
+        $this->assertSame($previousValues['expired'], $response->expired);
+    }
+
+    public function testScimSetSettingsController_Update_SameTokenSent_PreservesExpired(): void
+    {
+        $this->setupUpdate();
+        $this->logInAsAdmin();
+
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $previousValues = json_decode($gpg->decrypt($this->current->value), associative: true);
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+
+        // Client sends back the same plaintext token
+        $data = [
+            'scim_user_id' => $user->id,
+            'secret_token' => 'pb_0000000000000000000000000000000000000000000',
+        ];
+        $this->putJson("/scim/settings/{$this->current->id}.json", $data);
+
+        $this->assertSuccess();
+        $response = $this->_responseJsonBody;
+        $this->assertSame($previousValues['expired'], $response->expired);
     }
 }

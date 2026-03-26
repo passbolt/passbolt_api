@@ -21,7 +21,9 @@ use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\I18n\Date;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Passbolt\Scim\Form\Settings\ScimSettingsForm;
@@ -35,6 +37,11 @@ class ScimSetSettingsService extends ScimBaseSettingsService
      */
     public const SCIM_SECRET_TOKEN_PREFIX = 'pb_';
 
+    /**
+     * Dummy token sent by the client when the token should not be changed.
+     */
+    public const SCIM_SECRET_TOKEN_DUMMY = 'pb_0000000000000000000000000000000000000000000';
+
     public const SCIM_SETTINGS_UPDATE_EVENT_NAME = 'scim_settings_update_event_name';
 
     /**
@@ -46,6 +53,9 @@ class ScimSetSettingsService extends ScimBaseSettingsService
      */
     public function saveSettings(UserAccessControl $uac, array $data, ?string $id = null): array
     {
+        // Capture the raw plaintext token before form hashes it with bcrypt
+        $rawSecretToken = $data['secret_token'] ?? null;
+
         $form = new ScimSettingsForm();
         if ($id) {
             if (!Validation::uuid($id)) {
@@ -77,15 +87,25 @@ class ScimSetSettingsService extends ScimBaseSettingsService
             throw new NotFoundException(__('The uuid in the url doesn\'t match any known setting record.'));
         }
 
+        $isDummyToken = $rawSecretToken === self::SCIM_SECRET_TOKEN_DUMMY;
         if ($current) {
             $currentValue = $this->decryptSettings($current);
             $form->set('setting_id', Hash::get($currentValue, 'setting_id'));
-            if (!$form->getData('secret_token')) {
+            if (!$form->getData('secret_token') || $isDummyToken) {
                 $form->set('secret_token', Hash::get($currentValue, 'secret_token'));
             }
         }
 
-        $value = $this->encryptSettings($form->getData());
+        $settingsData = $form->getData();
+        $currentValue = $currentValue ?? [];
+        $isTokenRotated = $this->isTokenRotated($rawSecretToken, $currentValue);
+        if (!$current || $isTokenRotated) {
+            $settingsData['expired'] = $this->computeExpiredDate();
+        } else {
+            $settingsData['expired'] = Hash::get($currentValue, 'expired');
+        }
+
+        $value = $this->encryptSettings($settingsData);
         /** @var \Passbolt\Scim\Model\Entity\ScimSetting $setting */
         $setting = $scimSettingsTable->createOrUpdateSetting(
             $scimSettingsTable->getProperty(),
@@ -131,6 +151,44 @@ class ScimSetSettingsService extends ScimBaseSettingsService
 
         $settings->set('value', $this->encryptSettings($scimConfig));
         $scimSettingsTable->save($settings);
+    }
+
+    /**
+     * Determine if the raw token sent by the client differs from the stored hash.
+     *
+     * @param string|null $rawToken The plaintext token from the request (before bcrypt hashing).
+     * @param array $currentValue The decrypted current settings from the database.
+     * @return bool True if the token was rotated (i.e. a new token was provided).
+     */
+    private function isTokenRotated(?string $rawToken, array $currentValue): bool
+    {
+        if ($rawToken === null || $rawToken === self::SCIM_SECRET_TOKEN_DUMMY) {
+            return false;
+        }
+
+        $storedHash = Hash::get($currentValue, 'secret_token');
+        if ($storedHash === null) {
+            return true;
+        }
+
+        return !password_verify($rawToken, $storedHash);
+    }
+
+    /**
+     * Compute the expiration date for the SCIM secret token based on the configured expiry duration.
+     *
+     * @return string Date in Y-m-d format.
+     * @throws \Cake\Http\Exception\InternalErrorException If the expiry configuration is invalid.
+     */
+    private function computeExpiredDate(): string
+    {
+        /** @var string|null $expiry */
+        $expiry = Configure::read('passbolt.plugins.scim.security.secretToken.expiry');
+        if ($expiry === null) {
+            throw new InternalErrorException(__('The SCIM secret token expiry configuration is invalid.'));
+        }
+
+        return Date::now()->modify('+' . $expiry)->format('Y-m-d');
     }
 
     /**

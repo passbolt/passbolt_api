@@ -24,7 +24,10 @@ use App\Test\Lib\AppTestCase;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\I18n\Date;
 use Exception;
 use Passbolt\Scim\Service\ScimSetSettingsService;
 use Passbolt\Scim\Test\Factory\ScimSettingFactory;
@@ -45,6 +48,10 @@ class ScimSetSettingsServiceTest extends AppTestCase
     {
         parent::setUp();
         $this->service = new ScimSetSettingsService();
+        // Ensure the SCIM expiry config is available (normally loaded by plugin bootstrap)
+        if (Configure::read('passbolt.plugins.scim.security.secretToken.expiry') === null) {
+            Configure::write('passbolt.plugins.scim.security.secretToken.expiry', '1 year');
+        }
     }
 
     public function tearDown(): void
@@ -562,5 +569,141 @@ class ScimSetSettingsServiceTest extends AppTestCase
                 'ensureEmpty' => 'The Setting ID cannot be passed on update.',
             ],
         ], $e->getErrors());
+    }
+
+    public function testScimSetSettingsService_SaveSettingsCreate_SetsExpiredDate()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'setting_id' => UuidFactory::uuid(),
+            'scim_user_id' => $user->id,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $settings = $this->service->saveSettings($ua, $data);
+
+        $expectedExpired = Date::now()->modify('+1 year')->format('Y-m-d');
+        $this->assertSame($expectedExpired, $settings['expired']);
+
+        // Verify persisted in encrypted blob
+        $scimSettings = ScimSettingFactory::find()->first();
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $storedData = json_decode($gpg->decrypt($scimSettings->value), associative: true);
+        $this->assertSame($expectedExpired, $storedData['expired']);
+    }
+
+    public function testScimSetSettingsService_SaveSettingsCreate_CustomExpiry()
+    {
+        Configure::write('passbolt.plugins.scim.security.secretToken.expiry', '30 days');
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'setting_id' => UuidFactory::uuid(),
+            'scim_user_id' => $user->id,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $settings = $this->service->saveSettings($ua, $data);
+
+        $expectedExpired = Date::now()->modify('+30 days')->format('Y-m-d');
+        $this->assertSame($expectedExpired, $settings['expired']);
+    }
+
+    public function testScimSetSettingsService_SaveSettingsCreate_InvalidExpiryConfig()
+    {
+        Configure::write('passbolt.plugins.scim.security.secretToken.expiry', null);
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $data = [
+            'setting_id' => UuidFactory::uuid(),
+            'scim_user_id' => $user->id,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $this->expectException(InternalErrorException::class);
+        $this->expectExceptionMessage('The SCIM secret token expiry configuration is invalid.');
+        $this->service->saveSettings($ua, $data);
+    }
+
+    public function testScimSetSettingsService_SaveSettingsUpdate_TokenRotation_RecomputesExpired()
+    {
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $existingSettings */
+        $existingSettings = ScimSettingFactory::make()->default()->persist();
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $existingData = json_decode($gpg->decrypt($existingSettings->value), associative: true);
+
+        // Use a different expiry to verify recomputation
+        Configure::write('passbolt.plugins.scim.security.secretToken.expiry', '6 months');
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $newData = [
+            'scim_user_id' => $user->id,
+            'secret_token' => ScimSetSettingsService::generateToken(),
+        ];
+
+        $settings = $this->service->saveSettings($ua, $newData, $existingSettings->id);
+
+        $expectedExpired = Date::now()->modify('+6 months')->format('Y-m-d');
+        $this->assertSame($expectedExpired, $settings['expired']);
+        $this->assertNotSame($existingData['expired'], $settings['expired']);
+    }
+
+    public function testScimSetSettingsService_SaveSettingsUpdate_NoTokenSent_PreservesExpired()
+    {
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $existingSettings */
+        $existingSettings = ScimSettingFactory::make()->default()->persist();
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $existingData = json_decode($gpg->decrypt($existingSettings->value), associative: true);
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        $newData = [
+            'scim_user_id' => $user->id,
+        ];
+
+        $settings = $this->service->saveSettings($ua, $newData, $existingSettings->id);
+
+        $this->assertSame($existingData['expired'], $settings['expired']);
+    }
+
+    public function testScimSetSettingsService_SaveSettingsUpdate_DummyTokenSent_PreservesExpired()
+    {
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $existingSettings */
+        $existingSettings = ScimSettingFactory::make()->default()->persist();
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $existingData = json_decode($gpg->decrypt($existingSettings->value), associative: true);
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+        // Client sends the dummy token placeholder when the token should not change
+        $newData = [
+            'scim_user_id' => $user->id,
+            'secret_token' => ScimSetSettingsService::SCIM_SECRET_TOKEN_DUMMY,
+        ];
+
+        $settings = $this->service->saveSettings($ua, $newData, $existingSettings->id);
+
+        $this->assertSame($existingData['expired'], $settings['expired']);
+
+        // Verify the stored token was not overwritten with the dummy hash
+        $updatedSettings = ScimSettingFactory::find()->first();
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $updatedData = json_decode($gpg->decrypt($updatedSettings->value), associative: true);
+        $this->assertSame($existingData['secret_token'], $updatedData['secret_token']);
     }
 }
