@@ -27,6 +27,7 @@ use Cake\I18n\Date;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Passbolt\Scim\Form\Settings\ScimSettingsForm;
+use Passbolt\Scim\Utility\ScimTokenVerifier;
 
 class ScimSetSettingsService extends ScimBaseSettingsService
 {
@@ -87,6 +88,7 @@ class ScimSetSettingsService extends ScimBaseSettingsService
             throw new NotFoundException(__('The uuid in the url doesn\'t match any known setting record.'));
         }
 
+        $currentValue = [];
         $isDummyToken = $rawSecretToken === self::SCIM_SECRET_TOKEN_DUMMY;
         if ($current) {
             $currentValue = $this->decryptSettings($current);
@@ -97,7 +99,6 @@ class ScimSetSettingsService extends ScimBaseSettingsService
         }
 
         $settingsData = $form->getData();
-        $currentValue = $currentValue ?? [];
         $isTokenRotated = $this->isTokenRotated($rawSecretToken, $currentValue);
         if (!$current || $isTokenRotated) {
             $settingsData['expired'] = $this->computeExpiredDate();
@@ -171,7 +172,7 @@ class ScimSetSettingsService extends ScimBaseSettingsService
             return true;
         }
 
-        return !password_verify($rawToken, $storedHash);
+        return !ScimTokenVerifier::verify($rawToken, $storedHash);
     }
 
     /**

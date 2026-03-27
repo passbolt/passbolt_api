@@ -23,10 +23,10 @@ use Authentication\Identifier\Resolver\ResolverInterface;
 use Cake\Core\Configure;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\Utility\Security;
 use Exception;
 use Passbolt\Scim\Service\ScimGetSettingsService;
 use Passbolt\Scim\Service\ScimSetSettingsService;
+use Passbolt\Scim\Utility\ScimTokenVerifier;
 
 class ScimResolver implements ResolverInterface
 {
@@ -58,7 +58,7 @@ class ScimResolver implements ResolverInterface
         $rawToken = $conditions['secret_token'];
         $storedHash = $scimConfig['secret_token'];
 
-        if (!$this->verifyToken($rawToken, $storedHash)) {
+        if (!ScimTokenVerifier::verify($rawToken, $storedHash)) {
             return null;
         }
 
@@ -81,29 +81,6 @@ class ScimResolver implements ResolverInterface
     }
 
     /**
-     * Verify a raw bearer token against the stored hash.
-     *
-     * Supports bcrypt (current) and legacy SHA-256 (if allowed by config).
-     *
-     * @param string $rawToken The plaintext bearer token from the request.
-     * @param string $storedHash The hash stored in the encrypted settings.
-     * @return bool
-     */
-    private function verifyToken(string $rawToken, string $storedHash): bool
-    {
-        if ($this->isBcryptHash($storedHash)) {
-            return password_verify($rawToken, $storedHash);
-        }
-
-        // Legacy SHA-256 path — only if allowed by configuration
-        if (!Configure::read('passbolt.plugins.scim.security.secretToken.legacyHashAllowed', true)) {
-            return false;
-        }
-
-        return hash_equals($storedHash, Security::hash($rawToken, 'sha256'));
-    }
-
-    /**
      * Check if the stored hash needs to be rehashed to bcrypt.
      *
      * @param string $storedHash The stored hash value.
@@ -111,7 +88,7 @@ class ScimResolver implements ResolverInterface
      */
     private function needsRehash(string $storedHash): bool
     {
-        if (!$this->isBcryptHash($storedHash)) {
+        if (!ScimTokenVerifier::isBcryptHash($storedHash)) {
             return true; // Legacy SHA-256 — always needs rehash
         }
 
@@ -119,16 +96,5 @@ class ScimResolver implements ResolverInterface
         $cost = Configure::read('passbolt.plugins.scim.security.secretToken.cost', 12);
 
         return password_needs_rehash($storedHash, PASSWORD_BCRYPT, ['cost' => $cost]);
-    }
-
-    /**
-     * Check if a hash is in bcrypt format.
-     *
-     * @param string $hash The hash to check.
-     * @return bool
-     */
-    private function isBcryptHash(string $hash): bool
-    {
-        return str_starts_with($hash, '$2y$') || str_starts_with($hash, '$2b$');
     }
 }

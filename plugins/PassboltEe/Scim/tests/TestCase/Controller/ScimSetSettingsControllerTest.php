@@ -494,10 +494,10 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
 
-        // Client sends back the same plaintext token
+        // Client sends back the dummy token to signal no change
         $data = [
             'scim_user_id' => $user->id,
-            'secret_token' => 'pb_0000000000000000000000000000000000000000000',
+            'secret_token' => ScimSetSettingsService::SCIM_SECRET_TOKEN_DUMMY,
         ];
         $this->putJson("/scim/settings/{$this->current->id}.json", $data);
 

@@ -678,6 +678,42 @@ class ScimSetSettingsServiceTest extends AppTestCase
         $this->assertSame($existingData['expired'], $settings['expired']);
     }
 
+    /**
+     * When a legacy SHA-256 hashed token is stored and the client sends the same
+     * plaintext token on update, isTokenRotated() should detect that the token has
+     * NOT changed and preserve the existing expired date.
+     *
+     * @return void
+     */
+    public function testScimSetSettingsService_SaveSettingsUpdate_LegacySha256SameToken_PreservesExpired(): void
+    {
+        /** @var \Passbolt\Scim\Model\Entity\ScimSetting $existingSettings */
+        $existingSettings = ScimSettingFactory::make()->legacySecretTokenFormat()->persist();
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg = $this->setDecryptKeyWithServerKey($gpg);
+        $existingData = json_decode($gpg->decrypt($existingSettings->value), associative: true);
+        $originalExpired = $existingData['expired'];
+
+        // Use a different expiry config so a recomputation would produce a visibly different date
+        Configure::write('passbolt.plugins.scim.security.secretToken.expiry', '5 years');
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $ua = new UserAccessControl($user->role->name, $user->id, $user->username);
+
+        // Send the SAME plaintext token that was used to create the legacy SHA-256 hash.
+        // The token has not rotated — expired should be preserved.
+        $newData = [
+            'scim_user_id' => $user->id,
+            'secret_token' => ScimSettingFactory::SCIM_TEST_SECRET_TOKEN,
+        ];
+
+        $settings = $this->service->saveSettings($ua, $newData, $existingSettings->id);
+
+        // The expired date should remain unchanged because the token is the same
+        $this->assertSame($originalExpired, $settings['expired']);
+    }
+
     public function testScimSetSettingsService_SaveSettingsUpdate_DummyTokenSent_PreservesExpired()
     {
         /** @var \Passbolt\Scim\Model\Entity\ScimSetting $existingSettings */
