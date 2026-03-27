@@ -29,8 +29,9 @@ class V5110MigrateScimSettingsExpiredField extends AbstractMigration
         try {
             (new ScimSettingsMigrateExpiredFieldService())->migrate();
         } catch (\Throwable $e) {
-            Log::error('There was a migration error in V560MigrateScimSettingsExpiredField.');
-            Log::error($e->getMessage());
+            $msg = 'There was an error in V5110MigrateScimSettingsExpiredField.';
+            $msg .= ' ' . $e->getMessage();
+            Log::error($msg);
         }
     }
 }

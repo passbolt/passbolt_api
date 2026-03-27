@@ -18,6 +18,7 @@ namespace Passbolt\Scim\Service;
 
 use Cake\Core\Configure;
 use Cake\I18n\Date;
+use Cake\Log\Log;
 
 class ScimSettingsMigrateExpiredFieldService extends ScimBaseSettingsService
 {
@@ -37,15 +38,16 @@ class ScimSettingsMigrateExpiredFieldService extends ScimBaseSettingsService
             return;
         }
 
-        $data = $this->decryptSettings($settings);
-
-        if (isset($data['expired'])) {
-            return;
-        }
-
         /** @var string|null $expiry */
         $expiry = Configure::read('passbolt.plugins.scim.security.secretToken.expiry');
         if ($expiry === null) {
+            Log::warning('SCIM settings migration skipped: secretToken.expiry configuration is not set.');
+
+            return;
+        }
+
+        $data = $this->decryptSettings($settings);
+        if (isset($data['expired'])) {
             return;
         }
 
