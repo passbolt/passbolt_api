@@ -119,6 +119,7 @@ class ScimGetSettingsControllerTest extends ScimSettingsIntegrationTestCase
         $this->assertSame($data['scim_user_id'], $response->scim_user_id);
         $this->assertEmpty($response->secret_token ?? null);
         $this->assertObjectHasAttribute('id', $response);
+        $this->assertSame($data['expired'], $response->expired);
     }
 
     /**

@@ -14,6 +14,8 @@
  * @since         5.5.0
  */
 
+use App\Utility\AuthToken\AuthTokenExpiryConfigValidator;
+
 return [
     'passbolt' => [
         'plugins' => [
@@ -39,6 +41,7 @@ return [
                         'cost' => filter_var(env('PASSBOLT_SCIM_SECURITY_SECRET_TOKEN_COST', '12'), FILTER_VALIDATE_INT), // phpcs:ignore
                         // Disable in the cloud
                         'legacyHashAllowed' => filter_var(env('PASSBOLT_SCIM_SECURITY_SECRET_TOKEN_LEGACY_HASH_ALLOWED', true), FILTER_VALIDATE_BOOLEAN), // phpcs:ignore
+                        'expiry' => filter_var(env('PASSBOLT_SCIM_SECURITY_SECRET_TOKEN_EXPIRY', '1 year'), FILTER_CALLBACK, ['options' => new AuthTokenExpiryConfigValidator()]), // phpcs:ignore
                     ],
                     'allowSuspendAdministrators' => filter_var(env('PASSBOLT_PLUGINS_SCIM_SECURITY_ALLOW_SUSPEND_ADMINISTRATORS', false), FILTER_VALIDATE_BOOLEAN), // phpcs:ignore
                 ],
