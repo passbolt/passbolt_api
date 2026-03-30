@@ -372,6 +372,10 @@ return [
                         env('PASSBOLT_PLUGINS_SSO_PROVIDER_ADFS_ENABLED', true),
                         FILTER_VALIDATE_BOOLEAN
                     ),
+                    SsoSetting::PROVIDER_PINGONE => filter_var(
+                        env('PASSBOLT_PLUGINS_SSO_PROVIDER_PINGONE_ENABLED', false),
+                        FILTER_VALIDATE_BOOLEAN
+                    ),
                 ],
                 'security' => [
                     'jwks' => ['defaultAlg' => env('PASSBOLT_PLUGINS_SSO_SECURITY_JWKS_DEFAULT_ALG', null)],
