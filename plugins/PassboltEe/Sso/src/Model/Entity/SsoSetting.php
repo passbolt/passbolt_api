@@ -48,6 +48,7 @@ class SsoSetting extends Entity
     public const PROVIDER_GOOGLE = 'google';
     public const PROVIDER_OAUTH2 = 'oauth2';
     public const PROVIDER_ADFS = 'adfs';
+    public const PROVIDER_PINGONE = 'pingone';
 
     /**
      * List of supported providers.
@@ -59,6 +60,7 @@ class SsoSetting extends Entity
         self::PROVIDER_GOOGLE,
         self::PROVIDER_OAUTH2,
         self::PROVIDER_ADFS,
+        self::PROVIDER_PINGONE,
     ];
 
     /**
@@ -72,6 +74,11 @@ class SsoSetting extends Entity
      * Available ADFS email claims.
      */
     public const ADFS_EMAIL_CLAIM_UPN = 'upn';
+
+    /**
+     * Default PingOne email claim.
+     */
+    public const PINGONE_EMAIL_CLAIM_EMAIL = 'email';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
