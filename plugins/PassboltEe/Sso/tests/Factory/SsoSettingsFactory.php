@@ -100,6 +100,13 @@ class SsoSettingsFactory extends CakephpBaseFactory
         return $this->patchData(['provider' => SsoSetting::PROVIDER_ADFS])->patchData(['data' => $file]);
     }
 
+    public function pingone(): SsoSettingsFactory
+    {
+        $file = file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'SsoSettings' . DS . 'pingone.msg');
+
+        return $this->patchData(['provider' => SsoSetting::PROVIDER_PINGONE])->patchData(['data' => $file]);
+    }
+
     /**
      * @param string $data
      * @return SsoSettingsFactory this
