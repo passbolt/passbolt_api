@@ -56,6 +56,11 @@ class SsoSettingsPingOneDataForm extends SsoSettingsOAuth2DataForm
         ]);
 
         $dataValidator
+            ->requirePresence('environment_id', __('An environment id is required.'))
+            ->notEmptyString('environment_id', __('The environment id should not be empty.'))
+            ->uuid('environment_id', __('The environment id should be a valid UUID.'));
+
+        $dataValidator
             ->notEmptyString('email_claim', __('The email claim should not be empty.'))
             ->maxLength('email_claim', 64, __('The email claim is too large.'));
 
