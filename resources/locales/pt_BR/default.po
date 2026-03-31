@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-10-01 06:24+0000\n"
-"PO-Revision-Date: 2025-12-12 18:41\n"
+"PO-Revision-Date: 2026-03-24 08:14\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -20,19 +20,19 @@ msgid "You need to login to access this location."
 msgstr "Você precisa fazer login para acessar esta localização."
 
 msgid "The server verify token is missing or invalid."
-msgstr "O token de verificação do servidor está faltando ou é inválido."
+msgstr "O código de verificação do servidor está faltando ou é inválido."
 
 msgid "Decryption failed."
-msgstr "A desencriptação falhou."
+msgstr "A descriptografia falhou."
 
 msgid "Failed to create token."
-msgstr "Falha ao criar token."
+msgstr "Falha ao criar o código."
 
 msgid "The user token result should be a valid UUID."
-msgstr "O resultado do token do usuário deve ser um UUID válido."
+msgstr "O resultado do código do usuário deve ser um UUID válido."
 
 msgid "The user token result could not be found "
-msgstr "O resultado do token de usuário não pôde ser encontrado "
+msgstr "O resultado do código de usuário não pôde ser encontrado "
 
 msgid "The OpenPGP server key defined in the config cannot be used to decrypt."
 msgstr "A chave do servidor OpenPGP definida na configuração não pode ser usada para descriptografar."
@@ -44,22 +44,22 @@ msgid "Invalid verify token type."
 msgstr "Tipo de token de verificação inválido."
 
 msgid "Invalid verify token format, "
-msgstr "Formato de token de verificação inválido "
+msgstr "Formato de código de verificação inválido "
 
 msgid "sections are missing or using wrong delimiters."
-msgstr "seções estão faltando ou usando delimitadores errados."
+msgstr "Seções estão faltando ou usando delimitadores errados."
 
 msgid "the version numbers do not match."
-msgstr "os números de versão não correspondem."
+msgstr "Os números de versão não correspondem."
 
 msgid "wrong version number."
-msgstr "número da versão incorreta."
+msgstr "Número da versão incorreta."
 
 msgid "it is not a UUID."
-msgstr "isso não é uma UUID."
+msgstr "Isso não é uma UUID."
 
 msgid "wrong token data length."
-msgstr "tamanho de dados do token incorreto."
+msgstr "Tamanho de dados do código incorreto."
 
 msgid "There is no user associated with this key."
 msgstr "Não há nenhum usuário associado a esta chave."
@@ -68,7 +68,7 @@ msgid "Page not found."
 msgstr "Página não encontrada."
 
 msgid "Please use .json extension in URL or accept application/json."
-msgstr "Por favor, utilize a extensão .json na URL ou aceite o tipo de conteúdo application/json."
+msgstr "Por favor, use a extensão .json na URL ou aceite application/json."
 
 msgid "The request data can not be empty."
 msgstr "Os dados requisitados não podem estar vazios."
