@@ -35,6 +35,7 @@ class SsoIntegrationTestCase extends AppIntegrationTestCase
     private array $disabledSsoProviders = [
         SsoSetting::PROVIDER_OAUTH2,
         SsoSetting::PROVIDER_ADFS,
+        SsoSetting::PROVIDER_PINGONE,
     ];
 
     /**
