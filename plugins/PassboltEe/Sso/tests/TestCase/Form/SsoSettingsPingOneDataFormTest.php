@@ -41,6 +41,7 @@ class SsoSettingsPingOneDataFormTest extends AppTestCase
             'provider' => SsoSetting::PROVIDER_PINGONE,
             'data' => [
                 'url' => 'https://auth.pingone.com',
+                'environment_id' => UuidFactory::uuid(),
                 'client_id' => UuidFactory::uuid(),
                 'client_secret' => UuidFactory::uuid(),
                 'email_claim' => SsoSetting::PINGONE_EMAIL_CLAIM_EMAIL,
@@ -103,6 +104,22 @@ class SsoSettingsPingOneDataFormTest extends AppTestCase
             $data['data']['url'] = $url;
             $this->assertFalse($form->execute($data), "Expected {$url} to be rejected");
         }
+    }
+
+    public function testSsoSettingsPingOneDataForm_ValidateEnvironmentId(): void
+    {
+        $testCases = [
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'uuid' => self::getUuidTestCases(),
+        ];
+
+        $this->assertFormFieldFormatValidation(
+            SsoSettingsPingOneDataForm::class,
+            'data.environment_id',
+            $this->getPingOneDummySettingsData(),
+            $testCases
+        );
     }
 
     public function testSsoSettingsPingOneDataForm_ValidateClientId(): void

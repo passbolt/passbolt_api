@@ -22,6 +22,7 @@ use Cake\Core\Configure;
 use Cake\Validation\Validation;
 use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Middleware\SsoEndpointsSecurityMiddleware;
+use Passbolt\Sso\Model\Dto\SsoSettingsPingOneDataDto;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Service\Providers\SsoActiveProvidersGetService;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
@@ -221,5 +222,85 @@ class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
         $this->postJson('/sso/settings.json', $data);
 
         $this->assertForbiddenError('SSO settings edit endpoints are disabled');
+    }
+
+    /**
+     * PingOne provider
+     */
+    public function testSsoSettingsCreateController_Success_PingOne(): void
+    {
+        $this->logInAsAdmin();
+        $data = [
+            'provider' => SsoSetting::PROVIDER_PINGONE,
+            'data' => [
+                'url' => 'https://auth.pingone.com',
+                'environment_id' => UuidFactory::uuid(),
+                'client_id' => UuidFactory::uuid(),
+                'client_secret' => UuidFactory::uuid(),
+                'email_claim' => SsoSetting::PINGONE_EMAIL_CLAIM_EMAIL,
+            ],
+        ];
+
+        $this->postJson('/sso/settings.json', $data);
+
+        $this->assertSuccess();
+        $body = $this->getResponseBodyAsArray();
+        $this->assertTrue(Validation::uuid($body['id']));
+        $this->assertEquals(SsoSetting::PROVIDER_PINGONE, $body['provider']);
+        $this->assertEquals((new SsoActiveProvidersGetService())->get(), $body['providers']);
+        $this->assertEquals(SsoSetting::STATUS_DRAFT, $body['status']);
+        // The DTO adds default openid_configuration_path and scope
+        $expectedData = $data['data'];
+        $expectedData['openid_configuration_path'] = SsoSettingsPingOneDataDto::DEFAULT_OPENID_CONFIGURATION_PATH;
+        $expectedData['scope'] = SsoSettingsPingOneDataDto::DEFAULT_SCOPE;
+        $this->assertEquals($expectedData, $body['data']);
+    }
+
+    public function testSsoSettingsCreateController_ErrorValidationData_PingOne(): void
+    {
+        $this->logInAsAdmin();
+        $data = [
+            'provider' => SsoSetting::PROVIDER_PINGONE,
+            'data' => [
+                'url' => '🔥',
+            ],
+        ];
+
+        $this->postJson('/sso/settings.json', $data);
+
+        $this->assertError(400);
+        $body = $this->_responseJsonBody;
+        $this->assertObjectHasAttribute('url', $body->data);
+        $this->assertObjectHasAttribute('environment_id', $body->data);
+        $this->assertObjectHasAttribute('client_id', $body->data);
+        $this->assertObjectHasAttribute('client_secret', $body->data);
+        // scope and openid_configuration_path are not validated (removed from form)
+        $this->assertObjectNotHasAttribute('scope', $body->data);
+        $this->assertObjectNotHasAttribute('openid_configuration_path', $body->data);
+    }
+
+    public function testSsoSettingsCreateController_ErrorValidationData_PingOneInvalidUrl(): void
+    {
+        $this->logInAsAdmin();
+        $data = [
+            'provider' => SsoSetting::PROVIDER_PINGONE,
+            'data' => [
+                'url' => 'https://evil.com',
+                'environment_id' => UuidFactory::uuid(),
+                'client_id' => UuidFactory::uuid(),
+                'client_secret' => UuidFactory::uuid(),
+                'email_claim' => SsoSetting::PINGONE_EMAIL_CLAIM_EMAIL,
+            ],
+        ];
+
+        $this->postJson('/sso/settings.json', $data);
+
+        $this->assertError(400);
+        $body = $this->_responseJsonBody;
+        $this->assertObjectHasAttribute('url', $body->data);
+        $this->assertEquals(
+            'The URL must be a valid PingOne authentication domain.',
+            $body->data->url->isPingOneUrl
+        );
     }
 }
