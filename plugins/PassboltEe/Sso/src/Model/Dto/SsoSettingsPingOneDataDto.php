@@ -38,6 +38,11 @@ class SsoSettingsPingOneDataDto extends SsoSettingsOAuth2DataDto
     /**
      * @var string
      */
+    public string $environment_id;
+
+    /**
+     * @var string
+     */
     public string $email_claim;
 
     /**
@@ -45,6 +50,7 @@ class SsoSettingsPingOneDataDto extends SsoSettingsOAuth2DataDto
      *
      * @param array $data with
      *  - url string
+     *  - environment_id string
      *  - client_id string
      *  - client_secret string
      *  - openid_configuration_path string
@@ -58,6 +64,7 @@ class SsoSettingsPingOneDataDto extends SsoSettingsOAuth2DataDto
         parent::__construct($data);
 
         // Set PingOne specific fields
+        $this->environment_id = $data['environment_id'] ?? '';
         $this->email_claim = $data['email_claim'] ?? SsoSetting::PINGONE_EMAIL_CLAIM_EMAIL;
 
         // Always set PingOne defaults for these fields
@@ -73,6 +80,7 @@ class SsoSettingsPingOneDataDto extends SsoSettingsOAuth2DataDto
         $data = parent::toArray();
 
         // Append PingOne specific fields
+        $data['environment_id'] = $this->environment_id;
         $data['email_claim'] = $this->email_claim;
 
         return $data;
