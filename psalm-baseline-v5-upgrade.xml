@@ -1571,7 +1571,6 @@
     <InvalidPropertyFetch>
       <code><![CDATA[$ssoSetting->id]]></code>
       <code><![CDATA[$ssoSetting->id]]></code>
-      <code><![CDATA[$ssoSetting->id]]></code>
     </InvalidPropertyFetch>
   </file>
   <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Settings/SsoSettingsViewControllerTest.php">

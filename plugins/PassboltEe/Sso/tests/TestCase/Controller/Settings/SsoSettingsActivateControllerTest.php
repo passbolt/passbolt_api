@@ -62,6 +62,7 @@ class SsoSettingsActivateControllerTest extends SsoIntegrationTestCase
     public function testSsoSettingsActivateController_SuccessGoogle(): void
     {
         $settings = SsoSettingsFactory::make()->google()->persist();
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->active()->persist();
         $ssoAuthToken = SsoAuthenticationTokenFactory::make()
             ->type(SsoState::TYPE_SSO_SET_SETTINGS)
@@ -84,6 +85,36 @@ class SsoSettingsActivateControllerTest extends SsoIntegrationTestCase
         $settingDto = $this->_responseJsonBody;
         $this->assertEquals($settingDto->id, $settings->id);
         $this->assertEquals((new SsoActiveProvidersGetService())->get(), $settingDto->providers);
+    }
+
+    public function testSsoSettingsActivateController_SuccessPingOne(): void
+    {
+        $settings = SsoSettingsFactory::make()->pingone()->persist();
+        $user = UserFactory::make()->admin()->active()->persist();
+        /** @var \Passbolt\Sso\Model\Entity\SsoAuthenticationToken $ssoAuthToken */
+        $ssoAuthToken = SsoAuthenticationTokenFactory::make()
+            ->type(SsoState::TYPE_SSO_SET_SETTINGS)
+            ->userId($user->id)
+            ->active()
+            ->data([
+                'sso_setting_id' => $settings->id,
+                'ip' => SsoIntegrationTestCase::IP_ADDRESS,
+                'user_agent' => SsoIntegrationTestCase::USER_AGENT,
+            ])
+            ->persist();
+        $this->logInAs($user);
+
+        $this->postJson('/sso/settings/' . $settings->id . '.json', [
+            'status' => SsoSetting::STATUS_ACTIVE,
+            'token' => $ssoAuthToken->token,
+        ]);
+
+        $this->assertSuccess();
+        $settingDto = $this->_responseJsonBody;
+        $this->assertEquals($settingDto->id, $settings->id);
+        $this->assertEquals(SsoSetting::PROVIDER_PINGONE, $settingDto->provider);
+        $this->assertEquals(SsoSetting::PINGONE_EMAIL_CLAIM_EMAIL, $settingDto->data->email_claim);
+        $this->assertEquals('d1b2c3a4-e5f6-7890-abcd-ef1234567890', $settingDto->data->environment_id);
     }
 
     public function testSsoSettingsActivateController_ErrorNotLoggedIn(): void
@@ -130,6 +161,7 @@ class SsoSettingsActivateControllerTest extends SsoIntegrationTestCase
 
     public function testSsoSettingsActivateController_ErrorValidationToken(): void
     {
+        /** @var \Passbolt\Sso\Model\Entity\SsoSetting $settings */
         $settings = SsoSettingsFactory::make()->azure()->persist();
         $this->logInAsAdmin();
         $this->postJson('/sso/settings/' . $settings->id . '.json', [
