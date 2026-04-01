@@ -17,6 +17,9 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Comments;
 
 use App\Model\Table\CommentsTable;
+use App\Test\Factory\CommentFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\CommentsModelTrait;
 use App\Utility\UuidFactory;
@@ -29,17 +32,6 @@ class FindViewForeignCommentsTest extends AppTestCase
     use CommentsModelTrait;
 
     public $Comments;
-
-    public array $fixtures = [
-        'app.Base/ResourceTypes',
-        'app.Base/Resources',
-        'app.Base/Users',
-        'app.Base/Profiles',
-        'app.Base/Groups',
-        'app.Base/GroupsUsers',
-        'app.Base/Permissions',
-        'app.Base/Comments',
-    ];
 
     public function setUp(): void
     {
@@ -57,9 +49,12 @@ class FindViewForeignCommentsTest extends AppTestCase
 
     public function testSuccess()
     {
-        $comments = $this->Comments->findViewForeignComments(UuidFactory::uuid('user.id.ada'), 'Resource', UuidFactory::uuid('resource.id.apache'))->all();
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $comment = CommentFactory::make()->withUser($user)->withResource($resource)->persist();
+        CommentFactory::make()->withUser($user)->withResource($resource)->withParent($comment)->persist();
+        $comments = $this->Comments->findViewForeignComments($user->id, 'Resource', $resource->id)->all();
         $this->assertEquals(1, count($comments));
-
         $firstComment = $comments->first();
         $this->assertCommentAttributes($firstComment);
 
@@ -69,8 +64,11 @@ class FindViewForeignCommentsTest extends AppTestCase
 
     public function testContainCreator()
     {
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        CommentFactory::make()->withCreator($user)->withUser($user)->withResource($resource)->persist();
         $options['contain']['creator'] = true;
-        $comments = $this->Comments->findViewForeignComments(UuidFactory::uuid('user.id.ada'), 'Resource', UuidFactory::uuid('resource.id.apache'), $options)->all();
+        $comments = $this->Comments->findViewForeignComments($user->id, 'Resource', $resource->id, $options)->all();
         $comment = $comments->first();
 
         // Expected content.
@@ -81,8 +79,11 @@ class FindViewForeignCommentsTest extends AppTestCase
 
     public function testContainModifier()
     {
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        CommentFactory::make()->withModifier($user)->withUser($user)->withResource($resource)->persist();
         $options['contain']['modifier'] = true;
-        $comments = $this->Comments->findViewForeignComments(UuidFactory::uuid('user.id.ada'), 'Resource', UuidFactory::uuid('resource.id.apache'), $options)->all();
+        $comments = $this->Comments->findViewForeignComments($user->id, 'Resource', $resource->id, $options)->all();
         $comment = $comments->first();
 
         // Expected content.
@@ -93,8 +94,11 @@ class FindViewForeignCommentsTest extends AppTestCase
 
     public function testErrorInvalidModelNameParameter()
     {
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        CommentFactory::make()->withUser($user)->withResource($resource)->persist();
         try {
-            $this->Comments->findViewForeignComments(UuidFactory::uuid('user.id.ada'), 'UnsupportedModel', UuidFactory::uuid('resource.id.apache'));
+            $this->Comments->findViewForeignComments($user->id, 'UnsupportedModel', $resource->id);
         } catch (InvalidArgumentException $e) {
             return $this->assertTrue(true);
         }
@@ -103,8 +107,11 @@ class FindViewForeignCommentsTest extends AppTestCase
 
     public function testErrorInvalidModelIdParameter()
     {
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        CommentFactory::make()->withUser($user)->withResource($resource)->persist();
         try {
-            $this->Comments->findViewForeignComments(UuidFactory::uuid('user.id.ada'), 'Resource', 'wrong-uuid');
+            $this->Comments->findViewForeignComments($user->id, 'Resource', 'wrong-uuid');
         } catch (InvalidArgumentException $e) {
             return $this->assertTrue(true);
         }
@@ -113,8 +120,11 @@ class FindViewForeignCommentsTest extends AppTestCase
 
     public function testErrorNonExistingModelIdParameter()
     {
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        CommentFactory::make()->withUser($user)->withResource($resource)->persist();
         try {
-            $this->Comments->findViewForeignComments(UuidFactory::uuid('user.id.ada'), 'Resource', UuidFactory::uuid('Resource.id.doesnotexist'));
+            $this->Comments->findViewForeignComments($user->id, 'Resource', UuidFactory::uuid('Resource.id.doesnotexist'));
         } catch (RecordNotFoundException $e) {
             return $this->assertTrue(true);
         }
@@ -123,14 +133,17 @@ class FindViewForeignCommentsTest extends AppTestCase
 
     public function testErrorDeletedModelIdParameter()
     {
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        CommentFactory::make()->withUser($user)->withResource($resource)->persist();
         // Delete resource before testing.
         $Resources = TableRegistry::getTableLocator()->get('Resources');
-        $resource = $Resources->get(UuidFactory::uuid('resource.id.apache'));
+        $resource = $Resources->get($resource->id);
         $resource->deleted = 1;
         $Resources->save($resource);
 
         try {
-            $this->Comments->findViewForeignComments(UuidFactory::uuid('user.id.ada'), 'Resource', UuidFactory::uuid('resource.id.apache'));
+            $this->Comments->findViewForeignComments($user->id, 'Resource', $resource->id);
         } catch (RecordNotFoundException $e) {
             return $this->assertTrue(true);
         }
@@ -139,9 +152,12 @@ class FindViewForeignCommentsTest extends AppTestCase
 
     public function testErrorNonAccessibleModelIdParameter()
     {
+        [$user, $userNoAccess] = UserFactory::make(2)->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        CommentFactory::make()->withUser($user)->withResource($resource)->persist();
         // Test to access the comments of a resource that is not readable by a given user. Frances in our case.
         try {
-            $this->Comments->findViewForeignComments(UuidFactory::uuid('user.id.frances'), 'Resource', UuidFactory::uuid('resource.id.apache'));
+            $this->Comments->findViewForeignComments($userNoAccess->id, 'Resource', $resource->id);
         } catch (RecordNotFoundException $e) {
             return $this->assertTrue(true);
         }

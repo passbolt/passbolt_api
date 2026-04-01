@@ -69,12 +69,6 @@ module.exports = function(grunt) {
           src: ['openpgp.min.js'],
           dest: paths.js + 'vendors',
           expand: true
-        }, {
-          // jQuery
-          cwd: paths.node_modules + 'jquery/dist',
-          src: ['jquery.min.js'],
-          dest: paths.js + 'vendors',
-          expand: true
         }]
       },
       styleguide: {
@@ -122,8 +116,6 @@ module.exports = function(grunt) {
             'third_party/appstore.svg',
             'third_party/edge-addon-black.svg',
             'third_party/edge-addon-white.svg',
-            'third_party/chosen-sprite.png',
-            'third_party/chosen-sprite@2x.png',
             'third_party/firefox.svg',
             'third_party/chrome.svg',
             'third_party/edge.svg',

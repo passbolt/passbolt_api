@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Test\TestCase\Authenticator;
 
 use App\Middleware\ContainerInjectorMiddleware;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
@@ -45,10 +47,6 @@ class GpgJwtAuthenticatorTest extends TestCase
     use GpgAdaSetupTrait;
     use TruncateDirtyTables;
 
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Gpgkeys',
-    ];
-
     protected $sut;
 
     public function setUp(): void
@@ -58,6 +56,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $this->sut = new GpgJwtAuthenticator(new TokenIdentifier());
         EventManager::instance()->setEventList(new EventList());
         $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
+        RoleFactory::make()->guest()->persist();
     }
 
     public function testGpgJwtAuthenticatorAuthenticateError_NoData()
@@ -90,7 +89,7 @@ class GpgJwtAuthenticatorTest extends TestCase
     {
         $this->gpgSetup();
         $request = new ServerRequest();
-        $request = $request->withData('user_id', UuidFactory::uuid('user.id.ada'));
+        $request = $request->withData('user_id', UserFactory::make()->withAdaKey()->persist()->get('id'));
         $result = $this->sut->authenticate($request);
         $this->assertEquals(Result::FAILURE_CREDENTIALS_INVALID, $result->getStatus());
     }
@@ -100,7 +99,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $this->gpgSetup();
         $request = new ServerRequest();
 
-        $request = $request->withData('user_id', UuidFactory::uuid('user.id.ada'));
+        $request = $request->withData('user_id', UserFactory::make()->withAdaKey()->persist()->get('id'));
         $request = $request->withData('challenge', 'nope');
         $result = $this->sut->authenticate($request);
 
@@ -116,7 +115,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $this->gpg->setSignKeyFromFingerprint($this->adaKeyId, '');
         $msg = $this->gpg->encrypt('no sig');
 
-        $request = $request->withData('user_id', UuidFactory::uuid('user.id.ada'));
+        $request = $request->withData('user_id', UserFactory::make()->withAdaKey()->persist()->get('id'));
         $request = $request->withData('challenge', $msg);
         $result = $this->sut->authenticate($request);
 
@@ -132,7 +131,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $this->gpg->setSignKeyFromFingerprint($this->adaKeyId, '');
         $msg = $this->gpg->encryptSign('wrong format');
 
-        $request = $request->withData('user_id', UuidFactory::uuid('user.id.ada'));
+        $request = $request->withData('user_id', UserFactory::make()->withAdaKey()->persist()->get('id'));
         $request = $request->withData('challenge', $msg);
         $result = $this->sut->authenticate($request);
 
@@ -154,7 +153,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         ];
         $msg = $this->gpg->encryptSign(json_encode($challenge));
 
-        $request = $request->withData('user_id', UuidFactory::uuid('user.id.ada'));
+        $request = $request->withData('user_id', UserFactory::make()->withAdaKey()->persist()->get('id'));
         $request = $request->withData('challenge', $msg);
         $result = $this->sut->authenticate($request);
 
@@ -176,7 +175,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         ];
         $msg = $this->gpg->encryptSign(json_encode($challenge));
 
-        $request = $request->withData('user_id', UuidFactory::uuid('user.id.ada'));
+        $request = $request->withData('user_id', UserFactory::make()->withAdaKey()->persist()->get('id'));
         $request = $request->withData('challenge', $msg);
         $result = $this->sut->authenticate($request);
 
@@ -216,7 +215,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         ];
         $msg = $this->gpg->encryptSign(json_encode($challenge));
 
-        $request = $request->withData('user_id', UuidFactory::uuid('user.id.ada'));
+        $request = $request->withData('user_id', UserFactory::make()->withAdaKey()->persist()->get('id'));
         $request = $request->withData('challenge', $msg);
         $result = $this->sut->authenticate($request);
 
@@ -238,7 +237,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         ];
         $msg = $this->gpg->encryptSign(json_encode($challenge));
 
-        $request = $request->withData('user_id', UuidFactory::uuid('user.id.ada'));
+        $request = $request->withData('user_id', UserFactory::make()->withAdaKey()->persist()->get('id'));
         $request = $request->withData('challenge', $msg);
         $result = $this->sut->authenticate($request);
 
@@ -278,7 +277,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         ];
         $msg = $this->gpg->encryptSign(json_encode($challenge));
 
-        $request = $request->withData('user_id', UuidFactory::uuid('user.id.ada'));
+        $request = $request->withData('user_id', UserFactory::make()->withAdaKey()->persist()->get('id'));
         $request = $request->withData('challenge', $msg);
         $result = $this->sut->authenticate($request);
 
@@ -289,6 +288,11 @@ class GpgJwtAuthenticatorTest extends TestCase
     {
         $this->gpgSetup();
         $request = new ServerRequest();
+        $userId = UserFactory::make(['username' => 'ada@passbolt.com'])
+            ->withAdaKey()
+            ->withProfileName('Ada', 'Lovelace')
+            ->persist()
+            ->get('id');
 
         $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
         $this->gpg->setSignKeyFromFingerprint($this->adaKeyId, '');
@@ -303,7 +307,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $container = new Container();
         $container->add(JwtArmoredChallengeInterface::class, JwtArmoredChallengeService::class);
         $request = $request
-            ->withData('user_id', UuidFactory::uuid('user.id.ada'))
+            ->withData('user_id', $userId)
             ->withData('challenge', $msg)
             ->withAttribute(ContainerInjectorMiddleware::CONTAINER_ATTRIBUTE, $container);
         $result = $this->sut->authenticate($request);
@@ -315,7 +319,7 @@ class GpgJwtAuthenticatorTest extends TestCase
 
         // Assert user is part of results
         $user = $data['user'];
-        $this->assertEquals(UuidFactory::uuid('user.id.ada'), $user['id']);
+        $this->assertEquals($userId, $user['id']);
         $this->assertEquals('ada@passbolt.com', $user['username']);
         $this->assertEquals('Lovelace', $user['profile']['last_name']);
         $this->assertEquals('03F60E958F4CB29723ACDF761353B5B15D9B054F', $user['gpgkey']['fingerprint']);

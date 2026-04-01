@@ -8,10 +8,17 @@ use Cake\Database\Driver\Mysql;
 use Cake\Database\Driver\Postgres;
 use Cake\Routing\Router;
 
-$this->Html->script('vendors/jquery.min.js', ['block' => 'scriptBottom']);
-$this->Html->script('vendors/chosen.jquery.js', ['block' => 'scriptBottom']);
 $this->Html->script('web_installer/database', ['block' => 'scriptBottom']);
 ?>
+<style>
+.singleline.connection_info .protocol select {
+    border: 0;
+    margin: 0;
+    background-color: transparent;
+    max-width: initial;
+    height: 3rem;
+}
+</style>
 <?= $this->element('header', ['title' => __('Enter your database details.')]) ?>
 <div class="panel main ">
     <!-- wizard steps -->
@@ -50,7 +57,7 @@ $this->Html->script('web_installer/database', ['block' => 'scriptBottom']);
                                         ],
                                         'default' => Mysql::class,
                                         'templates' => [
-                                            'inputContainer' => '<div class="input text protocol">{{content}}</div>',
+                                            'inputContainer' => '<div class="input select protocol">{{content}}</div>',
                                         ],
                                         'label' => false,
                                         'class' => 'required fluid',
