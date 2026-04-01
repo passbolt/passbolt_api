@@ -17,25 +17,21 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Groups;
 
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
-use App\Utility\UuidFactory;
 
 class GroupsViewControllerTest extends AppIntegrationTestCase
 {
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
 
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups',
-        'app.Base/GroupsUsers', 'app.Base/Gpgkeys', 'app.Base/Permissions',
-    ];
-
     public function testGroupsViewSuccess(): void
     {
-        $this->authenticateAs('ada');
-        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $this->logInAsUser();
+        $groupId = GroupFactory::make()->persist()->id;
         $this->getJson("/groups/$groupId.json");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -51,14 +47,15 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
 
     public function testGroupsViewContainSuccess_DeprecatedContain(): void
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $urlParameter = 'contain[modifier]=1';
         $urlParameter .= '&contain[modifier.profile]=1';
         $urlParameter .= '&contain[user]=1';
         $urlParameter .= '&contain[group_user]=1';
         $urlParameter .= '&contain[group_user.user.profile]=1';
         $urlParameter .= '&contain[my_group_user]=1';
-        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $user = UserFactory::make()->persist();
+        $groupId = GroupFactory::make(['modified_by' => $user->id])->withGroupsManagersFor([$user])->persist()->id;
         $this->getJson("/groups/$groupId.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -80,8 +77,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertNull($this->_responseJsonBody->my_group_user);
 
         // Check that the my_group_user attribute is not null for a group the user is member of
-        $this->authenticateAs('hedy');
-        $groupId = UuidFactory::uuid('group.id.board');
+        $this->logInAs($user);
         $this->getJson("/groups/$groupId.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -91,14 +87,15 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
 
     public function testGroupsViewContainSuccess(): void
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $urlParameter = 'contain[modifier]=1';
         $urlParameter .= '&contain[modifier.profile]=1';
         $urlParameter .= '&contain[users]=1';
         $urlParameter .= '&contain[groups_users]=1';
         $urlParameter .= '&contain[groups_users.user.profile]=1';
         $urlParameter .= '&contain[my_group_user]=1';
-        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $user = UserFactory::make()->persist();
+        $groupId = GroupFactory::make(['modified_by' => $user->id])->withGroupsManagersFor([$user])->persist()->id;
         $this->getJson("/groups/$groupId.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -120,8 +117,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertNull($this->_responseJsonBody->my_group_user);
 
         // Check that the my_group_user attribute is not null for a group the user is member of
-        $this->authenticateAs('hedy');
-        $groupId = UuidFactory::uuid('group.id.board');
+        $this->logInAs($user);
         $this->getJson("/groups/$groupId.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);

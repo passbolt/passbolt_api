@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Controller\Auth;
 
+use App\Authenticator\GpgAuthenticator;
 use App\Controller\AppController;
 use App\Event\UpdateUserLastLoggedInListener;
 use App\Model\Entity\Role;
@@ -26,6 +27,7 @@ use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 
@@ -86,6 +88,9 @@ class AuthLoginController extends AppController
         if ($result->isValid()) {
             /** @var \App\Authenticator\GpgAuthenticator $authenticator */
             $authenticator = $this->Authentication->getAuthenticationService()->getAuthenticationProvider();
+            if (!($authenticator instanceof GpgAuthenticator)) {
+                throw new BadRequestException(__('You are already logged in.'), 409);
+            }
             $user = $authenticator->getUser();
             $uac = new UserAccessControl($user['role']['name'], $user['id']);
             UserAction::getInstance()->setUserAccessControl($uac);

@@ -18,20 +18,19 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Comments;
 
 use App\Model\Table\CommentsTable;
+use App\Test\Factory\CommentFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use App\Test\Lib\Model\CommentsModelTrait;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class CreateTest extends AppTestCase
 {
-    use CommentsModelTrait;
     use FormatValidationTrait;
 
     public $Comments;
-
-    public array $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments', 'app.Base/Permissions'];
 
     public function setUp(): void
     {
@@ -65,6 +64,32 @@ class CreateTest extends AppTestCase
         return $entityOptions;
     }
 
+    /**
+     * Build default comment using factories.
+     */
+    private function generateDummyComment(array $data = [], bool $persist = true): array
+    {
+        if ($persist) {
+            $user = UserFactory::make()->persist();
+            $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+            $userId = $user->id;
+            $resourceId = $resource->id;
+        } else {
+            $userId = UuidFactory::uuid();
+            $resourceId = UuidFactory::uuid();
+        }
+
+        return array_merge([
+            'user_id' => $userId,
+            'foreign_key' => $resourceId,
+            'foreign_model' => 'Resource',
+            'content' => 'this is a test comment',
+            'parent_id' => null,
+            'created_by' => $userId,
+            'modified_by' => $userId,
+        ], $data);
+    }
+
     /* FORMAT VALIDATION TESTS */
 
     public function testValidationUserId()
@@ -74,7 +99,7 @@ class CreateTest extends AppTestCase
             'notEmpty' => self::getNotEmptyTestCases(),
             'requirePresence' => self::getRequirePresenceTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Comments, 'user_id', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Comments, 'user_id', $this->generateDummyComment(persist: false), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationParentId()
@@ -83,7 +108,7 @@ class CreateTest extends AppTestCase
             'uuid' => self::getUuidTestCases(),
             'allowEmpty' => self::getAllowEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Comments, 'parent_id', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Comments, 'parent_id', $this->generateDummyComment(persist: false), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationForeignModel()
@@ -93,7 +118,7 @@ class CreateTest extends AppTestCase
             'notEmpty' => self::getNotEmptyTestCases(),
             'inList' => self::getInListTestCases(CommentsTable::ALLOWED_FOREIGN_MODELS),
         ];
-        $this->assertFieldFormatValidation($this->Comments, 'foreign_model', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Comments, 'foreign_model', $this->generateDummyComment(persist: false), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationForeignId()
@@ -103,7 +128,7 @@ class CreateTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Comments, 'foreign_key', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Comments, 'foreign_key', $this->generateDummyComment(persist: false), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationContent()
@@ -114,7 +139,7 @@ class CreateTest extends AppTestCase
             'notEmpty' => self::getNotEmptyTestCases(),
             'lengthBetween' => self::getLengthBetweenTestCases(1, 255),
         ];
-        $this->assertFieldFormatValidation($this->Comments, 'content', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Comments, 'content', $this->generateDummyComment(persist: false), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationCreatedBy()
@@ -124,14 +149,15 @@ class CreateTest extends AppTestCase
             'notEmpty' => self::getNotEmptyTestCases(),
             'requirePresence' => self::getRequirePresenceTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Comments, 'created_by', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Comments, 'created_by', $this->generateDummyComment(persist: false), self::getEntityDefaultOptions(), $testCases);
     }
 
     /* LOGIC VALIDATION TESTS */
 
     public function testErrorUserDoesNotExist()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['user_id' => UuidFactory::uuid()]), self::getEntityDefaultOptions());
+        $data = $this->generateDummyComment(['user_id' => UuidFactory::uuid()]);
+        $comment = $this->Comments->newEntity($data, self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
@@ -141,7 +167,9 @@ class CreateTest extends AppTestCase
 
     public function testErrorUserNotSoftDeleted()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['user_id' => UuidFactory::uuid('user.id.sofia')]), self::getEntityDefaultOptions());
+        $softDeletedUser = UserFactory::make()->deleted()->persist();
+        $data = $this->generateDummyComment(['user_id' => $softDeletedUser->id]);
+        $comment = $this->Comments->newEntity($data, self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
@@ -151,7 +179,8 @@ class CreateTest extends AppTestCase
 
     public function testErrorResourceDoesNotExist()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['foreign_key' => UuidFactory::uuid()]), self::getEntityDefaultOptions());
+        $data = $this->generateDummyComment(['foreign_key' => UuidFactory::uuid()]);
+        $comment = $this->Comments->newEntity($data, self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
@@ -161,7 +190,9 @@ class CreateTest extends AppTestCase
 
     public function testErrorResourceIsSoftDeleted()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['foreign_key' => UuidFactory::uuid('resource.id.jquery')]), self::getEntityDefaultOptions());
+        $softDeletedResource = ResourceFactory::make()->deleted()->persist();
+        $data = $this->generateDummyComment(['foreign_key' => $softDeletedResource->id]);
+        $comment = $this->Comments->newEntity($data, self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
@@ -171,13 +202,8 @@ class CreateTest extends AppTestCase
 
     public function testErrorParentIdDoesNotExist()
     {
-        $comment = $this->Comments->newEntity(
-            self::getDummyComment([
-                'foreign_key' => UuidFactory::uuid('resource.id.apache'),
-                'parent_id' => UuidFactory::uuid('comment.id.doesnotexist'),
-            ]),
-            self::getEntityDefaultOptions()
-        );
+        $data = $this->generateDummyComment(['parent_id' => UuidFactory::uuid()]);
+        $comment = $this->Comments->newEntity($data, self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
@@ -187,13 +213,9 @@ class CreateTest extends AppTestCase
 
     public function testErrorParentIdParentHasDifferentForeignId()
     {
-        $comment = $this->Comments->newEntity(
-            self::getDummyComment([
-                'foreign_key' => UuidFactory::uuid('resource.id.bower'),
-                'parent_id' => UuidFactory::uuid('comment.id.apache-1'),
-            ]),
-            self::getEntityDefaultOptions()
-        );
+        $parentComment = CommentFactory::make()->withResource()->withUser()->persist();
+        $data = $this->generateDummyComment(['parent_id' => $parentComment->id]);
+        $comment = $this->Comments->newEntity($data, self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
@@ -203,7 +225,10 @@ class CreateTest extends AppTestCase
 
     public function testErrorHasResourceAccessRule()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['user_id' => UuidFactory::uuid('user.id.dame'), 'foreign_key' => UuidFactory::uuid('resource.id.canjs')]), self::getEntityDefaultOptions());
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->persist();
+        $data = $this->generateDummyComment(['user_id' => $user->id, 'foreign_key' => $resource->id]);
+        $comment = $this->Comments->newEntity($data, self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
@@ -213,7 +238,8 @@ class CreateTest extends AppTestCase
 
     public function testErrorCreatedByDoesNotExist()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['created_by' => UuidFactory::uuid()]), self::getEntityDefaultOptions());
+        $data = $this->generateDummyComment(['created_by' => UuidFactory::uuid()]);
+        $comment = $this->Comments->newEntity($data, self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
@@ -223,17 +249,18 @@ class CreateTest extends AppTestCase
 
     public function testSuccess()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(), self::getEntityDefaultOptions());
+        $data = $this->generateDummyComment();
+        $comment = $this->Comments->newEntity($data, self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertNotEmpty($save);
         $errors = $comment->getErrors();
         $this->assertEmpty($errors);
 
-        // Check the favorite exists in db.
+        // Check the comment exists in db.
         $addedComment = $this->Comments->get($save->id);
         $this->assertNotEmpty($addedComment);
-        $this->assertEquals(UuidFactory::uuid('user.id.ada'), $addedComment->user_id);
-        $this->assertEquals(UuidFactory::uuid('resource.id.bower'), $addedComment->foreign_key);
+        $this->assertEquals($data['user_id'], $addedComment->user_id);
+        $this->assertEquals($data['foreign_key'], $addedComment->foreign_key);
         $this->assertEquals('Resource', $addedComment->foreign_model);
         $this->assertNull($addedComment->parent_id);
     }

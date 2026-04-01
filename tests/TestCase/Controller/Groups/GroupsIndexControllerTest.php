@@ -17,10 +17,11 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Groups;
 
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
-use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
 
 class GroupsIndexControllerTest extends AppIntegrationTestCase
@@ -28,18 +29,10 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
 
-    public array $fixtures = [
-        'app.Base/Users',
-        'app.Base/Profiles',
-        'app.Base/Roles',
-        'app.Base/Groups',
-        'app.Base/GroupsUsers',
-        'app.Base/Permissions',
-    ];
-
     public function testGroupsIndexSuccess(): void
     {
-        $this->authenticateAs('ada');
+        GroupFactory::make(5)->persist();
+        $this->logInAsUser();
         $this->getJson('/groups.json');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
@@ -55,7 +48,10 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
 
     public function testGroupsIndexContainSuccess(): void
     {
-        $this->authenticateAs('hedy');
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $groupAId = GroupFactory::make()->withGroupsUsersFor([$userB])->persist()->id;
+        $groupBId = GroupFactory::make(['modified_by' => $userA->id])->withGroupsManagersFor([$userA])->persist()->id;
+        $this->logInAs($userA);
         $urlParameter = 'contain[modifier]=1';
         $urlParameter .= '&contain[modifier.profile]=1';
         $urlParameter .= '&contain[user]=1';
@@ -77,7 +73,6 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertGroupUserAttributes($this->_responseJsonBody[0]->groups_users[0]);
 
         // A group Hedy is not member
-        $groupAId = UuidFactory::uuid('group.id.accounting');
         $groupA = array_reduce($this->_responseJsonBody, function ($carry, $item) use ($groupAId) {
             if ($item->id == $groupAId) {
                 $carry = $item;
@@ -88,7 +83,6 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertNull($groupA->my_group_user);
 
         // A group Hedy is member
-        $groupBId = UuidFactory::uuid('group.id.board');
         $groupB = array_reduce($this->_responseJsonBody, function ($carry, $item) use ($groupBId) {
             if ($item->id == $groupBId) {
                 $carry = $item;
@@ -102,20 +96,24 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
 
     public function testGroupsIndexFilterHasUsersSuccess(): void
     {
-        $this->authenticateAs('ada');
-        $urlParameter = 'filter[has-users]=' . UuidFactory::uuid('user.id.irene');
+        $this->logInAsUser();
+        $user = UserFactory::make()->persist();
+        [$groupA, $groupB, $groupC] = GroupFactory::make(3)->withGroupsUsersFor([$user])->persist();
+        $urlParameter = 'filter[has-users]=' . $user->id;
         $this->getJson("/groups.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $this->assertCount(3, $this->_responseJsonBody);
         $groupsIds = Hash::extract($this->_responseJsonBody, '{n}.id');
-        $expectedGroupsIds = [UuidFactory::uuid('group.id.creative'), UuidFactory::uuid('group.id.developer'), UuidFactory::uuid('group.id.ergonom')];
+        $expectedGroupsIds = [$groupA->id, $groupB->id, $groupC->id];
         $this->assertEquals(0, count(array_diff($expectedGroupsIds, $groupsIds)));
     }
 
     public function testGroupsIndexFilterHasUsers_UpperCase(): void
     {
-        $this->authenticateAs('ada');
-        $urlParameter = 'filter[has-users]=' . strtoupper(UuidFactory::uuid('user.id.irene'));
+        $this->logInAsUser();
+        $user = UserFactory::make()->persist();
+        GroupFactory::make(3)->withGroupsUsersFor([$user])->persist();
+        $urlParameter = 'filter[has-users]=' . strtoupper($user->id);
         $this->getJson("/groups.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $this->assertCount(3, $this->_responseJsonBody);
@@ -123,13 +121,15 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
 
     public function testGroupsIndexFilterHasManagersSuccess(): void
     {
-        $this->authenticateAs('ada');
-        $urlParameter = 'filter[has-managers]=' . UuidFactory::uuid('user.id.ping');
+        $this->logInAsUser();
+        $user = UserFactory::make()->persist();
+        [$groupA, $groupB] = GroupFactory::make(2)->withGroupsManagersFor([$user])->persist();
+        $urlParameter = 'filter[has-managers]=' . $user->id;
         $this->getJson("/groups.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $this->assertCount(2, $this->_responseJsonBody);
         $groupsIds = Hash::extract($this->_responseJsonBody, '{n}.id');
-        $expectedGroupsIds = [UuidFactory::uuid('group.id.human_resource'), UuidFactory::uuid('group.id.it_support')];
+        $expectedGroupsIds = [$groupA->id, $groupB->id];
         $this->assertEquals(0, count(array_diff($expectedGroupsIds, $groupsIds)));
     }
 }
