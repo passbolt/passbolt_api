@@ -45,7 +45,7 @@ class YubikeySetupPostControllerTest extends MfaIntegrationTestCase
         $this->loadFixtureScenario(MfaYubikeyOrganizationOnlyScenario::class);
         $this->mockValidMfaFormInterface(YubikeySetupForm::class, $this->makeUac($user));
         $this->mockSessionId($sessionID);
-        $this->post('/mfa/setup/yubikey?api-version=v2', [
+        $this->postJson('/mfa/setup/yubikey.json?api-version=v2', [
             'hotp' => 'i-am-mocked',
         ]);
         $this->assertResponseSuccess();
