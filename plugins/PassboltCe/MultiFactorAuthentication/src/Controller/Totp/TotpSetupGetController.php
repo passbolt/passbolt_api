@@ -32,6 +32,7 @@ class TotpSetupGetController extends MfaSetupController
      */
     public function get(MfaFormInterface $setupForm)
     {
+        $this->_assertRequestIsJson();
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
         try {
             $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
@@ -39,39 +40,6 @@ class TotpSetupGetController extends MfaSetupController
         } catch (BadRequestException $exception) {
             $this->_handleGetExistingSettings(MfaSettings::PROVIDER_TOTP);
         }
-    }
-
-    /**
-     * Display start page (with how to diagram)
-     *
-     * @return void
-     */
-    public function start()
-    {
-        $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
-        try {
-            $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
-            $this->_handleGetStart();
-        } catch (BadRequestException $exception) {
-            $this->_handleGetExistingSettings(MfaSettings::PROVIDER_TOTP);
-        }
-    }
-
-    /**
-     * Display start page
-     *
-     * @return void
-     */
-    protected function _handleGetStart()
-    {
-        if (!$this->request->is('json')) {
-            $this->set('theme', $this->User->theme());
-            $this->viewBuilder()
-                ->setLayout('mfa_setup')
-                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_TOTP))
-                ->setTemplate('setupStart');
-        }
-        $this->success(__('Please setup the TOTP application.'));
     }
 
     /**
@@ -88,22 +56,10 @@ class TotpSetupGetController extends MfaSetupController
         $uri = MfaOtpFactory::generateTOTP($uac);
         $qrCode = MfaOtpFactory::getQrCodeInlineSvg($uri);
 
-        if (!$this->request->is('json')) {
-            $this->set('totpSetupForm', $totpSetupForm);
-            $this->set('theme', $this->User->theme());
-            $this->request = $this->request
-                ->withData('otpQrCodeSvg', $qrCode)
-                ->withData('otpProvisioningUri', $uri);
-            $this->viewBuilder()
-                ->setLayout('mfa_setup')
-                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_TOTP))
-                ->setTemplate('setupForm');
-        } else {
-            $data = [
-                'otpQrCodeSvg' => $qrCode,
-                'otpProvisioningUri' => $uri,
-            ];
-            $this->success(__('Please setup the TOTP application.'), $data);
-        }
+        $data = [
+            'otpQrCodeSvg' => $qrCode,
+            'otpProvisioningUri' => $uri,
+        ];
+        $this->success(__('Please setup the TOTP application.'), $data);
     }
 }

@@ -155,4 +155,82 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         $this->assertStringContainsString('Enter your SMTP server settings.', $data);
         $this->assertMailCount(0);
     }
+
+    public function testWebInstallerEmailPostSuccess_UsernameOnly(): void
+    {
+        $postData = [
+            'sender_name' => 'Passbolt Test',
+            'sender_email' => 'test@passbolt.com',
+            'host' => 'unreachable_host',
+            'tls' => true,
+            'port' => 587,
+            'authentication_method' => 'username_only',
+            'username' => 'test@passbolt.com',
+            'password' => '',
+        ];
+
+        $this->post('/install/email', $postData);
+        $this->assertRedirectContains('install/account_creation');
+        $this->assertMailCount(0);
+    }
+
+    public function testWebInstallerEmailPostSuccess_None(): void
+    {
+        $postData = [
+            'sender_name' => 'Passbolt Test',
+            'sender_email' => 'test@passbolt.com',
+            'host' => 'unreachable_host',
+            'tls' => true,
+            'port' => 587,
+            'authentication_method' => 'none',
+            'username' => '',
+            'password' => '',
+        ];
+
+        $this->post('/install/email', $postData);
+        $this->assertRedirectContains('install/account_creation');
+        $this->assertMailCount(0);
+    }
+
+    public function testWebInstallerEmailPostSuccess_Oauth2ClientCredentials(): void
+    {
+        $postData = [
+            'sender_name' => 'Passbolt Test',
+            'sender_email' => 'test@passbolt.com',
+            'host' => 'smtp.office365.com',
+            'tls' => true,
+            'port' => 587,
+            'authentication_method' => 'oauth2_client_credentials',
+            'tenant_id' => 'aaa85870-75e0-4613-be3c-ecf3e3f7e9a1',
+            'client_id' => 'bbb85870-75e0-4613-be3c-ecf3e3f7e9a1',
+            'client_secret' => 'some-client-secret-value',
+            'oauth_username' => 'mailbox@company.com',
+        ];
+
+        $this->post('/install/email', $postData);
+        $this->assertRedirectContains('install/account_creation');
+        $this->assertMailCount(0);
+    }
+
+    public function testWebInstallerEmailPostError_Oauth2MissingFields(): void
+    {
+        $postData = [
+            'sender_name' => 'Passbolt Test',
+            'sender_email' => 'test@passbolt.com',
+            'host' => 'smtp.office365.com',
+            'tls' => true,
+            'port' => 587,
+            'authentication_method' => 'oauth2_client_credentials',
+            'tenant_id' => '',
+            'client_id' => '',
+            'client_secret' => '',
+            'oauth_username' => '',
+        ];
+
+        $this->post('/install/email', $postData);
+        $data = $this->_getBodyAsString();
+        $this->assertResponseOk();
+        $this->assertStringContainsString('The data entered are not correct', $data);
+        $this->assertMailCount(0);
+    }
 }

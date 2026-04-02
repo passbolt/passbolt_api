@@ -27,6 +27,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Response;
 use Cake\Log\Log;
+use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
@@ -40,6 +41,18 @@ use Throwable;
 
 class DuoSetupCallbackGetController extends MfaSetupController
 {
+    public const DUO_SETUP_REDIRECT_PATH = '/app/settings/mfa/duo';
+
+    /**
+     * Get the full Duo setup redirect URL.
+     *
+     * @return string
+     */
+    public static function getFormUrl(): string
+    {
+        return Router::url('/mfa/setup/duo/prompt?redirect=' . self::DUO_SETUP_REDIRECT_PATH, true);
+    }
+
     /**
      * @return void
      */
@@ -121,7 +134,7 @@ class DuoSetupCallbackGetController extends MfaSetupController
         if (empty($redirect)) {
             return null;
         }
-        if ($redirect !== DuoSetupGetController::DUO_SETUP_REDIRECT_PATH) {
+        if ($redirect !== self::DUO_SETUP_REDIRECT_PATH) {
             Log::error('Cannot redirect to an unsupported path');
 
             return null;
@@ -223,7 +236,7 @@ class DuoSetupCallbackGetController extends MfaSetupController
         if (empty($redirect)) {
             return;
         }
-        if ($redirect !== DuoSetupGetController::DUO_SETUP_REDIRECT_PATH) {
+        if ($redirect !== self::DUO_SETUP_REDIRECT_PATH) {
             Log::error('Cannot redirect to an unsupported path');
 
             return;

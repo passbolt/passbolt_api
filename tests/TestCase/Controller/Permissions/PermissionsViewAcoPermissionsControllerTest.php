@@ -17,31 +17,23 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Permissions;
 
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
 {
     use GroupsModelTrait;
 
-    public array $fixtures = [
-        'app.Base/Groups',
-        'app.Base/GroupsUsers',
-        'app.Base/Permissions',
-        'app.Base/Profiles',
-        'app.Base/ResourceTypes',
-        'app.Base/Resources',
-        'app.Base/Users',
-        'app.Base/Roles',
-    ];
-
     public function testPermissionsViewSuccess(): void
     {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->getJson("/permissions/resource/$resourceId.json");
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $this->logInAs($user);
+        $this->getJson("/permissions/resource/$resource->id.json");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
 
@@ -54,10 +46,12 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
 
     public function testPermissionsViewContainSuccess(): void
     {
-        $this->authenticateAs('ada');
+        $user = UserFactory::make()->persist();
+        $group = GroupFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user, $group])->persist();
+        $this->logInAs($user);
         $urlParameter = 'contain[group]=1&contain[user]=1&contain[user.profile]=1';
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->getJson("/permissions/resource/$resourceId.json?$urlParameter&api-version=2");
+        $this->getJson("/permissions/resource/$resource->id.json?$urlParameter&api-version=2");
         $this->assertSuccess();
 
         // Search a user permission.
@@ -82,14 +76,14 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
 
     public function testPermissionsViewErrorNotAuthenticated(): void
     {
-        $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->getJson("/permissions/resource/$resourceId.json");
+        $resource = ResourceFactory::make()->persist();
+        $this->getJson("/permissions/resource/$resource->id.json");
         $this->assertAuthenticationError();
     }
 
     public function testPermissionsViewErrorNotValidId(): void
     {
-        $this->authenticateAs('dame');
+        $this->logInAsUser();
         $resourceId = 'invalid-id';
         $this->getJson("/permissions/resource/$resourceId.json");
         $this->assertError(400, 'The identifier should be a valid UUID.');
@@ -97,24 +91,24 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
 
     public function testPermissionsViewErrorSoftDeletedResource(): void
     {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $this->getJson("/permissions/resource/$resourceId.json");
+        $this->logInAsUser();
+        $resource = ResourceFactory::make()->deleted()->persist();
+        $this->getJson("/permissions/resource/$resource->id.json");
         $this->assertError(404, 'The resource does not exist.');
     }
 
     public function testPermissionsViewErrorResourceAccessDenied(): void
     {
-        $resourceId = UuidFactory::uuid('resource.id.canjs');
+        $resource = ResourceFactory::make()->persist();
 
         // Check that the resource exists.
         $Resources = TableRegistry::getTableLocator()->get('Resources');
-        $resource = $Resources->get($resourceId);
+        $resource = $Resources->get($resource->id);
         $this->assertNotNull($resource);
 
         // Check that the user cannot access the resource
-        $this->authenticateAs('dame');
-        $this->getJson("/permissions/resource/$resourceId.json");
+        $this->logInAsUser();
+        $this->getJson("/permissions/resource/$resource->id.json");
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -123,9 +117,9 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
      */
     public function testPermissionsViewController_Error_NotJson(): void
     {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->get("/permissions/resource/$resourceId");
+        $this->logInAsUser();
+        $resource = ResourceFactory::make()->persist();
+        $this->get("/permissions/resource/$resource->id");
         $this->assertResponseCode(404);
     }
 }

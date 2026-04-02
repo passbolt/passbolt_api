@@ -531,6 +531,25 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->assertTextContains('The user token result should be a valid UUID', $headers['X-GPGAuth-Debug']);
     }
 
+    /**
+     * Test that a user already logged in via session gets a 409 when trying to login again.
+     */
+    public function testAuthLoginController_Error_AlreadyLoggedIn(): void
+    {
+        $this->logInAsUser();
+
+        $this->postJson('/auth/login.json', [
+            'data' => [
+                'gpg_auth' => [
+                    'keyid' => $this->adaKeyId,
+                ],
+            ],
+        ]);
+
+        $this->assertResponseCode(409);
+        $this->assertResponseContains('You are already logged in.');
+    }
+
     // ====== UTILITIES =========================================================
 
     /**

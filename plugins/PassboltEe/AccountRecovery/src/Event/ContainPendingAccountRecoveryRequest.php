@@ -66,8 +66,12 @@ class ContainPendingAccountRecoveryRequest implements EventListenerInterface
         if (!$isContainInRequest) {
             return;
         }
-        /** @var \App\Model\Entity\User $identity */
+        /** @var \App\Model\Entity\User|null $identity */
         $identity = $controller->getRequest()->getAttribute('identity');
+        // Return if no user is authenticated
+        if (is_null($identity)) {
+            return;
+        }
         if ($identity->role->isAdmin()) {
             $this->isContained = true;
 

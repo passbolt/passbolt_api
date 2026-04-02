@@ -1,18 +1,20 @@
-$(function() {
+document.addEventListener('DOMContentLoaded', () => {
+  const schemaBlock = document.getElementById('schema-block');
+  const port = document.getElementById('port');
+  const driver = document.getElementById('driver');
+
   /**
-   * Detect id the driver is Postgres.
+   * Update port and schema visibility based on selected database driver.
    */
-  let handleDatabaseDriver = function() {
-    let schema = $("#schema-block");
-    let port = $("#port");
-    switch ($("#driver").val()) {
+  const handleDatabaseDriver = () => {
+    switch (driver.value) {
       case 'Cake\\Database\\Driver\\Postgres':
-        port.val('5432');
-        schema.show();
+        port.value = '5432';
+        schemaBlock.classList.remove('hidden');
         break;
       case 'Cake\\Database\\Driver\\Mysql':
-        port.val('3306');
-        schema.hide();
+        port.value = '3306';
+        schemaBlock.classList.add('hidden');
         break;
       default:
         break;
@@ -20,9 +22,5 @@ $(function() {
   };
 
   handleDatabaseDriver();
-  $("#driver")
-    .chosen({width: '100%', disable_search: true})
-    .change(function () {
-      handleDatabaseDriver();
-    });
+  driver.addEventListener('change', handleDatabaseDriver);
 });

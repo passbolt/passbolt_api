@@ -18,24 +18,18 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Groups;
 
 use App\Model\Table\GroupsTable;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
-use App\Test\Lib\Model\GroupsModelTrait;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class SaveTest extends AppTestCase
 {
     use FormatValidationTrait;
-    use GroupsModelTrait;
 
     public GroupsTable $Groups;
-
-    public array $fixtures = [
-        'app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Permissions',
-        'app.Base/Resources', 'app.Base/Favorites',
-    ];
 
     public function setUp(): void
     {
@@ -74,6 +68,21 @@ class SaveTest extends AppTestCase
         ];
     }
 
+    /**
+     * Build default group data using factories.
+     */
+    private function generateDummyGroup(array $data = []): array
+    {
+        $admin = UserFactory::make()->admin()->persist();
+
+        return array_merge([
+            'name' => 'New group name',
+            'created_by' => $admin->id,
+            'modified_by' => $admin->id,
+            'deleted' => false,
+        ], $data);
+    }
+
     /* FORMAT VALIDATION TESTS */
 
     public function testValidationName()
@@ -84,22 +93,21 @@ class SaveTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Groups, 'name', self::getDummyGroupData(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Groups, 'name', $this->generateDummyGroup(), self::getEntityDefaultOptions(), $testCases);
     }
 
     /* LOGIC VALIDATION TESTS */
 
     public function testSuccess()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
+        [$userA, $userB] = UserFactory::make(2)->persist();
         $groupData = [
             'groups_users' => [
-                ['user_id' => $userAId, 'is_admin' => true],
-                ['user_id' => $userBId],
+                ['user_id' => $userA->id, 'is_admin' => true],
+                ['user_id' => $userB->id],
             ],
         ];
-        $data = self::getDummyGroupData($groupData);
+        $data = $this->generateDummyGroup($groupData);
         $options = self::getEntityDefaultOptions();
         $entity = $this->Groups->newEntity($data, $options);
         $save = $this->Groups->save($entity);
@@ -115,8 +123,8 @@ class SaveTest extends AppTestCase
         $this->assertEquals($data['name'], $group->name);
         $this->assertEquals(false, $group->deleted);
         $this->assertCount(2, $group->groups_users);
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
+        $userAId = $userA->id;
+        $userBId = $userB->id;
         $groupUserA = Hash::extract($group->groups_users, "{n}[user_id=$userAId][is_admin=true]");
         $this->assertNotEmpty($groupUserA);
         $groupUserB = Hash::extract($group->groups_users, "{n}[user_id=$userBId]");
@@ -125,17 +133,17 @@ class SaveTest extends AppTestCase
 
     public function testSuccessRuleGroupUnique()
     {
-        $group = $this->Groups->findById(UuidFactory::uuid('group.id.freelancer'))->first();
+        $groupId = GroupFactory::make(['name' => 'Freelancer'])->persist()->id;
+        $group = $this->Groups->findById($groupId)->first();
         $this->Groups->softDelete($group);
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
+        [$userA, $userB] = UserFactory::make(2)->persist();
         $groupData = [
             'groups_users' => [
-                ['user_id' => $userAId, 'is_admin' => true],
-                ['user_id' => $userBId],
+                ['user_id' => $userA->id, 'is_admin' => true],
+                ['user_id' => $userB->id],
             ],
         ];
-        $data = self::getDummyGroupData($groupData);
+        $data = $this->generateDummyGroup($groupData);
         $data['name'] = 'Freelancer';
         $options = self::getEntityDefaultOptions();
         $entity = $this->Groups->newEntity($data, $options);
@@ -146,7 +154,8 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleGroupUnique()
     {
-        $data = self::getDummyGroupData();
+        GroupFactory::make(['name' => 'Freelancer'])->persist();
+        $data = $this->generateDummyGroup();
         $data['name'] = 'Freelancer';
         $options = self::getEntityDefaultOptions();
         $entity = $this->Groups->newEntity($data, $options);
@@ -159,10 +168,11 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleAtLeastOneAdmin()
     {
-        $data = self::getDummyGroupData();
+        $data = $this->generateDummyGroup();
+        [$userA, $userB] = UserFactory::make(2)->persist();
         $data['groups_users'] = [
-            ['user_id' => UuidFactory::uuid('user.id.ada')],
-            ['user_id' => UuidFactory::uuid('user.id.betty')],
+            ['user_id' => $userA->id],
+            ['user_id' => $userB->id],
         ];
         $options = self::getEntityDefaultOptions();
         $entity = $this->Groups->newEntity($data, $options);

@@ -30,6 +30,7 @@ use Passbolt\Sso\Form\SsoSettingsAdfsDataForm;
 use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Form\SsoSettingsGoogleDataForm;
 use Passbolt\Sso\Form\SsoSettingsOAuth2DataForm;
+use Passbolt\Sso\Form\SsoSettingsPingOneDataForm;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 
@@ -165,6 +166,8 @@ class SsoSettingsSetService
                 return new SsoSettingsOAuth2DataForm();
             case SsoSetting::PROVIDER_ADFS:
                 return new SsoSettingsAdfsDataForm();
+            case SsoSetting::PROVIDER_PINGONE:
+                return new SsoSettingsPingOneDataForm();
             default:
                 throw new BadRequestException('Service provider not supported.');
         }

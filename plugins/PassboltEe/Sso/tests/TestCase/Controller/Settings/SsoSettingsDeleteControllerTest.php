@@ -22,9 +22,27 @@ use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
 
 class SsoSettingsDeleteControllerTest extends SsoIntegrationTestCase
 {
-    public function testSsoSettingsDeleteController_SuccessAzure(): void
+    /**
+     * @see testSsoSettingsDeleteController_Success
+     * @return array[]
+     */
+    public static function ssoSettingsDeleteSuccessProvider(): array
     {
-        $ssoSetting = SsoSettingsFactory::make()->persist();
+        return [
+            'Azure' => [fn () => SsoSettingsFactory::make()->azure()],
+            'Google' => [fn () => SsoSettingsFactory::make()->google()],
+            'OAuth2' => [fn () => SsoSettingsFactory::make()->oauth2()],
+            'ADFS' => [fn () => SsoSettingsFactory::make()->adfs()],
+            'PingOne' => [fn () => SsoSettingsFactory::make()->pingone()],
+        ];
+    }
+
+    /**
+     * @dataProvider ssoSettingsDeleteSuccessProvider
+     */
+    public function testSsoSettingsDeleteController_Success(callable $factorySetup): void
+    {
+        $ssoSetting = $factorySetup()->persist();
         $this->logInAsAdmin();
         $this->deleteJson('/sso/settings/' . $ssoSetting->id . '.json');
         $this->assertSuccess();

@@ -254,7 +254,7 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
                                                         <tr>
                                                             <td valign="top" class="textContentLast" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #404040;font-family: Helvetica;font-size: 12px;line-height: 125%;text-align: center;padding-bottom: 20px;">
                                                                 <?= __('This email is an automatic notification sent by'); ?> <a href="<?php echo Purifier::clean($fullBaseUrl) ?>" style="-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #888888;text-decoration: underline;"><?php echo Purifier::clean($fullBaseUrl) ?></a>.
-                                                                <?= __('You can disable these notifications by requesting an administrator to delete your account.'); ?>
+                                                                <?= __('To disable these notifications, contact an administrator.'); ?>
                                                             </td>
                                                         </tr>
                                                     </table>

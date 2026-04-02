@@ -22,32 +22,12 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaSetupSelectProviderControllerTest extends MfaIntegrationTestCase
 {
-    public function testMfaSetupSelectProviderController_MFA_Not_Possible()
+    public function testMfaSetupSelectProviderController_Error_NotJson()
     {
         $this->logInAsUser();
         $this->get('https://foo.com/mfa/setup/select');
-        $this->assertResponseOk();
-        $this->assertResponseContains('Sorry no multi factor authentication is enabled for this organization.');
-    }
-
-    public function testMfaSetupSelectProviderController_MFA_Not_On_HTTPS_Is_Allowed()
-    {
-        $this->logInAsUser();
-        $this->get('http://foo.local/mfa/setup/select');
-        $this->assertResponseOk();
-        $this->assertResponseContains('Sorry no multi factor authentication is enabled for this organization.');
-    }
-
-    public function testMfaSetupSelectProviderController_MFA_With_MultipleProviders()
-    {
-        $this->logInAsUser();
-        MfaOrganizationSettingFactory::make()->duoWithTotp()->persist();
-        $this->get('https://foo.com/mfa/setup/select');
-        $this->assertResponseOk();
-        $this->assertResponseContains('start');
-        $this->assertResponseContains('Duo MFA');
-        $this->assertResponseContains('img/third_party/duo.svg');
-        $this->assertResponseNotContains('Yubikey OTP');
+        $this->assertResponseError();
+        $this->assertResponseContains('This functionality is only available using AJAX/JSON.');
     }
 
     public function testMfaSetupSelectProviderController_MFA_With_MultipleProviders_Json_Https()

@@ -59,6 +59,7 @@ class ScimGetSettingsServiceTest extends AppTestCase
             'setting_id',
             'scim_user_id',
             'secret_token',
+            'expired',
         ], array_keys($value));
         $this->assertSame($data, $value);
     }
@@ -76,6 +77,7 @@ class ScimGetSettingsServiceTest extends AppTestCase
             'scim_user_id',
             'id',
             'base_api_endpoint',
+            'expired',
             'created',
             'modified',
             'created_by',

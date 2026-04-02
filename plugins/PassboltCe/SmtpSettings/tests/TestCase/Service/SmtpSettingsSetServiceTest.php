@@ -22,6 +22,7 @@ use App\Model\Entity\OrganizationSetting;
 use App\Test\Factory\UserFactory;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
+use Cake\Utility\Text;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSetService;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
@@ -118,6 +119,35 @@ class SmtpSettingsSetServiceTest extends TestCase
         $settings = SmtpSettingFactory::find()->firstOrFail();
         unset($data['bar']);
         $this->assertSame($data, $this->decryptSettings($settings));
+    }
+
+    public function testSmtpSettingsSetServiceTest_Valid_WithOauth2Fields(): void
+    {
+        $this->gpgSetup();
+        $data = $this->getSmtpSettingsData();
+        $data = array_merge($data, [
+            'authentication_method' => 'oauth2_client_credentials',
+            'tenant_id' => Text::uuid(),
+            'client_id' => Text::uuid(),
+            'client_secret' => 'my-client-secret',
+            'oauth_username' => 'user@example.com',
+            // non-oauth2 fields set to null
+            'username' => null,
+            'password' => null,
+        ]);
+
+        $settings = $this->service->saveSettings($data);
+
+        $this->assertInstanceOf(OrganizationSetting::class, $settings);
+        $this->assertSame(1, SmtpSettingFactory::count());
+        $decryptedSettings = $this->decryptSettings($settings);
+        $this->assertSame($data['tenant_id'], $decryptedSettings['tenant_id']);
+        $this->assertSame($data['client_id'], $decryptedSettings['client_id']);
+        $this->assertSame($data['client_secret'], $decryptedSettings['client_secret']);
+        $this->assertSame($data['oauth_username'], $decryptedSettings['oauth_username']);
+        // username and password should be null in OAuth2 mode
+        $this->assertNull($decryptedSettings['username']);
+        $this->assertNull($decryptedSettings['password']);
     }
 
     public static function data_For_testSmtpSettingsSetServiceTest_Valid(): array

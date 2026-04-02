@@ -36,6 +36,7 @@ use Passbolt\Scim\Middleware\ScimAuthMiddleware;
 use Passbolt\Scim\Middleware\ScimLogMiddleware;
 use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Service\Healthcheck\ScimHealthcheck;
+use Passbolt\Scim\Service\Healthcheck\ScimSecretTokenExpiryHealthcheck;
 use Passbolt\Scim\Utility\ScimConstants;
 
 /**
@@ -55,7 +56,6 @@ class ScimPlugin extends BasePlugin
     public function bootstrap(PluginApplicationInterface $app): void
     {
         parent::bootstrap($app);
-        Configure::write('passbolt.plugins.scim.isInBeta', true);
         $this->attachListeners($app->getEventManager());
         $this->addScimAssociationToUsers();
         $this->addScimAssociationToScimUsers();
@@ -77,12 +77,14 @@ class ScimPlugin extends BasePlugin
      */
     public function services(ContainerInterface $container): void
     {
-        // SSO Health checks
+        // SCIM Health checks
         $container->add(ScimHealthcheck::class);
-        // Add SSO health check services to collector
+        $container->add(ScimSecretTokenExpiryHealthcheck::class);
+        // Add SCIM health check services to collector
         $container
             ->extend(HealthcheckServiceCollector::class)
-            ->addMethodCall('addService', [ScimHealthcheck::class]);
+            ->addMethodCall('addService', [ScimHealthcheck::class])
+            ->addMethodCall('addService', [ScimSecretTokenExpiryHealthcheck::class]);
         $container
             ->extend(BodyParserMiddleware::class)
             ->addMethodCall('addParser', [

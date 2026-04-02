@@ -49,6 +49,18 @@ class GroupsAddController extends AppController
         $GroupsTable = $this->fetchTable('Groups');
         $group = $GroupsTable->create($data, $this->User->getAccessControl());
 
+        // Retrieve the saved group with requested contains.
+        $whitelist = [
+            'contain' => ['my_group_user'],
+        ];
+        $options = $this->QueryString->get($whitelist);
+        // Always contain the groups_users in the response
+        $options['contain']['groups_users'] = true;
+        if (isset($options['contain']['my_group_user'])) {
+            $options['my_user_id'] = $this->User->id();
+        }
+        $group = $GroupsTable->findView($group->id, $options)->firstOrFail();
+
         $msg = __('The group has been added successfully.');
         $this->success($msg, $group);
     }

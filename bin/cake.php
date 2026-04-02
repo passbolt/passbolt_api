@@ -1,5 +1,10 @@
 #!/usr/bin/php -q
 <?php
+// =================================================================
+// ⚠ WARNING
+// This file is patched while building official packages.
+// If you do any changes make sure to notify the SRE/packaging team.
+// =================================================================
 // Check platform requirements
 require dirname(__DIR__) . '/config/requirements.php';
 require dirname(__DIR__) . '/vendor/autoload.php';

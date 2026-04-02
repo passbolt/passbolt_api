@@ -19,6 +19,7 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Form;
 use App\Test\Lib\Model\FormatValidationTrait;
 use Cake\Event\EventDispatcherTrait;
 use Cake\TestSuite\TestCase;
+use Cake\Utility\Text;
 use Faker\Factory;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
@@ -156,6 +157,7 @@ class EmailConfigurationFormTest extends TestCase
     public function testEmailConfigurationForm_Error_OnWebInstaller_AuthenticationMethodFieldIsRequired()
     {
         $data = $this->getSmtpSettingsData();
+        unset($data['authentication_method']);
 
         $result = $this->form->execute($data, ['validate' => 'webInstaller']);
 
@@ -306,5 +308,209 @@ class EmailConfigurationFormTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    // ---------------------------
+    // OAuth2 tests
+    // ---------------------------
+
+    public function testEmailConfigurationForm_Oauth2Execute_AllFieldsValid(): void
+    {
+        $data = $this->getSmtpSettingsData();
+        $data['authentication_method'] = 'oauth2_client_credentials';
+        $data['tenant_id'] = Text::uuid();
+        $data['client_id'] = Text::uuid();
+        $data['client_secret'] = 'my-secret';
+        $data['oauth_username'] = 'user@example.com';
+
+        $result = $this->form->execute($data);
+        $this->assertTrue($result);
+    }
+
+    public static function emptyOAuth2FieldsProvider(): array
+    {
+        return [
+            [
+                [
+                    'tenant_id' => '',
+                    'client_id' => '',
+                    'client_secret' => '',
+                    'oauth_username' => '',
+                ],
+            ],
+            [
+                [
+                    'tenant_id' => null,
+                    'client_id' => null,
+                    'client_secret' => null,
+                    'oauth_username' => null,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider emptyOAuth2FieldsProvider
+     * @param array $emptyData Data to override.
+     * @return void
+     */
+    public function testEmailConfigurationForm_Oauth2Fields_PermissiveWhenEmpty(array $emptyData): void
+    {
+        $data = array_merge($this->getSmtpSettingsData(), $emptyData);
+        $result = $this->form->execute($data);
+        $this->assertTrue($result);
+    }
+
+    public static function invalidOAuth2ValuesProvider(): array
+    {
+        return [
+            [
+                [
+                    'tenant_id' => 'not-a-uuid',
+                    'client_id' => 'not-a-uuid',
+                    'client_secret' => 'super-secret',
+                    'oauth_username' => 'user@example.com',
+                ],
+                ['tenant_id', 'client_id'],
+            ],
+            [
+                [
+                    'tenant_id' => Text::uuid(),
+                    'client_id' => Text::uuid(),
+                    'client_secret' => str_repeat('a', 257),
+                    'oauth_username' => 'user@example.com',
+                ],
+                ['client_secret'],
+            ],
+            [
+                [
+                    'tenant_id' => Text::uuid(),
+                    'client_id' => Text::uuid(),
+                    'client_secret' => 'super-secret',
+                    'oauth_username' => 'not-an-email',
+                ],
+                ['oauth_username'],
+            ],
+            [
+                [
+                    'tenant_id' => Text::uuid(),
+                    'client_id' => Text::uuid(),
+                    'client_secret' => 'super-secret',
+                    'oauth_username' => str_repeat('a', 246) . '@example.com',
+                ],
+                ['oauth_username'],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidOAuth2ValuesProvider
+     * @param array $invalidData Invalid data to test.
+     * @param array $errorFields Field keys with errors.
+     * @return void
+     */
+    public function testEmailConfigurationForm_InvalidOauth2Data(array $invalidData, array $errorFields): void
+    {
+        $data = array_merge($this->getSmtpSettingsData(), $invalidData);
+        $result = $this->form->execute($data);
+        $this->assertFalse($result);
+        $errors = $this->form->getErrors();
+        $this->assertCount(count($errorFields), $errors);
+        foreach ($errorFields as $field) {
+            $this->assertArrayHasKey($field, $errors);
+        }
+    }
+
+    public function testEmailConfigurationForm_Oauth2Execute_RequiresAllFields(): void
+    {
+        $data = $this->getSmtpSettingsData();
+        $data['authentication_method'] = 'oauth2_client_credentials';
+        // Missing all OAuth2 fields
+        $result = $this->form->execute($data);
+        $this->assertFalse($result);
+        $errors = $this->form->getErrors();
+        $this->assertArrayHasKey('tenant_id', $errors);
+        $this->assertArrayHasKey('client_id', $errors);
+        $this->assertArrayHasKey('client_secret', $errors);
+        $this->assertArrayHasKey('oauth_username', $errors);
+    }
+
+    public static function dataForOauth2MissingRequiredField(): array
+    {
+        return [
+            ['tenant_id'],
+            ['client_id'],
+            ['client_secret'],
+            ['oauth_username'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataForOauth2MissingRequiredField
+     */
+    public function testEmailConfigurationForm_Oauth2Execute_MissingField(string $missingField): void
+    {
+        $data = $this->getSmtpSettingsData();
+        $data['authentication_method'] = 'oauth2_client_credentials';
+        $data['tenant_id'] = Text::uuid();
+        $data['client_id'] = Text::uuid();
+        $data['client_secret'] = 'my-secret';
+        $data['oauth_username'] = 'user@example.com';
+        unset($data[$missingField]);
+
+        $result = $this->form->execute($data);
+        $this->assertFalse($result);
+        $this->assertArrayHasKey($missingField, $this->form->getErrors());
+    }
+
+    public function testEmailConfigurationForm_FilterOauth2Fields_Oauth2NullifiesUsernamePassword(): void
+    {
+        $data = $this->getSmtpSettingsData();
+        $data['authentication_method'] = 'oauth2_client_credentials';
+        $data['tenant_id'] = Text::uuid();
+        $data['client_id'] = Text::uuid();
+        $data['client_secret'] = 'my-secret';
+        $data['oauth_username'] = 'user@example.com';
+        $data['username'] = 'should-be-nullified';
+        $data['password'] = 'should-be-nullified';
+
+        $this->form->execute($data);
+        $this->assertNull($this->form->getData('username'));
+        $this->assertNull($this->form->getData('password'));
+    }
+
+    public function testEmailConfigurationForm_FilterOauth2Fields_NonOauth2NullifiesOauth2Fields(): void
+    {
+        $data = $this->getSmtpSettingsData();
+        $data['authentication_method'] = 'username_and_password';
+        $data['tenant_id'] = Text::uuid();
+        $data['client_id'] = Text::uuid();
+        $data['client_secret'] = 'my-secret';
+        $data['oauth_username'] = 'user@example.com';
+
+        $this->form->execute($data);
+        $this->assertNull($this->form->getData('tenant_id'));
+        $this->assertNull($this->form->getData('client_id'));
+        $this->assertNull($this->form->getData('client_secret'));
+        $this->assertNull($this->form->getData('oauth_username'));
+    }
+
+    public function testEmailConfigurationForm_FilterOauth2Fields_NoAuthMethodLeavesAllUnchanged(): void
+    {
+        $data = $this->getSmtpSettingsData();
+        $tenantId = Text::uuid();
+        $data['tenant_id'] = $tenantId;
+        // No authentication_method key
+
+        $this->form->execute($data);
+        $this->assertSame($tenantId, $this->form->getData('tenant_id'));
+    }
+
+    public function testEmailConfigurationForm_BackwardCompat_ExistingDataWithoutOauth2Fields(): void
+    {
+        $data = $this->getSmtpSettingsData();
+        // No OAuth2 fields at all - should pass validation
+        $result = $this->form->execute($data);
+        $this->assertTrue($result);
     }
 }
