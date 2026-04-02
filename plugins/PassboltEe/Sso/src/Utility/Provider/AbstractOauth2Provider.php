@@ -278,10 +278,20 @@ abstract class AbstractOauth2Provider extends AbstractProvider
             throw new InternalErrorException(__('Invalid JWKS endpoint response. Keys missing.'));
         }
 
-        $defaultAlg = Configure::read('passbolt.plugins.sso.security.jwks.defaultAlg');
+        $defaultAlg = $this->getJwksDefaultAlg();
         $this->assertJwkDefaultAlg($defaultAlg);
 
         return JWK::parseKeySet($response, $defaultAlg);
+    }
+
+    /**
+     * Returns the alg of the keys.
+     *
+     * @return mixed
+     */
+    protected function getJwksDefaultAlg(): mixed
+    {
+        return Configure::read('passbolt.plugins.sso.security.jwks.defaultAlg');
     }
 
     /**

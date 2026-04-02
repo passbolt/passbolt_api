@@ -178,6 +178,14 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
             ->setMiddleware([SsoEndpointsSecurityMiddleware::class]);
 
         $routes
+            ->connect('/pingone/login', [
+                'prefix' => 'PingOne',
+                'controller' => 'SsoPingOneStage1',
+                'action' => 'stage1',
+            ])
+            ->setMethods(['POST']);
+
+        $routes
             ->connect('/pingone/redirect', [
                 'prefix' => 'PingOne',
                 'controller' => 'SsoPingOneStage2',

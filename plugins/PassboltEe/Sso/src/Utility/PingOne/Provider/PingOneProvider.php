@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Sso\Utility\PingOne\Provider;
 
+use Cake\Core\Configure;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
@@ -83,6 +84,18 @@ class PingOneProvider extends OAuth2Provider
             // Map OAuth2 exception with PingOne exception
             throw new PingOneException($data['error'], $data['error_description']);
         }
+    }
+
+    /**
+     * PingOne's JWKS endpoint does not include the "alg" parameter in JWK entries.
+     *  This override defaults to RS256 (PingOne's standard signing algorithm) when
+     *  no global defaultAlg configuration is set.
+     *
+     * @retrun mixed
+     */
+    protected function getJwksDefaultAlg(): mixed
+    {
+        return Configure::read('passbolt.plugins.sso.security.jwks.defaultAlg') ?? 'RS256';
     }
 
     /**
