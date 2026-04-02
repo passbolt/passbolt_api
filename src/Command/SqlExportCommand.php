@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Command;
 
+use App\Utility\CommandRunner;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
@@ -25,6 +26,7 @@ use Cake\Database\Driver\Mysql;
 use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\Exception\MissingDatasourceConfigException;
+use Symfony\Component\Process\Process;
 
 class SqlExportCommand extends PassboltCommand
 {
@@ -167,22 +169,21 @@ class SqlExportCommand extends PassboltCommand
     /**
      * MySQL dump
      *
-     * @param array $config Databse config
+     * @param array $config Database config
      * @param string $dir Target directory
      * @param string $file Target file
      * @return int
      */
     protected function mysqlDump(array $config, string $dir, string $file): int
     {
-        // Build the dump command.
-        $cmd = 'mysqldump -h' . escapeshellarg($config['host']) . ' -u' . escapeshellarg($config['username']);
+        $cmd = ['mysqldump', '-h', $config['host'], '-u', $config['username']];
         if (!empty($config['password'])) {
-            $cmd .= ' -p' . escapeshellarg($config['password']);
+            // mysqldump expects password immediately after -p with no space: -p<password>
+            $cmd[] = '-p' . $config['password'];
         }
-        $cmd .= ' ' . escapeshellarg($config['database']) . ' > ' . $dir . $file;
-        exec($cmd, $output, $status);
+        $cmd[] = $config['database'];
 
-        return $status;
+        return $this->runDumpCommand($cmd, $dir . $file);
     }
 
     /**
@@ -195,34 +196,65 @@ class SqlExportCommand extends PassboltCommand
      */
     protected function mariaDbDump(array $config, string $dir, string $file): int
     {
-        // Build the dump command.
-        $cmd = 'mariadb-dump -h' . escapeshellarg($config['host']) . ' -u' . escapeshellarg($config['username']);
+        $cmd = ['mariadb-dump', '-h', $config['host'], '-u', $config['username']];
         if (!empty($config['password'])) {
-            $cmd .= ' -p' . escapeshellarg($config['password']);
+            // mariadb-dump expects password immediately after -p with no space: -p<password>
+            $cmd[] = '-p' . $config['password'];
         }
-        $cmd .= ' ' . escapeshellarg($config['database']) . ' > ' . $dir . $file;
-        exec($cmd, $output, $status);
+        $cmd[] = $config['database'];
 
-        return $status;
+        return $this->runDumpCommand($cmd, $dir . $file);
     }
 
     /**
      * PostgreSQL dump
      *
-     * @param array $config Databse config
+     * @param array $config Database config
      * @param string $dir Target directory
      * @param string $file Target file
      * @return int
      */
     protected function postgresDump(array $config, string $dir, string $file): int
     {
-        // Build the dump command.
-        $cmd = 'PGPASSWORD=' . escapeshellarg($config['password']) . ' pg_dump -h ' . escapeshellarg($config['host']);
-        $cmd .= ' -U ' . escapeshellarg($config['username']);
-        $cmd .= ' -d ' . escapeshellarg($config['database']) . ' > ' . $dir . $file;
-        exec($cmd, $output, $status);
+        $cmd = ['pg_dump', '-h', $config['host'], '-U', $config['username'], '-d', $config['database']];
+        $env = ['PGPASSWORD' => $config['password']];
 
-        return $status;
+        return $this->runDumpCommand($cmd, $dir . $file, $env);
+    }
+
+    /**
+     * Execute a dump command and write its output to a file.
+     *
+     * @param array $cmd Command as array of arguments.
+     * @param string $filePath Absolute path to the output file.
+     * @param array|null $env Optional environment variables.
+     * @return int Exit code (0 = success).
+     */
+    private function runDumpCommand(array $cmd, string $filePath, ?array $env = null): int
+    {
+        $fileHandle = fopen($filePath, 'w');
+        if ($fileHandle === false) {
+            return $this->errorCode();
+        }
+
+        // To fix high memory consumption on large database dumps use incremental output to a file descriptor.
+        $callback = function (string $type, string $buffer) use ($fileHandle): void {
+            if ($type === Process::OUT) {
+                fwrite($fileHandle, $buffer);
+            }
+        };
+
+        // Timeout disabled (null) — database dumps can take minutes on large datasets.
+        $process = CommandRunner::run($cmd, null, $env, null, null, $callback);
+        fclose($fileHandle);
+
+        if ($process === false || !$process->isSuccessful()) {
+            unlink($filePath);
+
+            return $this->errorCode();
+        }
+
+        return $this->successCode();
     }
 
     /**

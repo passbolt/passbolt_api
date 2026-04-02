@@ -19,9 +19,13 @@ namespace App\Test\TestCase\Command;
 use App\Mailer\Transport\DebugTransport;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\EmailTestTrait;
+use App\Utility\UuidFactory;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
+use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
 
 /**
@@ -110,6 +114,60 @@ class SendTestEmailCommandTest extends AppTestCase
         $this->assertExitSuccess();
         $this->assertOutputContains('<info>Trace</info>');
         $this->assertOutputContains('<info> Password: *****</info>');
+        $this->assertMailSentToAt(0, [$recipient => $recipient]);
+        $this->assertMailSubjectContainsAt(0, 'Passbolt test email');
+        $this->assertMailCount(1);
+    }
+
+    public function testSendTestEmailCommandWithRecipient_Oauth2ExchangeOnline(): void
+    {
+        // Set oauth2 related fields in transport for testing
+        $config = array_merge(TransportFactory::getConfig('default'), [
+            'tenant_id' => UuidFactory::uuid(),
+            'client_id' => UuidFactory::uuid(),
+            'client_secret' => 'secret',
+            'oauth_username' => 'test@example.com',
+        ]);
+        TransportFactory::drop('default');
+        TransportFactory::setConfig('default', $config);
+
+        $recipient = 'test@passbolt.test';
+        $this->mockService(SmtpSettingsTestEmailService::class, function () use ($recipient) {
+            $trace = [['cmd' => 'AUTH XOAUTH2 *****']];
+
+            // Build expected config the same way the command does
+            $expectedConfig = (new SmtpSettingsGetService())->getSettings();
+            $expectedConfig[SmtpSettingsSendTestMailerService::EMAIL_TEST_TO] = $recipient;
+
+            $service = $this->getMockBuilder(SmtpSettingsTestEmailService::class)
+                ->onlyMethods(['sendTestEmail', 'getTrace'])
+                ->disableOriginalConstructor()
+                ->getMock();
+            $service->expects($this->once())->method('sendTestEmail')
+                ->with($expectedConfig)
+                ->willReturnCallback(function ($config) {
+                    // Send email via DebugTransport to satisfy mail assertions (bypasses OAuth2 token fetch)
+                    $email = new Mailer(['transport' => TransportFactory::get('default')]);
+                    $email->setFrom([$config['sender_email'] => $config['sender_name']])
+                        ->setTo($config[SmtpSettingsSendTestMailerService::EMAIL_TEST_TO])
+                        ->setSubject(__('Passbolt test email'))
+                        ->deliver('Test');
+                });
+            $service->method('getTrace')->willReturn($trace);
+
+            return $service;
+        });
+
+        $this->exec('passbolt send_test_email -r ' . $recipient);
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('<info>Email configuration</info>');
+        $this->assertOutputContains('Tenant ID: ');
+        $this->assertOutputContains('Client ID: ');
+        $this->assertOutputContains('Client Secret: *********');
+        $this->assertOutputContains('Username: ');
+        $this->assertOutputContains('<info>Trace</info>');
+        $this->assertOutputContains('<info> AUTH XOAUTH2 *****</info>');
         $this->assertMailSentToAt(0, [$recipient => $recipient]);
         $this->assertMailSubjectContainsAt(0, 'Passbolt test email');
         $this->assertMailCount(1);

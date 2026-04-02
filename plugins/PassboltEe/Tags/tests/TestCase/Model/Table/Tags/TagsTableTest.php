@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
@@ -20,6 +20,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
+use Cake\Database\Driver\Mysql;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
@@ -220,6 +221,48 @@ class TagsTableTest extends TagTestCase
         ]);
 
         $this->assertSame(1, $tagsAccessibleToUser->all()->count());
+    }
+
+    /**
+     * Verify that getCaseSensitiveValue and getCaseSensitiveValues produce unique
+     * bind placeholders when called on the same query object. A collision would
+     * cause CakePHP's query binder to silently overwrite a previously bound value,
+     * returning incorrect results.
+     *
+     * @return void
+     */
+    public function testTagsTable_CaseSensitivePlaceholdersDoNotCollideWhenBothMethodsUsedOnSameQuery(): void
+    {
+        if (!$this->Tags->getConnection()->getDriver() instanceof Mysql) {
+            $this->markTestSkipped('Case-sensitive placeholders are only generated for MySQL/MariaDB.');
+        }
+
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->persist();
+
+        TagFactory::make(['slug' => 'alpha'])->isPersonalFor($resource, $user)->persist();
+        TagFactory::make(['slug' => 'beta'])->isPersonalFor($resource, $user)->persist();
+        TagFactory::make(['slug' => 'gamma'])->isPersonalFor($resource, $user)->persist();
+
+        // Build a single query and call both methods on it — this is the collision scenario.
+        $query = $this->Tags->find()->select(['Tags.id', 'Tags.slug']);
+        $singleExpr = $this->Tags->getCaseSensitiveValue($query, 'alpha');
+        $multiExprs = $this->Tags->getCaseSensitiveValues($query, ['beta', 'gamma']);
+
+        $query->where([
+            'OR' => [
+                ['Tags.slug' => $singleExpr],
+                ['Tags.slug IN' => $multiExprs],
+            ],
+        ]);
+
+        $results = $query->all()->toArray();
+        $slugs = Hash::extract($results, '{n}.slug');
+        sort($slugs);
+
+        // If placeholders collided, 'alpha' would be overwritten, and we'd get fewer/wrong results.
+        $this->assertCount(3, $results);
+        $this->assertSame(['alpha', 'beta', 'gamma'], $slugs);
     }
 
     public static function hydrateQueryProvider(): array

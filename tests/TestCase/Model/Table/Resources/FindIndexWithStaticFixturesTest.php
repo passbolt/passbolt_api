@@ -1,0 +1,102 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
+
+namespace App\Test\TestCase\Model\Table\Resources;
+
+use App\Model\Table\ResourcesTable;
+use App\Test\Lib\AppTestCase;
+use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
+use Passbolt\TestData\Lib\PermissionMatrix;
+
+class FindIndexWithStaticFixturesTest extends AppTestCase
+{
+    /**
+     * @var ResourcesTable
+     */
+    public $Resources;
+
+    public array $fixtures = [
+        'app.Base/Users',
+        'app.Base/Groups',
+        'app.Base/GroupsUsers',
+        'app.Base/ResourceTypes',
+        'app.Base/Resources',
+        'app.Base/Secrets',
+        'app.Base/Favorites',
+        'app.Base/Permissions',
+    ];
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $config = TableRegistry::getTableLocator()->exists('Resources') ? [] : ['className' => ResourcesTable::class];
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources', $config);
+    }
+
+    public function testContainPermission()
+    {
+        $findIndexOptions['contain']['permission'] = true;
+        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
+        foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
+            // Find all the resources for the current user.
+            $userId = UuidFactory::uuid("user.id.$userAlias");
+            $resources = $this->Resources->findIndex($userId, $findIndexOptions)->all();
+
+            // Check expected permissions are there.
+            foreach ($usersExpectedPermissions as $resourceAlias => $expectedPermissionType) {
+                $resourceId = UuidFactory::uuid("resource.id.$resourceAlias");
+                $resource = @Hash::extract($resources->toArray(), "{n}[id=$resourceId]")[0]; // phpcs:ignore
+                if ($expectedPermissionType == 0) {
+                    $this->assertEmpty($resource, "$userAlias should not have a permission [$expectedPermissionType] for $resourceAlias");
+                } else {
+                    $this->assertNotEmpty($resource, "$userAlias should have a permission [$expectedPermissionType] for $resourceAlias");
+                    $this->assertPermissionAttributes($resource->permission);
+                    $this->assertEquals($expectedPermissionType, $resource->permission->type, "$userAlias should have a permission [$expectedPermissionType] for $resourceAlias");
+                }
+            }
+        }
+    }
+
+    public function testPermissions()
+    {
+        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
+        foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
+            $expectedResourcesIds = array_reduce(array_keys($usersExpectedPermissions), function ($result, $key) use ($usersExpectedPermissions) {
+                if ($usersExpectedPermissions[$key] == 0) {
+                    return $result;
+                }
+                $result[] = UuidFactory::uuid("resource.id.$key");
+
+                return $result;
+            }, []);
+
+            // Find all the resources for the current user.
+            $userId = UuidFactory::uuid("user.id.$userAlias");
+            $resources = $this->Resources->findIndex($userId)->all();
+            $resourcesIds = $resources->reduce(function ($result, $row) {
+                $result[] = $row->id;
+
+                return $result;
+            }, []);
+
+            $this->assertEmpty(array_diff($expectedResourcesIds, $resourcesIds), "There is a problem with the permissions of $userAlias");
+            $this->assertEmpty(array_diff($resourcesIds, $expectedResourcesIds), "There is a problem with the permissions of $userAlias");
+        }
+    }
+}

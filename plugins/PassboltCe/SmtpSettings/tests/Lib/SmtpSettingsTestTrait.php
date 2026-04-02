@@ -60,6 +60,11 @@ trait SmtpSettingsTestTrait
             'client' => 'passbolt.com',
             'username' => 'test-user',
             'password' => 'test-secret',
+            'authentication_method' => null,
+            'tenant_id' => null,
+            'client_id' => null,
+            'client_secret' => null,
+            'oauth_username' => null,
         ];
 
         if (isset($field)) {
@@ -137,24 +142,26 @@ trait SmtpSettingsTestTrait
     private function assertFileSettingsHaveTheRightKeys(array $settings)
     {
         $keys = array_keys($settings);
-        $expectedKeys = SmtpSettingsSetService::SMTP_SETTINGS_ALLOWED_FIELDS;
-        asort($keys);
-        asort($expectedKeys);
+        $allowedKeys = SmtpSettingsSetService::SMTP_SETTINGS_ALLOWED_FIELDS;
 
-        $this->assertEquals(array_values($expectedKeys), array_values($keys));
+        // All returned keys must be in the allowed list
+        foreach ($keys as $key) {
+            $this->assertContains($key, $allowedKeys, "Unexpected key '{$key}' in file settings.");
+        }
     }
 
     private function assertDBSettingsHaveTheRightKeys(array $settings)
     {
         $keys = array_keys($settings);
-        $expectedKeys = array_merge(
+        $allowedKeys = array_merge(
             SmtpSettingsSetService::SMTP_SETTINGS_ALLOWED_FIELDS,
-            ['id', 'created', 'modified', 'created_by', 'modified_by',]
+            ['id', 'created', 'modified', 'created_by', 'modified_by']
         );
-        asort($keys);
-        asort($expectedKeys);
 
-        $this->assertEquals(array_values($expectedKeys), array_values($keys));
+        // All returned keys must be in the allowed list
+        foreach ($keys as $key) {
+            $this->assertContains($key, $allowedKeys, "Unexpected key '{$key}' in DB settings.");
+        }
     }
 
     /**

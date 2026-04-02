@@ -17,11 +17,11 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Secrets;
 
-use App\Model\Entity\Permission;
+use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
-use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
@@ -29,12 +29,6 @@ use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 class SaveTest extends AppTestCase
 {
     use FormatValidationTrait;
-    use PermissionsModelTrait;
-
-    public array $fixtures = [
-        'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Permissions',
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers',
-    ];
 
     /**
      * @var \App\Model\Table\SecretsTable
@@ -70,6 +64,22 @@ class SaveTest extends AppTestCase
         ];
     }
 
+    /**
+     * Build default secret data using factories.
+     */
+    private function generateDummySecretData(array $data = []): array
+    {
+        $resource = ResourceFactory::make()->persist();
+        $user = UserFactory::make()->persist();
+
+        return array_merge([
+            'resource_id' => $resource->id,
+            'user_id' => $user->id,
+            'secret_revision_id' => SecretRevisionFactory::make()->persist()->id,
+            'data' => SecretFactory::make()->getEntity()->data,
+        ], $data);
+    }
+
     /* FORMAT VALIDATION TESTS */
 
     public function testSecretsSaveValidationUserId()
@@ -79,7 +89,7 @@ class SaveTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Secrets, 'user_id', self::getDummySecretData(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Secrets, 'user_id', $this->generateDummySecretData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testSecretsSaveValidationResourceId()
@@ -89,7 +99,7 @@ class SaveTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Secrets, 'resource_id', self::getDummySecretData(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Secrets, 'resource_id', $this->generateDummySecretData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testSecretsSaveValidationSecretRevisionId()
@@ -99,7 +109,7 @@ class SaveTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Secrets, 'secret_revision_id', self::getDummySecretData(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Secrets, 'secret_revision_id', $this->generateDummySecretData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testSecretsSaveValidationData()
@@ -109,19 +119,18 @@ class SaveTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Secrets, 'data', self::getDummySecretData(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Secrets, 'data', $this->generateDummySecretData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     /* LOGIC VALIDATION TESTS */
 
     public function testSecretsSaveSuccess()
     {
-        $data = self::getDummySecretData();
-        $options = self::getEntityDefaultOptions();
-        $data['secret_revision_id'] = SecretRevisionFactory::make()->persist()->id;
-
         // Contextual data change: give access to the resource to the user
-        $this->addPermission('Resource', $data['resource_id'], 'User', $data['user_id'], Permission::OWNER);
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $data = $this->generateDummySecretData(['resource_id' => $resource->id, 'user_id' => $user->id]);
+        $options = self::getEntityDefaultOptions();
 
         $entity = $this->Secrets->newEntity($data, $options);
         $save = $this->Secrets->save($entity);
@@ -142,9 +151,15 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleSecretUnique()
     {
-        $data = self::getDummySecretData();
-        $data['user_id'] = UuidFactory::uuid('user.id.ada');
-        $data['resource_id'] = UuidFactory::uuid('resource.id.apache');
+        // Create an existing secret for a real user/resource pair
+        $existingSecret = SecretFactory::make()
+            ->withSecretRevision()
+            ->persist();
+
+        $data = $this->generateDummySecretData([
+            'user_id' => $existingSecret->user_id,
+            'resource_id' => $existingSecret->resource_id,
+        ]);
         $options = self::getEntityDefaultOptions();
         $entity = $this->Secrets->newEntity($data, $options);
 
@@ -157,7 +172,7 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleUserExists()
     {
-        $data = self::getDummySecretData();
+        $data = $this->generateDummySecretData();
         $data['user_id'] = UuidFactory::uuid();
         $options = self::getEntityDefaultOptions();
         $entity = $this->Secrets->newEntity($data, $options);
@@ -171,8 +186,10 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleUserIsNotSoftDeleted()
     {
-        $data = self::getDummySecretData();
-        $data['user_id'] = UuidFactory::uuid('user.id.sofia');
+        $softDeletedUser = UserFactory::make()->deleted()->persist();
+        $data = $this->getDummySecretData([
+            'user_id' => $softDeletedUser->id,
+        ]);
         $options = self::getEntityDefaultOptions();
         $entity = $this->Secrets->newEntity($data, $options);
 
@@ -185,7 +202,7 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleResourceExists()
     {
-        $data = self::getDummySecretData();
+        $data = $this->generateDummySecretData();
         $data['resource_id'] = UuidFactory::uuid();
         $options = self::getEntityDefaultOptions();
         $entity = $this->Secrets->newEntity($data, $options);
@@ -199,8 +216,10 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleResourceIsNotSoftDeleted()
     {
-        $data = self::getDummySecretData();
-        $data['resource_id'] = UuidFactory::uuid('resource.id.jquery');
+        $softDeletedResource = ResourceFactory::make()->deleted()->persist();
+        $data = $this->getDummySecretData([
+            'resource_id' => $softDeletedResource->id,
+        ]);
         $options = self::getEntityDefaultOptions();
         $entity = $this->Secrets->newEntity($data, $options);
 
@@ -213,7 +232,7 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleHasAccess()
     {
-        $data = self::getDummySecretData();
+        $data = $this->generateDummySecretData();
         $options = self::getEntityDefaultOptions();
         $entity = $this->Secrets->newEntity($data, $options);
 
@@ -226,12 +245,12 @@ class SaveTest extends AppTestCase
 
     public function testSecretsSaveError_On_Soft_Deleted_Secret_Revision()
     {
-        $data = self::getDummySecretData();
+        // Contextual data change: give access to the resource to the user
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $data = $this->generateDummySecretData(['resource_id' => $resource->id, 'user_id' => $user->id]);
         $options = self::getEntityDefaultOptions();
         $data['secret_revision_id'] = SecretRevisionFactory::make()->deleted()->persist()->id;
-
-        // Contextual data change: give access to the resource to the user
-        $this->addPermission('Resource', $data['resource_id'], 'User', $data['user_id'], Permission::OWNER);
 
         $entity = $this->Secrets->newEntity($data, $options);
         $save = $this->Secrets->save($entity);
@@ -242,21 +261,18 @@ class SaveTest extends AppTestCase
 
     public function testSecretsSaveError_On_Duplicate_Resource_User_Revision_Deleted()
     {
-        $existingSecret = SecretFactory::make()
-            ->with('Users')
-            ->with('Resources')
+        // Contextual data change: give access to the resource to the user
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $existingSecret = SecretFactory::make(['resource_id' => $resource->id, 'user_id' => $user->id])
             ->withSecretRevision()
             ->deleted()
             ->persist();
-
-        $data = self::getDummySecretData();
+        $data = $this->generateDummySecretData([
+            'resource_id' => $existingSecret->resource_id,
+            'user_id' => $existingSecret->user_id,
+            'secret_revision_id' => $existingSecret->secret_revision_id]);
         $options = self::getEntityDefaultOptions();
-        $data['secret_revision_id'] = $existingSecret->secret_revision_id;
-        $data['user_id'] = $existingSecret->user_id;
-        $data['resource_id'] = $existingSecret->resource_id;
-
-        // Contextual data change: give access to the resource to the user
-        $this->addPermission('Resource', $data['resource_id'], 'User', $data['user_id'], Permission::OWNER);
 
         $entity = $this->Secrets->newEntity($data, $options);
         $save = $this->Secrets->save($entity);
@@ -268,20 +284,16 @@ class SaveTest extends AppTestCase
 
     public function testSecretsSaveSuccess_On_Duplicate_Resource_User_Secret_Deleted()
     {
-        $existingSecret = SecretFactory::make()
-            ->with('Users')
-            ->with('Resources')
+        // Contextual data change: give access to the resource to the user
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $existingSecret = SecretFactory::make(['resource_id' => $resource->id, 'user_id' => $user->id])
             ->deleted()
             ->persist();
-
-        $data = self::getDummySecretData();
+        $data = $this->generateDummySecretData([
+            'resource_id' => $existingSecret->resource_id,
+            'user_id' => $existingSecret->user_id]);
         $options = self::getEntityDefaultOptions();
-        $data['secret_revision_id'] = SecretRevisionFactory::make()->persist()->id;
-        $data['user_id'] = $existingSecret->user_id;
-        $data['resource_id'] = $existingSecret->resource_id;
-
-        // Contextual data change: give access to the resource to the user
-        $this->addPermission('Resource', $data['resource_id'], 'User', $data['user_id'], Permission::OWNER);
 
         $entity = $this->Secrets->newEntity($data, $options);
         $this->Secrets->save($entity);

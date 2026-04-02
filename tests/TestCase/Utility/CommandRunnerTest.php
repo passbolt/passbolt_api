@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         5.11.0
+ * @since         5.10.0
  */
 namespace App\Test\TestCase\Utility;
 
@@ -83,5 +83,52 @@ class CommandRunnerTest extends TestCase
         $this->assertInstanceOf(Process::class, $result);
         $this->assertTrue($result->isSuccessful());
         $this->assertSame('test_value', trim($result->getOutput()));
+    }
+
+    public function testCommandRunner_Run_WithCallback(): void
+    {
+        $chunks = [];
+        $callback = function (string $type, string $buffer) use (&$chunks): void {
+            $chunks[] = ['type' => $type, 'buffer' => $buffer];
+        };
+
+        $result = CommandRunner::run(['echo', 'streamed'], null, null, null, 60, $callback);
+
+        $this->assertInstanceOf(Process::class, $result);
+        $this->assertTrue($result->isSuccessful());
+        $this->assertNotEmpty($chunks);
+        $this->assertSame(Process::OUT, $chunks[0]['type']);
+        $this->assertStringContainsString('streamed', $chunks[0]['buffer']);
+    }
+
+    public function testCommandRunner_Run_WithCallbackAndFailingCommand(): void
+    {
+        $callbackInvoked = false;
+        $callback = function () use (&$callbackInvoked): void {
+            $callbackInvoked = true;
+        };
+
+        $result = CommandRunner::run(['ls', '/nonexistent/path'], null, null, null, 60, $callback);
+
+        $this->assertInstanceOf(Process::class, $result);
+        $this->assertFalse($result->isSuccessful());
+    }
+
+    public function testCommandRunner_Run_WithCustomEnvPreservesPath(): void
+    {
+        $result = CommandRunner::run(['printenv', 'PATH'], null, ['CUSTOM_VAR' => 'value']);
+
+        $this->assertInstanceOf(Process::class, $result);
+        $this->assertTrue($result->isSuccessful());
+        $this->assertNotEmpty(trim($result->getOutput()));
+    }
+
+    public function testCommandRunner_Run_WithNullTimeout(): void
+    {
+        $result = CommandRunner::run(['echo', 'no-timeout'], null, null, null, null);
+
+        $this->assertInstanceOf(Process::class, $result);
+        $this->assertTrue($result->isSuccessful());
+        $this->assertNull($result->getTimeout());
     }
 }

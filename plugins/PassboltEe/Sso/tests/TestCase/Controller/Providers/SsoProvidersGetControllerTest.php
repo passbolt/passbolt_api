@@ -47,6 +47,7 @@ class SsoProvidersGetControllerTest extends SsoIntegrationTestCase
                 SsoSetting::PROVIDER_AZURE => true,
                 SsoSetting::PROVIDER_GOOGLE => true,
                 SsoSetting::PROVIDER_OAUTH2 => false,
+                SsoSetting::PROVIDER_PINGONE => false,
             ]
         );
         $this->getJson('/sso/providers.json');
@@ -81,5 +82,26 @@ class SsoProvidersGetControllerTest extends SsoIntegrationTestCase
 
         $this->assertSuccess();
         $this->assertEqualsCanonicalizing([SsoSetting::PROVIDER_AZURE], $this->_responseJsonBody);
+    }
+
+    public function testSsoProvidersGetController_Success_PingOneEnabled(): void
+    {
+        $this->logInAsAdmin();
+        Configure::write(
+            'passbolt.plugins.sso.providers',
+            [
+                SsoSetting::PROVIDER_AZURE => true,
+                SsoSetting::PROVIDER_PINGONE => true,
+                SsoSetting::PROVIDER_OAUTH2 => false,
+            ]
+        );
+
+        $this->getJson('/sso/providers.json');
+
+        $this->assertSuccess();
+        $this->assertEqualsCanonicalizing(
+            [SsoSetting::PROVIDER_AZURE, SsoSetting::PROVIDER_PINGONE],
+            $this->_responseJsonBody
+        );
     }
 }

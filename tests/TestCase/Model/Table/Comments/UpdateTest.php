@@ -18,20 +18,18 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Comments;
 
 use App\Model\Table\CommentsTable;
+use App\Test\Factory\CommentFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use App\Test\Lib\Model\CommentsModelTrait;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class UpdateTest extends AppTestCase
 {
-    use CommentsModelTrait;
     use FormatValidationTrait;
 
     public $Comments;
-
-    public array $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments', 'app.Base/Permissions'];
 
     public function setUp(): void
     {
@@ -75,10 +73,13 @@ class UpdateTest extends AppTestCase
             'notEmpty' => self::getNotEmptyTestCases(),
             'lengthBetween' => self::getLengthBetweenTestCases(1, 255),
         ];
-        $comment = self::getDummyComment([
-            'id' => UuidFactory::uuid('comment.id.apache-1'),
-            'modified_by' => UuidFactory::uuid('user.id.ada'),
-        ]);
+        $user = UserFactory::make()->persist();
+        $commentId = CommentFactory::make()->withUser($user)->withCreatorAndModifier($user)->persist()->id;
+        $comment = [
+            'id' => $commentId,
+            'content' => 'this is a test comment',
+            'modified_by' => $user->id,
+        ];
         $this->assertFieldFormatValidation($this->Comments, 'content', $comment, self::getEntityDefaultOptions(), $testCases);
     }
 
@@ -89,10 +90,13 @@ class UpdateTest extends AppTestCase
             'notEmpty' => self::getNotEmptyTestCases(),
             'requirePresence' => self::getRequirePresenceTestCases(),
         ];
-        $comment = self::getDummyComment([
-            'id' => UuidFactory::uuid('comment.id.apache-1'),
-            'modified_by' => UuidFactory::uuid('user.id.ada'),
-        ]);
+        $user = UserFactory::make()->persist();
+        $commentId = CommentFactory::make()->withUser($user)->withCreatorAndModifier($user)->persist()->id;
+        $comment = [
+            'id' => $commentId,
+            'content' => 'this is a test comment',
+            'modified_by' => $user->id,
+        ];
         $this->assertFieldFormatValidation($this->Comments, 'modified_by', $comment, self::getEntityDefaultOptions(), $testCases);
     }
 
@@ -100,9 +104,11 @@ class UpdateTest extends AppTestCase
 
     public function testErrorModifiedByUserDoesNotExist()
     {
-        $comment = $this->Comments->get(UuidFactory::uuid('comment.id.apache-1'));
-        $comment = $this->Comments->patchEntity($comment, ['content' => 'test', 'modified_by' => UuidFactory::uuid('user.id.notexist')], self::getEntityDefaultOptions());
-        $save = $this->Comments->save($comment, ['Comments.user_id' => UuidFactory::uuid('user.id.irene')]);
+        $user = UserFactory::make()->persist();
+        $commentId = CommentFactory::make()->withUser($user)->persist()->id;
+        $comment = $this->Comments->get($commentId);
+        $comment = $this->Comments->patchEntity($comment, ['content' => 'test', 'modified_by' => UuidFactory::uuid()], self::getEntityDefaultOptions());
+        $save = $this->Comments->save($comment, ['Comments.user_id' => $user->id]);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
         $this->assertNotEmpty($errors);
@@ -111,9 +117,11 @@ class UpdateTest extends AppTestCase
 
     public function testErrorModifiedByUserIsNotOwner()
     {
-        $comment = $this->Comments->get(UuidFactory::uuid('comment.id.apache-1'));
-        $comment = $this->Comments->patchEntity($comment, ['content' => 'test', 'modified_by' => UuidFactory::uuid('user.id.jean')], self::getEntityDefaultOptions());
-        $save = $this->Comments->save($comment, ['Comments.user_id' => UuidFactory::uuid('user.id.jean')]);
+        $user = UserFactory::make()->persist();
+        $commentId = CommentFactory::make()->persist()->id;
+        $comment = $this->Comments->get($commentId);
+        $comment = $this->Comments->patchEntity($comment, ['content' => 'test', 'modified_by' => $user->id], self::getEntityDefaultOptions());
+        $save = $this->Comments->save($comment, ['Comments.user_id' => $user->id]);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
         $this->assertNotEmpty($errors);
@@ -122,16 +130,18 @@ class UpdateTest extends AppTestCase
 
     public function testSuccess()
     {
-        $comment = $this->Comments->get(UuidFactory::uuid('comment.id.apache-1'));
-        $comment = $this->Comments->patchEntity($comment, ['content' => 'updated comment', 'modified_by' => UuidFactory::uuid('user.id.irene')], self::getEntityDefaultOptions());
-        $save = $this->Comments->save($comment, ['Comments.user_id' => UuidFactory::uuid('user.id.irene')]);
+        $user = UserFactory::make()->persist();
+        $commentId = CommentFactory::make()->withUser($user)->persist()->id;
+        $comment = $this->Comments->get($commentId);
+        $comment = $this->Comments->patchEntity($comment, ['content' => 'updated comment', 'modified_by' => $user->id], self::getEntityDefaultOptions());
+        $save = $this->Comments->save($comment, ['Comments.user_id' => $user->id]);
         $this->assertTrue((bool)$save);
         $errors = $comment->getErrors();
         $this->assertEmpty($errors);
 
-        // Check the favorite exists in db.
+        // Check the comment exists in db.
         $updatedComment = $this->Comments->get($save->id);
-        $this->assertEquals(UuidFactory::uuid('user.id.irene'), $updatedComment->modified_by);
+        $this->assertEquals($user->id, $updatedComment->modified_by);
         $this->assertEquals('updated comment', $updatedComment->content);
     }
 }

@@ -21,7 +21,7 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Utility\UuidFactory;
 use Duo\DuoUniversal\Client;
-use Passbolt\MultiFactorAuthentication\Controller\Duo\DuoSetupGetController;
+use Passbolt\MultiFactorAuthentication\Controller\Duo\DuoSetupCallbackGetController;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoStateCookieService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
@@ -251,7 +251,7 @@ class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
         $authToken = AuthenticationTokenFactory::make()->active()->data([
             'provider' => 'duo',
             'state' => $duoState,
-            'redirect' => DuoSetupGetController::DUO_SETUP_REDIRECT_PATH,
+            'redirect' => DuoSetupCallbackGetController::DUO_SETUP_REDIRECT_PATH,
             'user_agent' => 'PassboltUA',
         ])->userId($userId)->type(AuthenticationToken::TYPE_MFA_VERIFY)->persist();
 

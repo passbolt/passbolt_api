@@ -26,6 +26,7 @@ use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Utility\Hash;
 use Exception;
+use Passbolt\SmtpSettings\Service\SmtpOauthExchangeOnlineService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
@@ -150,8 +151,15 @@ class SendTestEmailCommand extends PassboltCommand
         $io->hr();
         $io->out(__('Host: {0}', $transportConfig['host']));
         $io->out(__('Port: {0}', $transportConfig['port']));
-        $io->out(__('Username: {0}', $transportConfig['username'] ?? ''));
-        $io->out(__('Password: {0}', '*********'));
+        if (SmtpOauthExchangeOnlineService::isOauth2ClientCredentials($transportConfig)) {
+            $io->out(__('Tenant ID: {0}', $transportConfig['tenant_id']));
+            $io->out(__('Client ID: {0}', $transportConfig['client_id']));
+            $io->out(__('Client Secret: {0}', '*********'));
+            $io->out(__('Username: {0}', $transportConfig['oauth_username']));
+        } else {
+            $io->out(__('Username: {0}', $transportConfig['username'] ?? ''));
+            $io->out(__('Password: {0}', '*********'));
+        }
         $io->out(__('TLS: {0}', $transportConfig['tls'] == null ? 'false' : 'true'));
         $io->nl(0);
         $io->out(__('Sending email from: {0}', $this->getEmailFromAsString($transportConfig)));

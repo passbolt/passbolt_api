@@ -17,25 +17,18 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Resources;
 
+use App\Model\Entity\Permission;
 use App\Model\Table\ResourcesTable;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Exception;
-use Passbolt\TestData\Lib\PermissionMatrix;
 
 class FindViewTest extends AppTestCase
 {
-    public array $fixtures = [
-        'app.Base/Users',
-        'app.Base/Groups',
-        'app.Base/GroupsUsers',
-        'app.Base/ResourceTypes',
-        'app.Base/Resources',
-        'app.Base/Favorites',
-        'app.Base/Permissions',
-    ];
-
     /**
      * Test subject
      *
@@ -57,14 +50,14 @@ class FindViewTest extends AppTestCase
 
     public function testSuccess()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $resources = $this->Resources->findView($userId, $resourceId);
+        $user = UserFactory::make()->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $resources = $this->Resources->findView($user->id, $r1->id);
 
         // Expected fields.
         $resource = $resources->first();
         $this->assertResourceAttributes($resource);
-        $this->assertEquals($resourceId, $resource->id);
+        $this->assertEquals($r1->id, $resource->id);
         // Not expected fields.
         $this->assertObjectNotHasAttribute('secrets', $resource);
         $this->assertObjectNotHasAttribute('creator', $resource);
@@ -72,21 +65,43 @@ class FindViewTest extends AppTestCase
         $this->assertObjectNotHasAttribute('favorite', $resource);
     }
 
-    public function testPermissions()
+    public function testPermissions_UserAccess(): void
     {
-        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
-        foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
-            $userId = UuidFactory::uuid("user.id.$userAlias");
-            foreach ($usersExpectedPermissions as $resourceAlias => $permissionType) {
-                $resourceId = UuidFactory::uuid("resource.id.$resourceAlias");
-                $resource = $this->Resources->findView($userId, $resourceId)->first();
-                if ($permissionType == 0) {
-                    $this->assertNull($resource);
-                } else {
-                    $this->assertNotNull($resource);
-                }
-            }
-        }
+        [$user, $otherUser] = UserFactory::make(2)->persist();
+
+        $r1HasAccess = ResourceFactory::make()->withPermissionsFor([$user, $otherUser])->persist();
+        $r2HasAccess = ResourceFactory::make()->withPermissionsFor([$user], Permission::READ)->persist();
+        $r3HasAccess = ResourceFactory::make()->withPermissionsFor([$user], Permission::UPDATE)->persist();
+        $r4NoAccess = ResourceFactory::make()->withPermissionsFor([$otherUser])->persist();
+
+        $this->assertNotNull($this->Resources->findView($user->id, $r1HasAccess->id)->first());
+        $this->assertNotNull($this->Resources->findView($user->id, $r2HasAccess->id)->first());
+        $this->assertNotNull($this->Resources->findView($user->id, $r3HasAccess->id)->first());
+        $this->assertNull($this->Resources->findView($user->id, $r4NoAccess->id)->first());
+    }
+
+    public function testPermissions_AccessViaGroup(): void
+    {
+        [$user, $otherUser] = UserFactory::make(2)->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$user])->persist();
+
+        $r1HasAccess = ResourceFactory::make()->withPermissionsFor([$group, $otherUser])->persist();
+        $r2HasAccess = ResourceFactory::make()->withPermissionsFor([$group], Permission::READ)->persist();
+        $r3HasAccess = ResourceFactory::make()->withPermissionsFor([$group], Permission::UPDATE)->persist();
+        $r4NoAccess = ResourceFactory::make()->withPermissionsFor([$otherUser])->persist();
+
+        $this->assertNotNull($this->Resources->findView($user->id, $r1HasAccess->id)->first());
+        $this->assertNotNull($this->Resources->findView($user->id, $r2HasAccess->id)->first());
+        $this->assertNotNull($this->Resources->findView($user->id, $r3HasAccess->id)->first());
+        $this->assertNull($this->Resources->findView($user->id, $r4NoAccess->id)->first());
+    }
+
+    public function testPermissions_SoftDeletedResourceIsNotVisible(): void
+    {
+        $user = UserFactory::make()->persist();
+        $deleted = ResourceFactory::make()->withPermissionsFor([$user])->setDeleted()->persist();
+
+        $this->assertNull($this->Resources->findView($user->id, $deleted->id)->first());
     }
 
     public function testErrorInvalidUserIdParameter()

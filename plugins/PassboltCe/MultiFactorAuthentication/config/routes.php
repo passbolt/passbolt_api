@@ -31,9 +31,6 @@ $routes->plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functi
     /**
      * TOTP
      */
-    $routes->connect('/setup/totp/start', ['prefix' => 'Totp', 'controller' => 'TotpSetupGet', 'action' => 'start'])
-        ->setMethods(['GET']);
-
     $routes->connect('/setup/totp', ['prefix' => 'Totp', 'controller' => 'TotpSetupGet', 'action' => 'get'])
         ->setMethods(['GET']);
 
@@ -74,9 +71,6 @@ $routes->plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functi
     /**
      * Duo
      */
-    $routes->connect('/setup/duo', ['prefix' => 'Duo', 'controller' => 'DuoSetupGet', 'action' => 'get'])
-        ->setMethods(['GET']);
-
     /** @deprecated Now using /setup/duo/prompt endpoint instead, redirecting to Duo instead of displaying a iFrame */
     $routes->connect('/setup/duo', ['prefix' => 'Duo', 'controller' => 'DuoSetupPost', 'action' => 'post'])
         ->setMethods(['POST']);

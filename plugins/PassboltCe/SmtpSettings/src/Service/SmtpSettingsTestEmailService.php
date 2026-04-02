@@ -102,7 +102,7 @@ class SmtpSettingsTestEmailService
         $replaceMask = '*****';
         $replaceWith = [];
 
-        if (isset($this->smtpSettings['username'])) {
+        if (!empty($this->smtpSettings['username'])) {
             $usernameEncoded = base64_encode($this->smtpSettings['username']);
             $usernameClear = $this->smtpSettings['username'];
             $toReplace[] = $usernameClear;
@@ -110,7 +110,7 @@ class SmtpSettingsTestEmailService
             $toReplace[] = $usernameEncoded;
             $replaceWith[] = $replaceMask;
         }
-        if (isset($this->smtpSettings['password'])) {
+        if (!empty($this->smtpSettings['password'])) {
             $passwordEncoded = base64_encode($this->smtpSettings['password']);
             $passwordClear = $this->smtpSettings['password'];
             $toReplace[] = $passwordEncoded;
@@ -118,11 +118,26 @@ class SmtpSettingsTestEmailService
             $toReplace[] = $passwordClear;
             $replaceWith[] = $replaceMask;
         }
-        if (isset($this->smtpSettings['username']) && isset($this->smtpSettings['password'])) {
+        if (!empty($this->smtpSettings['username']) && !empty($this->smtpSettings['password'])) {
             $encodedCreds = base64_encode(
                 chr(0) . $this->smtpSettings['username'] . chr(0) . $this->smtpSettings['password']
             );
             $toReplace[] = $encodedCreds;
+            $replaceWith[] = $replaceMask;
+        }
+
+        // Mask the OAuth2 access token fetched at runtime (not part of smtpSettings)
+        $oauthAccessToken = $this->mailerService->getOauthAccessToken();
+        if (!empty($this->smtpSettings['oauth_username']) && !empty($oauthAccessToken)) {
+            $toReplace[] = base64_encode(sprintf(
+                "user=%s\1auth=Bearer %s\1\1",
+                $this->smtpSettings['oauth_username'],
+                $oauthAccessToken,
+            ));
+            $replaceWith[] = $replaceMask;
+        }
+        if (!empty($this->smtpSettings['client_secret'])) {
+            $toReplace[] = $this->smtpSettings['client_secret'];
             $replaceWith[] = $replaceMask;
         }
 

@@ -20,6 +20,7 @@ use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use Cake\I18n\Date;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Security;
 use Passbolt\Scim\Model\Table\ScimSettingsTable;
@@ -82,6 +83,7 @@ class ScimSettingFactory extends OrganizationSettingFactory
             'scim_user_id' => UserFactory::make()->admin()->persist()->get('id'),
             // Use minimum bcrypt cost (4) in tests to keep test suite fast
             'secret_token' => password_hash(self::SCIM_TEST_SECRET_TOKEN, PASSWORD_BCRYPT, ['cost' => 4]),
+            'expired' => Date::now()->modify('+' . rand(1, 365) . ' days')->format('Y-m-d'),
         ];
     }
 
@@ -99,6 +101,7 @@ class ScimSettingFactory extends OrganizationSettingFactory
             'setting_id' => self::SCIM_TEST_SETTING_ID,
             'scim_user_id' => UserFactory::make()->admin()->persist()->get('id'),
             'secret_token' => Security::hash(self::SCIM_TEST_SECRET_TOKEN, 'sha256'),
+            'expired' => Date::now()->modify('+' . rand(1, 365) . ' days')->format('Y-m-d'),
         ];
 
         return $this->setField('value', $gpg->encrypt(json_encode($value)));

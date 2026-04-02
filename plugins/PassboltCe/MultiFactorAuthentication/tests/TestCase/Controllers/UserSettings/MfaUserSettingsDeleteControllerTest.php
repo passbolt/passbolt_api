@@ -17,29 +17,16 @@ declare(strict_types=1);
 
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\UserSettings;
 
-use App\Test\Fixture\Alt0\GroupsUsersFixture;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\UsersFixture;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\I18n\DateTime;
-use Passbolt\AccountSettings\Test\Fixture\AccountSettingsFixture;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
 {
-    public array $fixtures = [
-        AccountSettingsFixture::class,
-        UsersFixture::class,
-        RolesFixture::class,
-        ProfilesFixture::class,
-        GpgkeysFixture::class,
-        GroupsUsersFixture::class,
-    ];
-
     public const TESTED_ROUTE = '/mfa/setup/%s.json?api-version=v2';
 
     public function testMfaUserSettingsDeleteNeedsAuthenticatedUser()
@@ -51,27 +38,30 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
 
     public function testMfaUserSettingsDeleteIsAllowedIfUserIsAdmin()
     {
-        $this->authenticateAs('admin');
+        RoleFactory::make()->guest()->persist();
+        $this->logInAsAdmin();
         $this->deleteJson(sprintf(self::TESTED_ROUTE, UuidFactory::uuid()));
         $this->assertResponseCode(400);
     }
 
     public function testMfaUserSettingsDeleteIsAllowedIfUserIsAccountOwner()
     {
+        RoleFactory::make()->guest()->persist();
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO],
             MfaSettings::PROVIDER_DUO => [],
         ];
-        $this->mockMfaAccountSettings('ada', $data);
+        $user = UserFactory::make()->user()->persist();
+        $this->mockMfaAccountSettings($this->makeUac($user), $data);
 
-        $this->authenticateAs('ada');
-        $this->deleteJson(sprintf(self::TESTED_ROUTE, UuidFactory::uuid('user.id.ada')));
+        $this->logInAs($user);
+        $this->deleteJson(sprintf(self::TESTED_ROUTE, $user->get('id')));
         $this->assertResponseCode(200);
     }
 
     public function testMfaUserSettingsDeleteIsNotAllowedIfNotAccountOwnerOrAdmin()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->deleteJson(sprintf(self::TESTED_ROUTE, UuidFactory::uuid()));
         $this->assertResponseCode(403);
         $this->assertResponseError('You are not allowed to access this location.');
@@ -79,7 +69,7 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
 
     public function testMfaUserSettingsDeleteCheckIfGivenUserIdIsValid()
     {
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->deleteJson(sprintf(self::TESTED_ROUTE, 'fake-uuid'));
         $this->assertResponseCode(400);
         $this->assertResponseError('The user id is not valid.');
@@ -87,22 +77,26 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
 
     public function testMfaUserSettingsDeleteIsSuccessIfNoSettingsWerePresentForUser()
     {
-        $this->authenticateAs('admin');
-        $this->deleteJson(sprintf(self::TESTED_ROUTE, UuidFactory::uuid('user.id.ada')));
+        RoleFactory::make()->guest()->persist();
+        $this->logInAsAdmin();
+        $user = UserFactory::make()->user()->persist();
+        $this->deleteJson(sprintf(self::TESTED_ROUTE, $user->get('id')));
         $this->assertResponseCode(200);
         $this->assertResponseContains('No multi-factor authentication settings defined for the user.');
     }
 
     public function testMfaUserSettingsDeleteIsSuccessWhenAllConditionsAreFullfiled()
     {
+        RoleFactory::make()->guest()->persist();
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO],
             MfaSettings::PROVIDER_DUO => [MfaAccountSettings::VERIFIED => DateTime::now()],
         ];
-        $this->mockMfaAccountSettings('ada', $data);
+        $user = UserFactory::make()->user()->persist();
+        $this->mockMfaAccountSettings($this->makeUac($user), $data);
 
-        $this->authenticateAs('admin');
-        $this->deleteJson(sprintf(self::TESTED_ROUTE, UuidFactory::uuid('user.id.ada')));
+        $this->logInAsAdmin();
+        $this->deleteJson(sprintf(self::TESTED_ROUTE, $user->get('id')));
         $this->assertResponseCode(200);
         $this->assertResponseContains('The multi-factor authentication settings for the user were deleted.');
     }

@@ -18,17 +18,17 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Groups;
 
 use App\Model\Table\GroupsTable;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\PermissionFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Passbolt\TestData\Lib\PermissionMatrix;
 
 class FindIndexTest extends AppTestCase
 {
     public $Groups;
-
-    public array $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Profiles', 'app.Base/Permissions'];
 
     public function setUp(): void
     {
@@ -46,6 +46,7 @@ class FindIndexTest extends AppTestCase
 
     public function testGroupFindIndexSuccess()
     {
+        GroupFactory::make(2)->persist();
         $groups = $this->Groups->findIndex()->all();
         $this->assertGreaterThan(1, count($groups));
 
@@ -60,7 +61,7 @@ class FindIndexTest extends AppTestCase
     public function testGroupFindIndexExcludeSoftDeletedGroups()
     {
         // Check the deleted groups exist.
-        $deletedGroups = [UuidFactory::uuid('group.id.deleted')];
+        $deletedGroups = [GroupFactory::make()->deleted()->persist()->id];
         foreach ($deletedGroups as $deletedGroup) {
             $group = $this->Groups->get($deletedGroup);
             $this->assertNotNull($group);
@@ -76,6 +77,8 @@ class FindIndexTest extends AppTestCase
 
     public function testGroupFindIndexContainModifier()
     {
+        $user = UserFactory::make()->persist();
+        GroupFactory::make(['modified_by' => $user->id])->persist();
         $options['contain']['modifier'] = true;
         $groups = $this->Groups->findIndex($options)->all();
         $group = $groups->first();
@@ -88,6 +91,8 @@ class FindIndexTest extends AppTestCase
 
     public function testGroupFindIndexContainModifierProfile()
     {
+        $user = UserFactory::make()->persist();
+        GroupFactory::make(['modified_by' => $user->id])->persist();
         $options['contain']['modifier.profile'] = true;
         $groups = $this->Groups->findIndex($options)->all();
         $group = $groups->first();
@@ -101,6 +106,8 @@ class FindIndexTest extends AppTestCase
 
     public function testGroupFindIndexContainUserDeprecated()
     {
+        [$userA, $userB, $userC, $userD] = UserFactory::make(4)->persist();
+        $groupId = GroupFactory::make()->withGroupsManagersFor([$userA, $userB, $userC, $userD])->persist()->id;
         $options['contain']['user'] = true;
         $groups = $this->Groups->findIndex($options)->all();
         $group = $groups->first();
@@ -111,13 +118,11 @@ class FindIndexTest extends AppTestCase
         $this->assertUserAttributes($group->users[0]);
 
         // Check that the groups contain only the expected users.
-        $groupId = UuidFactory::uuid('group.id.freelancer');
         $groupUsers = [
-            UuidFactory::uuid('user.id.jean'),
-            UuidFactory::uuid('user.id.kathleen'),
-            UuidFactory::uuid('user.id.lynne'),
-            UuidFactory::uuid('user.id.marlyn'),
-            UuidFactory::uuid('user.id.nancy'),
+            $userA->id,
+            $userB->id,
+            $userC->id,
+            $userD->id,
         ];
         // Retrieve the users from the group we want to test.
         $group = Hash::extract($groups->toArray(), '{n}[id=' . $groupId . ']')[0];
@@ -128,6 +133,8 @@ class FindIndexTest extends AppTestCase
 
     public function testGroupFindIndexContainUsers()
     {
+        [$userA, $userB, $userC, $userD] = UserFactory::make(4)->persist();
+        $groupId = GroupFactory::make()->withGroupsManagersFor([$userA, $userB, $userC, $userD])->persist()->id;
         $options['contain']['users'] = true;
         $groups = $this->Groups->findIndex($options)->all();
         $group = $groups->first();
@@ -138,13 +145,11 @@ class FindIndexTest extends AppTestCase
         $this->assertUserAttributes($group->users[0]);
 
         // Check that the groups contain only the expected users.
-        $groupId = UuidFactory::uuid('group.id.freelancer');
         $groupUsers = [
-            UuidFactory::uuid('user.id.jean'),
-            UuidFactory::uuid('user.id.kathleen'),
-            UuidFactory::uuid('user.id.lynne'),
-            UuidFactory::uuid('user.id.marlyn'),
-            UuidFactory::uuid('user.id.nancy'),
+            $userA->id,
+            $userB->id,
+            $userC->id,
+            $userD->id,
         ];
         // Retrieve the users from the group we want to test.
         $group = Hash::extract($groups->toArray(), '{n}[id=' . $groupId . ']')[0];
@@ -155,6 +160,8 @@ class FindIndexTest extends AppTestCase
 
     public function testGroupFindIndexContainUserCount()
     {
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        GroupFactory::make(2)->withGroupsManagersFor([$userA, $userB])->persist();
         $options['contain']['user_count'] = true;
         $groups = $this->Groups->findIndex($options)->all();
 
@@ -168,6 +175,8 @@ class FindIndexTest extends AppTestCase
 
     public function testGroupFindIndexContainGroupUser_DeprecatedContain()
     {
+        [$userA, $userB, $userC, $userD] = UserFactory::make(4)->persist();
+        $groupId = GroupFactory::make()->withGroupsManagersFor([$userA, $userB, $userC, $userD])->persist()->id;
         $options['contain']['group_user'] = true;
         $groups = $this->Groups->findIndex($options)->all();
         $group = $groups->first();
@@ -178,13 +187,11 @@ class FindIndexTest extends AppTestCase
         $this->assertGroupUserAttributes($group->groups_users[0]);
 
         // Check that the groups contain only the expected users.
-        $groupId = UuidFactory::uuid('group.id.freelancer');
         $groupUsers = [
-            UuidFactory::uuid('user.id.jean'),
-            UuidFactory::uuid('user.id.kathleen'),
-            UuidFactory::uuid('user.id.lynne'),
-            UuidFactory::uuid('user.id.marlyn'),
-            UuidFactory::uuid('user.id.nancy'),
+            $userA->id,
+            $userB->id,
+            $userC->id,
+            $userD->id,
         ];
         // Retrieve the users from the group we want to test.
         $group = Hash::extract($groups->toArray(), '{n}[id=' . $groupId . ']')[0];
@@ -195,6 +202,8 @@ class FindIndexTest extends AppTestCase
 
     public function testGroupFindIndexContainGroupsUsers_DeprecateContain()
     {
+        [$userA, $userB, $userC, $userD] = UserFactory::make(4)->persist();
+        $groupId = GroupFactory::make()->withGroupsManagersFor([$userA, $userB, $userC, $userD])->persist()->id;
         $options['contain']['groups_users'] = true;
         $groups = $this->Groups->findIndex($options)->all();
         $group = $groups->first();
@@ -205,13 +214,11 @@ class FindIndexTest extends AppTestCase
         $this->assertGroupUserAttributes($group->groups_users[0]);
 
         // Check that the groups contain only the expected users.
-        $groupId = UuidFactory::uuid('group.id.freelancer');
         $groupUsers = [
-            UuidFactory::uuid('user.id.jean'),
-            UuidFactory::uuid('user.id.kathleen'),
-            UuidFactory::uuid('user.id.lynne'),
-            UuidFactory::uuid('user.id.marlyn'),
-            UuidFactory::uuid('user.id.nancy'),
+            $userA->id,
+            $userB->id,
+            $userC->id,
+            $userD->id,
         ];
         // Retrieve the users from the group we want to test.
         $group = Hash::extract($groups->toArray(), '{n}[id=' . $groupId . ']')[0];
@@ -222,6 +229,8 @@ class FindIndexTest extends AppTestCase
 
     public function testGroupFindIndexContainGroupsUsersProfile()
     {
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
         $options['contain']['groups_users.user.profile'] = true;
         $groups = $this->Groups->findIndex($options)->all();
         $group = $groups->first();
@@ -236,6 +245,8 @@ class FindIndexTest extends AppTestCase
 
     public function testGroupFindIndexContainGroupUserProfile_DeprecateContain()
     {
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
         $options['contain']['group_user.user.profile'] = true;
         $groups = $this->Groups->findIndex($options)->all();
         $group = $groups->first();
@@ -250,8 +261,10 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasUsers()
     {
-        $expectedGroupsIds = [UuidFactory::uuid('group.id.creative'), UuidFactory::uuid('group.id.developer'), UuidFactory::uuid('group.id.ergonom')];
-        $options['filter']['has-users'] = [UuidFactory::uuid('user.id.irene')];
+        $user = UserFactory::make()->persist();
+        [$groupA, $groupB, $groupC] = GroupFactory::make(3)->withGroupsUsersFor([$user])->persist();
+        $expectedGroupsIds = [$groupA->id, $groupB->id, $groupC->id];
+        $options['filter']['has-users'] = [$user->id];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(3, $groups);
@@ -261,7 +274,7 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasUsersNoResult()
     {
-        $options['filter']['has-users'] = [UuidFactory::uuid('user.id.ada')];
+        $options['filter']['has-users'] = [UserFactory::make()->persist()->id];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(0, $groups);
@@ -269,8 +282,9 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasUsersMultipleUsers()
     {
-        $expectedGroupsIds = [UuidFactory::uuid('group.id.freelancer')];
-        $options['filter']['has-users'] = [UuidFactory::uuid('user.id.jean'), UuidFactory::uuid('user.id.nancy')];
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $expectedGroupsIds = [GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist()->id];
+        $options['filter']['has-users'] = [$userA->id, $userB->id];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(1, $groups);
@@ -280,7 +294,8 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasUsersMultipleUsersNoResult()
     {
-        $options['filter']['has-users'] = [UuidFactory::uuid('user.id.frances'), UuidFactory::uuid('user.id.hedy')];
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $options['filter']['has-users'] = [$userA->id, $userB->id];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(0, $groups);
@@ -288,7 +303,7 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasManagersNoResult()
     {
-        $options['filter']['has-managers'] = [UuidFactory::uuid('user.id.ad')];
+        $options['filter']['has-managers'] = [UserFactory::make()->persist()->id];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(0, $groups);
@@ -296,8 +311,10 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasManagers()
     {
-        $expectedGroupsIds = [UuidFactory::uuid('group.id.human_resource'), UuidFactory::uuid('group.id.it_support')];
-        $options['filter']['has-managers'] = [UuidFactory::uuid('user.id.ping')];
+        $user = UserFactory::make()->persist();
+        [$groupA, $groupB] = GroupFactory::make(2)->withGroupsManagersFor([$user])->persist();
+        $expectedGroupsIds = [$groupA->id, $groupB->id];
+        $options['filter']['has-managers'] = [$user->id];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(2, $groups);
@@ -307,8 +324,9 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasManagersMultipleManagers()
     {
-        $expectedGroupsIds = [UuidFactory::uuid('group.id.human_resource')];
-        $options['filter']['has-managers'] = [UuidFactory::uuid('user.id.ping'), UuidFactory::uuid('user.id.thelma')];
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $expectedGroupsIds = [GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist()->id];
+        $options['filter']['has-managers'] = [$userA->id, $userB->id];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(1, $groups);
@@ -318,59 +336,189 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasManagersMultipleManagersNoResult()
     {
-        $options['filter']['has-managers'] = [UuidFactory::uuid('user.id.ping'), UuidFactory::uuid('user.id.admin')];
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $options['filter']['has-managers'] = [$userA->id, $userB->id];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(0, $groups);
     }
 
-    public function testFilterHasNotPermission()
+    /**
+     * Test that groups with a READ permission on a resource are excluded.
+     */
+    public function testFilterHasNotPermission_ExcludesGroupWithReadPermission()
     {
-        $permissionsMatrix = PermissionMatrix::getGroupsResourcesPermissions('resource');
-        foreach ($permissionsMatrix as $resourceAlias => $resourcesExpectedPermissions) {
-            // Extract expected groups.
-            $expectedGroupsIds = [];
-            foreach ($resourcesExpectedPermissions as $groupAlias => $permissionType) {
-                if (!$permissionType) {
-                    $expectedGroupsIds[] = UuidFactory::uuid("group.id.$groupAlias");
-                }
-            }
+        [$groupWithAccess, $groupWithout] = GroupFactory::make(2)->persist();
+        $resource = ResourceFactory::make()->persist();
+        PermissionFactory::make()->acoResource($resource)->aroGroup($groupWithAccess)->typeRead()->persist();
 
-            // Find all the groups who have access to the resource.
-            $findIndexOptions['filter']['has-not-permission'] = [UuidFactory::uuid("resource.id.$resourceAlias")];
-            $groups = $this->Groups->findIndex($findIndexOptions)->all();
-            $groupsIds = Hash::extract($groups->toArray(), '{n}.id');
+        $findIndexOptions['filter']['has-not-permission'] = [$resource->id];
+        $groups = $this->Groups->findIndex($findIndexOptions)->all();
+        $groupsIds = Hash::extract($groups->toArray(), '{n}.id');
 
-            $this->assertEmpty(array_diff($expectedGroupsIds, $groupsIds), "The filter hasNotPermission does not return expected groups for the resource $resourceAlias");
-            $this->assertEmpty(array_diff($groupsIds, $expectedGroupsIds), "The filter hasNotPermission does not return expected groups for the resource $resourceAlias");
-        }
+        $this->assertContains($groupWithout->id, $groupsIds);
+        $this->assertNotContains($groupWithAccess->id, $groupsIds);
+    }
+
+    /**
+     * Test that groups with an UPDATE permission on a resource are excluded.
+     */
+    public function testFilterHasNotPermission_ExcludesGroupWithUpdatePermission()
+    {
+        [$groupWithAccess, $groupWithout] = GroupFactory::make(2)->persist();
+        $resource = ResourceFactory::make()->persist();
+        PermissionFactory::make()->acoResource($resource)->aroGroup($groupWithAccess)->typeUpdate()->persist();
+
+        $findIndexOptions['filter']['has-not-permission'] = [$resource->id];
+        $groups = $this->Groups->findIndex($findIndexOptions)->all();
+        $groupsIds = Hash::extract($groups->toArray(), '{n}.id');
+
+        $this->assertContains($groupWithout->id, $groupsIds);
+        $this->assertNotContains($groupWithAccess->id, $groupsIds);
+    }
+
+    /**
+     * Test that groups with an OWNER permission on a resource are excluded.
+     */
+    public function testFilterHasNotPermission_ExcludesGroupWithOwnerPermission()
+    {
+        [$groupWithAccess, $groupWithout] = GroupFactory::make(2)->persist();
+        $resource = ResourceFactory::make()->persist();
+        PermissionFactory::make()->acoResource($resource)->aroGroup($groupWithAccess)->typeOwner()->persist();
+
+        $findIndexOptions['filter']['has-not-permission'] = [$resource->id];
+        $groups = $this->Groups->findIndex($findIndexOptions)->all();
+        $groupsIds = Hash::extract($groups->toArray(), '{n}.id');
+
+        $this->assertContains($groupWithout->id, $groupsIds);
+        $this->assertNotContains($groupWithAccess->id, $groupsIds);
+    }
+
+    /**
+     * Test that all permission types (READ, UPDATE, OWNER) are excluded and
+     * only the group with no permission is returned.
+     */
+    public function testFilterHasNotPermission_MixedPermissionTypes()
+    {
+        [$groupRead, $groupUpdate, $groupOwner, $groupNoPerm] = GroupFactory::make(4)->persist();
+        $resource = ResourceFactory::make()->persist();
+        PermissionFactory::make()->acoResource($resource)->aroGroup($groupRead)->typeRead()->persist();
+        PermissionFactory::make()->acoResource($resource)->aroGroup($groupUpdate)->typeUpdate()->persist();
+        PermissionFactory::make()->acoResource($resource)->aroGroup($groupOwner)->typeOwner()->persist();
+
+        $findIndexOptions['filter']['has-not-permission'] = [$resource->id];
+        $groups = $this->Groups->findIndex($findIndexOptions)->all();
+        $groupsIds = Hash::extract($groups->toArray(), '{n}.id');
+
+        $this->assertEqualsCanonicalizing([$groupNoPerm->id], $groupsIds);
+    }
+
+    /**
+     * Test that when a resource has no permissions at all, all groups are returned.
+     */
+    public function testFilterHasNotPermission_ResourceWithNoPermissions()
+    {
+        [$groupA, $groupB] = GroupFactory::make(2)->persist();
+        $resource = ResourceFactory::make()->persist();
+
+        $findIndexOptions['filter']['has-not-permission'] = [$resource->id];
+        $groups = $this->Groups->findIndex($findIndexOptions)->all();
+        $groupsIds = Hash::extract($groups->toArray(), '{n}.id');
+
+        $this->assertContains($groupA->id, $groupsIds);
+        $this->assertContains($groupB->id, $groupsIds);
+    }
+
+    /**
+     * Test that permissions on a different resource do not affect the filter result.
+     */
+    public function testFilterHasNotPermission_PermissionOnDifferentResource()
+    {
+        [$groupA, $groupB] = GroupFactory::make(2)->persist();
+        [$resourceA, $resourceB] = ResourceFactory::make(2)->persist();
+        // groupA has permission on resourceA only
+        PermissionFactory::make()->acoResource($resourceA)->aroGroup($groupA)->typeRead()->persist();
+
+        // Filter on resourceB — groupA has no permission on resourceB, so both groups should be returned.
+        $findIndexOptions['filter']['has-not-permission'] = [$resourceB->id];
+        $groups = $this->Groups->findIndex($findIndexOptions)->all();
+        $groupsIds = Hash::extract($groups->toArray(), '{n}.id');
+
+        $this->assertContains($groupA->id, $groupsIds);
+        $this->assertContains($groupB->id, $groupsIds);
+
+        // Filter on resourceA — only groupB should be returned.
+        $findIndexOptions['filter']['has-not-permission'] = [$resourceA->id];
+        $groups = $this->Groups->findIndex($findIndexOptions)->all();
+        $groupsIds = Hash::extract($groups->toArray(), '{n}.id');
+
+        $this->assertContains($groupB->id, $groupsIds);
+        $this->assertNotContains($groupA->id, $groupsIds);
+    }
+
+    /**
+     * Test that soft-deleted groups are excluded from has-not-permission results.
+     */
+    public function testFilterHasNotPermission_ExcludesSoftDeletedGroups()
+    {
+        $activeGroup = GroupFactory::make()->persist();
+        $deletedGroup = GroupFactory::make()->deleted()->persist();
+        $resource = ResourceFactory::make()->persist();
+
+        $findIndexOptions['filter']['has-not-permission'] = [$resource->id];
+        $groups = $this->Groups->findIndex($findIndexOptions)->all();
+        $groupsIds = Hash::extract($groups->toArray(), '{n}.id');
+
+        $this->assertContains($activeGroup->id, $groupsIds);
+        $this->assertNotContains($deletedGroup->id, $groupsIds);
+    }
+
+    /**
+     * Test that a soft-deleted group with a permission on the resource is excluded.
+     */
+    public function testFilterHasNotPermission_SoftDeletedGroupWithPermission()
+    {
+        $activeGroup = GroupFactory::make()->persist();
+        $deletedGroupWithPerm = GroupFactory::make()->deleted()->persist();
+        $resource = ResourceFactory::make()->persist();
+        PermissionFactory::make()->acoResource($resource)->aroGroup($deletedGroupWithPerm)->typeRead()->persist();
+
+        $findIndexOptions['filter']['has-not-permission'] = [$resource->id];
+        $groups = $this->Groups->findIndex($findIndexOptions)->all();
+        $groupsIds = Hash::extract($groups->toArray(), '{n}.id');
+
+        $this->assertContains($activeGroup->id, $groupsIds);
+        $this->assertNotContains($deletedGroupWithPerm->id, $groupsIds);
     }
 
     public function testFilterSearch()
     {
+        $groupId = GroupFactory::make(['name' => 'creative'])->persist()->id;
         $findIndexOptions['filter']['search'] = ['Creative'];
         $groups = $this->Groups->findIndex($findIndexOptions)->all();
         $this->assertCount(1, $groups);
         $group = $groups->first();
-        $this->assertEquals(UuidFactory::uuid('group.id.creative'), $group->id);
+        $this->assertEquals($groupId, $group->id);
     }
 
     public function testOrderByName()
     {
+        $groupA = GroupFactory::make(['name' => 'accounting'])->persist();
+        $groupZ = GroupFactory::make(['name' => 'zoo'])->persist();
         $findIndexOptions = ['order' => ['Groups.name ASC']];
         $groups = $this->Groups->findIndex($findIndexOptions)->all()->toArray();
-        $this->assertEquals($groups[0]->id, UuidFactory::uuid('group.id.accounting'));
+        $this->assertEquals($groups[0]->id, $groupA->id);
 
         $findIndexOptions = ['order' => 'Groups.name ASC'];
         $groups = $this->Groups->findIndex($findIndexOptions)->all()->toArray();
-        $this->assertEquals($groups[0]->id, UuidFactory::uuid('group.id.accounting'));
+        $this->assertEquals($groups[0]->id, $groupA->id);
 
         $findIndexOptions = ['order' => ['Groups.name DESC']];
         $groups = $this->Groups->findIndex($findIndexOptions)->all()->toArray();
-        $this->assertEquals($groups[0]->id, UuidFactory::uuid('group.id.traffic'));
+        $this->assertEquals($groups[0]->id, $groupZ->id);
 
         $findIndexOptions = ['order' => 'Groups.name DESC'];
         $groups = $this->Groups->findIndex($findIndexOptions)->all()->toArray();
-        $this->assertEquals($groups[0]->id, UuidFactory::uuid('group.id.traffic'));
+        $this->assertEquals($groups[0]->id, $groupZ->id);
     }
 }

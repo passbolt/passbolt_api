@@ -31,7 +31,7 @@ return [
                  * See ExportPoliciesPlugin.php file for available env variables.
                  * See `ExportPoliciesSettingsDto::createFromDefault()` for default values.
                  */
-                // 'allow_csv_format' => true,
+                // 'allowCsvFormat' => true,
             ],
         ],
     ],

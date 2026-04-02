@@ -190,4 +190,36 @@ class SmtpTransportBeforeSendEventListenerTest extends TestCase
             $this->assertArrayNotHasKey('context', $result);
         }
     }
+
+    public function testSmtpTransportSendEventListener_LegacyConfigNoOauth2_NoAuthType(): void
+    {
+        $config = $this->getSmtpSettingsData();
+        $this->encryptAndPersistSmtpSettings($config);
+        $subject = new SmtpTransport($config);
+        $event = new Event('foo', $subject, []);
+
+        /** @psalm-suppress InvalidArgument */
+        $this->listener->initializeTransport($event);
+
+        $result = $subject->getConfig();
+        $this->assertNull($result['authType']);
+        $this->assertSame($config['username'], $result['username']);
+        $this->assertSame($config['password'], $result['password']);
+    }
+
+    public function testSmtpTransportSendEventListener_NoDbConfig_FallbackBehaviorUnchanged(): void
+    {
+        $fileConfig = $this->getSmtpSettingsData();
+        $subject = new SmtpTransport($fileConfig);
+        $event = new Event('foo', $subject, $fileConfig);
+
+        /** @psalm-suppress InvalidArgument */
+        $this->listener->initializeTransport($event);
+
+        $this->assertNull($this->listener->getConfigInDB());
+        $this->assertFalse($this->listener->isSourceDB());
+        $result = $subject->getConfig();
+        $this->assertSame($fileConfig['username'], $result['username']);
+        $this->assertSame($fileConfig['password'], $result['password']);
+    }
 }

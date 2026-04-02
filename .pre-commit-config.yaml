@@ -1,0 +1,5 @@
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.0  # v8.30.0
+    hooks:
+      - id: gitleaks
