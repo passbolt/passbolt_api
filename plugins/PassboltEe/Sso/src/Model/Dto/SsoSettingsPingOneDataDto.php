@@ -53,8 +53,6 @@ class SsoSettingsPingOneDataDto extends SsoSettingsOAuth2DataDto
      *  - environment_id string
      *  - client_id string
      *  - client_secret string
-     *  - openid_configuration_path string
-     *  - scope string
      *  - email_claim string
      * @return void
      */
