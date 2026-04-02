@@ -42,14 +42,29 @@ class TotpSetupGetControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupGet
      * @group mfaSetupGetTotp
      */
+    public function testMfaSetupGetTotp_Error_NotJson()
+    {
+        $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
+        $this->get('/mfa/setup/totp');
+        $this->assertResponseError();
+        $this->assertResponseContains('This functionality is only available using AJAX/JSON.');
+    }
+
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupGet
+     * @group mfaSetupGetTotp
+     */
     public function testMfaSetupGetTotpAlreadyConfigured()
     {
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpScenario::class, $user);
         $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_TOTP);
-        $this->get('/mfa/setup/totp');
+        $this->getJson('/mfa/setup/totp.json?api-version=v2');
         $this->assertResponseOk();
-        $this->assertResponseContains('is enabled');
+        $this->assertResponseContains('configured');
     }
 
     /**
@@ -63,25 +78,9 @@ class TotpSetupGetControllerTest extends MfaIntegrationTestCase
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaDuoScenario::class, $user);
         $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_DUO);
-        $this->get('/mfa/setup/totp');
+        $this->getJson('/mfa/setup/totp.json?api-version=v2');
         $this->assertResponseError();
         $this->assertResponseContains('This authentication provider is not enabled for your organization.');
-    }
-
-    /**
-     * @group mfa
-     * @group mfaSetup
-     * @group mfaSetupGet
-     * @group mfaSetupGetTotp
-     */
-    public function testMfaSetupGetTotpSuccess()
-    {
-        $this->logInAsUser();
-        $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
-        $this->get('/mfa/setup/totp');
-        $this->assertResponseOk();
-        $this->assertResponseContains('<form');
-        $this->assertResponseContains('<svg');
     }
 
     /**

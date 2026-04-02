@@ -53,12 +53,6 @@ abstract class MfaSetupController extends MfaController
      */
     protected function _handleGetExistingSettings(string $provider)
     {
-        $this->set('theme', $this->User->theme());
-        $this->viewBuilder()
-            ->setLayout('mfa_setup')
-            ->setTemplatePath(ucfirst($provider))
-            ->setTemplate('setupSuccess');
-
         $verified = $this->mfaSettings
             ->getAccountSettings()
             ->getVerifiedFrozenTime($provider);
@@ -81,14 +75,6 @@ abstract class MfaSetupController extends MfaController
         $token = MfaVerifiedToken::get($this->User->getAccessControl(), $provider, $sessionId);
         $cookie = MfaVerifiedCookie::get($this->getRequest(), $token, null);
         $this->response = $this->getResponse()->withCookie($cookie);
-
-        if (!$this->request->is('json')) {
-            $this->set('theme', $this->User->theme());
-            $this->viewBuilder()
-                ->setLayout('mfa_setup')
-                ->setTemplatePath(ucfirst($provider))
-                ->setTemplate('setupSuccess');
-        }
 
         $mfaAccountSettings = $this->mfaSettings->getAccountSettings(true);
         if (is_null($mfaAccountSettings)) {
