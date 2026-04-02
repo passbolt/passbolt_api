@@ -58,6 +58,17 @@ $routes->plugin('Passbolt/SsoRecover', ['path' => '/sso/recover'], function (Rou
         ->setMethods(['GET']);
 
     /**
+     * PingOne
+     */
+    $routes
+        ->connect('/pingone', [
+            'prefix' => 'PingOne',
+            'controller' => 'PingOneRecoverLogin',
+            'action' => 'login',
+        ])
+        ->setMethods(['POST']);
+
+    /**
      * Get recover URL
      */
     $routes
