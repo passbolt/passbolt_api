@@ -18,9 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Test\TestCase\Service\Sso\PingOne;
 
 use App\Service\Cookie\DefaultSecureCookieService;
-use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
-use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Service\Sso\OAuth2\SsoOAuth2Service;
 use Passbolt\Sso\Service\Sso\PingOne\SsoPingOneService;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
@@ -32,16 +30,6 @@ use Passbolt\Sso\Utility\Provider\SsoProviderFactory;
  */
 class SsoPingOneServiceTest extends SsoTestCase
 {
-    /**
-     * @inheritDoc
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-        // Enable PingOne provider for testing (disabled by default)
-        Configure::write('passbolt.plugins.sso.providers.' . SsoSetting::PROVIDER_PINGONE, true);
-    }
-
     /**
      * @inheritDoc
      */
