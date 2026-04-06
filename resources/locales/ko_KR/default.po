@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-04-02 12:51+0000\n"
-"PO-Revision-Date: 2026-04-06 01:12\n"
+"PO-Revision-Date: 2026-04-06 02:12\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -1379,7 +1379,7 @@ msgid "Could not validate group user data."
 msgstr "그룹 사용자 데이터를 검사할 수 없습니다."
 
 msgid "The resource with ID {0} does not have a secret revision."
-msgstr ""
+msgstr "ID가 {0}인 리소스에는 비밀 수정이 없습니다."
 
 msgid "All email notifications will be sent."
 msgstr "모든 이메일 알림이 전송됩니다."
@@ -1610,10 +1610,10 @@ msgid "Run the install script to install the database tables"
 msgstr "설치 스크립트를 실행하여 데이터베이스 테이블을 설치하세요"
 
 msgid "The database version is supported."
-msgstr ""
+msgstr "데이터베이스 버전이 지원됩니다."
 
 msgid "The database version is deprecated."
-msgstr ""
+msgstr "데이터베이스 버전이 더 이상 사용되지 않습니다."
 
 msgid "The database schema is up to date."
 msgstr "데이터베이스 스키마가 최신 상태입니다."
@@ -2114,7 +2114,7 @@ msgid "The resource types associated to this resource does not exist."
 msgstr "이 리소스에 연결된 리소스 유형이 존재하지 않습니다."
 
 msgid "No secret revision were found for this resource."
-msgstr ""
+msgstr "이 리소스에 대한 비밀 수정본을 찾을 수 없습니다."
 
 msgid "You are not allowed to update this resource."
 msgstr "이 리소스를 수정할 수 있는 권한이 없습니다."
@@ -2123,19 +2123,19 @@ msgid "Additional resource types are not enabled on this server."
 msgstr "이 서버에서는 추가 리소스 유형을 사용할 수 없습니다."
 
 msgid "The role could not be saved."
-msgstr ""
+msgstr "역할을 저장할 수 없습니다."
 
 msgid "Could not save the role, please try again later."
-msgstr ""
+msgstr "역할을 저장할 수 없습니다, 나중에 재시도 하세요."
 
 msgid "The role does not exist or deleted."
-msgstr ""
+msgstr "역할이 존재하지 않거나 삭제되었습니다."
 
 msgid "The role could not be deleted."
-msgstr ""
+msgstr "역할을 삭제할 수 없습니다."
 
 msgid "Could not delete the role, please try again later."
-msgstr ""
+msgstr "역할을 삭제할 수 없습니다, 나중에 재시도 하세요."
 
 msgid "There should be at least 4 roles"
 msgstr "최소 4개의 역할이 있어야 합니다."
@@ -2147,10 +2147,10 @@ msgid "Validation success for role {0}"
 msgstr "{0} 역할에 대한 유효성 검증 성공"
 
 msgid "The role could not be updated."
-msgstr ""
+msgstr "역할을 업데이트할 수 없습니다."
 
 msgid "Could not update the role, please try again later."
-msgstr ""
+msgstr "역할을 업데이트할 수 없습니다. 나중에 재시도해 주세요."
 
 msgid "Could not validate secrets data."
 msgstr "비밀번호 데이터를 검사할 수 없습니다."
@@ -2357,10 +2357,10 @@ msgid "The supplied email notification settings are not valid"
 msgstr "제공된 이메일 알림 설정이 올바르지 않습니다."
 
 msgid "The allow CSV format setting is required."
-msgstr ""
+msgstr "허용 CSV 형식 설정이 필요합니다."
 
 msgid "The allow CSV format setting should be a boolean."
-msgstr ""
+msgstr "허용 CSV 형식 설정은 부울 형식이어야 합니다."
 
 msgid "The folder has been added successfully."
 msgstr "폴더가 성공적으로 추가되었습니다."
@@ -2471,10 +2471,10 @@ msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "개인 유형의 폴더는 다른 사용자 또는 그룹과 공유할 수 없습니다."
 
 msgid "You made changes on several folders"
-msgstr ""
+msgstr "여러 폴더를 변경함"
 
 msgid "{0} has made changes on several folders"
-msgstr ""
+msgstr "{0}이(가) 여러 폴더에 변경 사항을 적용함"
 
 msgid "You added the folder {0}"
 msgstr "폴더 {0} 이(가) 추가됨"
@@ -2573,7 +2573,7 @@ msgid "{0} edited a folder"
 msgstr "{0} 이(가) 폴더를 수정함"
 
 msgid "{0} folders were affected."
-msgstr ""
+msgstr "{0} 개의 폴다가 영향을 받았습니다."
 
 msgid "It would be too much to list them here, but you can go check them on passbolt."
 msgstr "여기에 모두 나열하기에는 너무 많지만, Passbolt에서 확인하세요."
@@ -3179,10 +3179,10 @@ msgid "The server does not have access to the server metadata private key in Zer
 msgstr "서버는 영지식 모드에서 서버 메타데이터 개인 키에 액세스할 수 없습니다."
 
 msgid "The server has access to the server metadata private key while in Zero-knowledge mode."
-msgstr ""
+msgstr "서버는 영지식 모드에 있는 동안 서버 메타데이터 개인 키에 액세스할 수 있습니다."
 
 msgid "When Zero-knowledge mode is enabled, the server should not have access to the server metadata private key."
-msgstr ""
+msgstr "영지식 모드가 활성화된 경우, 서버는 서버 메타데이터 개인 키에 접근할 수 없어야 합니다."
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "메타데이터 키가 없거나 삭제되었습니다."
@@ -3623,7 +3623,7 @@ msgid "This functionality is not available using AJAX/JSON."
 msgstr "이 기능은 AJAX/JSON에서는 사용할 수 없습니다."
 
 msgid "This functionality is only available using AJAX/JSON."
-msgstr ""
+msgstr "이 기능은 AJAX/JSON을 사용할 때만 사용할 수 있습니다."
 
 msgid "This authentication provider is already setup. Disable it first"
 msgstr "이 인증 공급자가 이미 설정되었습니다. 먼저 사용 중지하세요."
@@ -3632,7 +3632,7 @@ msgid "Multi Factor Authentication is configured!"
 msgstr "다단계 인증이 구성되었습니다!"
 
 msgid "Unable to configure Multi Factor Authentication."
-msgstr ""
+msgstr "다단계 인증을 구성할 수 없습니다."
 
 msgid "MFA authentication is required."
 msgstr "다단계인증이 필요합니다."
@@ -4073,10 +4073,10 @@ msgid "The password generator exclude look alike chars should be a boolean type.
 msgstr "비밀번호 생성기의 유사 문자 제외는 부울 유형이어야 합니다."
 
 msgid "The rbacs could not be saved."
-msgstr ""
+msgstr "역할 기반 접근 제어를 저장할 수 없습니다."
 
 msgid "Could not save the rbacs, please try again later."
-msgstr ""
+msgstr "역할 기반 접근 제어를 저장할 수 없습니다, 나중에 재시도 하세요."
 
 msgid "Record not found"
 msgstr "레코드가 존재하지 않음"
@@ -4109,7 +4109,7 @@ msgid "The control function is not allowed for this UI Action."
 msgstr "이 UI 작업에는 제어 기능이 허용되지 않습니다."
 
 msgid "The control function is not allowed for this Action."
-msgstr ""
+msgstr "이 작업에는 제어 기능이 허용되지 않습니다."
 
 msgid "An action identifier should be a valid UUID."
 msgstr "활동 식별자는 유효한 UUID여야 합니다."
@@ -4289,37 +4289,37 @@ msgid "The resource type is not deleted."
 msgstr "리소스 유형이 삭제되지 않았습니다."
 
 msgid "The max revisions should be a valid integer."
-msgstr ""
+msgstr "최대 개정 수는 유효한 정수여야 합니다."
 
 msgid "The max revisions is required."
-msgstr ""
+msgstr "최대 개정 수는 필수 항목입니다."
 
 msgid "The max revisions should be greater than 0."
-msgstr ""
+msgstr "최대 개정 수는 0보다 커야 합니다."
 
 msgid "The max revisions should not exceed the max revisions limit set by the administrator."
-msgstr ""
+msgstr "최대 개정 수는 관리자가 설정한 최대 개정 수 제한을 초과할 수 없습니다."
 
 msgid "The allow sharing revisions should be a valid boolean."
-msgstr ""
+msgstr "개정 공유 허용 여부는 유효한 부울 값이어야 합니다."
 
 msgid "The allow sharing revisions is required."
-msgstr ""
+msgstr "개정 공유 허용 여부는 필수 항목입니다."
 
 msgid "The allow sharing revisions is not enabled by the administrator."
-msgstr ""
+msgstr "개정 공유 허용 기능이 관리자에 의해 활성화되어 있지 않습니다."
 
 msgid "Secret revisions settings endpoints are disabled."
-msgstr ""
+msgstr "비밀 개정 설정 엔드포인트가 비활성화되어 있습니다."
 
 msgid "The identifier of the user who created the secret revision should be a valid UUID."
-msgstr ""
+msgstr "비밀 개정을 생성한 사용자의 식별자는 유효한 UUID여야 합니다."
 
 msgid "The identifier of the user who modified the secret revision should be a valid UUID."
-msgstr ""
+msgstr "비밀 개정을 수정한 사용자의 식별자는 유효한 UUID여야 합니다."
 
 msgid "Could not save secret revision"
-msgstr ""
+msgstr "비밀 개정을 저장할 수 없음"
 
 msgid "The self registration setting id should be a valid UUID."
 msgstr "자체 등록 설정 ID는 올바른 UUID여야 합니다."
@@ -4460,22 +4460,22 @@ msgid "The test email should be a valid email address."
 msgstr "테스트 이메일은 유효한 이메일 주소여야 합니다."
 
 msgid "The tenant ID should be a valid UUID."
-msgstr ""
+msgstr "테넌트 ID는 유효한 UUID여야 합니다."
 
 msgid "The client ID should be a valid UUID."
-msgstr ""
+msgstr "클라이언트 ID는 유효한 UUID여야 합니다."
 
 msgid "The client secret should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "클라이언트 비밀은 유효한 BMP-UTF8 문자열이어야 합니다."
 
 msgid "The client secret should not exceed 256 characters."
-msgstr ""
+msgstr "클라이언트 비밀은 256자를 초과할 수 없습니다."
 
 msgid "The OAuth2 username should be a valid email address."
-msgstr ""
+msgstr "OAuth2 사용자 이름은 유효한 이메일 주소여야 합니다."
 
 msgid "The OAuth2 username should not exceed 256 characters."
-msgstr ""
+msgstr "OAuth2 사용자 이름은 256자를 초과할 수 없습니다."
 
 msgid "The authentication method is required."
 msgstr "인증 방법이 필요합니다."
@@ -4490,28 +4490,28 @@ msgid "A test recipient is required."
 msgstr "테스트 수신자가 필요합니다."
 
 msgid "The tenant ID is required."
-msgstr ""
+msgstr "테넌트 ID가 필요합니다."
 
 msgid "The tenant ID should not be empty."
-msgstr ""
+msgstr "테넌트 ID는 비워둘 수 없습니다."
 
 msgid "The client ID is required."
-msgstr ""
+msgstr "클라이언트 ID가 필요합니다."
 
 msgid "The client ID should not be empty."
-msgstr ""
+msgstr "클라이언트 ID는 비워둘 수 없습니다."
 
 msgid "The client secret is required."
-msgstr ""
+msgstr "클라이언트 비밀이 필요합니다."
 
 msgid "The client secret should not be empty."
 msgstr "클라이언트 비밀번호는 비워둘 수 없습니다."
 
 msgid "The OAuth2 username is required."
-msgstr ""
+msgstr "OAuth2 사용자 이름이 필요합니다."
 
 msgid "The OAuth2 username should not be empty."
-msgstr ""
+msgstr "OAuth2 사용자 이름은 비워둘 수 없습니다."
 
 msgid "SMTP settings endpoints disabled."
 msgstr "SMTP 설정 엔드포인트를 사용할 수 없습니다."
@@ -4568,16 +4568,16 @@ msgid "env variables"
 msgstr "환경 변수"
 
 msgid "Tenant ID should be a valid UUID."
-msgstr ""
+msgstr "테넌트 ID는 유효한 UUID여야 합니다."
 
 msgid "Client ID should be a valid UUID."
-msgstr ""
+msgstr "클라이언트 ID는 유효한 UUID여야 합니다."
 
 msgid "Failed to obtain SMTP OAuth2 access token."
-msgstr ""
+msgstr "SMTP OAuth2 액세스 토큰을 가져오지 못했습니다."
 
 msgid "SMTP OAuth2 token response from Microsoft did not contain an access token."
-msgstr ""
+msgstr "Microsoft의 SMTP OAuth2 토큰 응답에 액세스 토큰이 포함되어 있지 않았습니다."
 
 msgid "Could not validate the smtp settings."
 msgstr "Smtp 설정의 유효성을 검사할 수 없습니다."
@@ -5558,7 +5558,7 @@ msgid "{0} has initiated an account recovery request."
 msgstr "{0} 계정 복구 요청이 시작되었습니다."
 
 msgid "Since you’re authorized to handle account recovery requests, please process this one."
-msgstr ""
+msgstr "계정 복구 요청을 처리할 권한이 있으므로, 이 요청을 진행해 주세요."
 
 msgid "You will need your organization recovery key to continue."
 msgstr "계속하려면 조직 복구 키가 필요합니다."
@@ -6218,7 +6218,7 @@ msgid "The ID for the SCIM settings should be a valid UUID."
 msgstr "SCIM 설정에 대한 ID는 올바른 UUID여야 합니다."
 
 msgid "The SCIM secret token is expired, you are requested to rotate it."
-msgstr ""
+msgstr "SICIM 비밀 토큰이 만료되었으므로, 교체하시기 바랍니다."
 
 msgid "Simultaneous SCIM and session authentication is not permitted."
 msgstr "SCIM과 세션 인증은 동시에 허용되지 않습니다."
@@ -6230,7 +6230,7 @@ msgid "An entry for the same related entity already exists"
 msgstr "동일한 관련 엔터티에 대한 항목이 이미 존재합니다."
 
 msgid "An entry with the same `scim_name` and `foreign_model` already exist."
-msgstr ""
+msgstr "동일한 'sim_name'과 'foreign_model' 항목이 이미 존재합니다."
 
 msgid "Users"
 msgstr "사용자"
@@ -6248,10 +6248,10 @@ msgid "SCIM plugin is disabled."
 msgstr "SCIM 플러그인이 비활성화되었습니다."
 
 msgid "The SCIM secret token is not expired."
-msgstr ""
+msgstr "SICIM 비밀 토큰은 만료되지 않았습니다."
 
 msgid "Rotate the SCIM secret token in the administration settings."
-msgstr ""
+msgstr "관리 설정에서 SCIM 비밀 토큰을 교체하세요."
 
 msgid "The SCIM settings could not be decrypted with the server gpg key."
 msgstr "SCIM 설정은 서버 GPG 키로 해독할 수 없습니다."
@@ -6278,16 +6278,16 @@ msgid "The uuid in the url doesn't match any known setting record."
 msgstr "url의 uuid가 알려진 설정 레코드와 일치하지 않습니다."
 
 msgid "The SCIM secret token expiry configuration is invalid."
-msgstr ""
+msgstr "SCIM 비밀 토큰 만료 구성이 잘못되었습니다."
 
 msgid "Missing or invalid SCIM user in configuration settings"
-msgstr ""
+msgstr "구성 설정에서 SCIM 사용자 누락 또는 유효하지 않음"
 
 msgid "An unexpected error occurred while creating the user in the database"
-msgstr ""
+msgstr "데이터베이스에서 사용자를 생성하는 동안 예기치 않은 오류가 발생"
 
 msgid "An administrator user cannot be suspended via SCIM."
-msgstr ""
+msgstr "관리자 사용자는 SCIM을 통해 정지할 수 없습니다."
 
 msgid "Email"
 msgstr "이메일"
@@ -6455,7 +6455,7 @@ msgid "The OpenID configuration path is too large."
 msgstr "OpenID 구성 패스가 너무 큽니다."
 
 msgid "The client id should be a valid BMP-UTF8 string."
-msgstr "클라이엉트 ID는 유효한 BMP-UTF8 문자열이어야합니다."
+msgstr "클라이언트 ID는 유효한 BMP-UTF8 문자열이어야합니다."
 
 msgid "The scope should be a valid string."
 msgstr "범위는 유효한 문자열이어야 합니다."
@@ -6464,10 +6464,10 @@ msgid "The scope is too large."
 msgstr "범위가 너무 큽니다."
 
 msgid "The URL must be a valid PingOne authentication domain."
-msgstr ""
+msgstr "URL은 유효한 PingOne 인증 도메인이어야 합니다."
 
 msgid "An environment id is required."
-msgstr ""
+msgstr "환경 ID가 필요합니다."
 
 msgid "The environment id should not be empty."
 msgstr ""
@@ -7190,7 +7190,7 @@ msgid "Contact your admin"
 msgstr "관리자에게 연락"
 
 msgid "{0} changed the role of {1} to {2}."
-msgstr ""
+msgstr "{0}이(가) {1}의 역할을 {2}(으)로 변경했습니다."
 
 msgid "{0} can no longer perform administration tasks."
 msgstr "{0} 이(가) 더 이상 관리 작업을 수행할 수 없습니다."
@@ -7202,10 +7202,10 @@ msgid "View user in passbolt"
 msgstr "Passbolt에서 사용자 보기"
 
 msgid "A new role {0} has been created."
-msgstr ""
+msgstr "{0} 역할이 새로 생성되었습니다."
 
 msgid "The role {0} has been renamed to {1}."
-msgstr ""
+msgstr "역할 {0} 이름이 {1}(으)로 변경되었습니다."
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
 msgstr "이 사용자는 개인 키 및(또는) 비밀문구를 분실하여 계정 복구 프로세스를 완료할 수 없습니다."
@@ -7406,16 +7406,16 @@ msgid "{0} resources were shared with you."
 msgstr "{0} 이(가) 당신과 리소스를 공유함"
 
 msgid "{0} changed your role to {1}."
-msgstr ""
+msgstr "{0}이(가) 내 역할을 {1}(으)로 변경했습니다."
 
 msgid "You can no longer perform administration tasks."
-msgstr ""
+msgstr "더 이상 관리 작업을 수행할 수 없습니다."
 
 msgid "This email is an automatic notification sent by"
 msgstr "이 이메일은 다음에서 자동으로 발송되는 알림입니다."
 
 msgid "To disable these notifications, contact an administrator."
-msgstr ""
+msgstr "이러한 알림을 비활성화하려면 관리자에게 문의하세요."
 
 msgid "The locale {0} is not valid or not supported."
 msgstr "{0} 로케일이 잘못되었거나 지원되지 않습니다."
