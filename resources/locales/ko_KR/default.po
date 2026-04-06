@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-04-02 12:51+0000\n"
-"PO-Revision-Date: 2026-04-02 14:13\n"
+"PO-Revision-Date: 2026-04-06 01:12\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +74,7 @@ msgid "The request data can not be empty."
 msgstr "요청 데이터는 비워둘 수 없습니다."
 
 msgid "You are already logged in."
-msgstr ""
+msgstr "이미 로그인했습니다."
 
 msgid "You are successfully logged in."
 msgstr "로그인에 성공하였습니다."
@@ -278,13 +278,13 @@ msgid "The resource has been updated successfully."
 msgstr "리소스가 성공적으로 수정되었습니다."
 
 msgid "The role was deleted."
-msgstr ""
+msgstr "역할이 삭제되었습니다."
 
 msgid "The role identifier is not valid."
-msgstr ""
+msgstr "역할 식별자가 잘못되었습니다."
 
 msgid "The role was successfully updated."
-msgstr ""
+msgstr "역할이 정상적으로 수정되었습니다."
 
 msgid "The secret does not exist."
 msgstr "비밀번호가 존재하지 않습니다."
@@ -410,7 +410,7 @@ msgid "Invalid expiry time {0}."
 msgstr "만료 시간 {0} 이(가) 잘못되었습니다."
 
 msgid "The user role ID must not be of the guest role."
-msgstr ""
+msgstr "사용자 역할 ID는 게스트 역할이 아니어야 합니다."
 
 msgid "The identifier should not be empty."
 msgstr "식별자는 비워둘 수 없습니다."
@@ -950,25 +950,25 @@ msgid "The name should be a valid BMP-UTF8 string."
 msgstr "이름은 유효한 BMP-UTF8 문자열이어야합니다."
 
 msgid "The name should not be greater than 50 characters."
-msgstr ""
+msgstr "이름은 50자를 초과할 수 없습니다."
 
 msgid "The name should not be reserved role."
-msgstr ""
+msgstr "해당 이름은 예약된 역할이 아니어야 합니다."
 
 msgid "The description should be a valid BMP-UTF8 string."
 msgstr "설명은 유효한 BMP-UTF8 문자열이어야합니다."
 
 msgid "The role cannot be deleted as it is associated with another user."
-msgstr ""
+msgstr "이 역할은 다른 사용자와 연결되어 있어 삭제할 수 없습니다."
 
 msgid "A reserved role cannot be deleted."
-msgstr ""
+msgstr "예약된 역할은 삭제할 수 없습니다."
 
 msgid "A role already exists for the given name."
 msgstr "지정한 이름에 대한 역할이 이미 있습니다."
 
 msgid "Only maximum of {0} active roles are allowed."
-msgstr ""
+msgstr "최대 {0}개의 활성 역할만 허용됩니다."
 
 msgid "The resource identifier is required."
 msgstr "리소스 식별자가 필요합니다."
@@ -977,13 +977,13 @@ msgid "The resource identifier should not be empty."
 msgstr "리소스 식별자는 비워둘 수 없습니다."
 
 msgid "The secret revision identifier should be a valid UUID."
-msgstr ""
+msgstr "비밀 수정 식별자는 유효한 UUID여야 합니다."
 
 msgid "A secret revision identifier is required."
-msgstr ""
+msgstr "비밀 수정 식별자가 필요합니다."
 
 msgid "The secret revision identifier should not be empty."
-msgstr ""
+msgstr "비밀 수정 식별자는 비워둘 수 없습니다."
 
 msgid "The message should be a valid ASCII string."
 msgstr "메시지는 유효한 ASCII 문자열이어야 합니다."
@@ -998,10 +998,10 @@ msgid "A secret already exists for the given user and resource."
 msgstr "지정한 사용자 및 리소스에 대한 비밀번호가 이미 있습니다."
 
 msgid "A secret already exists for the given user, resource and secret revision."
-msgstr ""
+msgstr "주어진 사용자, 리소스 및 비밀 수정에 대한 비밀이 이미 존재합니다."
 
 msgid "The secret revision does not exist or is deleted."
-msgstr ""
+msgstr "비밀 수정이 존재하지 않거나 삭제되었습니다."
 
 msgid "The user identifier by should be a valid UUID."
 msgstr "사용자 식별자는 유효한 UUID여야 합니다."
@@ -1034,7 +1034,7 @@ msgid "The username is already in use."
 msgstr "사용자이름이 이미 사용 중입니다."
 
 msgid "The role does not exist."
-msgstr ""
+msgstr "역할이 존재하지 않습니다."
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "사용자가 공유 콘텐츠의 단독 소유자가 되어서는 안 되며, 소유권을 다른 사용자에게 이전하세요."
@@ -1172,10 +1172,10 @@ msgid "{0} edited the resource {1}"
 msgstr "{0} 에 의해 {1} 리소스가 수정됨"
 
 msgid "{0} created a new role {1}"
-msgstr ""
+msgstr "{0}이(가) 새 역할 {1}을(를) 생성함"
 
 msgid "{0} updated the role {1}"
-msgstr ""
+msgstr "{0} 이(가) {1} 역할를 업데이트함"
 
 msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다!"
@@ -1211,7 +1211,7 @@ msgid "Welcome to passbolt, {0}!"
 msgstr "Passbolt에 오신 것을 환영합니다, {0}!"
 
 msgid "Your role has been updated"
-msgstr ""
+msgstr "역할이 수정됨"
 
 msgid "The purify subject setting should be a boolean."
 msgstr "정화된 제목 설정은 부울이어야 합니다."
