@@ -657,7 +657,7 @@
   "I do not want to share a copy of my private key & passphrase with my organization recovery contacts.": "Je ne veux pas partager une copie de ma clé privée et de mon mot de passe avec les contacts de récupération de mon organisation.",
   "I lost my passphrase, generate a new private key.": "J'ai perdu ma phrase de passe, générer une nouvelle clé privée.",
   "I safely stored my recovery kit.": "J'ai stocké mon kit de récupération en toute sécurité.",
-  "I understand this file is unencrypted and potentially unsafe to open in a spreadsheet software.": "I understand this file is unencrypted and potentially unsafe to open in a spreadsheet software.",
+  "I understand this file is unencrypted and potentially unsafe to open in a spreadsheet software.": "Je comprends que ce fichier est non chiffré et potentiellement dangereux à ouvrir dans un logiciel de tableur.",
   "I verified with <1>{creatorName}</1> that the request is valid.": "J'ai vérifié avec <1>{creatorName}</1> que la requête est valide.",
   "I want to try again.": "Je souhaite essayer à nouveau.",
   "Icons": "Icônes",
