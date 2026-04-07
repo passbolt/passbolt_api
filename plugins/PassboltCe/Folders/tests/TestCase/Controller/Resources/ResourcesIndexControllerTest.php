@@ -94,8 +94,8 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
             ],
             'When has-parent is multiple and return more than 1 item' => [
                 'filter' => [
-                    $folderB->id, // has 1 child
-                    $folderC->id, // has 2 children
+                    $folderB->id, // has 2 children
+                    $folderC->id, // has 1 child
                 ],
                 'expected' => [
                     $resourceF->get('id'),
