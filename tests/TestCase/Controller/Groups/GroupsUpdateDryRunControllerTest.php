@@ -17,18 +17,15 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Groups;
 
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
 {
-    public array $fixtures = [
-        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Secrets',
-    ];
-
     /**
      * @var \App\Model\Table\GroupsTable
      */
@@ -76,52 +73,63 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
     public function testGroupsUpdateDryRunAsGroupManagerSuccess(): void
     {
         // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $userFId = UuidFactory::uuid('user.id.frances');
-        $resourceCId = UuidFactory::uuid('resource.id.chai');
-        $resourceFId = UuidFactory::uuid('resource.id.fosdem');
-        $resourceGId = UuidFactory::uuid('resource.id.grunt');
+        [$j, $k, $l, $m, $n, $a, $c, $f] = UserFactory::make(8)->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$j])->withGroupsUsersFor([$k, $l, $m, $n])->persist();
+        [$fosdem, $grunt] = ResourceFactory::make(2)
+            ->withPermissionsFor([$group, $c])
+            ->withSecretsFor([$group, $c])
+            ->persist();
+        $chai = ResourceFactory::make()->withPermissionsFor([$group, $c, $l])
+            ->withSecretsFor([$group, $c, $l])
+            ->persist();
+        ResourceFactory::make(4)->withPermissionsFor([$group, $c, $a])->withSecretsFor([$group, $c, $a])->persist();
 
         // Retrieve the resources the group has access.
-        $resources = $this->Resources->findAllByGroupAccess($groupId)->all()->toArray();
+        $resources = $this->Resources->findAllByGroupAccess($group->id)->all()->toArray();
         $groupHasAccess = Hash::extract($resources, '{n}.id');
 
         // Build the request data.
         $changes = [];
 
+        // Build group users map
+        $groupUsersMap = TableRegistry::getTableLocator()->get('GroupsUsers')
+            ->find()
+            ->where(['group_id' => $group->id])
+            ->all()
+            ->combine('user_id', 'id')
+            ->toArray();
+
         // Update memberships.
         // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
+        $changes[] = ['id' => $groupUsersMap[$j->id], 'is_admin' => false];
         // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
+        $changes[] = ['id' => $groupUsersMap[$n->id], 'is_admin' => true];
 
         // Remove users from the group
         // Remove Kathleen who has access to the group resources only because of her membership.
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
+        $changes[] = ['id' => $groupUsersMap[$k->id], 'delete' => true];
 
         // Remove a user who has its own access to the same resource the group has.
         // Remove lynne who has a direct access to the resource chai.
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-lynne'), 'delete' => true];
+        $changes[] = ['id' => $groupUsersMap[$l->id], 'delete' => true];
 
         // Add a user who has not access to the group resources before adding it to the group.
         // Add Frances.
-        $changes[] = ['user_id' => $userFId];
+        $changes[] = ['user_id' => $f->id];
 
         // Add a user who already has access to all of the resources the group has access.
         // Carol has the same access as the group Freelancer.
         // No secret need to be encrypted for the user.
-        $changes[] = ['user_id' => $userCId];
+        $changes[] = ['user_id' => $c->id];
 
         // Add a user who already has access to some of the resources the group has access.
         // Ada already has access to few resources the group has access : chai, fosdem, grunt
         // Expect the secrets Ada had no access to be encrypted.
-        $changes[] = ['user_id' => $userAId];
+        $changes[] = ['user_id' => $a->id];
 
         // Update the group users.
-        $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId/dry-run.json", ['groups_users' => $changes]);
+        $this->logInAs($j);
+        $this->putJson("/groups/$group->id/dry-run.json", ['groups_users' => $changes]);
 
         $this->assertSuccess();
         $result = $this->getResponseBodyAsArray();
@@ -143,13 +151,13 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         // Lynne should not have anymore access to the group resources (except chai). Nothing expected.
         // Frances should have access to the group resources.
         foreach ($groupHasAccess as $resourceId) {
-            $expectedSecretsToAdd[] = ['resource_id' => $resourceId, 'user_id' => $userFId];
+            $expectedSecretsToAdd[] = ['resource_id' => $resourceId, 'user_id' => $f->id];
         }
         // Carol already have access to the resources, nothing expected.
         // Ada should have access to the group resources.
-        $userHasNotAccess = [$resourceCId, $resourceFId, $resourceGId];
+        $userHasNotAccess = [$chai->id, $fosdem->id, $grunt->id];
         foreach ($userHasNotAccess as $resourceId) {
-            $expectedSecretsToAdd[] = ['resource_id' => $resourceId, 'user_id' => $userAId];
+            $expectedSecretsToAdd[] = ['resource_id' => $resourceId, 'user_id' => $a->id];
         }
 
         // Assert the added secrets are as expected.
@@ -170,18 +178,18 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
     public function testGroupsUpdateDryRunAsAdminSuccess(): void
     {
         // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userAId = UuidFactory::uuid('user.id.ada');
+        $group = GroupFactory::make()->persist();
+        $user = UserFactory::make()->user()->persist();
 
         // Try to add the user Ada.
         $data = [
             'name' => 'Name changed',
-            'groups_users' => [['user_id' => $userAId]],
+            'groups_users' => [['user_id' => $user->id]],
         ];
 
         // Update the group name.
-        $this->authenticateAs('admin');
-        $this->putJson("/groups/$groupId/dry-run.json", $data);
+        $this->logInAsAdmin();
+        $this->putJson("/groups/$group->id/dry-run.json", $data);
         $this->assertSuccess();
 
         // No secrets should be requested nor source secrets given.
