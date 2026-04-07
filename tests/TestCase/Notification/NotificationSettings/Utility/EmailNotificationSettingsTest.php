@@ -19,10 +19,10 @@ namespace App\Test\TestCase\Notification\NotificationSettings\Utility;
 
 use App\Model\Entity\Role;
 use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\UserAccessControl;
-use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\EventManager;
 use Cake\Http\Exception\InternalErrorException;
@@ -44,12 +44,6 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
      * @var \App\Model\Table\UsersTable Users
      */
     protected $Users;
-
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments',
-        'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Profiles',
-         'app.Base/Gpgkeys',
-    ];
 
     public function setUp(): void
     {
@@ -93,12 +87,12 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
 
         foreach ($cases as $config => $expected) {
             $originalConfigSetting = EmailNotificationSettings::get($config);
-            $accessControl = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+            $uac = UserFactory::make()->admin()->persistedUAC();
 
             // Changing the settings to !default
             EmailNotificationSettings::save([
                 $config => !$originalConfigSetting,
-            ], $accessControl);
+            ], $uac);
 
             $updatedTriggerSetting = EmailNotificationSettings::get($config);
             $expectedConfigSetting = !$originalConfigSetting;
@@ -135,11 +129,13 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
      */
     public function testNotificationSettingTriggerCommentAdd()
     {
-        $testResourceId = UuidFactory::uuid('resource.id.bower');
+        RoleFactory::make()->guest()->persist();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $testResourceId = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->persist()->get('id');
         $shouldSend = EmailNotificationSettings::get('send.comment.add');
         $oldEmailQueueLength = $expectedEmailQueueLength = $this->emailQueue->find()->all()->count();
         EmailNotificationSettings::flushCache();
-        $this->_addTestComment($testResourceId);
+        $this->_addTestComment($userA, $testResourceId);
         $resourceSubscribers = $this->_getResourceSubscribers($testResourceId)->count();
 
         // The user making the comment doesn't get an email
@@ -159,7 +155,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
     public function testNotificationSettingTriggerGroupAdd()
     {
         $oldEmailQueueLength = $expectedEmailQueueLength = $this->emailQueue->find()->all()->count();
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $testGroupData = $this->_addTestGroup();
         $shouldSend = EmailNotificationSettings::get('send.group.user.add');
         $emailRecipientCount = count($testGroupData['GroupUsers']);
@@ -196,8 +192,8 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
         // Using low level table insert as the utility checks for invalid json
         /** @var \App\Model\Table\OrganizationSettingsTable $organizationSettings */
         $organizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
-        $accessControl = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
-        $organizationSettings->createOrUpdateSetting(EmailNotificationSettings::NAMESPACE, $invalidJsonString, $accessControl);
+        $uac = UserFactory::make()->admin()->persistedUAC();
+        $organizationSettings->createOrUpdateSetting(EmailNotificationSettings::NAMESPACE, $invalidJsonString, $uac);
         $this->expectException(InternalErrorException::class);
         $this->expectExceptionMessage('The Email Notification Settings configs are invalid');
         EmailNotificationSettings::get('send.comment.add');
@@ -206,12 +202,13 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
     /**
      * Add a test comment
      *
+     * @param User $user entity
      * @param string $resourceId ResourceId where comment will be added
      * @return void
      */
-    protected function _addTestComment($resourceId)
+    protected function _addTestComment($user, $resourceId)
     {
-        $this->authenticateAs('ada');
+        $this->logInAs($user);
         $commentContent = 'this is a test';
 
         $postData = [
@@ -228,11 +225,12 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
      */
     protected function _addTestGroup()
     {
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
         $testGroupData = [
             'Group' => ['name' => 'New group name'],
             'GroupUsers' => [
-                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
-                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]],
+                ['GroupUser' => ['user_id' => $userA->id, 'is_admin' => 1]],
+                ['GroupUser' => ['user_id' => $userB->id]],
             ],
         ];
 
