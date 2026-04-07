@@ -109,17 +109,32 @@ class AllSyncAction
      * @param bool $dryRun whether to do it in dry run mode.
      * @return array reports collection.
      */
-    public function execute(?bool $dryRun = false): array
+    public function execute(bool $dryRun = false): array
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
+        $conn = $Users->getConnection();
+
+        // Enable savepoints BEFORE any transaction begins.
+        // Inner services (GroupsUsersAddService, GroupsUpdateService, etc.) use their own
+        // transactional() calls. Without savepoints, an inner rollback poisons the outer
+        // transaction (NestedTransactionRollbackException). With savepoints, inner rollbacks
+        // only undo their savepoint, allowing partial-success error handling to work.
+        if (!$conn->isSavePointsEnabled()) {
+            $conn->enableSavePoints();
+        }
+
         $reports = [];
         if ($dryRun) {
-            $conn = $Users->getConnection();
+            // Dry-run: open a real transaction, run the full sync, then rollback.
+            // SyncAction's transactional() calls become savepoints inside this transaction.
             $conn->begin();
-            $conn->transactional(function () use (&$reports, $dryRun): void {
+            try {
                 $reports = $this->syncAll($dryRun);
-            });
-            $conn->rollback();
+            } finally {
+                if ($conn->inTransaction()) {
+                    $conn->rollback(true);
+                }
+            }
         } else {
             $reports = $this->syncAll($dryRun);
         }
