@@ -1,8 +1,8 @@
 Release song: https://www.youtube.com/watch?v=9Nv-WHmjN7s
 
-Passbolt 5.11.0-test.2 PRO.
+Passbolt 5.11.0-test.3 PRO.
 
-## [5.11.0-test.2] - 2026-04-03
+## [5.11.0-test.3] - 2026-04-07
 ### Added
 - PB-49875 OAuth support for smtp authentication
 - PB-50158 Add a feature flag to enable/disable Safari availability on a Passbolt instance
@@ -25,6 +25,7 @@ Passbolt 5.11.0-test.2 PRO.
 - PB-49285 PBL-15-008 WP4: ScimEntry uniqueness race condition (Medium)
 - PB-49284 PBL-15-007 WP5: Potential DoS via pre-authentication GPG decryption (Low)
 - PB-49151 PBL-15-003 WP3: Lack of bearer token expiry & revocation schemes (Medium)
+- PB-49159 Fix enableSavePoints() not placed correctly
 
 ### Improved
 - PB-50489 Email digest batch sending improvements
