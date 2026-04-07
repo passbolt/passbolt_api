@@ -19,196 +19,122 @@ namespace Passbolt\Folders\Test\TestCase\Controller\Resources;
 use App\Model\Entity\Permission;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\UserFactory;
-use App\Test\Lib\Model\PermissionsModelTrait;
-use App\Test\Lib\Utility\FixtureProviderTrait;
-use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Closure;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
-use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * @covers \App\Controller\Resources\ResourcesIndexController
  */
 class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
 {
-    use FixtureProviderTrait;
-    use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-    use PermissionsModelTrait;
-
-    public array $fixtures = [
-        'app.Base/Users',
-        'app.Base/Profiles',
-        'app.Base/Roles',
-        'app.Base/Groups',
-        'app.Base/GroupsUsers',
-        'app.Base/ResourceTypes',
-        'app.Base/Resources',
-        'app.Base/Favorites',
-        'app.Base/Permissions',
-    ];
-
-    /**
-     * @param string $folderParentId Folder parent id
-     * @param array $childrenFolders Children folders
-     * @param string $userId user id
-     */
-    private static function addFolderAndItsChildren(string $folderParentId, array $childrenFolders, string $userId)
+    public function testResourcesIndexController_FilterHasParentSuccess()
     {
-        self::addFolderFor(['id' => $folderParentId], [$userId => Permission::OWNER]);
-        foreach ($childrenFolders as $childrenFolderId) {
-            self::addResourceFor(
-                ['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId],
-                [$userId => Permission::OWNER]
-            );
-        }
-    }
+        $user = UserFactory::make()->user()->persist();
+        [$resourceA, $resourceB, $resourceC] = ResourceFactory::make(3)
+            ->withPermissionsFor([$user])
+            ->withFoldersRelationsFor([$user])
+            ->persist();
+        [$folderA, $folderB, $folderC] = FolderFactory::make(3)
+            ->withPermissionsFor([$user])
+            ->persist();
+        [$resourceD, $resourceE] = ResourceFactory::make(2)
+            ->withPermissionsFor([$user])
+            ->withFoldersRelationsFor([$user], $folderB)
+            ->persist();
+        $resourceF = ResourceFactory::make()
+            ->withPermissionsFor([$user])
+            ->withFoldersRelationsFor([$user], $folderC)
+            ->persist();
 
-    /**
-     * @return array
-     */
-    public static function provideFoldersIndexFilterHasParentSuccessRelations()
-    {
-        $fixture = function () {
-            // Relations are expressed as follow: folder_parent_id => [child_folder_id]
-            $folderRelations = [
-                UuidFactory::uuid('folder.id.a') => [],
-                UuidFactory::uuid('folder.id.c') => [
-                    UuidFactory::uuid('resource.id.e'),
-                ],
-                UuidFactory::uuid('folder.id.d') => [
-                    UuidFactory::uuid('resource.id.f'),
-                    UuidFactory::uuid('resource.id.g'),
-                ],
-            ];
-
-            $rootResources = [
-                UuidFactory::uuid('resource.id.a'),
-                UuidFactory::uuid('resource.id.c'),
-                UuidFactory::uuid('resource.id.d'),
-            ];
-
-            $userId = UuidFactory::uuid('user.id.ada');
-
-            foreach ($folderRelations as $folderParentId => $childrenFolders) {
-                self::addFolderAndItsChildren($folderParentId, $childrenFolders, $userId);
-            }
-
-            foreach ($rootResources as $resourceId) {
-                self::addResourceFor(['id' => $resourceId], [$userId => Permission::OWNER]);
-            }
-        };
-
-        return [
+        $cases = [
             'When has parent is false' => [
-                $fixture,
-                [false],
-                [
-                    UuidFactory::uuid('resource.id.a'),
-                    UuidFactory::uuid('resource.id.c'),
-                    UuidFactory::uuid('resource.id.d'),
+                'filter' => [false],
+                'expected' => [
+                    $resourceA->get('id'),
+                    $resourceB->get('id'),
+                    $resourceC->get('id'),
                 ],
             ],
             'When has parent is false as a string' => [
-                $fixture,
-                ['false'],
-                [
-                    UuidFactory::uuid('resource.id.a'),
-                    UuidFactory::uuid('resource.id.c'),
-                    UuidFactory::uuid('resource.id.d'),
+                'filter' => ['false'],
+                'expected' => [
+                    $resourceA->get('id'),
+                    $resourceB->get('id'),
+                    $resourceC->get('id'),
                 ],
             ],
             'When has-parent is single and return only 1 item' => [
-                $fixture,
-                [
-                    UuidFactory::uuid('folder.id.c'),
+                'filter' => [
+                    $folderC->id,
                 ],
-                [
-                    UuidFactory::uuid('resource.id.e'),
+                'expected' => [
+                    $resourceF->get('id'),
                 ],
             ],
             'When has-parent is single and return more than 1 item' => [
-                $fixture,
-                [
-                    UuidFactory::uuid('folder.id.d'),
+                'filter' => [
+                    $folderB->id,
                 ],
-                [
-                    UuidFactory::uuid('resource.id.f'),
-                    UuidFactory::uuid('resource.id.g'),
+                'expected' => [
+                    $resourceD->get('id'),
+                    $resourceE->get('id'),
                 ],
             ],
             'When has-parent is multiple and return 1 item' => [
-                $fixture,
-                [
-                    UuidFactory::uuid('folder.id.a'), // has no children
-                    UuidFactory::uuid('folder.id.c'), // has 1 child
+                'filter' => [
+                    $folderA->id, // has no children
+                    $folderC->id, // has 1 child
                 ],
-                [
-                    UuidFactory::uuid('resource.id.e'),
+                'expected' => [
+                    $resourceF->get('id'),
                 ],
             ],
             'When has-parent is multiple and return more than 1 item' => [
-                $fixture,
-                [
-                    UuidFactory::uuid('folder.id.c'), // has 1 child
-                    UuidFactory::uuid('folder.id.d'), // has 2 children
+                'filter' => [
+                    $folderB->id, // has 1 child
+                    $folderC->id, // has 2 children
                 ],
-                [
-                    UuidFactory::uuid('resource.id.e'),
-                    UuidFactory::uuid('resource.id.f'),
-                    UuidFactory::uuid('resource.id.g'),
+                'expected' => [
+                    $resourceF->get('id'),
+                    $resourceE->get('id'),
+                    $resourceD->get('id'),
                 ],
             ],
             'When has-parent is mixed with root and ids' => [
-                $fixture,
-                [
+                'filter' => [
                     false, // has no children
-                    UuidFactory::uuid('folder.id.c'),
+                    $folderC->id,
                 ],
-                [
-                    UuidFactory::uuid('resource.id.e'),
-                    UuidFactory::uuid('resource.id.a'),
-                    UuidFactory::uuid('resource.id.c'),
-                    UuidFactory::uuid('resource.id.d'),
+                'expected' => [
+                    $resourceF->get('id'),
+                    $resourceA->get('id'),
+                    $resourceB->get('id'),
+                    $resourceC->get('id'),
                 ],
             ],
         ];
-    }
 
-    /**
-     * @dataProvider provideFoldersIndexFilterHasParentSuccessRelations
-     * @param Closure $fixture Fixture data
-     * @param mixed $hasParentFilterId
-     * @param array $expectedFolderChildrenIds
-     * @return void
-     */
-    public function testResourcesIndexController_FilterHasParentSuccess(Closure $fixture, $hasParentFilterId, array $expectedFolderChildrenIds)
-    {
-        $this->executeFixture($fixture);
+        $this->logInAs($user);
 
-        TableRegistry::getTableLocator()->clear(); // We clean up the registry for clean initialization of the tables during tests.
+        foreach ($cases as $case) {
+            $queryParameters = http_build_query([
+                'api-version' => 2,
+                'filter' => [
+                    'has-parent' => $case['filter'],
+                ],
+            ]);
 
-        $queryParameters = http_build_query([
-            'api-version' => 2,
-            'filter' => [
-                'has-parent' => $hasParentFilterId,
-            ],
-        ]);
+            $this->getJson('/resources.json?' . $queryParameters);
+            $this->assertSuccess();
 
-        $this->authenticateAs('ada');
-        $this->getJson('/resources.json?' . $queryParameters);
-        $this->assertSuccess();
+            $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
 
-        $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
-
-        foreach ($expectedFolderChildrenIds as $expectedFolderChildrenId) {
-            $this->assertContains($expectedFolderChildrenId, $resultFolderIds, 'Expected children is missing for the given parent folder.');
+            foreach ($case['expected'] as $expectedFolderChildrenId) {
+                $this->assertContains($expectedFolderChildrenId, $resultFolderIds, 'Expected children is missing for the given parent folder.');
+            }
         }
     }
 
