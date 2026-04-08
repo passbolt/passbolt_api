@@ -427,6 +427,11 @@ return [
         //ObfuscateFields placeholder
         'obfuscateFields' => [
             'placeholder' => env('PASSBOLT_OBFUSCATE_FIELDS_PLACEHOLDER', \App\Controller\Component\ObfuscateFieldsComponent::FIELD_PLACEHOLDER),
+        ],
+        'permissionsPolicyHeader' => [
+            'unload' => [
+                'enabled' => filter_var(env('PASSBOLT_PERMISSIONS_POLICY_HEADER_UNLOAD_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            ]
         ]
     ],
     // Override the Cake ExceptionRenderer.
