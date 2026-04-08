@@ -19,8 +19,9 @@ namespace Passbolt\AuditLog\Test\TestCase\Utility;
 
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
-use App\Utility\UuidFactory;
 use Passbolt\AuditLog\Test\Lib\ActionLogsOperationsTestTrait;
 use Passbolt\AuditLog\Utility\ActionLogResultsParser;
 use Passbolt\AuditLog\Utility\ResourceActionLogsFinder;
@@ -35,31 +36,28 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
 {
     use ActionLogsOperationsTestTrait;
 
-    public array $fixtures = [
-        'app.Base/Users',
-        'app.Base/Profiles',
-        'app.Base/Resources',
-        'app.Base/ResourceTypes',
-        'app.Base/Permissions',
-    ];
-
     public function testAuditLogsActionLogsFinderPermissionCreated()
     {
-        $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        /** @var \App\Model\Entity\Resource $resourceA */
+        $resourceA = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA])
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $this->simulateShare(
             $uac,
             'Resource',
-            $resourceId,
+            $resourceA->id,
             'User',
-            UuidFactory::uuid('user.id.betty'),
+            $userB->id,
             EntityHistory::CRUD_CREATE,
             Permission::READ
         );
 
         $ActionLogsFinder = new ResourceActionLogsFinder();
-        $actionLogs = $ActionLogsFinder->find($uac, $resourceId);
-        $actionLogs = (new ActionLogResultsParser($actionLogs->all(), ['resources' => [$resourceId]]))->parse();
+        $actionLogs = $ActionLogsFinder->find($uac, $resourceA->id);
+        $actionLogs = (new ActionLogResultsParser($actionLogs->all(), ['resources' => [$resourceA->id]]))->parse();
 
         $this->assertEquals(count($actionLogs), 1);
         $this->assertEquals($actionLogs[0]['type'], 'Permissions.updated');
@@ -69,28 +67,33 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         $this->assertNotEmpty($actionLogs[0]['data']['permissions']['added']);
         $this->assertCount(1, $actionLogs[0]['data']['permissions']['added']);
         $this->assertEquals($actionLogs[0]['data']['permissions']['added'][0]['type'], Permission::READ);
-        $this->assertEquals($actionLogs[0]['data']['permissions']['added'][0]['resource']['id'], $resourceId);
-        $this->assertEquals($actionLogs[0]['data']['permissions']['added'][0]['user']['id'], UuidFactory::uuid('user.id.betty'));
+        $this->assertEquals($actionLogs[0]['data']['permissions']['added'][0]['resource']['id'], $resourceA->id);
+        $this->assertEquals($actionLogs[0]['data']['permissions']['added'][0]['user']['id'], $userB->id);
     }
 
     public function testAuditLogsActionLogsFinderPermissionUpdated()
     {
-        $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        /** @var \App\Model\Entity\Resource $resourceA */
+        $resourceA = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA])
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $this->simulateShare(
             $uac,
             //@@@@@@
             'Resource',
-            $resourceId,
+            $resourceA->id,
             'User',
-            UuidFactory::uuid('user.id.betty'),
+            $userB->id,
             EntityHistory::CRUD_UPDATE,
             Permission::OWNER
         );
 
         $ActionLogsFinder = new ResourceActionLogsFinder();
-        $actionLogs = $ActionLogsFinder->find($uac, $resourceId);
-        $actionLogs = (new ActionLogResultsParser($actionLogs->all(), ['resources' => [$resourceId]]))->parse();
+        $actionLogs = $ActionLogsFinder->find($uac, $resourceA->id);
+        $actionLogs = (new ActionLogResultsParser($actionLogs->all(), ['resources' => [$resourceA->id]]))->parse();
 
         $this->assertEquals(count($actionLogs), 1);
         $this->assertEquals($actionLogs[0]['type'], 'Permissions.updated');
@@ -100,27 +103,32 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         $this->assertNotEmpty($actionLogs[0]['data']['permissions']['updated']);
         $this->assertCount(1, $actionLogs[0]['data']['permissions']['updated']);
         $this->assertEquals($actionLogs[0]['data']['permissions']['updated'][0]['type'], Permission::OWNER);
-        $this->assertEquals($actionLogs[0]['data']['permissions']['updated'][0]['resource']['id'], $resourceId);
-        $this->assertEquals($actionLogs[0]['data']['permissions']['updated'][0]['user']['id'], UuidFactory::uuid('user.id.betty'));
+        $this->assertEquals($actionLogs[0]['data']['permissions']['updated'][0]['resource']['id'], $resourceA->id);
+        $this->assertEquals($actionLogs[0]['data']['permissions']['updated'][0]['user']['id'], $userB->id);
     }
 
     public function testAuditLogsActionLogsFinderPermissionRemoved()
     {
-        $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        /** @var \App\Model\Entity\Resource $resourceA */
+        $resourceA = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA])
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $this->simulateShare(
             $uac,
             'Resource',
-            $resourceId,
+            $resourceA->id,
             'User',
-            UuidFactory::uuid('user.id.betty'),
+            $userB->id,
             EntityHistory::CRUD_DELETE,
             Permission::OWNER
         );
 
         $ActionLogsFinder = new ResourceActionLogsFinder();
-        $actionLogs = $ActionLogsFinder->find($uac, $resourceId);
-        $actionLogs = (new ActionLogResultsParser($actionLogs->all(), ['resources' => [$resourceId]]))->parse();
+        $actionLogs = $ActionLogsFinder->find($uac, $resourceA->id);
+        $actionLogs = (new ActionLogResultsParser($actionLogs->all(), ['resources' => [$resourceA->id]]))->parse();
 
         $this->assertEquals(count($actionLogs), 1);
         $this->assertEquals($actionLogs[0]['type'], 'Permissions.updated');
@@ -130,7 +138,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         $this->assertNotEmpty($actionLogs[0]['data']['permissions']['removed']);
         $this->assertCount(1, $actionLogs[0]['data']['permissions']['removed']);
         $this->assertEquals($actionLogs[0]['data']['permissions']['removed'][0]['type'], Permission::OWNER);
-        $this->assertEquals($actionLogs[0]['data']['permissions']['removed'][0]['resource']['id'], $resourceId);
-        $this->assertEquals($actionLogs[0]['data']['permissions']['removed'][0]['user']['id'], UuidFactory::uuid('user.id.betty'));
+        $this->assertEquals($actionLogs[0]['data']['permissions']['removed'][0]['resource']['id'], $resourceA->id);
+        $this->assertEquals($actionLogs[0]['data']['permissions']['removed'][0]['user']['id'], $userB->id);
     }
 }

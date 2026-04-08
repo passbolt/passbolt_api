@@ -17,12 +17,9 @@ declare(strict_types=1);
 
 namespace Passbolt\AuditLog\Test\TestCase\Utility;
 
-use App\Model\Entity\Role;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\UserAccessControlTrait;
-use App\Utility\UserAccessControl;
-use App\Utility\UuidFactory;
 use Passbolt\AuditLog\Test\Lib\ActionLogsOperationsTestTrait;
 use Passbolt\AuditLog\Utility\ActionLogResultsParser;
 use Passbolt\AuditLog\Utility\ResourceActionLogsFinder;
@@ -41,23 +38,20 @@ class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
     use ActionLogsOperationsTestTrait;
     use UserAccessControlTrait;
 
-    public array $fixtures = [
-        'app.Base/Users',
-        'app.Base/Profiles',
-        'app.Base/Resources',
-        'app.Base/ResourceTypes',
-        'app.Base/Permissions',
-    ];
-
     public function testAuditLogsActionLogsFinderResourceSecretUpdated()
     {
-        $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->simulateResourceSecretUpdate($uac, $resourceId);
+        $userA = UserFactory::make()->user()->persist();
+        /** @var \App\Model\Entity\Resource $resourceA */
+        $resourceA = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA])
+            ->persist();
+        $uac = $this->makeUac($userA);
+        $this->simulateResourceSecretUpdate($uac, $resourceA->id);
 
         $ActionLogsFinder = new ResourceActionLogsFinder();
-        $actionLogs = $ActionLogsFinder->find($uac, $resourceId);
-        $actionLogs = (new ActionLogResultsParser($actionLogs->all(), ['resources' => [$resourceId]]))->parse();
+        $actionLogs = $ActionLogsFinder->find($uac, $resourceA->id);
+        $actionLogs = (new ActionLogResultsParser($actionLogs->all(), ['resources' => [$resourceA->id]]))->parse();
 
         $this->assertEquals(count($actionLogs), 1);
         $this->assertEquals($actionLogs[0]['type'], 'Resource.Secrets.updated');
