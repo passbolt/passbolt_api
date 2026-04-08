@@ -1,4 +1,4 @@
-Release song: https://www.youtube.com/watch?v=9Nv-WHmjN7s
+Release song: https://www.youtube.com/watch?v=GXbOROT0OuA
 
 Passbolt 5.11.0-test.3 PRO.
 
@@ -28,7 +28,6 @@ Passbolt 5.11.0-test.3 PRO.
 - PB-49159 Fix enableSavePoints() not placed correctly
 
 ### Improved
-- PB-50489 Email digest batch sending improvements
 - PB-50070 Align X-Frame-Options with CSP and add missing X-XSS-Protection header
 
 ### Maintenance

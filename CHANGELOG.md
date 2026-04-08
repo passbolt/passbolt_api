@@ -28,7 +28,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-49159 Fix enableSavePoints() not placed correctly
 
 ### Improved
-- PB-50489 Email digest batch sending improvements
 - PB-50070 Align X-Frame-Options with CSP and add missing X-XSS-Protection header
 
 ### Maintenance
@@ -61,7 +60,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-49151 PBL-15-003 WP3: Lack of bearer token expiry & revocation schemes (Medium)
 
 ### Improved
-- PB-50489 Email digest batch sending improvements
 - PB-50070 Align X-Frame-Options with CSP and add missing X-XSS-Protection header
 
 ### Maintenance
@@ -94,7 +92,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-49151 PBL-15-003 WP3: Lack of bearer token expiry & revocation schemes (Medium)
 
 ### Improved
-- PB-50489 Email digest batch sending improvements
 - PB-50070 Align X-Frame-Options with CSP and add missing X-XSS-Protection header
 
 ### Maintenance
