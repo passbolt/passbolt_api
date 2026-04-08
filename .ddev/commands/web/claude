@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+## Description: Run Claude Code in the web container with project-scoped config
+## Usage: claude [args]
+## Example: "ddev claude", "ddev claude --help"
+## ExecRaw: true
+## HostWorkingDir: true
+
+# Use the project .ddev dir as HOME so Claude config is persisted on the host
+export HOME="${DDEV_APPROOT}/.ddev"
+
+mkdir -p "${HOME}"
+
+# Run Claude Code CLI
+claude "$@"

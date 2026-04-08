@@ -1,0 +1,8 @@
+# .ddev/web-build/Dockerfile.claude
+ARG BASE_IMAGE
+FROM $BASE_IMAGE
+
+# Install Claude Code CLI via official installer script
+RUN curl -fsSL https://claude.ai/install.sh | sudo -u ${username} bash \
+  && sudo -u ${username} mkdir -p /home/${username}/bin \
+  && sudo -u ${username} ln -s /home/${username}/.local/bin/claude /home/${username}/bin/claude
