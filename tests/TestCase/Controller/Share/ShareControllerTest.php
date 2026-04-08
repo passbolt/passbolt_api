@@ -19,7 +19,10 @@ namespace App\Test\TestCase\Controller\Share;
 
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
+use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
@@ -29,20 +32,6 @@ use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 class ShareControllerTest extends AppIntegrationTestCase
 {
-    public array $fixtures = [
-        'app.Base/Users',
-        'app.Base/Gpgkeys',
-        'app.Base/Profiles',
-        'app.Base/Roles',
-        'app.Base/Groups',
-        'app.Base/GroupsUsers',
-        'app.Base/ResourceTypes',
-        'app.Base/Resources',
-        'app.Base/Permissions',
-        'app.Base/Secrets',
-        'app.Base/Favorites',
-    ];
-
     /**
      * @var \App\Model\Table\UsersTable|null
      */
@@ -53,12 +42,38 @@ class ShareControllerTest extends AppIntegrationTestCase
      */
     public $gpg = null;
 
+    /**
+     * @var \App\Model\Table\PermissionsTable
+     */
+    public $Permissions;
+
     public function setUp(): void
     {
         parent::setUp();
 
         $this->Users = TableRegistry::getTableLocator()->get('Users');
         $this->gpg = OpenPGPBackendFactory::get();
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+    }
+
+    /**
+     * Fetch the DB permission ID for a given resource + ARO (user or group).
+     *
+     * @param string $resourceId
+     * @param string $aroForeignKeyId
+     * @return string
+     */
+    private function getPermissionId(string $resourceId, string $aroForeignKeyId): string
+    {
+        $permission = $this->Permissions
+            ->find()
+            ->where([
+                'aco_foreign_key' => $resourceId,
+                'aro_foreign_key' => $aroForeignKeyId,
+            ])
+            ->firstOrFail();
+
+        return $permission->id;
     }
 
     protected static function getValidSecret(): string
@@ -81,60 +96,60 @@ hcciUFw5
     public function testShareController_Success(): void
     {
         // Define actors of this tests
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
         // Users
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $userEId = UuidFactory::uuid('user.id.edith');
-        $userFId = UuidFactory::uuid('user.id.frances');
-        $userJId = UuidFactory::uuid('user.id.jean');
-        $userKId = UuidFactory::uuid('user.id.kathleen');
-        $userLId = UuidFactory::uuid('user.id.lynne');
-        $userMId = UuidFactory::uuid('user.id.marlyn');
-        $userNId = UuidFactory::uuid('user.id.nancy');
+        RoleFactory::make()->guest()->persist();
+        [$userA, $userB, $userC, $userD, $userE, $userF, $userG, $userH, $userI] = UserFactory::make(9)->user()->persist();
         // Groups
-        $groupBId = UuidFactory::uuid('group.id.board');
-        $groupFId = UuidFactory::uuid('group.id.freelancer');
-        $groupAId = UuidFactory::uuid('group.id.accounting');
+        $groupA = GroupFactory::make()->persist();
+        $groupB = GroupFactory::make()
+            ->withGroupsManagersFor([$userF, $userG, $userH, $userI])
+            ->withGroupsUsersFor([$userE])
+            ->persist();
+        $groupC = GroupFactory::make()->withGroupsManagersFor([$userD])->persist();
+        // Resource
+        $resourceA = ResourceFactory::make()
+            ->withPermissionsFor([$userA, $userB, $groupA, $groupB])
+            ->withSecretsFor([$userA, $userB, $groupB])
+            ->persist();
 
-        SecretRevisionFactory::make(['resource_id' => $resourceId])->persist();
+        SecretRevisionFactory::make(['resource_id' => $resourceA->id])->persist();
 
         // Expected results.
         $expectedAddedUsersIds = [];
         $expectedRemovedUsersIds = [];
 
         // Build the changes.
-        $data = ['permissions' => []];
+        $data = ['permissions' => [], 'secrets' => []];
 
         // Users permissions changes.
         // Change the permission of the user Ada to read (no users are expected to be added or removed).
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'type' => Permission::READ];
+        $data['permissions'][] = ['id' => $this->getPermissionId($resourceA->id, $userA->id), 'type' => Permission::READ];
         // Delete the permission of the user Betty.
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'delete' => true];
-        $expectedRemovedUsersIds[] = $userBId;
+        $data['permissions'][] = ['id' => $this->getPermissionId($resourceA->id, $userB->id), 'delete' => true];
+        $expectedRemovedUsersIds[] = $userB->id;
         // Add an owner permission for the user Edith
-        $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
-        $data['secrets'][] = ['user_id' => $userEId, 'data' => self::getValidSecret()];
-        $expectedAddedUsersIds[] = $userEId;
+        $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userC->id, 'type' => Permission::OWNER];
+        $data['secrets'][] = ['user_id' => $userC->id, 'data' => self::getValidSecret()];
+        $expectedAddedUsersIds[] = $userC->id;
 
         // Groups permissions changes.
         // Change the permission of the group Board (no users are expected to be added or removed).
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$groupBId"), 'type' => Permission::OWNER];
+        $data['permissions'][] = ['id' => $this->getPermissionId($resourceA->id, $groupA->id), 'type' => Permission::OWNER];
         // Delete the permission of the group Freelancer.
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$groupFId"), 'delete' => true];
-        $expectedRemovedUsersIds = array_merge($expectedRemovedUsersIds, [$userJId, $userKId, $userLId, $userMId, $userNId]);
+        $data['permissions'][] = ['id' => $this->getPermissionId($resourceA->id, $groupB->id), 'delete' => true];
+        $expectedRemovedUsersIds = array_merge($expectedRemovedUsersIds, [$userE->id, $userF->id, $userG->id, $userH->id, $userI->id]);
         // Add a read permission for the group Accounting.
-        $data['permissions'][] = ['aro' => 'Group', 'aro_foreign_key' => $groupAId, 'type' => Permission::READ];
-        $data['secrets'][] = ['user_id' => $userFId, 'data' => self::getValidSecret()];
-        $expectedAddedUsersIds[] = $userFId;
+        $data['permissions'][] = ['aro' => 'Group', 'aro_foreign_key' => $groupC->id, 'type' => Permission::READ];
+        $data['secrets'][] = ['user_id' => $userD->id, 'data' => self::getValidSecret()];
+        $expectedAddedUsersIds[] = $userD->id;
 
-        $this->authenticateAs('ada');
-        $this->putJson("/share/resource/$resourceId.json", $data);
+        $this->logInAs($userA);
+        $this->putJson("/share/resource/$resourceA->id.json", $data);
         $this->assertSuccess();
 
         // Load the resource.
         $resource = ResourceFactory::find()
-            ->where(['Resources.id' => $resourceId,])
+            ->where(['Resources.id' => $resourceA->id,])
             ->contain('Permissions')
             ->contain('Secrets', function ($q) {
                 return $q->find('notDeleted');
@@ -142,7 +157,7 @@ hcciUFw5
 
         // Verify that all the allowed users have a secret for the resource.
         $secretsUsersIds = Hash::extract($resource->secrets, '{n}.user_id');
-        $hasAccessUsers = $this->Users->findIndex(Role::USER, ['filter' => ['has-access' => [$resourceId]]])->all()->toArray();
+        $hasAccessUsers = $this->Users->findIndex(Role::USER, ['filter' => ['has-access' => [$resourceA->id]]])->all()->toArray();
         $hasAccessUsersIds = Hash::extract($hasAccessUsers, '{n}.id');
         $this->assertEquals(count($secretsUsersIds), count($hasAccessUsersIds));
         $this->assertEmpty(array_diff($secretsUsersIds, $hasAccessUsersIds));
@@ -159,91 +174,92 @@ hcciUFw5
         }
     }
 
-    public static function dataForTestErrorValidation(): array
+    public function testShareController_Error_Validation(): void
     {
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $resourceAprilId = UuidFactory::uuid('resource.id.april');
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userEId = UuidFactory::uuid('user.id.edith');
-        $userRId = UuidFactory::uuid('user.id.ruth');
-        $userSId = UuidFactory::uuid('user.id.sofia');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $userInactive = UserFactory::make()->user()->inactive()->persist();
+        $userDeleted = UserFactory::make()->user()->deleted()->persist();
+        $resourceOwned = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA])
+            ->persist();
+        $resourceOther = ResourceFactory::make()
+            ->withPermissionsFor([$userB])
+            ->withSecretsFor([$userB])
+            ->persist();
+        SecretRevisionFactory::make(['resource_id' => $resourceOwned->id])->persist();
 
-        return [
-            ['cannot a permission that does not exist', [
+        $cases = [
+            'cannot a permission that does not exist' => [
                 'errorField' => 'permissions.0.id.exists',
                 'data' => ['permissions' => [
                     ['id' => UuidFactory::uuid()],
                 ]],
-            ]],
-            ['cannot delete a permission of another resource', [
+            ],
+            'cannot delete a permission of another resource' => [
                 'errorField' => 'permissions.0.id.exists',
                 'data' => ['permissions' => [
-                    ['id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"), 'delete' => true],
+                    ['id' => $this->getPermissionId($resourceOther->id, $userB->id), 'delete' => true],
                 ]],
-            ]],
-            ['cannot add a permission with invalid data', [
+            ],
+            'cannot add a permission with invalid data' => [
                 'errorField' => 'permissions.0.aro_foreign_key._empty',
                 'data' => ['permissions' => [
                     ['aro' => 'User', 'type' => Permission::OWNER],
                 ]],
-            ]],
-            ['cannot add a permission for a soft deleted user', [
+            ],
+            'cannot add a permission for a soft deleted user' => [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
                 'data' => ['permissions' => [[
                     'aro' => 'User',
-                    'aro_foreign_key' => $userSId,
+                    'aro_foreign_key' => $userDeleted->id,
                     'type' => Permission::OWNER],
                 ]],
-            ]],
-            ['cannot add a permission for an inactive user', [
+            ],
+            'cannot add a permission for an inactive user' => [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
                 'data' => ['permissions' => [[
                     'aro' => 'User',
-                    'aro_foreign_key' => $userRId,
+                    'aro_foreign_key' => $userInactive->id,
                     'type' => Permission::OWNER],
                 ]],
-            ]],
-            ['cannot remove the latest owner', [
+            ],
+            'cannot remove the latest owner' => [
                 'errorField' => 'permissions.at_least_one_owner',
                 'data' => ['permissions' => [
-                    ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'delete' => true],
+                    ['id' => $this->getPermissionId($resourceOwned->id, $userA->id), 'delete' => true],
                 ]],
-            ]],
+            ],
             // Test on secrets.
-            ['cannot add a permission for a user and forget to send its secret', [
+            'cannot add a permission for a user and forget to send its secret' => [
                 'errorField' => 'secrets.secrets_provided',
                 'data' => ['permissions' => [
-                    ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::READ],
+                    ['aro' => 'User', 'aro_foreign_key' => $userB->id, 'type' => Permission::READ],
                 ]],
-            ]],
-            ['cannot add a secret for a user who do not have access to the resource', [
+            ],
+            'cannot add a secret for a user who do not have access to the resource' => [
                 'errorField' => 'secrets.0.resource_id.has_resource_access',
                 'data' => ['secrets' => [
-                    ['user_id' => $userEId, 'data' => self::getValidSecret()],
+                    ['user_id' => $userB->id, 'data' => self::getValidSecret()],
                 ]],
-            ]],
+            ],
         ];
-    }
 
-    /**
-     * @dataProvider dataForTestErrorValidation
-     */
-    public function testShareController_Error_Validation($caseLabel, $case)
-    {
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        SecretRevisionFactory::make(['resource_id' => $resourceId])->persist();
-        $this->authenticateAs('ada');
-        $this->putJson("/share/resource/$resourceId.json", $case['data']);
-        $this->assertError();
-        $errors = $this->getResponseBodyAsArray();
-        $this->assertNotEmpty($errors);
-        $error = Hash::get($errors, $case['errorField']);
-        $this->assertNotNull($error, "Expected error not found ({$case['errorField']}) for the case {$caseLabel}. Errors: " . json_encode($errors));
+        $this->logInAs($userA);
+
+        foreach ($cases as $caseLabel => $case) {
+            $this->putJson("/share/resource/$resourceOwned->id.json", $case['data']);
+            $this->assertError();
+            $errors = $this->getResponseBodyAsArray();
+            $this->assertNotEmpty($errors);
+            $error = Hash::get($errors, $case['errorField']);
+            $this->assertNotNull($error, "Expected error not found ({$case['errorField']}) for the case {$caseLabel}. Errors: " . json_encode($errors));
+        }
     }
 
     public function testShareController_Error_NotValidResourceId(): void
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $resourceId = 'invalid-id';
         $this->putJson("/share/resource/$resourceId.json");
         $this->assertError(400, 'The resource identifier should be a valid UUID.');
@@ -251,7 +267,7 @@ hcciUFw5
 
     public function testShareController_Error_DoesNotExistResource(): void
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $resourceId = UuidFactory::uuid();
         $this->putJson("/share/resource/$resourceId.json");
         $this->assertError(404, 'The resource does not exist.');
@@ -259,25 +275,29 @@ hcciUFw5
 
     public function testShareController_Error_ResourceIsSoftDeleted(): void
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $this->putJson("/share/resource/$resourceId.json");
+        $this->logInAsUser();
+        $resource = ResourceFactory::make()->deleted()->persist();
+        $this->putJson("/share/resource/$resource->id.json");
         $this->assertError(404, 'The resource does not exist.');
     }
 
     public function testShareController_Error_AccessDenied(): void
     {
+        $userA = UserFactory::make()->user()->persist();
+        $resourceA = ResourceFactory::make()->persist();
+        $resourceB = ResourceFactory::make()->withPermissionsFor([$userA], Permission::READ)->persist();
+        $resourceC = ResourceFactory::make()->withPermissionsFor([$userA], Permission::UPDATE)->persist();
         $testCases = [
             'Cannot share a resource if no permission' => [
-                'userAlias' => 'ada', 'resourceId' => UuidFactory::uuid('resource.id.april')],
+                'resourceId' => $resourceA->id],
             'Cannot share a resource with only read access' => [
-                'userAlias' => 'ada', 'resourceId' => UuidFactory::uuid('resource.id.bower')],
+                'resourceId' => $resourceB->id],
             'Cannot share a resource with only update access' => [
-                'userAlias' => 'ada', 'resourceId' => UuidFactory::uuid('resource.id.canjs')],
+                'resourceId' => $resourceC->id],
         ];
 
         foreach ($testCases as $testCase) {
-            $this->authenticateAs($testCase['userAlias']);
+            $this->logInAs($userA);
             $resourceId = $testCase['resourceId'];
             $this->putJson("/share/resource/$resourceId.json");
             $this->assertError(403, 'You are not authorized to share this resource.');
@@ -286,8 +306,8 @@ hcciUFw5
 
     public function testShareController_Error_NotAuthenticated(): void
     {
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->putJson("/share/resource/$resourceId.json");
+        $resource = ResourceFactory::make()->persist();
+        $this->putJson("/share/resource/$resource->id.json");
         $this->assertAuthenticationError();
     }
 
@@ -297,12 +317,13 @@ hcciUFw5
     public function testShareController_Error_NotJson(): void
     {
         // Define actors of this tests
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
+        $userA = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA])->persist();
         // Build the changes.
         $data = ['permissions' => []];
 
-        $this->authenticateAs('ada');
-        $this->put("/share/resource/$resourceId", $data);
+        $this->logInAs($userA);
+        $this->put("/share/resource/$resource->id", $data);
         $this->assertResponseCode(404);
     }
 }
