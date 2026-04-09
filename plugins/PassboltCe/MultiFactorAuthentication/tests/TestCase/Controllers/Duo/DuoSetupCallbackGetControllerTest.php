@@ -22,7 +22,7 @@ use App\Test\Factory\OrganizationSettingFactory;
 use App\Utility\UuidFactory;
 use Cake\Routing\Router;
 use Duo\DuoUniversal\Client;
-use Passbolt\MultiFactorAuthentication\Controller\Duo\DuoSetupGetController;
+use Passbolt\MultiFactorAuthentication\Controller\Duo\DuoSetupCallbackGetController;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoStateCookieService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
@@ -128,7 +128,7 @@ class DuoSetupCallbackGetControllerTest extends MfaIntegrationTestCase
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class);
         $duoState = UuidFactory::uuid();
-        $redirect = DuoSetupGetController::DUO_SETUP_REDIRECT_PATH;
+        $redirect = DuoSetupCallbackGetController::DUO_SETUP_REDIRECT_PATH;
         $userId = $user->get('id');
         $error = 'DuoCallbackError';
         $errorDesc = 'DuoCallbackErrorDescription';
@@ -254,7 +254,7 @@ class DuoSetupCallbackGetControllerTest extends MfaIntegrationTestCase
         $authToken = AuthenticationTokenFactory::make()->active()->data([
             'provider' => 'duo',
             'state' => $duoState,
-            'redirect' => DuoSetupGetController::DUO_SETUP_REDIRECT_PATH,
+            'redirect' => DuoSetupCallbackGetController::DUO_SETUP_REDIRECT_PATH,
             'user_agent' => 'PassboltUA',
         ])->userId($userId)->type(AuthenticationToken::TYPE_MFA_SETUP)->persist();
 
@@ -281,7 +281,7 @@ class DuoSetupCallbackGetControllerTest extends MfaIntegrationTestCase
         $authToken = AuthenticationTokenFactory::make()->active()->data([
             'provider' => 'duo',
             'state' => $duoState,
-            'redirect' => DuoSetupGetController::DUO_SETUP_REDIRECT_PATH,
+            'redirect' => DuoSetupCallbackGetController::DUO_SETUP_REDIRECT_PATH,
             'user_agent' => 'PassboltUA',
         ])->userId($userId)->type(AuthenticationToken::TYPE_MFA_SETUP)->persist();
 

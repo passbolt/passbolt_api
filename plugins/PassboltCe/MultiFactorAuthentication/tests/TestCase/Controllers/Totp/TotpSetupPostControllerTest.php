@@ -48,6 +48,25 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupPost
      * @group mfaSetupPostTotp
      */
+    public function testTotpSetupPostController_Error_NotJson()
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
+        $uri = MfaOtpFactory::generateTOTP($this->makeUac($user));
+        $this->post('/mfa/setup/totp', [
+            'otpProvisioningUri' => $uri,
+            'totp' => '12345',
+        ]);
+        $this->assertResponseError();
+        $this->assertResponseContains('This functionality is only available using AJAX/JSON.');
+    }
+
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupPost
+     * @group mfaSetupPostTotp
+     */
     public function testTotpSetupPostController_ProviderNotSupportedByOrg()
     {
         $user = $this->logInAsUser();
@@ -249,30 +268,6 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupPost
      * @group mfaSetupPostTotp
      */
-    public function testTotpSetupPostController_SuccessContainDisableLink()
-    {
-        $user = $this->logInAsUser();
-        $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
-        $uri = MfaOtpFactory::generateTOTP($this->makeUac($user));
-        /** @var \OTPHP\TOTPInterface $otp */
-        $otp = Factory::loadFromProvisioningUri($uri);
-        $this->mockTotpMfaFormInterface(TotpSetupForm::class, $this->makeUac($user));
-
-        $this->post('/mfa/setup/totp', [
-            'otpProvisioningUri' => $uri,
-            'totp' => $otp->now(),
-        ]);
-        $this->assertResponseOk();
-        $this->assertResponseContains('success');
-        $this->assertResponseContains('js_mfa_provider_disable');
-    }
-
-    /**
-     * @group mfa
-     * @group mfaSetup
-     * @group mfaSetupPost
-     * @group mfaSetupPostTotp
-     */
     public function testTotpSetupPostController_Success_With_Legacy_Secret_Length()
     {
         $originalSecretLength = Configure::read(MfaOtpFactory::PASSBOLT_PLUGINS_MFA_TOTP_SECRET_LENGTH);
@@ -286,12 +281,11 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $otp = Factory::loadFromProvisioningUri($uri);
         $this->mockTotpMfaFormInterface(TotpSetupForm::class, $this->makeUac($user));
 
-        $this->post('/mfa/setup/totp', [
+        $this->post('/mfa/setup/totp.json?api-version=v2', [
             'otpProvisioningUri' => $uri,
             'totp' => $otp->now(),
         ]);
         $this->assertResponseOk();
-        $this->assertResponseContains('success');
 
         Configure::write(MfaOtpFactory::PASSBOLT_PLUGINS_MFA_TOTP_SECRET_LENGTH, $originalSecretLength);
     }

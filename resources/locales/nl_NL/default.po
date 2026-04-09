@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-10-01 06:12+0000\n"
-"PO-Revision-Date: 2025-12-12 18:40\n"
+"POT-Creation-Date: 2026-04-02 11:49+0000\n"
+"PO-Revision-Date: 2026-04-02 13:48\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -72,6 +72,9 @@ msgstr "Gebruik de extensie .json in de URL of accepteer applicatie/json."
 
 msgid "The request data can not be empty."
 msgstr "De aanvraaggegevens moeten ingevuld worden."
+
+msgid "You are already logged in."
+msgstr ""
 
 msgid "You are successfully logged in."
 msgstr "Je bent met succes aangemeld."
@@ -274,6 +277,15 @@ msgstr "Het middel kon niet worden verwijderd."
 msgid "The resource has been updated successfully."
 msgstr "Het middel is met succes bijgewerkt."
 
+msgid "The role was deleted."
+msgstr ""
+
+msgid "The role identifier is not valid."
+msgstr ""
+
+msgid "The role was successfully updated."
+msgstr ""
+
 msgid "The secret does not exist."
 msgstr "Het geheim bestaat niet."
 
@@ -397,8 +409,8 @@ msgstr "De configuratie `{0}` moet een geldige niet-lege tekenreeks zijn."
 msgid "Invalid expiry time {0}."
 msgstr "Ongeldige vervaltijd {0}."
 
-msgid "The user role ID must be one of the admin or user roles."
-msgstr "De gebruikersrol-ID moet een van de beheerder- of gebruikersrollen zijn."
+msgid "The user role ID must not be of the guest role."
+msgstr ""
 
 msgid "The identifier should not be empty."
 msgstr "De ID moet ingevuld worden."
@@ -934,23 +946,44 @@ msgstr "De gebruiker kan dit middel niet verwijderen."
 msgid "The resource type for this resource does not exist."
 msgstr "Het type middel voor deze resource bestaat niet."
 
-msgid "The name should be a valid ASCII string."
-msgstr "De naam moet een geldige ASCII-tekenreeks zijn."
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "De naam moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The name should not be greater than 50 characters."
+msgstr ""
+
+msgid "The name should not be reserved role."
+msgstr ""
 
 msgid "The description should be a valid BMP-UTF8 string."
 msgstr "De omschrijving moet een geldige BMP-UTF8-tekenreeks zijn."
 
+msgid "The role cannot be deleted as it is associated with another user."
+msgstr ""
+
+msgid "A reserved role cannot be deleted."
+msgstr ""
+
 msgid "A role already exists for the given name."
 msgstr "Er is al een functie voor de opgegeven naam."
 
-msgid "The role name should be from the list of allowed role names."
-msgstr "De functienaam moet uit de lijst van toegestane functienamen komen."
+msgid "Only maximum of {0} active roles are allowed."
+msgstr ""
 
 msgid "The resource identifier is required."
 msgstr "De ID van het middel is vereist."
 
 msgid "The resource identifier should not be empty."
 msgstr "De ID van het middel moet ingevuld worden."
+
+msgid "The secret revision identifier should be a valid UUID."
+msgstr ""
+
+msgid "A secret revision identifier is required."
+msgstr ""
+
+msgid "The secret revision identifier should not be empty."
+msgstr ""
 
 msgid "The message should be a valid ASCII string."
 msgstr "Het bericht moet een geldige ASCII-tekenreeks zijn."
@@ -963,6 +996,12 @@ msgstr "Het bericht moet ingevuld worden."
 
 msgid "A secret already exists for the given user and resource."
 msgstr "Er bestaat al een geheim voor deze gebruiker en dit middel."
+
+msgid "A secret already exists for the given user, resource and secret revision."
+msgstr ""
+
+msgid "The secret revision does not exist or is deleted."
+msgstr ""
 
 msgid "The user identifier by should be a valid UUID."
 msgstr "De gebruikers-ID moet een geldige UUID zijn."
@@ -993,6 +1032,9 @@ msgstr "De gebruikersnaam mag maximaal 255 tekens bevatten."
 
 msgid "The username is already in use."
 msgstr "De gebruikersnaam is al in gebruik."
+
+msgid "The role does not exist."
+msgstr ""
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "De gebruiker mag niet de enige eigenaar zijn van gedeelde inhoud, draag de eigendom over aan andere gebruikers."
@@ -1123,8 +1165,14 @@ msgstr "Je hebt de resource {0} bewerkt"
 msgid "{0} edited the resource {1}"
 msgstr "{0} heeft de resource {1} bewerkt"
 
-msgid "{0} can not complete the account recovery process!"
-msgstr "{0} kan het herstelproces van de account niet voltooien!"
+msgid "{0} created a new role {1}"
+msgstr ""
+
+msgid "{0} updated the role {1}"
+msgstr ""
+
+msgid "{0} cannot complete the account recovery process!"
+msgstr "{0} kan het accountherstelproces niet voltooien!"
 
 msgid "{0} shared the resource {1}"
 msgstr "{0} heeft de resource {1} gedeeld"
@@ -1144,9 +1192,6 @@ msgstr "{0} heeft beheerder {1} verwijderd"
 msgid "Your account has been suspended"
 msgstr "Uw account is opgeschort"
 
-msgid "Your admin role has been revoked"
-msgstr "Je beheerdersrol is ingetrokken"
-
 msgid "{0}'s admin role has been revoked"
 msgstr "De beheerdersrol van {0} is ingetrokken"
 
@@ -1158,6 +1203,9 @@ msgstr "{0} is opgeschort"
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "Welkom bij Passbolt, {0}!"
+
+msgid "Your role has been updated"
+msgstr ""
 
 msgid "The purify subject setting should be a boolean."
 msgstr "De instelling voor het zuiveren van het onderwerp moet een Boolean zijn."
@@ -1323,6 +1371,9 @@ msgstr "Validatie van groep {0} is geslaagd"
 
 msgid "Could not validate group user data."
 msgstr "Gebruikersgegevens van de groep konden niet worden gevalideerd."
+
+msgid "The resource with ID {0} does not have a secret revision."
+msgstr ""
 
 msgid "All email notifications will be sent."
 msgstr "Alle e-mailmeldingen worden verzonden."
@@ -1551,6 +1602,12 @@ msgstr "Geen standaardinhoud gevonden."
 
 msgid "Run the install script to install the database tables"
 msgstr "Voer het installatiescript uit om de databasetabellen te installeren"
+
+msgid "The database version is supported."
+msgstr ""
+
+msgid "The database version is deprecated."
+msgstr ""
 
 msgid "The database schema is up to date."
 msgstr "Het databaseschema is up-to-date."
@@ -2050,11 +2107,29 @@ msgstr "Metadata-sleutel bestaat niet of is soft-verwijderd voor resource {0}."
 msgid "The resource types associated to this resource does not exist."
 msgstr "De typen middelen die aan deze resource zijn gekoppeld, bestaan niet."
 
+msgid "No secret revision were found for this resource."
+msgstr ""
+
 msgid "You are not allowed to update this resource."
 msgstr "Je bent niet bevoegd om dit middel bij te werken."
 
 msgid "Additional resource types are not enabled on this server."
 msgstr "Overige middelentypes zijn niet ingeschakeld op deze server."
+
+msgid "The role could not be saved."
+msgstr ""
+
+msgid "Could not save the role, please try again later."
+msgstr ""
+
+msgid "The role does not exist or deleted."
+msgstr ""
+
+msgid "The role could not be deleted."
+msgstr ""
+
+msgid "Could not delete the role, please try again later."
+msgstr ""
 
 msgid "There should be at least 4 roles"
 msgstr "Er moeten ten minste 4 functies zijn"
@@ -2064,6 +2139,15 @@ msgstr "Validatie van functie {0} is mislukt. {1}"
 
 msgid "Validation success for role {0}"
 msgstr "Validatie van functie {0} is geslaagd"
+
+msgid "The role could not be updated."
+msgstr ""
+
+msgid "Could not update the role, please try again later."
+msgstr ""
+
+msgid "Could not validate secrets data."
+msgstr "Gegevens van de geheimen konden niet worden gevalideerd."
 
 msgid "Could not validate secret data."
 msgstr "Gegevens van het geheim konden niet worden gevalideerd."
@@ -2079,9 +2163,6 @@ msgstr "Validatie van geheim {0} is mislukt. {1}"
 
 msgid "Validation success for secret {0}"
 msgstr "Validatie van geheim {0} is geslaagd"
-
-msgid "Could not validate secrets data."
-msgstr "Gegevens van de geheimen konden niet worden gevalideerd."
 
 msgid "The secrets of all the users having access to the resource are required."
 msgstr "De geheimen van alle gebruikers die toegang hebben tot het middel zijn vereist."
@@ -2269,6 +2350,12 @@ msgstr "De notificatie-instellingen voor de organisatie zijn bijgewerkt."
 msgid "The supplied email notification settings are not valid"
 msgstr "De opgegeven notificatie-instellingen voor e-mail zijn niet geldig"
 
+msgid "The allow CSV format setting is required."
+msgstr ""
+
+msgid "The allow CSV format setting should be a boolean."
+msgstr ""
+
 msgid "The folder has been added successfully."
 msgstr "De map is met succes toegevoegd."
 
@@ -2377,6 +2464,12 @@ msgstr "De opgegeven mapmetadata kan niet worden ontsleuteld."
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Een map van het type persoonlijk kan niet met andere gebruikers of een groep worden gedeeld."
 
+msgid "You made changes on several folders"
+msgstr ""
+
+msgid "{0} has made changes on several folders"
+msgstr ""
+
 msgid "You added the folder {0}"
 msgstr "Je hebt de map {0} toegevoegd"
 
@@ -2421,9 +2514,6 @@ msgstr "Je bent niet bevoegd om deze map te verwijderen."
 
 msgid "The folder does not exist."
 msgstr "De map bestaat niet."
-
-msgid "You cannot delete this resource"
-msgstr "Je kunt dit middel niet verwijderen"
 
 msgid "You are not allowed to update the permissions of this folder."
 msgstr "Je bent niet bevoegd om de machtigingen van deze map bij te werken."
@@ -2475,6 +2565,15 @@ msgstr "Je hebt een map bewerkt"
 
 msgid "{0} edited a folder"
 msgstr "{0} heeft een map bewerkt"
+
+msgid "{0} folders were affected."
+msgstr ""
+
+msgid "It would be too much to list them here, but you can go check them on passbolt."
+msgstr "Het zou te veel zijn om ze hier op te noemen, maar je kunt ze nakijken bij Passbolt."
+
+msgid "View them in passbolt"
+msgstr "Bekijk ze in Passbolt"
 
 msgid "The user signature could not be verified."
 msgstr "De gebruikershandtekening kon niet worden geverifieerd."
@@ -2652,6 +2751,9 @@ msgstr "De datum {0} moet na de datum {1} liggen."
 
 msgid "The identifier should be not be empty."
 msgstr "De ID moet ingevuld worden."
+
+msgid "The name should be a valid ASCII string."
+msgstr "De naam moet een geldige ASCII-tekenreeks zijn."
 
 msgid "Could not validate action data."
 msgstr "De actiegegevens konden niet worden gevalideerd."
@@ -3025,18 +3127,6 @@ msgstr "Geen actieve metadata-sleutel gevonden."
 msgid "Active metadata key found or not required."
 msgstr "Actieve metadata-sleutel gevonden of niet vereist."
 
-msgid "The server has access to the metadata keys or does not require access to it."
-msgstr "De server heeft toegang tot de metadata-sleutels of heeft geen toegang nodig."
-
-msgid "The server does not have access to metadata key."
-msgstr "De server heeft geen toegang tot de metadata-sleutel."
-
-msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
-msgstr "Wanneer de zero-knowledge-modus is uitgeschakeld, moet de server toegang hebben tot de metadata-sleutel."
-
-msgid "Without having access, the server won't be able to share the metadata private key with the users."
-msgstr "Zonder toegang kan de server de private metadata-sleutel niet met de gebruikers delen."
-
 msgid "No server metadata private key found."
 msgstr "Geen server-metadata privésleutel gevonden."
 
@@ -3048,6 +3138,18 @@ msgstr "De server kan de metadata privésleutel ontsleutelen."
 
 msgid "Unable to decrypt the metadata private key."
 msgstr "Het is niet mogelijk om de metadata privésleutel te ontsleutelen."
+
+msgid "The server has access to the metadata keys or does not require access to it."
+msgstr "De server heeft toegang tot de metadata-sleutels of heeft geen toegang nodig."
+
+msgid "The server does not have access to metadata key."
+msgstr "De server heeft geen toegang tot de metadata-sleutel."
+
+msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
+msgstr "Wanneer de zero-knowledge-modus is uitgeschakeld, moet de server toegang hebben tot de metadata-sleutel."
+
+msgid "Without having access, the server won't be able to share the metadata private key with the users."
+msgstr "Zonder toegang kan de server de private metadata-sleutel niet met de gebruikers delen."
 
 msgid "Unable to decrypt the metadata private key (id: {0}) data."
 msgstr "Kan de gegevens van de private metadata-sleutel (id: {0}) niet ontsleutelen."
@@ -3066,6 +3168,15 @@ msgstr "De private metadata-sleutel van de server is geldig."
 
 msgid "The server metadata private key is not valid."
 msgstr "De private metadata-sleutel van de server is ongeldig."
+
+msgid "The server does not have access to the server metadata private key in Zero-knowledge mode."
+msgstr ""
+
+msgid "The server has access to the server metadata private key while in Zero-knowledge mode."
+msgstr ""
+
+msgid "When Zero-knowledge mode is enabled, the server should not have access to the server metadata private key."
+msgstr ""
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "De metadata-sleutel bestaat niet of is verwijderd."
@@ -3505,11 +3616,17 @@ msgstr "Deze authenticatie-aanbieder is niet ingeschakeld voor jouw organisatie.
 msgid "This functionality is not available using AJAX/JSON."
 msgstr "Deze toepassingsmogelijkheid is niet beschikbaar met AJAX/JSON."
 
+msgid "This functionality is only available using AJAX/JSON."
+msgstr ""
+
 msgid "This authentication provider is already setup. Disable it first"
 msgstr "Deze authenticatie-aanbieder is al ingesteld. Schakel deze eerst uit"
 
 msgid "Multi Factor Authentication is configured!"
 msgstr "Multi-factor Authenticatie is geconfigureerd!"
+
+msgid "Unable to configure Multi Factor Authentication."
+msgstr ""
 
 msgid "MFA authentication is required."
 msgstr "Multi-factor Authenticatie is vereist."
@@ -3715,66 +3832,6 @@ msgstr "De geheime Yubikey OTP-sleutel is niet geldig."
 msgid "Could not validate Yubikey configuration."
 msgstr "Kon de Yubikey-configuratie niet valideren."
 
-msgid "Duo Multi Factor Authentication"
-msgstr "Duo Multi-factor Authenticatie"
-
-msgid "Something went wrong."
-msgstr "Er ging iets mis."
-
-msgid "Please try again later or contact your administrator."
-msgstr "Probeer het later opnieuw of neem contact op met jouw beheerder."
-
-msgid "Logs"
-msgstr "Logboeken"
-
-msgid "Retry"
-msgstr "Opnieuw proberen"
-
-msgid "Getting started with Duo"
-msgstr "Aan de slag met Duo"
-
-msgid "How does it work?"
-msgstr "Hoe werkt het?"
-
-msgid "You sign in to passbolt just like you normally do."
-msgstr "Je meldt je aan bij Passbolt, net zoals je dat normaal doet."
-
-msgid "Use you 2FA device to authenticate."
-msgstr "Gebruik je 2FA-apparaat om te authenticeren."
-
-msgid "Follow the procedure to login."
-msgstr "Volg de procedure om in te loggen."
-
-msgid "Cancel"
-msgstr "Annuleren"
-
-msgid "Get started"
-msgstr "Aan de slag"
-
-msgid "Requirements"
-msgstr "Vereisten"
-
-msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
-msgstr "Om door te gaan, moet je de Duo mobiele applicatie installeren of een apparaat hebben om te authenticeren dat door Duo wordt ondersteund."
-
-msgid "For the list of supported devices, see:"
-msgstr "Voor de lijst met ondersteunde apparaten, zie:"
-
-msgid "Duo authentication methods"
-msgstr "Duo-authenticatiemethoden"
-
-msgid "Learn more"
-msgstr "Meer informatie"
-
-msgid "Duo multi-factor authentication is enabled!"
-msgstr "De Duo Multi-factor Authenticatie is ingeschakeld!"
-
-msgid "When logging in you will be asked to perform Duo Authentication."
-msgstr "Wanneer je inlogt, zal je worden gevraagd de Duo-authenticatie uit te voeren."
-
-msgid "Since"
-msgstr "Sinds"
-
 msgid "Multi factor authentication verification"
 msgstr "Verificatie van de Multi-factor Authenticatie"
 
@@ -3784,77 +3841,14 @@ msgstr "Multi-factor Authenticatie vereist"
 msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
 msgstr "Een aanvullende authenticatie is vereist met Duo. Je wordt doorgestuurd naar Duo voor verificatie."
 
-msgid "Multi factor authentication"
-msgstr "Multi-factor Authenticatie"
-
-msgid "Sorry no multi factor authentication is enabled for this organization."
-msgstr "Sorry, Multi-factor Authenticatie is niet ingeschakeld voor deze organisatie."
-
-msgid "Please contact your administrator to enable multi-factor authentication."
-msgstr "Neem contact op met je beheerder om Multi-factor Authenticatie in te schakelen."
-
-msgid "Please select a provider"
-msgstr "Selecteer een aanbieder"
-
-msgid "Enabled"
-msgstr "Ingeschakeld"
-
-msgid "Disabled"
-msgstr "Uitgeschakeld"
-
-msgid "What is multi-factor authentication?"
-msgstr "Wat is Multi-factor Authenticatie?"
-
-msgid "Multi-factor authentication (MFA) is a method of confirming a user's identity that requires presenting two or more pieces of evidence (or factor)."
-msgstr "Multi-factor Authenticatie (MFA) is een methode, waarbij de identiteit van een gebruiker wordt bevestigd door twee of meer bewijzen (of factoren) over te leggen."
-
-msgid "learn more"
-msgstr "meer informatie"
-
-msgid "Time based One Time Password (TOTP)"
-msgstr "Tijdelijk Eenmalig Wachtwoord (TOTP)"
-
-msgid "Scan this bar code"
-msgstr "Scan deze streepjescode"
-
 msgid "Enter the six digit number as presented on your phone or tablet."
 msgstr "Voer het zescijferige nummer in zoals weergegeven op je telefoon of tablet."
-
-msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
-msgstr "Om verder te gaan moet je een applicatie installeren die Tijdelijke Eenmalige Wachtwoorden (TOTP) op je telefoon of tablet ondersteunt, zoals:"
-
-msgid "or"
-msgstr "of"
-
-msgid "Getting started with Time based One Time Password (TOTP)"
-msgstr "Aan de slag met een Tijdelijk Eenmalig Wachtwoord (TOTP)"
-
-msgid "When using a new browser, you need an additional code from your phone."
-msgstr "Als je een nieuwe browser gebruikt, heb je een extra code vanaf je telefoon nodig."
-
-msgid "Once you enter this code, you can log in."
-msgstr "Zodra je deze code invoert, kan je je aanmelden."
-
-msgid "Time based One Time Password (TOTP) is enabled!"
-msgstr "Tijdelijk Eenmalig Wachtwoord (TOTP) is ingeschakeld!"
-
-msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
-msgstr "Wanneer je inlogt vanaf een nieuw apparaat, moet je een unieke verificatiecode invoeren die gegenereerd wordt door een app op je mobiele telefoon."
 
 msgid "Remember this device for a month."
 msgstr "Onthoud dit apparaat een maand lang."
 
-msgid "Yubikey One Time Password"
-msgstr "Yubikey Eenmalig Wachtwoord"
-
 msgid "Plug in the yubikey and put your finger on it."
 msgstr "Sluit de Yubikey aan en leg je vinger erop."
-
-msgid "Yubikey One Time Password is enabled!"
-msgstr "Yubikey Eenmalig Wachtwoord is ingeschakeld!"
-
-msgid "When logging in from a new device you will need a unique code generated by your yubikey."
-msgstr "Wanneer je inlogt vanaf een nieuw apparaat, heb je een unieke code nodig die gegenereerd wordt door jouw Yubikey."
 
 msgid "verify"
 msgstr "verifiëren"
@@ -3864,12 +3858,6 @@ msgstr "Inloggen met Duo"
 
 msgid "Or try with another provider"
 msgstr "Of probeer het met een andere aanbieder"
-
-msgid "Manage providers"
-msgstr "Beheer aanbieders"
-
-msgid "Turn off"
-msgstr "Uitschakelen"
 
 msgid "Your multi-factor authentication is disabled."
 msgstr "Multi-factor Authenticatie is uitgeschakeld."
@@ -3928,14 +3916,8 @@ msgstr "Kon de wachtwoordverloop-instellingen niet valideren."
 msgid "The password expiry settings have been updated."
 msgstr "De wachtwoordverloop-instellingen zijn bijgewerkt."
 
-msgid "View them in passbolt"
-msgstr "Bekijk ze in Passbolt"
-
 msgid "{0} resources were affected."
 msgstr "Er zijn {0} middelen getroffen."
-
-msgid "It would be too much to list them here, but you can go check them on passbolt."
-msgstr "Het zou te veel zijn om ze hier op te noemen, maar je kunt ze nakijken bij Passbolt."
 
 msgid "Change them in passbolt"
 msgstr "Wijzig ze in Passbolt"
@@ -4084,6 +4066,12 @@ msgstr "De instelling 'exclude look alike chars' van de wachtwoordgenerator is v
 msgid "The password generator exclude look alike chars should be a boolean type."
 msgstr "De instelling 'exclude look alike chars' van de wachtwoordgenerator moet een Boolean zijn."
 
+msgid "The rbacs could not be saved."
+msgstr ""
+
+msgid "Could not save the rbacs, please try again later."
+msgstr ""
+
 msgid "Record not found"
 msgstr "Record niet gevonden"
 
@@ -4110,6 +4098,12 @@ msgstr "De verzoekgegevens zijn ongeldig: ongeldige control_function."
 
 msgid "The request data is invalid: ids must be unique."
 msgstr "De verzoekgegevens zijn ongeldig: ids moeten uniek zijn."
+
+msgid "The control function is not allowed for this UI Action."
+msgstr "De control_function is niet toegestaan voor deze UI-actie."
+
+msgid "The control function is not allowed for this Action."
+msgstr ""
 
 msgid "An action identifier should be a valid UUID."
 msgstr "Een actie-ID moet een geldig UUID zijn."
@@ -4158,9 +4152,6 @@ msgstr "Er bestaat al een RBAC-item voor de opgegeven id."
 
 msgid "An entry already exists for the given role and action ids."
 msgstr "Er bestaat al een item voor de opgegeven rol- en actie-id's."
-
-msgid "The control function is not allowed for this UI Action."
-msgstr "De control_function is niet toegestaan voor deze UI-actie."
 
 msgid "An action already exists for the given name."
 msgstr "Er bestaat al een actie voor de opgegeven naam."
@@ -4240,9 +4231,6 @@ msgstr "Het veld \"deleted\" moet op null worden ingesteld."
 msgid "It is not allowed to update these resource type properties."
 msgstr "Het is niet toegestaan om deze brontype-eigenschappen bij te werken."
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr "De naam moet een geldige BMP-UTF8-tekenreeks zijn."
-
 msgid "The slug should be a valid BMP-UTF8 string."
 msgstr "De slug moet een geldige BMP-UTF8-tekenreeks zijn."
 
@@ -4294,6 +4282,39 @@ msgstr "Het brontype kon niet worden verwijderd."
 msgid "The resource type is not deleted."
 msgstr "Het brontype is niet verwijderd."
 
+msgid "The max revisions should be a valid integer."
+msgstr ""
+
+msgid "The max revisions is required."
+msgstr ""
+
+msgid "The max revisions should be greater than 0."
+msgstr ""
+
+msgid "The max revisions should not exceed the max revisions limit set by the administrator."
+msgstr ""
+
+msgid "The allow sharing revisions should be a valid boolean."
+msgstr ""
+
+msgid "The allow sharing revisions is required."
+msgstr ""
+
+msgid "The allow sharing revisions is not enabled by the administrator."
+msgstr ""
+
+msgid "Secret revisions settings endpoints are disabled."
+msgstr ""
+
+msgid "The identifier of the user who created the secret revision should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the secret revision should be a valid UUID."
+msgstr ""
+
+msgid "Could not save secret revision"
+msgstr ""
+
 msgid "The self registration setting id should be a valid UUID."
 msgstr "De self registration-instelling-id moet een geldig UUID zijn."
 
@@ -4314,6 +4335,12 @@ msgstr "De lijst met toegestane domeinen moet een reeks tekenreeksen zijn."
 
 msgid "The domain #{0} should be a valid domain."
 msgstr "Het domein #{0} moet een geldig domein zijn."
+
+msgid "Disabled"
+msgstr "Uitgeschakeld"
+
+msgid "Enabled"
+msgstr "Ingeschakeld"
 
 msgid "Allowed domains: {0}"
 msgstr "Toegestane domeinen: {0}"
@@ -4426,6 +4453,24 @@ msgstr "Het wachtwoord moet een geldige BMP-UTF8-tekenreeks zijn."
 msgid "The test email should be a valid email address."
 msgstr "Het e-mailadres voor de test moet een geldig e-mailadres zijn."
 
+msgid "The tenant ID should be a valid UUID."
+msgstr ""
+
+msgid "The client ID should be a valid UUID."
+msgstr ""
+
+msgid "The client secret should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The client secret should not exceed 256 characters."
+msgstr ""
+
+msgid "The OAuth2 username should be a valid email address."
+msgstr ""
+
+msgid "The OAuth2 username should not exceed 256 characters."
+msgstr ""
+
 msgid "The authentication method is required."
 msgstr "De authenticatiemethode is vereist."
 
@@ -4437,6 +4482,30 @@ msgstr "Het e-mailadres van de afzender moet een geldig e-mailadres zijn."
 
 msgid "A test recipient is required."
 msgstr "Een testontvanger is vereist."
+
+msgid "The tenant ID is required."
+msgstr ""
+
+msgid "The tenant ID should not be empty."
+msgstr ""
+
+msgid "The client ID is required."
+msgstr ""
+
+msgid "The client ID should not be empty."
+msgstr ""
+
+msgid "The client secret is required."
+msgstr ""
+
+msgid "The client secret should not be empty."
+msgstr "De client-secret moet ingevuld worden."
+
+msgid "The OAuth2 username is required."
+msgstr ""
+
+msgid "The OAuth2 username should not be empty."
+msgstr ""
 
 msgid "SMTP settings endpoints disabled."
 msgstr "SMTP-instellingendpoints uitgeschakeld."
@@ -4491,6 +4560,18 @@ msgstr "database"
 
 msgid "env variables"
 msgstr "omgevingsvariabelen"
+
+msgid "Tenant ID should be a valid UUID."
+msgstr ""
+
+msgid "Client ID should be a valid UUID."
+msgstr ""
+
+msgid "Failed to obtain SMTP OAuth2 access token."
+msgstr ""
+
+msgid "SMTP OAuth2 token response from Microsoft did not contain an access token."
+msgstr ""
 
 msgid "Could not validate the smtp settings."
 msgstr "De smtp-instellingen konden niet gevalideerd worden."
@@ -4792,6 +4873,9 @@ msgstr "structuur"
 msgid "Schema"
 msgstr "Structuur"
 
+msgid "Cancel"
+msgstr "Annuleren"
+
 msgid "Enter your SMTP server settings."
 msgstr "Voer uw SMTP-serverinstellingen in."
 
@@ -4828,8 +4912,14 @@ msgstr "Poort"
 msgid "Authentication method"
 msgstr "Authenticatiemethode"
 
-msgid "client"
-msgstr "cliënt"
+msgid "Directory (tenant) ID"
+msgstr ""
+
+msgid "Application (client) ID"
+msgstr ""
+
+msgid "Client secret"
+msgstr ""
 
 msgid "Client"
 msgstr "Cliënt"
@@ -5089,17 +5179,11 @@ msgstr "Andere gebruikers kunnen nog steeds middelen met je delen en je aan een 
 msgid "Contact your admin"
 msgstr "Neem contact op met je beheerder"
 
-msgid "{0} changed your role to user."
-msgstr "{0} heeft je rol gewijzigd naar gebruiker."
-
-msgid "{0} changed the role of {1} to user."
-msgstr "{0} heeft de rol van {1} gewijzigd naar gebruiker."
+msgid "{0} changed the role of {1} to {2}."
+msgstr ""
 
 msgid "{0} can no longer perform administration tasks."
 msgstr "{0} kan geen beheertaken meer uitvoeren."
-
-msgid "You"
-msgstr "Jij"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr "{0} ({1}) heeft zojuist een accountherstel voltooid. Neem gerust contact op met deze gebruiker als je denkt dat deze actie verdacht is."
@@ -5107,8 +5191,11 @@ msgstr "{0} ({1}) heeft zojuist een accountherstel voltooid. Neem gerust contact
 msgid "View user in passbolt"
 msgstr "Bekijk gebruiker in Passbolt"
 
-msgid "{0} cannot complete the account recovery process!"
-msgstr "{0} kan het accountherstelproces niet voltooien!"
+msgid "A new role {0} has been created."
+msgstr ""
+
+msgid "The role {0} has been renamed to {1}."
+msgstr ""
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
 msgstr "Deze gebruiker is zijn persoonlijke sleutel en/of wachtwoordzin kwijt en kan het accountherstelproces niet voltooien."
@@ -5209,6 +5296,9 @@ msgstr "Je hebt zojuist je account bij Passbolt aangemaakt!"
 msgid "You just opened an account on passbolt at {0}."
 msgstr "Je hebt zojuist een account geopend bij Passbolt op {0}."
 
+msgid "Get started"
+msgstr "Aan de slag"
+
 msgid "There was a change in the user directory."
 msgstr "Er is een wijziging in de gebruikersdirectory."
 
@@ -5308,11 +5398,17 @@ msgstr "{0} heeft wachtwoorden met je gedeeld"
 msgid "{0} resources were shared with you."
 msgstr "{0} middelen zijn met je gedeeld."
 
+msgid "{0} changed your role to {1}."
+msgstr ""
+
+msgid "You can no longer perform administration tasks."
+msgstr ""
+
 msgid "This email is an automatic notification sent by"
 msgstr "Deze e-mail is een automatische melding verzonden door"
 
-msgid "You can disable these notifications by requesting an administrator to delete your account."
-msgstr "Je kunt deze meldingen uitschakelen door een beheerder te vragen je account te verwijderen."
+msgid "To disable these notifications, contact an administrator."
+msgstr ""
 
 msgid "The locale {0} is not valid or not supported."
 msgstr "De locatie {0} is niet geldig of wordt niet ondersteund."

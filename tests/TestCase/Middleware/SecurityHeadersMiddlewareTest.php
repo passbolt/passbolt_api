@@ -12,20 +12,21 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.5.0
+ * @since         5.11.0
  */
-namespace Passbolt\MultiFactorAuthentication\Controller;
 
-class MfaSetupSelectProviderController extends MfaController
+namespace App\Test\TestCase\Middleware;
+
+use App\Test\Lib\AppIntegrationTestCase;
+use Cake\Http\Middleware\SecurityHeadersMiddleware;
+
+class SecurityHeadersMiddlewareTest extends AppIntegrationTestCase
 {
-    /**
-     * @throw ForbiddenException
-     * @return void
-     */
-    public function get()
+    public function testSecurityHeadersMiddleware_SecurityHeadersAreSet(): void
     {
-        $this->_assertRequestIsJson();
-        $body = $this->mfaSettings->getProvidersStatuses();
-        $this->success(__('The operation was successful.'), $body);
+        $this->get('/auth/login');
+        $this->assertHeader('X-Frame-Options', SecurityHeadersMiddleware::DENY);
+        $this->assertHeader('X-Download-Options', SecurityHeadersMiddleware::NOOPEN);
+        $this->assertHeader('X-Content-Type-Options', SecurityHeadersMiddleware::NOSNIFF);
     }
 }

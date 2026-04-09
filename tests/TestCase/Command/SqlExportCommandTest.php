@@ -122,6 +122,29 @@ class SqlExportCommandTest extends AppTestCase
         $this->assertFalse(file_exists($testDir . DS . $testFile));
     }
 
+    /**
+     * Regression test: special characters in file name must not cause command injection.
+     * The file path is handled by pure PHP I/O (not shell), so special chars are safe.
+     */
+    public function testSqlExportCommand_SpecialCharsInFileName()
+    {
+        $testDir = SqlExportCommand::CACHE_DATABASE_DIRECTORY;
+        $this->emptyDirectory($testDir);
+
+        // File name with shell-dangerous characters (backtick, $()) that would cause
+        // command injection if passed to an unescaped shell command.
+        $testFile = 'backup_$(id)_`whoami`.sql';
+
+        $this->exec("passbolt sql_export --dir {$testDir} --file {$testFile} --force");
+        $this->assertExitSuccess();
+
+        // The file should exist with the exact literal name (no shell expansion occurred)
+        $this->assertTrue(file_exists($testDir . $testFile));
+
+        // Cleanup
+        $this->emptyDirectory($testDir);
+    }
+
     public function testMysqlExportCommandHelp()
     {
         $this->exec('passbolt mysql_export -h');

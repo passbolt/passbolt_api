@@ -1,4 +1,9 @@
 <?php
+// =================================================================
+// ⚠ WARNING
+// This file is patched while building official packages.
+// If you do any changes make sure to notify the SRE/packaging team.
+// =================================================================
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -324,6 +329,14 @@ return [
             'exportPolicies' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_EXPORT_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
             ],
+            'safari' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SAFARI_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+                'settingsVisibility' => [
+                    'whiteListPublic' => [
+                        'enabled',
+                    ],
+                ],
+            ],
         ],
 
         // Activate specific entry points for selenium testing.
@@ -414,6 +427,11 @@ return [
         //ObfuscateFields placeholder
         'obfuscateFields' => [
             'placeholder' => env('PASSBOLT_OBFUSCATE_FIELDS_PLACEHOLDER', \App\Controller\Component\ObfuscateFieldsComponent::FIELD_PLACEHOLDER),
+        ],
+        'permissionsPolicyHeader' => [
+            'unload' => [
+                'enabled' => filter_var(env('PASSBOLT_PERMISSIONS_POLICY_HEADER_UNLOAD_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            ]
         ]
     ],
     // Override the Cake ExceptionRenderer.

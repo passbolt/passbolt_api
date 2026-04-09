@@ -26,9 +26,10 @@ use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
 class EmailConfigurationForm extends Form
 {
     public const ALLOWED_AUTH_METHODS = [
-        'username_and_password',
-        'username_only',
         'none',
+        'username_only',
+        'username_and_password',
+        'oauth2_client_credentials',
     ];
 
     /**
@@ -48,7 +49,12 @@ class EmailConfigurationForm extends Form
             ->addField('client', ['type' => 'string'])
             ->addField('username', ['type' => 'string'])
             ->addField('password', ['type' => 'string'])
-            ->addField('email_test_to', ['type' => 'string']);
+            ->addField('email_test_to', ['type' => 'string'])
+            // OAuth2 fields
+            ->addField('tenant_id', ['type' => 'string'])
+            ->addField('client_id', ['type' => 'string'])
+            ->addField('client_secret', ['type' => 'string'])
+            ->addField('oauth_username', ['type' => 'string']);
     }
 
     /**
@@ -108,6 +114,26 @@ class EmailConfigurationForm extends Form
             ->add('email_test_to', 'email', new EmailValidationRule([
                 'message' => __('The test email should be a valid email address.'),
             ]));
+
+        $validator
+            ->allowEmptyString('tenant_id')
+            ->uuid('tenant_id', __('The tenant ID should be a valid UUID.'));
+
+        $validator
+            ->allowEmptyString('client_id')
+            ->uuid('client_id', __('The client ID should be a valid UUID.'));
+
+        $validator
+            ->allowEmptyString('client_secret')
+            ->utf8('client_secret', __('The client secret should be a valid BMP-UTF8 string.'))
+            ->maxLength('client_secret', 256, __('The client secret should not exceed 256 characters.'));
+
+        $validator
+            ->allowEmptyString('oauth_username')
+            ->add('oauth_username', 'email', new EmailValidationRule([
+                'message' => __('The OAuth2 username should be a valid email address.'),
+            ]))
+            ->maxLength('oauth_username', 256, __('The OAuth2 username should not exceed 256 characters.'));
 
         return $validator;
     }
@@ -179,6 +205,14 @@ class EmailConfigurationForm extends Form
         $data = $this->mapTlsToTrueOrNull($data);
         $data = $this->setClient($data);
         $data = $this->filterUsernameAndPassword($data);
+        $data = $this->filterOauth2Fields($data);
+
+        // If OAuth2 auth method, upgrade the validator with required-field rules
+        if (($data['authentication_method'] ?? null) === 'oauth2_client_credentials') {
+            $validatorName = $options['validate'] ?? 'default';
+            $validator = $this->getValidator($validatorName);
+            $this->addOauth2ClientCredentialsValidation($validator);
+        }
 
         return parent::execute($data, $options);
     }
@@ -235,5 +269,62 @@ class EmailConfigurationForm extends Form
         }
 
         return $data;
+    }
+
+    /**
+     * When authentication method is oauth2_client_credentials,
+     * nullify legacy username/password fields.
+     * When authentication method is set but NOT oauth2, nullify OAuth2 fields.
+     *
+     * @param array $data The data to filter.
+     * @return array
+     */
+    private function filterOauth2Fields(array $data): array
+    {
+        if (!isset($data['authentication_method'])) {
+            return $data;
+        }
+
+        if ($data['authentication_method'] === 'oauth2_client_credentials') {
+            $data['username'] = null;
+            $data['password'] = null;
+        } else {
+            $data['tenant_id'] = null;
+            $data['client_id'] = null;
+            $data['client_secret'] = null;
+            $data['oauth_username'] = null;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Add required-field validation rules for OAuth2 client credentials fields.
+     * Called from execute() to enforce stricter rules when OAuth2 is the auth method.
+     *
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
+     */
+    private function addOauth2ClientCredentialsValidation(Validator $validator): Validator
+    {
+        // Only upgrade to required + non-empty; format rules (uuid, email, maxLength, utf8)
+        // are already set in validationDefault().
+        $validator
+            ->requirePresence('tenant_id', true, __('The tenant ID is required.'))
+            ->notEmptyString('tenant_id', __('The tenant ID should not be empty.'));
+
+        $validator
+            ->requirePresence('client_id', true, __('The client ID is required.'))
+            ->notEmptyString('client_id', __('The client ID should not be empty.'));
+
+        $validator
+            ->requirePresence('client_secret', true, __('The client secret is required.'))
+            ->notEmptyString('client_secret', __('The client secret should not be empty.'));
+
+        $validator
+            ->requirePresence('oauth_username', true, __('The OAuth2 username is required.'))
+            ->notEmptyString('oauth_username', __('The OAuth2 username should not be empty.'));
+
+        return $validator;
     }
 }

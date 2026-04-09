@@ -1,5 +1,4 @@
 <?php
-$this->Html->script('vendors/jquery.min.js', ['block' => 'scriptBottom']);
 $this->Html->script('web_installer/installation', ['block' => 'scriptBottom']);
 ?>
 <?= $this->element('header', ['title' => __('Some binary things are happening...')]) ?>

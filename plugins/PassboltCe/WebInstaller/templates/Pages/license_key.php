@@ -1,7 +1,5 @@
 <?php
 use Cake\Routing\Router;
-
-$this->Html->script('vendors/jquery.min.js', ['block' => 'scriptBottom']);
 $this->Html->script('web_installer/key_chooser', ['block' => 'scriptBottom']);
 ?>
 <?= $this->element('header', ['title' => __('Passbolt Pro activation.')]) ?>

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-10-01 06:12+0000\n"
-"PO-Revision-Date: 2025-12-12 18:39\n"
+"POT-Creation-Date: 2026-04-02 11:49+0000\n"
+"PO-Revision-Date: 2026-04-02 13:48\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian\n"
 "MIME-Version: 1.0\n"
@@ -72,6 +72,9 @@ msgstr "Vă rugăm să folosiți extensia .json în URL sau să acceptați appli
 
 msgid "The request data can not be empty."
 msgstr "Datele cererii nu pot fi goale."
+
+msgid "You are already logged in."
+msgstr ""
 
 msgid "You are successfully logged in."
 msgstr "Sunteți autentificat cu succes."
@@ -274,6 +277,15 @@ msgstr "Nu s-a putut șterge resursa."
 msgid "The resource has been updated successfully."
 msgstr "Resursa a fost actualizată cu succes."
 
+msgid "The role was deleted."
+msgstr ""
+
+msgid "The role identifier is not valid."
+msgstr ""
+
+msgid "The role was successfully updated."
+msgstr ""
+
 msgid "The secret does not exist."
 msgstr "Secretul nu există."
 
@@ -397,8 +409,8 @@ msgstr "Configurația `{0}` trebuie să fie un șir valid și ne-gol."
 msgid "Invalid expiry time {0}."
 msgstr "Timp de expirare invalid {0}."
 
-msgid "The user role ID must be one of the admin or user roles."
-msgstr "ID-ul rolului de utilizator trebuie să fie unul dintre rolurile de administrator sau utilizator."
+msgid "The user role ID must not be of the guest role."
+msgstr ""
 
 msgid "The identifier should not be empty."
 msgstr "Identificatorul nu trebuie să fie gol."
@@ -934,23 +946,44 @@ msgstr "Utilizatorul nu poate șterge această resursă."
 msgid "The resource type for this resource does not exist."
 msgstr "Tipul de resursă pentru această resursă nu există."
 
-msgid "The name should be a valid ASCII string."
-msgstr "Numele trebuie să fie un şir ASCII valid."
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "Numele trebuie să fie un șir valid BMP-UTF8."
+
+msgid "The name should not be greater than 50 characters."
+msgstr ""
+
+msgid "The name should not be reserved role."
+msgstr ""
 
 msgid "The description should be a valid BMP-UTF8 string."
 msgstr "Descrierea trebuie să fie un șir valid BMP-UTF8."
 
+msgid "The role cannot be deleted as it is associated with another user."
+msgstr ""
+
+msgid "A reserved role cannot be deleted."
+msgstr ""
+
 msgid "A role already exists for the given name."
 msgstr "Există deja un rol pentru numele dat."
 
-msgid "The role name should be from the list of allowed role names."
-msgstr "Numele rolului ar trebui să fie din lista numelor de roluri permise."
+msgid "Only maximum of {0} active roles are allowed."
+msgstr ""
 
 msgid "The resource identifier is required."
 msgstr "Identificatorul de resursă este necesar."
 
 msgid "The resource identifier should not be empty."
 msgstr "Identificatorul de resursă nu trebuie să fie gol."
+
+msgid "The secret revision identifier should be a valid UUID."
+msgstr ""
+
+msgid "A secret revision identifier is required."
+msgstr ""
+
+msgid "The secret revision identifier should not be empty."
+msgstr ""
 
 msgid "The message should be a valid ASCII string."
 msgstr "Mesajul trebuie să fie un şir ASCII valid."
@@ -963,6 +996,12 @@ msgstr "Mesajul nu trebuie să fie gol."
 
 msgid "A secret already exists for the given user and resource."
 msgstr "Există deja un secret pentru utilizatorul și resursele date."
+
+msgid "A secret already exists for the given user, resource and secret revision."
+msgstr ""
+
+msgid "The secret revision does not exist or is deleted."
+msgstr ""
 
 msgid "The user identifier by should be a valid UUID."
 msgstr "Identificatorul de utilizator ar trebui să fie un UUID valid."
@@ -993,6 +1032,9 @@ msgstr "Lungimea numelui de utilizator trebuie să fie de maximum 255 de caracte
 
 msgid "The username is already in use."
 msgstr "Numele de utilizator este deja folosit."
+
+msgid "The role does not exist."
+msgstr ""
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "Utilizatorul nu trebuie să fie singurul proprietar al conținutului partajat, transferă proprietatea și către alți utilizatori."
@@ -1123,7 +1165,13 @@ msgstr "Ați editat resursa {0}"
 msgid "{0} edited the resource {1}"
 msgstr "{0} a editat resursa {1}"
 
-msgid "{0} can not complete the account recovery process!"
+msgid "{0} created a new role {1}"
+msgstr ""
+
+msgid "{0} updated the role {1}"
+msgstr ""
+
+msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} nu poate finaliza procesul de recuperare a contului!"
 
 msgid "{0} shared the resource {1}"
@@ -1144,9 +1192,6 @@ msgstr "{0} a șters administratorul {1}"
 msgid "Your account has been suspended"
 msgstr "Contul tău a fost suspendat"
 
-msgid "Your admin role has been revoked"
-msgstr "Rolul dumneavoastră de administrator a fost revocat"
-
 msgid "{0}'s admin role has been revoked"
 msgstr "Rolul de administrator al lui {0} a fost revocat"
 
@@ -1158,6 +1203,9 @@ msgstr "{0} a fost suspendat"
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "Bine ai venit la Passbolt, {0}!"
+
+msgid "Your role has been updated"
+msgstr ""
 
 msgid "The purify subject setting should be a boolean."
 msgstr "Setarea subiectului purify ar trebui să fie booleană."
@@ -1323,6 +1371,9 @@ msgstr "Validare reușită pentru grupul {0}"
 
 msgid "Could not validate group user data."
 msgstr "Nu s-au putut valida datele de utilizator grup."
+
+msgid "The resource with ID {0} does not have a secret revision."
+msgstr ""
 
 msgid "All email notifications will be sent."
 msgstr "Toate notificările prin e-mail vor fi trimise."
@@ -1551,6 +1602,12 @@ msgstr "Nu s-a găsit conținut implicit."
 
 msgid "Run the install script to install the database tables"
 msgstr "Rulați scriptul de instalare pentru a instala tabelele bazei de date"
+
+msgid "The database version is supported."
+msgstr ""
+
+msgid "The database version is deprecated."
+msgstr ""
 
 msgid "The database schema is up to date."
 msgstr "Schema bazei de date este la zi."
@@ -2050,11 +2107,29 @@ msgstr "Cheia de metadate nu există sau a fost ștearsă soft pentru resursa {0
 msgid "The resource types associated to this resource does not exist."
 msgstr "Tipurile de resursă asociate acestei resurse nu există."
 
+msgid "No secret revision were found for this resource."
+msgstr ""
+
 msgid "You are not allowed to update this resource."
 msgstr "Nu ai permisiunea de a actualiza această resursă."
 
 msgid "Additional resource types are not enabled on this server."
 msgstr "Tipurile de resurse suplimentare nu sunt activate pe acest server."
+
+msgid "The role could not be saved."
+msgstr ""
+
+msgid "Could not save the role, please try again later."
+msgstr ""
+
+msgid "The role does not exist or deleted."
+msgstr ""
+
+msgid "The role could not be deleted."
+msgstr ""
+
+msgid "Could not delete the role, please try again later."
+msgstr ""
 
 msgid "There should be at least 4 roles"
 msgstr "Trebuie să existe cel puțin 4 roluri"
@@ -2064,6 +2139,15 @@ msgstr "Validarea a eșuat pentru rolul {0}. {1}"
 
 msgid "Validation success for role {0}"
 msgstr "Validare reușită pentru rolul {0}"
+
+msgid "The role could not be updated."
+msgstr ""
+
+msgid "Could not update the role, please try again later."
+msgstr ""
+
+msgid "Could not validate secrets data."
+msgstr "Nu s-au putut valida datele secretelor."
 
 msgid "Could not validate secret data."
 msgstr "Nu s-au putut valida datele secret-ului."
@@ -2079,9 +2163,6 @@ msgstr "Validare eșuată pentru secretul {0}. {1}"
 
 msgid "Validation success for secret {0}"
 msgstr "Validare reușită pentru secretul {0}"
-
-msgid "Could not validate secrets data."
-msgstr "Nu s-au putut valida datele secretelor."
 
 msgid "The secrets of all the users having access to the resource are required."
 msgstr "Secretele tuturor utilizatorilor care au acces la resursă sunt necesare."
@@ -2269,6 +2350,12 @@ msgstr "Setările de notificare pentru organizație au fost actualizate."
 msgid "The supplied email notification settings are not valid"
 msgstr "Setările pentru notificarea prin e-mail furnizate nu sunt valide"
 
+msgid "The allow CSV format setting is required."
+msgstr ""
+
+msgid "The allow CSV format setting should be a boolean."
+msgstr ""
+
 msgid "The folder has been added successfully."
 msgstr "Folderul a fost adăugat cu succes."
 
@@ -2377,6 +2464,12 @@ msgstr "Metadatele folderului furnizate nu pot fi decriptate."
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Un folder de tip personal nu poate fi partajat cu alți utilizatori sau cu un grup."
 
+msgid "You made changes on several folders"
+msgstr ""
+
+msgid "{0} has made changes on several folders"
+msgstr ""
+
 msgid "You added the folder {0}"
 msgstr "Ați adăugat folderul {0}"
 
@@ -2421,9 +2514,6 @@ msgstr "Nu aveţi permisiunea de a şterge acest folder."
 
 msgid "The folder does not exist."
 msgstr "Folderul nu există."
-
-msgid "You cannot delete this resource"
-msgstr "Nu puteți șterge această resursă"
 
 msgid "You are not allowed to update the permissions of this folder."
 msgstr "Nu aveți permisiunea de a actualiza permisiunile acestui folder."
@@ -2475,6 +2565,15 @@ msgstr "Ați modificat un folder"
 
 msgid "{0} edited a folder"
 msgstr "{0} a modificat un folder"
+
+msgid "{0} folders were affected."
+msgstr ""
+
+msgid "It would be too much to list them here, but you can go check them on passbolt."
+msgstr "Ar fi prea mult să le enumerăm aici, dar le puteți vizualiza pe site-ul Passbolt."
+
+msgid "View them in passbolt"
+msgstr "Vizualizați-le în Passbolt"
 
 msgid "The user signature could not be verified."
 msgstr "Semnătura utilizatorului nu a putut fi verificată."
@@ -2652,6 +2751,9 @@ msgstr "Data {0} ar trebui să fie după data {1}."
 
 msgid "The identifier should be not be empty."
 msgstr "Identificatorul nu trebuie să fie gol."
+
+msgid "The name should be a valid ASCII string."
+msgstr "Numele trebuie să fie un şir ASCII valid."
 
 msgid "Could not validate action data."
 msgstr "Nu s-au putut valida datele acțiunii."
@@ -3025,18 +3127,6 @@ msgstr "Nu a fost găsită nicio cheie de metadate activă."
 msgid "Active metadata key found or not required."
 msgstr "Cheie de metadate activă găsită sau nu este necesară."
 
-msgid "The server has access to the metadata keys or does not require access to it."
-msgstr "Serverul are acces la cheile de metadate sau nu are nevoie de acces la acestea."
-
-msgid "The server does not have access to metadata key."
-msgstr "Serverul nu are acces la cheia de metadate."
-
-msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
-msgstr "Când modul zero-knowledge este dezactivat, serverul trebuie să aibă acces la cheia de metadate."
-
-msgid "Without having access, the server won't be able to share the metadata private key with the users."
-msgstr "Fără acest acces, serverul nu va putea partaja cheia privată de metadate cu utilizatorii."
-
 msgid "No server metadata private key found."
 msgstr "Nu s-a găsit nicio cheie privată de metadata a serverului."
 
@@ -3048,6 +3138,18 @@ msgstr "Serverul poate decripta cheia privată de metadata."
 
 msgid "Unable to decrypt the metadata private key."
 msgstr "Imposibil de decriptat cheia privată de metadata."
+
+msgid "The server has access to the metadata keys or does not require access to it."
+msgstr "Serverul are acces la cheile de metadate sau nu are nevoie de acces la acestea."
+
+msgid "The server does not have access to metadata key."
+msgstr "Serverul nu are acces la cheia de metadate."
+
+msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
+msgstr "Când modul zero-knowledge este dezactivat, serverul trebuie să aibă acces la cheia de metadate."
+
+msgid "Without having access, the server won't be able to share the metadata private key with the users."
+msgstr "Fără acest acces, serverul nu va putea partaja cheia privată de metadate cu utilizatorii."
 
 msgid "Unable to decrypt the metadata private key (id: {0}) data."
 msgstr "Nu se pot decripta datele cheii private de metadate (id: {0})."
@@ -3066,6 +3168,15 @@ msgstr "Cheia privată de metadate a serverului este validă."
 
 msgid "The server metadata private key is not valid."
 msgstr "Cheia privată de metadate a serverului nu este validă."
+
+msgid "The server does not have access to the server metadata private key in Zero-knowledge mode."
+msgstr ""
+
+msgid "The server has access to the server metadata private key while in Zero-knowledge mode."
+msgstr ""
+
+msgid "When Zero-knowledge mode is enabled, the server should not have access to the server metadata private key."
+msgstr ""
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "Cheia de metadata nu există sau a fost ștearsă."
@@ -3505,11 +3616,17 @@ msgstr "Acest furnizor de autentificare nu este activat pentru organizația dvs.
 msgid "This functionality is not available using AJAX/JSON."
 msgstr "Această funcționalitate nu este disponibilă folosind AJAX/JSON."
 
+msgid "This functionality is only available using AJAX/JSON."
+msgstr ""
+
 msgid "This authentication provider is already setup. Disable it first"
 msgstr "Acest furnizor de autentificare este deja configurat. Dezactivați-l mai întâi"
 
 msgid "Multi Factor Authentication is configured!"
 msgstr "Autentificarea multi-factor este configurată!"
+
+msgid "Unable to configure Multi Factor Authentication."
+msgstr ""
 
 msgid "MFA authentication is required."
 msgstr "Autentificarea MFA este necesară."
@@ -3715,66 +3832,6 @@ msgstr "Cheia secretă OTP YubiKey nu este validă."
 msgid "Could not validate Yubikey configuration."
 msgstr "Nu s-a putut valida configurația YubiKey."
 
-msgid "Duo Multi Factor Authentication"
-msgstr "Duo Autentificare Multi Factor"
-
-msgid "Something went wrong."
-msgstr "Ceva nu a funcționat bine."
-
-msgid "Please try again later or contact your administrator."
-msgstr "Vă rugăm să încercați din nou mai târziu sau să contactați administratorul dvs."
-
-msgid "Logs"
-msgstr "Loguri"
-
-msgid "Retry"
-msgstr "Reîncercați"
-
-msgid "Getting started with Duo"
-msgstr "Începeți cu Duo"
-
-msgid "How does it work?"
-msgstr "Cum funcționează?"
-
-msgid "You sign in to passbolt just like you normally do."
-msgstr "Vă autentificați in Passbolt ca de obicei."
-
-msgid "Use you 2FA device to authenticate."
-msgstr "Utilizați dispozitivul 2FA pentru a vă autentifica."
-
-msgid "Follow the procedure to login."
-msgstr "Urmați procedura pentru a vă conecta."
-
-msgid "Cancel"
-msgstr "Anulează"
-
-msgid "Get started"
-msgstr "Începeți"
-
-msgid "Requirements"
-msgstr "Cerințe"
-
-msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
-msgstr "Pentru a continua, trebuie să instalați aplicația mobilă Duo sau să aveți un dispozitiv compatibil cu Duo pentru autentificare."
-
-msgid "For the list of supported devices, see:"
-msgstr "Pentru lista de dispozitive suportate, consultați:"
-
-msgid "Duo authentication methods"
-msgstr "Metode de autentificare Duo"
-
-msgid "Learn more"
-msgstr "Aflați mai multe"
-
-msgid "Duo multi-factor authentication is enabled!"
-msgstr "Autentificarea multi-factor Duo este activată!"
-
-msgid "When logging in you will be asked to perform Duo Authentication."
-msgstr "Când vă conectați, vi se va cere să efectuați autentificarea Duo."
-
-msgid "Since"
-msgstr "De la"
-
 msgid "Multi factor authentication verification"
 msgstr "Verificare autentificare multi-factor"
 
@@ -3784,77 +3841,14 @@ msgstr "Este necesară autentificarea multi-factor"
 msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
 msgstr "Este necesară o autentificare suplimentară prin Duo. Veți fi redirecționat către Duo pentru verificare."
 
-msgid "Multi factor authentication"
-msgstr "Autentificare multi-factor"
-
-msgid "Sorry no multi factor authentication is enabled for this organization."
-msgstr "Ne pare rău, pentru această organizație nu este activată autentificarea multi-factor."
-
-msgid "Please contact your administrator to enable multi-factor authentication."
-msgstr "Vă rugăm să contactați administratorul pentru a activa autentificarea multi-factor."
-
-msgid "Please select a provider"
-msgstr "Vă rugăm să selectați un furnizor"
-
-msgid "Enabled"
-msgstr "Activat"
-
-msgid "Disabled"
-msgstr "Dezactivat"
-
-msgid "What is multi-factor authentication?"
-msgstr "Ce este autentificarea multi-factor?"
-
-msgid "Multi-factor authentication (MFA) is a method of confirming a user's identity that requires presenting two or more pieces of evidence (or factor)."
-msgstr "Autentificarea multi-factor (MFA) este o metodă de confirmare a identității unui utilizator care necesită prezentarea a două sau mai multe probe (sau factori)."
-
-msgid "learn more"
-msgstr "Aflați mai multe"
-
-msgid "Time based One Time Password (TOTP)"
-msgstr "Parolă de unică folosință bazată pe timp (TOTP)"
-
-msgid "Scan this bar code"
-msgstr "Scanați acest cod de bare"
-
 msgid "Enter the six digit number as presented on your phone or tablet."
 msgstr "Introduceți numărul de șase cifre așa cum este prezentat pe telefon sau tabletă."
-
-msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
-msgstr "Pentru a continua, trebuie să instalați o aplicație care acceptă parole de unică folosință bazate pe timp(TOTP) pe telefon sau tabletă, cum ar fi:"
-
-msgid "or"
-msgstr "sau"
-
-msgid "Getting started with Time based One Time Password (TOTP)"
-msgstr "Noțiuni de bază pentru parole de unică folosință bazate pe timp (TOTP)"
-
-msgid "When using a new browser, you need an additional code from your phone."
-msgstr "Când folosiți un browser nou, aveți nevoie de un cod suplimentar de la telefonul dvs."
-
-msgid "Once you enter this code, you can log in."
-msgstr "Odată ce introduceți acest cod, vă puteți autentifica."
-
-msgid "Time based One Time Password (TOTP) is enabled!"
-msgstr "Parolă de unică folosință bazată pe timp (TOTP) este activată!"
-
-msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
-msgstr "Când vă conectați de pe un dispozitiv nou, va trebui să introduceți un cod unic de verificare generat de o aplicație de pe telefonul mobil."
 
 msgid "Remember this device for a month."
 msgstr "Memorează acest dispozitiv pentru o lună."
 
-msgid "Yubikey One Time Password"
-msgstr "Parolă de unică folosință YubiKey"
-
 msgid "Plug in the yubikey and put your finger on it."
 msgstr "Conectați YubiKey-ul și puneți degetul pe el."
-
-msgid "Yubikey One Time Password is enabled!"
-msgstr "Parola de unică folosință YubiKey este activată!"
-
-msgid "When logging in from a new device you will need a unique code generated by your yubikey."
-msgstr "Când vă conectați de pe un dispozitiv nou, veți avea nevoie de un cod unic generat de YubiKey-ul dvs."
 
 msgid "verify"
 msgstr "verificați"
@@ -3864,12 +3858,6 @@ msgstr "Conectați-vă cu Duo"
 
 msgid "Or try with another provider"
 msgstr "Sau încercați cu un alt furnizor"
-
-msgid "Manage providers"
-msgstr "Gestionați furnizorii"
-
-msgid "Turn off"
-msgstr "Opriți"
 
 msgid "Your multi-factor authentication is disabled."
 msgstr "Autentificarea dvs. multi-factor este dezactivată."
@@ -3928,14 +3916,8 @@ msgstr "Nu s-au putut valida setările de expirare a parolei."
 msgid "The password expiry settings have been updated."
 msgstr "Setările de expirare a parolei au fost actualizate."
 
-msgid "View them in passbolt"
-msgstr "Vizualizați-le în Passbolt"
-
 msgid "{0} resources were affected."
 msgstr "{0} resurse au fost afectate."
-
-msgid "It would be too much to list them here, but you can go check them on passbolt."
-msgstr "Ar fi prea mult să le enumerăm aici, dar le puteți vizualiza pe site-ul Passbolt."
 
 msgid "Change them in passbolt"
 msgstr "Modificați-le în Passbolt"
@@ -4084,6 +4066,12 @@ msgstr "Este necesară setarea generatorului de parole pentru excluderea caracte
 msgid "The password generator exclude look alike chars should be a boolean type."
 msgstr "Setarea generatorului de parole pentru excluderea caracterelor care pot fi confundate ar trebui să fie de tip boolean."
 
+msgid "The rbacs could not be saved."
+msgstr ""
+
+msgid "Could not save the rbacs, please try again later."
+msgstr ""
+
 msgid "Record not found"
 msgstr "Înregistrare negăsită"
 
@@ -4110,6 +4098,12 @@ msgstr "Datele cererii sunt invalide: control_function este invalid."
 
 msgid "The request data is invalid: ids must be unique."
 msgstr "Datele cererii sunt invalide: valorile ids trebuie să fie unice."
+
+msgid "The control function is not allowed for this UI Action."
+msgstr "Funcția de control nu este permisă pentru această Acțiune UI."
+
+msgid "The control function is not allowed for this Action."
+msgstr ""
 
 msgid "An action identifier should be a valid UUID."
 msgstr "Identificatorul unei acțiuni ar trebui să fie un UUID valid."
@@ -4158,9 +4152,6 @@ msgstr "Există deja o intrare RBAC pentru id-ul furnizat."
 
 msgid "An entry already exists for the given role and action ids."
 msgstr "Există deja o intrare pentru rolul și acțiunile specificate."
-
-msgid "The control function is not allowed for this UI Action."
-msgstr "Funcția de control nu este permisă pentru această Acțiune UI."
 
 msgid "An action already exists for the given name."
 msgstr "Există deja o acțiune pentru numele dat."
@@ -4240,9 +4231,6 @@ msgstr "Câmpul deleted trebuie să fie setat la null."
 msgid "It is not allowed to update these resource type properties."
 msgstr "Nu este permisă actualizarea acestor proprietăți de tip resursă."
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr "Numele trebuie să fie un șir valid BMP-UTF8."
-
 msgid "The slug should be a valid BMP-UTF8 string."
 msgstr "Slug URL-ul trebuie să fie un șir valid BMP-UTF8."
 
@@ -4294,6 +4282,39 @@ msgstr "Tipul de resursă nu a putut fi șters."
 msgid "The resource type is not deleted."
 msgstr "Tipul de resursă nu este șters."
 
+msgid "The max revisions should be a valid integer."
+msgstr ""
+
+msgid "The max revisions is required."
+msgstr ""
+
+msgid "The max revisions should be greater than 0."
+msgstr ""
+
+msgid "The max revisions should not exceed the max revisions limit set by the administrator."
+msgstr ""
+
+msgid "The allow sharing revisions should be a valid boolean."
+msgstr ""
+
+msgid "The allow sharing revisions is required."
+msgstr ""
+
+msgid "The allow sharing revisions is not enabled by the administrator."
+msgstr ""
+
+msgid "Secret revisions settings endpoints are disabled."
+msgstr ""
+
+msgid "The identifier of the user who created the secret revision should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the secret revision should be a valid UUID."
+msgstr ""
+
+msgid "Could not save secret revision"
+msgstr ""
+
 msgid "The self registration setting id should be a valid UUID."
 msgstr "Id-ul setării de auto-înregistrare ar trebui să fie un UUID valid."
 
@@ -4314,6 +4335,12 @@ msgstr "Lista de domenii permise trebuie să fie un array de șiruri."
 
 msgid "The domain #{0} should be a valid domain."
 msgstr "Domeniul #{0} ar trebui să fie un domeniu valid."
+
+msgid "Disabled"
+msgstr "Dezactivat"
+
+msgid "Enabled"
+msgstr "Activat"
 
 msgid "Allowed domains: {0}"
 msgstr "Domenii permise: {0}"
@@ -4426,6 +4453,24 @@ msgstr "Parola trebuie să fie un șir valid BMP-UTF8."
 msgid "The test email should be a valid email address."
 msgstr "E-mail-ul de test trebuie să fie o adresă de e-mail validă."
 
+msgid "The tenant ID should be a valid UUID."
+msgstr ""
+
+msgid "The client ID should be a valid UUID."
+msgstr ""
+
+msgid "The client secret should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The client secret should not exceed 256 characters."
+msgstr ""
+
+msgid "The OAuth2 username should be a valid email address."
+msgstr ""
+
+msgid "The OAuth2 username should not exceed 256 characters."
+msgstr ""
+
 msgid "The authentication method is required."
 msgstr "Metoda de autentificare este necesară."
 
@@ -4437,6 +4482,30 @@ msgstr "E-mail-ul expeditorului trebuie să fie o adresă de e-mail validă."
 
 msgid "A test recipient is required."
 msgstr "Este necesar un destinatar de test."
+
+msgid "The tenant ID is required."
+msgstr ""
+
+msgid "The tenant ID should not be empty."
+msgstr ""
+
+msgid "The client ID is required."
+msgstr ""
+
+msgid "The client ID should not be empty."
+msgstr ""
+
+msgid "The client secret is required."
+msgstr ""
+
+msgid "The client secret should not be empty."
+msgstr "Secretul de client nu trebuie să fie gol."
+
+msgid "The OAuth2 username is required."
+msgstr ""
+
+msgid "The OAuth2 username should not be empty."
+msgstr ""
 
 msgid "SMTP settings endpoints disabled."
 msgstr "Punctele finale ale setărilor SMTP sunt dezactivate."
@@ -4491,6 +4560,18 @@ msgstr "baza de date"
 
 msgid "env variables"
 msgstr "variabile de mediu"
+
+msgid "Tenant ID should be a valid UUID."
+msgstr ""
+
+msgid "Client ID should be a valid UUID."
+msgstr ""
+
+msgid "Failed to obtain SMTP OAuth2 access token."
+msgstr ""
+
+msgid "SMTP OAuth2 token response from Microsoft did not contain an access token."
+msgstr ""
 
 msgid "Could not validate the smtp settings."
 msgstr "Nu s-au putut valida setările SMTP."
@@ -4792,6 +4873,9 @@ msgstr "schemă"
 msgid "Schema"
 msgstr "Schemă"
 
+msgid "Cancel"
+msgstr "Anulează"
+
 msgid "Enter your SMTP server settings."
 msgstr "Introduceți setările serverului SMTP."
 
@@ -4828,8 +4912,14 @@ msgstr "Port"
 msgid "Authentication method"
 msgstr "Metoda de autentificare"
 
-msgid "client"
-msgstr "client"
+msgid "Directory (tenant) ID"
+msgstr ""
+
+msgid "Application (client) ID"
+msgstr ""
+
+msgid "Client secret"
+msgstr ""
 
 msgid "Client"
 msgstr "Client"
@@ -5089,17 +5179,11 @@ msgstr "Alți utilizatori încă pot partaja resurse cu tine și te pot adăuga 
 msgid "Contact your admin"
 msgstr "Contactează-ți administratorul"
 
-msgid "{0} changed your role to user."
-msgstr "{0} v-a schimbat rolul în utilizator."
-
-msgid "{0} changed the role of {1} to user."
-msgstr "{0} a schimbat rolul lui {1} în utilizator."
+msgid "{0} changed the role of {1} to {2}."
+msgstr ""
 
 msgid "{0} can no longer perform administration tasks."
 msgstr "{0} nu mai poate efectua activități de administrare."
-
-msgid "You"
-msgstr "Dvs"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr "{0} ({1}) tocmai a finalizat o recuperare a contului. Puteți lua legătura cu acest utilizator dacă această acțiune vi pare suspectă."
@@ -5107,8 +5191,11 @@ msgstr "{0} ({1}) tocmai a finalizat o recuperare a contului. Puteți lua legăt
 msgid "View user in passbolt"
 msgstr "Vizualizați utilizatorul în Passbolt"
 
-msgid "{0} cannot complete the account recovery process!"
-msgstr "{0} nu poate finaliza procesul de recuperare a contului!"
+msgid "A new role {0} has been created."
+msgstr ""
+
+msgid "The role {0} has been renamed to {1}."
+msgstr ""
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
 msgstr "Acest utilizator și-a pierdut cheia privată și/sau parola și nu poate finaliza procesul de recuperare a contului."
@@ -5209,6 +5296,9 @@ msgstr "Tocmai ți-ai creat contul în Passbolt!"
 msgid "You just opened an account on passbolt at {0}."
 msgstr "Tocmai ai deschis un cont în Passbolt la {0}."
 
+msgid "Get started"
+msgstr "Începeți"
+
 msgid "There was a change in the user directory."
 msgstr "A avut loc o modificare în directorul de utilizatori."
 
@@ -5308,11 +5398,17 @@ msgstr "{0} parole partajate cu dvs."
 msgid "{0} resources were shared with you."
 msgstr "{0} resurse au fost partajate cu tine."
 
+msgid "{0} changed your role to {1}."
+msgstr ""
+
+msgid "You can no longer perform administration tasks."
+msgstr ""
+
 msgid "This email is an automatic notification sent by"
 msgstr "Acest e-mail este o notificare automată trimisă de către"
 
-msgid "You can disable these notifications by requesting an administrator to delete your account."
-msgstr "Puteți dezactiva aceste notificări solicitând unui administrator să vă șteargă contul."
+msgid "To disable these notifications, contact an administrator."
+msgstr ""
 
 msgid "The locale {0} is not valid or not supported."
 msgstr "Limba {0} nu este validă sau nu este acceptată."

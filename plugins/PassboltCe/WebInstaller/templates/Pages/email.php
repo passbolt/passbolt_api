@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 use Cake\Routing\Router;
 
-$this->Html->script('vendors/jquery.min.js', ['block' => 'scriptBottom']);
 $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
 ?>
 <?= $this->element('header', ['title' => __('Enter your SMTP server settings.')]) ?>
@@ -72,6 +71,7 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                                     'username_and_password' => 'Username & password',
                                     'username_only' => 'Username only',
                                     'none' => 'None',
+                                    'oauth2_client_credentials' => 'OAuth2 client credentials (Microsoft 365)',
                                 ],
                                 'required' => 'required',
                                 'default' => 'username_and_password',
@@ -94,12 +94,40 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                                     'type' => 'password',
                                 ]); ?>
                             </div>
+                            <div id="smtp-config-oauth2-fields" style="display:none;">
+                            <?= $this->Form->control('tenant_id', [
+                                'type' => 'text',
+                                'placeholder' => __('Directory (tenant) ID'),
+                                'label' => __('Directory (tenant) ID'),
+                                'class' => 'fluid',
+                            ]); ?>
+                            <?= $this->Form->control('client_id', [
+                                'type' => 'text',
+                                'placeholder' => __('Application (client) ID'),
+                                'label' => __('Application (client) ID'),
+                                'class' => 'fluid',
+                            ]); ?>
+                            <?= $this->Form->control('client_secret', [
+                                'type' => 'password',
+                                'placeholder' => __('Client secret'),
+                                'label' => __('Client secret'),
+                                'class' => 'fluid',
+                            ]); ?>
+                            <?= $this->Form->control('oauth_username', [
+                                'type' => 'email',
+                                'placeholder' => __('Username'),
+                                'label' => __('Username'),
+                                'class' => 'fluid',
+                            ]); ?>
+                            </div>
+                            <div id="smtp-config-input-client">
                             <?= $this->Form->control('client', [
-                                'placeholder' => __('client'),
+                                'placeholder' => __('Client'),
                                 'label' => __('Client'),
                                 'class' => 'fluid',
                                 'type' => 'text',
                             ]); ?>
+                            </div>
                         </div>
                     </div>
                 </div>

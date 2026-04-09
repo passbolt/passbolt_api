@@ -17,26 +17,26 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
 
 class UsersIndexControllerGroupTest extends AppIntegrationTestCase
 {
-    use GroupsUsersModelTrait;
-
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/GroupsUsers',
-    ];
-
     public function testUsersIndexController_Success(): void
     {
-        $this->authenticateAs('ada');
+        RoleFactory::make()->guest()->persist();
+        [$userA, $userB, $userC] = UserFactory::make(3)->user()->withValidGpgKey()->persist();
+        $inactiveUser = UserFactory::make()->user()->inactive()->persist();
+        GroupFactory::make()->withGroupsManagersFor([$userA, $userB, $userC])->persist();
+
+        $this->logInAs($userA);
         $this->getJson('/users.json');
         $this->assertSuccess();
-        $this->assertGreaterThan(1, count($this->_responseJsonBody));
+        $this->assertCount(3, $this->_responseJsonBody);
         $this->assertUserAttributes($this->_responseJsonBody[0]);
 
         // gpgkey
@@ -56,40 +56,41 @@ class UsersIndexControllerGroupTest extends AppIntegrationTestCase
 
         // Should not contain inactive users.
         $usersIds = Hash::extract($this->_responseJsonBody, '{n}.id');
-        $notActiveUserId = UuidFactory::uuid('user.id.ruth');
-        $this->assertNotContains($notActiveUserId, $usersIds);
+        $this->assertNotContains($inactiveUser->id, $usersIds);
     }
 
     public function testUsersIndexController_Succes_FilterByGroups(): void
     {
-        $this->authenticateAs('ada');
-        $freelancersId = UuidFactory::uuid('group.id.freelancer');
-        $this->getJson('/users.json?filter[has-groups]=' . $freelancersId);
+        RoleFactory::make()->guest()->persist();
+        $this->logInAsUser();
+        [$userA, $userB, $userC] = UserFactory::make(3)->user()->persist();
+        $group = GroupFactory::make()->withGroupsUsersFor([$userA, $userB, $userC])->persist();
+        $this->getJson('/users.json?filter[has-groups]=' . $group->id);
         $this->assertSuccess();
-        $freelancers = ['jean', 'kathleen', 'lynne', 'marlyn', 'nancy'];
-        $this->assertEquals(count($this->_responseJsonBody), count($freelancers));
+        $this->assertEquals(count($this->_responseJsonBody), 3);
     }
 
     public function testUsersIndexController_Success_FilterByMultipleGroups(): void
     {
-        $this->authenticateAs('ada');
-        $hr = UuidFactory::uuid('group.id.human_resource');
-        $it = UuidFactory::uuid('group.id.it_support');
-        $this->getJson('/users.json?filter[has-groups]=' . $it . ',' . $hr);
+        RoleFactory::make()->guest()->persist();
+        $this->logInAsUser();
+        [$userA, $userB, $userC, $userD] = UserFactory::make(4)->user()->withValidGpgKey()->persist();
+        $groupA = GroupFactory::make()->withGroupsUsersFor([$userA, $userB, $userC, $userD])->persist();
+        $groupB = GroupFactory::make()->withGroupsUsersFor([$userA, $userB, $userC, $userD])->persist();
+        $this->getJson('/users.json?filter[has-groups]=' . $groupA->id . ',' . $groupB->id);
         $this->assertSuccess();
-        $freelancers = ['ping', 'thelma', 'ursula', 'wang'];
-        $this->assertEquals(count($this->_responseJsonBody), count($freelancers));
+        $this->assertEquals(count($this->_responseJsonBody), 4);
 
-        $this->getJson('/users.json?filter[has-groups][]=' . $it . '&filter[has-groups][]=' . $hr);
+        $this->getJson('/users.json?filter[has-groups][]=' . $groupA->id . '&filter[has-groups][]=' . $groupB->id);
         $this->assertSuccess();
-        $this->assertEquals(count($this->_responseJsonBody), count($freelancers));
+        $this->assertEquals(count($this->_responseJsonBody), 4);
     }
 
     public function testUsersIndexController_Error_FilterByInvalidGroups(): void
     {
-        $this->authenticateAs('ada');
-        $hr = UuidFactory::uuid('group.id.human_resource');
-        $no = UuidFactory::uuid('group.id.nobueno');
+        RoleFactory::make()->guest()->persist();
+        $this->logInAsUser();
+        $group = GroupFactory::make()->persist();
 
         // Invalid format trigger BadRequest
         $this->getJson('/users.json?filter[has-groups]');
@@ -98,11 +99,11 @@ class UsersIndexControllerGroupTest extends AppIntegrationTestCase
         $this->assertError(400);
         $this->getJson('/users.json?filter[has-groups]=nope');
         $this->assertError(400);
-        $this->getJson('/users.json?filter[has-groups]=' . $hr . ',nope');
+        $this->getJson('/users.json?filter[has-groups]=' . $group->id . ',nope');
         $this->assertError(400);
 
         // non existing group triggers empty results set
-        $this->getJson('/users.json?filter[has-groups]=' . $no);
+        $this->getJson('/users.json?filter[has-groups]=' . UuidFactory::uuid());
         $this->assertSuccess();
         $this->assertEquals(count($this->_responseJsonBody), 0);
     }

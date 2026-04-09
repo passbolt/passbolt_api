@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-10-01 06:12+0000\n"
-"PO-Revision-Date: 2025-12-12 18:40\n"
+"POT-Creation-Date: 2026-04-02 11:49+0000\n"
+"PO-Revision-Date: 2026-04-02 13:48\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -72,6 +72,9 @@ msgstr "Vänligen använd .json-tillägg i URL:en eller acceptera application/js
 
 msgid "The request data can not be empty."
 msgstr "Begärdedatan får inte vara tom."
+
+msgid "You are already logged in."
+msgstr ""
 
 msgid "You are successfully logged in."
 msgstr "Du är inloggad."
@@ -274,6 +277,15 @@ msgstr "Kunde inte radera resursen."
 msgid "The resource has been updated successfully."
 msgstr "Resursen har uppdaterats."
 
+msgid "The role was deleted."
+msgstr ""
+
+msgid "The role identifier is not valid."
+msgstr ""
+
+msgid "The role was successfully updated."
+msgstr ""
+
 msgid "The secret does not exist."
 msgstr "Hemligheten finns inte."
 
@@ -397,8 +409,8 @@ msgstr "Konfigurationen \"{0}\" måste vara en giltig icke-tom sträng."
 msgid "Invalid expiry time {0}."
 msgstr "Ogiltig utgångstid {0}."
 
-msgid "The user role ID must be one of the admin or user roles."
-msgstr "Roll-ID:t måste motsvara antingen administratörs- eller användarrollen."
+msgid "The user role ID must not be of the guest role."
+msgstr ""
 
 msgid "The identifier should not be empty."
 msgstr "Identifieraren får inte vara tom."
@@ -934,23 +946,44 @@ msgstr "Användaren kan inte ta bort denna resurs."
 msgid "The resource type for this resource does not exist."
 msgstr "Resurstypen för denna resurs finns inte."
 
-msgid "The name should be a valid ASCII string."
-msgstr "Namnet bör vara en giltig ASCII-sträng."
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "Namnet bör vara en giltig BMP-UTF8-sträng."
+
+msgid "The name should not be greater than 50 characters."
+msgstr ""
+
+msgid "The name should not be reserved role."
+msgstr ""
 
 msgid "The description should be a valid BMP-UTF8 string."
 msgstr "Beskrivningen bör vara en giltig BMP-UTF8-sträng."
 
+msgid "The role cannot be deleted as it is associated with another user."
+msgstr ""
+
+msgid "A reserved role cannot be deleted."
+msgstr ""
+
 msgid "A role already exists for the given name."
 msgstr "Det finns redan en roll för det angivna namnet."
 
-msgid "The role name should be from the list of allowed role names."
-msgstr "Rollnamnet ska vara från listan över tillåtna rollnamn."
+msgid "Only maximum of {0} active roles are allowed."
+msgstr ""
 
 msgid "The resource identifier is required."
 msgstr "Resursidentifieraren krävs."
 
 msgid "The resource identifier should not be empty."
 msgstr "Resursidentifieraren får inte vara tom."
+
+msgid "The secret revision identifier should be a valid UUID."
+msgstr ""
+
+msgid "A secret revision identifier is required."
+msgstr ""
+
+msgid "The secret revision identifier should not be empty."
+msgstr ""
 
 msgid "The message should be a valid ASCII string."
 msgstr "Meddelandet ska vara en giltig ASCII-sträng."
@@ -963,6 +996,12 @@ msgstr "Meddelandet bör inte vara tomt."
 
 msgid "A secret already exists for the given user and resource."
 msgstr "Det finns redan en hemlighet för den givna användaren och resursen."
+
+msgid "A secret already exists for the given user, resource and secret revision."
+msgstr ""
+
+msgid "The secret revision does not exist or is deleted."
+msgstr ""
 
 msgid "The user identifier by should be a valid UUID."
 msgstr "Användaridentifieraren av bör vara ett giltigt UUID."
@@ -993,6 +1032,9 @@ msgstr "Användarnamnets längd bör vara högst 255 tecken."
 
 msgid "The username is already in use."
 msgstr "Användarnamnet används redan."
+
+msgid "The role does not exist."
+msgstr ""
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "Användaren bör inte vara ensam ägare av delat innehåll, överför ägandet till andra användare."
@@ -1123,8 +1165,14 @@ msgstr "\"Du redigerade resursen {0}\""
 msgid "{0} edited the resource {1}"
 msgstr "\"{0} redigerade resursen {1}\""
 
-msgid "{0} can not complete the account recovery process!"
-msgstr "{0} kan inte slutföra kontoåterställningsprocessen!"
+msgid "{0} created a new role {1}"
+msgstr ""
+
+msgid "{0} updated the role {1}"
+msgstr ""
+
+msgid "{0} cannot complete the account recovery process!"
+msgstr "{0} kan inte slutföra kontåterställningsprocessen!"
 
 msgid "{0} shared the resource {1}"
 msgstr "\"{0} delade resursen {1}\""
@@ -1144,9 +1192,6 @@ msgstr "{0} tog bort administratören {1}"
 msgid "Your account has been suspended"
 msgstr "\"Ditt konto har blivit avstängt\""
 
-msgid "Your admin role has been revoked"
-msgstr "Din administratörsroll har återkallats"
-
 msgid "{0}'s admin role has been revoked"
 msgstr "{0}'s administratörsroll har återkallats"
 
@@ -1158,6 +1203,9 @@ msgstr "\"{0} har blivit avstängd\""
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "Välkommen till passbolt, {0}!"
+
+msgid "Your role has been updated"
+msgstr ""
 
 msgid "The purify subject setting should be a boolean."
 msgstr "Den renade subjektinställningen bör vara en boolean."
@@ -1323,6 +1371,9 @@ msgstr "Validering lyckades för grupp {0}"
 
 msgid "Could not validate group user data."
 msgstr "Kunde inte validera användardata för grupp."
+
+msgid "The resource with ID {0} does not have a secret revision."
+msgstr ""
 
 msgid "All email notifications will be sent."
 msgstr "Alla e-postaviseringar kommer att skickas."
@@ -1551,6 +1602,12 @@ msgstr "Inget standardinnehåll hittades."
 
 msgid "Run the install script to install the database tables"
 msgstr "Kör installationsskriptet för att installera databastabellerna"
+
+msgid "The database version is supported."
+msgstr ""
+
+msgid "The database version is deprecated."
+msgstr ""
 
 msgid "The database schema is up to date."
 msgstr "\"Databaseschemat är uppdaterat.\""
@@ -2050,11 +2107,29 @@ msgstr "Metadatanyckel saknas eller är mjukraderad för resurs {0}."
 msgid "The resource types associated to this resource does not exist."
 msgstr "Resurstyperna som är kopplade till denna resurs finns inte."
 
+msgid "No secret revision were found for this resource."
+msgstr ""
+
 msgid "You are not allowed to update this resource."
 msgstr "Du har inte behörighet att uppdatera denna resurs."
 
 msgid "Additional resource types are not enabled on this server."
 msgstr "Ytterligare resurstyper är inte aktiverade på denna server."
+
+msgid "The role could not be saved."
+msgstr ""
+
+msgid "Could not save the role, please try again later."
+msgstr ""
+
+msgid "The role does not exist or deleted."
+msgstr ""
+
+msgid "The role could not be deleted."
+msgstr ""
+
+msgid "Could not delete the role, please try again later."
+msgstr ""
 
 msgid "There should be at least 4 roles"
 msgstr "Det bör finnas minst 4 roller"
@@ -2064,6 +2139,15 @@ msgstr "Validering misslyckades för rollen {0}. {1}"
 
 msgid "Validation success for role {0}"
 msgstr "Validering lyckades för rollen {0}"
+
+msgid "The role could not be updated."
+msgstr ""
+
+msgid "Could not update the role, please try again later."
+msgstr ""
+
+msgid "Could not validate secrets data."
+msgstr "Kunde inte validera hemlighetsdata."
 
 msgid "Could not validate secret data."
 msgstr "Kunde inte validera hemlig data."
@@ -2079,9 +2163,6 @@ msgstr "Validering misslyckades för hemlighet {0}. {1}"
 
 msgid "Validation success for secret {0}"
 msgstr "Valideringen lyckades för hemlighet {0}"
-
-msgid "Could not validate secrets data."
-msgstr "Kunde inte validera hemlighetsdata."
 
 msgid "The secrets of all the users having access to the resource are required."
 msgstr "Hemligheterna för alla användare som har tillgång till resursen krävs."
@@ -2269,6 +2350,12 @@ msgstr "Aviseringsinställningarna för organisationen uppdaterades."
 msgid "The supplied email notification settings are not valid"
 msgstr "Inställningarna för e-postaviseringar är inte giltiga"
 
+msgid "The allow CSV format setting is required."
+msgstr ""
+
+msgid "The allow CSV format setting should be a boolean."
+msgstr ""
+
 msgid "The folder has been added successfully."
 msgstr "Mappen har lagts till."
 
@@ -2377,6 +2464,12 @@ msgstr "Den angivna mappmetadatan kan inte dekrypteras."
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "\"En mapp av typen personlig kan inte delas med andra användare eller en grupp.\""
 
+msgid "You made changes on several folders"
+msgstr ""
+
+msgid "{0} has made changes on several folders"
+msgstr ""
+
 msgid "You added the folder {0}"
 msgstr "Du lade till mappen {0}"
 
@@ -2421,9 +2514,6 @@ msgstr "Du har inte behörighet att ta bort denna mapp."
 
 msgid "The folder does not exist."
 msgstr "Mappen finns inte."
-
-msgid "You cannot delete this resource"
-msgstr "Du kan inte radera denna resurs"
 
 msgid "You are not allowed to update the permissions of this folder."
 msgstr "Du har inte behörighet att uppdatera behörigheterna för denna mapp."
@@ -2475,6 +2565,15 @@ msgstr "Du redigerade en mapp"
 
 msgid "{0} edited a folder"
 msgstr "{0} redigerade en mapp"
+
+msgid "{0} folders were affected."
+msgstr ""
+
+msgid "It would be too much to list them here, but you can go check them on passbolt."
+msgstr "Det skulle vara för mycket att lista dem här men du kan gå och kontrollera dem på passbolt."
+
+msgid "View them in passbolt"
+msgstr "Visa dem i passbolt"
 
 msgid "The user signature could not be verified."
 msgstr "Användarsignaturen kunde inte verifieras."
@@ -2652,6 +2751,9 @@ msgstr "Datumet {0} bör komma efter datumet {1}."
 
 msgid "The identifier should be not be empty."
 msgstr "Identifieraren får inte vara tom."
+
+msgid "The name should be a valid ASCII string."
+msgstr "Namnet bör vara en giltig ASCII-sträng."
 
 msgid "Could not validate action data."
 msgstr "Kunde inte validera åtgärdsdata."
@@ -3025,18 +3127,6 @@ msgstr "Ingen aktiv metadatanyckel hittades."
 msgid "Active metadata key found or not required."
 msgstr "Aktiv metadatanyckel hittad eller ej nödvändig."
 
-msgid "The server has access to the metadata keys or does not require access to it."
-msgstr "Servern har åtkomst till metadatanycklarna eller behöver inte åtkomst till dem."
-
-msgid "The server does not have access to metadata key."
-msgstr "Servern har inte åtkomst till metadatanyckeln."
-
-msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
-msgstr "När zero-knowledge-läget är avstängt måste servern ha åtkomst till metadatanyckeln."
-
-msgid "Without having access, the server won't be able to share the metadata private key with the users."
-msgstr "Utan åtkomst kommer servern inte att kunna dela den privata metadatanyckeln med användarna."
-
 msgid "No server metadata private key found."
 msgstr "Ingen servermetadata-privat nyckel hittades."
 
@@ -3048,6 +3138,18 @@ msgstr "Servern kan dekryptera metadata-privat nyckel."
 
 msgid "Unable to decrypt the metadata private key."
 msgstr "Kunde inte dekryptera metadata-privat nyckel."
+
+msgid "The server has access to the metadata keys or does not require access to it."
+msgstr "Servern har åtkomst till metadatanycklarna eller behöver inte åtkomst till dem."
+
+msgid "The server does not have access to metadata key."
+msgstr "Servern har inte åtkomst till metadatanyckeln."
+
+msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
+msgstr "När zero-knowledge-läget är avstängt måste servern ha åtkomst till metadatanyckeln."
+
+msgid "Without having access, the server won't be able to share the metadata private key with the users."
+msgstr "Utan åtkomst kommer servern inte att kunna dela den privata metadatanyckeln med användarna."
 
 msgid "Unable to decrypt the metadata private key (id: {0}) data."
 msgstr "Det gick inte att dekryptera data för den privata metadatanyckeln (id: {0})."
@@ -3066,6 +3168,15 @@ msgstr "Serverns privata metadatanyckel är giltig."
 
 msgid "The server metadata private key is not valid."
 msgstr "Serverns privata metadatanyckel är inte giltig."
+
+msgid "The server does not have access to the server metadata private key in Zero-knowledge mode."
+msgstr ""
+
+msgid "The server has access to the server metadata private key while in Zero-knowledge mode."
+msgstr ""
+
+msgid "When Zero-knowledge mode is enabled, the server should not have access to the server metadata private key."
+msgstr ""
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "Metadata-nyckeln existerar inte eller har raderats."
@@ -3505,11 +3616,17 @@ msgstr "Denna autentiseringsleverantör är inte aktiverad för din organisation
 msgid "This functionality is not available using AJAX/JSON."
 msgstr "Denna funktion är inte tillgänglig med AJAX/JSON."
 
+msgid "This functionality is only available using AJAX/JSON."
+msgstr ""
+
 msgid "This authentication provider is already setup. Disable it first"
 msgstr "Denna autentiseringsleverantör är redan inställd. Inaktivera den först"
 
 msgid "Multi Factor Authentication is configured!"
 msgstr "Multifaktor-autentisering har konfigurerats!"
+
+msgid "Unable to configure Multi Factor Authentication."
+msgstr ""
 
 msgid "MFA authentication is required."
 msgstr "MFA autentisering krävs."
@@ -3715,66 +3832,6 @@ msgstr "Yubikey OTP-hemlig nyckel är inte giltig."
 msgid "Could not validate Yubikey configuration."
 msgstr "Kunde inte validera konfigurationen för Yubikey."
 
-msgid "Duo Multi Factor Authentication"
-msgstr "Duo multifaktorautentisering"
-
-msgid "Something went wrong."
-msgstr "Något gick fel."
-
-msgid "Please try again later or contact your administrator."
-msgstr "Försök igen senare eller kontakta din administratör."
-
-msgid "Logs"
-msgstr "Loggar"
-
-msgid "Retry"
-msgstr "Försök igen"
-
-msgid "Getting started with Duo"
-msgstr "Komma igång med Duo"
-
-msgid "How does it work?"
-msgstr "Hur fungerar det?"
-
-msgid "You sign in to passbolt just like you normally do."
-msgstr "Du loggar in på passbolt precis som du brukar göra."
-
-msgid "Use you 2FA device to authenticate."
-msgstr "Använd din 2FA-enhet för att autentisera."
-
-msgid "Follow the procedure to login."
-msgstr "Följ proceduren för att logga in."
-
-msgid "Cancel"
-msgstr "Avbryt"
-
-msgid "Get started"
-msgstr "Kom igång"
-
-msgid "Requirements"
-msgstr "Krav"
-
-msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
-msgstr "För att fortsätta måste du installera Duo-mobilappen eller ha en enhet för autentisering som stöds av Duo."
-
-msgid "For the list of supported devices, see:"
-msgstr "För en lista över stödda enheter, se:"
-
-msgid "Duo authentication methods"
-msgstr "Duo-autentiseringsmetoder"
-
-msgid "Learn more"
-msgstr "Mer information"
-
-msgid "Duo multi-factor authentication is enabled!"
-msgstr "Duo multi-faktor autentisering är aktiverad!"
-
-msgid "When logging in you will be asked to perform Duo Authentication."
-msgstr "När du loggar in kommer du att bli ombedd att utföra Duo-autentisering."
-
-msgid "Since"
-msgstr "Eftersom"
-
 msgid "Multi factor authentication verification"
 msgstr "Verifiering av flerfaktorsautentisering"
 
@@ -3784,77 +3841,14 @@ msgstr "Multifaktorautentisering krävs"
 msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
 msgstr "Ytterligare autentisering krävs med Duo. Du kommer att omdirigeras till Duo för verifiering."
 
-msgid "Multi factor authentication"
-msgstr "Multi-faktor autentisering"
-
-msgid "Sorry no multi factor authentication is enabled for this organization."
-msgstr "Tyvärr är ingen multi-faktor autentisering aktiverad för denna organisation."
-
-msgid "Please contact your administrator to enable multi-factor authentication."
-msgstr "Kontakta din administratör för att aktivera multi-faktor autentisering."
-
-msgid "Please select a provider"
-msgstr "Välj en leverantör"
-
-msgid "Enabled"
-msgstr "Aktiverad"
-
-msgid "Disabled"
-msgstr "Inaktiverad"
-
-msgid "What is multi-factor authentication?"
-msgstr "Vad är multi-faktor-autentisering?"
-
-msgid "Multi-factor authentication (MFA) is a method of confirming a user's identity that requires presenting two or more pieces of evidence (or factor)."
-msgstr "Multi-faktor autentisering (MFA) är en metod för att bekräfta en användares identitet som kräver att två eller fler bevis(eller faktorer) presenteras."
-
-msgid "learn more"
-msgstr "lär dig mer"
-
-msgid "Time based One Time Password (TOTP)"
-msgstr "Tidsbaserat engångslösenord (TOTP)"
-
-msgid "Scan this bar code"
-msgstr "Skanna den här streckkoden"
-
 msgid "Enter the six digit number as presented on your phone or tablet."
 msgstr "Ange det sexsiffriga numret som visas på din telefon eller surfplatta."
-
-msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
-msgstr "För att fortsätta måste du installera ett program som stöder tidsbaserade engångslösenord (TOTP) på din telefon eller surfplatta såsom:"
-
-msgid "or"
-msgstr "eller"
-
-msgid "Getting started with Time based One Time Password (TOTP)"
-msgstr "Komma igång med tidsbaserat engångslösenord (TOTP)"
-
-msgid "When using a new browser, you need an additional code from your phone."
-msgstr "När du använder en ny webbläsare behöver du ytterligare en kod från telefonen."
-
-msgid "Once you enter this code, you can log in."
-msgstr "När du har angett den här koden kan du logga in."
-
-msgid "Time based One Time Password (TOTP) is enabled!"
-msgstr "Tidsbaserat engångslösenord (TOTP) är aktiverat!"
-
-msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
-msgstr "När du loggar in från en ny enhet måste du ange en unik verifieringskod som genereras av en app på din mobil."
 
 msgid "Remember this device for a month."
 msgstr "Kom ihåg den här enheten en månad."
 
-msgid "Yubikey One Time Password"
-msgstr "Engångslösenord Yubikey"
-
 msgid "Plug in the yubikey and put your finger on it."
 msgstr "Anslut yubikey och sätt fingret på den."
-
-msgid "Yubikey One Time Password is enabled!"
-msgstr "Engångslösenord för Yubikey är aktiverat!"
-
-msgid "When logging in from a new device you will need a unique code generated by your yubikey."
-msgstr "När du loggar in från en ny enhet behöver du en unik kod genererad av din yubikey."
 
 msgid "verify"
 msgstr "verifiera"
@@ -3864,12 +3858,6 @@ msgstr "Logga in med Duo"
 
 msgid "Or try with another provider"
 msgstr "Eller försök med en annan leverantör"
-
-msgid "Manage providers"
-msgstr "Hantera leverantörer"
-
-msgid "Turn off"
-msgstr "Stäng av"
 
 msgid "Your multi-factor authentication is disabled."
 msgstr "Din multifaktor-autentisering är inaktiverad."
@@ -3928,14 +3916,8 @@ msgstr "Kunde inte validera inställningarna för lösenordsutgång."
 msgid "The password expiry settings have been updated."
 msgstr "Inställningarna för lösenordsutgång har uppdaterats."
 
-msgid "View them in passbolt"
-msgstr "Visa dem i passbolt"
-
 msgid "{0} resources were affected."
 msgstr "{0} resurser påverkades."
-
-msgid "It would be too much to list them here, but you can go check them on passbolt."
-msgstr "Det skulle vara för mycket att lista dem här men du kan gå och kontrollera dem på passbolt."
 
 msgid "Change them in passbolt"
 msgstr "Ändra dem i passbolt"
@@ -4084,6 +4066,12 @@ msgstr "Parametern \"exclude look alike chars\" för lösenordsgeneratorn krävs
 msgid "The password generator exclude look alike chars should be a boolean type."
 msgstr "\"exclude look alike chars\" för lösenordsgeneratorn bör vara av typen boolean."
 
+msgid "The rbacs could not be saved."
+msgstr ""
+
+msgid "Could not save the rbacs, please try again later."
+msgstr ""
+
 msgid "Record not found"
 msgstr "Posten hittades inte"
 
@@ -4110,6 +4098,12 @@ msgstr "Begärdedatan är ogiltig: control_function ogiltig."
 
 msgid "The request data is invalid: ids must be unique."
 msgstr "Begärdedatan är ogiltig: id:n måste vara unika."
+
+msgid "The control function is not allowed for this UI Action."
+msgstr "Control-funktionen är inte tillåten för denna UI-åtgärd."
+
+msgid "The control function is not allowed for this Action."
+msgstr ""
 
 msgid "An action identifier should be a valid UUID."
 msgstr "En åtgärdsidentifierare bör vara ett giltigt UUID."
@@ -4158,9 +4152,6 @@ msgstr "En RBAC-post finns redan för det angivna id:t."
 
 msgid "An entry already exists for the given role and action ids."
 msgstr "En post finns redan för de angivna roll- och åtgärds-id:erna."
-
-msgid "The control function is not allowed for this UI Action."
-msgstr "Control-funktionen är inte tillåten för denna UI-åtgärd."
 
 msgid "An action already exists for the given name."
 msgstr "En åtgärd finns redan för det angivna namnet."
@@ -4240,9 +4231,6 @@ msgstr "Fältet \"deleted\" måste vara satt till null."
 msgid "It is not allowed to update these resource type properties."
 msgstr "Det är inte tillåtet att uppdatera dessa resurstyp-egenskaper."
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr "Namnet bör vara en giltig BMP-UTF8-sträng."
-
 msgid "The slug should be a valid BMP-UTF8 string."
 msgstr "Sluggen bör vara en giltig BMP-UTF8-sträng."
 
@@ -4294,6 +4282,39 @@ msgstr "Resurstypen kunde inte raderas."
 msgid "The resource type is not deleted."
 msgstr "Resurstypen är inte raderad."
 
+msgid "The max revisions should be a valid integer."
+msgstr ""
+
+msgid "The max revisions is required."
+msgstr ""
+
+msgid "The max revisions should be greater than 0."
+msgstr ""
+
+msgid "The max revisions should not exceed the max revisions limit set by the administrator."
+msgstr ""
+
+msgid "The allow sharing revisions should be a valid boolean."
+msgstr ""
+
+msgid "The allow sharing revisions is required."
+msgstr ""
+
+msgid "The allow sharing revisions is not enabled by the administrator."
+msgstr ""
+
+msgid "Secret revisions settings endpoints are disabled."
+msgstr ""
+
+msgid "The identifier of the user who created the secret revision should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the secret revision should be a valid UUID."
+msgstr ""
+
+msgid "Could not save secret revision"
+msgstr ""
+
 msgid "The self registration setting id should be a valid UUID."
 msgstr "Självregistreringsinställningens id bör vara ett giltigt UUID."
 
@@ -4314,6 +4335,12 @@ msgstr "Listan över tillåtna domäner bör vara en array av strängar."
 
 msgid "The domain #{0} should be a valid domain."
 msgstr "Domänen #{0} bör vara en giltig domän."
+
+msgid "Disabled"
+msgstr "Inaktiverad"
+
+msgid "Enabled"
+msgstr "Aktiverad"
 
 msgid "Allowed domains: {0}"
 msgstr "Tillåtna domäner: {0}"
@@ -4426,6 +4453,24 @@ msgstr "Lösenordet bör vara en giltig BMP-UTF8-sträng."
 msgid "The test email should be a valid email address."
 msgstr "Testmeddelandet bör vara en giltig e-postadress."
 
+msgid "The tenant ID should be a valid UUID."
+msgstr ""
+
+msgid "The client ID should be a valid UUID."
+msgstr ""
+
+msgid "The client secret should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The client secret should not exceed 256 characters."
+msgstr ""
+
+msgid "The OAuth2 username should be a valid email address."
+msgstr ""
+
+msgid "The OAuth2 username should not exceed 256 characters."
+msgstr ""
+
 msgid "The authentication method is required."
 msgstr "\"Autentiseringsmetoden krävs.\""
 
@@ -4437,6 +4482,30 @@ msgstr "Avsändarens e-postadress bör vara en giltig e-postadress."
 
 msgid "A test recipient is required."
 msgstr "En testmottagare krävs."
+
+msgid "The tenant ID is required."
+msgstr ""
+
+msgid "The tenant ID should not be empty."
+msgstr ""
+
+msgid "The client ID is required."
+msgstr ""
+
+msgid "The client ID should not be empty."
+msgstr ""
+
+msgid "The client secret is required."
+msgstr ""
+
+msgid "The client secret should not be empty."
+msgstr "Klienthemligheten får inte vara tom."
+
+msgid "The OAuth2 username is required."
+msgstr ""
+
+msgid "The OAuth2 username should not be empty."
+msgstr ""
 
 msgid "SMTP settings endpoints disabled."
 msgstr "SMTP-inställningarnas slutpunkter är inaktiverade."
@@ -4491,6 +4560,18 @@ msgstr "databas"
 
 msgid "env variables"
 msgstr "miljövariabler"
+
+msgid "Tenant ID should be a valid UUID."
+msgstr ""
+
+msgid "Client ID should be a valid UUID."
+msgstr ""
+
+msgid "Failed to obtain SMTP OAuth2 access token."
+msgstr ""
+
+msgid "SMTP OAuth2 token response from Microsoft did not contain an access token."
+msgstr ""
 
 msgid "Could not validate the smtp settings."
 msgstr "Kunde inte validera smtp-inställningarna."
@@ -4792,6 +4873,9 @@ msgstr "\"schema\""
 msgid "Schema"
 msgstr "\"Schema\""
 
+msgid "Cancel"
+msgstr "Avbryt"
+
 msgid "Enter your SMTP server settings."
 msgstr "Ange inställningarna för din SMTP-server."
 
@@ -4828,8 +4912,14 @@ msgstr "Port"
 msgid "Authentication method"
 msgstr "\"Autentiseringsmetod\""
 
-msgid "client"
-msgstr "klient"
+msgid "Directory (tenant) ID"
+msgstr ""
+
+msgid "Application (client) ID"
+msgstr ""
+
+msgid "Client secret"
+msgstr ""
 
 msgid "Client"
 msgstr "Klient"
@@ -5089,17 +5179,11 @@ msgstr "\"Andra användare kan fortfarande dela resurser med dig och lägga till
 msgid "Contact your admin"
 msgstr "\"Kontakta din administratör\""
 
-msgid "{0} changed your role to user."
-msgstr "{0} ändrade din roll till användare."
-
-msgid "{0} changed the role of {1} to user."
-msgstr "{0} ändrade rollen för {1} till användare."
+msgid "{0} changed the role of {1} to {2}."
+msgstr ""
 
 msgid "{0} can no longer perform administration tasks."
 msgstr "{0} kan inte längre utföra administrationsuppgifter."
-
-msgid "You"
-msgstr "Du"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr "{0} ({1}) har precis slutfört en kontåterställning. Om du anser att åtgärden verkar misstänkt får du gärna kontakta denna användare."
@@ -5107,8 +5191,11 @@ msgstr "{0} ({1}) har precis slutfört en kontåterställning. Om du anser att �
 msgid "View user in passbolt"
 msgstr "Visa användare i Passbolt"
 
-msgid "{0} cannot complete the account recovery process!"
-msgstr "{0} kan inte slutföra kontåterställningsprocessen!"
+msgid "A new role {0} has been created."
+msgstr ""
+
+msgid "The role {0} has been renamed to {1}."
+msgstr ""
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
 msgstr "Den här användaren tappade sin privata nyckel och/eller lösenfras och kan inte slutföra kontåterställningen."
@@ -5209,6 +5296,9 @@ msgstr "Du har precis skapat ditt konto på passbolt!"
 msgid "You just opened an account on passbolt at {0}."
 msgstr "Du har precis öppnat ett konto på passbolt på {0}."
 
+msgid "Get started"
+msgstr "Kom igång"
+
 msgid "There was a change in the user directory."
 msgstr "Det skedde en ändring i användarkatalogen."
 
@@ -5308,11 +5398,17 @@ msgstr "{0} delade lösenord med dig"
 msgid "{0} resources were shared with you."
 msgstr "{0} resurser har delats med dig."
 
+msgid "{0} changed your role to {1}."
+msgstr ""
+
+msgid "You can no longer perform administration tasks."
+msgstr ""
+
 msgid "This email is an automatic notification sent by"
 msgstr "Detta e-postmeddelande är en automatisk notifiering som skickats av"
 
-msgid "You can disable these notifications by requesting an administrator to delete your account."
-msgstr "Du kan inaktivera dessa aviseringar genom att be en administratör ta bort ditt konto."
+msgid "To disable these notifications, contact an administrator."
+msgstr ""
 
 msgid "The locale {0} is not valid or not supported."
 msgstr "Språket {0} är inte giltigt eller stöds inte."

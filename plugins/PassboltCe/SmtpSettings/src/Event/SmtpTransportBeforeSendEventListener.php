@@ -19,6 +19,8 @@ namespace Passbolt\SmtpSettings\Event;
 use App\Mailer\Transport\SmtpTransport;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
+use Cake\Mailer\Transport\SmtpTransport as CakeSmtpTransport;
+use Passbolt\SmtpSettings\Service\SmtpOauthExchangeOnlineService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSslOptionsGetService;
 
@@ -80,6 +82,16 @@ class SmtpTransportBeforeSendEventListener implements EventListenerInterface
                 'username' => $this->configInDB['username'],
                 'password' => $this->configInDB['password'],
             ];
+
+            // Override credentials with OAuth2 token when configured
+            if (SmtpOauthExchangeOnlineService::isOauth2ClientCredentials($this->configInDB)) {
+                $smtpOauthService = new SmtpOauthExchangeOnlineService($this->configInDB);
+                $configToMerge = array_merge($configToMerge, [
+                    'authType' => CakeSmtpTransport::AUTH_XOAUTH2,
+                    'username' => $smtpOauthService->getUsername(),
+                    'password' => $smtpOauthService->getAccessToken(),
+                ]);
+            }
         } else {
             // Consider empty username & password as 'None' authentication type
             if (empty($defaultConfig['username']) && empty($defaultConfig['password'])) {

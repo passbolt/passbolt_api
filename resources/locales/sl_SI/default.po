@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-10-01 06:12+0000\n"
-"PO-Revision-Date: 2025-12-12 18:40\n"
+"POT-Creation-Date: 2026-04-02 11:49+0000\n"
+"PO-Revision-Date: 2026-04-02 13:48\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -72,6 +72,9 @@ msgstr "Uporabite .json v URL-ju ali sprejmite application/json."
 
 msgid "The request data can not be empty."
 msgstr "Podatki zahtevka ne smejo biti prazni."
+
+msgid "You are already logged in."
+msgstr ""
 
 msgid "You are successfully logged in."
 msgstr "Uspešno ste prijavljeni."
@@ -274,6 +277,15 @@ msgstr "Vira ni bilo mogoče izbrisati."
 msgid "The resource has been updated successfully."
 msgstr "Vir je bil uspešno posodobljen."
 
+msgid "The role was deleted."
+msgstr ""
+
+msgid "The role identifier is not valid."
+msgstr ""
+
+msgid "The role was successfully updated."
+msgstr ""
+
 msgid "The secret does not exist."
 msgstr "Skrivnost ne obstaja."
 
@@ -397,8 +409,8 @@ msgstr "Nastavitev \"{0}\" mora biti veljaven neprazen niz."
 msgid "Invalid expiry time {0}."
 msgstr "Neveljaven čas poteka {0}."
 
-msgid "The user role ID must be one of the admin or user roles."
-msgstr "ID uporabniške vloge mora biti eden izmed vlog skrbnika ali uporabnika."
+msgid "The user role ID must not be of the guest role."
+msgstr ""
 
 msgid "The identifier should not be empty."
 msgstr "Identifikator ne sme biti prazen."
@@ -934,23 +946,44 @@ msgstr "Uporabnik ne more izbrisati tega vira."
 msgid "The resource type for this resource does not exist."
 msgstr "Tip vira za ta vir ne obstaja."
 
-msgid "The name should be a valid ASCII string."
-msgstr "Ime mora biti veljaven niz ASCII."
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "Ime mora biti veljaven niz BMP-UTF8."
+
+msgid "The name should not be greater than 50 characters."
+msgstr ""
+
+msgid "The name should not be reserved role."
+msgstr ""
 
 msgid "The description should be a valid BMP-UTF8 string."
 msgstr "Opis mora biti veljaven niz BMP-UTF8."
 
+msgid "The role cannot be deleted as it is associated with another user."
+msgstr ""
+
+msgid "A reserved role cannot be deleted."
+msgstr ""
+
 msgid "A role already exists for the given name."
 msgstr "Vloga že obstaja za dano ime."
 
-msgid "The role name should be from the list of allowed role names."
-msgstr "Ime vloge mora biti iz seznama dovoljenih imen vlog."
+msgid "Only maximum of {0} active roles are allowed."
+msgstr ""
 
 msgid "The resource identifier is required."
 msgstr "Identifikator vira je obvezen."
 
 msgid "The resource identifier should not be empty."
 msgstr "Identifikator vira ne sme biti prazen."
+
+msgid "The secret revision identifier should be a valid UUID."
+msgstr ""
+
+msgid "A secret revision identifier is required."
+msgstr ""
+
+msgid "The secret revision identifier should not be empty."
+msgstr ""
 
 msgid "The message should be a valid ASCII string."
 msgstr "Sporočilo mora biti veljaven niz ASCII."
@@ -963,6 +996,12 @@ msgstr "Sporočilo ne sme biti prazno."
 
 msgid "A secret already exists for the given user and resource."
 msgstr "Skrivnost že obstaja za danega uporabnika in vir."
+
+msgid "A secret already exists for the given user, resource and secret revision."
+msgstr ""
+
+msgid "The secret revision does not exist or is deleted."
+msgstr ""
 
 msgid "The user identifier by should be a valid UUID."
 msgstr "Identifikator uporabnika mora biti veljaven UUID."
@@ -993,6 +1032,9 @@ msgstr "Dolžina uporabniškega imena naj bo največ 255 znakov."
 
 msgid "The username is already in use."
 msgstr "Uporabniško ime je že v uporabi."
+
+msgid "The role does not exist."
+msgstr ""
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "Uporabnik ne sme biti edini lastnik skupne vsebine, prenesite lastništvo na druge uporabnike."
@@ -1123,8 +1165,14 @@ msgstr "Uredili ste vir {0}"
 msgid "{0} edited the resource {1}"
 msgstr "{0} je uredil vir {1}"
 
-msgid "{0} can not complete the account recovery process!"
-msgstr "{0} ne more dokončati postopka obnovitve računa!"
+msgid "{0} created a new role {1}"
+msgstr ""
+
+msgid "{0} updated the role {1}"
+msgstr ""
+
+msgid "{0} cannot complete the account recovery process!"
+msgstr "{0} ne more dokončati postopka obnove računa!"
 
 msgid "{0} shared the resource {1}"
 msgstr "{0} je delil vir {1}"
@@ -1144,9 +1192,6 @@ msgstr "{0} je izbrisal skrbnika {1}"
 msgid "Your account has been suspended"
 msgstr "Vaš račun je bil onemogočen"
 
-msgid "Your admin role has been revoked"
-msgstr "Vaša skrbniška vloga je bila preklicana"
-
 msgid "{0}'s admin role has been revoked"
 msgstr "Skrbniška vloga uporabnika {0} je bila preklicana"
 
@@ -1158,6 +1203,9 @@ msgstr "{0} je bil onemogočen"
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "Dobrodošli v passboltu, {0}!"
+
+msgid "Your role has been updated"
+msgstr ""
 
 msgid "The purify subject setting should be a boolean."
 msgstr "Nastavitev za očiščenje predmeta mora biti logična vrednost."
@@ -1323,6 +1371,9 @@ msgstr "Preverjanje za skupino {0} je bilo uspešno"
 
 msgid "Could not validate group user data."
 msgstr "Podatke uporabnika skupine ni bilo mogoče preveriti."
+
+msgid "The resource with ID {0} does not have a secret revision."
+msgstr ""
 
 msgid "All email notifications will be sent."
 msgstr "Vsa e-poštna obvestila bodo poslana."
@@ -1551,6 +1602,12 @@ msgstr "Ni bilo najdene privzete vsebine."
 
 msgid "Run the install script to install the database tables"
 msgstr "Za namestitev tabel zbirke podatkov zaženite namestitveni skript"
+
+msgid "The database version is supported."
+msgstr ""
+
+msgid "The database version is deprecated."
+msgstr ""
 
 msgid "The database schema is up to date."
 msgstr "Shema podatkovne baze je posodobljena."
@@ -2050,11 +2107,29 @@ msgstr "Ključ metapodatkov za vir {0} ne obstaja ali je mehko izbrisan."
 msgid "The resource types associated to this resource does not exist."
 msgstr "Povezani tipi virov za ta vir ne obstajajo."
 
+msgid "No secret revision were found for this resource."
+msgstr ""
+
 msgid "You are not allowed to update this resource."
 msgstr "Ni vam dovoljeno posodobiti ta vir."
 
 msgid "Additional resource types are not enabled on this server."
 msgstr "Dodatni tipi virov niso omogočeni na tem strežniku."
+
+msgid "The role could not be saved."
+msgstr ""
+
+msgid "Could not save the role, please try again later."
+msgstr ""
+
+msgid "The role does not exist or deleted."
+msgstr ""
+
+msgid "The role could not be deleted."
+msgstr ""
+
+msgid "Could not delete the role, please try again later."
+msgstr ""
 
 msgid "There should be at least 4 roles"
 msgstr "Morale bi biti vsaj 4 vloge"
@@ -2064,6 +2139,15 @@ msgstr "Preverjanje za vlogo {0} ni uspelo. {1}"
 
 msgid "Validation success for role {0}"
 msgstr "Preverjanje za vlogo {0} je bilo uspešno"
+
+msgid "The role could not be updated."
+msgstr ""
+
+msgid "Could not update the role, please try again later."
+msgstr ""
+
+msgid "Could not validate secrets data."
+msgstr "Podatke o skrivnostih ni bilo mogoče preveriti."
 
 msgid "Could not validate secret data."
 msgstr "Podatke o skrivnosti ni bilo mogoče preveriti."
@@ -2079,9 +2163,6 @@ msgstr "Preverjanje za skrivnost {0} ni uspelo. {1}"
 
 msgid "Validation success for secret {0}"
 msgstr "Preverjanje za skrivnost {0} je bilo uspešno"
-
-msgid "Could not validate secrets data."
-msgstr "Podatke o skrivnostih ni bilo mogoče preveriti."
 
 msgid "The secrets of all the users having access to the resource are required."
 msgstr "Skrivnosti vseh uporabnikov, ki imajo dostop do vira, so obvezne."
@@ -2269,6 +2350,12 @@ msgstr "Nastavitve obveščanja za organizacijo so bile posodobljene."
 msgid "The supplied email notification settings are not valid"
 msgstr "Posredovane nastavitve e-poštnih obvestil niso veljavne"
 
+msgid "The allow CSV format setting is required."
+msgstr ""
+
+msgid "The allow CSV format setting should be a boolean."
+msgstr ""
+
 msgid "The folder has been added successfully."
 msgstr "Mapa je bila uspešno dodana."
 
@@ -2377,6 +2464,12 @@ msgstr "Predloženih metapodatkov mape ni mogoče dešifrirati."
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Mape tipa \"personal\" ni mogoče deliti z drugimi uporabniki ali skupino."
 
+msgid "You made changes on several folders"
+msgstr ""
+
+msgid "{0} has made changes on several folders"
+msgstr ""
+
 msgid "You added the folder {0}"
 msgstr "Dodali ste mapo {0}"
 
@@ -2421,9 +2514,6 @@ msgstr "Nimate dovoljenja za izbris te mape."
 
 msgid "The folder does not exist."
 msgstr "Mapa ne obstaja."
-
-msgid "You cannot delete this resource"
-msgstr "Tega vira ni mogoče izbrisati"
 
 msgid "You are not allowed to update the permissions of this folder."
 msgstr "Nimate dovoljenja za posodabljanje dovoljenj te mape."
@@ -2475,6 +2565,15 @@ msgstr "Uredili ste mapo"
 
 msgid "{0} edited a folder"
 msgstr "{0} je uredil mapo"
+
+msgid "{0} folders were affected."
+msgstr ""
+
+msgid "It would be too much to list them here, but you can go check them on passbolt."
+msgstr "Bilo bi preveč, da jih tu naštejem, vendar jih lahko preverite na passbolt."
+
+msgid "View them in passbolt"
+msgstr "Ogled v Passbolt"
 
 msgid "The user signature could not be verified."
 msgstr "Podpis uporabnika ni bilo mogoče preveriti."
@@ -2652,6 +2751,9 @@ msgstr "Datum {0} mora biti po datumu {1}."
 
 msgid "The identifier should be not be empty."
 msgstr "Identifikator ne sme biti prazen."
+
+msgid "The name should be a valid ASCII string."
+msgstr "Ime mora biti veljaven niz ASCII."
 
 msgid "Could not validate action data."
 msgstr "Ni bilo mogoče preveriti podatkov dejanja."
@@ -3025,18 +3127,6 @@ msgstr "Ni najdenega aktivnega ključa metapodatkov."
 msgid "Active metadata key found or not required."
 msgstr "Aktivni ključ metapodatkov je najden ali pa ni zahtevan."
 
-msgid "The server has access to the metadata keys or does not require access to it."
-msgstr "Strežnik ima dostop do ključev metapodatkov ali pa dostop ni potreben."
-
-msgid "The server does not have access to metadata key."
-msgstr "Strežnik nima dostopa do ključa metapodatkov."
-
-msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
-msgstr "Ko je način ničelnega znanja izklopljen, mora imeti strežnik dostop do ključa metapodatkov."
-
-msgid "Without having access, the server won't be able to share the metadata private key with the users."
-msgstr "Brez dostopa strežnik ne bo mogel deliti zasebnega ključa metapodatkov z uporabniki."
-
 msgid "No server metadata private key found."
 msgstr "Ni bilo najdenega zasebnega ključa strežniških metapodatkov."
 
@@ -3048,6 +3138,18 @@ msgstr "Strežnik lahko dešifrira zasebni ključ metapodatkov."
 
 msgid "Unable to decrypt the metadata private key."
 msgstr "Ni mogoče dešifrirati zasebnega ključa metapodatkov."
+
+msgid "The server has access to the metadata keys or does not require access to it."
+msgstr "Strežnik ima dostop do ključev metapodatkov ali pa dostop ni potreben."
+
+msgid "The server does not have access to metadata key."
+msgstr "Strežnik nima dostopa do ključa metapodatkov."
+
+msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
+msgstr "Ko je način ničelnega znanja izklopljen, mora imeti strežnik dostop do ključa metapodatkov."
+
+msgid "Without having access, the server won't be able to share the metadata private key with the users."
+msgstr "Brez dostopa strežnik ne bo mogel deliti zasebnega ključa metapodatkov z uporabniki."
 
 msgid "Unable to decrypt the metadata private key (id: {0}) data."
 msgstr "Ni mogoče dešifrirati podatkov zasebnega ključa metapodatkov (id: {0})."
@@ -3066,6 +3168,15 @@ msgstr "Zasebni ključ strežniških metapodatkov je veljaven."
 
 msgid "The server metadata private key is not valid."
 msgstr "Zasebni ključ strežniških metapodatkov ni veljaven."
+
+msgid "The server does not have access to the server metadata private key in Zero-knowledge mode."
+msgstr ""
+
+msgid "The server has access to the server metadata private key while in Zero-knowledge mode."
+msgstr ""
+
+msgid "When Zero-knowledge mode is enabled, the server should not have access to the server metadata private key."
+msgstr ""
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "Ključ metapodatkov ne obstaja ali je bil izbrisan."
@@ -3505,11 +3616,17 @@ msgstr "Ta ponudnik preverjanja pristnosti ni omogočen za vašo organizacijo."
 msgid "This functionality is not available using AJAX/JSON."
 msgstr "Ta funkcionalnost ni na voljo pri uporabi AJAX/JSON."
 
+msgid "This functionality is only available using AJAX/JSON."
+msgstr ""
+
 msgid "This authentication provider is already setup. Disable it first"
 msgstr "Ta ponudnik preverjanja pristnosti je že nastavljen. Najprej ga onemogočite"
 
 msgid "Multi Factor Authentication is configured!"
 msgstr "Večfaktorska avtentikacija je nastavljena!"
+
+msgid "Unable to configure Multi Factor Authentication."
+msgstr ""
 
 msgid "MFA authentication is required."
 msgstr "MFA avtentikacija je potrebna."
@@ -3715,66 +3832,6 @@ msgstr "Skrivni ključ Yubikey OTP ni veljaven."
 msgid "Could not validate Yubikey configuration."
 msgstr "Konfiguracijo Yubikey ni mogoče preveriti."
 
-msgid "Duo Multi Factor Authentication"
-msgstr "Večfaktorska avtentikacija Duo"
-
-msgid "Something went wrong."
-msgstr "Nekaj ​​je šlo narobe."
-
-msgid "Please try again later or contact your administrator."
-msgstr "Poskusite znova pozneje ali stopite v stik s svojim administratorjem."
-
-msgid "Logs"
-msgstr "Dnevniki"
-
-msgid "Retry"
-msgstr "Ponovni poskus"
-
-msgid "Getting started with Duo"
-msgstr "Začnite z Duo"
-
-msgid "How does it work?"
-msgstr "Kako deluje?"
-
-msgid "You sign in to passbolt just like you normally do."
-msgstr "Prijavite se v passbolt, kot ste to po navadi storili."
-
-msgid "Use you 2FA device to authenticate."
-msgstr "Uporabite svojo 2FA napravo za avtentikacijo."
-
-msgid "Follow the procedure to login."
-msgstr "Sledite postopku za prijavo."
-
-msgid "Cancel"
-msgstr "Prekliči"
-
-msgid "Get started"
-msgstr "Začnite"
-
-msgid "Requirements"
-msgstr "Zahteve"
-
-msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
-msgstr "Za nadaljevanje morate namestiti aplikacijo Duo za mobilne naprave ali imeti napravo za avtentikacijo, ki jo podpira Duo."
-
-msgid "For the list of supported devices, see:"
-msgstr "Za seznam podprtih naprav, glejte:"
-
-msgid "Duo authentication methods"
-msgstr "Metode avtentikacije Duo"
-
-msgid "Learn more"
-msgstr "Več o tem"
-
-msgid "Duo multi-factor authentication is enabled!"
-msgstr "Večfaktorska avtentikacija Duo je omogočena!"
-
-msgid "When logging in you will be asked to perform Duo Authentication."
-msgstr "Pri prijavi vas bomo prosili za izvedbo avtentikacije Duo."
-
-msgid "Since"
-msgstr "Od"
-
 msgid "Multi factor authentication verification"
 msgstr "Preverjanje večfaktorske avtentikacije"
 
@@ -3784,77 +3841,14 @@ msgstr "Potrebna je večfaktorska avtentikacija"
 msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
 msgstr "Potrebna je dodatna avtentikacija z uporabo Duo. Preusmerjeni boste za preverjanje na Duo."
 
-msgid "Multi factor authentication"
-msgstr "Večfaktorska avtentikacija"
-
-msgid "Sorry no multi factor authentication is enabled for this organization."
-msgstr "Oprostite, večfaktorska avtentikacija za to organizacijo ni omogočena."
-
-msgid "Please contact your administrator to enable multi-factor authentication."
-msgstr "Prosimo, obrnite se na svojega administratorja za omogočitev večfaktorske avtentikacije."
-
-msgid "Please select a provider"
-msgstr "Prosimo, izberite ponudnika"
-
-msgid "Enabled"
-msgstr "Omogočeno"
-
-msgid "Disabled"
-msgstr "Onemogoči"
-
-msgid "What is multi-factor authentication?"
-msgstr "Kaj je večfaktorska avtentikacija?"
-
-msgid "Multi-factor authentication (MFA) is a method of confirming a user's identity that requires presenting two or more pieces of evidence (or factor)."
-msgstr "Večfaktorska avtentikacija (MFA) je metoda potrjevanja identitete uporabnika, ki zahteva predstavitev dveh ali več dokazov (ali faktorjev)."
-
-msgid "learn more"
-msgstr "več o tem"
-
-msgid "Time based One Time Password (TOTP)"
-msgstr "Enota časovnega žetona (TOTP)"
-
-msgid "Scan this bar code"
-msgstr "Skenirajte to črtno kodo"
-
 msgid "Enter the six digit number as presented on your phone or tablet."
 msgstr "Vnesite šestmestno številko, kot je prikazano na vašem telefonu ali tabli."
-
-msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
-msgstr "Za nadaljevanje morate namestiti aplikacijo, ki podpira časovno odvisne enkratne gesla (TOTP) na vašem telefonu ali tabli, na primer:"
-
-msgid "or"
-msgstr "ali"
-
-msgid "Getting started with Time based One Time Password (TOTP)"
-msgstr "Začetek dela s časovnim enkratnim geslom (TOTP)"
-
-msgid "When using a new browser, you need an additional code from your phone."
-msgstr "Pri uporabi novega brskalnika je potrebna dodatna koda s telefona."
-
-msgid "Once you enter this code, you can log in."
-msgstr "Ko vnesete to kodo, se lahko prijavite."
-
-msgid "Time based One Time Password (TOTP) is enabled!"
-msgstr "Enota časovnega žetona (TOTP) je omogočena!"
-
-msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
-msgstr "Pri prijavi z novega naprave boste potrebovali enkratno preverjanje kodo, ki jo generira aplikacija na vašem mobilnem telefonu."
 
 msgid "Remember this device for a month."
 msgstr "Zapomnite si to napravo za en mesec."
 
-msgid "Yubikey One Time Password"
-msgstr "Enota enkratnega gesla Yubikey"
-
 msgid "Plug in the yubikey and put your finger on it."
 msgstr "Vstavite yubikey in dotaknite se prsta."
-
-msgid "Yubikey One Time Password is enabled!"
-msgstr "Enota enkratnega gesla Yubikey je omogočena!"
-
-msgid "When logging in from a new device you will need a unique code generated by your yubikey."
-msgstr "Pri prijavi z novega naprave boste potrebovali enkratno kodo, ki jo generira vaša yubikey."
 
 msgid "verify"
 msgstr "preveri"
@@ -3864,12 +3858,6 @@ msgstr "Prijavite se z Duo"
 
 msgid "Or try with another provider"
 msgstr "Ali poskusite z drugim ponudnikom"
-
-msgid "Manage providers"
-msgstr "Upravljajte ponudnike"
-
-msgid "Turn off"
-msgstr "Izklop"
 
 msgid "Your multi-factor authentication is disabled."
 msgstr "Vaša večfaktorska avtentikacija je onemogočena."
@@ -3928,14 +3916,8 @@ msgstr "Nastavitev poteka gesel ni bilo mogoče potrditi."
 msgid "The password expiry settings have been updated."
 msgstr "Nastavitve poteka gesel so bile posodobljene."
 
-msgid "View them in passbolt"
-msgstr "Ogled v Passbolt"
-
 msgid "{0} resources were affected."
 msgstr "{0} virov je bilo prizadetih."
-
-msgid "It would be too much to list them here, but you can go check them on passbolt."
-msgstr "Bilo bi preveč, da jih tu naštejem, vendar jih lahko preverite na passbolt."
 
 msgid "Change them in passbolt"
 msgstr "Spremeni v Passbolt"
@@ -4084,6 +4066,12 @@ msgstr "Maska generatorja gesla za izključitev podobnih znakov je obvezna."
 msgid "The password generator exclude look alike chars should be a boolean type."
 msgstr "Maska generatorja gesla za izključitev podobnih znakov mora biti logičnega tipa."
 
+msgid "The rbacs could not be saved."
+msgstr ""
+
+msgid "Could not save the rbacs, please try again later."
+msgstr ""
+
 msgid "Record not found"
 msgstr "Zapis ni bil najden"
 
@@ -4110,6 +4098,12 @@ msgstr "Podatki zahtevka niso veljavni: neveljavna kontrolna funkcija."
 
 msgid "The request data is invalid: ids must be unique."
 msgstr "Podatki zahtevka niso veljavni: ID-ji morajo biti edinstveni."
+
+msgid "The control function is not allowed for this UI Action."
+msgstr "Ta kontrolna funkcija ni dovoljena za to dejanje uporabniškega vmesnika."
+
+msgid "The control function is not allowed for this Action."
+msgstr ""
 
 msgid "An action identifier should be a valid UUID."
 msgstr "Identifikator akcije mora biti veljaven UUID."
@@ -4158,9 +4152,6 @@ msgstr "Vnos RBAC za dani ID že obstaja."
 
 msgid "An entry already exists for the given role and action ids."
 msgstr "Vnos za dano vlogo in ID dejanja že obstaja."
-
-msgid "The control function is not allowed for this UI Action."
-msgstr "Ta kontrolna funkcija ni dovoljena za to dejanje uporabniškega vmesnika."
 
 msgid "An action already exists for the given name."
 msgstr "Dejanje za dano ime že obstaja."
@@ -4240,9 +4231,6 @@ msgstr "Polje \"deleted\" mora biti nastavljeno na null."
 msgid "It is not allowed to update these resource type properties."
 msgstr "Ni dovoljeno posodabljati teh lastnosti vrste vira."
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr "Ime mora biti veljaven niz BMP-UTF8."
-
 msgid "The slug should be a valid BMP-UTF8 string."
 msgstr "Slug mora biti veljaven niz BMP-UTF8."
 
@@ -4294,6 +4282,39 @@ msgstr "Vrste vira ni bilo mogoče izbrisati."
 msgid "The resource type is not deleted."
 msgstr "Vrsta vira ni izbrisana."
 
+msgid "The max revisions should be a valid integer."
+msgstr ""
+
+msgid "The max revisions is required."
+msgstr ""
+
+msgid "The max revisions should be greater than 0."
+msgstr ""
+
+msgid "The max revisions should not exceed the max revisions limit set by the administrator."
+msgstr ""
+
+msgid "The allow sharing revisions should be a valid boolean."
+msgstr ""
+
+msgid "The allow sharing revisions is required."
+msgstr ""
+
+msgid "The allow sharing revisions is not enabled by the administrator."
+msgstr ""
+
+msgid "Secret revisions settings endpoints are disabled."
+msgstr ""
+
+msgid "The identifier of the user who created the secret revision should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the secret revision should be a valid UUID."
+msgstr ""
+
+msgid "Could not save secret revision"
+msgstr ""
+
 msgid "The self registration setting id should be a valid UUID."
 msgstr "Identifikator samoregistracije mora biti veljaven UUID."
 
@@ -4314,6 +4335,12 @@ msgstr "Seznam dovoljenih domen mora biti tabela nizov."
 
 msgid "The domain #{0} should be a valid domain."
 msgstr "Domena #{0} mora biti veljavna domena."
+
+msgid "Disabled"
+msgstr "Onemogoči"
+
+msgid "Enabled"
+msgstr "Omogočeno"
 
 msgid "Allowed domains: {0}"
 msgstr "Dovoljene domene: {0}"
@@ -4426,6 +4453,24 @@ msgstr "Geslo mora biti veljaven niz BMP-UTF8."
 msgid "The test email should be a valid email address."
 msgstr "E-poštni naslov za testiranje mora biti veljaven e-poštni naslov."
 
+msgid "The tenant ID should be a valid UUID."
+msgstr ""
+
+msgid "The client ID should be a valid UUID."
+msgstr ""
+
+msgid "The client secret should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The client secret should not exceed 256 characters."
+msgstr ""
+
+msgid "The OAuth2 username should be a valid email address."
+msgstr ""
+
+msgid "The OAuth2 username should not exceed 256 characters."
+msgstr ""
+
 msgid "The authentication method is required."
 msgstr "Metoda avtentikacije je zahtevana."
 
@@ -4437,6 +4482,30 @@ msgstr "E-poštni naslov pošiljatelja mora biti veljaven e-poštni naslov."
 
 msgid "A test recipient is required."
 msgstr "Potreben je prejemnik testiranja."
+
+msgid "The tenant ID is required."
+msgstr ""
+
+msgid "The tenant ID should not be empty."
+msgstr ""
+
+msgid "The client ID is required."
+msgstr ""
+
+msgid "The client ID should not be empty."
+msgstr ""
+
+msgid "The client secret is required."
+msgstr ""
+
+msgid "The client secret should not be empty."
+msgstr "Skrivni ključ stranke ne sme biti prazen"
+
+msgid "The OAuth2 username is required."
+msgstr ""
+
+msgid "The OAuth2 username should not be empty."
+msgstr ""
 
 msgid "SMTP settings endpoints disabled."
 msgstr "Končne točke nastavitev SMTP so onemogočene"
@@ -4491,6 +4560,18 @@ msgstr "podatkovna baza"
 
 msgid "env variables"
 msgstr "okoljske spremenljivke"
+
+msgid "Tenant ID should be a valid UUID."
+msgstr ""
+
+msgid "Client ID should be a valid UUID."
+msgstr ""
+
+msgid "Failed to obtain SMTP OAuth2 access token."
+msgstr ""
+
+msgid "SMTP OAuth2 token response from Microsoft did not contain an access token."
+msgstr ""
 
 msgid "Could not validate the smtp settings."
 msgstr "SMTP nastavitve ni bilo mogoče preveriti."
@@ -4792,6 +4873,9 @@ msgstr "shema"
 msgid "Schema"
 msgstr "Shema"
 
+msgid "Cancel"
+msgstr "Prekliči"
+
 msgid "Enter your SMTP server settings."
 msgstr "Vnesite nastavitve vašega SMTP strežnika."
 
@@ -4828,8 +4912,14 @@ msgstr "Vrata"
 msgid "Authentication method"
 msgstr "Metoda avtentikacije"
 
-msgid "client"
-msgstr "stranka"
+msgid "Directory (tenant) ID"
+msgstr "ID imenika (najemnik)"
+
+msgid "Application (client) ID"
+msgstr "ID aplikacije (odjemalec)"
+
+msgid "Client secret"
+msgstr "Geslo klienta"
 
 msgid "Client"
 msgstr "Stranka"
@@ -5089,17 +5179,11 @@ msgstr "Drugi uporabniki lahko še vedno delijo vire z vami in vas dodajo v skup
 msgid "Contact your admin"
 msgstr "Obrnite se na skrbnika"
 
-msgid "{0} changed your role to user."
-msgstr "{0} je spremenil vašo vlogo v \"user\"."
-
-msgid "{0} changed the role of {1} to user."
-msgstr "{0} je spremenil vlogo uporabnika {1} v \"user\"."
+msgid "{0} changed the role of {1} to {2}."
+msgstr ""
 
 msgid "{0} can no longer perform administration tasks."
 msgstr "{0} ne more več izvajati skrbniških opravil."
-
-msgid "You"
-msgstr "Vi"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr "{0} ({1}) je pravkar zaključil obnovitev računa. Če menite, da je to dejanje sumljivo, lahko stopite v stik s tem uporabnikom."
@@ -5107,8 +5191,11 @@ msgstr "{0} ({1}) je pravkar zaključil obnovitev računa. Če menite, da je to 
 msgid "View user in passbolt"
 msgstr "Oglejte si uporabnika v passboltu"
 
-msgid "{0} cannot complete the account recovery process!"
-msgstr "{0} ne more dokončati postopka obnove računa!"
+msgid "A new role {0} has been created."
+msgstr ""
+
+msgid "The role {0} has been renamed to {1}."
+msgstr ""
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
 msgstr "Ta uporabnik je izgubil svoj zasebni ključ in/ali geslo in ne more dokončati postopka obnove računa."
@@ -5209,6 +5296,9 @@ msgstr "Pravkar ste ustvarili svoj račun na passbolt!"
 msgid "You just opened an account on passbolt at {0}."
 msgstr "Pravkar ste odprli račun na passbolt na {0}."
 
+msgid "Get started"
+msgstr "Začnite"
+
 msgid "There was a change in the user directory."
 msgstr "Prišlo je do spremembe v uporabniškem imeniku."
 
@@ -5308,11 +5398,17 @@ msgstr "{0} je z vami delil gesla"
 msgid "{0} resources were shared with you."
 msgstr "{0} virov je bilo deljenih z vami."
 
+msgid "{0} changed your role to {1}."
+msgstr ""
+
+msgid "You can no longer perform administration tasks."
+msgstr ""
+
 msgid "This email is an automatic notification sent by"
 msgstr "To je avtomatsko sporočilo, ki ga je poslal"
 
-msgid "You can disable these notifications by requesting an administrator to delete your account."
-msgstr "Ta sporočila lahko onemogočite tako, da zahtevate administratorja, naj izbriše vaš račun."
+msgid "To disable these notifications, contact an administrator."
+msgstr ""
 
 msgid "The locale {0} is not valid or not supported."
 msgstr "Lokalizacija {0} ni veljavna ali ni podprta."

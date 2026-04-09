@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Cake\Utility\Text;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 use Passbolt\SmtpSettings\SmtpSettingsPlugin;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
@@ -109,5 +110,41 @@ class SmtpSettingsGetControllerTest extends AppIntegrationTestCase
         $this->assertForbiddenError('SMTP settings endpoints disabled.');
 
         $this->enableSmtpSettingsEndpoints();
+    }
+
+    public function testSmtpSettingsGetController_Success_WithOauth2Settings(): void
+    {
+        $this->logInAsAdmin();
+        $data = $this->getSmtpSettingsData();
+        $data['tenant_id'] = Text::uuid();
+        $data['client_id'] = Text::uuid();
+        $data['client_secret'] = 'my-secret';
+        $data['oauth_username'] = 'user@example.com';
+        $this->encryptAndPersistSmtpSettings($data);
+
+        $this->getJson('/smtp/settings.json');
+        $this->assertSuccess();
+        $response = (array)$this->_responseJsonBody;
+        $this->assertSame($data['tenant_id'], $response['tenant_id']);
+        $this->assertSame($data['client_id'], $response['client_id']);
+        $this->assertSame($data['client_secret'], $response['client_secret']);
+        $this->assertSame($data['oauth_username'], $response['oauth_username']);
+    }
+
+    public function testSmtpSettingsGetController_BackwardCompat_LegacySettingsNoOauth2(): void
+    {
+        $this->logInAsAdmin();
+        $data = $this->getSmtpSettingsData();
+        // No OAuth2 fields - legacy settings
+        $this->encryptAndPersistSmtpSettings($data);
+
+        $this->getJson('/smtp/settings.json');
+        $this->assertSuccess();
+        $response = (array)$this->_responseJsonBody;
+        // OAuth2 fields should be null or absent
+        $this->assertTrue(
+            !isset($response['tenant_id']) || $response['tenant_id'] === null,
+            'tenant_id should be absent or null for legacy settings'
+        );
     }
 }

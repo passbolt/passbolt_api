@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2025-10-01 06:12+0000\n"
+"POT-Creation-Date: 2026-04-02 11:49+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -69,6 +69,9 @@ msgid "Please use .json extension in URL or accept application/json."
 msgstr ""
 
 msgid "The request data can not be empty."
+msgstr ""
+
+msgid "You are already logged in."
 msgstr ""
 
 msgid "You are successfully logged in."
@@ -272,6 +275,15 @@ msgstr ""
 msgid "The resource has been updated successfully."
 msgstr ""
 
+msgid "The role was deleted."
+msgstr ""
+
+msgid "The role identifier is not valid."
+msgstr ""
+
+msgid "The role was successfully updated."
+msgstr ""
+
 msgid "The secret does not exist."
 msgstr ""
 
@@ -395,7 +407,7 @@ msgstr ""
 msgid "Invalid expiry time {0}."
 msgstr ""
 
-msgid "The user role ID must be one of the admin or user roles."
+msgid "The user role ID must not be of the guest role."
 msgstr ""
 
 msgid "The identifier should not be empty."
@@ -932,22 +944,43 @@ msgstr ""
 msgid "The resource type for this resource does not exist."
 msgstr ""
 
-msgid "The name should be a valid ASCII string."
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The name should not be greater than 50 characters."
+msgstr ""
+
+msgid "The name should not be reserved role."
 msgstr ""
 
 msgid "The description should be a valid BMP-UTF8 string."
 msgstr ""
 
+msgid "The role cannot be deleted as it is associated with another user."
+msgstr ""
+
+msgid "A reserved role cannot be deleted."
+msgstr ""
+
 msgid "A role already exists for the given name."
 msgstr ""
 
-msgid "The role name should be from the list of allowed role names."
+msgid "Only maximum of {0} active roles are allowed."
 msgstr ""
 
 msgid "The resource identifier is required."
 msgstr ""
 
 msgid "The resource identifier should not be empty."
+msgstr ""
+
+msgid "The secret revision identifier should be a valid UUID."
+msgstr ""
+
+msgid "A secret revision identifier is required."
+msgstr ""
+
+msgid "The secret revision identifier should not be empty."
 msgstr ""
 
 msgid "The message should be a valid ASCII string."
@@ -960,6 +993,12 @@ msgid "The message should not be empty."
 msgstr ""
 
 msgid "A secret already exists for the given user and resource."
+msgstr ""
+
+msgid "A secret already exists for the given user, resource and secret revision."
+msgstr ""
+
+msgid "The secret revision does not exist or is deleted."
 msgstr ""
 
 msgid "The user identifier by should be a valid UUID."
@@ -990,6 +1029,9 @@ msgid "The username length should be maximum 255 characters."
 msgstr ""
 
 msgid "The username is already in use."
+msgstr ""
+
+msgid "The role does not exist."
 msgstr ""
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
@@ -1121,7 +1163,13 @@ msgstr ""
 msgid "{0} edited the resource {1}"
 msgstr ""
 
-msgid "{0} can not complete the account recovery process!"
+msgid "{0} created a new role {1}"
+msgstr ""
+
+msgid "{0} updated the role {1}"
+msgstr ""
+
+msgid "{0} cannot complete the account recovery process!"
 msgstr ""
 
 msgid "{0} shared the resource {1}"
@@ -1142,9 +1190,6 @@ msgstr ""
 msgid "Your account has been suspended"
 msgstr ""
 
-msgid "Your admin role has been revoked"
-msgstr ""
-
 msgid "{0}'s admin role has been revoked"
 msgstr ""
 
@@ -1155,6 +1200,9 @@ msgid "{0} has been suspended"
 msgstr ""
 
 msgid "Welcome to passbolt, {0}!"
+msgstr ""
+
+msgid "Your role has been updated"
 msgstr ""
 
 msgid "The purify subject setting should be a boolean."
@@ -1320,6 +1368,9 @@ msgid "Validation success for group {0}"
 msgstr ""
 
 msgid "Could not validate group user data."
+msgstr ""
+
+msgid "The resource with ID {0} does not have a secret revision."
 msgstr ""
 
 msgid "All email notifications will be sent."
@@ -1548,6 +1599,12 @@ msgid "No default content found."
 msgstr ""
 
 msgid "Run the install script to install the database tables"
+msgstr ""
+
+msgid "The database version is supported."
+msgstr ""
+
+msgid "The database version is deprecated."
 msgstr ""
 
 msgid "The database schema is up to date."
@@ -2048,10 +2105,28 @@ msgstr ""
 msgid "The resource types associated to this resource does not exist."
 msgstr ""
 
+msgid "No secret revision were found for this resource."
+msgstr ""
+
 msgid "You are not allowed to update this resource."
 msgstr ""
 
 msgid "Additional resource types are not enabled on this server."
+msgstr ""
+
+msgid "The role could not be saved."
+msgstr ""
+
+msgid "Could not save the role, please try again later."
+msgstr ""
+
+msgid "The role does not exist or deleted."
+msgstr ""
+
+msgid "The role could not be deleted."
+msgstr ""
+
+msgid "Could not delete the role, please try again later."
 msgstr ""
 
 msgid "There should be at least 4 roles"
@@ -2061,6 +2136,15 @@ msgid "Validation failed for role {0}. {1}"
 msgstr ""
 
 msgid "Validation success for role {0}"
+msgstr ""
+
+msgid "The role could not be updated."
+msgstr ""
+
+msgid "Could not update the role, please try again later."
+msgstr ""
+
+msgid "Could not validate secrets data."
 msgstr ""
 
 msgid "Could not validate secret data."
@@ -2076,9 +2160,6 @@ msgid "Validation failed for secret {0}. {1}"
 msgstr ""
 
 msgid "Validation success for secret {0}"
-msgstr ""
-
-msgid "Could not validate secrets data."
 msgstr ""
 
 msgid "The secrets of all the users having access to the resource are required."
@@ -2267,6 +2348,12 @@ msgstr ""
 msgid "The supplied email notification settings are not valid"
 msgstr ""
 
+msgid "The allow CSV format setting is required."
+msgstr ""
+
+msgid "The allow CSV format setting should be a boolean."
+msgstr ""
+
 msgid "The folder has been added successfully."
 msgstr ""
 
@@ -2375,6 +2462,12 @@ msgstr ""
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr ""
 
+msgid "You made changes on several folders"
+msgstr ""
+
+msgid "{0} has made changes on several folders"
+msgstr ""
+
 msgid "You added the folder {0}"
 msgstr ""
 
@@ -2418,9 +2511,6 @@ msgid "You are not allowed to delete this folder."
 msgstr ""
 
 msgid "The folder does not exist."
-msgstr ""
-
-msgid "You cannot delete this resource"
 msgstr ""
 
 msgid "You are not allowed to update the permissions of this folder."
@@ -2472,6 +2562,15 @@ msgid "You edited a folder"
 msgstr ""
 
 msgid "{0} edited a folder"
+msgstr ""
+
+msgid "{0} folders were affected."
+msgstr ""
+
+msgid "It would be too much to list them here, but you can go check them on passbolt."
+msgstr ""
+
+msgid "View them in passbolt"
 msgstr ""
 
 msgid "The user signature could not be verified."
@@ -2649,6 +2748,9 @@ msgid "The date {0} should be after the date {1}."
 msgstr ""
 
 msgid "The identifier should be not be empty."
+msgstr ""
+
+msgid "The name should be a valid ASCII string."
 msgstr ""
 
 msgid "Could not validate action data."
@@ -3023,18 +3125,6 @@ msgstr ""
 msgid "Active metadata key found or not required."
 msgstr ""
 
-msgid "The server has access to the metadata keys or does not require access to it."
-msgstr ""
-
-msgid "The server does not have access to metadata key."
-msgstr ""
-
-msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
-msgstr ""
-
-msgid "Without having access, the server won't be able to share the metadata private key with the users."
-msgstr ""
-
 msgid "No server metadata private key found."
 msgstr ""
 
@@ -3045,6 +3135,18 @@ msgid "The server is able to decrypt the metadata private key."
 msgstr ""
 
 msgid "Unable to decrypt the metadata private key."
+msgstr ""
+
+msgid "The server has access to the metadata keys or does not require access to it."
+msgstr ""
+
+msgid "The server does not have access to metadata key."
+msgstr ""
+
+msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
+msgstr ""
+
+msgid "Without having access, the server won't be able to share the metadata private key with the users."
 msgstr ""
 
 msgid "Unable to decrypt the metadata private key (id: {0}) data."
@@ -3063,6 +3165,15 @@ msgid "The server metadata private key is valid."
 msgstr ""
 
 msgid "The server metadata private key is not valid."
+msgstr ""
+
+msgid "The server does not have access to the server metadata private key in Zero-knowledge mode."
+msgstr ""
+
+msgid "The server has access to the server metadata private key while in Zero-knowledge mode."
+msgstr ""
+
+msgid "When Zero-knowledge mode is enabled, the server should not have access to the server metadata private key."
 msgstr ""
 
 msgid "The metadata key does not exist or has been deleted."
@@ -3503,10 +3614,16 @@ msgstr ""
 msgid "This functionality is not available using AJAX/JSON."
 msgstr ""
 
+msgid "This functionality is only available using AJAX/JSON."
+msgstr ""
+
 msgid "This authentication provider is already setup. Disable it first"
 msgstr ""
 
 msgid "Multi Factor Authentication is configured!"
+msgstr ""
+
+msgid "Unable to configure Multi Factor Authentication."
 msgstr ""
 
 msgid "MFA authentication is required."
@@ -3713,66 +3830,6 @@ msgstr ""
 msgid "Could not validate Yubikey configuration."
 msgstr ""
 
-msgid "Duo Multi Factor Authentication"
-msgstr ""
-
-msgid "Something went wrong."
-msgstr ""
-
-msgid "Please try again later or contact your administrator."
-msgstr ""
-
-msgid "Logs"
-msgstr ""
-
-msgid "Retry"
-msgstr ""
-
-msgid "Getting started with Duo"
-msgstr ""
-
-msgid "How does it work?"
-msgstr ""
-
-msgid "You sign in to passbolt just like you normally do."
-msgstr ""
-
-msgid "Use you 2FA device to authenticate."
-msgstr ""
-
-msgid "Follow the procedure to login."
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
-msgid "Get started"
-msgstr ""
-
-msgid "Requirements"
-msgstr ""
-
-msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
-msgstr ""
-
-msgid "For the list of supported devices, see:"
-msgstr ""
-
-msgid "Duo authentication methods"
-msgstr ""
-
-msgid "Learn more"
-msgstr ""
-
-msgid "Duo multi-factor authentication is enabled!"
-msgstr ""
-
-msgid "When logging in you will be asked to perform Duo Authentication."
-msgstr ""
-
-msgid "Since"
-msgstr ""
-
 msgid "Multi factor authentication verification"
 msgstr ""
 
@@ -3782,76 +3839,13 @@ msgstr ""
 msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
 msgstr ""
 
-msgid "Multi factor authentication"
-msgstr ""
-
-msgid "Sorry no multi factor authentication is enabled for this organization."
-msgstr ""
-
-msgid "Please contact your administrator to enable multi-factor authentication."
-msgstr ""
-
-msgid "Please select a provider"
-msgstr ""
-
-msgid "Enabled"
-msgstr ""
-
-msgid "Disabled"
-msgstr ""
-
-msgid "What is multi-factor authentication?"
-msgstr ""
-
-msgid "Multi-factor authentication (MFA) is a method of confirming a user's identity that requires presenting two or more pieces of evidence (or factor)."
-msgstr ""
-
-msgid "learn more"
-msgstr ""
-
-msgid "Time based One Time Password (TOTP)"
-msgstr ""
-
-msgid "Scan this bar code"
-msgstr ""
-
 msgid "Enter the six digit number as presented on your phone or tablet."
-msgstr ""
-
-msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
-msgstr ""
-
-msgid "or"
-msgstr ""
-
-msgid "Getting started with Time based One Time Password (TOTP)"
-msgstr ""
-
-msgid "When using a new browser, you need an additional code from your phone."
-msgstr ""
-
-msgid "Once you enter this code, you can log in."
-msgstr ""
-
-msgid "Time based One Time Password (TOTP) is enabled!"
-msgstr ""
-
-msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
 msgstr ""
 
 msgid "Remember this device for a month."
 msgstr ""
 
-msgid "Yubikey One Time Password"
-msgstr ""
-
 msgid "Plug in the yubikey and put your finger on it."
-msgstr ""
-
-msgid "Yubikey One Time Password is enabled!"
-msgstr ""
-
-msgid "When logging in from a new device you will need a unique code generated by your yubikey."
 msgstr ""
 
 msgid "verify"
@@ -3861,12 +3855,6 @@ msgid "Sign-in with Duo"
 msgstr ""
 
 msgid "Or try with another provider"
-msgstr ""
-
-msgid "Manage providers"
-msgstr ""
-
-msgid "Turn off"
 msgstr ""
 
 msgid "Your multi-factor authentication is disabled."
@@ -3926,13 +3914,7 @@ msgstr ""
 msgid "The password expiry settings have been updated."
 msgstr ""
 
-msgid "View them in passbolt"
-msgstr ""
-
 msgid "{0} resources were affected."
-msgstr ""
-
-msgid "It would be too much to list them here, but you can go check them on passbolt."
 msgstr ""
 
 msgid "Change them in passbolt"
@@ -4082,6 +4064,12 @@ msgstr ""
 msgid "The password generator exclude look alike chars should be a boolean type."
 msgstr ""
 
+msgid "The rbacs could not be saved."
+msgstr ""
+
+msgid "Could not save the rbacs, please try again later."
+msgstr ""
+
 msgid "Record not found"
 msgstr ""
 
@@ -4107,6 +4095,12 @@ msgid "The request data is invalid: control_function invalid."
 msgstr ""
 
 msgid "The request data is invalid: ids must be unique."
+msgstr ""
+
+msgid "The control function is not allowed for this UI Action."
+msgstr ""
+
+msgid "The control function is not allowed for this Action."
 msgstr ""
 
 msgid "An action identifier should be a valid UUID."
@@ -4155,9 +4149,6 @@ msgid "An RBAC entry already exists for the given id."
 msgstr ""
 
 msgid "An entry already exists for the given role and action ids."
-msgstr ""
-
-msgid "The control function is not allowed for this UI Action."
 msgstr ""
 
 msgid "An action already exists for the given name."
@@ -4238,9 +4229,6 @@ msgstr ""
 msgid "It is not allowed to update these resource type properties."
 msgstr ""
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr ""
-
 msgid "The slug should be a valid BMP-UTF8 string."
 msgstr ""
 
@@ -4292,6 +4280,39 @@ msgstr ""
 msgid "The resource type is not deleted."
 msgstr ""
 
+msgid "The max revisions should be a valid integer."
+msgstr ""
+
+msgid "The max revisions is required."
+msgstr ""
+
+msgid "The max revisions should be greater than 0."
+msgstr ""
+
+msgid "The max revisions should not exceed the max revisions limit set by the administrator."
+msgstr ""
+
+msgid "The allow sharing revisions should be a valid boolean."
+msgstr ""
+
+msgid "The allow sharing revisions is required."
+msgstr ""
+
+msgid "The allow sharing revisions is not enabled by the administrator."
+msgstr ""
+
+msgid "Secret revisions settings endpoints are disabled."
+msgstr ""
+
+msgid "The identifier of the user who created the secret revision should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the secret revision should be a valid UUID."
+msgstr ""
+
+msgid "Could not save secret revision"
+msgstr ""
+
 msgid "The self registration setting id should be a valid UUID."
 msgstr ""
 
@@ -4311,6 +4332,12 @@ msgid "The list of allowed domains should be an array of strings."
 msgstr ""
 
 msgid "The domain #{0} should be a valid domain."
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "Enabled"
 msgstr ""
 
 msgid "Allowed domains: {0}"
@@ -4424,6 +4451,24 @@ msgstr ""
 msgid "The test email should be a valid email address."
 msgstr ""
 
+msgid "The tenant ID should be a valid UUID."
+msgstr ""
+
+msgid "The client ID should be a valid UUID."
+msgstr ""
+
+msgid "The client secret should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The client secret should not exceed 256 characters."
+msgstr ""
+
+msgid "The OAuth2 username should be a valid email address."
+msgstr ""
+
+msgid "The OAuth2 username should not exceed 256 characters."
+msgstr ""
+
 msgid "The authentication method is required."
 msgstr ""
 
@@ -4434,6 +4479,30 @@ msgid "The sender email should be a valid email address."
 msgstr ""
 
 msgid "A test recipient is required."
+msgstr ""
+
+msgid "The tenant ID is required."
+msgstr ""
+
+msgid "The tenant ID should not be empty."
+msgstr ""
+
+msgid "The client ID is required."
+msgstr ""
+
+msgid "The client ID should not be empty."
+msgstr ""
+
+msgid "The client secret is required."
+msgstr ""
+
+msgid "The client secret should not be empty."
+msgstr ""
+
+msgid "The OAuth2 username is required."
+msgstr ""
+
+msgid "The OAuth2 username should not be empty."
 msgstr ""
 
 msgid "SMTP settings endpoints disabled."
@@ -4488,6 +4557,18 @@ msgid "database"
 msgstr ""
 
 msgid "env variables"
+msgstr ""
+
+msgid "Tenant ID should be a valid UUID."
+msgstr ""
+
+msgid "Client ID should be a valid UUID."
+msgstr ""
+
+msgid "Failed to obtain SMTP OAuth2 access token."
+msgstr ""
+
+msgid "SMTP OAuth2 token response from Microsoft did not contain an access token."
 msgstr ""
 
 msgid "Could not validate the smtp settings."
@@ -4790,6 +4871,9 @@ msgstr ""
 msgid "Schema"
 msgstr ""
 
+msgid "Cancel"
+msgstr ""
+
 msgid "Enter your SMTP server settings."
 msgstr ""
 
@@ -4826,7 +4910,13 @@ msgstr ""
 msgid "Authentication method"
 msgstr ""
 
-msgid "client"
+msgid "Directory (tenant) ID"
+msgstr ""
+
+msgid "Application (client) ID"
+msgstr ""
+
+msgid "Client secret"
 msgstr ""
 
 msgid "Client"
@@ -5087,16 +5177,10 @@ msgstr ""
 msgid "Contact your admin"
 msgstr ""
 
-msgid "{0} changed your role to user."
-msgstr ""
-
-msgid "{0} changed the role of {1} to user."
+msgid "{0} changed the role of {1} to {2}."
 msgstr ""
 
 msgid "{0} can no longer perform administration tasks."
-msgstr ""
-
-msgid "You"
 msgstr ""
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
@@ -5105,7 +5189,10 @@ msgstr ""
 msgid "View user in passbolt"
 msgstr ""
 
-msgid "{0} cannot complete the account recovery process!"
+msgid "A new role {0} has been created."
+msgstr ""
+
+msgid "The role {0} has been renamed to {1}."
 msgstr ""
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
@@ -5207,6 +5294,9 @@ msgstr ""
 msgid "You just opened an account on passbolt at {0}."
 msgstr ""
 
+msgid "Get started"
+msgstr ""
+
 msgid "There was a change in the user directory."
 msgstr ""
 
@@ -5306,10 +5396,16 @@ msgstr ""
 msgid "{0} resources were shared with you."
 msgstr ""
 
+msgid "{0} changed your role to {1}."
+msgstr ""
+
+msgid "You can no longer perform administration tasks."
+msgstr ""
+
 msgid "This email is an automatic notification sent by"
 msgstr ""
 
-msgid "You can disable these notifications by requesting an administrator to delete your account."
+msgid "To disable these notifications, contact an administrator."
 msgstr ""
 
 msgid "The locale {0} is not valid or not supported."
