@@ -66,7 +66,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
         $userA = UserFactory::make()->user()->persist();
         $this->deleteJson('/users/' . $userA->id . '/dry-run.json');
         $this->assertSuccess();
-        $this->assertFalse($userA->deleted);
+        $this->assertUserIsNotSoftDeleted($userA->id);
     }
 
     public function testUsersDeleteController_DryRun_Error_MissingCsrfToken(): void
@@ -108,7 +108,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
         $userA = UserFactory::make()->user()->persist();
         $this->deleteJson("/users/$userA->id.json");
         $this->assertSuccess();
-        $this->assertFalse($userA->deleted);
+        $this->assertUserIsSoftDeleted($userA->id);
     }
 
     public function testUsersDeleteController_Error_NotJson(): void
@@ -620,7 +620,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
         // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
         $this->Permissions->deleteAll([
             'aro_foreign_key' => $userA->id,
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.linux'),
+            'aco_foreign_key' => $resource->id,
         ]);
 
         $groupUser = $this->GroupsUsers
