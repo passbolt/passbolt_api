@@ -2,6 +2,31 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.11.0] - 2026-04-09
+### Added
+- PB-49875 OAuth support for smtp authentication
+- PB-50158 Add a feature flag to enable/disable Safari availability on a Passbolt instance
+- PB-50199 As an admin I can contain my_group_user in POST /groups.json
+- PB-50646 Add Permissions-Policy header on the API response
+
+### Fixed
+- PB-49323 As a user creating a resource, I should not get a 500 if the secret passed is not an array of secrets
+- PB-40266 Health-check issues on Ubuntu 24 when running while being in a directory without the +x permission bit for www-data user (GITHUB #571)
+- PB-50021 As a guest, I should not get a 500 on GET /users.json?contain[pending_account_recovery_request]=1
+- PB-49823 Fix misleading email notification footer
+- PB-50028 GITHUB - Fix GPG authentication nonce UUID validation using incorrect comparison operand (#592, #596)
+- PB-50121 Replace rand() with a static counter to generate unique bind-parameter placeholder (GITHUB #595)
+- PB-50241 As a logged-in user I should not get a 500 when logging-in again
+- PB-49902 As a user I cannot create a v4 resource with v5 resource type
+
+### Improved
+- PB-50070 Align X-Frame-Options with CSP and add missing X-XSS-Protection header
+
+### Maintenance
+- PB-50133 Align allowCsvFormat variable name in plugin config.php
+- PB-50173 Fix composer security vulnerability advisory affecting phpseclib/phpseclib package (CVE-2026-32935)
+- PB-49096 Remove unused MFA assets & pages served by the browser extension
+
 ## [5.11.0-test.3] - 2026-04-07
 ### Added
 - PB-49875 OAuth support for smtp authentication
@@ -19,7 +44,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-49902 As a user I cannot create a v4 resource with v5 resource type
 
 ### Improved
-- PB-50489 Email digest batch sending improvements
 - PB-50070 Align X-Frame-Options with CSP and add missing X-XSS-Protection header
 
 ### Maintenance
@@ -44,7 +68,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-49902 As a user I cannot create a v4 resource with v5 resource type
 
 ### Improved
-- PB-50489 Email digest batch sending improvements
 - PB-50070 Align X-Frame-Options with CSP and add missing X-XSS-Protection header
 
 ### Maintenance
@@ -69,7 +92,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-49902 As a user I cannot create a v4 resource with v5 resource type
 
 ### Improved
-- PB-50489 Email digest batch sending improvements
 - PB-50070 Align X-Frame-Options with CSP and add missing X-XSS-Protection header
 
 ### Maintenance
