@@ -164,6 +164,37 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
     }
 
     /**
+     * Endpoints related to PingOne endpoint.
+     */
+    $pingone = SsoSetting::PROVIDER_PINGONE;
+    if (Configure::read("passbolt.plugins.sso.providers.{$pingone}")) {
+        $routes
+            ->connect('/pingone/login/dry-run', [
+                'prefix' => 'PingOne',
+                'controller' => 'SsoPingOneStage1DryRun',
+                'action' => 'stage1DryRun',
+            ])
+            ->setMethods(['POST'])
+            ->setMiddleware([SsoEndpointsSecurityMiddleware::class]);
+
+        $routes
+            ->connect('/pingone/login', [
+                'prefix' => 'PingOne',
+                'controller' => 'SsoPingOneStage1',
+                'action' => 'stage1',
+            ])
+            ->setMethods(['POST']);
+
+        $routes
+            ->connect('/pingone/redirect', [
+                'prefix' => 'PingOne',
+                'controller' => 'SsoPingOneStage2',
+                'action' => 'triage',
+            ])
+            ->setMethods(['GET', 'POST']);
+    }
+
+    /**
      * Common pages to all providers
      */
     // Login success

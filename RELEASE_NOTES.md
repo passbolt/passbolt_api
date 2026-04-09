@@ -1,80 +1,79 @@
-Release song: https://www.youtube.com/watch?v=9Nv-WHmjN7s
+Release song: https://www.youtube.com/watch?v=GXbOROT0OuA
 
-Passbolt 5.10 "You've Got the Love" introduces the first Safari-compatible version of the Passbolt browser extension. The extension is currently available as a beta preview for testers who want to try it and provide feedback ahead of the stable release. This version also brings new productivity features such as TOTP autofill and tags visible in the grid, along with security hardening and performance improvements.
+Passbolt 5.11.0 "Got To be Real" introduces improvements to enterprise authentication and integration capabilities, alongside continued security hardening.
 
-## Safari beta support (TestFlight preview)
+This release adds support for OAuth-based SMTP authentication for Microsoft Exchange Online and expands SSO coverage with PingOne. It also includes the finalisation of SCIM following external audit fixes.
 
-Passbolt 5.10 introduces the first Safari-compatible version of the Passbolt browser extension. The Safari extension is currently available as a build distributed through TestFlight via this [public link](https://testflight.apple.com/join/Q758nSft) for users who want to try it and provide feedback ahead of the stable release. The extension is currently distributed this way while work continues toward a stable Safari release.
+## SCIM: audit fixes and general availability (Passbolt Pro)
+Following the external security audit conducted by Cure53, this release includes fixes addressing the identified findings in the SCIM provisioning implementation.
 
-Learn how to get started with the Safari beta in the [dedicated guide](https://community.passbolt.com/t/passbolt-safari-extension-now-available-in-open-beta/14182).
+With these changes, SCIM is now considered stable and exits beta.
 
-## TOTP autofill
+The audit-driven improvements strengthen validation, error handling, and overall robustness of the provisioning flow. SCIM is now ready for production use in environments requiring automated user lifecycle management.
 
-Users can now autofill one-time passwords (TOTP) directly in login forms, similar to how usernames and passwords are autofilled.
+## PingOne SSO support (Passbolt Pro)
+Passbolt 5.11 adds support for PingOne as a new SSO provider, enabling organisations to authenticate users via their existing Ping Identity infrastructure.
 
-When a webpage contains a TOTP field, Passbolt detects it and proposes relevant resources that contain a configured TOTP secret.
-Users can then select the resource to fill the current one-time password directly into the form.
+The integration is based on **OpenID Connect (OIDC)** using the Authorization Code flow, with Passbolt delegating authentication to PingOne and receiving a verified user identity via ID tokens.
 
-TOTP autofill can be triggered either from the in-form menu or from the Quick Access interface, allowing users to complete multi-factor authentication without manually copying codes between applications.
+Administrators can configure PingOne from the SSO settings using the required environment ID, client ID, client secret, and base URL, with a dry-run option available to validate the setup before activation. Once enabled, users are redirected to PingOne for authentication and seamlessly logged into Passbolt, including during account recovery.
 
-## Tags visible in the grid (Passbolt Pro)
+This addition expands Passbolt’s SSO coverage for enterprise environments and removes a key adoption blocker for organisations standardised on Ping Identity.
 
-Tags are now displayed directly in the resources grid, making it easier to identify and filter resources without opening the resource details view.
+## SMTP OAuth support for Microsoft Exchange Online
+Passbolt 5.11 introduces OAuth 2.0 support for SMTP with Microsoft Exchange Online, replacing legacy username/password authentication.
 
-A new tags column shows the tags associated with each resource. Tags are displayed in alphabetical order and remain clickable, allowing users to filter the workspace by selecting a tag directly from the grid.
+Administrators can configure the **OAuth (Client Credentials)** method by registering an application in Microsoft Entra ID and providing the required tenant ID, client ID, client secret, and service account email.
 
-When multiple tags exist, the grid displays as many as possible within the column width and indicates additional tags using a counter with a tooltip showing the remaining tags.
-
-This update also modernises the tag codebase and lays the groundwork for further improvements to tagging capabilities.
+At runtime, Passbolt retrieves short-lived access tokens to authenticate SMTP connections without user interaction, improving security and aligning with modern authentication standards.
 
 ## Security improvements
+This release continues the ongoing security hardening effort across the platform.
 
-Passbolt team is currently preparing its First Level Security Certification (CSPN) with the French National Cybersecurity Agency (ANSSI). This release includes some fixes following the CSPN pre-audit evaluation done in partnership with Quarkslab and an external audit of SCIM provisioning by Cure53. This release addresses the findings identified during both audits.
-
-One notable issue is around [CSV injection](https://owasp.org/www-community/attacks/CSV_Injection), e.g. when CSV exports could be susceptible to [formula injection](https://owasp.org/www-community/attacks/CSV_Injection) when opened in spreadsheet software. This issue was known and classified as out of scope, as exported CSV files are not intended to be opened in spreadsheets but with the password manager they were generated for. However we revisited this decision and settled for a security-by-default approach: CSV export is now disabled by default, fixing the bigger problem of credentials being potentially exported in plaintext. Organisations that still rely on it can re-enable the feature through configuration. Encrypted KDBX export remains available and is the recommended format for credential portability. Looking ahead, we plan to support the FIDO CFX format in a future release to further standardise credential import and export across tools.
-
-Content Security Policy enforcement has been extended to close remaining gaps, further reducing the attack surface in case of a breach. Because the browser extension serves its own code locally rather than relying on the API, sensitive operations were already well protected by design against server-side injection.
-
-Additionally an external security audit of SCIM provisioning has been completed, and this release includes fixes for a number of the findings. We are actively working through the remaining issues and will publish the full audit results once that work is done. SCIM will exit beta and ship on Passbolt Cloud as soon as all findings are resolved.
+In addition to the SCIM audit fixes, improvements have been made to align with external audit recommendations and reduce potential attack surface in authentication and integration layers.
 
 ## Maintenance & performance
+This release includes general performance improvements, particularly around background job processing and email delivery workflows.
 
-This release brings a major upgrade to React 18, resulting in up to 20% faster rendering and the elimination of rare visual glitches that could cause flashes during navigation.
+Email-related operations are now more efficient and better distributed, reducing bottlenecks in high-load environments.
 
-First load times have also improved substantially. Large organisations with thousands of resources will notice the biggest difference, with initial data processing now up to 20% faster.
-
-Bear with us, more optimisations are already in the pipeline for future releases.
+As usual, additional optimisations are already in progress for upcoming releases.
 
 ## Conclusion
-
 As usual, the release is also packed with additional improvements and fixes. Check out the changelog to learn more.
 
 Many thanks to everyone who provided feedback, reported bugs, and contributed to making passbolt better!
 
-## [5.10.0] - 2026-03-11
+## [5.11.0] - 2026-04-09
 ### Added
-- PB-48415 As an administrator, I can define the export policies to prevent CSV Export RCE
-- PB-45576 As a logged-in user, the user ID only should be stored in session
-- PB-24273 GET /auth/logout endpoint is now disabled by default
-- PB-48148 Enforces content security policy
+- PB-49875 OAuth support for smtp authentication
+- PB-50158 Add a feature flag to enable/disable Safari availability on a Passbolt instance
+- PB-50199 As an admin I can contain my_group_user in POST /groups.json
+- PB-50646 Add Permissions-Policy header on the API response
+- PB-32992 As a user I can use PingOne as single sign on provider
+- PB-50524 Move SCIM feature out of beta
 
 ### Fixed
-- PB-48092 Fixes incorrect client IP in error logs by moving HttpProxyMiddleware upper in the middlewares chain
-- PB-48208 POST /mfa/verify/yubikey should not trigger 500
-- PB-43183 Improve folders cascade delete performance by refactoring code using iterative BFS and batch operations
 - PB-49323 As a user creating a resource, I should not get a 500 if the secret passed is not an array of secrets
-- PB-47973 As an administrator I can synchronize with active directory longer entries in order to support 2 or more bytes alphabets
-- PB-49152 PBL-15-004 WP1: Fixes unsalted SHA256 hashing of bearer tokens in SCIM
-- PB-49148 PBL-15-002 WP3: Fixes suboptimal token generation randomness of SCIM bearer token
-- PB-49153 PBL-15-005 WP2: Fixes race condition in SCIM user creation endpoint
-- PB-49158 PBL-15-010 WP4: Fixes directory entry foreign key race condition
+- PB-40266 Health-check issues on Ubuntu 24 when running while being in a directory without the +x permission bit for www-data user (GITHUB #571)
+- PB-50021 As a guest, I should not get a 500 on GET /users.json?contain[pending_account_recovery_request]=1
+- PB-49823 Fix misleading email notification footer
+- PB-50028 GITHUB - Fix GPG authentication nonce UUID validation using incorrect comparison operand (#592, #596)
+- PB-50121 Replace rand() with a static counter to generate unique bind-parameter placeholder (GITHUB #595)
+- PB-50241 As a logged-in user I should not get a 500 when logging-in again
+- PB-49902 As a user I cannot create a v4 resource with v5 resource type
+- PB-49286 PBL-15-009 WP4: Non-transactional group member operations (Low)
+- PB-49160 PBL-15-012 WP1: Potential admin lockout via malicious IdP request (Low)
+- PB-49159 PBL-15-011 WP4: Lack of transaction wrapper in production sync (Low)
+- PB-49285 PBL-15-008 WP4: ScimEntry uniqueness race condition (Medium)
+- PB-49284 PBL-15-007 WP5: Potential DoS via pre-authentication GPG decryption (Low)
+- PB-49151 PBL-15-003 WP3: Lack of bearer token expiry & revocation schemes (Medium)
+- PB-49159 Fix enableSavePoints() not placed correctly
 
-### Security
-- PB-49154 PBL-15-006 WP2: Disable user enumeration via error messages on SCIM user creation endpoint
+### Improved
+- PB-50070 Align X-Frame-Options with CSP and add missing X-XSS-Protection header
 
 ### Maintenance
-- PB-48556 Fixes CVE-2026-25129 security vulnerability advisory for psy/psysh package
-- PB-47677 Upgrades firebase/php-jwt to version v7.0.0
-- PB-47628 Upgrades cakephp/cakephp to v5.2.12
-- PB-48555 Fix CVE-2026-24765 security vulnerability advisory for phpunit/phpunit package
-- PB-48396 Update composer/composer package to 2.9.5 to fix CVE CVE-2026-24739 in symfony/process package
+- PB-50133 Align allowCsvFormat variable name in plugin config.php
+- PB-50173 Fix composer security vulnerability advisory affecting phpseclib/phpseclib package (CVE-2026-32935)
+- PB-49096 Remove unused MFA assets & pages served by the browser extension

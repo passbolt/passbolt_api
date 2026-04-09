@@ -39,7 +39,7 @@ class YubikeySetupGetControllerTest extends MfaIntegrationTestCase
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaYubikeyOrganizationOnlyScenario::class);
         $this->mockValidMfaFormInterface(YubikeySetupForm::class, $this->makeUac($user));
-        $this->get('/mfa/setup/yubikey?api-version=v2');
+        $this->getJson('/mfa/setup/yubikey.json?api-version=v2');
         $this->assertResponseSuccess();
         $this->assertSame(0, AuthenticationTokenFactory::count());
     }

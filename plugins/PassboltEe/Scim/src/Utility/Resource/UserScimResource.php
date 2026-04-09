@@ -18,8 +18,11 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Utility\Resource;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\DateTime;
 use Cake\Log\Log;
@@ -427,7 +430,7 @@ class UserScimResource implements ScimResourceInterface
             'foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
             'foreign_key' => $user->id,
         ]);
-        if (!$this->ScimEntries->save($scimEntry)) {
+        if (!$this->ScimEntries->save($scimEntry, ['lockForUpdate' => true])) {
             Log::error('Unable to save the scim entity');
             Log::error(print_r($this->$scimEntry, return: true));
 
@@ -676,6 +679,48 @@ class UserScimResource implements ScimResourceInterface
     }
 
     /**
+     * Assert that the user being disabled is not an administrator.
+     *
+     * @param array $userPatchData The patch data being applied.
+     * @return void
+     * @throws \Cake\Http\Exception\ForbiddenException If trying to disable an admin and the config flag is not set.
+     */
+    protected function assertAdminSuspendAllowed(array $userPatchData): void
+    {
+        // Only check when user is being disabled (disabled field is being set to a non-null value)
+        if (empty($userPatchData['disabled'])) {
+            return;
+        }
+
+        // If already disabled, no change — skip guard
+        if ($this->userEntity->disabled) {
+            return;
+        }
+
+        // Check if the config allows suspending administrators
+        if (Configure::read('passbolt.plugins.scim.security.allowSuspendAdministrators')) {
+            return;
+        }
+
+        // Check if the user is an admin
+        $query = $this->Users
+            ->find()
+            ->select(['existing' => 1])
+            ->contain(['Roles'])
+            ->where([
+                $this->Users->aliasField('id') => $this->userEntity->id,
+                'Roles.name' => Role::ADMIN,
+            ])
+            ->limit(1)
+            ->epilog('FOR UPDATE');
+        $isAdmin = (bool)count($query->disableHydration()->toArray());
+
+        if ($isAdmin) {
+            throw new ForbiddenException(__('An administrator user cannot be suspended via SCIM.'));
+        }
+    }
+
+    /**
      * Update the user information in the database
      *
      * @param array $userPatchData
@@ -689,6 +734,8 @@ class UserScimResource implements ScimResourceInterface
         return $this->Users
             ->getConnection()
             ->transactional(function () use ($userPatchData, $scimEntryPatchData, $requestData) {
+                $this->assertAdminSuspendAllowed($userPatchData);
+
                 if ($userPatchData) {
                     $this->Users->patchEntity($this->userEntity, $userPatchData, [
                         'accessibleFields' => [
@@ -730,7 +777,12 @@ class UserScimResource implements ScimResourceInterface
                             'scim_name' => true,
                         ],
                     ]);
-                    if (!$this->Users->ScimEntries->save($scimEntry, ['atomic' => false])) {
+                    if (
+                        !$this->Users->ScimEntries->save($scimEntry, [
+                        'atomic' => false,
+                        'lockForUpdate' => true,
+                        ])
+                    ) {
                         ScimLog::error('Unable to update the scim entry from the request data');
                         ScimLog::error(print_r($requestData, return: true));
                         ScimLog::error(print_r($scimEntry, return: true));

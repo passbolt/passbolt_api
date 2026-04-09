@@ -82,6 +82,8 @@ class SsoSettingsDto extends AbstractSsoSettingsDto
                 return new SsoSettingsOAuth2DataDto($data);
             case SsoSetting::PROVIDER_ADFS:
                 return new SsoSettingsAdfsDataDto($data);
+            case SsoSetting::PROVIDER_PINGONE:
+                return new SsoSettingsPingOneDataDto($data);
             default:
                 throw new InternalErrorException('SSO provider not implemented.');
         }

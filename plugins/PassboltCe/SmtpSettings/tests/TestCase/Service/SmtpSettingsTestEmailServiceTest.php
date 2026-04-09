@@ -179,4 +179,108 @@ class SmtpSettingsTestEmailServiceTest extends TestCase
 
         $this->assertSame('AUTH PLAIN *****', $result[0]['cmd']);
     }
+
+    public function testSmtpSettingsSendTestEmailService_GetTrace_MasksOauth2Username(): void
+    {
+        $oauth2Username = 'oauth-user@example.com';
+        $oauth2AccessToken = 'super-secure-access-token';
+        $smtpSettings = [
+            'sender_name' => 'Passbolt test',
+            'sender_email' => 'test@passbolt.test',
+            'host' => 'localhost',
+            'username' => null,
+            'password' => null,
+            'tls' => null,
+            'client' => null,
+            'port' => 587,
+            'email_test_to' => 'test@passbolt.test',
+            'oauth_username' => $oauth2Username,
+            'client_secret' => 'my-secret',
+        ];
+        // mock mailer service
+        $mailerService = $this->createMock(SmtpSettingsSendTestMailerService::class);
+        $mailerService->expects($this->once())->method('sendEmail')->with($smtpSettings);
+        $mailerService
+            ->expects($this->exactly(2)) // first time for 'cmd' and second for 'response'
+            ->method('getOauthAccessToken')
+            ->willReturn($oauth2AccessToken);
+        $authString = base64_encode(sprintf("user=%s\1auth=Bearer %s\1\1", $oauth2Username, $oauth2AccessToken));
+        $trace = [
+            ['cmd' => "AUTH XOAUTH2 {$authString}"],
+            ['response' => [['code' => '235', 'message' => '2.7.0 Authentication successful']]],
+        ];
+        $mailerService->expects($this->once())->method('getTrace')->willReturn($trace);
+
+        $sut = new SmtpSettingsTestEmailService($mailerService);
+        $sut->sendTestEmail($smtpSettings);
+        $result = $sut->getTrace();
+
+        $this->assertStringNotContainsString($oauth2Username, $result[0]['cmd']);
+        $this->assertStringNotContainsString($oauth2AccessToken, $result[0]['cmd']);
+        $this->assertStringContainsString('*****', $result[0]['cmd']);
+        $this->assertStringNotContainsString($oauth2Username, $result[1]['response'][0]['message']);
+        $this->assertStringNotContainsString($oauth2AccessToken, $result[1]['response'][0]['message']);
+    }
+
+    public function testSmtpSettingsSendTestEmailService_GetTrace_MasksClientSecret(): void
+    {
+        $clientSecret = 'super-secret-client-value';
+        $smtpSettings = [
+            'sender_name' => 'Passbolt test',
+            'sender_email' => 'test@passbolt.test',
+            'host' => 'localhost',
+            'username' => null,
+            'password' => null,
+            'tls' => null,
+            'client' => null,
+            'port' => 587,
+            'email_test_to' => 'test@passbolt.test',
+            'client_secret' => $clientSecret,
+        ];
+
+        $mailerService = $this->createMock(SmtpSettingsSendTestMailerService::class);
+        $mailerService->expects($this->once())->method('sendEmail')->with($smtpSettings);
+        $trace = [
+            ['cmd' => "Some command with {$clientSecret} in it"],
+        ];
+        $mailerService->expects($this->once())->method('getTrace')->willReturn($trace);
+
+        $sut = new SmtpSettingsTestEmailService($mailerService);
+        $sut->sendTestEmail($smtpSettings);
+        $result = $sut->getTrace();
+
+        $this->assertStringNotContainsString($clientSecret, $result[0]['cmd']);
+        $this->assertStringContainsString('*****', $result[0]['cmd']);
+    }
+
+    public function testSmtpSettingsSendTestEmailService_GetTrace_BackwardCompat_StillMasksLegacyCreds(): void
+    {
+        $smtpUsername = 'legacy-user';
+        $smtpPassword = 'legacy-pass';
+        $smtpSettings = [
+            'sender_name' => 'Passbolt test',
+            'sender_email' => 'test@passbolt.test',
+            'host' => 'localhost',
+            'username' => $smtpUsername,
+            'password' => $smtpPassword,
+            'tls' => null,
+            'client' => null,
+            'port' => 25,
+            'email_test_to' => 'test@passbolt.test',
+        ];
+
+        $mailerService = $this->createMock(SmtpSettingsSendTestMailerService::class);
+        $mailerService->expects($this->once())->method('sendEmail')->with($smtpSettings);
+        $trace = [
+            ['cmd' => "AUTH LOGIN {$smtpUsername} {$smtpPassword}"],
+        ];
+        $mailerService->expects($this->once())->method('getTrace')->willReturn($trace);
+
+        $sut = new SmtpSettingsTestEmailService($mailerService);
+        $sut->sendTestEmail($smtpSettings);
+        $result = $sut->getTrace();
+
+        $this->assertStringNotContainsString($smtpUsername, $result[0]['cmd']);
+        $this->assertStringNotContainsString($smtpPassword, $result[0]['cmd']);
+    }
 }

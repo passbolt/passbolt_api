@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers;
 
+use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
@@ -24,10 +25,6 @@ use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 
 class MfaMiddlewareLoginTest extends MfaIntegrationTestCase
 {
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
-        'app.Base/Gpgkeys', 'app.Base/GroupsUsers',
-    ];
     public $keyid;
 
     /**
@@ -54,8 +51,8 @@ class MfaMiddlewareLoginTest extends MfaIntegrationTestCase
      */
     public function testMfaMiddlewareLoginSuccess200()
     {
-        $adaId = 'f848277c-5398-58f8-a82a-72397af2d450';
-        $user = UserFactory::get($adaId, contain: 'Roles');
+        RoleFactory::make()->guest()->persist();
+        $user = UserFactory::make()->withAdaKey()->persist();
         $this->loadFixtureScenario(MfaTotpScenario::class, $user);
         $this->gpgSetup();
         $this->postJson('/auth/login.json', [

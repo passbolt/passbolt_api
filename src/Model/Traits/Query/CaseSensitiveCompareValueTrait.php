@@ -27,6 +27,16 @@ use Cake\ORM\Query\SelectQuery;
 trait CaseSensitiveCompareValueTrait
 {
     /**
+     * Global counter for generating unique bind placeholder names.
+     * A per-query counter (e.g. ValueBinder::placeholder()) is not sufficient because
+     * queries can be combined via union(), which merges their bindings — identical
+     * placeholder names across queries would silently overwrite each other.
+     *
+     * @var int
+     */
+    private static int $placeholderCounter = 0;
+
+    /**
      * @param \Cake\ORM\Query\SelectQuery $query Reference query object.
      * @param mixed $col Column value to convert into case-sensitive binary.
      * @return \Cake\Database\Expression\QueryExpression|string
@@ -41,7 +51,7 @@ trait CaseSensitiveCompareValueTrait
             return $col;
         }
 
-        $valuePlaceholder = ':value_case_insensitive_' . rand();
+        $valuePlaceholder = ':value_case_insensitive_' . self::$placeholderCounter++;
         $query = $query->bind($valuePlaceholder, $col, $this->getBindType($col));
 
         return $query->newExpr()->add("CONVERT({$valuePlaceholder} using utf8mb4) COLLATE utf8mb4_bin");
@@ -65,7 +75,7 @@ trait CaseSensitiveCompareValueTrait
         $conditions = [];
         $values = array_unique($values);
         foreach ($values as $value) {
-            $valuePlaceholder = ':value_case_insensitive_' . rand();
+            $valuePlaceholder = ':value_case_insensitive_' . self::$placeholderCounter++;
             $conditions[] = $query
                 ->newExpr()
                 ->add("CONVERT({$valuePlaceholder} using utf8mb4) COLLATE utf8mb4_bin");

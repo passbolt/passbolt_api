@@ -24,39 +24,20 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 class YubikeySetupGetController extends MfaSetupController
 {
     /**
-     * Totp Get Qr Code and provisioning urls
+     * Yubikey Get setup
      *
      * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $setupForm MFA Form
      * @return void
      */
     public function get(MfaFormInterface $setupForm)
     {
+        $this->_assertRequestIsJson();
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_YUBIKEY);
         try {
             $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_YUBIKEY);
-            $this->_handleGetNewSettings($setupForm);
+            $this->success(__('Please setup the Yubikey settings.'));
         } catch (BadRequestException $exception) {
             $this->_handleGetExistingSettings(MfaSettings::PROVIDER_YUBIKEY);
-        }
-    }
-
-    /**
-     * Handle get request when new settings are needed
-     *
-     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $setupForm MFA Form
-     * @return void
-     */
-    protected function _handleGetNewSettings(MfaFormInterface $setupForm)
-    {
-        if (!$this->request->is('json')) {
-            $this->set('yubikeySetupForm', $setupForm);
-            $this->set('theme', $this->User->theme());
-            $this->viewBuilder()
-                ->setLayout('mfa_setup')
-                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_YUBIKEY))
-                ->setTemplate('setupForm');
-        } else {
-            $this->success(__('Please setup the Yubikey settings.'));
         }
     }
 }

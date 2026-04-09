@@ -54,6 +54,7 @@ abstract class ScimBaseSettingsService
                 'base_api_endpoint' => Router::url('scim/v2/' . Hash::get($data, 'setting_id'), true),
                 'setting_id' => Hash::get($data, 'setting_id'),
                 'scim_user_id' => Hash::get($data, 'scim_user_id'),
+                'expired' => Hash::get($data, 'expired'),
                 'created' => $setting->modified,
                 'modified' => $setting->modified,
                 'created_by' => $setting->created_by,

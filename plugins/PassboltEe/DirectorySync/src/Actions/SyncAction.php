@@ -206,15 +206,34 @@ abstract class SyncAction
      */
     public function execute(): ActionReportCollection
     {
-        if ($this->isDryRun()) {
-            $conn = $this->Users->getConnection();
+        $conn = $this->Users->getConnection();
+        // Enable savepoints so that inner transactional() calls (e.g. in GroupsUpdateService,
+        // GroupsUsersAddService) create real SQL savepoints. Without savepoints, CakePHP tracks
+        // nested rollbacks and prevents the outer transaction from committing — even when the
+        // sync error handling catches and handles the inner failures gracefully.
+        // With savepoints enabled, inner rollbacks only undo their savepoint's changes and do
+        // NOT poison the outer transaction, allowing partial success within a single sync run.
+        if (!$conn->isSavePointsEnabled()) {
+            $conn->enableSavePoints();
+        }
+
+        if ($this->isDryRun() && !$this->isPartOfAllSync()) {
+            // Standalone dry-run (e.g. from CLI UsersCommand/GroupsCommand):
+            // wrap in begin/rollback so no changes persist.
             $conn->begin();
+            try {
+                $conn->transactional(function (): void {
+                    $this->_execute();
+                });
+            } finally {
+                if ($conn->inTransaction()) {
+                    $conn->rollback(true);
+                }
+            }
+        } else {
             $conn->transactional(function (): void {
                 $this->_execute();
             });
-            $conn->rollback();
-        } else {
-            $this->_execute();
         }
 
         return $this->getSummary();

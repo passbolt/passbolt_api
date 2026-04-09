@@ -171,6 +171,65 @@ class SsoSettingsViewCurrentControllerTest extends SsoIntegrationTestCase
         $this->assertEqualsCanonicalizing([SsoSetting::PROVIDER_AZURE, SsoSetting::PROVIDER_GOOGLE], $body->providers);
     }
 
+    public function testSsoSettingsViewCurrentController_SuccessPingOne(): void
+    {
+        SsoSettingsFactory::make()->pingone()->active()->persist();
+        $this->logInAsAdmin();
+
+        $this->getJson('/sso/settings/current.json');
+
+        $this->assertSuccess();
+        $body = $this->_responseJsonBody;
+        $activeProviders = (new SsoActiveProvidersGetService())->get();
+        $this->assertTrue(Validation::uuid($body->id));
+        $this->assertEquals(SsoSetting::PROVIDER_PINGONE, $body->provider);
+        $this->assertEquals($activeProviders, $body->providers);
+        $this->assertEquals(SsoSetting::STATUS_ACTIVE, $body->status);
+        $this->assertTrue(!isset($body->data));
+    }
+
+    public function testSsoSettingsViewCurrentController_SuccessPingOneWithContain(): void
+    {
+        SsoSettingsFactory::make()->pingone()->active()->persist();
+        $this->logInAsAdmin();
+
+        $this->getJson('/sso/settings/current.json?contain[data]=1');
+
+        $this->assertSuccess();
+        $body = $this->_responseJsonBody;
+        $activeProviders = (new SsoActiveProvidersGetService())->get();
+        $this->assertTrue(Validation::uuid($body->id));
+        $this->assertEquals(SsoSetting::PROVIDER_PINGONE, $body->provider);
+        $this->assertEquals($activeProviders, $body->providers);
+        $this->assertEquals(SsoSetting::STATUS_ACTIVE, $body->status);
+        // Assert PingOne data properties
+        $this->assertEquals('https://auth.pingone.com', $body->data->url);
+        $this->assertEquals('d1b2c3a4-e5f6-7890-abcd-ef1234567890', $body->data->environment_id);
+        $this->assertEquals('a1b2c3d4-e5f6-7890-abcd-ef1234567890', $body->data->client_id);
+        $this->assertTrue(is_string($body->data->client_secret));
+        $this->assertEquals('/.well-known/openid-configuration', $body->data->openid_configuration_path);
+        $this->assertEquals('openid email profile', $body->data->scope);
+        $this->assertObjectHasAttribute('email_claim', $body->data);
+        $this->assertSame(SsoSetting::PINGONE_EMAIL_CLAIM_EMAIL, $body->data->email_claim);
+    }
+
+    public function testSsoSettingsViewCurrentController_SuccessPingOneNotAdmin(): void
+    {
+        SsoSettingsFactory::make()->pingone()->active()->persist();
+        $this->logInAsUser();
+        $this->getJson('/sso/settings/current.json?contain[data]=1');
+        $this->assertSuccess();
+        $body = $this->_responseJsonBody;
+        $this->assertEquals(SsoSetting::PROVIDER_PINGONE, $body->provider);
+        $this->assertTrue(!isset($body->providers));
+        $this->assertTrue(!isset($body->status));
+        $this->assertTrue(!isset($body->data));
+        $this->assertTrue(!isset($body->created));
+        $this->assertTrue(!isset($body->created_by));
+        $this->assertTrue(!isset($body->modified));
+        $this->assertTrue(!isset($body->modified_by));
+    }
+
     public function testSsoSettingsViewCurrentController_SuccessEmptyAdminAllProvidersDisabled(): void
     {
         $this->logInAsAdmin();

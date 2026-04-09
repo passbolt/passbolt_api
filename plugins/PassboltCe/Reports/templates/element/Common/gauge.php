@@ -8,9 +8,7 @@
  */
 use Passbolt\Reports\Utility\AbstractSingleReport;
 
-$this->Html->script('vendors/jquery.min.js', ['block' => 'scriptBottom']);
-$this->Html->script('vendors/report-widgets.js', ['block' => 'scriptBottom']);
-$this->Html->script('vendors/apexcharts.min.js', ['block' => 'scriptBottom']);
+// apexcharts.min.js and report-widgets.js dependencies were dropped — the report plugin is not functional.
 
 $statuses = [
     AbstractSingleReport::STATUS_SUCCESS => 'green',

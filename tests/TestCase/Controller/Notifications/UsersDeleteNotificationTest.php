@@ -17,39 +17,45 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Notification\Email\Redactor\User\AdminDeleteEmailRedactor;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
-use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 
 class UsersDeleteNotificationTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
 
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Secrets',
-        'app.Base/GroupsUsers', 'app.Base/Permissions',
-    ];
-
     public function testUsersDeleteNotificationSuccess(): void
     {
-        $francesId = UuidFactory::uuid('user.id.ursula');
+        RoleFactory::make()->guest()->persist();
+        $ursula = UserFactory::make()->withProfileName('Ursula', 'Martin')->persist();
+        [$userA, $userB, $userC] = UserFactory::make(3)->persist();
+        $groupA = GroupFactory::make()
+            ->withGroupsManagersFor([$userA, $userB])
+            ->withGroupsUsersFor([$ursula])
+            ->persist();
+        $groupB = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$ursula])
+            ->persist();
         Configure::write(AdminDeleteEmailRedactor::CONFIG_KEY_EMAIL_ENABLED, false);
 
-        $this->authenticateAs('admin');
-        $this->deleteJson('/users/' . $francesId . '.json');
+        $this->logInAsAdmin();
+        $this->deleteJson('/users/' . $ursula->get('id') . '.json');
 
         $this->assertSuccess();
-        $this->assertEmailInBatchContains('deleted the user Ursula', 'ping@passbolt.com');
-        $this->assertEmailInBatchContains('Human resource', 'ping@passbolt.com');
-        $this->assertEmailInBatchContains('IT support', 'ping@passbolt.com');
+        $this->assertEmailInBatchContains('deleted the user Ursula', $userA->username);
+        $this->assertEmailInBatchContains($groupA->name, $userA->username);
+        $this->assertEmailInBatchContains($groupB->name, $userA->username);
 
-        $this->assertEmailInBatchContains('deleted the user Ursula', 'thelma@passbolt.com');
-        $this->assertEmailInBatchContains('Human resource', 'thelma@passbolt.com');
-        $this->assertEmailInBatchNotContains('IT support', 'thelma@passbolt.com');
+        $this->assertEmailInBatchContains('deleted the user Ursula', $userB->username);
+        $this->assertEmailInBatchContains($groupA->name, $userB->username);
+        $this->assertEmailInBatchNotContains($groupB->name, $userB->username);
 
-        $this->assertEmailWithRecipientIsInNotQueue('wang@passbolt.com');
+        $this->assertEmailWithRecipientIsInNotQueue($userC->username);
 
         // Two mails should be in the queue
         $this->assertEmailQueueCount(2);

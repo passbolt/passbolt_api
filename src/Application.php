@@ -28,6 +28,7 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\HttpProxyMiddleware;
+use App\Middleware\PermissionsPolicyHeaderUnloadMiddleware;
 use App\Middleware\SessionAuthPreventDeletedOrDisabledUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SetUserIdentityInRequestMiddleware;
@@ -132,6 +133,11 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(new GpgAuthHeadersMiddleware())
             ->add($csrf);
 
+        // PB-50644: Temporary fix for Chrome to handle navigation without BFCaching
+        if (Configure::read('passbolt.permissionsPolicyHeader.unload.enabled')) {
+            $middlewareQueue->add(new PermissionsPolicyHeaderUnloadMiddleware());
+        }
+
         /*
          * Additional security headers
          * - Only allow assets to be loaded from the passbolt instance domain
@@ -146,7 +152,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             $headers
                 ->setCrossDomainPolicy()
                 ->setReferrerPolicy()
-                ->setXFrameOptions()
+                ->setXFrameOptions(SecurityHeadersMiddleware::DENY)
                 ->noOpen()
                 ->noSniff();
 

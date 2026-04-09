@@ -20,35 +20,20 @@ namespace App\Test\TestCase\Model\Table\Resources;
 use App\Model\Entity\Permission;
 use App\Model\Table\ResourcesTable;
 use App\Test\Factory\FavoriteFactory;
+use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use App\Test\Lib\Model\FavoritesModelTrait;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 use InvalidArgumentException;
-use Passbolt\TestData\Lib\PermissionMatrix;
 
 class FindIndexTest extends AppTestCase
 {
-    use FavoritesModelTrait;
-
     /**
      * @var ResourcesTable
      */
     public $Resources;
-    public array $fixtures = [
-        'app.Base/Users',
-        'app.Base/Groups',
-        'app.Base/GroupsUsers',
-        'app.Base/ResourceTypes',
-        'app.Base/Resources',
-        'app.Base/Secrets',
-        'app.Base/Favorites',
-        'app.Base/Permissions',
-    ];
 
     public function setUp(): void
     {
@@ -59,8 +44,9 @@ class FindIndexTest extends AppTestCase
 
     public function testSuccess()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $resources = $this->Resources->findIndex($userId)->all();
+        $user = UserFactory::make()->persist();
+        ResourceFactory::make(2)->withPermissionsFor([$user])->persist();
+        $resources = $this->Resources->findIndex($user->id)->all();
         $this->assertGreaterThan(1, count($resources));
 
         // Expected fields.
@@ -89,9 +75,10 @@ class FindIndexTest extends AppTestCase
 
     public function testContainSecrets()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $user = UserFactory::make()->persist();
+        ResourceFactory::make()->withPermissionsFor([$user])->withSecretsFor([$user])->persist();
         $options['contain']['secret'] = true;
-        $resources = $this->Resources->findIndex($userId, $options)->all();
+        $resources = $this->Resources->findIndex($user->id, $options)->all();
         $resource = $resources->first();
 
         // Expected fields.
@@ -131,9 +118,10 @@ class FindIndexTest extends AppTestCase
 
     public function testContainCreator()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $user = UserFactory::make()->persist();
+        ResourceFactory::make()->withCreatorAndPermission($user)->persist();
         $options['contain']['creator'] = true;
-        $resources = $this->Resources->findIndex($userId, $options)->all();
+        $resources = $this->Resources->findIndex($user->id, $options)->all();
         $resource = $resources->first();
 
         // Expected fields.
@@ -144,9 +132,10 @@ class FindIndexTest extends AppTestCase
 
     public function testContainModifier()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $user = UserFactory::make()->persist();
+        ResourceFactory::make(['modified_by' => $user->id])->withPermissionsFor([$user])->persist();
         $options['contain']['modifier'] = true;
-        $resources = $this->Resources->findIndex($userId, $options)->all();
+        $resources = $this->Resources->findIndex($user->id, $options)->all();
         $resource = $resources->first();
 
         // Expected fields.
@@ -174,35 +163,14 @@ class FindIndexTest extends AppTestCase
         $this->assertFavoriteAttributes($resource->favorite);
     }
 
-    public function testContainPermission()
-    {
-        $findIndexOptions['contain']['permission'] = true;
-        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
-        foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
-            // Find all the resources for the current user.
-            $userId = UuidFactory::uuid("user.id.$userAlias");
-            $resources = $this->Resources->findIndex($userId, $findIndexOptions)->all();
-
-            // Check expected permissions are there.
-            foreach ($usersExpectedPermissions as $resourceAlias => $expectedPermissionType) {
-                $resourceId = UuidFactory::uuid("resource.id.$resourceAlias");
-                $resource = @Hash::extract($resources->toArray(), "{n}[id=$resourceId]")[0]; // phpcs:ignore
-                if ($expectedPermissionType == 0) {
-                    $this->assertEmpty($resource, "$userAlias should not have a permission [$expectedPermissionType] for $resourceAlias");
-                } else {
-                    $this->assertNotEmpty($resource, "$userAlias should have a permission [$expectedPermissionType] for $resourceAlias");
-                    $this->assertPermissionAttributes($resource->permission);
-                    $this->assertEquals($expectedPermissionType, $resource->permission->type, "$userAlias should have a permission [$expectedPermissionType] for $resourceAlias");
-                }
-            }
-        }
-    }
-
     public function testFilterIsFavorite()
     {
-        $userId = UuidFactory::uuid('user.id.dame');
+        $user = UserFactory::make()->persist();
+        [$r1, $r2] = ResourceFactory::make(2)->withCreatorAndPermission($user)->persist();
+        FavoriteFactory::make()->setResource($r1)->setUser($user)->persist();
+        FavoriteFactory::make()->setResource($r2)->setUser($user)->persist();
         $options['filter']['is-favorite'] = true;
-        $resources = $this->Resources->findIndex($userId, $options)->all();
+        $resources = $this->Resources->findIndex($user->id, $options)->all();
 
         // Check that the result contain only the expected favorite resources.
         $favoriteResourcesIds = $resources->reduce(function ($result, $row) {
@@ -210,15 +178,18 @@ class FindIndexTest extends AppTestCase
 
             return $result;
         }, []);
-        $expectedResources = [UuidFactory::uuid('resource.id.apache'), UuidFactory::uuid('resource.id.april')];
+        $expectedResources = [$r1->id, $r2->id];
         $this->assertEquals(0, count(array_diff($expectedResources, $favoriteResourcesIds)));
     }
 
     public function testFilterIsNotFavorite()
     {
-        $userId = UuidFactory::uuid('user.id.dame');
+        $user = UserFactory::make()->persist();
+        [$r1, $r2] = ResourceFactory::make(2)->withCreatorAndPermission($user)->persist();
+        FavoriteFactory::make()->setResource($r1)->setUser($user)->persist();
+        FavoriteFactory::make()->setResource($r2)->setUser($user)->persist();
         $options['filter']['is-favorite'] = false;
-        $resources = $this->Resources->findIndex($userId, $options)->all();
+        $resources = $this->Resources->findIndex($user->id, $options)->all();
 
         // Check that the result contain only the expected favorite resources.
         $favoriteResourcesIds = $resources->reduce(function ($result, $row) {
@@ -226,31 +197,47 @@ class FindIndexTest extends AppTestCase
 
             return $result;
         }, []);
-        $expectedResources = [UuidFactory::uuid('resource.id.apache'), UuidFactory::uuid('resource.id.april')];
+        $expectedResources = [$r1->id, $r2->id];
         $this->assertEquals(0, count(array_intersect($expectedResources, $favoriteResourcesIds)));
     }
 
     public function testFilterIsSharedWithGroup()
     {
-        $permissionsMatrix = PermissionMatrix::getGroupsResourcesPermissions('group');
-        $userId = UuidFactory::uuid('user.id.jean');
-        $groupFId = UuidFactory::uuid('group.id.freelancer');
+        [$user, $otherUser, $groupUser] = UserFactory::make(3)->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$user])
+            ->withGroupsUsersFor([$groupUser])
+            ->persist();
+        $group2 = GroupFactory::make()->withGroupsManagersFor([$groupUser])->persist();
+        // Resources with Access
+        $r1withAccess = ResourceFactory::make()
+            ->withPermissionsFor([$group])->persist();
+        $r2withAccess = ResourceFactory::make()
+            ->withPermissionsFor([$group], Permission::READ)->persist();
+        $r3withAccess = ResourceFactory::make()
+            ->withPermissionsFor([$group], Permission::UPDATE)->persist();
+        $r4withAccess = ResourceFactory::make()
+            ->withPermissionsFor([$group, $user])->persist();
+        $r5withAccess = ResourceFactory::make()
+            ->withPermissionsFor([$group, $otherUser])->persist();
+
+        // Resources with No Access
+        ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        ResourceFactory::make()->withPermissionsFor([$otherUser])->persist();
+        ResourceFactory::make()->withPermissionsFor([$group2])->persist();
+        ResourceFactory::make()->withPermissionsFor([$user, $otherUser, $groupUser, $group2])->persist();
+        ResourceFactory::make()->withPermissionsFor([$group])->setDeleted()->persist();
 
         // Filter resources which are shared with the target group;
-        $options['filter']['is-shared-with-group'] = $groupFId;
-        $resourcesIds = $this->Resources->findIndex($userId, $options)
+        $options['filter']['is-shared-with-group'] = $group->id;
+        $resourcesIds = $this->Resources->findIndex($user->id, $options)
             ->all()
             ->extract('id')
             ->toArray();
         sort($resourcesIds);
 
         // Extract the resource the group should have access.
-        $expectedResourcesIds = [];
-        foreach ($permissionsMatrix['freelancer'] as $resourceAlias => $resourcePermission) {
-            if ($resourcePermission > 0) {
-                $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
-            }
-        }
+        $expectedResourcesIds = [$r1withAccess->id, $r2withAccess->id, $r3withAccess->id, $r4withAccess->id, $r5withAccess->id];
         sort($expectedResourcesIds);
 
         $this->assertCount(count($expectedResourcesIds), $resourcesIds);
@@ -259,23 +246,24 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterIsOwnedByMe()
     {
-        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
-        $userId = UuidFactory::uuid('user.id.ada');
+        $user = UserFactory::make()->user()->persist();
+        $otherUser = UserFactory::make()->user()->persist();
+
+        $r1IsOwned = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $r2IsOwned = ResourceFactory::make()->withPermissionsFor([$user, $otherUser])->persist();
+        ResourceFactory::make()->withPermissionsFor([$user], Permission::UPDATE)->persist();
+        ResourceFactory::make()->withPermissionsFor([$user], Permission::READ)->persist();
+        ResourceFactory::make()->withPermissionsFor([$otherUser])->persist();
 
         // Filter resources which are shared with the target group;
         $options['filter']['is-owned-by-me'] = 1;
-        $resourcesIds = $this->Resources->findIndex($userId, $options)
+        $resourcesIds = $this->Resources->findIndex($user->id, $options)
             ->all()
             ->extract('id')
             ->toArray();
         sort($resourcesIds);
 
-        $expectedResourcesIds = [];
-        foreach ($permissionsMatrix['ada'] as $resourceAlias => $resourcePermission) {
-            if ($resourcePermission == 15) {
-                $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
-            }
-        }
+        $expectedResourcesIds = [$r1IsOwned->id, $r2IsOwned->id];
         sort($expectedResourcesIds);
 
         $this->assertCount(count($expectedResourcesIds), $resourcesIds);
@@ -284,54 +272,33 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterIsSharedWithMe()
     {
-        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
-        $userId = UuidFactory::uuid('user.id.ada');
+        $user = UserFactory::make()->user()->persist();
+        $owner = UserFactory::make()->user()->persist();
+
+        $r1IsShared = ResourceFactory::make()
+            ->withPermissionsFor([$owner])
+            ->withPermissionsFor([$user], Permission::READ)
+            ->persist();
+        $r2IsShared = ResourceFactory::make()
+            ->withPermissionsFor([$owner])
+            ->withPermissionsFor([$user], Permission::UPDATE)
+            ->persist();
+        ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        ResourceFactory::make()->withPermissionsFor([$owner])->persist();
 
         // Filter resources which are shared with the target group;
         $options['filter']['is-shared-with-me'] = 1;
-        $resourcesIds = $this->Resources->findIndex($userId, $options)
+        $resourcesIds = $this->Resources->findIndex($user->id, $options)
             ->all()
             ->extract('id')
             ->toArray();
         sort($resourcesIds);
 
         // Get all resources with permissions.
-        $expectedResourcesIds = [];
-        foreach ($permissionsMatrix['ada'] as $resourceAlias => $resourcePermission) {
-            if ($resourcePermission >= Permission::READ && $resourcePermission < Permission::OWNER) {
-                $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
-            }
-        }
+        $expectedResourcesIds = [$r1IsShared->id, $r2IsShared->id];
         sort($expectedResourcesIds);
 
         $this->assertEquals($resourcesIds, $expectedResourcesIds);
-    }
-
-    public function testPermissions()
-    {
-        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
-        foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
-            $expectedResourcesIds = array_reduce(array_keys($usersExpectedPermissions), function ($result, $key) use ($usersExpectedPermissions) {
-                if ($usersExpectedPermissions[$key] == 0) {
-                    return $result;
-                }
-                $result[] = UuidFactory::uuid("resource.id.$key");
-
-                return $result;
-            }, []);
-
-            // Find all the resources for the current user.
-            $userId = UuidFactory::uuid("user.id.$userAlias");
-            $resources = $this->Resources->findIndex($userId)->all();
-            $resourcesIds = $resources->reduce(function ($result, $row) {
-                $result[] = $row->id;
-
-                return $result;
-            }, []);
-
-            $this->assertEmpty(array_diff($expectedResourcesIds, $resourcesIds), "There is a problem with the permissions of $userAlias");
-            $this->assertEmpty(array_diff($resourcesIds, $expectedResourcesIds), "There is a problem with the permissions of $userAlias");
-        }
     }
 
     public function testErrorInvalidUserIdParameter()

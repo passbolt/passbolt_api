@@ -83,4 +83,17 @@ abstract class MfaController extends AppController
             throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
         }
     }
+
+    /**
+     * Assert the request is of json type.
+     *
+     * @return void
+     * @throw BadRequestException if the request is not of json type.
+     */
+    protected function _assertRequestIsJson(): void
+    {
+        if (!$this->getRequest()->is('json')) {
+            throw new BadRequestException(__('This functionality is only available using AJAX/JSON.'));
+        }
+    }
 }

@@ -22,10 +22,9 @@
     "grunt": "^1.5.3",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
-    "jquery": "^3.5.1",
     "lockfile-lint": "^4.14.1",
     "openpgp": "^5.11.3",
-    "passbolt-styleguide": "^5.10.6"
+    "passbolt-styleguide": "^5.11.2"
   },
   "scripts": {
     "lint": "npm run lint:lockfile",

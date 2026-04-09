@@ -18,8 +18,9 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Comments;
 
 use App\Model\Table\CommentsTable;
+use App\Test\Factory\CommentFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UuidFactory;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -27,8 +28,6 @@ use Cake\Utility\Hash;
 class DeleteTest extends AppTestCase
 {
     public $Comments;
-
-    public array $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments', 'app.Base/Permissions'];
 
     public function setUp(): void
     {
@@ -46,9 +45,10 @@ class DeleteTest extends AppTestCase
 
     public function testSuccess()
     {
-        $commentId = UuidFactory::uuid('comment.id.apache-1');
+        $user = UserFactory::make()->persist();
+        $commentId = CommentFactory::make()->withUser($user)->persist()->id;
         $comment = $this->Comments->get($commentId);
-        $delete = $this->Comments->delete($comment, ['Comments.user_id' => UuidFactory::uuid('user.id.irene')]);
+        $delete = $this->Comments->delete($comment, ['Comments.user_id' => $user->id]);
         $this->assertTrue($delete);
 
         try {
@@ -61,9 +61,11 @@ class DeleteTest extends AppTestCase
 
     public function testDeleteErrorIsOwnerRule()
     {
-        $commentId = UuidFactory::uuid('comment.id.apache-1');
+        $owner = UserFactory::make()->persist();
+        $otherUser = UserFactory::make()->persist();
+        $commentId = CommentFactory::make()->withUser($owner)->persist()->id;
         $comment = $this->Comments->get($commentId);
-        $delete = $this->Comments->delete($comment, ['Comments.user_id' => UuidFactory::uuid('user.id.ada')]);
+        $delete = $this->Comments->delete($comment, ['Comments.user_id' => $otherUser->id]);
         $this->assertFalse($delete);
         $errors = $comment->getErrors();
         $this->assertNotEmpty($errors);

@@ -11,7 +11,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-$(function () {
+document.addEventListener('DOMContentLoaded', () => {
     const bases = document.getElementsByTagName('base');
     const baseUrl = bases[0] ? bases[0].href : '/';
     const details = [
@@ -34,7 +34,7 @@ $(function () {
     function rollStatus(i)
     {
         i = i != undefined ? i : 0;
-        $('.install-details').text(details[i % details.length]);
+        document.querySelector('.install-details').textContent = details[i % details.length];
         rollStatusTimeout = setTimeout(() => {
             i++;
           rollStatus(i);
@@ -71,12 +71,18 @@ $(function () {
             redirectUrl = `${baseUrl}setup/install/${response.user_id}/${response.token}`;
         }
 
-        $('li.selected').removeClass('selected');
-        $('li.disabled').removeClass('disabled').addClass('selected');
-        $('#js_step_title').text('You\'ve made it!');
-        $('#js-install-installing').hide();
-        $('#js-install-complete').show();
-        $('#js-install-complete-redirect').attr('href', redirectUrl);
+        const selected = document.querySelector('li.selected');
+        if (selected) selected.classList.remove('selected');
+
+        document.querySelectorAll('li.disabled').forEach(el => {
+            el.classList.remove('disabled');
+            el.classList.add('selected');
+        });
+
+        document.getElementById('js_step_title').textContent = 'You\'ve made it!';
+        document.getElementById('js-install-installing').classList.add('hidden');
+        document.getElementById('js-install-complete').classList.remove('hidden');
+        document.getElementById('js-install-complete-redirect').setAttribute('href', redirectUrl);
 
         setTimeout(function () {
             document.location.href = redirectUrl;
@@ -89,13 +95,15 @@ $(function () {
    */
     function handleInstallError(response)
     {
-        $('#js_step_title').text('Oops something went wrong!');
-        $('#js-install-installing').hide();
-        $('#js-install-error').show();
-        $('#js-install-error-message').text(response.header.message);
-        $('#js-install-error-message').text(response.header.message);
-        $('#js-install-error-details').text(JSON.stringify(response.body, null, 2));
-        $('#js-show-debug-info').on('click', () => $('#js-install-error-details').toggle())
+        document.getElementById('js_step_title').textContent = 'Oops something went wrong!';
+        document.getElementById('js-install-installing').classList.add('hidden');
+        document.getElementById('js-install-error').classList.remove('hidden');
+        document.getElementById('js-install-error-message').textContent = response.header.message;
+        document.getElementById('js-install-error-details').textContent = JSON.stringify(response.body, null, 2);
+        document.getElementById('js-show-debug-info').addEventListener('click', () => {
+            const details = document.getElementById('js-install-error-details');
+            details.classList.toggle('hidden');
+        });
     }
 
     install();

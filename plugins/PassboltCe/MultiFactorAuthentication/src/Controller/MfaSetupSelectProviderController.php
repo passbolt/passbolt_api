@@ -16,8 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-
 class MfaSetupSelectProviderController extends MfaController
 {
     /**
@@ -26,24 +24,8 @@ class MfaSetupSelectProviderController extends MfaController
      */
     public function get()
     {
+        $this->_assertRequestIsJson();
         $body = $this->mfaSettings->getProvidersStatuses();
-        $isMfaPossible = false;
-        foreach ($body[MfaSettings::ORG_SETTINGS] as $enabled) {
-            if ($enabled) {
-                $isMfaPossible = true;
-                break;
-            }
-        }
-
-        if (!$this->request->is('json')) {
-            $this->set('theme', $this->User->theme());
-            $this->viewBuilder()
-                ->setLayout('mfa_setup')
-                ->setTemplatePath(ucfirst(MfaSettings::MFA))
-                ->setTemplate('select');
-        }
-
-        $this->set(compact('isMfaPossible'));
         $this->success(__('The operation was successful.'), $body);
     }
 }

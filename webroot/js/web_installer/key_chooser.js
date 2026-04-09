@@ -11,50 +11,47 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-$(function () {
-    var getFile = function () {
-        return new Promise(function (resolve, reject) {
-            var fileChooser = document.createElement('input');
-            fileChooser.type = 'file';
-            fileChooser.addEventListener('change', function () {
-                var file = fileChooser.files[0];
+document.addEventListener('DOMContentLoaded', () => {
+    const keyContent = document.querySelector('.key-content');
+    const nextButton = document.querySelector('.button.next');
+    const keyChooser = document.getElementById('key-chooser');
 
-                var reader = new FileReader();
-                reader.onload = function () {
-                    var data = reader.result;
-                    resolve(data);
+    const getFile = () => {
+        return new Promise((resolve) => {
+            const fileChooser = document.createElement('input');
+            fileChooser.type = 'file';
+            fileChooser.addEventListener('change', () => {
+                const file = fileChooser.files[0];
+                const reader = new FileReader();
+                reader.onload = () => {
+                    resolve(reader.result);
                 };
                 reader.readAsText(file);
                 form.reset();
             });
 
-            var form = document.createElement('form');
+            const form = document.createElement('form');
             form.appendChild(fileChooser);
             fileChooser.click();
         });
     };
 
-    var onKeyContentChange = function () {
-        if ($('.key-content').val() != '') {
-            $('.button.next')
-            .removeClass('disabled')
-            .removeAttr('disabled');
+    const onKeyContentChange = () => {
+        if (keyContent.value !== '') {
+            nextButton.classList.remove('disabled');
+            nextButton.removeAttribute('disabled');
         } else {
-            $('.button.next')
-            .addClass('disabled')
-            .attr('disabled', 'disabled');
+            nextButton.classList.add('disabled');
+            nextButton.setAttribute('disabled', 'disabled');
         }
     };
 
-    $('#key-chooser').click(function () {
-        getFile().then(function (fileContent) {
-            $('.key-content').val(fileContent);
+    keyChooser.addEventListener('click', () => {
+        getFile().then((fileContent) => {
+            keyContent.value = fileContent;
             onKeyContentChange();
         });
     });
-    $('.key-content').on('input propertychange', function () {
-        onKeyContentChange();
-    });
+    keyContent.addEventListener('input', onKeyContentChange);
     onKeyContentChange();
-
 });

@@ -19,6 +19,7 @@ namespace Passbolt\SmtpSettings\Service;
 use App\Mailer\Transport\DebugSmtpTransport;
 use App\Mailer\Transport\DebugTransport;
 use Cake\Mailer\Mailer;
+use Cake\Mailer\Transport\SmtpTransport as CakeSmtpTransport;
 use Cake\Mailer\TransportFactory;
 
 class SmtpSettingsSendTestMailerService
@@ -37,6 +38,11 @@ class SmtpSettingsSendTestMailerService
      * @var array
      */
     private array $smtpSettings = [];
+
+    /**
+     * @var string|null
+     */
+    private ?string $oauthAccessToken = null;
 
     /**
      * Sends an email.
@@ -73,6 +79,17 @@ class SmtpSettingsSendTestMailerService
             'client' => $smtpSettings['client'],
         ];
 
+        // Override credentials with OAuth2 token when configured
+        if (SmtpOauthExchangeOnlineService::isOauth2ClientCredentials($smtpSettings)) {
+            $smtpOauthService = new SmtpOauthExchangeOnlineService($smtpSettings);
+            $this->oauthAccessToken = $smtpOauthService->getAccessToken();
+            $config = array_merge($config, [
+                'username' => $smtpOauthService->getUsername(),
+                'password' => $this->oauthAccessToken,
+                'authType' => CakeSmtpTransport::AUTH_XOAUTH2,
+            ]);
+        }
+
         // Merge SSL Options if present in config
         $sslOptions = (new SmtpSettingsSslOptionsGetService())->get();
         if (!empty($sslOptions)) {
@@ -103,6 +120,16 @@ class SmtpSettingsSendTestMailerService
         $transport = $this->email->getTransport();
 
         return $transport->getTrace();
+    }
+
+    /**
+     * Get the OAuth2 access token fetched at runtime, if any.
+     *
+     * @return string|null
+     */
+    public function getOauthAccessToken(): ?string
+    {
+        return $this->oauthAccessToken;
     }
 
     /**

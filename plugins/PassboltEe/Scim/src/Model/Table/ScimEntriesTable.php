@@ -126,7 +126,7 @@ class ScimEntriesTable extends Table
         ]);
         $rules->add([$this, 'isUniqueScimName'], 'uniqueScimName', [
             'errorField' => 'scim_name',
-            'message' => __('An entry with the same `scim_name` and ResourceType already exist.'),
+            'message' => __('An entry with the same `scim_name` and `foreign_model` already exist.'),
         ]);
 
         return $rules;
@@ -136,10 +136,12 @@ class ScimEntriesTable extends Table
      * Assert that the scim_name is unique among all non-deleted users
      *
      * @param \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry entity being saved
+     * @param array $options options passed in the save
      * @return bool
      * @throws \Cake\Http\Exception\InternalErrorException if the scim_name field is not accessible
+     * // TODO: add a argument to specify if the entry to check unicity on should be locked for update
      */
-    public function isUniqueScimName(ScimEntry $scimEntry): bool
+    public function isUniqueScimName(ScimEntry $scimEntry, array $options): bool
     {
         if (!$scimEntry->isNew() && !$scimEntry->isDirty('scim_name')) {
             return true;
@@ -154,9 +156,19 @@ class ScimEntriesTable extends Table
         if ($scimEntry->id) {
             $conditions[$this->aliasField('id') . ' !='] = $scimEntry->id;
         }
-        $exist = $this->find()->where($conditions)->whereNull($this->aliasField('deleted'))->all()->count() > 0;
+        $exist = $this->find()
+                ->select(['existing' => 1])
+                ->limit(1)
+                ->disableHydration()
+                ->where($conditions)
+                ->whereNull($this->aliasField('deleted'));
 
-        return $exist === false;
+        // Option to lock the existing entry avoiding TOCTOU race condition
+        if ($options['lockForUpdate'] ?? false) {
+            $exist->epilog('FOR UPDATE');
+        }
+
+        return $exist->all()->count() === 0;
     }
 
     /**

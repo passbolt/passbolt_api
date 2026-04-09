@@ -25,20 +25,34 @@ class CommandRunner
     /**
      * Runs a given command as a Symfony Process instance.
      *
+     * ⚠ NOTE:
+     * Using an array of arguments is the recommended way to define commands (`$command`).
+     * If you need to use stream redirections, conditional execution, or any other feature provided by the shell of your operating system, you can also define commands as strings.
+     * But make sure to use "placeholders" to inject dynamic values into command-lines. This will save manually escaping values, which is not portable nor secure anyway.
+     *
      * @param array|string $command The command line to pass to the shell of the OS
      * @param string|null $cwd The working directory or null to use the working dir of the current PHP process
      * @param array|null $env The environment variables or null to use the same environment as the current PHP process
      * @param mixed $input The input as stream resource, scalar or \Traversable, or null for no input
      * @param float|null $timeout The timeout in seconds or null to disable
+     * @param callable|null $callback A PHP callback to run whenever there is some output available on STDOUT or STDERR
      * @return \Symfony\Component\Process\Process|false Returns a Symfony Process instance, or false in case of any exceptions.
+     * @see https://symfony.com/doc/current/components/process.html#using-features-from-the-os-shell
      */
     public static function run(
         array|string $command,
         ?string $cwd = null,
         ?array $env = null,
         mixed $input = null,
-        ?float $timeout = 60
+        ?float $timeout = 60,
+        ?callable $callback = null
     ): Process|false {
+        // Default to a known-safe CWD if none provided
+        // This prevents proc_open permission errors from the web request where the CWD is unexpectedly inaccessible
+        if ($cwd === null) {
+            $cwd = ROOT;
+        }
+
         try {
             if (is_array($command)) {
                 $process = new Process($command, $cwd, $env, $input, $timeout);
@@ -46,7 +60,7 @@ class CommandRunner
                 $process = Process::fromShellCommandLine($command, $cwd, $env, $input, $timeout);
             }
 
-            $process->run();
+            $process->run($callback);
         } catch (Exception $e) {
             $errorMessage = 'The command runner failed to run. Error: ' . $e->getMessage();
             Log::error($errorMessage);
