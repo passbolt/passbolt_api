@@ -17,6 +17,9 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Users;
 
 use App\Model\Entity\Permission;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
@@ -32,20 +35,6 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
 
-    public array $fixtures = [
-        'app.Base/Users',
-        'app.Base/Groups',
-        'app.Base/Profiles',
-        'app.Base/Gpgkeys',
-        'app.Base/Roles',
-        'app.Base/ResourceTypes',
-        'app.Base/Resources',
-        'app.Base/Secrets',
-        'app.Alt0/GroupsUsers',
-        'app.Alt0/Permissions',
-        'app.Base/Favorites',
-    ];
-
     /**
      * @var \App\Model\Table\PermissionsTable
      */
@@ -56,113 +45,122 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
      */
     public $Resources;
 
+    /**
+     * @var \App\Model\Table\GroupsUsersTable
+     */
+    public $GroupsUsers;
+
     public function setUp(): void
     {
-            parent::setUp();
+        parent::setUp();
 
-            $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
-            $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
+        RoleFactory::make()->guest()->persist();
     }
 
     public function testUsersDeleteController_DryRun_Success(): void
     {
-            $this->authenticateAs('admin');
-            $userFId = UuidFactory::uuid('user.id.frances');
-            $this->deleteJson('/users/' . $userFId . '/dry-run.json');
-            $this->assertSuccess();
-            $frances = UserFactory::get($userFId);
-            $this->assertFalse($frances->deleted);
+        $this->logInAsAdmin();
+        $userA = UserFactory::make()->user()->persist();
+        $this->deleteJson('/users/' . $userA->id . '/dry-run.json');
+        $this->assertSuccess();
+        $this->assertUserIsNotSoftDeleted($userA->id);
     }
 
     public function testUsersDeleteController_DryRun_Error_MissingCsrfToken(): void
     {
-            $this->disableCsrfToken();
-            $this->authenticateAs('admin');
-            $userAId = UuidFactory::uuid('user.id.ada');
-            $this->delete("/users/$userAId/dry-run.json");
-            $this->assertResponseCode(403);
+        $this->disableCsrfToken();
+        $this->logInAsAdmin();
+        $userA = UserFactory::make()->user()->persist();
+        $this->delete("/users/$userA->id/dry-run.json");
+        $this->assertResponseCode(403);
     }
 
     public function testUsersDeleteController_DryRun_Error(): void
     {
-            $this->authenticateAs('admin');
-            $userAId = UuidFactory::uuid('user.id.ada');
-            $this->deleteJson("/users/$userAId/dry-run.json");
-            $this->assertError(400);
-            $this->assertStringContainsString(
-                'sole group manager',
-                $this->_responseJsonHeader->message
-            );
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        $this->deleteJson("/users/$userA->id/dry-run.json");
+        $this->assertError(400);
+        $this->assertStringContainsString(
+            'sole group manager',
+            $this->_responseJsonHeader->message
+        );
     }
 
     public function testUsersDeleteController_DryRun_Error_NotJson(): void
     {
-        $this->authenticateAs('admin');
-        $userFId = UuidFactory::uuid('user.id.frances');
-        $this->delete('/users/' . $userFId . '/dry-run');
+        $this->logInAsAdmin();
+        $userA = UserFactory::make()->user()->persist();
+        $this->delete('/users/' . $userA->id . '/dry-run');
         $this->assertResponseCode(404);
     }
 
     public function testUsersDeleteController_Success(): void
     {
-        $this->authenticateAs('admin');
-        $userFId = UuidFactory::uuid('user.id.frances');
-        $this->deleteJson("/users/$userFId.json");
+        $this->logInAsAdmin();
+        $userA = UserFactory::make()->user()->persist();
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertSuccess();
-        $frances = UserFactory::get($userFId);
-        $this->assertTrue($frances->deleted);
+        $this->assertUserIsSoftDeleted($userA->id);
     }
 
     public function testUsersDeleteController_Error_NotJson(): void
     {
-        $this->authenticateAs('admin');
-        $userFId = UuidFactory::uuid('user.id.frances');
-        $this->delete("/users/$userFId");
+        $this->logInAsAdmin();
+        $userA = UserFactory::make()->user()->persist();
+        $this->delete("/users/$userA->id");
         $this->assertResponseCode(404);
     }
 
     public function testUsersDeleteController_Error_MissingCsrfToken(): void
     {
         $this->disableCsrfToken();
-        $this->authenticateAs('admin');
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $this->deleteJson("/users/$userAId.json");
+        $this->logInAsAdmin();
+        $userA = UserFactory::make()->user()->persist();
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertResponseCode(403);
     }
 
     public function testUsersDeleteController_Error_NotLoggedIn(): void
     {
-        $userFId = UuidFactory::uuid('user.id.frances');
-        $this->deleteJson("/users/$userFId.json");
+        $userA = UserFactory::make()->user()->persist();
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertAuthenticationError();
     }
 
     public function testUsersDeleteController_Error_NotAdmin(): void
     {
-        $this->authenticateAs('ada');
-        $userFId = UuidFactory::uuid('user.id.frances');
-        $this->deleteJson("/users/$userFId.json");
+        $this->logInAsUser();
+        $userA = UserFactory::make()->user()->persist();
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertForbiddenError('You are not authorized to access that location.');
     }
 
     public function testUsersDeleteController_Error_InvalidUser(): void
     {
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $userId = '0';
         $this->deleteJson("/users/$userId.json");
         $this->assertError(400, 'The user identifier should be a valid UUID.');
 
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $userId = 'true';
         $this->deleteJson("/users/$userId.json");
         $this->assertError(400, 'The user identifier should be a valid UUID.');
 
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $userId = 'null';
         $this->deleteJson("/users/$userId.json");
         $this->assertError(400, 'The user identifier should be a valid UUID.');
 
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $userId = '🔥';
         $this->deleteJson("/users/$userId.json");
         $this->assertError(400, 'The user identifier should be a valid UUID.');
@@ -170,7 +168,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
     public function testUsersDeleteController_Error_UserDoesNotExist(): void
     {
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $userId = UuidFactory::uuid('user.id.bogus');
         $this->deleteJson("/users/$userId.json");
         $this->assertError(404, 'The user does not exist or has been already deleted.');
@@ -178,9 +176,9 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
     public function testUsersDeleteController_Error_UserAlreadyDeleted(): void
     {
-        $this->authenticateAs('admin');
-        $userSId = UuidFactory::uuid('user.id.sofia');
-        $this->deleteJson("/users/$userSId.json");
+        $this->logInAsAdmin();
+        $userDeleted = UserFactory::make()->user()->deleted()->persist();
+        $this->deleteJson("/users/$userDeleted->id.json");
         $this->assertError(404, 'The user does not exist or has been already deleted.');
     }
 
@@ -202,33 +200,39 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
     public function testUsersDeleteController_Success_NoOwnerNoResourcesSharedNoGroupsMember_DelUserCase0(): void
     {
-        $this->authenticateAs('admin');
-        $userIId = UuidFactory::uuid('user.id.irene');
-        $this->deleteJson("/users/$userIId.json");
+        $this->logInAsAdmin();
+        $userA = UserFactory::make()->user()->persist();
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertSuccess();
-        $this->assertUserIsSoftDeleted($userIId);
+        $this->assertUserIsSoftDeleted($userA->id);
     }
 
     public function testUsersDeleteController_Success_SoleOwnerNotSharedResource_DelUserCase1(): void
     {
-        $this->authenticateAs('admin');
-        $userJId = UuidFactory::uuid('user.id.jean');
-        $this->deleteJson("/users/$userJId.json");
+        $this->logInAsAdmin();
+        $userA = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->persist();
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertSuccess();
-        $this->assertUserIsSoftDeleted($userJId);
-        $this->assertResourceIsSoftDeleted(UuidFactory::uuid('resource.id.mailvelope'));
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertResourceIsSoftDeleted($resource->id);
     }
 
     public function testUsersDeleteController_Error_SoleOwnerSharedResourceWithUser_DelUserCase2(): void
     {
-        $this->authenticateAs('admin');
-        $userKId = UuidFactory::uuid('user.id.kathleen');
-        $resourceMId = UuidFactory::uuid('resource.id.mocha');
-        $this->deleteJson("/users/$userKId.json");
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $resourceA = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+        $this->deleteJson("/users/$userA->id.json");
 
         $this->assertError(400);
-        $this->assertUserIsNotSoftDeleted($userKId);
-        $this->assertResourceIsNotSoftDeleted($resourceMId);
+        $this->assertUserIsNotSoftDeleted($userA->id);
+        $this->assertResourceIsNotSoftDeleted($resourceA->id);
         $this->assertStringContainsString('sole owner of shared content', $this->_responseJsonHeader->message);
 
         $errors = $this->_responseJsonBody->errors;
@@ -237,72 +241,115 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
         $resource = $errors->resources->sole_owner[0];
         $this->assertResourceAttributes($resource);
-        $this->assertEquals($resource->id, $resourceMId);
+        $this->assertEquals($resource->id, $resourceA->id);
     }
 
     public function testUsersDeleteController_Error_TransferOwnersOfAnotherResource_SoleOwnerSharedResourceWithUser_DelUserCase2(): void
     {
-        $this->authenticateAs('admin');
-        $userKId = UuidFactory::uuid('user.id.kathleen');
-        $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+        $this->logInAsAdmin();
+        [$userA, $userB, $userC] = UserFactory::make(3)->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userC])->persist();
+        ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+        $resourceB = ResourceFactory::make()
+            ->withPermissionsFor([$userC])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
 
-        $transfer['owners'][] = ['id' => UuidFactory::uuid('permission.id.openpgpjs-leadership_team'), 'aco_foreign_key' => $resourceOId];
-        $this->deleteJson("/users/$userKId.json", ['transfer' => $transfer]);
+        $permission = $this->Permissions
+            ->find()
+            ->where([
+                'aco_foreign_key' => $resourceB->id,
+                'aro_foreign_key' => $group->id,
+            ])
+            ->firstOrFail();
+
+        $transfer['owners'][] = ['id' => $permission->id, 'aco_foreign_key' => $resourceB->id];
+        $this->deleteJson("/users/$userA->id.json", ['transfer' => $transfer]);
 
         $this->assertError(400, 'The transfer is not authorized');
-        $this->assertUserIsNotSoftDeleted($userKId);
+        $this->assertUserIsNotSoftDeleted($userA->id);
     }
 
     public function testUsersDeleteController_Error_TransferOwnersBadGroupUserId_SoleOwnerSharedResourceWithUser_DelUserCase2(): void
     {
-        $this->authenticateAs('admin');
-        $userKId = UuidFactory::uuid('user.id.kathleen');
-        $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+        $this->logInAsAdmin();
+        [$userA, $userB, $userC] = UserFactory::make(3)->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userC])->persist();
+        ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+        $resourceB = ResourceFactory::make()
+            ->withPermissionsFor([$userC])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
 
-        $transfer['owners'][] = ['id' => 'invalid-uuid', 'aco_foreign_key' => $resourceOId];
-        $this->deleteJson("/users/$userKId.json", ['transfer' => $transfer]);
+        $transfer['owners'][] = ['id' => 'invalid-uuid', 'aco_foreign_key' => $resourceB->id];
+        $this->deleteJson("/users/$userA->id.json", ['transfer' => $transfer]);
 
         $this->assertError(400, 'The permissions identifiers must be valid UUID.');
-        $this->assertUserIsNotSoftDeleted($userKId);
+        $this->assertUserIsNotSoftDeleted($userA->id);
     }
 
     public function testUsersDeleteController_Success_SoleOwnerSharedResourceWithUser_DelUserCase2(): void
     {
-        $this->authenticateAs('admin');
-        $userKId = UuidFactory::uuid('user.id.kathleen');
-        $userLId = UuidFactory::uuid('user.id.lynne');
-        $resourceMId = UuidFactory::uuid('resource.id.mocha');
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
 
-        $transfer['owners'][] = ['id' => UuidFactory::uuid('permission.id.mocha-lynne'), 'aco_foreign_key' => $resourceMId];
-        $this->deleteJson("/users/$userKId.json", ['transfer' => $transfer]);
+        $permission = $this->Permissions
+            ->find()
+            ->where([
+                'aco_foreign_key' => $resource->id,
+                'aro_foreign_key' => $userB->id,
+            ])
+            ->firstOrFail();
+
+        $transfer['owners'][] = ['id' => $permission->id, 'aco_foreign_key' => $resource->id];
+        $this->deleteJson("/users/$userA->id.json", ['transfer' => $transfer]);
         $this->assertSuccess();
 
-        $this->assertUserIsSoftDeleted($userKId);
-        $this->assertResourceIsNotSoftDeleted($resourceMId);
-        $this->assertPermission($resourceMId, $userLId, Permission::OWNER);
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertResourceIsNotSoftDeleted($resource->id);
+        $this->assertPermission($resource->id, $userB->id, Permission::OWNER);
     }
 
     public function testUsersDeleteController_Success_SoftDeleteSharedResourceWithMe_DelUserCase3(): void
     {
-        $this->authenticateAs('admin');
-        $userLId = UuidFactory::uuid('user.id.lynne');
-        $this->deleteJson("/users/$userLId.json");
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+
+        $this->deleteJson("/users/$userB->id.json");
         $this->assertSuccess();
-        $this->assertUserIsSoftDeleted($userLId);
-        $this->assertResourceIsNotSoftDeleted(UuidFactory::uuid('resource.id.mocha'));
+        $this->assertUserIsSoftDeleted($userB->id);
+        $this->assertResourceIsNotSoftDeleted($resource->id);
     }
 
     public function testUsersDeleteController_Error_SoleOwnerSharedResourceWithGroup_DelUserCase4(): void
     {
-        $this->authenticateAs('admin');
-        $userMId = UuidFactory::uuid('user.id.marlyn');
-        $resourceNId = UuidFactory::uuid('resource.id.nodejs');
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userB])->persist();
+        $resourceA = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
 
-        $this->deleteJson("/users/$userMId.json");
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertError(400);
 
-        $this->assertUserIsNotSoftDeleted($userMId);
-        $this->assertResourceIsNotSoftDeleted($resourceNId);
+        $this->assertUserIsNotSoftDeleted($userA->id);
+        $this->assertResourceIsNotSoftDeleted($resourceA->id);
 
         $errors = $this->_responseJsonBody->errors;
         $this->assertFalse(isset($errors->groups));
@@ -310,96 +357,119 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
         $resource = $errors->resources->sole_owner[0];
         $this->assertResourceAttributes($resource);
-        $this->assertEquals($resource->id, $resourceNId);
+        $this->assertEquals($resource->id, $resourceA->id);
     }
 
     public function testUsersDeleteController_Success_SoleOwnerSharedResourceWithGroup_DelUserCase4(): void
     {
-        $this->authenticateAs('admin');
-        $userMId = UuidFactory::uuid('user.id.marlyn');
-        $groupQId = UuidFactory::uuid('group.id.quality_assurance');
-        $resourceNId = UuidFactory::uuid('resource.id.nodejs');
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userB])->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
 
-        $transfer['owners'][] = ['id' => UuidFactory::uuid('permission.id.nodejs-quality_assurance'), 'aco_foreign_key' => $resourceNId];
-        $this->deleteJson("/users/$userMId.json", ['transfer' => $transfer]);
+        $permission = $this->Permissions
+            ->find()
+            ->where([
+                'aco_foreign_key' => $resource->id,
+                'aro_foreign_key' => $group->id,
+            ])
+            ->firstOrFail();
+
+        $transfer['owners'][] = ['id' => $permission->id, 'aco_foreign_key' => $resource->id];
+        $this->deleteJson("/users/$userA->id.json", ['transfer' => $transfer]);
 
         $this->assertSuccess();
-        $this->assertUserIsSoftDeleted($userMId);
-        $this->assertResourceIsNotSoftDeleted($resourceNId);
-        $this->assertPermission($resourceNId, $groupQId, Permission::OWNER);
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertResourceIsNotSoftDeleted($resource->id);
+        $this->assertPermission($resource->id, $group->id, Permission::OWNER);
     }
 
     public function testUsersDeleteController_Success_SoleOwnerSharedResourceWithSoleManageEmptyGroup_DelUserCase5(): void
     {
-        $this->authenticateAs('admin');
-        $userNId = UuidFactory::uuid('user.id.nancy');
-        $groupLId = UuidFactory::uuid('group.id.leadership_team');
-        $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+        $this->logInAsAdmin();
+        $userA = UserFactory::make()->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
 
-        $this->deleteJson("/users/$userNId.json");
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertSuccess();
 
-        $this->assertUserIsSoftDeleted($userNId);
-        $this->assertResourceIsSoftDeleted($resourceOId);
-        $this->assertGroupIsSoftDeleted($groupLId);
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertResourceIsSoftDeleted($resource->id);
+        $this->assertGroupIsSoftDeleted($group->id);
     }
 
     public function testUsersDeleteController_Success_ownerSharedResourceAlongWithSoleManagerEmptyGroup_DelUserCase6(): void
     {
-        $this->authenticateAs('admin');
-        $userNId = UuidFactory::uuid('user.id.nancy');
-        $groupLId = UuidFactory::uuid('group.id.leadership_team');
-        $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+        $this->logInAsAdmin();
+        $userA = UserFactory::make()->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
 
         // CONTEXTUAL TEST CHANGES Make the group also owner of the resource
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => $groupLId,
-            'aco_foreign_key' => $resourceOId,
+            'aro_foreign_key' => $group->id,
+            'aco_foreign_key' => $resource->id,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
 
-        $this->deleteJson("/users/$userNId.json");
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertSuccess();
 
-        $this->assertUserIsSoftDeleted($userNId);
-        $this->assertResourceIsSoftDeleted($resourceOId);
-        $this->assertGroupIsSoftDeleted($groupLId);
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertResourceIsSoftDeleted($resource->id);
+        $this->assertGroupIsSoftDeleted($group->id);
     }
 
     public function testUsersDeleteController_Success_indirectlyOwnerSharedResourceWithSoleManagerEmptyGroup_DelUserCase7(): void
     {
-        $this->authenticateAs('admin');
-        $userNId = UuidFactory::uuid('user.id.nancy');
-        $groupLId = UuidFactory::uuid('group.id.leadership_team');
-        $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+        $this->logInAsAdmin();
+        $userA = UserFactory::make()->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
 
         // CONTEXTUAL TEST CHANGES Remove the direct permission of nancy
-        $this->Permissions->deleteAll(['aro_foreign_key IN' => $userNId, 'aco_foreign_key' => $resourceOId]);
+        $this->Permissions->deleteAll(['aro_foreign_key IN' => $userA->id, 'aco_foreign_key' => $resource->id]);
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => $groupLId,
-            'aco_foreign_key' => $resourceOId,
+            'aro_foreign_key' => $group->id,
+            'aco_foreign_key' => $resource->id,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
 
-        $this->deleteJson("/users/$userNId.json");
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertSuccess();
 
-        $this->assertUserIsSoftDeleted($userNId);
-        $this->assertResourceIsSoftDeleted($resourceOId);
-        $this->assertGroupIsSoftDeleted($groupLId);
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertResourceIsSoftDeleted($resource->id);
+        $this->assertGroupIsSoftDeleted($group->id);
     }
 
     public function testUsersDeleteController_Error_soleManagerOfNotEmptyGroup_DelUserCase9(): void
     {
-        $this->authenticateAs('admin');
-        $userEId = UuidFactory::uuid('user.id.edith');
-        $groupFId = UuidFactory::uuid('group.id.freelancer');
+        $this->logInAsAdmin();
+        [$userA, $userB, $userC] = UserFactory::make(3)->user()->persist();
+        $groupA = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB, $userC])
+            ->persist();
 
-        $this->deleteJson("/users/$userEId.json");
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertError(400);
-        $this->assertUserIsNotSoftDeleted($userEId);
+        $this->assertUserIsNotSoftDeleted($userA->id);
 
         $errors = $this->_responseJsonBody->errors;
         $this->assertCount(1, $errors->groups->sole_manager);
@@ -407,36 +477,48 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
         $group = $errors->groups->sole_manager[0];
         $this->assertGroupAttributes($group);
-        $this->assertEquals($group->id, $groupFId);
+        $this->assertEquals($group->id, $groupA->id);
     }
 
     public function testUsersDeleteController_Success_soleManagerOfNotEmptyGroup_DelUserCase9(): void
     {
-        $this->authenticateAs('admin');
-        $userEId = UuidFactory::uuid('user.id.edith');
-        $userFId = UuidFactory::uuid('user.id.frances');
-        $groupFId = UuidFactory::uuid('group.id.freelancer');
+        $this->logInAsAdmin();
+        [$userA, $userB, $userC] = UserFactory::make(3)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB, $userC])
+            ->persist();
 
-        $transfer['managers'][] = ['id' => UuidFactory::uuid('group_user.id.freelancer-frances'), 'group_id' => $groupFId];
-        $this->deleteJson("/users/$userEId.json", ['transfer' => $transfer]);
+        $groupUser = $this->GroupsUsers
+            ->find()
+            ->where([
+            'user_id' => $userB->id,
+            'group_id' => $group->id,
+        ])->firstOrFail();
+
+        $transfer['managers'][] = ['id' => $groupUser->id, 'group_id' => $group->id];
+        $this->deleteJson("/users/$userA->id.json", ['transfer' => $transfer]);
         $this->assertSuccess();
 
-        $this->assertUserIsSoftDeleted($userEId);
-        $this->assertGroupIsNotSoftDeleted($groupFId);
-        $this->assertUserIsAdmin($groupFId, $userFId);
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertGroupIsNotSoftDeleted($group->id);
+        $this->assertUserIsAdmin($group->id, $userB->id);
     }
 
     public function testUsersDeleteController_Error_ownerAlongWithSoleManagerOfNotEmptyGroup_DelUserCase10(): void
     {
-        $this->authenticateAs('admin');
-        $userOId = UuidFactory::uuid('user.id.orna');
-        $resourceLId = UuidFactory::uuid('resource.id.linux');
-        $groupMId = UuidFactory::uuid('group.id.management');
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $groupA = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $groupA])->persist();
 
-        $this->deleteJson("/users/$userOId.json");
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertError(400);
-        $this->assertUserIsNotSoftDeleted($userOId);
-        $this->assertResourceIsNotSoftDeleted($resourceLId);
+        $this->assertUserIsNotSoftDeleted($userA->id);
+        $this->assertResourceIsNotSoftDeleted($resource->id);
 
         $errors = $this->_responseJsonBody->errors;
         $this->assertCount(1, $errors->groups->sole_manager);
@@ -444,42 +526,55 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
         $group = $errors->groups->sole_manager[0];
         $this->assertGroupAttributes($group);
-        $this->assertEquals($group->id, $groupMId);
+        $this->assertEquals($group->id, $groupA->id);
     }
 
     public function testUsersDeleteController_Success_ownerAlongWithSoleManagerOfNotEmptyGroup_DelUserCase10(): void
     {
-        $this->authenticateAs('admin');
-        $userOId = UuidFactory::uuid('user.id.orna');
-        $userPId = UuidFactory::uuid('user.id.ping');
-        $groupMId = UuidFactory::uuid('group.id.management');
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        ResourceFactory::make()->withPermissionsFor([$userA, $group])->persist();
 
-        $transfer['managers'][] = ['id' => UuidFactory::uuid('group_user.id.management-ping'), 'group_id' => $groupMId];
-        $this->deleteJson("/users/$userOId.json", ['transfer' => $transfer]);
+        $groupUser = $this->GroupsUsers
+            ->find()
+            ->where([
+                'user_id' => $userB->id,
+                'group_id' => $group->id,
+            ])->firstOrFail();
+
+        $transfer['managers'][] = ['id' => $groupUser->id, 'group_id' => $group->id];
+        $this->deleteJson("/users/$userA->id.json", ['transfer' => $transfer]);
         $this->assertSuccess();
 
-        $this->assertUserIsSoftDeleted($userOId);
-        $this->assertGroupIsNotSoftDeleted($groupMId);
-        $this->assertUserIsAdmin($groupMId, $userPId);
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertGroupIsNotSoftDeleted($group->id);
+        $this->assertUserIsAdmin($group->id, $userB->id);
     }
 
     public function testUsersDeleteController_Error_indireclyOwnerWithSoleManagerOfNotEmptyGroup_DelUserCase11(): void
     {
-        $this->authenticateAs('admin');
-        $userOId = UuidFactory::uuid('user.id.orna');
-        $resourceLId = UuidFactory::uuid('resource.id.linux');
-        $groupMId = UuidFactory::uuid('group.id.management');
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $groupA = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $groupA])->persist();
 
         // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
         $this->Permissions->deleteAll([
-            'aro_foreign_key' => $userOId,
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.linux'),
+            'aro_foreign_key' => $userA->id,
+            'aco_foreign_key' => $resource->id,
         ]);
 
-        $this->deleteJson("/users/$userOId.json");
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertError(400);
-        $this->assertUserIsNotSoftDeleted($userOId);
-        $this->assertResourceIsNotSoftDeleted($resourceLId);
+        $this->assertUserIsNotSoftDeleted($userA->id);
+        $this->assertResourceIsNotSoftDeleted($resource->id);
 
         $errors = $this->_responseJsonBody->errors;
         $this->assertCount(1, $errors->groups->sole_manager);
@@ -487,60 +582,77 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
         $group = $errors->groups->sole_manager[0];
         $this->assertGroupAttributes($group);
-        $this->assertEquals($group->id, $groupMId);
+        $this->assertEquals($group->id, $groupA->id);
     }
 
     public function testUsersDeleteController_Error_TransferManagersBadPermissionId_indireclyOwnerWithSoleManagerOfNotEmptyGroup_DelUserCase11(): void
     {
-        $this->authenticateAs('admin');
-        $userOId = UuidFactory::uuid('user.id.orna');
-        $groupBId = UuidFactory::uuid('group.id.board');
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $group])->persist();
 
         // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
         $this->Permissions->deleteAll([
-            'aro_foreign_key' => $userOId,
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.linux'),
+            'aro_foreign_key' => $userA->id,
+            'aco_foreign_key' => $resource->id,
         ]);
 
-        $transfer['managers'][] = ['id' => 'invalid-uuid', 'group_id' => $groupBId];
-        $this->deleteJson("/users/$userOId.json", ['transfer' => $transfer]);
+        $transfer['managers'][] = ['id' => 'invalid-uuid', 'group_id' => $group->id];
+        $this->deleteJson("/users/$userA->id.json", ['transfer' => $transfer]);
         $this->assertError(400, 'The groups users identifiers must be valid UUID.');
-        $this->assertUserIsNotSoftDeleted($userOId);
+        $this->assertUserIsNotSoftDeleted($userA->id);
     }
 
     public function testUsersDeleteController_Success_indireclyOwnerWithSoleManagerOfNotEmptyGroup_DelUserCase11(): void
     {
-        $this->authenticateAs('admin');
-        $userOId = UuidFactory::uuid('user.id.orna');
-        $userPId = UuidFactory::uuid('user.id.ping');
-        $groupMId = UuidFactory::uuid('group.id.management');
-        $resourceLId = UuidFactory::uuid('resource.id.linux');
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $group])->persist();
 
         // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
         $this->Permissions->deleteAll([
-            'aro_foreign_key' => $userOId,
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.linux'),
+            'aro_foreign_key' => $userA->id,
+            'aco_foreign_key' => $resource->id,
         ]);
 
-        $transfer['managers'][] = ['id' => UuidFactory::uuid('group_user.id.management-ping'), 'group_id' => $groupMId];
-        $this->deleteJson("/users/$userOId.json", ['transfer' => $transfer]);
+        $groupUser = $this->GroupsUsers
+            ->find()
+            ->where([
+                'user_id' => $userB->id,
+                'group_id' => $group->id,
+            ])->firstOrFail();
+
+        $transfer['managers'][] = ['id' => $groupUser->id, 'group_id' => $group->id];
+        $this->deleteJson("/users/$userA->id.json", ['transfer' => $transfer]);
         $this->assertSuccess();
 
-        $this->assertUserIsSoftDeleted($userOId);
-        $this->assertGroupIsNotSoftDeleted($groupMId);
-        $this->assertResourceIsNotSoftDeleted($resourceLId);
-        $this->assertUserIsAdmin($groupMId, $userPId);
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertGroupIsNotSoftDeleted($group->id);
+        $this->assertResourceIsNotSoftDeleted($resource->id);
+        $this->assertUserIsAdmin($group->id, $userB->id);
     }
 
     public function testUsersDeleteController_Error_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_DelUserCase12(): void
     {
-        $this->authenticateAs('admin');
-        $userUId = UuidFactory::uuid('user.id.ursula');
-        $resourcePId = UuidFactory::uuid('resource.id.phpunit');
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        $resourceA = ResourceFactory::make()
+            ->withPermissionsFor([$group])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
 
-        $this->deleteJson("/users/$userUId.json");
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertError(400);
-        $this->assertUserIsNotSoftDeleted($userUId);
+        $this->assertUserIsNotSoftDeleted($userA->id);
 
         $errors = $this->_responseJsonBody->errors;
         $this->assertFalse(isset($errors->groups));
@@ -548,57 +660,65 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
         $resource = $errors->resources->sole_owner[0];
         $this->assertGroupAttributes($resource);
-        $this->assertEquals($resource->id, $resourcePId);
+        $this->assertEquals($resource->id, $resourceA->id);
     }
 
     public function testUsersDeleteController_Success_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_DelUserCase12(): void
     {
-        $this->authenticateAs('admin');
-        $userTId = UuidFactory::uuid('user.id.thelma');
-        $userUId = UuidFactory::uuid('user.id.ursula');
-        $groupNId = UuidFactory::uuid('group.id.network');
-        $resourcePId = UuidFactory::uuid('resource.id.phpunit');
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$group])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
 
         // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => $userTId,
-            'aco_foreign_key' => $resourcePId,
+            'aro_foreign_key' => $userB->id,
+            'aco_foreign_key' => $resource->id,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
 
-        $this->deleteJson("/users/$userUId.json");
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertSuccess();
 
-        $this->assertUserIsSoftDeleted($userUId);
-        $this->assertGroupIsSoftDeleted($groupNId);
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertGroupIsSoftDeleted($group->id);
     }
 
     public function testUsersDeleteController_Success_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroups_DelUserCase13(): void
     {
-        $this->authenticateAs('admin');
-        $userWId = UuidFactory::uuid('user.id.wang');
-        $resourceQId = UuidFactory::uuid('resource.id.qgis');
-        $groupOId = UuidFactory::uuid('group.id.operations');
-        $groupPId = UuidFactory::uuid('group.id.procurement');
+        $this->logInAsAdmin();
+        $userA = UserFactory::make()->user()->persist();
+        [$groupA, $groupB] = GroupFactory::make(2)->withGroupsManagersFor([$userA])->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$groupA, $groupB])->persist();
 
-        $this->deleteJson("/users/$userWId.json");
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertSuccess();
-        $this->assertUserIsSoftDeleted($userWId);
-        $this->assertGroupIsSoftDeleted($groupOId);
-        $this->assertGroupIsSoftDeleted($groupPId);
-        $this->assertResourceIsSoftDeleted($resourceQId);
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertGroupIsSoftDeleted($groupA->id);
+        $this->assertGroupIsSoftDeleted($groupB->id);
+        $this->assertResourceIsSoftDeleted($resource->id);
     }
 
     public function testUsersDeleteController_Error_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_DelUserCase14(): void
     {
-        $this->authenticateAs('admin');
-        $userYId = UuidFactory::uuid('user.id.yvonne');
-        $groupHId = UuidFactory::uuid('group.id.human_resource');
+        $this->logInAsAdmin();
+        [$userA, $userB, $userC] = UserFactory::make(3)->user()->persist();
+        $groupA = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        ResourceFactory::make()
+            ->withPermissionsFor([$groupA])
+            ->withPermissionsFor([$userC], Permission::READ)
+            ->persist();
 
-        $this->deleteJson("/users/$userYId.json");
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertError(400);
-        $this->assertUserIsNotSoftDeleted($userYId);
+        $this->assertUserIsNotSoftDeleted($userA->id);
 
         $errors = $this->_responseJsonBody->errors;
         $this->assertCount(1, $errors->groups->sole_manager);
@@ -606,45 +726,60 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
         $group = $errors->groups->sole_manager[0];
         $this->assertGroupAttributes($group);
-        $this->assertEquals($group->id, $groupHId);
+        $this->assertEquals($group->id, $groupA->id);
     }
 
     public function testUsersDeleteController_Success_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_DelUserCase14(): void
     {
-        $this->authenticateAs('admin');
-        $userYId = UuidFactory::uuid('user.id.yvonne');
-        $userJId = UuidFactory::uuid('user.id.joan');
-        $groupHId = UuidFactory::uuid('group.id.human_resource');
-        $resourceSId = UuidFactory::uuid('resource.id.selenium');
+        $this->logInAsAdmin();
+        [$userA, $userB, $userC] = UserFactory::make(3)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$group])
+            ->withPermissionsFor([$userC], Permission::READ)
+            ->persist();
 
-        $transfer['managers'][] = ['id' => UuidFactory::uuid('group_user.id.human_resource-joan'), 'group_id' => $groupHId];
-        $this->deleteJson("/users/$userYId.json", ['transfer' => $transfer]);
+        $groupUser = $this->GroupsUsers
+            ->find()
+            ->where([
+                'user_id' => $userB->id,
+                'group_id' => $group->id,
+            ])->firstOrFail();
+
+        $transfer['managers'][] = ['id' => $groupUser->id, 'group_id' => $group->id];
+        $this->deleteJson("/users/$userA->id.json", ['transfer' => $transfer]);
 
         $this->assertSuccess();
-        $this->assertUserIsSoftDeleted($userYId);
-        $this->assertGroupIsNotSoftDeleted($groupHId);
-        $this->assertResourceIsNotSoftDeleted($resourceSId);
-        $this->assertUserIsAdmin($groupHId, $userJId);
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertGroupIsNotSoftDeleted($group->id);
+        $this->assertResourceIsNotSoftDeleted($resource->id);
+        $this->assertUserIsAdmin($group->id, $userB->id);
     }
 
     public function testUsersDeleteController_Error_SoleOwnerSharedResourceWithNotEmptyGroup_DelUserCase15(): void
     {
-        $this->authenticateAs('admin');
-        $userOId = UuidFactory::uuid('user.id.orna');
-        $groupMId = UuidFactory::uuid('group.id.management');
-        $resourceLId = UuidFactory::uuid('resource.id.linux');
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $groupA = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        $resourceA = ResourceFactory::make()->withPermissionsFor([$userA, $groupA])->persist();
 
         // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => $groupMId,
-            'aco_foreign_key' => $resourceLId,
+            'aro_foreign_key' => $groupA->id,
+            'aco_foreign_key' => $resourceA->id,
         ])->first();
         $permission->type = Permission::READ;
         $this->Permissions->save($permission);
 
-        $this->deleteJson("/users/$userOId.json");
+        $this->deleteJson("/users/$userA->id.json");
         $this->assertError(400);
-        $this->assertUserIsNotSoftDeleted($userOId);
+        $this->assertUserIsNotSoftDeleted($userA->id);
 
         $errors = $this->_responseJsonBody->errors;
         $this->assertCount(1, $errors->groups->sole_manager);
@@ -652,35 +787,51 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
         $group = $errors->groups->sole_manager[0];
         $this->assertGroupAttributes($group);
-        $this->assertEquals($group->id, $groupMId);
+        $this->assertEquals($group->id, $groupA->id);
 
         $resource = $errors->resources->sole_owner[0];
         $this->assertGroupAttributes($resource);
-        $this->assertEquals($resource->id, $resourceLId);
+        $this->assertEquals($resource->id, $resourceA->id);
     }
 
     public function testUsersDeleteController_Success_SoleOwnerSharedResourceWithNotEmptyGroup_DelUserCase15(): void
     {
-        $this->authenticateAs('admin');
-        $userOId = UuidFactory::uuid('user.id.orna');
-        $userPId = UuidFactory::uuid('user.id.ping');
-        $groupMId = UuidFactory::uuid('group.id.management');
-        $resourceLId = UuidFactory::uuid('resource.id.linux');
+        $this->logInAsAdmin();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $group])->persist();
 
         // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => $groupMId,
-            'aco_foreign_key' => $resourceLId,
+            'aro_foreign_key' => $group->id,
+            'aco_foreign_key' => $resource->id,
         ])->first();
         $permission->type = Permission::READ;
         $this->Permissions->save($permission);
 
-        $transfer['owners'][] = ['id' => UuidFactory::uuid('permission.id.linux-management'), 'aco_foreign_key' => $resourceLId];
-        $transfer['managers'][] = ['id' => UuidFactory::uuid('group_user.id.management-ping'), 'group_id' => $groupMId];
-        $this->deleteJson("/users/$userOId.json", ['transfer' => $transfer]);
+        $permission = $this->Permissions
+            ->find()
+            ->where([
+                'aco_foreign_key' => $resource->id,
+                'aro_foreign_key' => $group->id,
+            ])
+            ->firstOrFail();
+        $groupUser = $this->GroupsUsers
+            ->find()
+            ->where([
+                'user_id' => $userB->id,
+                'group_id' => $group->id,
+            ])->firstOrFail();
+
+        $transfer['owners'][] = ['id' => $permission->id, 'aco_foreign_key' => $resource->id];
+        $transfer['managers'][] = ['id' => $groupUser->id, 'group_id' => $group->id];
+        $this->deleteJson("/users/$userA->id.json", ['transfer' => $transfer]);
         $this->assertSuccess();
-        $this->assertUserIsSoftDeleted($userOId);
-        $this->assertUserIsAdmin($groupMId, $userPId);
-        $this->assertPermission($resourceLId, $groupMId, Permission::OWNER);
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertUserIsAdmin($group->id, $userB->id);
+        $this->assertPermission($resource->id, $group->id, Permission::OWNER);
     }
 }
