@@ -30,7 +30,6 @@ use App\Command\UsersIndexCommand;
 use App\Service\Command\GetUserCommandService;
 use App\Service\Command\ProcessUserService;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
-use App\Service\Subscriptions\DefaultSubscriptionCheckInCommandService;
 use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
@@ -60,10 +59,6 @@ class CommandServiceProvider extends ServiceProvider
     {
         $container->add(ProcessUserService::class);
         $container->add(GetUserCommandService::class);
-        $container->add(
-            SubscriptionCheckInCommandServiceInterface::class,
-            DefaultSubscriptionCheckInCommandService::class
-        );
 
         $container->add(HealthcheckCommand::class)->addArguments([
             ProcessUserService::class,
