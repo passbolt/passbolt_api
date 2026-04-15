@@ -51,6 +51,7 @@ class SubscriptionImportCommandTest extends AppTestCase
         parent::setUp();
         $this->setUpPathAndPublicSubscriptionKey();
         $this->Subscriptions = $this->fetchTable('Passbolt/Subscription.Subscriptions');
+        $this->enableFeaturePlugin('Subscription');
     }
 
     /**
