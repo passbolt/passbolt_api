@@ -23,6 +23,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Validation\Validation;
 use Passbolt\Subscription\Model\Entity\Subscription;
+use Passbolt\Subscription\SubscriptionPlugin;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 use Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
@@ -35,6 +36,7 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
         $this->mockPassboltIsNotconfigured();
         $this->initWebInstallerSession();
         $this->backupConfiguration();
+        $this->enableFeaturePlugin(SubscriptionPlugin::class);
     }
 
     public function tearDown(): void

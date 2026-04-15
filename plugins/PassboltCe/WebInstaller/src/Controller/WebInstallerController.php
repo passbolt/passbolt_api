@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Controller;
 
+use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
@@ -32,6 +33,8 @@ use Passbolt\WebInstaller\Utility\WebInstaller;
  */
 class WebInstallerController extends Controller
 {
+    use FeaturePluginAwareTrait;
+
     /**
      * The web installer model
      *
