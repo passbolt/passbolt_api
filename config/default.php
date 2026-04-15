@@ -46,7 +46,6 @@ return [
     'passbolt' => [
         // Edition.
         'edition' => 'pro',
-        'featurePluginAdder' => \Passbolt\Ee\EeSolutionBootstrapper::class,
         // set in bootstrap.php
         'originalFullBaseUrl' => '',
         'v5' => [

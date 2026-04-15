@@ -43,6 +43,7 @@ use App\Service\Avatars\AvatarsConfigurationService;
 use App\Service\Cookie\AbstractSecureCookieService;
 use App\Service\Cookie\DefaultSecureCookieService;
 use App\Service\Subscriptions\DefaultSubscriptionCheckInCommandService;
+use App\Service\Subscriptions\EditionManager;
 use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use App\ServiceProvider\CommandServiceProvider;
 use App\ServiceProvider\HealthcheckServiceProvider;
@@ -62,6 +63,7 @@ use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\Client;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Http\MiddlewareQueue;
@@ -88,6 +90,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      * @var \App\BaseSolutionBootstrapper|null
      */
     private ?BaseSolutionBootstrapper $solutionBootstrapper = null;
+
+    private ?EditionManager $editionManager = null;
 
     /**
      * Setup the PSR-7 middleware passbolt application will use.
@@ -179,8 +183,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $this->addCorePlugins()
             ->addVendorPlugins();
 
-        // Load feature plugins
-        $this->getSolutionBootstrapper()->addFeaturePlugins($this);
+        $this->initEdition();
+        $this->initSolutionBootstrapper();
 
         if (PHP_SAPI === 'cli') {
             $this->addCliDevelopmentPlugins();
@@ -188,6 +192,32 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         $this->initEmails();
         (new AvatarsConfigurationService())->loadConfiguration();
+    }
+
+    /**
+     * Boot edition manager which will determine the plugins to be loaded and behavior of the application.
+     *
+     * @return void
+     */
+    private function initEdition(): void
+    {
+        $this->editionManager = new EditionManager();
+        $this->editionManager->boot();
+    }
+
+    /**
+     * @return void
+     */
+    private function initSolutionBootstrapper(): void
+    {
+        // This is DI friendly so we can easily overwrite this in cloud to return cloud specific bootstrapper
+        $solutionBootstrapperClass = $this->editionManager->getSolutionBootstrapperClass();
+        if (is_null($solutionBootstrapperClass)) {
+            throw new InternalErrorException('SolutionBootstrapper class not found. Call initEdition() before initialization.'); // phpcs:ignore
+        }
+
+        $this->solutionBootstrapper = new $solutionBootstrapperClass();
+        $this->solutionBootstrapper->addFeaturePlugins($this);
     }
 
     /**
@@ -203,13 +233,13 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     }
 
     /**
-     * @return \App\BaseSolutionBootstrapper
+     * @return \App\BaseSolutionBootstrapper|null
      */
-    public function getSolutionBootstrapper(): BaseSolutionBootstrapper
+    public function getSolutionBootstrapper(): ?BaseSolutionBootstrapper
     {
         if (is_null($this->solutionBootstrapper)) {
-            $className = Configure::readOrFail('passbolt.featurePluginAdder');
-            $this->solutionBootstrapper = new $className();
+            $this->initEdition();
+            $this->initSolutionBootstrapper();
         }
 
         return $this->solutionBootstrapper;
