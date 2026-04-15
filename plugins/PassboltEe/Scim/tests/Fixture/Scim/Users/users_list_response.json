@@ -1,0 +1,64 @@
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+    ],
+    "itemsPerPage": 25,
+    "startIndex": 1,
+    "totalResults": 2,
+    "Resources": [
+        {
+            "schemas": [
+                "urn:ietf:params:scim:schemas:core:2.0:User"
+            ],
+            "id": "PLACEHOLDER_USER_ID_1",
+            "externalId": "4d36b536-42ba-4a65-9299-c4461222b47f",
+            "meta": {
+                "resourceType": "User",
+                "created": "2025-07-18T12:00:00.000Z",
+                "lastModified": "2025-07-18T12:00:00.000Z"
+            },
+            "userName": "user1@username.com",
+            "active": true,
+            "emails": [
+                {
+                    "primary": true,
+                    "type": "work",
+                    "value": "user1@email.com"
+                }
+            ],
+            "name": {
+                "formatted": "User 1 Scim",
+                "familyName": "Scim",
+                "givenName": "User 1",
+                "middleName": null
+            }
+        },
+        {
+            "schemas": [
+                "urn:ietf:params:scim:schemas:core:2.0:User"
+            ],
+            "id": "PLACEHOLDER_USER_ID_2",
+            "externalId": "db8d7e50-0718-4556-bb49-92f43af1b6d4",
+            "meta": {
+                "resourceType": "User",
+                "created": "2025-07-18T12:00:00.000Z",
+                "lastModified": "2025-07-18T12:00:00.000Z"
+            },
+            "userName": "user2@username.com",
+            "active": true,
+            "emails": [
+                {
+                    "primary": true,
+                    "type": "work",
+                    "value": "user2@email.com"
+                }
+            ],
+            "name": {
+                "formatted": "User 2 Scim",
+                "familyName": "Scim",
+                "givenName": "User 2",
+                "middleName": null
+            }
+        }
+    ]
+}

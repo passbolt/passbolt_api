@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         5.4.0
+ * @since         5.4.1
  */
 
 use App\Service\Users\PopulateLastLoggedInDateService;
@@ -29,12 +29,15 @@ class V540PopulateLastLoggedInDate extends AbstractMigration
      */
     public function change(): void
     {
-        try {
-            (new PopulateLastLoggedInDateService())->populate();
-        } catch (\Throwable $e) {
-            $msg = 'There was an error in V540PopulateLastLoggedInDate.';
-            $msg .= ' ' . $e->getMessage();
-            Log::error($msg);
-        }
+
+        // An issue was found in PopulateLastLoggedInDateService.
+        // As the migration was faulty, we skip this one and (re-)run instead V541PopulateLastLoggedInDate
+//        try {
+//            (new PopulateLastLoggedInDateService())->populate();
+//        } catch (\Throwable $e) {
+//            $msg = 'There was an error in V540PopulateLastLoggedInDate.';
+//            $msg .= ' ' . $e->getMessage();
+//            Log::error($msg);
+//        }
     }
 }

@@ -304,7 +304,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
     {
         $this->logInAsUser();
         $resourceId = UuidFactory::uuid();
-        $this->putJson("/resources/$resourceId.json");
+        $this->putJson("/resources/$resourceId.json?api-version=v2");
         $this->assertError(404, 'The resource does not exist.');
     }
 

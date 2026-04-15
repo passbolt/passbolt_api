@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var array $config
+ */
+?>
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -35,6 +40,9 @@ return [
     // Database configuration.
     'Datasources' => [
         'default' => [<?php foreach ($config['database'] as $key => $value) {
+            if (is_array($value)) {
+                $value = implode('', $value);
+            }
 echo "
             '$key' => '$value',";
     }?>

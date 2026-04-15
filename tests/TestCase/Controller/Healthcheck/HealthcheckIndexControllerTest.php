@@ -155,6 +155,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'hostAvailabilityCheckEnabled' => Configure::read(EmailValidationRule::MX_CHECK_KEY),
                 'jsProd' => (Configure::read('passbolt.js.build') === 'production'),
                 'emailNotificationEnabled' => false,
+                'subscriptionKeyStatus' => false,
             ],
             'gpg' => [
                 'canDecryptVerify' => true,

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2023-07-24 11:52+0000\n"
+"POT-Creation-Date: 2026-04-02 12:51+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -38,6 +38,9 @@ msgstr ""
 msgid "Could not import the user OpenPGP key."
 msgstr ""
 
+msgid "Invalid verify token type."
+msgstr ""
+
 msgid "Invalid verify token format, "
 msgstr ""
 
@@ -66,6 +69,9 @@ msgid "Please use .json extension in URL or accept application/json."
 msgstr ""
 
 msgid "The request data can not be empty."
+msgstr ""
+
+msgid "You are already logged in."
 msgstr ""
 
 msgid "You are successfully logged in."
@@ -149,10 +155,16 @@ msgstr ""
 msgid "\"{0}\" is not a valid group filter."
 msgstr ""
 
+msgid "\"{0}\" is not a valid parent filter."
+msgstr ""
+
 msgid "\"{0}\" is not a valid resource id for filter {1}."
 msgstr ""
 
 msgid "\"{0}\" is not a valid group id for filter {1}."
+msgstr ""
+
+msgid "\"{0}\" is not a valid parent id for filter {1}."
 msgstr ""
 
 msgid "\"{0}\" is not a valid timestamp for filter {1}."
@@ -176,6 +188,12 @@ msgstr ""
 msgid "Access restricted to administrators."
 msgstr ""
 
+msgid "Access restricted to unauthenticated users."
+msgstr ""
+
+msgid "The user should not be logged in."
+msgstr ""
+
 msgid "This feature is not supported by your version of passbolt."
 msgstr ""
 
@@ -185,25 +203,10 @@ msgstr ""
 msgid "The resource was marked as favorite."
 msgstr ""
 
-msgid "The resource does not exist."
-msgstr ""
-
-msgid "This record is already marked as favorite."
-msgstr ""
-
-msgid "Could not validate favorite data."
-msgstr ""
-
 msgid "The favorite id is not valid."
 msgstr ""
 
-msgid "The favorite does not exist."
-msgstr ""
-
 msgid "The favorite was deleted."
-msgstr ""
-
-msgid "Could not delete favorite."
 msgstr ""
 
 msgid "The OpenPGP key identifier should be a valid UUID."
@@ -245,6 +248,9 @@ msgstr ""
 msgid "All checks ran successfully!"
 msgstr ""
 
+msgid "Healthcheck security index endpoint disabled."
+msgstr ""
+
 msgid "OK"
 msgstr ""
 
@@ -267,6 +273,15 @@ msgid "Could not delete the resource."
 msgstr ""
 
 msgid "The resource has been updated successfully."
+msgstr ""
+
+msgid "The role was deleted."
+msgstr ""
+
+msgid "The role identifier is not valid."
+msgstr ""
+
+msgid "The role was successfully updated."
 msgstr ""
 
 msgid "The secret does not exist."
@@ -297,6 +312,9 @@ msgid "Only guests are allowed to start setup."
 msgstr ""
 
 msgid "You are not authorized to share this resource."
+msgstr ""
+
+msgid "Resource metadata key type is invalid."
 msgstr ""
 
 msgid "Only administrators can add new users."
@@ -362,7 +380,7 @@ msgstr ""
 msgid "Recovery process started, check your email."
 msgstr ""
 
-msgid "Registration is not opened to public. Please contact your administrator."
+msgid "Only guests are allowed to register."
 msgstr ""
 
 msgid "Registration is not opened to public."
@@ -381,6 +399,15 @@ msgid "The user does not exist."
 msgstr ""
 
 msgid "No admin were found in the database."
+msgstr ""
+
+msgid "The `{0}` configuration must be a valid non-empty string."
+msgstr ""
+
+msgid "Invalid expiry time {0}."
+msgstr ""
+
+msgid "The user role ID must not be of the guest role."
 msgstr ""
 
 msgid "The identifier should not be empty."
@@ -827,6 +854,9 @@ msgstr ""
 msgid "A resource type identifier is required."
 msgstr ""
 
+msgid "The resource type should be one of the following: {0}."
+msgstr ""
+
 msgid "The permissions are required."
 msgstr ""
 
@@ -845,7 +875,25 @@ msgstr ""
 msgid "The secrets should contain only the secret of the owner."
 msgstr ""
 
+msgid "The metadata key ID should be a valid UUID."
+msgstr ""
+
+msgid "The metadata should be a valid ASCII string."
+msgstr ""
+
+msgid "The metadata should not be empty."
+msgstr ""
+
+msgid "The metadata key type should be a valid UTF8 string."
+msgstr ""
+
+msgid "The metadata key type should be one of the following: {0}."
+msgstr ""
+
 msgid "The resource type does not exist."
+msgstr ""
+
+msgid "The resource type should not be deleted."
 msgstr ""
 
 msgid "The permissions should contain the owner permission."
@@ -860,28 +908,79 @@ msgstr ""
 msgid "The permissions should contain at least the owner permission."
 msgstr ""
 
+msgid "The settings selected by your administrator prevent from downgrading resource type."
+msgstr ""
+
+msgid "The settings selected by your administrator prevent from using that key type."
+msgstr ""
+
+msgid "The metadata key does not exist or was deleted."
+msgstr ""
+
+msgid "The metadata key is marked as expired."
+msgstr ""
+
+msgid "The shared metadata key should be unique."
+msgstr ""
+
+msgid "It is not allowed to create v5-password-string resource types."
+msgstr ""
+
+msgid "The resource metadata provided can not be decrypted."
+msgstr ""
+
+msgid "A resource of type personal cannot be shared with other users or a group."
+msgstr ""
+
+msgid "The settings selected by your administrator prevent from upgrading v4 to v5."
+msgstr ""
+
 msgid "The resource should not be already soft deleted."
 msgstr ""
 
 msgid "The user cannot delete this resource."
 msgstr ""
 
-msgid "The name should be a valid ASCII string."
+msgid "The resource type for this resource does not exist."
+msgstr ""
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The name should not be greater than 50 characters."
+msgstr ""
+
+msgid "The name should not be reserved role."
 msgstr ""
 
 msgid "The description should be a valid BMP-UTF8 string."
 msgstr ""
 
+msgid "The role cannot be deleted as it is associated with another user."
+msgstr ""
+
+msgid "A reserved role cannot be deleted."
+msgstr ""
+
 msgid "A role already exists for the given name."
 msgstr ""
 
-msgid "The role name should be from the list of allowed role names."
+msgid "Only maximum of {0} active roles are allowed."
 msgstr ""
 
 msgid "The resource identifier is required."
 msgstr ""
 
 msgid "The resource identifier should not be empty."
+msgstr ""
+
+msgid "The secret revision identifier should be a valid UUID."
+msgstr ""
+
+msgid "A secret revision identifier is required."
+msgstr ""
+
+msgid "The secret revision identifier should not be empty."
 msgstr ""
 
 msgid "The message should be a valid ASCII string."
@@ -896,7 +995,10 @@ msgstr ""
 msgid "A secret already exists for the given user and resource."
 msgstr ""
 
-msgid "The name should be a valid BMP-UTF8 string."
+msgid "A secret already exists for the given user, resource and secret revision."
+msgstr ""
+
+msgid "The secret revision does not exist or is deleted."
 msgstr ""
 
 msgid "The user identifier by should be a valid UUID."
@@ -914,6 +1016,9 @@ msgstr ""
 msgid "A role identifier is required."
 msgstr ""
 
+msgid "The disabled date should be a valid date."
+msgstr ""
+
 msgid "The profile should not be empty."
 msgstr ""
 
@@ -926,7 +1031,7 @@ msgstr ""
 msgid "The username is already in use."
 msgstr ""
 
-msgid "The role identifier does not exist."
+msgid "The role does not exist."
 msgstr ""
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
@@ -941,6 +1046,9 @@ msgstr ""
 msgid "The armored key should be a valid ASCII-armored OpenPGP key."
 msgstr ""
 
+msgid "The armored key is not valid."
+msgstr ""
+
 msgid "The message should be a valid ASCII-armored OpenPGP message."
 msgstr ""
 
@@ -948,6 +1056,18 @@ msgid "The creation date should be set in the past."
 msgstr ""
 
 msgid "The key should not already be expired."
+msgstr ""
+
+msgid "The date should not be set in the future."
+msgstr ""
+
+msgid "The date could not be parsed."
+msgstr ""
+
+msgid "The email should be a valid email address."
+msgstr ""
+
+msgid "The regular expression should be a valid string."
 msgstr ""
 
 msgid "The fingerprint does not match the one of the armored key."
@@ -962,7 +1082,31 @@ msgstr ""
 msgid "The delete status should be a valid boolean."
 msgstr ""
 
+msgid "The field must be null when creating a new record."
+msgstr ""
+
 msgid "The key identifier should be a string of 8 hexadecimal characters."
+msgstr ""
+
+msgid "The provided IP is invalid."
+msgstr ""
+
+msgid "The provided user agent is invalid."
+msgstr ""
+
+msgid "{0} updated your memberships in several groups"
+msgstr ""
+
+msgid "{0} deleted several group memberships"
+msgstr ""
+
+msgid "You made changes on several resources"
+msgstr ""
+
+msgid "{0} has made changes on several resources"
+msgstr ""
+
+msgid "{0} shared several items with you"
 msgstr ""
 
 msgid "{0} just activated their account on passbolt"
@@ -983,6 +1127,9 @@ msgstr ""
 msgid "{0} requested you to add members to {1}"
 msgstr ""
 
+msgid "You have been requested to add members to {0}"
+msgstr ""
+
 msgid "{0} removed you from the group {1}"
 msgstr ""
 
@@ -1001,46 +1148,67 @@ msgstr ""
 msgid "You added the password {0}"
 msgstr ""
 
+msgid "You added a new password"
+msgstr ""
+
 msgid "{0} deleted the password {1}"
 msgstr ""
 
-msgid "{0} edited the password {1}"
+msgid "{0} deleted a password"
 msgstr ""
 
-msgid "{0} can not complete the account recovery process!"
+msgid "You edited a resource"
 msgstr ""
 
-msgid "{0} shared the password {1}"
+msgid "{0} edited a resource"
+msgstr ""
+
+msgid "You edited the resource {0}"
+msgstr ""
+
+msgid "{0} edited the resource {1}"
+msgstr ""
+
+msgid "{0} created a new role {1}"
+msgstr ""
+
+msgid "{0} updated the role {1}"
+msgstr ""
+
+msgid "{0} cannot complete the account recovery process!"
+msgstr ""
+
+msgid "{0} shared the resource {1}"
+msgstr ""
+
+msgid "{0} shared a resource"
+msgstr ""
+
+msgid "You deleted administrator {0}"
+msgstr ""
+
+msgid "{0} deleted your account"
+msgstr ""
+
+msgid "{0} deleted administrator {1}"
+msgstr ""
+
+msgid "Your account has been suspended"
+msgstr ""
+
+msgid "{0}'s admin role has been revoked"
 msgstr ""
 
 msgid "{0} deleted user {1}"
 msgstr ""
 
+msgid "{0} has been suspended"
+msgstr ""
+
 msgid "Welcome to passbolt, {0}!"
 msgstr ""
 
-msgid "{0} updated your memberships in several groups"
-msgstr ""
-
-msgid "Your membership in several groups changed in passbolt"
-msgstr ""
-
-msgid "{0} deleted several groups"
-msgstr ""
-
-msgid "Several groups were deleted in passbolt"
-msgstr ""
-
-msgid "{0} has made changes on several resources"
-msgstr ""
-
-msgid "Multiple passwords have been changed in passbolt"
-msgstr ""
-
-msgid "{0} shared several items with you"
-msgstr ""
-
-msgid "Multiple passwords have been shared with you in passbolt"
+msgid "Your role has been updated"
 msgstr ""
 
 msgid "The purify subject setting should be a boolean."
@@ -1067,6 +1235,12 @@ msgstr ""
 msgid "The send on user recover abort setting should be a boolean."
 msgstr ""
 
+msgid "The send on user disabled setting should be a boolean."
+msgstr ""
+
+msgid "The send on admin disabled setting should be a boolean."
+msgstr ""
+
 msgid "The send on comment added setting should be a boolean."
 msgstr ""
 
@@ -1083,6 +1257,9 @@ msgid "The send on group user updated setting should be a boolean."
 msgstr ""
 
 msgid "The send on group manager updated setting should be a boolean."
+msgstr ""
+
+msgid "The send on group manager request add user should be a boolean."
 msgstr ""
 
 msgid "The send on password created setting should be a boolean."
@@ -1154,6 +1331,18 @@ msgstr ""
 msgid "Could not find comments for the requested model."
 msgstr ""
 
+msgid "This record is already marked as favorite."
+msgstr ""
+
+msgid "Could not validate favorite data."
+msgstr ""
+
+msgid "The favorite does not exist."
+msgstr ""
+
+msgid "Could not delete favorite."
+msgstr ""
+
 msgid "Validation failed for favorite {0}. {1}"
 msgstr ""
 
@@ -1187,10 +1376,601 @@ msgstr ""
 msgid "Could not validate group user data."
 msgstr ""
 
-msgid "Could not validate sub key data."
+msgid "The resource with ID {0} does not have a secret revision."
 msgstr ""
 
-msgid "Public key sub key id could not be found."
+msgid "All email notifications will be sent."
+msgstr ""
+
+msgid "Some email notifications are disabled by the administrator."
+msgstr ""
+
+msgid "Host availability will be checked."
+msgstr ""
+
+msgid "Host availability checking is disabled."
+msgstr ""
+
+msgid "Make sure this instance is not publicly available on the internet."
+msgstr ""
+
+msgid "Or set the PASSBOLT_EMAIL_VALIDATE_MX environment variable to true."
+msgstr ""
+
+msgid "Or set passbolt.email.validate.mx to true in {0}."
+msgstr ""
+
+msgid "Serving the compiled version of the javascript app."
+msgstr ""
+
+msgid "Using non-compiled Javascript. Passbolt will be slower."
+msgstr ""
+
+msgid "Set passbolt.js.build to production in {0}"
+msgstr ""
+
+msgid "undefined"
+msgstr ""
+
+msgid "Could not read tag information on github repository"
+msgstr ""
+
+msgid "Using latest passbolt version ({0})."
+msgstr ""
+
+msgid "Could connect to passbolt repository to check versions."
+msgstr ""
+
+msgid "This installation is not up to date. Currently using {0} and it should be {1}."
+msgstr ""
+
+msgid "Could not connect to passbolt repository to check versions."
+msgstr ""
+
+msgid "It is not possible to check if your version is up-to-date."
+msgstr ""
+
+msgid "See https://www.passbolt.com/help/tech/update"
+msgstr ""
+
+msgid "Check the network configuration to allow this script to check for updates."
+msgstr ""
+
+msgid "Search engine robots are told not to index content."
+msgstr ""
+
+msgid "Search engine robots are not told not to index content."
+msgstr ""
+
+msgid "Set passbolt.meta.robots to false in {0}."
+msgstr ""
+
+msgid "Selenium API endpoints are disabled."
+msgstr ""
+
+msgid "Selenium API endpoints are active. This setting should be used for testing only."
+msgstr ""
+
+msgid "Set passbolt.selenium.active to false in {0}."
+msgstr ""
+
+msgid "The Self Registration plugin is enabled."
+msgstr ""
+
+msgid "The Self Registration plugin is disabled."
+msgstr ""
+
+msgid "Enable the plugin in order to define self registration settings."
+msgstr ""
+
+msgid "Registration is closed, only administrators can add users."
+msgstr ""
+
+msgid "The self registration provider is: {0}."
+msgstr ""
+
+msgid "The deprecated self registration public setting was not found in {0}."
+msgstr ""
+
+msgid "The deprecated self registration public setting was found in {0}."
+msgstr ""
+
+msgid "You may remove the \"passbolt.registration.public\" setting."
+msgstr ""
+
+msgid "Passbolt is configured to force SSL use."
+msgstr ""
+
+msgid "Passbolt is not configured to force SSL use."
+msgstr ""
+
+msgid "Set passbolt.ssl.force to true in {0}."
+msgstr ""
+
+msgid "App.fullBaseUrl is set to HTTPS."
+msgstr ""
+
+msgid "App.fullBaseUrl is not set to HTTPS."
+msgstr ""
+
+msgid "Check App.fullBaseUrl url scheme in {0}."
+msgstr ""
+
+msgid "The application config file is present"
+msgstr ""
+
+msgid "The application config file is missing in {0}"
+msgstr ""
+
+msgid "Copy {0} to {1}"
+msgstr ""
+
+msgid "The passbolt config file is present"
+msgstr ""
+
+msgid "The passbolt config file is missing in {0}"
+msgstr ""
+
+msgid "The passbolt config file is not required if passbolt is configured with environment variables"
+msgstr ""
+
+msgid "Cache is working."
+msgstr ""
+
+msgid "Cache is NOT working."
+msgstr ""
+
+msgid "Deprecated `_cake_core_` cache configuration found."
+msgstr ""
+
+msgid "Check the settings in {0}"
+msgstr ""
+
+msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
+msgstr ""
+
+msgid "Debug mode is off."
+msgstr ""
+
+msgid "Debug mode is on."
+msgstr ""
+
+msgid "Set debug to false in {0}"
+msgstr ""
+
+msgid "Full base url is set to {0}"
+msgstr ""
+
+msgid "Full base url is not set. The application is using: {0}."
+msgstr ""
+
+msgid "Edit App.fullBaseUrl in {0}"
+msgstr ""
+
+msgid "/healthcheck/status is reachable."
+msgstr ""
+
+msgid "Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl"
+msgstr ""
+
+msgid "Check that the domain name is correct in {0}"
+msgstr ""
+
+msgid "Check the network settings"
+msgstr ""
+
+msgid "Unique value set for security.salt"
+msgstr ""
+
+msgid "Default value found for security.salt"
+msgstr ""
+
+msgid "Edit the security.salt in {0}"
+msgstr ""
+
+msgid "App.fullBaseUrl validation OK."
+msgstr ""
+
+msgid "App.fullBaseUrl does not validate. A valid URL/IP is accepted, but found \"{0}\"."
+msgstr ""
+
+msgid "Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt"
+msgstr ""
+
+msgid "IMPORTANT: Using an empty App.fullBaseUrl can lead to host header injection attack: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
+msgstr ""
+
+msgid "The application is able to connect to the database"
+msgstr ""
+
+msgid "The driver defined in the database configuration is not supported."
+msgstr ""
+
+msgid "The application is not able to connect to the database."
+msgstr ""
+
+msgid "Ensure that the driver defined in {0} is one of the following: {1}."
+msgstr ""
+
+msgid "Double check the host, database name, username and password in {0}."
+msgstr ""
+
+msgid "Make sure the database exists and is accessible for the given database user."
+msgstr ""
+
+msgid "Some default content is present."
+msgstr ""
+
+msgid "No default content found."
+msgstr ""
+
+msgid "Run the install script to install the database tables"
+msgstr ""
+
+msgid "The database version is supported."
+msgstr ""
+
+msgid "The database version is deprecated."
+msgstr ""
+
+msgid "The database schema is up to date."
+msgstr ""
+
+msgid "The database schema is not up to date."
+msgstr ""
+
+msgid "Run the migration scripts:"
+msgstr ""
+
+msgid "{0} tables found."
+msgstr ""
+
+msgid "No table found."
+msgstr ""
+
+msgid "Cannot detect your system distribution details."
+msgstr ""
+
+msgid "See `{0}`."
+msgstr ""
+
+msgid "Cannot detect your `gpg` or `libgcrypt` version."
+msgstr ""
+
+msgid "See `{0}` and `{1}`."
+msgstr ""
+
+msgid "GD or Imagick extension is installed."
+msgstr ""
+
+msgid "You must enable the gd or imagick extensions to use Passbolt."
+msgstr ""
+
+msgid "See: https://secure.php.net/manual/en/book.image.php"
+msgstr ""
+
+msgid "See: https://secure.php.net/manual/en/book.imagick.php"
+msgstr ""
+
+msgid "Intl extension is installed."
+msgstr ""
+
+msgid "You must enable the intl extension to use Passbolt."
+msgstr ""
+
+msgid "See: https://secure.php.net/manual/en/book.intl.php"
+msgstr ""
+
+msgid "The logs directory {0} and its content are writable."
+msgstr ""
+
+msgid "The logs directory {0} and its content are not writable."
+msgstr ""
+
+msgid "Ensure the logs directory and its content are writable by the webserver user."
+msgstr ""
+
+msgid "You can try:"
+msgstr ""
+
+msgid "Mbstring extension is installed."
+msgstr ""
+
+msgid "You must enable the mbstring extension to use Passbolt."
+msgstr ""
+
+msgid "See: https://secure.php.net/manual/en/book.mbstring.php"
+msgstr ""
+
+msgid "PHP version is {0} or above."
+msgstr ""
+
+msgid "PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment."
+msgstr ""
+
+msgid "64-bit architecture system detected."
+msgstr ""
+
+msgid "32-bit architecture system detected, this environment will not be supported as of Passbolt v5+."
+msgstr ""
+
+msgid "See PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
+msgstr ""
+
+msgid "PCRE compiled with unicode support."
+msgstr ""
+
+msgid "PCRE has not been compiled with Unicode support."
+msgstr ""
+
+msgid "Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring."
+msgstr ""
+
+msgid "PHP version {0}."
+msgstr ""
+
+msgid "PHP version is too low, passbolt need PHP {0} or higher."
+msgstr ""
+
+msgid "System clock is synchronized and NTP service is active."
+msgstr ""
+
+msgid "System clock and NTP service information cannot be found."
+msgstr ""
+
+msgid "NTP service is active but the system clock is not synchronized."
+msgstr ""
+
+msgid "System clock is synchronized but NTP service is inactive."
+msgstr ""
+
+msgid "System clock is not synchronized and NTP service is inactive."
+msgstr ""
+
+msgid "That generally means the NTP service is failing to contact any NTP servers."
+msgstr ""
+
+msgid "See `{0}`. More information: {1}"
+msgstr ""
+
+msgid "The temporary directory and its content are writable and not executable."
+msgstr ""
+
+msgid "The temporary directory and its content are not writable, or are executable."
+msgstr ""
+
+msgid "Ensure the temporary directory and its content are writable by the webserver user."
+msgstr ""
+
+msgid "you can try:"
+msgstr ""
+
+msgid "The private key can be used to decrypt a message."
+msgstr ""
+
+msgid "The private key cannot be used to decrypt a message"
+msgstr ""
+
+msgid "The private key can be used to decrypt and verify a message."
+msgstr ""
+
+msgid "The private key cannot be used to decrypt and verify a message"
+msgstr ""
+
+msgid "The public key can be used to encrypt a message."
+msgstr ""
+
+msgid "The public key cannot be used to encrypt a message"
+msgstr ""
+
+msgid "Make sure that the server private key is valid and that there is no passphrase."
+msgstr ""
+
+msgid "Make sure you imported the private server key in the keyring of the webserver user."
+msgstr ""
+
+msgid "The public and private keys can be used to encrypt and sign a message."
+msgstr ""
+
+msgid "The public and private keys cannot be used to encrypt and sign a message"
+msgstr ""
+
+msgid "The private key can be used to sign a message."
+msgstr ""
+
+msgid "The private key cannot be used to sign a message"
+msgstr ""
+
+msgid "The public key can be used to verify a signature."
+msgstr ""
+
+msgid "The public key cannot be used to verify a signature."
+msgstr ""
+
+msgid "The server key fingerprint matches the one defined in {0}."
+msgstr ""
+
+msgid "The server key fingerprint doesn't match the one defined in {0}."
+msgstr ""
+
+msgid "Double check the key fingerprint, example: "
+msgstr ""
+
+msgid "SERVER_KEY_EMAIL: The email you used when you generated the server key."
+msgstr ""
+
+msgid "See. https://www.passbolt.com/help/tech/install#toc_gpg"
+msgstr ""
+
+msgid "The server private key format is Gopengpg compatible."
+msgstr ""
+
+msgid "The server private key format is not Gopengpg compatible."
+msgstr ""
+
+msgid "The server public key format is Gopengpg compatible."
+msgstr ""
+
+msgid "The server public key format is not Gopengpg compatible."
+msgstr ""
+
+msgid "The environment variable GNUPGHOME is set to {0}."
+msgstr ""
+
+msgid "The environment variable GNUPGHOME is set to {0}, but the directory does not exist."
+msgstr ""
+
+msgid "Ensure the keyring location exists and is accessible by the webserver user."
+msgstr ""
+
+msgid "You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}."
+msgstr ""
+
+msgid "The directory {0} containing the keyring is writable by the webserver user."
+msgstr ""
+
+msgid "The directory {0} containing the keyring is not writable by the webserver user."
+msgstr ""
+
+msgid "Ensure the keyring location is accessible by the webserver user."
+msgstr ""
+
+msgid "The server OpenPGP key is not the default one."
+msgstr ""
+
+msgid "Do not use the default OpenPGP key for the server."
+msgstr ""
+
+msgid "The server OpenPGP key is not set."
+msgstr ""
+
+msgid "Create a key, export it and add the fingerprint to {0}"
+msgstr ""
+
+msgid "PHP GPG Module is installed and loaded."
+msgstr ""
+
+msgid "PHP GPG Module is not installed or loaded."
+msgstr ""
+
+msgid "Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php"
+msgstr ""
+
+msgid "Make sure to add extension=gnupg.so in php ini files for both php-cli and php."
+msgstr ""
+
+msgid "The private key file is defined in {0} and readable."
+msgstr ""
+
+msgid "The private key file is not defined in {0} or not readable."
+msgstr ""
+
+msgid "Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in {0}."
+msgstr ""
+
+msgid "Ensure there is a private key armored block in the key file."
+msgstr ""
+
+msgid "Ensure the private key defined in {0} exists and is accessible by the webserver user."
+msgstr ""
+
+msgid "There is a valid email id defined for the server key."
+msgstr ""
+
+msgid "The server key does not have a valid email id."
+msgstr ""
+
+msgid "The server public key defined in the {0} (or environment variables) is in the keyring."
+msgstr ""
+
+msgid "The server public key defined in the {0} (or environment variables) is not in the keyring"
+msgstr ""
+
+msgid "Import the private server key in the keyring of the webserver user."
+msgstr ""
+
+msgid "The public key file is defined in {0} and readable."
+msgstr ""
+
+msgid "The public key file is not defined in {0} or not readable."
+msgstr ""
+
+msgid "Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in {0}."
+msgstr ""
+
+msgid "Ensure there is a public key armored block in the key file."
+msgstr ""
+
+msgid "Ensure the public key defined in {0} exists and is accessible by the webserver user."
+msgstr ""
+
+msgid "Environment"
+msgstr ""
+
+msgid "Config files"
+msgstr ""
+
+msgid "Core config"
+msgstr ""
+
+msgid "SMTP settings"
+msgstr ""
+
+msgid "Application configuration"
+msgstr ""
+
+msgid "Database"
+msgstr ""
+
+msgid "GPG Configuration"
+msgstr ""
+
+msgid "JWT Authentication"
+msgstr ""
+
+msgid "SSL Certificate"
+msgstr ""
+
+msgid "The {0} plugin is enabled."
+msgstr ""
+
+msgid "The {0} plugin is disabled."
+msgstr ""
+
+msgid "Set the environment variable {0} to true"
+msgstr ""
+
+msgid "Enable the plugin in order to define SMTP settings in the database."
+msgstr ""
+
+msgid "Hostname is matching in SSL certificate."
+msgstr ""
+
+msgid "Hostname does not match when validating certificates."
+msgstr ""
+
+msgid "SSL access is enabled."
+msgstr ""
+
+msgid "SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue."
+msgstr ""
+
+msgid "Not using a self-signed certificate."
+msgstr ""
+
+msgid "Using a self-signed certificate."
+msgstr ""
+
+msgid "SSL peer certificate validates."
+msgstr ""
+
+msgid "SSL peer certificate does not validate."
+msgstr ""
+
+msgid "The keyring is not defined."
+msgstr ""
+
+msgid "The keyring directory is not accessible by the current user: {0}"
 msgstr ""
 
 msgid "Could not validate message data."
@@ -1218,6 +1998,30 @@ msgid "Unknown key validation rule: {0}"
 msgstr ""
 
 msgid "The armored message could not be validated."
+msgstr ""
+
+msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
+msgstr ""
+
+msgid "The OpenPGP server key defined in the config cannot be used to verify signature."
+msgstr ""
+
+msgid "The OpenPGP server key defined in the config cannot be used to sign."
+msgstr ""
+
+msgid "The config for the server private key fingerprint is not available or incomplete."
+msgstr ""
+
+msgid "The config for the server private key passphrase is invalid."
+msgstr ""
+
+msgid "The user public key is not available or incomplete."
+msgstr ""
+
+msgid "The user public key fingerprint is not available or incomplete."
+msgstr ""
+
+msgid "The user armored key is not available or incomplete."
 msgstr ""
 
 msgid "The algorithm is invalid."
@@ -1268,6 +2072,12 @@ msgstr ""
 msgid "Validation success for permission {0}"
 msgstr ""
 
+msgid "The permissions data must be an array."
+msgstr ""
+
+msgid "The permissions data array keys must be integers."
+msgstr ""
+
 msgid "Could not validate permissions data."
 msgstr ""
 
@@ -1280,7 +2090,7 @@ msgstr ""
 msgid "Could not validate resource data."
 msgstr ""
 
-msgid "An unexpected error occured, please contact an administrator."
+msgid "An unexpected error occurred, please contact an administrator."
 msgstr ""
 
 msgid "The server returned the following error:"
@@ -1292,10 +2102,37 @@ msgstr ""
 msgid "Validation success for resource {0}"
 msgstr ""
 
+msgid "Metadata key exist and present for resource {0}."
+msgstr ""
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr ""
+
+msgid "The resource types associated to this resource does not exist."
+msgstr ""
+
+msgid "No secret revision were found for this resource."
+msgstr ""
+
 msgid "You are not allowed to update this resource."
 msgstr ""
 
 msgid "Additional resource types are not enabled on this server."
+msgstr ""
+
+msgid "The role could not be saved."
+msgstr ""
+
+msgid "Could not save the role, please try again later."
+msgstr ""
+
+msgid "The role does not exist or deleted."
+msgstr ""
+
+msgid "The role could not be deleted."
+msgstr ""
+
+msgid "Could not delete the role, please try again later."
 msgstr ""
 
 msgid "There should be at least 4 roles"
@@ -1307,16 +2144,28 @@ msgstr ""
 msgid "Validation success for role {0}"
 msgstr ""
 
+msgid "The role could not be updated."
+msgstr ""
+
+msgid "Could not update the role, please try again later."
+msgstr ""
+
+msgid "Could not validate secrets data."
+msgstr ""
+
 msgid "Could not validate secret data."
+msgstr ""
+
+msgid "The group id should be a valid UUID."
+msgstr ""
+
+msgid "The users ids array should contain only valid UUIDs."
 msgstr ""
 
 msgid "Validation failed for secret {0}. {1}"
 msgstr ""
 
 msgid "Validation success for secret {0}"
-msgstr ""
-
-msgid "Could not validate secrets data."
 msgstr ""
 
 msgid "The secrets of all the users having access to the resource are required."
@@ -1343,7 +2192,7 @@ msgstr ""
 msgid "The key provided does not belong to given user."
 msgstr ""
 
-msgid "The user does not exist or is not active."
+msgid "The user does not exist or is not active or is disabled."
 msgstr ""
 
 msgid "The OpenPGP key data is not valid."
@@ -1355,7 +2204,7 @@ msgstr ""
 msgid "The user does not exist, is already active or has been deleted."
 msgstr ""
 
-msgid "The user does not exist or is already active."
+msgid "The user does not exist or is already active or is disabled."
 msgstr ""
 
 msgid "The user should not be a guest."
@@ -1376,6 +2225,12 @@ msgstr ""
 msgid "Please register and complete the setup first."
 msgstr ""
 
+msgid "This user has been disabled."
+msgstr ""
+
+msgid "The username {0} is a duplicate."
+msgstr ""
+
 msgid "Validation failed for user {0}. {1}"
 msgstr ""
 
@@ -1383,12 +2238,6 @@ msgid "Validation success for user {0}"
 msgstr ""
 
 msgid "The directory {0} cannot be deleted"
-msgstr ""
-
-msgid "Could not connect to github repository"
-msgstr ""
-
-msgid "Could not read tag information on github repository"
 msgstr ""
 
 msgid "The key {0} cannot be used to encrypt."
@@ -1505,6 +2354,12 @@ msgstr ""
 msgid "The supplied email notification settings are not valid"
 msgstr ""
 
+msgid "The allow CSV format setting is required."
+msgstr ""
+
+msgid "The allow CSV format setting should be a boolean."
+msgstr ""
+
 msgid "The folder has been added successfully."
 msgstr ""
 
@@ -1601,7 +2456,28 @@ msgstr ""
 msgid "The identifier of the user who modified the folder should not be empty."
 msgstr ""
 
+msgid "The settings selected by your administrator prevent from downgrading folder."
+msgstr ""
+
+msgid "The metadata key does not exist."
+msgstr ""
+
+msgid "The folder metadata provided cannot be decrypted."
+msgstr ""
+
+msgid "A folder of type personal cannot be shared with other users or a group."
+msgstr ""
+
+msgid "You made changes on several folders"
+msgstr ""
+
+msgid "{0} has made changes on several folders"
+msgstr ""
+
 msgid "You added the folder {0}"
+msgstr ""
+
+msgid "You added a new folder"
 msgstr ""
 
 msgid "You deleted the folder {0}"
@@ -1613,10 +2489,13 @@ msgstr ""
 msgid "{0} shared the folder {1}"
 msgstr ""
 
-msgid "You edited the folder {0}"
+msgid "{0} shared a folder"
 msgstr ""
 
-msgid "{0} edited the folder {1}"
+msgid "{0} edited the folder"
+msgstr ""
+
+msgid "You edited the folder"
 msgstr ""
 
 msgid "An email notification setting should be a boolean."
@@ -1638,9 +2517,6 @@ msgid "You are not allowed to delete this folder."
 msgstr ""
 
 msgid "The folder does not exist."
-msgstr ""
-
-msgid "You cannot delete this resource"
 msgstr ""
 
 msgid "You are not allowed to update the permissions of this folder."
@@ -1673,7 +2549,7 @@ msgstr ""
 msgid "Name: {0}"
 msgstr ""
 
-msgid "view it in passbolt"
+msgid "View it in passbolt"
 msgstr ""
 
 msgid "You deleted a folder"
@@ -1682,7 +2558,7 @@ msgstr ""
 msgid "{0} deleted a folder"
 msgstr ""
 
-msgid "log in passbolt"
+msgid "Log in passbolt"
 msgstr ""
 
 msgid "{0} shared a folder with you"
@@ -1692,6 +2568,15 @@ msgid "You edited a folder"
 msgstr ""
 
 msgid "{0} edited a folder"
+msgstr ""
+
+msgid "{0} folders were affected."
+msgstr ""
+
+msgid "It would be too much to list them here, but you can go check them on passbolt."
+msgstr ""
+
+msgid "View them in passbolt"
 msgstr ""
 
 msgid "The user signature could not be verified."
@@ -1704,12 +2589,6 @@ msgid "The challenge is invalid. Deserialization failed."
 msgstr ""
 
 msgid "The challenge is invalid. Validation Failed."
-msgstr ""
-
-msgid "The config for the server private key fingerprint is not available or incomplete."
-msgstr ""
-
-msgid "The config for the server private key passphrase is invalid."
 msgstr ""
 
 msgid "The user id is missing or invalid."
@@ -1757,7 +2636,7 @@ msgstr ""
 msgid "No active refresh token matching the request could be found."
 msgstr ""
 
-msgid "The user is deactivated."
+msgid "The user is not activated or disabled."
 msgstr ""
 
 msgid "The user is deleted."
@@ -1767,6 +2646,12 @@ msgid "The verify token is invalid."
 msgstr ""
 
 msgid "The route {0} is not permitted with JWT authentication."
+msgstr ""
+
+msgid "The JWT public key could not be extracted."
+msgstr ""
+
+msgid "The JWT public key details could not be read."
 msgstr ""
 
 msgid "The key pair for JWT Authentication is not complete."
@@ -1779,6 +2664,21 @@ msgid "The JWT private key should be at least {0} bytes long."
 msgstr ""
 
 msgid "The configuration {0} is not correctly set."
+msgstr ""
+
+msgid "The {0} directory is not writable."
+msgstr ""
+
+msgid "The {0} directory should not be writable."
+msgstr ""
+
+msgid "A valid JWT key pair was found."
+msgstr ""
+
+msgid "A valid JWT key pair is missing."
+msgstr ""
+
+msgid "Run the create JWT keys script to create a valid JWT secret and public key pair:"
 msgstr ""
 
 msgid "The refresh token should be a valid UUID."
@@ -1808,28 +2708,13 @@ msgstr ""
 msgid "Verify token has been already used in the past."
 msgstr ""
 
-msgid "Security warning!"
-msgstr ""
-
-msgid "An unknown user with IP: {0} attempted to identify as {1}."
-msgstr ""
-
-msgid "This is a potential security issue."
-msgstr ""
-
-msgid "Please investigate!"
-msgstr ""
-
-msgid "An unknown user with IP: {0}  attempted to steal your login data."
-msgstr ""
-
-msgid "Please get in touch with one of your administrators."
-msgstr ""
-
 msgid "This is not a valid locale."
 msgstr ""
 
 msgid "This is not a valid {0}."
+msgstr ""
+
+msgid "The locale should be a string."
 msgstr ""
 
 msgid "The strategy should extend the class: {0}"
@@ -1865,7 +2750,13 @@ msgstr ""
 msgid "Could not validate action log data."
 msgstr ""
 
+msgid "The date {0} should be after the date {1}."
+msgstr ""
+
 msgid "The identifier should be not be empty."
+msgstr ""
+
+msgid "The name should be a valid ASCII string."
 msgstr ""
 
 msgid "Could not validate action data."
@@ -1932,6 +2823,669 @@ msgid "Could not validate secret access data."
 msgstr ""
 
 msgid "Could not validate secret history data."
+msgstr ""
+
+msgid "Invalid pagination limit set for metadata endpoint."
+msgstr ""
+
+msgid "Could not validate the metadata key data."
+msgstr ""
+
+msgid "The metadata key identifier should be a UUID."
+msgstr ""
+
+msgid "The private key identifier should be a UUID."
+msgstr ""
+
+msgid "The missing_metadata_key_ids contain is only allowed for administrators."
+msgstr ""
+
+msgid "An object type is required."
+msgstr ""
+
+msgid "The object type is invalid."
+msgstr ""
+
+msgid "A passphrase is required."
+msgstr ""
+
+msgid "The passphrase should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "A fingerprint is required."
+msgstr ""
+
+msgid "A fingerprint should not be greater than 51 characters."
+msgstr ""
+
+msgid "A fingerprint should not be empty."
+msgstr ""
+
+msgid "The fingerprint should be a valid alphanumeric string."
+msgstr ""
+
+msgid "The armored key should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The value is not a valid OpenPGP private key."
+msgstr ""
+
+msgid "The fingerprint does not match the OpenPGP private keys fingerprint."
+msgstr ""
+
+msgid "A domain is required."
+msgstr ""
+
+msgid "The domain should not be empty."
+msgstr ""
+
+msgid "The domain should match current instance URL."
+msgstr ""
+
+msgid "Private keys are required."
+msgstr ""
+
+msgid "Need at least one metadata private key."
+msgstr ""
+
+msgid "A data is required."
+msgstr ""
+
+msgid "The data should not be empty."
+msgstr ""
+
+msgid "The data should be a valid ASCII string."
+msgstr ""
+
+msgid "The expired field value should be a valid ISO 80601 date."
+msgstr ""
+
+msgid "The expired field value should be parseable."
+msgstr ""
+
+msgid "The setting should be a valid boolean."
+msgstr ""
+
+msgid "The setting is required."
+msgstr ""
+
+msgid "The metadata private keys is required."
+msgstr ""
+
+msgid "The metadata private keys should not be empty."
+msgstr ""
+
+msgid "Need at most one metadata private key."
+msgstr ""
+
+msgid "A metadata key identifier is required."
+msgstr ""
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr ""
+
+msgid "The user identifier should be null."
+msgstr ""
+
+msgid "The data is required."
+msgstr ""
+
+msgid "The modified date should be a valid ISO 80601 date."
+msgstr ""
+
+msgid "A modified date is required."
+msgstr ""
+
+msgid "The modified date should not be empty."
+msgstr ""
+
+msgid "The setting should not be empty."
+msgstr ""
+
+msgid "The setting should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The setting should be one of the following: {0}."
+msgstr ""
+
+msgid "The content type needs to be enabled in order to be set as default."
+msgstr ""
+
+msgid "Both v4 and v5 settings cannot be disabled."
+msgstr ""
+
+msgid "The metadata key type should be shared key."
+msgstr ""
+
+msgid "The metadata key should not be deleted."
+msgstr ""
+
+msgid "The metadata key identifier should not be empty."
+msgstr ""
+
+msgid "A metadata key type is required."
+msgstr ""
+
+msgid "The metadata key type should not be empty."
+msgstr ""
+
+msgid "A metadata is required."
+msgstr ""
+
+msgid "A modified by is required."
+msgstr ""
+
+msgid "The modified by should not be empty."
+msgstr ""
+
+msgid "The modified by should be a valid UUID."
+msgstr ""
+
+msgid "Metadata settings endpoints are disabled."
+msgstr ""
+
+msgid "Folder can not be shared"
+msgstr ""
+
+msgid "Few fields are missing for the V5."
+msgstr ""
+
+msgid "Missing fields: {0}"
+msgstr ""
+
+msgid "V4 related fields are not supported for V5."
+msgstr ""
+
+msgid "Superfluous fields: {0}"
+msgstr ""
+
+msgid "Allow usage of personal keys"
+msgstr ""
+
+msgid "True"
+msgstr ""
+
+msgid "False"
+msgstr ""
+
+msgid "Zero-knowledge key share"
+msgstr ""
+
+msgid "The metadata private key data must be an array."
+msgstr ""
+
+msgid "No resource type mapping for ID '{0}'"
+msgstr ""
+
+msgid "Default resource types"
+msgstr ""
+
+msgid "Default folder type"
+msgstr ""
+
+msgid "Default comment type"
+msgstr ""
+
+msgid "Allow creation of V5 resources"
+msgstr ""
+
+msgid "Allow creation of V5 folders"
+msgstr ""
+
+msgid "Allow creation of V5 tags"
+msgstr ""
+
+msgid "Allow creation of V5 comments"
+msgstr ""
+
+msgid "Allow creation of V4 resources"
+msgstr ""
+
+msgid "Allow creation of V4 folders"
+msgstr ""
+
+msgid "Allow creation of V4 tags"
+msgstr ""
+
+msgid "No permission found for the entity: {0}"
+msgstr ""
+
+msgid "The identifier of the user who created the metadata key should be a valid UUID."
+msgstr ""
+
+msgid "The creator is required."
+msgstr ""
+
+msgid "The identifier of the user who modified the metadata key should be a valid UUID."
+msgstr ""
+
+msgid "A expired date is required."
+msgstr ""
+
+msgid "The expired date should not be empty."
+msgstr ""
+
+msgid "The modifier is required."
+msgstr ""
+
+msgid "The fingerprint is already in use."
+msgstr ""
+
+msgid "Already two metadata keys are active."
+msgstr ""
+
+msgid "You cannot reuse the user key."
+msgstr ""
+
+msgid "The user does not exist or is not active or is deleted."
+msgstr ""
+
+msgid "The metadata key id & user id combination is already in use."
+msgstr ""
+
+msgid "The data is not valid. Please make sure it is encrypted for the correct key."
+msgstr ""
+
+msgid "The entity must be an array."
+msgstr ""
+
+msgid "Entity {0} not found."
+msgstr ""
+
+msgid "Could not validate the metadata key data for the entity with ID: {0}."
+msgstr ""
+
+msgid "{0} created a new metadata key"
+msgstr ""
+
+msgid "You created a new metadata key"
+msgstr ""
+
+msgid "{0} deleted a metadata key"
+msgstr ""
+
+msgid "You deleted a metadata key"
+msgstr ""
+
+msgid "{0} has expired a metadata key"
+msgstr ""
+
+msgid "You have expired a metadata key"
+msgstr ""
+
+msgid "{0} edited the metadata settings"
+msgstr ""
+
+msgid "You edited the metadata settings"
+msgstr ""
+
+msgid "No metadata private keys found for metadata key {0}."
+msgstr ""
+
+msgid "Metadata keys present for metadata key {0}"
+msgstr ""
+
+msgid "No active metadata key found."
+msgstr ""
+
+msgid "Active metadata key found or not required."
+msgstr ""
+
+msgid "No server metadata private key found."
+msgstr ""
+
+msgid "Unable to decrypt the metadata private key data."
+msgstr ""
+
+msgid "The server is able to decrypt the metadata private key."
+msgstr ""
+
+msgid "Unable to decrypt the metadata private key."
+msgstr ""
+
+msgid "The server has access to the metadata keys or does not require access to it."
+msgstr ""
+
+msgid "The server does not have access to metadata key."
+msgstr ""
+
+msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
+msgstr ""
+
+msgid "Without having access, the server won't be able to share the metadata private key with the users."
+msgstr ""
+
+msgid "Unable to decrypt the metadata private key (id: {0}) data."
+msgstr ""
+
+msgid "The metadata private key (id: {0}) cleartext data should be in JSON format."
+msgstr ""
+
+msgid "The metadata private key (id: {0}) cleartext data should not be empty."
+msgstr ""
+
+msgid "Unable to validate metadata private key (id: {0}) cleartext data."
+msgstr ""
+
+msgid "The server metadata private key is valid."
+msgstr ""
+
+msgid "The server metadata private key is not valid."
+msgstr ""
+
+msgid "The server does not have access to the server metadata private key in Zero-knowledge mode."
+msgstr ""
+
+msgid "The server has access to the server metadata private key while in Zero-knowledge mode."
+msgstr ""
+
+msgid "When Zero-knowledge mode is enabled, the server should not have access to the server metadata private key."
+msgstr ""
+
+msgid "The metadata key does not exist or has been deleted."
+msgstr ""
+
+msgid "The metadata key has already been deleted."
+msgstr ""
+
+msgid "The metadata key should be marked as expired first."
+msgstr ""
+
+msgid "The metadata key is still in use, migrate the remaining items to the new key first."
+msgstr ""
+
+msgid "The metadata key could not be deleted."
+msgstr ""
+
+msgid "The metadata key fingerprint is invalid."
+msgstr ""
+
+msgid "The metadata key is already marked as expired."
+msgstr ""
+
+msgid "The metadata key could not be updated."
+msgstr ""
+
+msgid "The metadata key could not be saved."
+msgstr ""
+
+msgid "Could not save the metadata key, please try again later."
+msgstr ""
+
+msgid "Server metadata private key was not found."
+msgstr ""
+
+msgid "Metadata key could not be shared with user id: {0}."
+msgstr ""
+
+msgid "The data could not be validated."
+msgstr ""
+
+msgid "The data could not be saved."
+msgstr ""
+
+msgid "The metadata private key should not be empty."
+msgstr ""
+
+msgid "The metadata private key cleartext data should be in JSON format."
+msgstr ""
+
+msgid "The metadata private key cleartext data should not be empty."
+msgstr ""
+
+msgid "The metadata private key cleartext data is not valid."
+msgstr ""
+
+msgid "The OpenPGP user key cannot be found."
+msgstr ""
+
+msgid "Could not validate the settings."
+msgstr ""
+
+msgid "The server metadata private keys data are invalid."
+msgstr ""
+
+msgid "The server metadata private key is required to enable these settings."
+msgstr ""
+
+msgid "The metadata private key could not be created."
+msgstr ""
+
+msgid "Please try again later."
+msgstr ""
+
+msgid "The metadata private key could not be validated."
+msgstr ""
+
+msgid "The request data is invalid."
+msgstr ""
+
+msgid "The metadata key is already shared with the user."
+msgstr ""
+
+msgid "The metadata private keys could not be created."
+msgstr ""
+
+msgid "The metadata private key data is not valid."
+msgstr ""
+
+msgid "The metadata private key does not exist or has been deleted."
+msgstr ""
+
+msgid "The metadata private key was already edited by the user."
+msgstr ""
+
+msgid "The metadata private key could not be updated."
+msgstr ""
+
+msgid "The metadata session key could not be saved."
+msgstr ""
+
+msgid "Could not save the metadata session key, please try again later."
+msgstr ""
+
+msgid "The data must be a string."
+msgstr ""
+
+msgid "The metadata session key identifier should be a UUID."
+msgstr ""
+
+msgid "The metadata session key does not exist or does not belong to this user."
+msgstr ""
+
+msgid "The metadata session key could not be deleted."
+msgstr ""
+
+msgid "Could not validate the data."
+msgstr ""
+
+msgid "The metadata session key data is identical."
+msgstr ""
+
+msgid "The metadata session key data has changed."
+msgstr ""
+
+msgid "Could not save the metadata session keys, please try again later."
+msgstr ""
+
+msgid "Unable to save the metadata settings."
+msgstr ""
+
+msgid "An active metadata key could not be found, create a key first."
+msgstr ""
+
+msgid "Could not prepare private key for server key."
+msgstr ""
+
+msgid "User key not found."
+msgstr ""
+
+msgid "Could not prepare private key for user id {0}."
+msgstr ""
+
+msgid "No folders to migrate."
+msgstr ""
+
+msgid "Folder ID \"{0}\" is already V5"
+msgstr ""
+
+msgid "No permission found for folder ID {0}"
+msgstr ""
+
+msgid "No user provided."
+msgstr ""
+
+msgid "The metadata could not be encrypted for permission id: {0}."
+msgstr ""
+
+msgid "No OpenPGP key found for the user."
+msgstr ""
+
+msgid "The metadata could not be encrypted with the user id: {0}."
+msgstr ""
+
+msgid "The metadata could not be encrypted with the metadata key id: {0}."
+msgstr ""
+
+msgid "Unable to migrate folder ID: {0} to V5."
+msgstr ""
+
+msgid "Migrating {0}..."
+msgstr ""
+
+msgid "Errors (encoded): {0}"
+msgstr ""
+
+msgid "Migration process for {0} finished."
+msgstr ""
+
+msgid "No resources to migrate."
+msgstr ""
+
+msgid "Resource ID \"{0}\" is already V5"
+msgstr ""
+
+msgid "No permission found for resource ID {0}"
+msgstr ""
+
+msgid "Unable to migrate resource ID: {0} to V5."
+msgstr ""
+
+msgid "Could not validate metadata key data."
+msgstr ""
+
+msgid "Could not import the metadata OpenPGP key."
+msgstr ""
+
+msgid "The metadata key is not available or incomplete."
+msgstr ""
+
+msgid "The metadata key fingerprint is not available or incomplete."
+msgstr ""
+
+msgid "The metadata armored key is not available or incomplete."
+msgstr ""
+
+msgid "The request data should not be empty."
+msgstr ""
+
+msgid "The request data is too large."
+msgstr ""
+
+msgid "The provided modified date does not match."
+msgstr ""
+
+msgid "The provided modified by does not match."
+msgstr ""
+
+msgid "The folder metadata key data could not be updated."
+msgstr ""
+
+msgid "The resource metadata key data could not be updated."
+msgstr ""
+
+msgid "The user identifier should be a UUID."
+msgstr ""
+
+msgid "The user metadata private keys could not be deleted."
+msgstr ""
+
+msgid "The user metadata session keys could not be deleted."
+msgstr ""
+
+msgid "V5 metadata format is not enabled."
+msgstr ""
+
+msgid "Resource creation/modification with encrypted metadata not allowed."
+msgstr ""
+
+msgid "Folder creation/modification with encrypted metadata not allowed."
+msgstr ""
+
+msgid "Tag creation/modification with encrypted metadata not allowed."
+msgstr ""
+
+msgid "Resource creation with cleartext metadata not allowed."
+msgstr ""
+
+msgid "Folder creation with cleartext metadata not allowed."
+msgstr ""
+
+msgid "Tag creation with cleartext metadata not allowed."
+msgstr ""
+
+msgid "You created a new metadata key."
+msgstr ""
+
+msgid "{0} created a new metadata key."
+msgstr ""
+
+msgid "You deleted a metadata key."
+msgstr ""
+
+msgid "{0} deleted a metadata key."
+msgstr ""
+
+msgid "You have expired a metadata key."
+msgstr ""
+
+msgid "{0} has expired a metadata key."
+msgstr ""
+
+msgid "You edited the metadata settings."
+msgstr ""
+
+msgid "{0} edited the metadata settings."
+msgstr ""
+
+msgid "You have created a new folder."
+msgstr ""
+
+msgid "{0} has shared a folder with you."
+msgstr ""
+
+msgid "You have edited a folder."
+msgstr ""
+
+msgid "You have saved a new password"
+msgstr ""
+
+msgid "You have created a new password."
+msgstr ""
+
+msgid "{0} deleted a password."
+msgstr ""
+
+msgid "{0} shared a resource with you"
+msgstr ""
+
+msgid "{0} shared a resource with you."
+msgstr ""
+
+msgid "You have edited a resource."
+msgstr ""
+
+msgid "{0} has edited a resource."
 msgstr ""
 
 msgid "Information about the transfer is required."
@@ -2066,16 +3620,25 @@ msgstr ""
 msgid "This functionality is not available using AJAX/JSON."
 msgstr ""
 
+msgid "This functionality is only available using AJAX/JSON."
+msgstr ""
+
 msgid "This authentication provider is already setup. Disable it first"
 msgstr ""
 
 msgid "Multi Factor Authentication is configured!"
 msgstr ""
 
+msgid "Unable to configure Multi Factor Authentication."
+msgstr ""
+
 msgid "MFA authentication is required."
 msgstr ""
 
 msgid "The multi-factor authentication is not required."
+msgstr ""
+
+msgid "No valid multi-factor authentication settings found."
 msgstr ""
 
 msgid "No valid multi-factor authentication settings found for this provider."
@@ -2231,9 +3794,6 @@ msgstr ""
 msgid "The property {0} is visible by administrators only."
 msgstr ""
 
-msgid "The property {0} should be contained in order to filter by {1}."
-msgstr ""
-
 msgid "The MFA token provided does not exist or is inactive."
 msgstr ""
 
@@ -2276,66 +3836,6 @@ msgstr ""
 msgid "Could not validate Yubikey configuration."
 msgstr ""
 
-msgid "Duo Multi Factor Authentication"
-msgstr ""
-
-msgid "Something went wrong."
-msgstr ""
-
-msgid "Please try again later or contact your administrator."
-msgstr ""
-
-msgid "Logs"
-msgstr ""
-
-msgid "Retry"
-msgstr ""
-
-msgid "Getting started with Duo"
-msgstr ""
-
-msgid "How does it work?"
-msgstr ""
-
-msgid "You sign in to passbolt just like you normally do."
-msgstr ""
-
-msgid "Use you 2FA device to authenticate."
-msgstr ""
-
-msgid "Follow the procedure to login."
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
-msgid "Get started"
-msgstr ""
-
-msgid "Requirements"
-msgstr ""
-
-msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
-msgstr ""
-
-msgid "For the list of supported devices, see:"
-msgstr ""
-
-msgid "Duo authentication methods"
-msgstr ""
-
-msgid "Learn more"
-msgstr ""
-
-msgid "Duo multi-factor authentication is enabled!"
-msgstr ""
-
-msgid "When logging in you will be asked to perform Duo Authentication."
-msgstr ""
-
-msgid "Since"
-msgstr ""
-
 msgid "Multi factor authentication verification"
 msgstr ""
 
@@ -2345,76 +3845,13 @@ msgstr ""
 msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
 msgstr ""
 
-msgid "Multi factor authentication"
-msgstr ""
-
-msgid "Sorry no multi factor authentication is enabled for this organization."
-msgstr ""
-
-msgid "Please contact your administrator to enable multi-factor authentication."
-msgstr ""
-
-msgid "Please select a provider"
-msgstr ""
-
-msgid "Enabled"
-msgstr ""
-
-msgid "Disabled"
-msgstr ""
-
-msgid "What is multi-factor authentication?"
-msgstr ""
-
-msgid "Multi-factor authentication (MFA) is a method of confirming a user's identity that requires presenting two or more pieces of evidence (or factor)."
-msgstr ""
-
-msgid "learn more"
-msgstr ""
-
-msgid "Time based One Time Password (TOTP)"
-msgstr ""
-
-msgid "Scan this bar code"
-msgstr ""
-
 msgid "Enter the six digit number as presented on your phone or tablet."
-msgstr ""
-
-msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
-msgstr ""
-
-msgid "or"
-msgstr ""
-
-msgid "Getting started with Time based One Time Password (TOTP)"
-msgstr ""
-
-msgid "When using a new browser, you need an additional code from your phone."
-msgstr ""
-
-msgid "Once you enter this code, you can log in."
-msgstr ""
-
-msgid "Time based One Time Password (TOTP) is enabled!"
-msgstr ""
-
-msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
 msgstr ""
 
 msgid "Remember this device for a month."
 msgstr ""
 
-msgid "Yubikey One Time Password"
-msgstr ""
-
 msgid "Plug in the yubikey and put your finger on it."
-msgstr ""
-
-msgid "Yubikey One Time Password is enabled!"
-msgstr ""
-
-msgid "When logging in from a new device you will need a unique code generated by your yubikey."
 msgstr ""
 
 msgid "verify"
@@ -2426,12 +3863,6 @@ msgstr ""
 msgid "Or try with another provider"
 msgstr ""
 
-msgid "Manage providers"
-msgstr ""
-
-msgid "Turn off"
-msgstr ""
-
 msgid "Your multi-factor authentication is disabled."
 msgstr ""
 
@@ -2441,10 +3872,208 @@ msgstr ""
 msgid "Please contact your administrator if you didn't request this action."
 msgstr ""
 
-msgid "Log in passbolt"
+msgid "The automatic_expiry field must be true."
 msgstr ""
 
-msgid "The password generator value \"{0}\" is not valid."
+msgid "The automatic_update field must be true."
+msgstr ""
+
+msgid "The value should be an array."
+msgstr ""
+
+msgid "{0} marked several passwords as expired"
+msgstr ""
+
+msgid "Some of your passwords expired"
+msgstr ""
+
+msgid "You have passwords requiring your attention"
+msgstr ""
+
+msgid "Some of your passwords are expiring today."
+msgstr ""
+
+msgid "{0} marked the password {1} as expired"
+msgstr ""
+
+msgid "{0} marked a password as expired"
+msgstr ""
+
+msgid "You edited the password expiry settings"
+msgstr ""
+
+msgid "{0} edited the password expiry settings"
+msgstr ""
+
+msgid "The send password expire setting should be a boolean."
+msgstr ""
+
+msgid "Password expiry is not activated."
+msgstr ""
+
+msgid "The password expiry setting does not exist."
+msgstr ""
+
+msgid "Could not validate the password expiry settings."
+msgstr ""
+
+msgid "The password expiry settings have been updated."
+msgstr ""
+
+msgid "{0} resources were affected."
+msgstr ""
+
+msgid "Change them in passbolt"
+msgstr ""
+
+msgid "You have been requested to change them"
+msgstr ""
+
+msgid "Access for users to your shared passwords have been revoked."
+msgstr ""
+
+msgid "These passwords are now marked as expired."
+msgstr ""
+
+msgid "Please rotate them to ensure continued security."
+msgstr ""
+
+msgid "Please rotate it to ensure continued security."
+msgstr ""
+
+msgid "Change it in passbolt "
+msgstr ""
+
+msgid "Could not retrieve the password policies."
+msgstr ""
+
+msgid "The default generator is required."
+msgstr ""
+
+msgid "The default generator should be one of the following: {0}."
+msgstr ""
+
+msgid "The external dictionary check is required."
+msgstr ""
+
+msgid "The external dictionary check should be a boolean."
+msgstr ""
+
+msgid "The password generator settings is required."
+msgstr ""
+
+msgid "The password generator settings should not be empty."
+msgstr ""
+
+msgid "The password generator settings should have at least one mask selected."
+msgstr ""
+
+msgid "The passphrase generator settings is required."
+msgstr ""
+
+msgid "The passphrase generator settings should not be empty."
+msgstr ""
+
+msgid "Could not validate the password policies settings."
+msgstr ""
+
+msgid "The passphrase generator words is required."
+msgstr ""
+
+msgid "The passphrase generator words should be between {0} and {1}."
+msgstr ""
+
+msgid "The passphrase generator word separator is required."
+msgstr ""
+
+msgid "The passphrase generator word separator should be a valid UTF8 string."
+msgstr ""
+
+msgid "The passphrase generator word separator should be maximum {0} characters."
+msgstr ""
+
+msgid "The passphrase generator word case is required."
+msgstr ""
+
+msgid "The passphrase generator word case should be one of the following: {0}."
+msgstr ""
+
+msgid "The password generator length should be between {0} and {1}."
+msgstr ""
+
+msgid "The password generator length is required."
+msgstr ""
+
+msgid "The password generator mask upper is required."
+msgstr ""
+
+msgid "The password generator mask upper should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask lower is required."
+msgstr ""
+
+msgid "The password generator mask lower should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask digit is required."
+msgstr ""
+
+msgid "The password generator mask digit should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask parenthesis is required."
+msgstr ""
+
+msgid "The password generator mask parenthesis should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask emoji is required."
+msgstr ""
+
+msgid "The password generator mask emoji should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char1 is required."
+msgstr ""
+
+msgid "The password generator mask char1 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char2 is required."
+msgstr ""
+
+msgid "The password generator mask char2 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char3 is required."
+msgstr ""
+
+msgid "The password generator mask char3 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char4 is required."
+msgstr ""
+
+msgid "The password generator mask char4 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char5 is required."
+msgstr ""
+
+msgid "The password generator mask char5 should be a boolean type."
+msgstr ""
+
+msgid "The password generator exclude look alike chars is required."
+msgstr ""
+
+msgid "The password generator exclude look alike chars should be a boolean type."
+msgstr ""
+
+msgid "The rbacs could not be saved."
+msgstr ""
+
+msgid "Could not save the rbacs, please try again later."
 msgstr ""
 
 msgid "Record not found"
@@ -2472,6 +4101,12 @@ msgid "The request data is invalid: control_function invalid."
 msgstr ""
 
 msgid "The request data is invalid: ids must be unique."
+msgstr ""
+
+msgid "The control function is not allowed for this UI Action."
+msgstr ""
+
+msgid "The control function is not allowed for this Action."
 msgstr ""
 
 msgid "An action identifier should be a valid UUID."
@@ -2594,6 +4229,12 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+msgid "The deleted field must be set to null."
+msgstr ""
+
+msgid "It is not allowed to update these resource type properties."
+msgstr ""
+
 msgid "The slug should be a valid BMP-UTF8 string."
 msgstr ""
 
@@ -2624,6 +4265,60 @@ msgstr ""
 msgid "A resource type already exists with this definition."
 msgstr ""
 
+msgid "The resource type identifier should be a UUID."
+msgstr ""
+
+msgid "The resource type is already deleted."
+msgstr ""
+
+msgid "You cannot delete the last resource type of the default version."
+msgstr ""
+
+msgid "You cannot delete the last resource type available."
+msgstr ""
+
+msgid "The resource type can not be deleted as resources of this type still exist."
+msgstr ""
+
+msgid "The resource type could not be deleted."
+msgstr ""
+
+msgid "The resource type is not deleted."
+msgstr ""
+
+msgid "The max revisions should be a valid integer."
+msgstr ""
+
+msgid "The max revisions is required."
+msgstr ""
+
+msgid "The max revisions should be greater than 0."
+msgstr ""
+
+msgid "The max revisions should not exceed the max revisions limit set by the administrator."
+msgstr ""
+
+msgid "The allow sharing revisions should be a valid boolean."
+msgstr ""
+
+msgid "The allow sharing revisions is required."
+msgstr ""
+
+msgid "The allow sharing revisions is not enabled by the administrator."
+msgstr ""
+
+msgid "Secret revisions settings endpoints are disabled."
+msgstr ""
+
+msgid "The identifier of the user who created the secret revision should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the secret revision should be a valid UUID."
+msgstr ""
+
+msgid "Could not save secret revision"
+msgstr ""
+
 msgid "The self registration setting id should be a valid UUID."
 msgstr ""
 
@@ -2636,9 +4331,6 @@ msgstr ""
 msgid "The provider should be part of the supported list: {0}."
 msgstr ""
 
-msgid "The data should not be empty."
-msgstr ""
-
 msgid "The list of allowed domains should not be empty."
 msgstr ""
 
@@ -2646,6 +4338,12 @@ msgid "The list of allowed domains should be an array of strings."
 msgstr ""
 
 msgid "The domain #{0} should be a valid domain."
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "Enabled"
 msgstr ""
 
 msgid "Allowed domains: {0}"
@@ -2693,6 +4391,18 @@ msgstr ""
 msgid "Status: {0}"
 msgstr ""
 
+msgid "The sslVerifyPeer configuration should be a boolean."
+msgstr ""
+
+msgid "The sslVerifyPeerName configuration should be a boolean."
+msgstr ""
+
+msgid "The sslAllowSelfSigned configuration should be a boolean."
+msgstr ""
+
+msgid "The sslCafile configuration should be NULL or string."
+msgstr ""
+
 msgid "A sender name is required."
 msgstr ""
 
@@ -2709,9 +4419,6 @@ msgid "The sender email should not be empty."
 msgstr ""
 
 msgid "The sender email should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "The sender email should be a valid email address."
 msgstr ""
 
 msgid "A host name is required."
@@ -2750,6 +4457,126 @@ msgstr ""
 msgid "The test email should be a valid email address."
 msgstr ""
 
+msgid "The tenant ID should be a valid UUID."
+msgstr ""
+
+msgid "The client ID should be a valid UUID."
+msgstr ""
+
+msgid "The client secret should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The client secret should not exceed 256 characters."
+msgstr ""
+
+msgid "The OAuth2 username should be a valid email address."
+msgstr ""
+
+msgid "The OAuth2 username should not exceed 256 characters."
+msgstr ""
+
+msgid "The authentication method is required."
+msgstr ""
+
+msgid "The authentication method should be one of the following: {0}."
+msgstr ""
+
+msgid "The sender email should be a valid email address."
+msgstr ""
+
+msgid "A test recipient is required."
+msgstr ""
+
+msgid "The tenant ID is required."
+msgstr ""
+
+msgid "The tenant ID should not be empty."
+msgstr ""
+
+msgid "The client ID is required."
+msgstr ""
+
+msgid "The client ID should not be empty."
+msgstr ""
+
+msgid "The client secret is required."
+msgstr ""
+
+msgid "The client secret should not be empty."
+msgstr ""
+
+msgid "The OAuth2 username is required."
+msgstr ""
+
+msgid "The OAuth2 username should not be empty."
+msgstr ""
+
+msgid "SMTP settings endpoints disabled."
+msgstr ""
+
+msgid "The client should be a valid IP or a valid domain."
+msgstr ""
+
+msgid "No custom SSL configuration for SMTP server."
+msgstr ""
+
+msgid "Custom SSL certificate options for SMTP server is in use."
+msgstr ""
+
+msgid "Custom SSL configuration options set are invalid."
+msgstr ""
+
+msgid "SSL certification validation for SMTP server is disabled."
+msgstr ""
+
+msgid "SMTP Settings coherent. You may send a test email to validate them."
+msgstr ""
+
+msgid "SMTP Setting errors: {0}"
+msgstr ""
+
+msgid "The {0} plugin endpoints are disabled."
+msgstr ""
+
+msgid "The {0} plugin endpoints are enabled."
+msgstr ""
+
+msgid "It is recommended to disable the plugin endpoints."
+msgstr ""
+
+msgid "Set the PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED environment variable to true."
+msgstr ""
+
+msgid "Or set passbolt.security.smtpSettings.endpointsDisabled to true in {0}."
+msgstr ""
+
+msgid "not found"
+msgstr ""
+
+msgid "The SMTP Settings source is: {0}."
+msgstr ""
+
+msgid "It is recommended to set the SMTP Settings in the database through the administration section."
+msgstr ""
+
+msgid "database"
+msgstr ""
+
+msgid "env variables"
+msgstr ""
+
+msgid "Tenant ID should be a valid UUID."
+msgstr ""
+
+msgid "Client ID should be a valid UUID."
+msgstr ""
+
+msgid "Failed to obtain SMTP OAuth2 access token."
+msgstr ""
+
+msgid "SMTP OAuth2 token response from Microsoft did not contain an access token."
+msgstr ""
+
 msgid "Could not validate the smtp settings."
 msgstr ""
 
@@ -2762,28 +4589,73 @@ msgstr ""
 msgid "To fix this problem, you need to configure the SMTP server again."
 msgstr ""
 
-msgid "not found"
-msgstr ""
-
-msgid "database"
-msgstr ""
-
-msgid "env variables"
-msgstr ""
-
-msgid "undefined"
-msgstr ""
-
 msgid "Passbolt test email"
-msgstr ""
-
-msgid "A test recipient is required."
 msgstr ""
 
 msgid "Congratulations!"
 msgstr ""
 
 msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
+msgstr ""
+
+msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
+msgstr ""
+
+msgid "Errors: "
+msgstr ""
+
+msgid "Could not retrieve the user key policies."
+msgstr ""
+
+msgid "Conflicting authentication parameters, provide user_id/token only when the user is not already signed in."
+msgstr ""
+
+msgid "You are not authorized to access this location."
+msgstr ""
+
+msgid "Sign-in to passbolt, or provide a valid user ID and authentication token."
+msgstr ""
+
+msgid "The user ID must be a valid UUID."
+msgstr ""
+
+msgid "The authentication token must be a valid UUID."
+msgstr ""
+
+msgid "Unable to authenticate the guest user with the provided credentials."
+msgstr ""
+
+msgid "No registration authentication token found for the given user."
+msgstr ""
+
+msgid "The registration authentication token is expired."
+msgstr ""
+
+msgid "The preferred key type is required."
+msgstr ""
+
+msgid "The preferred key type should not be empty."
+msgstr ""
+
+msgid "The preferred key type should be one of the following: {0}."
+msgstr ""
+
+msgid "The preferred key type and size combination does not match."
+msgstr ""
+
+msgid "The preferred key type and curve combination does not match."
+msgstr ""
+
+msgid "The preferred key size is required."
+msgstr ""
+
+msgid "The preferred key size should be one of the following: {0}."
+msgstr ""
+
+msgid "The preferred key curve is required."
+msgstr ""
+
+msgid "The preferred key curve should be one of the following: {0}."
 msgstr ""
 
 msgid "The data entered are not correct"
@@ -2807,9 +4679,6 @@ msgstr ""
 msgid "Subscription key"
 msgstr ""
 
-msgid "Database"
-msgstr ""
-
 msgid "Server keys"
 msgstr ""
 
@@ -2828,6 +4697,15 @@ msgstr ""
 msgid "That's it!"
 msgstr ""
 
+msgid "A driver name is required."
+msgstr ""
+
+msgid "The driver name should not be empty."
+msgstr ""
+
+msgid "The database driver should be one of the following: {0}."
+msgstr ""
+
 msgid "The password should not contain quotes."
 msgstr ""
 
@@ -2841,6 +4719,12 @@ msgid "The database name should be a valid BMP-UTF8 string."
 msgstr ""
 
 msgid "The database name should not contain dashes."
+msgstr ""
+
+msgid "The schema is required on PostgreSQL"
+msgstr ""
+
+msgid "The schema should be a valid BMP-UTF8 string."
 msgstr ""
 
 msgid "An OpenPGP public key is required."
@@ -2870,9 +4754,6 @@ msgstr ""
 msgid "The OpenPGP private key should be a valid ASCII string."
 msgstr ""
 
-msgid "The value is not a valid OpenPGP private key."
-msgstr ""
-
 msgid "The OpenPGP private key should not have an expiry date."
 msgstr ""
 
@@ -2882,13 +4763,7 @@ msgstr ""
 msgid "Please note that passbolt does not support OpenPGP key protected with a secret."
 msgstr ""
 
-msgid "A fingerprint is required."
-msgstr ""
-
 msgid "The fingerprint should not be empty."
-msgstr ""
-
-msgid "The fingerprint should be a valid alphanumeric string."
 msgstr ""
 
 msgid "The fingerprint does not match the OpenPGP public and the OpenPGP private keys fingerprints."
@@ -2903,16 +4778,43 @@ msgstr ""
 msgid "The full base url should be a valid BMP-UTF8 string."
 msgstr ""
 
-msgid "A public registration setting is required."
-msgstr ""
-
-msgid "The public registration setting should be a valid boolean."
-msgstr ""
-
 msgid "A force ssl status is required."
 msgstr ""
 
 msgid "The force ssl setting should be a valid boolean."
+msgstr ""
+
+msgid "A subscription key is required."
+msgstr ""
+
+msgid "The subscription key should not be empty."
+msgstr ""
+
+msgid "The subscription format is not valid."
+msgstr ""
+
+msgid "The passbolt config is writable."
+msgstr ""
+
+msgid "The passbolt config is not writable."
+msgstr ""
+
+msgid "Ensure the file "
+msgstr ""
+
+msgid "The server OpenPGP private key file is writable."
+msgstr ""
+
+msgid "The server OpenPGP private key file is not writable."
+msgstr ""
+
+msgid "Ensure the file {0} is writable by the webserver user."
+msgstr ""
+
+msgid "The server OpenPGP public key file is writable."
+msgstr ""
+
+msgid "The server OpenPGP public key file is not writable."
 msgstr ""
 
 msgid "The database schema does not match the one expected"
@@ -2925,30 +4827,6 @@ msgid "There was a problem creating the first user"
 msgstr ""
 
 msgid "There was a problem creating the registration token"
-msgstr ""
-
-msgid "The passbolt config is writable."
-msgstr ""
-
-msgid "The passbolt config is not writable."
-msgstr ""
-
-msgid "Ensure the file "
-msgstr ""
-
-msgid "you can try:"
-msgstr ""
-
-msgid "The server OpenPGP public key file is writable."
-msgstr ""
-
-msgid "The server OpenPGP public key file is not writable."
-msgstr ""
-
-msgid "The server OpenPGP private key file is writable."
-msgstr ""
-
-msgid "The server OpenPGP private key file is not writable."
 msgstr ""
 
 msgid "Create your user account!"
@@ -3002,6 +4880,12 @@ msgstr ""
 msgid "Database name"
 msgstr ""
 
+msgid "schema"
+msgstr ""
+
+msgid "Schema"
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
@@ -3036,6 +4920,21 @@ msgid "port"
 msgstr ""
 
 msgid "Port"
+msgstr ""
+
+msgid "Authentication method"
+msgstr ""
+
+msgid "Directory (tenant) ID"
+msgstr ""
+
+msgid "Application (client) ID"
+msgstr ""
+
+msgid "Client secret"
+msgstr ""
+
+msgid "Client"
 msgstr ""
 
 msgid "Passbolt is not configured."
@@ -3095,12 +4994,6 @@ msgstr ""
 msgid "Some binary things are happening..."
 msgstr ""
 
-msgid "Passbolt Pro activation."
-msgstr ""
-
-msgid "Copy paste your Passbolt Pro subscription key here"
-msgstr ""
-
 msgid "Choose your preferences."
 msgstr ""
 
@@ -3113,16 +5006,16 @@ msgstr ""
 msgid "This is the url where passbolt will be accessible. This url will be used for places where the passbolt url cannot be guessed automatically, such as links in emails. No trailing slash."
 msgstr ""
 
-msgid "Allow public registration?"
-msgstr ""
-
-msgid "Allowing public registration means that any visitor can create himself an account on your passbolt. Unless your instance of passbolt is not reachable by the outside world, it is usually a bad idea."
-msgstr ""
-
 msgid "Force SSL?"
 msgstr ""
 
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
+msgstr ""
+
+msgid "Passbolt Pro activation."
+msgstr ""
+
+msgid "Copy paste your Passbolt Pro subscription key here"
 msgstr ""
 
 msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
@@ -3143,16 +5036,7 @@ msgstr ""
 msgid "GPG is configured correctly."
 msgstr ""
 
-msgid "GPG Configuration"
-msgstr ""
-
 msgid "SSL"
-msgstr ""
-
-msgid "SSL access is enabled."
-msgstr ""
-
-msgid "SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue."
 msgstr ""
 
 msgid "Start configuration"
@@ -3200,12 +5084,6 @@ msgstr ""
 msgid "Need help? You can find more information on how to install passbolt in the official online help."
 msgstr ""
 
-msgid "What subscription key?"
-msgstr ""
-
-msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
-msgstr ""
-
 msgid "Send test email"
 msgstr ""
 
@@ -3227,16 +5105,2008 @@ msgstr ""
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr ""
 
+msgid "What subscription key?"
+msgstr ""
+
+msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
+msgstr ""
+
+msgid "The user id is invalid."
+msgstr ""
+
+msgid "The authentication token id is invalid."
+msgstr ""
+
+msgid "Only guests are allowed to create an account recovery request."
+msgstr ""
+
+msgid "Invalid request. Please provide the required data."
+msgstr ""
+
+msgid "The request id is invalid."
+msgstr ""
+
+msgid "Please provide a valid request id."
+msgstr ""
+
+msgid "You cannot reuse the account recovery key."
+msgstr ""
+
+msgid "A policy is required."
+msgstr ""
+
+msgid "The policy name should not be empty."
+msgstr ""
+
+msgid "The policy should be one of the following: {0}."
+msgstr ""
+
+msgid "The public key identifier should be a valid UUID."
+msgstr ""
+
+msgid "The public key identifier should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who created the organization policy should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who created the organization policy is required."
+msgstr ""
+
+msgid "The identifier of the user who created the organization policy should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who modified the organization policy should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the organization policy is required."
+msgstr ""
+
+msgid "The identifier of the user who modified the organization policy should not be empty."
+msgstr ""
+
+msgid "Could not validate policy data."
+msgstr ""
+
+msgid "The armored key is too big."
+msgstr ""
+
+msgid "The \"deleted\" field should be a valid date."
+msgstr ""
+
+msgid "The identifier of the user who created the organization public key should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who created the organization public key is required."
+msgstr ""
+
+msgid "The identifier of the user who created the organization public key should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who modified the organization public key should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the organization public key is required."
+msgstr ""
+
+msgid "The identifier of the user who modified the organization public key should not be empty."
+msgstr ""
+
+msgid "You cannot reuse the user keys."
+msgstr ""
+
+msgid "You cannot reuse account recovery organization public keys."
+msgstr ""
+
+msgid "You cannot reuse the metadata keys."
+msgstr ""
+
+msgid "Could not validate public key data."
+msgstr ""
+
+msgid "The recipient_foreign_model should be a valid string."
+msgstr ""
+
+msgid "The recipient_foreign_model must be provided."
+msgstr ""
+
+msgid "The recipient_foreign_model should not be empty."
+msgstr ""
+
+msgid "The recipient_foreign_model must be one of the following: {0}."
+msgstr ""
+
+msgid "The data should be a valid string."
+msgstr ""
+
+msgid "The data is too big."
+msgstr ""
+
+msgid "The identifier of the user who created the private key passwords should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who created the private key passwords is required."
+msgstr ""
+
+msgid "The identifier of the user who created the private key passwords should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who modified the private key passwords should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the private key passwords is required."
+msgstr ""
+
+msgid "The identifier of the user who modified the private key passwords should not be empty."
+msgstr ""
+
+msgid "The private key identifier should be a valid UUID."
+msgstr ""
+
+msgid "A private key identifier is required."
+msgstr ""
+
+msgid "The private key identifier should not be empty."
+msgstr ""
+
+msgid "Could not validate password data."
+msgstr ""
+
+msgid "The identifier of the user who created the private key  should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who created the private key  is required."
+msgstr ""
+
+msgid "The identifier of the user who created the private key  should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who modified the private key  should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the private key is required."
+msgstr ""
+
+msgid "The identifier of the user who modified the private key  should not be empty."
+msgstr ""
+
+msgid "The account recovery private key is not valid."
+msgstr ""
+
+msgid "The status should not be a valid string."
+msgstr ""
+
+msgid "This status is not supported."
+msgstr ""
+
+msgid "The status length should be maximum {0} characters."
+msgstr ""
+
+msgid "The identifier of the user who created the request should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who created the request is required."
+msgstr ""
+
+msgid "The identifier of the user who created the request should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who modified the request should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the request is required."
+msgstr ""
+
+msgid "The identifier of the user who modified the request should not be empty."
+msgstr ""
+
+msgid "The request is invalid."
+msgstr ""
+
+msgid "The account request is invalid."
+msgstr ""
+
+msgid "Invalid response status. Not supported."
+msgstr ""
+
+msgid "The responder_foreign_key should not be empty."
+msgstr ""
+
+msgid "The responder_foreign_key should be a valid UUID."
+msgstr ""
+
+msgid "The responder_foreign_model should be a valid string."
+msgstr ""
+
+msgid "The responder_foreign_model should not be empty."
+msgstr ""
+
+msgid "The responder_foreign_model must be one of the following: {0}."
+msgstr ""
+
+msgid "The identifier of the user who created the response should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who created the response is required."
+msgstr ""
+
+msgid "The identifier of the user who created the response should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who modified the response should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the response is required."
+msgstr ""
+
+msgid "The identifier of the user who modified the response should not be empty."
+msgstr ""
+
+msgid "The account recovery request response is invalid."
+msgstr ""
+
+msgid "The status should not be empty"
+msgstr ""
+
+msgid "The status should be one of the following: {0}."
+msgstr ""
+
+msgid "The identifier of the user who created the user settings should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who created the user settings is required."
+msgstr ""
+
+msgid "The identifier of the user who created the user settings should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who modified the user settings should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the user settings is required."
+msgstr ""
+
+msgid "The identifier of the user who modified the user settings should not be empty."
+msgstr ""
+
+msgid "This user already has an account recovery setting"
+msgstr ""
+
+msgid "The account recovery user setting is not valid."
+msgstr ""
+
+msgid "You have disabled the account recovery."
+msgstr ""
+
+msgid "{0} has disabled the account recovery."
+msgstr ""
+
+msgid "You have set the account recovery organization policy to {0}."
+msgstr ""
+
+msgid "{0} has set the account recovery organization policy to {1}."
+msgstr ""
+
+msgid "You have updated the account recovery organization policy to {0}."
+msgstr ""
+
+msgid "{0} has updated the account recovery organization policy to {1}."
+msgstr ""
+
+msgid "Suspicious account recovery request issued from IP {0} for {1}"
+msgstr ""
+
+msgid "{0} has initiated a recovery request"
+msgstr ""
+
+msgid "You have initiated a recovery request"
+msgstr ""
+
+msgid "Recovery request approved!"
+msgstr ""
+
+msgid "approved"
+msgstr ""
+
+msgid "rejected"
+msgstr ""
+
+msgid "Account recovery response set to {0}."
+msgstr ""
+
+msgid "Account recovery response set to {0} by {1}."
+msgstr ""
+
+msgid "Recovery request denied!"
+msgstr ""
+
+msgid "Could not validate key revocation."
+msgstr ""
+
+msgid "The fingerprint should match the one from the currently active key."
+msgstr ""
+
+msgid "Account recovery is disabled."
+msgstr ""
+
+msgid "The account recovery organization public key is not set."
+msgstr ""
+
+msgid "Invalid request. No policy change."
+msgstr ""
+
+msgid "Invalid request. Revoked key is required for key rotation."
+msgstr ""
+
+msgid "Invalid request. New key is required for key rotation."
+msgstr ""
+
+msgid "Invalid request. An organization recovery public key is required."
+msgstr ""
+
+msgid "Invalid request. Revoked key or passwords are not required."
+msgstr ""
+
+msgid "Invalid request. New key or passwords are not required."
+msgstr ""
+
+msgid "Invalid request. Keys are required for this change."
+msgstr ""
+
+msgid "Invalid request. Passwords are required for this change."
+msgstr ""
+
+msgid "An organization public key is required."
+msgstr ""
+
+msgid "The public_key_id must match current policy public_key_id."
+msgstr ""
+
+msgid "An invalid number of passwords sent. Expected {0} and got {1}."
+msgstr ""
+
+msgid "The message is not encrypted for the right recipient."
+msgstr ""
+
+msgid "Recovery request cannot be created when organization policy is disabled."
+msgstr ""
+
+msgid "Recovery request cannot be created when user is not enrolled."
+msgstr ""
+
+msgid "The authentication token is not valid or has expired."
+msgstr ""
+
+msgid "The account recovery request could not be found."
+msgstr ""
+
+msgid "The request is already completed."
+msgstr ""
+
+msgid "Recovery response cannot be created when organization policy is disabled."
+msgstr ""
+
+msgid "Could not validate response data."
+msgstr ""
+
+msgid "The account recovery response data is not required."
+msgstr ""
+
+msgid "The account recovery response data is required."
+msgstr ""
+
+msgid "The user is not enrolled in the account recovery program."
+msgstr ""
+
+msgid "User account recovery settings cannot be edited."
+msgstr ""
+
+msgid "The account recovery is mandatory and cannot be rejected."
+msgstr ""
+
+msgid "Invalid request. You cannot opt-out."
+msgstr ""
+
+msgid "The status must be set to approved."
+msgstr ""
+
+msgid "Invalid request. You cannot both opt-out and provide backup."
+msgstr ""
+
+msgid "The private key backup must be provided."
+msgstr ""
+
+msgid "Invalid request. Private key or password are missing."
+msgstr ""
+
+msgid "Could not validate private key data."
+msgstr ""
+
+msgid "The account recovery request identifier should be a valid UUID."
+msgstr ""
+
+msgid "The account recovery request status is not approved."
+msgstr ""
+
+msgid "Account recovery is disabled. Key backup is not supported."
+msgstr ""
+
+msgid "Account recovery is mandatory. Please provide the mandatory data."
+msgstr ""
+
+msgid "Account Recovery Disabled"
+msgstr ""
+
+msgid "Account Recovery Enabled"
+msgstr ""
+
+msgid "The fingerprint of the organization public key is {0}."
+msgstr ""
+
+msgid "Account Recovery Updated"
+msgstr ""
+
+msgid "{0} has initiated an account recovery request"
+msgstr ""
+
+msgid "Recovery request"
+msgstr ""
+
+msgid "{0} has initiated an account recovery request."
+msgstr ""
+
+msgid "Since you’re authorized to handle account recovery requests, please process this one."
+msgstr ""
+
+msgid "You will need your organization recovery key to continue."
+msgstr ""
+
+msgid "Review the recovery request"
+msgstr ""
+
+msgid "Suspicious recovery request"
+msgstr ""
+
+msgid "An account recovery request was attempted from a user with client IP {0} for {1}."
+msgstr ""
+
+msgid "The request could not be found in the database."
+msgstr ""
+
+msgid "This is a potential security threat."
+msgstr ""
+
+msgid "You have initiated an account recovery!"
+msgstr ""
+
+msgid "Recovery Request"
+msgstr ""
+
+msgid "You just requested an account recovery."
+msgstr ""
+
+msgid "Your administrator have been informed and will follow up with you."
+msgstr ""
+
+msgid "If you did not make this request please inform your administrator."
+msgstr ""
+
+msgid "You have updated a recovery request to {0}."
+msgstr ""
+
+msgid "You have set the status of the account recovery request initiated by {0} ({1}) to {2}."
+msgstr ""
+
+msgid "{0} ({1}) has updated a recovery request to {2}."
+msgstr ""
+
+msgid "{0} ({1}) has set the status of the request initiated by {2} ({3}) to {4}."
+msgstr ""
+
+msgid "{0} ({1}) has approved your recovery request."
+msgstr ""
+
+msgid "Your organization recovery contacts have reviewed and approved your account recovery request."
+msgstr ""
+
+msgid "Please click on the link below to continue."
+msgstr ""
+
+msgid "Important"
+msgstr ""
+
+msgid "Please use the same computer and browser that you used to initiate the request."
+msgstr ""
+
+msgid "Complete account recovery"
+msgstr ""
+
+msgid "{0} ({1}) has denied your recovery request."
+msgstr ""
+
+msgid "Your organization recovery contacts have reviewed and rejected your account recovery request."
+msgstr ""
+
+msgid "Only administrators can view user logs."
+msgstr ""
+
+msgid "The user {0} could not be added to group {1} because there is no matching directory entry in passbolt."
+msgstr ""
+
+msgid "The user {0} could not be added to the group {1} because the membership has been removed in passbolt"
+msgstr ""
+
+msgid "The user {0} was not synced with existing membership for group {1} because the membership was created before."
+msgstr ""
+
+msgid "The user {0} was successfully added to the group {1}."
+msgstr ""
+
+msgid "The user {0} could not be added to the group {1} because their account was priorly deleted in passbolt."
+msgstr ""
+
+msgid "The user {0} could not be added to the group {1} because they have not yet activated their account."
+msgstr ""
+
+msgid "The user {0} could not be added to the group {1} because of validation issues."
+msgstr ""
+
+msgid "The user {0} could not be added to the group {1} because of an internal error."
+msgstr ""
+
+msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
+msgstr ""
+
+msgid "The user {0} was successfully removed from the group {1}."
+msgstr ""
+
+msgid "The user {0} could not be removed from the group {1} because it is the only group manager."
+msgstr ""
+
+msgid "The user {0} could not be removed from the group {1} because some validation issues."
+msgstr ""
+
+msgid "The user {0} could not be removed from the group {1} because of an internal error."
+msgstr ""
+
+msgid "The user {0} was successfully synced with the group {1}."
+msgstr ""
+
+msgid "The group {0} has been successfully renamed to {1}."
+msgstr ""
+
+msgid "The group {0} could not be renamed to {1}."
+msgstr ""
+
+msgid "The passbolt {0} {1} was not deleted because it is marked as to be ignored."
+msgstr ""
+
+msgid "The directory {0} {1} was not deleted because it is ignored."
+msgstr ""
+
+msgid "The directory user {0} was already suspended in passbolt."
+msgstr ""
+
+msgid "The directory {0} {1} was already deleted in passbolt."
+msgstr ""
+
+msgid "The user {0} could not be deleted because they are the only owner of one or more passwords."
+msgstr ""
+
+msgid "The {0} {1} could not be deleted because they are the only manager of one or more groups."
+msgstr ""
+
+msgid "The user {0} was successfully suspended."
+msgstr ""
+
+msgid "The {0} {1} was successfully deleted."
+msgstr ""
+
+msgid "The {0} {1} could not be suspended because of an internal error. Please try again later."
+msgstr ""
+
+msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
+msgstr ""
+
+msgid "The {0} {1} was not synced because the passbolt {0} is marked as to be ignored."
+msgstr ""
+
+msgid "The {0} {1} was not synced because the directory {0} is marked as to be ignored."
+msgstr ""
+
+msgid "The {0} {1} was successfully added to passbolt."
+msgstr ""
+
+msgid "The {0} {1} could not be added because of data validation issues."
+msgstr ""
+
+msgid "The {0} {1} could not be added because of an internal error. Please try again later."
+msgstr ""
+
+msgid "The previously suspended {0} {1} was not unsuspended."
+msgstr ""
+
+msgid "The previously deleted {0} {1} was not re-added to passbolt."
+msgstr ""
+
+msgid "The previously suspended {0} {1} was unsuspended."
+msgstr ""
+
+msgid "The previously deleted {0} {1} was re-added to passbolt."
+msgstr ""
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of validation errors."
+msgstr ""
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of an internal error."
+msgstr ""
+
+msgid "The {0} {1} was mapped with an existing {0} in passbolt."
+msgstr ""
+
+msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after."
+msgstr ""
+
+msgid "The user {0} full name has been successfully updated to {1} {2}."
+msgstr ""
+
+msgid "The user {0} full name could not be updated to {1} {2}."
+msgstr ""
+
+msgid "The record model is not valid."
+msgstr ""
+
+msgid "The record is currently ignored as part of directory synchronization."
+msgstr ""
+
+msgid "The record is currently not ignored as part of directory synchronization."
+msgstr ""
+
+msgid "The record will be ignored in the next directory synchronization."
+msgstr ""
+
+msgid "The record id is not valid."
+msgstr ""
+
+msgid "The record does not exist."
+msgstr ""
+
+msgid "The record could not be unmarked as ignored. Please try again later."
+msgstr ""
+
+msgid "The record will not be ignored in the next directory synchronization."
+msgstr ""
+
+msgid "Could not validate settings."
+msgstr ""
+
+msgid "Could not save the settings. {0}"
+msgstr ""
+
+msgid "The directory structure cannot be retrieved."
+msgstr ""
+
+msgid "There was an issue while retrieving the invalid entries."
+msgstr ""
+
+msgid "The synchronization was done successfully."
+msgstr ""
+
+msgid "The simulation was done successfully."
+msgstr ""
+
+msgid "Need at least one domain configuration."
+msgstr ""
+
+msgid "The connection name `{0}` should not contain dots"
+msgstr ""
+
+msgid "Invalid connection name"
+msgstr ""
+
+msgid "The identifier of the default admin user is required."
+msgstr ""
+
+msgid "The identifier of the default admin user should not be empty."
+msgstr ""
+
+msgid "The identifier of the default admin user should be a valid UUID."
+msgstr ""
+
+msgid "The admin user does not exist."
+msgstr ""
+
+msgid "The identifier of the default group admin user is required."
+msgstr ""
+
+msgid "The identifier of the default group admin user should not be empty."
+msgstr ""
+
+msgid "The identifier of the default group admin user should be a valid UUID."
+msgstr ""
+
+msgid "The group admin user does not exist."
+msgstr ""
+
+msgid "The group object class should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The user object class should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The user path should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The group custom filter should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The user custom filter should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The email prefix/suffix setting should be a valid boolean."
+msgstr ""
+
+msgid "The email prefix should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The email suffix should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The users parent group should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The groups parent group should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The enabled users only setting should be a boolean."
+msgstr ""
+
+msgid "The sync of created users setting should be a boolean."
+msgstr ""
+
+msgid "The sync of updated users setting should be a boolean."
+msgstr ""
+
+msgid "The sync of deleted users setting should be a boolean."
+msgstr ""
+
+msgid "The sync of created groups setting should be a boolean."
+msgstr ""
+
+msgid "The sync of deleted groups setting should be a boolean."
+msgstr ""
+
+msgid "The sync of updated groups setting should be a boolean."
+msgstr ""
+
+msgid "The fields mapping should be a valid array."
+msgstr ""
+
+msgid "A directory type is required."
+msgstr ""
+
+msgid "The directory type should not be empty."
+msgstr ""
+
+msgid "The directory type should be one of the following: {0}."
+msgstr ""
+
+msgid "A domain name is required."
+msgstr ""
+
+msgid "The domain name should not be empty."
+msgstr ""
+
+msgid "The domain name should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The base DN should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "At least one host is required."
+msgstr ""
+
+msgid "The hosts should be a valid array."
+msgstr ""
+
+msgid "The port number should not be empty."
+msgstr ""
+
+msgid "The port number should be between 0 and 65535"
+msgstr ""
+
+msgid "A connection type is required."
+msgstr ""
+
+msgid "The connection type should not be empty."
+msgstr ""
+
+msgid "The connection type should be one of the following: {0}."
+msgstr ""
+
+msgid "An authentication type is required."
+msgstr ""
+
+msgid "The authentication type should not be empty."
+msgstr ""
+
+msgid "The authentication type should be one of the following: {0}."
+msgstr ""
+
+msgid "The map for this field is required."
+msgstr ""
+
+msgid "The map value should not be empty."
+msgstr ""
+
+msgid "The field name should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The map value length should be maximum {0} characters."
+msgstr ""
+
+msgid "The map value should not be from forbidden fields."
+msgstr ""
+
+msgid "The map configuration for `{0}` fields is required."
+msgstr ""
+
+msgid "The group object class length should be maximum {0} characters."
+msgstr ""
+
+msgid "The group object class should not be from forbidden fields."
+msgstr ""
+
+msgid "The user object class length should be maximum {0} characters."
+msgstr ""
+
+msgid "The user object class should not be from forbidden fields."
+msgstr ""
+
+msgid "The user custom filter length should be maximum {0} characters."
+msgstr ""
+
+msgid "The user custom filter contains the forbidden field."
+msgstr ""
+
+msgid "The group custom filter length should be maximum {0} characters."
+msgstr ""
+
+msgid "The group custom filter contains the forbidden field."
+msgstr ""
+
+msgid "The field fallbacks should be a valid array."
+msgstr ""
+
+msgid "The field fallbacks should not be empty."
+msgstr ""
+
+msgid "The field fallbacks keys should be one of the following: {0}."
+msgstr ""
+
+msgid "The fallback field value should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The fallback field value length should be maximum {0} characters."
+msgstr ""
+
+msgid "The fallback field value should not be from forbidden fields."
+msgstr ""
+
+msgid "The directory type in fallback fields should be a valid array."
+msgstr ""
+
+msgid "Directory sync settings endpoints are disabled."
+msgstr ""
+
+msgid "The directory name should be a valid UTF8 string."
+msgstr ""
+
+msgid "The directory_name length should be maximum {0} characters."
+msgstr ""
+
+msgid "A directory name is required."
+msgstr ""
+
+msgid "The directory should not be empty."
+msgstr ""
+
+msgid "Could not validate directory entry data."
+msgstr ""
+
+msgid "The associated record could not be found."
+msgstr ""
+
+msgid "This record is already marked as to be ignored."
+msgstr ""
+
+msgid "This is not a valid record to ignore."
+msgstr ""
+
+msgid "The parent identifier should be a valid UUID."
+msgstr ""
+
+msgid "A parent identifier is required."
+msgstr ""
+
+msgid "The child identifier should be a valid UUID."
+msgstr ""
+
+msgid "The child identifier is required."
+msgstr ""
+
+msgid "Directory Settings are invalid. Please check your config and try again."
+msgstr ""
+
+msgid "New directory settings could not be saved."
+msgstr ""
+
+msgid "The endpoints for updating the users directory configurations are disabled."
+msgstr ""
+
+msgid "The endpoints for updating the users directory configurations are enabled."
+msgstr ""
+
+msgid "It is recommended to disable endpoints for updating the users directory configurations."
+msgstr ""
+
+msgid "Set the PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED environment variable to true."
+msgstr ""
+
+msgid "Or set {0} to true in {1}."
+msgstr ""
+
+msgid "SSL certification verification for LDAP server is enabled."
+msgstr ""
+
+msgid "SSL certification verification for LDAP server is disabled."
+msgstr ""
+
+msgid "Disabling the ssl verify check can lead to security attacks."
+msgstr ""
+
+msgid "Attacker can alter the certificate and can perform man-in-the-middle attack."
+msgstr ""
+
+msgid "To fix this, you can set PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER environment variable to true."
+msgstr ""
+
+msgid "Or set passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer to true in {0}."
+msgstr ""
+
+msgid "A mapping rule for username attribute could not be found for directory type: {0}"
+msgstr ""
+
+msgid "A mapping rule for ID attribute could not be found for directory type: {0}"
+msgstr ""
+
+msgid "Mapping rules could not be found for directory type: {0}"
+msgstr ""
+
+msgid "A group name is required."
+msgstr ""
+
+msgid "A group member does not match the expected DN format."
+msgstr ""
+
+msgid "The {0} configuration should be a valid string"
+msgstr ""
+
 msgid "Invalid directory type for domain: {0}"
 msgstr ""
 
 msgid "Directory type could not be found for domain: {0}"
 msgstr ""
 
-msgid "The directory type should be one of the following: {0}."
+msgid "LDAP Object class could not be found: {0}"
 msgstr ""
 
-msgid "LDAP Object class could not be found: {0}"
+msgid "SSO"
+msgstr ""
+
+msgid "Directory Sync"
+msgstr ""
+
+msgid "SCIM"
+msgstr ""
+
+msgid "Only administrators are allowed to create/update MFA policies settings."
+msgstr ""
+
+msgid "Could not validate the MFA policies settings."
+msgstr ""
+
+msgid "The policy field is required."
+msgstr ""
+
+msgid "The type of the policy should be one of the following: {0}."
+msgstr ""
+
+msgid "The remember me for a month field is required."
+msgstr ""
+
+msgid "The remember me for a month should be a boolean type."
+msgstr ""
+
+msgid "You edited the MFA policy"
+msgstr ""
+
+msgid "{0} edited the MFA policy"
+msgstr ""
+
+msgid "The MFA policy has been updated, the new configuration is as follow:"
+msgstr ""
+
+msgid "Policy: {0}"
+msgstr ""
+
+msgid "Remember me for a month: {0}"
+msgstr ""
+
+msgid "Some of your passwords are expired."
+msgstr ""
+
+msgid "Some of your passwords are expiring in {0} days."
+msgstr ""
+
+msgid "Some of your passwords are expired or expiring in {0} days."
+msgstr ""
+
+msgid "The send password about to expire setting should be a boolean."
+msgstr ""
+
+msgid "Password expiry email notifications are disabled."
+msgstr ""
+
+msgid "An array of arrays is expected."
+msgstr ""
+
+msgid "The expiry date is required."
+msgstr ""
+
+msgid "The identifier should be unique: {0}."
+msgstr ""
+
+msgid "You are not allowed to update these resources."
+msgstr ""
+
+msgid "You are not allowed to update this resource: {0}"
+msgstr ""
+
+msgid "The resource with ID {0} does not exist."
+msgstr ""
+
+msgid "You edited the password policy"
+msgstr ""
+
+msgid "{0} edited the password policy"
+msgstr ""
+
+msgid "Only administrators are allowed to create/update password policies settings."
+msgstr ""
+
+msgid "The password policy settings has been updated by {0}."
+msgstr ""
+
+msgid "you"
+msgstr ""
+
+msgid "view it in passbolt"
+msgstr ""
+
+msgid "The SCIM setting id should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the default user should be a valid UUID."
+msgstr ""
+
+msgid "The user is not active, disabled or does not exist."
+msgstr ""
+
+msgid "The Setting ID cannot be passed on update."
+msgstr ""
+
+msgid "The secret token should not be empty."
+msgstr ""
+
+msgid "The ID for the SCIM settings should not be empty."
+msgstr ""
+
+msgid "The ID for the SCIM settings should be a valid UUID."
+msgstr ""
+
+msgid "The SCIM secret token is expired, you are requested to rotate it."
+msgstr ""
+
+msgid "Simultaneous SCIM and session authentication is not permitted."
+msgstr ""
+
+msgid "SCIM settings endpoints are disabled."
+msgstr ""
+
+msgid "An entry for the same related entity already exists"
+msgstr ""
+
+msgid "An entry with the same `scim_name` and `foreign_model` already exist."
+msgstr ""
+
+msgid "Users"
+msgstr ""
+
+msgid "Groups"
+msgstr ""
+
+msgid "The secret token format is incorrect."
+msgstr ""
+
+msgid "SCIM plugin is enabled."
+msgstr ""
+
+msgid "SCIM plugin is disabled."
+msgstr ""
+
+msgid "The SCIM secret token is not expired."
+msgstr ""
+
+msgid "Rotate the SCIM secret token in the administration settings."
+msgstr ""
+
+msgid "The SCIM settings could not be decrypted with the server gpg key."
+msgstr ""
+
+msgid "The SCIM settings could not be encrypted with the server gpg key."
+msgstr ""
+
+msgid "Could not validate the SCIM settings found in database."
+msgstr ""
+
+msgid "The SCIM setting identifier should be a valid UUID."
+msgstr ""
+
+msgid "Could not validate the SCIM settings."
+msgstr ""
+
+msgid "The SCIM plugin is disabled."
+msgstr ""
+
+msgid "Please delete previous settings before creating again."
+msgstr ""
+
+msgid "The uuid in the url doesn't match any known setting record."
+msgstr ""
+
+msgid "The SCIM secret token expiry configuration is invalid."
+msgstr ""
+
+msgid "Missing or invalid SCIM user in configuration settings"
+msgstr ""
+
+msgid "An unexpected error occurred while creating the user in the database"
+msgstr ""
+
+msgid "An administrator user cannot be suspended via SCIM."
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "External id"
+msgstr ""
+
+msgid "Invalid Schema"
+msgstr ""
+
+msgid "Invalid ResourceType"
+msgstr ""
+
+msgid "SsoRecover plugin is disabled."
+msgstr ""
+
+msgid "The SSO state type is invalid."
+msgstr ""
+
+msgid "CSRF issue. The state in URL and Cookies do not match."
+msgstr ""
+
+msgid "CSRF issue. The state in request data does not match with cookie value."
+msgstr ""
+
+msgid "The state is required in cookie."
+msgstr ""
+
+msgid "The token is required in URL parameters."
+msgstr ""
+
+msgid "The state is required in URL parameters."
+msgstr ""
+
+msgid "The code is required in URL parameters."
+msgstr ""
+
+msgid "The code is required in request data."
+msgstr ""
+
+msgid "The user id is required in URL parameters."
+msgstr ""
+
+msgid "The settings id is required in URL parameters."
+msgstr ""
+
+msgid "The user does not exist or is not active."
+msgstr ""
+
+msgid "The SSO setting does not exist."
+msgstr ""
+
+msgid "Information about the key is required."
+msgstr ""
+
+msgid "The SSO key id should be a uuid."
+msgstr ""
+
+msgid "The key could not be found"
+msgstr ""
+
+msgid "The SSO setting id should be a uuid."
+msgstr ""
+
+msgid "The SSO settings were activated."
+msgstr ""
+
+msgid "The draft setting was saved."
+msgstr ""
+
+msgid "The SSO settings were deleted."
+msgstr ""
+
+msgid "Ajax/Json request not supported."
+msgstr ""
+
+msgid "A provider is required."
+msgstr ""
+
+msgid "The provider is not supported."
+msgstr ""
+
+msgid "Data is required."
+msgstr ""
+
+msgid "Data must be an array of properties."
+msgstr ""
+
+msgid "The email claim should not be empty."
+msgstr ""
+
+msgid "The email claim is too large."
+msgstr ""
+
+msgid "The email claim should be one of the following: {0}."
+msgstr ""
+
+msgid "A URL is required."
+msgstr ""
+
+msgid "The URL should not be empty."
+msgstr ""
+
+msgid "The URL is not supported."
+msgstr ""
+
+msgid "A tenant id is required."
+msgstr ""
+
+msgid "The tenant id should not be empty."
+msgstr ""
+
+msgid "The tenant id should be a valid UUID."
+msgstr ""
+
+msgid "A client id is required."
+msgstr ""
+
+msgid "The client id should not be empty."
+msgstr ""
+
+msgid "The client id should be a valid UUID."
+msgstr ""
+
+msgid "A client secret is required."
+msgstr ""
+
+msgid "The client secret should be a valid string."
+msgstr ""
+
+msgid "The client secret is too large."
+msgstr ""
+
+msgid "A client secret expiry is required."
+msgstr ""
+
+msgid "The expiry should not be empty."
+msgstr ""
+
+msgid "The prompt should not be empty."
+msgstr ""
+
+msgid "The prompt should be one of the following: {0}."
+msgstr ""
+
+msgid "The login hint should be a boolean."
+msgstr ""
+
+msgid "The client id is too large."
+msgstr ""
+
+msgid "A base URL is required."
+msgstr ""
+
+msgid "The base URL should not be empty."
+msgstr ""
+
+msgid "The base URL is too large."
+msgstr ""
+
+msgid "The OpenID configuration path should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The OpenID configuration path is too large."
+msgstr ""
+
+msgid "The client id should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The scope should be a valid string."
+msgstr ""
+
+msgid "The scope is too large."
+msgstr ""
+
+msgid "The URL must be a valid PingOne authentication domain."
+msgstr ""
+
+msgid "An environment id is required."
+msgstr ""
+
+msgid "The environment id should not be empty."
+msgstr ""
+
+msgid "The environment id should be a valid UUID."
+msgstr ""
+
+msgid "SSO settings edit endpoints are disabled."
+msgstr ""
+
+msgid "The user is not active."
+msgstr ""
+
+msgid "The status length is not supported."
+msgstr ""
+
+msgid "The status is not supported."
+msgstr ""
+
+msgid "The nonce should be a valid ASCII string."
+msgstr ""
+
+msgid "The nonce length should be minimum {0} characters."
+msgstr ""
+
+msgid "The nonce length should be maximum {0} characters."
+msgstr ""
+
+msgid "A nonce is required."
+msgstr ""
+
+msgid "The nonce should not be empty."
+msgstr ""
+
+msgid "The type length should be maximum {0} characters."
+msgstr ""
+
+msgid "The state should be a valid ASCII string."
+msgstr ""
+
+msgid "The state length should be minimum {0} characters."
+msgstr ""
+
+msgid "The state length should be maximum {0} characters."
+msgstr ""
+
+msgid "The SSO settings identifier should be a valid UUID."
+msgstr ""
+
+msgid "The SSO settings identifier should not be empty."
+msgstr ""
+
+msgid "The user agent should be a valid ASCII string."
+msgstr ""
+
+msgid "The user agent length should be maximum {0} characters."
+msgstr ""
+
+msgid "A user agent is required."
+msgstr ""
+
+msgid "The user agent should not be empty."
+msgstr ""
+
+msgid "The IP length should be maximum {0} characters."
+msgstr ""
+
+msgid "An IP is required."
+msgstr ""
+
+msgid "The IP should not be empty."
+msgstr ""
+
+msgid "This nonce is already in use."
+msgstr ""
+
+msgid "This state is already in use."
+msgstr ""
+
+msgid "The SSO setting identifier does not exist."
+msgstr ""
+
+msgid "The user identifier does not exist."
+msgstr ""
+
+msgid "The provided nonce is invalid."
+msgstr ""
+
+msgid "The URL should start with https://"
+msgstr ""
+
+msgid "The provided state is invalid."
+msgstr ""
+
+msgid "The type of the SSO state is invalid."
+msgstr ""
+
+msgid "{0} activated the SSO setting"
+msgstr ""
+
+msgid "{0} deleted the SSO setting"
+msgstr ""
+
+msgid "Users are unable to log in via Azure SSO"
+msgstr ""
+
+msgid "Single sign-on failed."
+msgstr ""
+
+msgid "Provider error: \"{0}\""
+msgstr ""
+
+msgid "Azure SSO secret expiry date is near"
+msgstr ""
+
+msgid "SSL certification validation for SSO instance is enabled."
+msgstr ""
+
+msgid "SSL certification validation for SSO instance is disabled."
+msgstr ""
+
+msgid "To fix this, you can set PASSBOLT_SECURITY_SSO_SSL_VERIFY environment variable to true."
+msgstr ""
+
+msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
+msgstr ""
+
+msgid "The endpoints for updating the SSO configurations are disabled."
+msgstr ""
+
+msgid "The endpoints for updating the SSO configurations are enabled."
+msgstr ""
+
+msgid "It is recommended to disable endpoints for updating the SSO configurations."
+msgstr ""
+
+msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
+msgstr ""
+
+msgid "The user is missing for the SSO state."
+msgstr ""
+
+msgid "Email not provided by provider."
+msgstr ""
+
+msgid "Username mismatch."
+msgstr ""
+
+msgid "Invalid nonce."
+msgstr ""
+
+msgid "Invalid provider. Expected AD FS."
+msgstr ""
+
+msgid "Invalid provider data. Expected AD FS settings."
+msgstr ""
+
+msgid "No valid SSO settings found."
+msgstr ""
+
+msgid "You must authenticate with Azure again."
+msgstr ""
+
+msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
+msgstr ""
+
+msgid "Provided root CA file does not exist"
+msgstr ""
+
+msgid "Invalid provider. Expected PingOne."
+msgstr ""
+
+msgid "Invalid provider data. Expected PingOne settings."
+msgstr ""
+
+msgid "The user id should be a valid UUID."
+msgstr ""
+
+msgid "The authentication token does not exist."
+msgstr ""
+
+msgid "The SSO authentication token is invalid."
+msgstr ""
+
+msgid "Settings id is missing."
+msgstr ""
+
+msgid "User id mismatch."
+msgstr ""
+
+msgid "Token IP is missing."
+msgstr ""
+
+msgid "User IP mismatch."
+msgstr ""
+
+msgid "User agent is missing."
+msgstr ""
+
+msgid "User agent mismatch."
+msgstr ""
+
+msgid "Settings mismatch."
+msgstr ""
+
+msgid "The SSO key could not be saved."
+msgstr ""
+
+msgid "The SSO key does not exist."
+msgstr ""
+
+msgid "The SSO key could not be deleted."
+msgstr ""
+
+msgid "Could not update the SSO settings."
+msgstr ""
+
+msgid "The settings status is invalid."
+msgstr ""
+
+msgid "Invalid status."
+msgstr ""
+
+msgid "Could not delete the SSO settings."
+msgstr ""
+
+msgid "Could not delete the draft SSO settings."
+msgstr ""
+
+msgid "The SSO settings do not exist."
+msgstr ""
+
+msgid "The SSO setting cannot be decrypted."
+msgstr ""
+
+msgid "The SSO setting cannot be decoded."
+msgstr ""
+
+msgid "Only administrators can create SSO settings."
+msgstr ""
+
+msgid "Something went wrong when validating the single-sign on settings."
+msgstr ""
+
+msgid "It is not possible to save the SSO settings."
+msgstr ""
+
+msgid "The SSO state is invalid."
+msgstr ""
+
+msgid "The SSO state is expired."
+msgstr ""
+
+msgid "The SSO state could not be saved."
+msgstr ""
+
+msgid "The SSO state does not exist."
+msgstr ""
+
+msgid "Could not save the SSO state, invalid nonce."
+msgstr ""
+
+msgid "Could not save the SSO state, please try again later."
+msgstr ""
+
+msgid "The {0} claim is not present, please contact your administrator."
+msgstr ""
+
+msgid "Cannot parse JWKS endpoint response."
+msgstr ""
+
+msgid "Invalid JWKS endpoint response. Keys missing."
+msgstr ""
+
+msgid "Failed to read certificate: {0}"
+msgstr ""
+
+msgid "Failed to read public key from certificate: {0}"
+msgstr ""
+
+msgid "Failed to public key properties from certificate: {0}"
+msgstr ""
+
+msgid "JWT token is missing."
+msgstr ""
+
+msgid "Unable to decode JWT token."
+msgstr ""
+
+msgid "The {0} configuration value should be a string or NULL."
+msgstr ""
+
+msgid "The {0} configuration value should be one of the following: {1}."
+msgstr ""
+
+msgid "Single-sign on was a success"
+msgstr ""
+
+msgid "Users are unable to log in via Azure SSO."
+msgstr ""
+
+msgid "This can happen when the client secret of Azure AD is expired, or the SSO configurations (client credentials) are invalid."
+msgstr ""
+
+msgid "See Azure error response below:"
+msgstr ""
+
+msgid "Error: {0}"
+msgstr ""
+
+msgid "Error description: {0}"
+msgstr ""
+
+msgid "To fix this, you as an administrator have to update the Azure SSO credentials."
+msgstr ""
+
+msgid "Update it in passbolt"
+msgstr ""
+
+msgid "The client secret expiry date of your Azure AD instance is {0}."
+msgstr ""
+
+msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
+msgstr ""
+
+msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
+msgstr ""
+
+msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
+msgstr ""
+
+msgid "All users can now use Single Sign-on to perform authentication."
+msgstr ""
+
+msgid "Viewq  it in passbolt"
+msgstr ""
+
+msgid "The SSO setting has been deleted by {0}."
+msgstr ""
+
+msgid "The authentication token does not exist or has been deleted."
+msgstr ""
+
+msgid "The authentication token has been expired."
+msgstr ""
+
+msgid "Could not validate the SSO recover request."
+msgstr ""
+
+msgid "The email is required in URL parameters."
+msgstr ""
+
+msgid "The case field is required."
+msgstr ""
+
+msgid "The case is not supported. Only \"default\" case is supported."
+msgstr ""
+
+msgid "The token field is required."
+msgstr ""
+
+msgid "Access to this service requires an invitation. "
+msgstr ""
+
+msgid "Please contact your administrator to request an invitation link."
+msgstr ""
+
+msgid "Subscription key data is required."
+msgstr ""
+
+msgid "The subscription was created."
+msgstr ""
+
+msgid "The subscription was updated."
+msgstr ""
+
+msgid "The subscription is valid."
+msgstr ""
+
+msgid "Subscription key could not be found."
+msgstr ""
+
+msgid "The subscription cannot be verified. Parse error."
+msgstr ""
+
+msgid "The subscription format is not valid. Invalid format."
+msgstr ""
+
+msgid "The subscription key cannot be verified."
+msgstr ""
+
+msgid "The passbolt OpenPGP public key could not be found."
+msgstr ""
+
+msgid "A users quantity is required."
+msgstr ""
+
+msgid "The users quantity should not be empty."
+msgstr ""
+
+msgid "The users limit is exceeded."
+msgstr ""
+
+msgid "The key should have been created in the past."
+msgstr ""
+
+msgid "An expiry date is required."
+msgstr ""
+
+msgid "The subscription is expired."
+msgstr ""
+
+msgid "A customer identifier is required."
+msgstr ""
+
+msgid "A subscription identifier is required."
+msgstr ""
+
+msgid "The format of the subscription id is not valid."
+msgstr ""
+
+msgid "Only admin can create or update subscription information."
+msgstr ""
+
+msgid "The subscription key format is not valid."
+msgstr ""
+
+msgid "Subscription is valid and up to date."
+msgstr ""
+
+msgid "Subscription cannot be found or is invalid/expired."
+msgstr ""
+
+msgid "Subscription invalid/expired ({0})."
+msgstr ""
+
+msgid "Subscription expired ({0})."
+msgstr ""
+
+msgid "Subscription user count has been exceeded ({0}/{1})."
+msgstr ""
+
+msgid "Subscription will expire in {0} days."
+msgstr ""
+
+msgid "Subscription soon exceeds user count ({0}/{1})."
+msgstr ""
+
+msgid "Subscription invalid or expired."
+msgstr ""
+
+msgid "Subscription key format error."
+msgstr ""
+
+msgid "Subscription key signature error."
+msgstr ""
+
+msgid "Subscription key validation error."
+msgstr ""
+
+msgid "It looks like you could use some help."
+msgstr ""
+
+msgid "We are here for you. You can contact us at sales@passbolt.com"
+msgstr ""
+
+msgid "Thanks for choosing Passbolt Pro"
+msgstr ""
+
+msgid "Below are your subscription key details"
+msgstr ""
+
+msgid "<error>Not Available</error>"
+msgstr ""
+
+msgid "Customer id:\t{0}"
+msgstr ""
+
+msgid "<error>{0} (currently: {1}) - Exceeded</error>"
+msgstr ""
+
+msgid "<info>{0} (currently: {1})</info>"
+msgstr ""
+
+msgid "Users limit:\t{0}"
+msgstr ""
+
+msgid "Valid from:\t<info>{0}</info>"
+msgstr ""
+
+msgid "Expires on:\t<error>{0} (expired)</error>"
+msgstr ""
+
+msgid "Expires on:\t<info>{0} (in {1} days)</info>"
+msgstr ""
+
+msgid "For any question / feedback / subscription renewal,"
+msgstr ""
+
+msgid "kindly contact us at <info>sales@passbolt.com</info>"
+msgstr ""
+
+msgid "Only administrators can view the subscription details."
+msgstr ""
+
+msgid "The file {0} could not be found."
+msgstr ""
+
+msgid "The file {0} could not be read."
+msgstr ""
+
+msgid "No active admins were found."
+msgstr ""
+
+msgid "Only administrators can update the subscription details."
+msgstr ""
+
+msgid "The tags data should be a string or an array."
+msgstr ""
+
+msgid "Could not validate request data."
+msgstr ""
+
+msgid "The tag id is not valid."
+msgstr ""
+
+msgid "The tag does not exist."
+msgstr ""
+
+msgid "You do not have the permission to delete shared tags."
+msgstr ""
+
+msgid "The tag has been deleted successfully."
+msgstr ""
+
+msgid "You do not have the permission to update shared tags."
+msgstr ""
+
+msgid "The tag has been updated successfully."
+msgstr ""
+
+msgid "The tag identifier should be a valid UUID."
+msgstr ""
+
+msgid "The tag is missing or does not belong to current user."
+msgstr ""
+
+msgid "The is shared should be a boolean type."
+msgstr ""
+
+msgid "The tags plugin is in read-only mode."
+msgstr ""
+
+msgid "The tag should not be empty."
+msgstr ""
+
+msgid "A tag is required."
+msgstr ""
+
+msgid "The tag should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The tag length should be maximum {0} characters."
+msgstr ""
+
+msgid "The shared status should be a valid boolean."
+msgstr ""
+
+msgid "A shared status is required."
+msgstr ""
+
+msgid "The tag metadata OpenPGP message cannot be parsed or is not for the intended recipient."
+msgstr ""
+
+msgid "Error while building tag DTO."
+msgstr ""
+
+msgid "Could not validate tags data."
+msgstr ""
+
+msgid "Unable to build tag entity"
+msgstr ""
+
+msgid "No tags to migrate."
+msgstr ""
+
+msgid "Tag ID \"{0}\" is already V5"
+msgstr ""
+
+msgid "No user found for the personal tag id: \"{0}\"."
+msgstr ""
+
+msgid "User contain data missing for the tag id: \"{0}\"."
+msgstr ""
+
+msgid "Unable to migrate tag id: {0} to V5."
+msgstr ""
+
+msgid "The tag metadata key data could not be updated."
+msgstr ""
+
+msgid "Could not save the tags, try again later."
+msgstr ""
+
+msgid "You do not have the permission to edit shared tags on this resource."
+msgstr ""
+
+msgid "Unable to save the tag."
+msgstr ""
+
+msgid "You do not have the permission to change a personal tag into shared tag."
+msgstr ""
+
+msgid "The settings selected by your administrator prevent from downgrading tag."
+msgstr ""
+
+msgid "Could not retrieve the user passphrase policies."
+msgstr ""
+
+msgid "The entropy minimum is required."
+msgstr ""
+
+msgid "The entropy minimum should be between {0} and {1}."
+msgstr ""
+
+msgid "You edited the user passphrase policy"
+msgstr ""
+
+msgid "{0} edited the user passphrase policy"
+msgstr ""
+
+msgid "Could not validate the user passphrase policies settings."
+msgstr ""
+
+msgid "Only administrators are allowed to create/update user passphrase policies settings."
+msgstr ""
+
+msgid "The user passphrase policy settings has been updated by {0}."
+msgstr ""
+
+msgid "Error"
 msgstr ""
 
 msgid "The requested address was not found on this server."
@@ -3254,9 +7124,6 @@ msgstr ""
 msgid "Passbolt API Status"
 msgstr ""
 
-msgid "SSL access is not enabled."
-msgstr ""
-
 msgid "Group manager"
 msgstr ""
 
@@ -3270,6 +7137,12 @@ msgid "is now group manager"
 msgstr ""
 
 msgid "is not anymore group manager"
+msgstr ""
+
+msgid "User Agent: "
+msgstr ""
+
+msgid "User IP: "
 msgstr ""
 
 msgid "Terms"
@@ -3290,7 +7163,34 @@ msgstr ""
 msgid "login"
 msgstr ""
 
-msgid "register"
+msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
+msgstr ""
+
+msgid "{0} deleted you from the passbolt organisation."
+msgstr ""
+
+msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
+msgstr ""
+
+msgid "Account suspended"
+msgstr ""
+
+msgid "Your account has been suspended."
+msgstr ""
+
+msgid "You are not able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can still share resources with you and add you to a group."
+msgstr ""
+
+msgid "Contact your admin"
+msgstr ""
+
+msgid "{0} changed the role of {1} to {2}."
+msgstr ""
+
+msgid "{0} can no longer perform administration tasks."
 msgstr ""
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
@@ -3299,7 +7199,10 @@ msgstr ""
 msgid "View user in passbolt"
 msgstr ""
 
-msgid "{0} cannot complete the account recovery process!"
+msgid "A new role {0} has been created."
+msgstr ""
+
+msgid "The role {0} has been renamed to {1}."
 msgstr ""
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
@@ -3311,7 +7214,46 @@ msgstr ""
 msgid "Please check with them first to confirm."
 msgstr ""
 
-msgid "You have initiated an account recovery!"
+msgid "User suspended"
+msgstr ""
+
+msgid "The user {0} has been suspended."
+msgstr ""
+
+msgid "This user will not be able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can share resources and add this user to a group."
+msgstr ""
+
+msgid "Check user suspension"
+msgstr ""
+
+msgid "Welcome to {0}!"
+msgstr ""
+
+msgid "{0} used the self registration feature to create an account on passbolt."
+msgstr ""
+
+msgid "{0} just activated their account on passbolt!"
+msgstr ""
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr ""
+
+msgid "This user was invited by you {0}."
+msgstr ""
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr ""
+
+msgid "This user was invited by {0} {1}."
+msgstr ""
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr ""
+
+msgid "View users"
 msgstr ""
 
 msgid "Welcome back!"
@@ -3357,6 +7299,15 @@ msgid "You just created your account on passbolt!"
 msgstr ""
 
 msgid "You just opened an account on passbolt at {0}."
+msgstr ""
+
+msgid "Get started"
+msgstr ""
+
+msgid "There was a change in the user directory."
+msgstr ""
+
+msgid "You have been requested to add members to a group."
 msgstr ""
 
 msgid "{0} requested you to add members to a group"
@@ -3419,9 +7370,6 @@ msgstr ""
 msgid "You are no longer authorized to edit the members of this group."
 msgstr ""
 
-msgid "Edited your membership in several groups"
-msgstr ""
-
 msgid "{0} group memberships were affected."
 msgstr ""
 
@@ -3431,13 +7379,10 @@ msgstr ""
 msgid "go to passbolt"
 msgstr ""
 
-msgid "{0} deleted several group"
-msgstr ""
-
 msgid "{0} deleted {1} groups you were a member of."
 msgstr ""
 
-msgid "You have saved a new password"
+msgid "log in passbolt"
 msgstr ""
 
 msgid "Username: {0}"
@@ -3452,49 +7397,22 @@ msgstr ""
 msgid "{0} shared a password with you"
 msgstr ""
 
-msgid "{0} updated the password {1}"
-msgstr ""
-
-msgid "Edited multiple resources"
-msgstr ""
-
-msgid "{0} resources were affected."
-msgstr ""
-
-msgid "It would be too much to list them here, but you can go check them on passbolt."
-msgstr ""
-
-msgid "view them in passbolt"
-msgstr ""
-
 msgid "{0} shared passwords with you"
 msgstr ""
 
 msgid "{0} resources were shared with you."
 msgstr ""
 
-msgid "{0} just activated their account on passbolt!"
+msgid "{0} changed your role to {1}."
 msgstr ""
 
-msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr ""
-
-msgid "This user was invited by you {0}."
-msgstr ""
-
-msgid "This user signed up themselves, since the public registration is enabled."
-msgstr ""
-
-msgid "This user was invited by {0} {1}."
-msgstr ""
-
-msgid "view users"
+msgid "You can no longer perform administration tasks."
 msgstr ""
 
 msgid "This email is an automatic notification sent by"
 msgstr ""
 
-msgid "You can disable these notifications by requesting an administrator to delete your account."
+msgid "To disable these notifications, contact an administrator."
 msgstr ""
 
 msgid "The locale {0} is not valid or not supported."

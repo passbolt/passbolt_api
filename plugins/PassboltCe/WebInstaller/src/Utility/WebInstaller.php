@@ -164,6 +164,7 @@ class WebInstaller
         $this->installDatabase();
         $this->createFirstUser();
         $this->saveSmtpSettingsInDb();
+        $this->importSubscription(); // Pro Only
         $this->saveSettings();
         $this->deleteTmpFiles();
         $configFolderPermissionService->changeConfigFolderPermission();
@@ -213,6 +214,28 @@ class WebInstaller
         $passboltConfig = new PassboltConfiguration();
         $contents = $passboltConfig->render($this->settings);
         file_put_contents($fileName, $contents);
+    }
+
+    /**
+     * Store the subscription in the DB.
+     *
+     * @return void
+     */
+    public function importSubscription(): void
+    {
+        $asciiKey = $this->getSettings('subscription.subscription_key');
+        /** @var \Passbolt\Subscription\Model\Table\SubscriptionsTable $Subscriptions */
+        $Subscriptions = TableRegistry::getTableLocator()->get('Passbolt/Subscription.Subscriptions');
+        $userId = $this->getSettings('user.user_id');
+        if (is_null($userId)) {
+            /** @var \App\Model\Table\UsersTable $Users */
+            $Users = TableRegistry::getTableLocator()->get('Users');
+            $admin = $Users->findFirstAdmin();
+            $userId = $admin->get('id');
+        }
+
+        $uac = new UserAccessControl(Role::ADMIN, $userId);
+        $Subscriptions->createOrUpdate($asciiKey, $uac);
     }
 
     /**

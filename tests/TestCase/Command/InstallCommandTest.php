@@ -30,10 +30,12 @@ use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Faker\Factory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
+use Passbolt\Subscription\Test\DummySubscriptionTrait;
 
 class InstallCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use DummySubscriptionTrait;
     use HealthcheckRequestTestTrait;
     use EmailNotificationSettingsTestTrait;
     use EmailQueueTrait;
@@ -48,6 +50,8 @@ class InstallCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->emptyDirectory(CACHE . 'database' . DS);
+        $this->persistValidSubscription();
+        $this->setUpPathAndPublicSubscriptionKey();
         $this->loadNotificationSettings();
         $this->mockService(Client::class, function () {
             return $this->getMockedHealthcheckStatusRequest();

@@ -1,0 +1,101 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         3.9.0
+ */
+
+namespace Passbolt\Sso\Model\Entity;
+
+use Cake\ORM\Entity;
+
+/**
+ * SsoSetting Entity
+ *
+ * @property string $id
+ * @property string $provider
+ * @property string $data
+ * @property string $status
+ * @property \Cake\I18n\DateTime|null $created
+ * @property \Cake\I18n\DateTime|null $modified
+ * @property string $created_by
+ * @property string $modified_by
+ * @property \App\Model\Entity\User $creator
+ */
+class SsoSetting extends Entity
+{
+    public const STATUS_DRAFT = 'draft';
+    public const STATUS_ACTIVE = 'active';
+    public const ALLOWED_STATUSES = [
+        self::STATUS_DRAFT,
+        self::STATUS_ACTIVE,
+    ];
+
+    /**
+     * Providers.
+     */
+    public const PROVIDER_AZURE = 'azure';
+    public const PROVIDER_GOOGLE = 'google';
+    public const PROVIDER_OAUTH2 = 'oauth2';
+    public const PROVIDER_ADFS = 'adfs';
+    public const PROVIDER_PINGONE = 'pingone';
+
+    /**
+     * List of supported providers.
+     *
+     * @var array
+     */
+    public const ALLOWED_PROVIDERS = [
+        self::PROVIDER_AZURE,
+        self::PROVIDER_GOOGLE,
+        self::PROVIDER_OAUTH2,
+        self::PROVIDER_ADFS,
+        self::PROVIDER_PINGONE,
+    ];
+
+    /**
+     * Azure email claim alias fields.
+     */
+    public const AZURE_EMAIL_CLAIM_ALIAS_EMAIL = 'email';
+    public const AZURE_EMAIL_CLAIM_ALIAS_PREFERRED_USERNAME = 'preferred_username';
+    public const AZURE_EMAIL_CLAIM_ALIAS_UPN = 'upn';
+
+    /**
+     * Available ADFS email claims.
+     */
+    public const ADFS_EMAIL_CLAIM_UPN = 'upn';
+
+    /**
+     * Default PingOne email claim.
+     */
+    public const PINGONE_EMAIL_CLAIM_EMAIL = 'email';
+
+    /**
+     * Fields that can be mass assigned using newEntity() or patchEntity().
+     *
+     * For security purposes, it is advised to set '*' to false
+     * and explicitly make individual fields accessible as needed.
+     *
+     * @var array<string, bool>
+     */
+    protected array $_accessible = [
+        'id' => false,
+        'provider' => false,
+        'status' => false,
+        'data' => false,
+        'created' => false,
+        'modified' => false,
+        'created_by' => false,
+        'modified_by' => false,
+    ];
+}
