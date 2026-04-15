@@ -21,6 +21,7 @@ use App\Authenticator\SessionIdentificationService;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Command\PassboltBuildCommandsListener;
 use App\Command\SqlExportCommand;
+use App\Command\SubscriptionCheckCommand;
 use App\Middleware\ApiVersionMiddleware;
 use App\Middleware\AssertFullBaseUrlMiddleware;
 use App\Middleware\ContainerInjectorMiddleware;
@@ -364,6 +365,10 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         // Alias sql_export to mysql_export, this is to keep BC
         $commands->add('passbolt mysql_export', SqlExportCommand::class);
+
+        // Alias license_check to subscription_check for retro compatibility
+        $commands->add('passbolt license_check', SubscriptionCheckCommand::class);
+        $commands->add('passbolt subscription_check', SubscriptionCheckCommand::class);
 
         return $commands;
     }

@@ -24,6 +24,7 @@ use App\Command\MigrateCommand;
 use App\Command\MigratePostgresCommand;
 use App\Command\RecoverUserCommand;
 use App\Command\RegisterUserCommand;
+use App\Command\SubscriptionCheckCommand;
 use App\Command\UserPromoteToAdministratorCommand;
 use App\Command\UsersIndexCommand;
 use App\Service\Command\GetUserCommandService;
@@ -47,6 +48,7 @@ class CommandServiceProvider extends ServiceProvider
         RecoverUserCommand::class,
         MigratePostgresCommand::class,
         RegisterUserCommand::class,
+        SubscriptionCheckCommand::class,
         UserPromoteToAdministratorCommand::class,
         UsersIndexCommand::class,
     ];
@@ -82,5 +84,7 @@ class CommandServiceProvider extends ServiceProvider
         $container->add(RegisterUserCommand::class)->addArgument(ProcessUserService::class);
         $container->add(UserPromoteToAdministratorCommand::class)->addArgument(ProcessUserService::class);
         $container->add(UsersIndexCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(SubscriptionCheckCommand::class)
+            ->addArgument(SubscriptionCheckInCommandServiceInterface::class);
     }
 }
