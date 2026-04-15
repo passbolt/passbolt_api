@@ -42,6 +42,8 @@ use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Service\Avatars\AvatarsConfigurationService;
 use App\Service\Cookie\AbstractSecureCookieService;
 use App\Service\Cookie\DefaultSecureCookieService;
+use App\Service\Subscriptions\DefaultSubscriptionCheckInCommandService;
+use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use App\ServiceProvider\CommandServiceProvider;
 use App\ServiceProvider\HealthcheckServiceProvider;
 use App\ServiceProvider\ResourceServiceProvider;
@@ -316,6 +318,10 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         if (PHP_SAPI === 'cli') {
             $container->addServiceProvider(new CommandServiceProvider());
         }
+        $container->add(
+            SubscriptionCheckInCommandServiceInterface::class,
+            DefaultSubscriptionCheckInCommandService::class
+        );
         $container->addServiceProvider(new HealthcheckServiceProvider());
     }
 
