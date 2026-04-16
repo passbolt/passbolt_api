@@ -17,7 +17,11 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Permissions;
 
+use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
@@ -30,8 +34,6 @@ class SaveTest extends AppTestCase
     use PermissionsModelTrait;
 
     public $Permissions;
-
-    public array $fixtures = ['app.Base/Groups', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Users'];
 
     public function setUp(): void
     {
@@ -61,6 +63,23 @@ class SaveTest extends AppTestCase
         ];
     }
 
+    /**
+     * Build default Permission data using factories.
+     */
+    private function generateDummyPermissionData(array $data = []): array
+    {
+        $userA = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->persist();
+
+        return array_merge([
+            'aco' => 'Resource',
+            'aco_foreign_key' => $resource->id,
+            'aro' => 'User',
+            'aro_foreign_key' => $userA->id,
+            'type' => Permission::OWNER,
+        ], $data);
+    }
+
     /* FORMAT VALIDATION TESTS */
 
     public function testValidationAco()
@@ -70,7 +89,7 @@ class SaveTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Permissions, 'aco', self::getDummyPermission(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Permissions, 'aco', $this->generateDummyPermissionData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationAcoForeignKey()
@@ -80,7 +99,7 @@ class SaveTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Permissions, 'aco_foreign_key', self::getDummyPermission(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Permissions, 'aco_foreign_key', $this->generateDummyPermissionData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationAro()
@@ -90,7 +109,7 @@ class SaveTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Permissions, 'aro', self::getDummyPermission(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Permissions, 'aro', $this->generateDummyPermissionData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationAroForeignKey()
@@ -100,7 +119,7 @@ class SaveTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Permissions, 'aro_foreign_key', self::getDummyPermission(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Permissions, 'aro_foreign_key', $this->generateDummyPermissionData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationType()
@@ -110,14 +129,14 @@ class SaveTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Permissions, 'type', self::getDummyPermission(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Permissions, 'type', $this->generateDummyPermissionData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     /* LOGIC VALIDATION TESTS */
 
     public function testUserResourcePermissionSuccess()
     {
-        $data = self::getDummyPermission();
+        $data = $this->generateDummyPermissionData();
         $options = self::getEntityDefaultOptions();
         $entity = $this->Permissions->newEntity($data, $options);
         $save = $this->Permissions->save($entity);
@@ -140,9 +159,12 @@ class SaveTest extends AppTestCase
 
     public function testGroupResourcePermissionSuccess()
     {
-        $data = self::getDummyPermission();
-        $data['aro'] = 'Group';
-        $data['aro_foreign_key'] = UuidFactory::uuid('group.id.board');
+        $userB = UserFactory::make()->persist();
+        $groupA = GroupFactory::make()->withGroupsManagersFor([$userB])->persist();
+        $data = $this->generateDummyPermissionData([
+            'aro' => 'Group',
+            'aro_foreign_key' => $groupA->id,
+        ]);
         $options = self::getEntityDefaultOptions();
         $entity = $this->Permissions->newEntity($data, $options);
         $save = $this->Permissions->save($entity);
@@ -165,9 +187,12 @@ class SaveTest extends AppTestCase
 
     public function testErrorRulePermissionUnique()
     {
-        $data = self::getDummyPermission();
-        $data['aco_foreign_key'] = UuidFactory::uuid('resource.id.apache');
-        $data['aro_foreign_key'] = UuidFactory::uuid('user.id.ada');
+        $userA = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA])->persist();
+        $data = $this->generateDummyPermissionData([
+            'aco_foreign_key' => $resource->id,
+            'aro_foreign_key' => $userA->id,
+        ]);
         $options = self::getEntityDefaultOptions();
         $entity = $this->Permissions->newEntity($data, $options);
 
@@ -180,8 +205,9 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleAcoExists()
     {
-        $data = self::getDummyPermission();
-        $data['aco_foreign_key'] = UuidFactory::uuid();
+        $data = $this->generateDummyPermissionData([
+            'aco_foreign_key' => UuidFactory::uuid(),
+        ]);
         $options = self::getEntityDefaultOptions();
         $entity = $this->Permissions->newEntity($data, $options);
 
@@ -195,8 +221,9 @@ class SaveTest extends AppTestCase
     public function testErrorRuleAroExists()
     {
         // Check w/ a user that does not exist.
-        $data = self::getDummyPermission();
-        $data['aro_foreign_key'] = UuidFactory::uuid();
+        $data = $this->generateDummyPermissionData([
+            'aro_foreign_key' => UuidFactory::uuid(),
+        ]);
         $options = self::getEntityDefaultOptions();
         $entity = $this->Permissions->newEntity($data, $options);
 
@@ -207,8 +234,10 @@ class SaveTest extends AppTestCase
         $this->assertNotNull($errors['aro_foreign_key']['aro_exists']);
 
         // Check w/ a user that is soft deleted.
-        $data = self::getDummyPermission();
-        $data['aro_foreign_key'] = UuidFactory::uuid('user.id.sofia');
+        $userDeleted = UserFactory::make()->deleted()->persist();
+        $data = $this->generateDummyPermissionData([
+            'aro_foreign_key' => $userDeleted->id,
+        ]);
         $options = self::getEntityDefaultOptions();
         $entity = $this->Permissions->newEntity($data, $options);
 
@@ -219,9 +248,10 @@ class SaveTest extends AppTestCase
         $this->assertNotNull($errors['aro_foreign_key']['aro_exists']);
 
         // Check w/ a group that does not exist.
-        $data = self::getDummyPermission();
-        $data['aro'] = 'Group';
-        $data['aro_foreign_key'] = UuidFactory::uuid();
+        $data = $this->generateDummyPermissionData([
+            'aro' => 'Group',
+            'aro_foreign_key' => UuidFactory::uuid(),
+        ]);
         $options = self::getEntityDefaultOptions();
         $entity = $this->Permissions->newEntity($data, $options);
 
@@ -232,9 +262,11 @@ class SaveTest extends AppTestCase
         $this->assertNotNull($errors['aro_foreign_key']['aro_exists']);
 
         // Check w/ a group that is soft deleted.
-        $data = self::getDummyPermission();
-        $data['aro'] = 'Group';
-        $data['aro_foreign_key'] = UuidFactory::uuid('group.id.deleted');
+        $groupDeleted = GroupFactory::make()->deleted()->persist();
+        $data = $this->generateDummyPermissionData([
+            'aro' => 'Group',
+            'aro_foreign_key' => $groupDeleted->id,
+        ]);
         $options = self::getEntityDefaultOptions();
         $entity = $this->Permissions->newEntity($data, $options);
 
