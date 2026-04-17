@@ -32,6 +32,7 @@ require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
 use App\Mailer\Transport\DebugTransport;
 use App\Mailer\Transport\SmtpTransport;
+use App\Service\Subscriptions\EditionManager;
 use Cake\Cache\Cache;
 use Cake\Database\Type\JsonType;
 use Cake\Database\TypeFactory;
@@ -65,6 +66,11 @@ try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
     Configure::load('default', 'default', false); // passbolt default config
+    Configure::load('version', 'default', true);
+    if (Configure::read('passbolt.edition') === EditionManager::EDITION_PRO) {
+        Configure::load('pro', 'default', true); // pro default config
+    }
+
     Configure::load('audit_logs', 'default', true); // audit logs config
     if (\file_exists(CONFIG . DS . 'passbolt.php')) {
         Configure::load('passbolt', 'default', true); // merge with default config
@@ -76,7 +82,6 @@ try {
             Configure::write('Email.default.from', array_slice($from, -1, count($from))); // pick the last one
         }
     }
-    Configure::load('version', 'default', true);
 } catch (\Exception $e) {
     // let cli handle issues
     if (!$isCli) {

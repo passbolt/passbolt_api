@@ -24,16 +24,6 @@ class SubscriptionCheckCommandTest extends AppIntegrationTestCase
     use ConsoleIntegrationTestTrait;
 
     /**
-     * setUp method
-     *
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    /**
      * Basic help test
      */
     public function testSubscriptionCheckCommandHelp()
