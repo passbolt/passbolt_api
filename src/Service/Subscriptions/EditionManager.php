@@ -37,7 +37,7 @@ class EditionManager
     private ?string $solutionBootstrapperClass = null;
 
     /**
-     * @var array|array<string>
+     * @var array<string, class-string>
      */
     private array $editionBootstrapperMapping = [
         self::EDITION_CE => BaseSolutionBootstrapper::class,
@@ -58,7 +58,7 @@ class EditionManager
             return;
         }
 
-        $this->edition = Configure::read('passbolt.edition');
+        $this->edition = Configure::readOrFail('passbolt.edition');
 
         $this->setSolutionBootstrapperClass();
 

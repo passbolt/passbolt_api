@@ -210,7 +210,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     private function initSolutionBootstrapper(): void
     {
-        // This is DI friendly so we can easily overwrite this in cloud to return cloud specific bootstrapper
         $solutionBootstrapperClass = $this->editionManager->getSolutionBootstrapperClass();
         if (is_null($solutionBootstrapperClass)) {
             throw new InternalErrorException('SolutionBootstrapper class not found. Call initEdition() before initialization.'); // phpcs:ignore

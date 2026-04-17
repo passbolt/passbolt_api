@@ -66,9 +66,9 @@ try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
     Configure::load('default', 'default', false); // passbolt default config
-    Configure::load('version');
+    Configure::load('version', 'default', true);
     if (Configure::read('passbolt.edition') === EditionManager::EDITION_PRO) {
-        Configure::load('pro'); // pro default config
+        Configure::load('pro', 'default', true); // pro default config
     }
 
     Configure::load('audit_logs', 'default', true); // audit logs config

@@ -86,7 +86,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
     public function setUp(): void
     {
         parent::setUp();
-        Configure::write('passbolt.version', EditionManager::EDITION_PRO);
+        Configure::write('passbolt.edition', EditionManager::EDITION_PRO);
     }
 
     public function testEeSolutionBootstrapper_Application_Bootstrap(): void
