@@ -454,5 +454,14 @@ return [
     'Session' => [
         'cookie' => env('SESSION_COOKIE', 'passbolt_session'),
         'defaults' => env('SESSION_DEFAULTS', 'php'),
+        /**
+         * SSO Note
+         * When redirect request HTTP method is set to POST and cookies are set to samesite=Lax,
+         * the cookies will not be sent and thus session will be dropped. In this case
+         * You may need to override `session.cookie_samesite` value to use "None" to make it work.
+         */
+        'ini' => [
+            'session.cookie_samesite' => env('SESSION_COOKIE_SAMESITE', 'Lax'),
+        ],
     ],
 ];

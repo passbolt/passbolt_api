@@ -28,6 +28,7 @@ use Cake\Database\Expression\QueryExpression;
 use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\Query\SelectQuery;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use InvalidArgumentException;
 use Passbolt\Folders\Model\Entity\Folder;
@@ -103,6 +104,13 @@ trait ResourcesFindersTrait
         // Filter on resources shared with group.
         if (isset($options['filter']['is-shared-with-group'])) {
             $query = $this->_filterQuerySharedWithGroup($query, $options['filter']['is-shared-with-group']);
+        }
+
+        // If plugin tag is present and request contains tags
+        if (Configure::read('passbolt.plugins.tags.enabled')) {
+            /** @var \Passbolt\Tags\Model\Table\TagsTable $TagsTable */
+            $TagsTable = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
+            $TagsTable->decorateForeignFind($query, $options, $userId);
         }
 
         if (Configure::read('passbolt.plugins.folders')) {

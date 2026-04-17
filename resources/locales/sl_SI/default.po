@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2026-04-02 11:49+0000\n"
-"PO-Revision-Date: 2026-04-02 13:48\n"
+"POT-Creation-Date: 2026-04-02 12:51+0000\n"
+"PO-Revision-Date: 2026-04-02 14:13\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,8 @@ msgstr ""
 "X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "X-Crowdin-Project-ID: 2\n"
 "X-Crowdin-Language: sl\n"
-"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/default.po\n"
-"X-Crowdin-File-ID: 212\n"
+"X-Crowdin-File: /[passbolt.passbolt-pro-api] release/resources/locales/en_UK/default.po\n"
+"X-Crowdin-File-ID: 220\n"
 "Language: sl_SI\n"
 
 msgid "You need to login to access this location."
@@ -1089,6 +1089,12 @@ msgstr "Polje mora biti \"null\" pri ustvarjanju novega zapisa."
 
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "Identifikator ključa mora biti niz 8 šestnajstiških znakov."
+
+msgid "The provided IP is invalid."
+msgstr "Navedeni IP ni veljaven."
+
+msgid "The provided user agent is invalid."
+msgstr "Navedeni uporabniški agent ni veljaven."
 
 msgid "{0} updated your memberships in several groups"
 msgstr "{0} je posodobil vaša članstva v več skupinah"
@@ -4780,6 +4786,15 @@ msgstr "Potreben je status prisilnega SSL."
 msgid "The force ssl setting should be a valid boolean."
 msgstr "Nastavitev prisilnega SSL mora biti veljaven boolean."
 
+msgid "A subscription key is required."
+msgstr "Potreben je naročniški ključ."
+
+msgid "The subscription key should not be empty."
+msgstr "Naročniški ključ ne sme biti prazen."
+
+msgid "The subscription format is not valid."
+msgstr "Format naročnine ni veljaven."
+
 msgid "The passbolt config is writable."
 msgstr "Konfiguracija Passbolta je zapisljiva."
 
@@ -4981,12 +4996,6 @@ msgstr "Ali izberite datoteko iz vašega računalnika"
 msgid "Some binary things are happening..."
 msgstr "Neke binarne stvari se dogajajo..."
 
-msgid "Passbolt Pro activation."
-msgstr "Aktivacija Passbolt Pro."
-
-msgid "Copy paste your Passbolt Pro subscription key here"
-msgstr "Kopirajte in prilepite svoj ključ naročnine Passbolt Pro tukaj"
-
 msgid "Choose your preferences."
 msgstr "Izberite svoje prednostne nastavitve."
 
@@ -5005,8 +5014,14 @@ msgstr "Prisiliti SSL?"
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
 msgstr "Prisiliti SSL pomeni, da Passbolt ne sprejme povezav, ki prihajajo iz nevarovanega HTTP protokola. Če je SSL prisiljen, mora biti vaš strežnik konfiguriran za HTTPS. Močno priporočamo, da to storite."
 
-msgid "Welcome to Passbolt! Let's get started with the configuration."
-msgstr "Dobrodošli v Passbolt! Začnimo s konfiguracijo."
+msgid "Passbolt Pro activation."
+msgstr "Aktivacija Passbolt Pro."
+
+msgid "Copy paste your Passbolt Pro subscription key here"
+msgstr "Kopirajte in prilepite svoj ključ naročnine Passbolt Pro tukaj"
+
+msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
+msgstr "Dobrodošli v Passbolt Pro! Začnimo z nastavitvijo."
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "Odlično! Vaše okolje je pripravljeno za passbolt."
@@ -5071,12 +5086,6 @@ msgstr "Pomoč"
 msgid "Need help? You can find more information on how to install passbolt in the official online help."
 msgstr "Potrebujete pomoč? Več informacij o namestitvi passbolt najdete v uradni spletni pomoči."
 
-msgid "What subscription key?"
-msgstr "Kateri je naročniški ključ?"
-
-msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
-msgstr "Naročniški ključ je datoteka, ki vam je bila poslana, ko ste kupili Passbolt Pro. Za aktivacijo funkcij Passbolt Pro potrebujemo naročniški ključ."
-
 msgid "Send test email"
 msgstr "Pošlji testni e-poštni naslov"
 
@@ -5097,6 +5106,2007 @@ msgstr "Zakaj potrebujem SMTP strežnik?"
 
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "Passbolt potrebuje SMTP strežnik za pošiljanje vabil po ustvarjanju računov in za pošiljanje e-poštnih obvestil."
+
+msgid "What subscription key?"
+msgstr "Kateri je naročniški ključ?"
+
+msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
+msgstr "Naročniški ključ je datoteka, ki vam je bila poslana, ko ste kupili Passbolt Pro. Za aktivacijo funkcij Passbolt Pro potrebujemo naročniški ključ."
+
+msgid "The user id is invalid."
+msgstr "Uporabniški ID je neveljaven."
+
+msgid "The authentication token id is invalid."
+msgstr "ID avtentikacijskega žetona je neveljaven."
+
+msgid "Only guests are allowed to create an account recovery request."
+msgstr "Samo gostje smejo ustvariti zahtevo za obnovo računa."
+
+msgid "Invalid request. Please provide the required data."
+msgstr "Neveljavna zahteva. Prosimo, zagotovite zahtevane podatke."
+
+msgid "The request id is invalid."
+msgstr "ID zahteve je neveljaven."
+
+msgid "Please provide a valid request id."
+msgstr "Prosimo, zagotovite veljaven ID zahteve."
+
+msgid "You cannot reuse the account recovery key."
+msgstr "Ne morete ponovno uporabiti ključa za obnovitev računa."
+
+msgid "A policy is required."
+msgstr "Politika je zahtevana."
+
+msgid "The policy name should not be empty."
+msgstr "Ime politike ne sme biti prazno."
+
+msgid "The policy should be one of the following: {0}."
+msgstr "Politika mora biti ena od naslednjih: {0}."
+
+msgid "The public key identifier should be a valid UUID."
+msgstr "Identifikator javnega ključa mora biti veljaven UUID."
+
+msgid "The public key identifier should not be empty."
+msgstr "Identifikator javnega ključa ne sme biti prazen."
+
+msgid "The identifier of the user who created the organization policy should be a valid UUID."
+msgstr "Identifikator uporabnika, ki je ustvaril organizacijsko politiko, mora biti veljaven UUID."
+
+msgid "The identifier of the user who created the organization policy is required."
+msgstr "Identifikator uporabnika, ki je ustvaril organizacijsko politiko, je obvezen."
+
+msgid "The identifier of the user who created the organization policy should not be empty."
+msgstr "Identifikator uporabnika, ki je ustvaril organizacijsko politiko, ne sme biti prazen."
+
+msgid "The identifier of the user who modified the organization policy should be a valid UUID."
+msgstr "Identifikator uporabnika, ki je spremenil organizacijsko politiko, mora biti veljaven UUID."
+
+msgid "The identifier of the user who modified the organization policy is required."
+msgstr "Identifikator uporabnika, ki je spremenil organizacijsko politiko, je obvezen."
+
+msgid "The identifier of the user who modified the organization policy should not be empty."
+msgstr "Identifikator uporabnika, ki je spremenil organizacijsko politiko, ne sme biti prazen."
+
+msgid "Could not validate policy data."
+msgstr "Ni bilo mogoče potrditi podatkov politike."
+
+msgid "The armored key is too big."
+msgstr "Oklepni ključ je prevelik."
+
+msgid "The \"deleted\" field should be a valid date."
+msgstr "Polje \"deleted\" mora biti veljaven datum."
+
+msgid "The identifier of the user who created the organization public key should be a valid UUID."
+msgstr "Identifikator uporabnika, ki je ustvaril organizacijski javni ključ, mora biti veljaven UUID."
+
+msgid "The identifier of the user who created the organization public key is required."
+msgstr "Identifikator uporabnika, ki je ustvaril organizacijski javni ključ, je obvezen."
+
+msgid "The identifier of the user who created the organization public key should not be empty."
+msgstr "Identifikator uporabnika, ki je ustvaril organizacijski javni ključ, ne sme biti prazen."
+
+msgid "The identifier of the user who modified the organization public key should be a valid UUID."
+msgstr "Identifikator uporabnika, ki je spremenil organizacijski javni ključ, mora biti veljaven UUID."
+
+msgid "The identifier of the user who modified the organization public key is required."
+msgstr "Identifikator uporabnika, ki je spremenil organizacijski javni ključ, je obvezen."
+
+msgid "The identifier of the user who modified the organization public key should not be empty."
+msgstr "Identifikator uporabnika, ki je spremenil organizacijski javni ključ, ne sme biti prazen."
+
+msgid "You cannot reuse the user keys."
+msgstr "Uporabniških ključev ni mogoče ponovno uporabiti."
+
+msgid "You cannot reuse account recovery organization public keys."
+msgstr "Organizacijskih javnih ključev za obnovitev računa ni mogoče ponovno uporabiti."
+
+msgid "You cannot reuse the metadata keys."
+msgstr "Metapodatkovnih ključev ni mogoče ponovno uporabiti."
+
+msgid "Could not validate public key data."
+msgstr "Ni bilo mogoče potrditi podatkov javnega ključa."
+
+msgid "The recipient_foreign_model should be a valid string."
+msgstr "Vrednost recipient_foreign_model mora biti veljaven niz."
+
+msgid "The recipient_foreign_model must be provided."
+msgstr "Podati je treba polje recipient_foreign_model."
+
+msgid "The recipient_foreign_model should not be empty."
+msgstr "Polje recipient_foreign_model ne sme biti prazno."
+
+msgid "The recipient_foreign_model must be one of the following: {0}."
+msgstr "recipient_foreign_model mora biti eno od naslednjega: {0}."
+
+msgid "The data should be a valid string."
+msgstr "Podatki morajo biti veljaven niz."
+
+msgid "The data is too big."
+msgstr "Podatki so preveliki."
+
+msgid "The identifier of the user who created the private key passwords should be a valid UUID."
+msgstr "Identifikator uporabnika, ki je ustvaril gesla zasebnega ključa, mora biti veljaven UUID."
+
+msgid "The identifier of the user who created the private key passwords is required."
+msgstr "Identifikator uporabnika, ki je ustvaril gesla zasebnega ključa, je obvezen."
+
+msgid "The identifier of the user who created the private key passwords should not be empty."
+msgstr "Identifikator uporabnika, ki je ustvaril gesla zasebnega ključa, ne sme biti prazen."
+
+msgid "The identifier of the user who modified the private key passwords should be a valid UUID."
+msgstr "Identifikator uporabnika, ki je spremenil gesla zasebnega ključa, mora biti veljaven UUID."
+
+msgid "The identifier of the user who modified the private key passwords is required."
+msgstr "Identifikator uporabnika, ki je spremenil gesla zasebnega ključa, je obvezen."
+
+msgid "The identifier of the user who modified the private key passwords should not be empty."
+msgstr "Identifikator uporabnika, ki je spremenil gesla zasebnega ključa, ne sme biti prazen."
+
+msgid "The private key identifier should be a valid UUID."
+msgstr "Identifikator zasebnega ključa mora biti veljaven UUID."
+
+msgid "A private key identifier is required."
+msgstr "Identifikator zasebnega ključa je zahtevan."
+
+msgid "The private key identifier should not be empty."
+msgstr "Identifikator zasebnega ključa ne sme biti prazen."
+
+msgid "Could not validate password data."
+msgstr "Ni bilo mogoče potrditi podatkov gesla."
+
+msgid "The identifier of the user who created the private key  should be a valid UUID."
+msgstr "Identifikator uporabnika, ki je ustvaril zasebni ključ, mora biti veljaven UUID."
+
+msgid "The identifier of the user who created the private key  is required."
+msgstr "Identifikator uporabnika, ki je ustvaril zasebni ključ, je obvezen."
+
+msgid "The identifier of the user who created the private key  should not be empty."
+msgstr "Identifikator uporabnika, ki je ustvaril zasebni ključ, ne sme biti prazen."
+
+msgid "The identifier of the user who modified the private key  should be a valid UUID."
+msgstr "Identifikator uporabnika, ki je spremenil zasebni ključ, mora biti veljaven UUID."
+
+msgid "The identifier of the user who modified the private key is required."
+msgstr "Identifikator uporabnika, ki je spremenil zasebni ključ, je obvezen."
+
+msgid "The identifier of the user who modified the private key  should not be empty."
+msgstr "Identifikator uporabnika, ki je spremenil zasebni ključ, ne sme biti prazen."
+
+msgid "The account recovery private key is not valid."
+msgstr "Zasebni ključ za obnovitev računa ni veljaven."
+
+msgid "The status should not be a valid string."
+msgstr "Stanje ne sme biti veljaven niz."
+
+msgid "This status is not supported."
+msgstr "To stanje ni podprto."
+
+msgid "The status length should be maximum {0} characters."
+msgstr "Največja dovoljena dolžina stanja je {0} znakov."
+
+msgid "The identifier of the user who created the request should be a valid UUID."
+msgstr "Identifikator uporabnika, ki je ustvaril zahtevo, mora biti veljaven UUID."
+
+msgid "The identifier of the user who created the request is required."
+msgstr "Identifikator uporabnika, ki je ustvaril zahtevo, je obvezen."
+
+msgid "The identifier of the user who created the request should not be empty."
+msgstr "Identifikator uporabnika, ki je ustvaril zahtevo, ne sme biti prazen."
+
+msgid "The identifier of the user who modified the request should be a valid UUID."
+msgstr "Identifikator uporabnika, ki je spremenil zahtevo, mora biti veljaven UUID."
+
+msgid "The identifier of the user who modified the request is required."
+msgstr "Identifikator uporabnika, ki je spremenil zahtevo, je obvezen."
+
+msgid "The identifier of the user who modified the request should not be empty."
+msgstr "Identifikator uporabnika, ki je spremenil zahtevo, ne sme biti prazen."
+
+msgid "The request is invalid."
+msgstr "Zahteva je neveljavna."
+
+msgid "The account request is invalid."
+msgstr "Zahteva za račun je neveljavna."
+
+msgid "Invalid response status. Not supported."
+msgstr "Neveljavno stanje odziva. Ni podprto."
+
+msgid "The responder_foreign_key should not be empty."
+msgstr "Polje responder_foreign_key ne sme biti prazno."
+
+msgid "The responder_foreign_key should be a valid UUID."
+msgstr "Polje responder_foreign_key mora vsebovati veljaven UUID."
+
+msgid "The responder_foreign_model should be a valid string."
+msgstr "Polje responder_foreign_model mora biti veljaven niz."
+
+msgid "The responder_foreign_model should not be empty."
+msgstr "Polje responder_foreign_model ne sme biti prazno."
+
+msgid "The responder_foreign_model must be one of the following: {0}."
+msgstr "Polje responder_foreign_model mora biti eno od naslednjega: {0}."
+
+msgid "The identifier of the user who created the response should be a valid UUID."
+msgstr "Identifikator uporabnika, ki je ustvaril odziv, mora biti veljaven UUID."
+
+msgid "The identifier of the user who created the response is required."
+msgstr "Identifikator uporabnika, ki je ustvaril odziv, je obvezen."
+
+msgid "The identifier of the user who created the response should not be empty."
+msgstr "Identifikator uporabnika, ki je ustvaril odziv, ne sme biti prazen."
+
+msgid "The identifier of the user who modified the response should be a valid UUID."
+msgstr "Identifikator uporabnika, ki je spremenil odziv, mora biti veljaven UUID."
+
+msgid "The identifier of the user who modified the response is required."
+msgstr "Identifikator uporabnika, ki je spremenil odziv, je obvezen."
+
+msgid "The identifier of the user who modified the response should not be empty."
+msgstr "Identifikator uporabnika, ki je spremenil odziv, ne sme biti prazen."
+
+msgid "The account recovery request response is invalid."
+msgstr "Odziv na zahtevo za obnovitev računa je neveljaven."
+
+msgid "The status should not be empty"
+msgstr "Stanje ne sme biti prazno"
+
+msgid "The status should be one of the following: {0}."
+msgstr "Stanje mora biti eno od naslednjih: {0}."
+
+msgid "The identifier of the user who created the user settings should be a valid UUID."
+msgstr "Identifikator uporabnika, ki je ustvaril nastavitve uporabnika, mora biti veljaven UUID."
+
+msgid "The identifier of the user who created the user settings is required."
+msgstr "Identifikator uporabnika, ki je ustvaril nastavitve uporabnika, je obvezen."
+
+msgid "The identifier of the user who created the user settings should not be empty."
+msgstr "Identifikator uporabnika, ki je ustvaril nastavitve uporabnika, ne sme biti prazen."
+
+msgid "The identifier of the user who modified the user settings should be a valid UUID."
+msgstr "Identifikator uporabnika, ki je spremenil nastavitve uporabnika, mora biti veljaven UUID."
+
+msgid "The identifier of the user who modified the user settings is required."
+msgstr "Identifikator uporabnika, ki je spremenil nastavitve uporabnika, je obvezen."
+
+msgid "The identifier of the user who modified the user settings should not be empty."
+msgstr "Identifikator uporabnika, ki je spremenil nastavitve uporabnika, ne sme biti prazen."
+
+msgid "This user already has an account recovery setting"
+msgstr "Ta uporabnik že ima nastavljene možnosti za obnovitev računa"
+
+msgid "The account recovery user setting is not valid."
+msgstr "Nastavitev uporabnika za obnovitev računa ni veljavna."
+
+msgid "You have disabled the account recovery."
+msgstr "Onemogočili ste obnovitev računa."
+
+msgid "{0} has disabled the account recovery."
+msgstr "{0} je onemogočil obnovitev računa."
+
+msgid "You have set the account recovery organization policy to {0}."
+msgstr "Nastavili ste organizacijsko politiko za obnovitev računa na {0}."
+
+msgid "{0} has set the account recovery organization policy to {1}."
+msgstr "{0} je nastavil organizacijsko politiko za obnovitev računa na {1}."
+
+msgid "You have updated the account recovery organization policy to {0}."
+msgstr "Posodobili ste organizacijsko politiko za obnovitev računa na {0}."
+
+msgid "{0} has updated the account recovery organization policy to {1}."
+msgstr "{0} je posodobil organizacijsko politiko za obnovitev računa na {1}."
+
+msgid "Suspicious account recovery request issued from IP {0} for {1}"
+msgstr "Sumljiva zahteva za obnovitev računa, poslana iz IP {0} za {1}"
+
+msgid "{0} has initiated a recovery request"
+msgstr "{0} je sprožil zahtevo za obnovitev"
+
+msgid "You have initiated a recovery request"
+msgstr "Sprožili ste zahtevo za obnovitev"
+
+msgid "Recovery request approved!"
+msgstr "Zahteva za obnovitev je odobrena!"
+
+msgid "approved"
+msgstr "odobreno"
+
+msgid "rejected"
+msgstr "zavrnjeno"
+
+msgid "Account recovery response set to {0}."
+msgstr "Odziv obnove računa je nastavljen na {0}."
+
+msgid "Account recovery response set to {0} by {1}."
+msgstr "Odziv obnove računa je {1} nastavil na {0}."
+
+msgid "Recovery request denied!"
+msgstr "Zahteva za obnovitev je zavrnjena!"
+
+msgid "Could not validate key revocation."
+msgstr "Ni bilo mogoče potrditi preklica ključa."
+
+msgid "The fingerprint should match the one from the currently active key."
+msgstr "Prstni odtis se mora ujemati s trenutno aktivnim ključem."
+
+msgid "Account recovery is disabled."
+msgstr "Obnovitev računa je onemogočena."
+
+msgid "The account recovery organization public key is not set."
+msgstr "Organizacijski javni ključ za obnovitev računa ni nastavljen."
+
+msgid "Invalid request. No policy change."
+msgstr "Neveljavna zahteva. Ni spremembe politike."
+
+msgid "Invalid request. Revoked key is required for key rotation."
+msgstr "Neveljavna zahteva. Za rotacijo ključa je potreben preklicani ključ."
+
+msgid "Invalid request. New key is required for key rotation."
+msgstr "Neveljavna zahteva. Za rotacijo ključa je potreben nov ključ."
+
+msgid "Invalid request. An organization recovery public key is required."
+msgstr "Neveljavna zahteva. Za obnovitev računa je potreben organizacijski javni ključ."
+
+msgid "Invalid request. Revoked key or passwords are not required."
+msgstr "Neveljavna zahteva. Preklicani ključ ali gesla niso zahtevana."
+
+msgid "Invalid request. New key or passwords are not required."
+msgstr "Neveljavna zahteva. Nov ključ ali gesla niso zahtevana."
+
+msgid "Invalid request. Keys are required for this change."
+msgstr "Neveljavna zahteva. Za to spremembo so zahtevani ključi."
+
+msgid "Invalid request. Passwords are required for this change."
+msgstr "Neveljavna zahteva. Za to spremembo so zahtevana gesla."
+
+msgid "An organization public key is required."
+msgstr "Organizacijski javni ključ je zahtevan."
+
+msgid "The public_key_id must match current policy public_key_id."
+msgstr "public_key_id se mora ujemati s trenutnim public_key_id v politiki."
+
+msgid "An invalid number of passwords sent. Expected {0} and got {1}."
+msgstr "Poslano je neveljavno število gesel. Pričakovano {0}, prejeto {1}."
+
+msgid "The message is not encrypted for the right recipient."
+msgstr "Sporočilo za pravega prejemnika ni šifrirano."
+
+msgid "Recovery request cannot be created when organization policy is disabled."
+msgstr "Zahteve za obnovitev ni mogoče ustvariti, če je organizacijska politika onemogočena."
+
+msgid "Recovery request cannot be created when user is not enrolled."
+msgstr "Zahteva za obnovitev ni mogoča, če uporabnik ni vpisan."
+
+msgid "The authentication token is not valid or has expired."
+msgstr "Žeton za preverjanje pristnosti ni veljaven ali je potekel."
+
+msgid "The account recovery request could not be found."
+msgstr "Zahteve za obnovitev računa ni bilo mogoče najti."
+
+msgid "The request is already completed."
+msgstr "Zahteva je že zaključena."
+
+msgid "Recovery response cannot be created when organization policy is disabled."
+msgstr "Odziva za obnovitev ni mogoče ustvariti, če je organizacijska politika onemogočena."
+
+msgid "Could not validate response data."
+msgstr "Ni bilo mogoče potrditi podatkov odziva."
+
+msgid "The account recovery response data is not required."
+msgstr "Podatki o odzivu za obnovitev računa niso zahtevani."
+
+msgid "The account recovery response data is required."
+msgstr "Podatki o odzivu za obnovitev računa so zahtevani."
+
+msgid "The user is not enrolled in the account recovery program."
+msgstr "Uporabnik ni vpisan v program za obnovitev računa."
+
+msgid "User account recovery settings cannot be edited."
+msgstr "Nastavitev obnove uporabniškega računa ni mogoče urejati."
+
+msgid "The account recovery is mandatory and cannot be rejected."
+msgstr "Obnovitev računa je obvezna in je ni mogoče zavrniti."
+
+msgid "Invalid request. You cannot opt-out."
+msgstr "Neveljavna zahteva. Ne morete se odjaviti."
+
+msgid "The status must be set to approved."
+msgstr "Stanje mora biti nastavljeno na odobreno."
+
+msgid "Invalid request. You cannot both opt-out and provide backup."
+msgstr "Neveljavna zahteva. Ne morete se hkrati odjaviti in posredovati varnostne kopije."
+
+msgid "The private key backup must be provided."
+msgstr "Posredovati je treba varnostno kopijo zasebnega ključa."
+
+msgid "Invalid request. Private key or password are missing."
+msgstr "Neveljavna zahteva. Manjka zasebni ključ ali geslo."
+
+msgid "Could not validate private key data."
+msgstr "Ni bilo mogoče potrditi podatkov zasebnega ključa."
+
+msgid "The account recovery request identifier should be a valid UUID."
+msgstr "Identifikator zahteve za obnovitev računa mora biti veljaven UUID."
+
+msgid "The account recovery request status is not approved."
+msgstr "Stanje zahteve za obnovitev računa ni odobreno."
+
+msgid "Account recovery is disabled. Key backup is not supported."
+msgstr "Obnovitev računa je onemogočena. Varnostna kopija ključa ni podprta."
+
+msgid "Account recovery is mandatory. Please provide the mandatory data."
+msgstr "Obnovitev računa je obvezna. Prosimo, zagotovite obvezne podatke."
+
+msgid "Account Recovery Disabled"
+msgstr "Obnovitev računa onemogočena"
+
+msgid "Account Recovery Enabled"
+msgstr "Obnovitev računa omogočena"
+
+msgid "The fingerprint of the organization public key is {0}."
+msgstr "Prstni odtis organizacijskega javnega ključa je {0}."
+
+msgid "Account Recovery Updated"
+msgstr "Obnovitev računa posodobljena"
+
+msgid "{0} has initiated an account recovery request"
+msgstr "{0} je sprožil zahtevo za obnovitev računa"
+
+msgid "Recovery request"
+msgstr "Zahteva za obnovitev"
+
+msgid "{0} has initiated an account recovery request."
+msgstr "{0} je sprožil zahtevo za obnovitev računa."
+
+msgid "Since you’re authorized to handle account recovery requests, please process this one."
+msgstr ""
+
+msgid "You will need your organization recovery key to continue."
+msgstr "Za nadaljevanje boste potrebovali svoj organizacijski ključ za obnovitev."
+
+msgid "Review the recovery request"
+msgstr "Preglejte zahtevo za obnovitev"
+
+msgid "Suspicious recovery request"
+msgstr "Sumljiva zahteva za obnovitev"
+
+msgid "An account recovery request was attempted from a user with client IP {0} for {1}."
+msgstr "Zahteva za obnovo računa je bila poskus iz uporabnika z IP {0} za {1}."
+
+msgid "The request could not be found in the database."
+msgstr "Zahteve ni bilo mogoče najti v podatkovni bazi."
+
+msgid "This is a potential security threat."
+msgstr "To je potencialna varnostna grožnja."
+
+msgid "You have initiated an account recovery!"
+msgstr "Začeli ste postopek obnove računa!"
+
+msgid "Recovery Request"
+msgstr "Zahteva za obnovo"
+
+msgid "You just requested an account recovery."
+msgstr "Pravkar ste zahtevali obnovo računa."
+
+msgid "Your administrator have been informed and will follow up with you."
+msgstr "Vaš administrator je bil obveščen in bo nadaljeval z vami."
+
+msgid "If you did not make this request please inform your administrator."
+msgstr "Če niste naredili te zahteve, prosimo obvestite svojega administratorja."
+
+msgid "You have updated a recovery request to {0}."
+msgstr "Zamenjali ste zahtevo za obnovo za {0}."
+
+msgid "You have set the status of the account recovery request initiated by {0} ({1}) to {2}."
+msgstr "Nastavili ste stanje zahteve za obnovo računa, ki jo je začel {0} ({1}) na {2}."
+
+msgid "{0} ({1}) has updated a recovery request to {2}."
+msgstr "{0} ({1}) je posodobil zahtevek za obnovitev na {2}."
+
+msgid "{0} ({1}) has set the status of the request initiated by {2} ({3}) to {4}."
+msgstr "{0} ({1}) je nastavil stanje zahteve, ki jo je začel {2} ({3}) na {4}."
+
+msgid "{0} ({1}) has approved your recovery request."
+msgstr "{0} ({1}) je odobril vašo zahtevo za obnovitev."
+
+msgid "Your organization recovery contacts have reviewed and approved your account recovery request."
+msgstr "Vaši organizacijski stiki za obnovo so pregledali in odobrili vašo zahtevo za obnovo računa."
+
+msgid "Please click on the link below to continue."
+msgstr "Prosimo, kliknite na spodnjo povezavo za nadaljevanje."
+
+msgid "Important"
+msgstr "Pomembno"
+
+msgid "Please use the same computer and browser that you used to initiate the request."
+msgstr "Prosimo, uporabite isti računalnik in brskalnik, ki ste ga uporabili za začetek zahteve."
+
+msgid "Complete account recovery"
+msgstr "Dokončaj obnovo računa"
+
+msgid "{0} ({1}) has denied your recovery request."
+msgstr "{0} ({1}) je zavrnil vašo zahtevo za obnovo."
+
+msgid "Your organization recovery contacts have reviewed and rejected your account recovery request."
+msgstr "Vaši organizacijski stiki za obnovo so pregledali in zavrnili vašo zahtevo za obnovo računa."
+
+msgid "Only administrators can view user logs."
+msgstr "Samo administratorji lahko vidijo dnevnike uporabnikov."
+
+msgid "The user {0} could not be added to group {1} because there is no matching directory entry in passbolt."
+msgstr "Uporabnika {0} ni bilo mogoče dodati v skupino {1}, ker ni ustreznega vnosa v imeniku v Passbolt."
+
+msgid "The user {0} could not be added to the group {1} because the membership has been removed in passbolt"
+msgstr "Uporabnika {0} ni bilo mogoče dodati v skupino {1}, ker je bilo članstvo odstranjeno v Passboltu"
+
+msgid "The user {0} was not synced with existing membership for group {1} because the membership was created before."
+msgstr "Uporabnik {0} ni bil sinhroniziran z obstoječim članstvom za skupino {1}, ker je bilo članstvo ustvarjeno prej."
+
+msgid "The user {0} was successfully added to the group {1}."
+msgstr "Uporabnik {0} je bil uspešno dodan v skupino {1}."
+
+msgid "The user {0} could not be added to the group {1} because their account was priorly deleted in passbolt."
+msgstr "Uporabnika {0} ni bilo mogoče dodati v skupino {1}, ker je bil njegov račun predhodno izbrisan v Passboltu."
+
+msgid "The user {0} could not be added to the group {1} because they have not yet activated their account."
+msgstr "Uporabnika {0} ni bilo mogoče dodati v skupino {1}, ker še ni aktiviral svojega računa."
+
+msgid "The user {0} could not be added to the group {1} because of validation issues."
+msgstr "Uporabnika {0} ni bilo mogoče dodati v skupino {1} zaradi težav z validacijo."
+
+msgid "The user {0} could not be added to the group {1} because of an internal error."
+msgstr "Uporabnika {0} ni bilo mogoče dodati v skupino {1} zaradi notranje napake."
+
+msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
+msgstr "Uporabnika {0} ni mogoče samodejno dodati v skupino {1}. E-poštna zahteva je bila poslana upravitelju(-em) skupine, da to storijo ročno."
+
+msgid "The user {0} was successfully removed from the group {1}."
+msgstr "Uporabnik {0} je bil uspešno odstranjen iz skupine {1}."
+
+msgid "The user {0} could not be removed from the group {1} because it is the only group manager."
+msgstr "Uporabnika {0} ni bilo mogoče odstraniti iz skupine {1}, ker je edini upravitelj skupine."
+
+msgid "The user {0} could not be removed from the group {1} because some validation issues."
+msgstr "Uporabnika {0} ni bilo mogoče odstraniti iz skupine {1} zaradi težav z validacijo."
+
+msgid "The user {0} could not be removed from the group {1} because of an internal error."
+msgstr "Uporabnika {0} ni bilo mogoče odstraniti iz skupine {1} zaradi notranje napake."
+
+msgid "The user {0} was successfully synced with the group {1}."
+msgstr "Uporabnik {0} je bil uspešno sinhroniziran s skupino {1}."
+
+msgid "The group {0} has been successfully renamed to {1}."
+msgstr "Skupina {0} je bila uspešno preimenovana v {1}."
+
+msgid "The group {0} could not be renamed to {1}."
+msgstr "Skupine {0} ni bilo mogoče preimenovati v {1}."
+
+msgid "The passbolt {0} {1} was not deleted because it is marked as to be ignored."
+msgstr "Passbolt {0} {1} ni bil izbrisan, ker je označen za ignoriranje."
+
+msgid "The directory {0} {1} was not deleted because it is ignored."
+msgstr "Imenik {0} {1} ni bil izbrisan, ker je označen za ignoriranje."
+
+msgid "The directory user {0} was already suspended in passbolt."
+msgstr "Uporabnik imenika {0} je bil v sistemu passbolt že suspendiran."
+
+msgid "The directory {0} {1} was already deleted in passbolt."
+msgstr "Imenik {0} {1} je bil v Passbolt že izbrisan."
+
+msgid "The user {0} could not be deleted because they are the only owner of one or more passwords."
+msgstr "Uporabnika {0} ni bilo mogoče izbrisati, ker je edini lastnik enega ali več gesel."
+
+msgid "The {0} {1} could not be deleted because they are the only manager of one or more groups."
+msgstr "{0} {1} ni bilo mogoče izbrisati, ker je edini upravitelj ene ali več skupin."
+
+msgid "The user {0} was successfully suspended."
+msgstr "Uporabnik {0} je bil uspešno suspendiran."
+
+msgid "The {0} {1} was successfully deleted."
+msgstr "{0} {1} je bil uspešno izbrisan."
+
+msgid "The {0} {1} could not be suspended because of an internal error. Please try again later."
+msgstr "{0} {1} ni bilo mogoče suspendirati zaradi notranje napake. Poskusite znova pozneje."
+
+msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
+msgstr "{0} {1} ni bilo mogoče izbrisati zaradi notranje napake. Poskusite pozneje."
+
+msgid "The {0} {1} was not synced because the passbolt {0} is marked as to be ignored."
+msgstr "{0} {1} ni bil sinhroniziran, ker je Passbolt {0} označen za ignoriranje."
+
+msgid "The {0} {1} was not synced because the directory {0} is marked as to be ignored."
+msgstr "{0} {1} ni bil sinhroniziran, ker je {0} imenika označen za ignoriranje."
+
+msgid "The {0} {1} was successfully added to passbolt."
+msgstr "{0} {1} je bil uspešno dodan v Passbolt."
+
+msgid "The {0} {1} could not be added because of data validation issues."
+msgstr "{0} {1} ni bilo mogoče dodati zaradi težav z validacijo podatkov."
+
+msgid "The {0} {1} could not be added because of an internal error. Please try again later."
+msgstr "{0} {1} ni bilo mogoče dodati zaradi notranje napake. Poskusite pozneje."
+
+msgid "The previously suspended {0} {1} was not unsuspended."
+msgstr "Prej suspendiran {0} {1} ni bil obnovljen."
+
+msgid "The previously deleted {0} {1} was not re-added to passbolt."
+msgstr "Prej izbrisani {0} {1} ni bil ponovno dodan v Passbolt."
+
+msgid "The previously suspended {0} {1} was unsuspended."
+msgstr "Prej suspendiran {0} {1} je bil obnovljen."
+
+msgid "The previously deleted {0} {1} was re-added to passbolt."
+msgstr "Prej izbrisani {0} {1} je bil ponovno dodan v Passbolt."
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of validation errors."
+msgstr "Izbrisani {0} {1} ni bilo mogoče ponovno dodati v Passbolt zaradi napak pri validaciji."
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of an internal error."
+msgstr "Izbrisani {0} {1} ni bilo mogoče ponovno dodati v Passbolt zaradi notranje napake."
+
+msgid "The {0} {1} was mapped with an existing {0} in passbolt."
+msgstr "{0} {1} je bil preslikan z obstoječim {0} v Passbolt."
+
+msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after."
+msgstr "{0} {1} ni bilo mogoče preslikati z obstoječim {0} v Passbolt, ker je bil ustvarjen pozneje."
+
+msgid "The user {0} full name has been successfully updated to {1} {2}."
+msgstr "Polno ime uporabnika {0} je bilo uspešno posodobljeno na {1} {2}."
+
+msgid "The user {0} full name could not be updated to {1} {2}."
+msgstr "Polnega imena uporabnika {0} ni bilo mogoče posodobiti na {1} {2}."
+
+msgid "The record model is not valid."
+msgstr "Model zapisa ni veljaven."
+
+msgid "The record is currently ignored as part of directory synchronization."
+msgstr "Zapis je trenutno prezrt kot del sinhronizacije imenika."
+
+msgid "The record is currently not ignored as part of directory synchronization."
+msgstr "Zapis trenutno ni prezrt kot del sinhronizacije imenika."
+
+msgid "The record will be ignored in the next directory synchronization."
+msgstr "Zapis bo prezrt pri naslednji sinhronizaciji imenika."
+
+msgid "The record id is not valid."
+msgstr "ID zapisa ni veljaven."
+
+msgid "The record does not exist."
+msgstr "Zapis ne obstaja."
+
+msgid "The record could not be unmarked as ignored. Please try again later."
+msgstr "Zapisa ni bilo mogoče odstraniti iz prezrtih. Poskusite pozneje."
+
+msgid "The record will not be ignored in the next directory synchronization."
+msgstr "Zapis ne bo prezrt pri naslednji sinhronizaciji imenika."
+
+msgid "Could not validate settings."
+msgstr "Nastavitev ni bilo mogoče potrditi."
+
+msgid "Could not save the settings. {0}"
+msgstr "Nastavitev ni bilo mogoče shraniti. {0}"
+
+msgid "The directory structure cannot be retrieved."
+msgstr "Strukture imenika ni mogoče pridobiti."
+
+msgid "There was an issue while retrieving the invalid entries."
+msgstr "Pri pridobivanju neveljavnih vnosov je prišlo do težave."
+
+msgid "The synchronization was done successfully."
+msgstr "Sinhronizacija je bila uspešno izvedena."
+
+msgid "The simulation was done successfully."
+msgstr "Simulacija je bila uspešno izvedena."
+
+msgid "Need at least one domain configuration."
+msgstr "Potrebna je vsaj ena konfiguracija domene."
+
+msgid "The connection name `{0}` should not contain dots"
+msgstr "Ime povezave `{0}` ne sme vsebovati pik"
+
+msgid "Invalid connection name"
+msgstr "Neveljavno ime povezave"
+
+msgid "The identifier of the default admin user is required."
+msgstr "Identifikator privzetega skrbniškega uporabnika je zahtevan."
+
+msgid "The identifier of the default admin user should not be empty."
+msgstr "Identifikator privzetega skrbniškega uporabnika ne sme biti prazen."
+
+msgid "The identifier of the default admin user should be a valid UUID."
+msgstr "Identifikator privzetega skrbniškega uporabnika mora biti veljaven UUID."
+
+msgid "The admin user does not exist."
+msgstr "Skrbniški uporabnik ne obstaja."
+
+msgid "The identifier of the default group admin user is required."
+msgstr "Identifikator privzetega skrbniškega uporabnika skupine je zahtevan."
+
+msgid "The identifier of the default group admin user should not be empty."
+msgstr "Identifikator privzetega skrbniškega uporabnika skupine ne sme biti prazen."
+
+msgid "The identifier of the default group admin user should be a valid UUID."
+msgstr "Identifikator privzetega skrbniškega uporabnika skupine mora biti veljaven UUID."
+
+msgid "The group admin user does not exist."
+msgstr "Skrbniški uporabnik skupine ne obstaja."
+
+msgid "The group object class should be a valid BMP-UTF8 string."
+msgstr "Razred objekta skupine mora biti veljaven BMP-UTF8 niz."
+
+msgid "The user object class should be a valid BMP-UTF8 string."
+msgstr "Razred objekta uporabnika mora biti veljaven BMP-UTF8 niz."
+
+msgid "The user path should be a valid BMP-UTF8 string."
+msgstr "Pot uporabnika mora biti veljaven BMP-UTF8 niz."
+
+msgid "The group custom filter should be a valid BMP-UTF8 string."
+msgstr "Skupinski filter po meri mora biti veljaven niz BMP-UTF8."
+
+msgid "The user custom filter should be a valid BMP-UTF8 string."
+msgstr "Uporabniški filter po meri mora biti veljaven niz BMP-UTF8."
+
+msgid "The email prefix/suffix setting should be a valid boolean."
+msgstr "Nastavitev e-poštnega predpone/pripone mora biti veljaven boolean."
+
+msgid "The email prefix should be a valid BMP-UTF8 string."
+msgstr "E-poštni predpona mora biti veljaven BMP-UTF8 niz."
+
+msgid "The email suffix should be a valid BMP-UTF8 string."
+msgstr "E-poštni pripona mora biti veljaven BMP-UTF8 niz."
+
+msgid "The users parent group should be a valid BMP-UTF8 string."
+msgstr "Nadrejena skupina uporabnikov mora biti veljaven BMP-UTF8 niz."
+
+msgid "The groups parent group should be a valid BMP-UTF8 string."
+msgstr "Nadrejena skupina skupin mora biti veljaven BMP-UTF8 niz."
+
+msgid "The enabled users only setting should be a boolean."
+msgstr "Nastavitev samo omogočenih uporabnikov mora biti boolean."
+
+msgid "The sync of created users setting should be a boolean."
+msgstr "Nastavitev sinhronizacije ustvarjenih uporabnikov mora biti boolean."
+
+msgid "The sync of updated users setting should be a boolean."
+msgstr "Nastavitev sinhronizacije posodobljenih uporabnikov mora biti logična vrednost (boolean)."
+
+msgid "The sync of deleted users setting should be a boolean."
+msgstr "Nastavitev sinhronizacije izbrisnih uporabnikov mora biti boolean."
+
+msgid "The sync of created groups setting should be a boolean."
+msgstr "Nastavitev sinhronizacije ustvarjenih skupin mora biti boolean."
+
+msgid "The sync of deleted groups setting should be a boolean."
+msgstr "Nastavitev sinhronizacije izbrisanih skupin mora biti boolean."
+
+msgid "The sync of updated groups setting should be a boolean."
+msgstr "Nastavitev sinhronizacije posodobljenih skupin mora biti boolean."
+
+msgid "The fields mapping should be a valid array."
+msgstr "Preslikava polj mora biti veljavno polje."
+
+msgid "A directory type is required."
+msgstr "Tip imenika je zahtevan."
+
+msgid "The directory type should not be empty."
+msgstr "Tip imenika ne sme biti prazen."
+
+msgid "The directory type should be one of the following: {0}."
+msgstr "Tip imenika mora biti eden od naslednjih: {0}."
+
+msgid "A domain name is required."
+msgstr "Ime domene je zahtevano."
+
+msgid "The domain name should not be empty."
+msgstr "Ime domene ne sme biti prazno."
+
+msgid "The domain name should be a valid BMP-UTF8 string."
+msgstr "Ime domene mora biti veljaven BMP-UTF8 niz."
+
+msgid "The base DN should be a valid BMP-UTF8 string."
+msgstr "Osnovni DN mora biti veljaven BMP-UTF8 niz."
+
+msgid "At least one host is required."
+msgstr "Potrebno je vsaj eno gostiteljsko ime."
+
+msgid "The hosts should be a valid array."
+msgstr "Gostitelji morajo biti veljavno polje."
+
+msgid "The port number should not be empty."
+msgstr "Številka vrat ne sme biti prazna."
+
+msgid "The port number should be between 0 and 65535"
+msgstr "Številka vrat mora biti med 0 in 65535"
+
+msgid "A connection type is required."
+msgstr "Vrsta povezave je zahtevana."
+
+msgid "The connection type should not be empty."
+msgstr "Vrsta povezave ne sme biti prazna."
+
+msgid "The connection type should be one of the following: {0}."
+msgstr "Vrsta povezave mora biti ena od naslednjih: {0}."
+
+msgid "An authentication type is required."
+msgstr "Potrebna je vrsta avtentikacije."
+
+msgid "The authentication type should not be empty."
+msgstr "Vrsta avtentikacije ne sme biti prazna."
+
+msgid "The authentication type should be one of the following: {0}."
+msgstr "Vrsta avtentikacije mora biti ena izmed naslednjih: {0}."
+
+msgid "The map for this field is required."
+msgstr "Zemljevid za to polje je obvezen."
+
+msgid "The map value should not be empty."
+msgstr "Vrednost zemljevida ne sme biti prazna."
+
+msgid "The field name should be a valid BMP-UTF8 string."
+msgstr "Ime polja mora biti veljaven niz BMP-UTF8."
+
+msgid "The map value length should be maximum {0} characters."
+msgstr "Dolžina vrednosti zemljevida mora biti največ {0} znakov."
+
+msgid "The map value should not be from forbidden fields."
+msgstr "Vrednost zemljevida ne sme izhajati iz prepovedanih polj."
+
+msgid "The map configuration for `{0}` fields is required."
+msgstr "Konfiguracija zemljevida za polja `{0}` je obvezna."
+
+msgid "The group object class length should be maximum {0} characters."
+msgstr "Dolžina skupinskega razreda predmetov mora biti največ {0} znakov."
+
+msgid "The group object class should not be from forbidden fields."
+msgstr "Skupinski razred predmetov ne sme izhajati iz prepovedanih polj."
+
+msgid "The user object class length should be maximum {0} characters."
+msgstr "Dolžina uporabniškega razreda predmetov mora biti največ {0} znakov."
+
+msgid "The user object class should not be from forbidden fields."
+msgstr "Uporabniški razred predmetov ne sme izhajati iz prepovedanih polj."
+
+msgid "The user custom filter length should be maximum {0} characters."
+msgstr "Dolžina uporabniškega filtra po meri mora biti največ {0} znakov."
+
+msgid "The user custom filter contains the forbidden field."
+msgstr "Uporabniški filter po meri vsebuje prepovedano polje."
+
+msgid "The group custom filter length should be maximum {0} characters."
+msgstr "Dolžina skupinskega filtra po meri mora biti največ {0} znakov."
+
+msgid "The group custom filter contains the forbidden field."
+msgstr "Skupinski filter po meri vsebuje prepovedano polje."
+
+msgid "The field fallbacks should be a valid array."
+msgstr "Polje \"fallbacks\" mora biti veljavno polje."
+
+msgid "The field fallbacks should not be empty."
+msgstr "Polje \"fallbacks\" ne sme biti prazno."
+
+msgid "The field fallbacks keys should be one of the following: {0}."
+msgstr "Ključi polja \"fallbacks\" morajo biti eden izmed naslednjih: {0}."
+
+msgid "The fallback field value should be a valid BMP-UTF8 string."
+msgstr "Vrednost polja \"fallback\" mora biti veljaven BMP-UTF8 niz."
+
+msgid "The fallback field value length should be maximum {0} characters."
+msgstr "Dolžina vrednosti polja \"fallback\" mora biti največ {0} znakov."
+
+msgid "The fallback field value should not be from forbidden fields."
+msgstr "Vrednost polja \"fallback\" ne sme izhajati iz prepovedanih polj."
+
+msgid "The directory type in fallback fields should be a valid array."
+msgstr "Vrednost \"directory type\" v poljih fallback mora biti veljavno polje."
+
+msgid "Directory sync settings endpoints are disabled."
+msgstr "Končne točke nastavitev sinhronizacije imenika so onemogočene."
+
+msgid "The directory name should be a valid UTF8 string."
+msgstr "Ime imenika mora biti veljaven UTF8 niz."
+
+msgid "The directory_name length should be maximum {0} characters."
+msgstr "Dolžina directory_name mora biti največ {0} znakov."
+
+msgid "A directory name is required."
+msgstr "Ime imenika je zahtevano."
+
+msgid "The directory should not be empty."
+msgstr "Imenik ne sme biti prazen."
+
+msgid "Could not validate directory entry data."
+msgstr "Podatkov vnosa v imenik ni bilo mogoče potrditi."
+
+msgid "The associated record could not be found."
+msgstr "Povezanega zapisa ni bilo mogoče najti."
+
+msgid "This record is already marked as to be ignored."
+msgstr "Ta zapis je že označen za prezrtje."
+
+msgid "This is not a valid record to ignore."
+msgstr "To ni veljaven zapis za prezrtje."
+
+msgid "The parent identifier should be a valid UUID."
+msgstr "Nadrejeni identifikator mora biti veljaven UUID."
+
+msgid "A parent identifier is required."
+msgstr "Zahtevan je nadrejeni identifikator."
+
+msgid "The child identifier should be a valid UUID."
+msgstr "Podrejeni identifikator mora biti veljaven UUID."
+
+msgid "The child identifier is required."
+msgstr "Zahtevan je podrejeni identifikator."
+
+msgid "Directory Settings are invalid. Please check your config and try again."
+msgstr "Nastavitve imenika niso veljavne. Preverite konfiguracijo in poskusite znova."
+
+msgid "New directory settings could not be saved."
+msgstr "Novih nastavitev imenika ni bilo mogoče shraniti."
+
+msgid "The endpoints for updating the users directory configurations are disabled."
+msgstr "Končne točke za posodabljanje konfiguracij uporabniškega imenika so onemogočene."
+
+msgid "The endpoints for updating the users directory configurations are enabled."
+msgstr "Končne točke za posodabljanje konfiguracij uporabniškega imenika so omogočene."
+
+msgid "It is recommended to disable endpoints for updating the users directory configurations."
+msgstr "Priporočamo, da onemogočite končne točke za posodabljanje konfiguracij uporabniškega imenika."
+
+msgid "Set the PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED environment variable to true."
+msgstr "Spremenljivko okolja PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED nastavite na true."
+
+msgid "Or set {0} to true in {1}."
+msgstr "Ali nastavite {0} na true v {1}."
+
+msgid "SSL certification verification for LDAP server is enabled."
+msgstr "Preverjanje SSL certifikata za strežnik LDAP je omogočeno."
+
+msgid "SSL certification verification for LDAP server is disabled."
+msgstr "Preverjanje SSL certifikata za strežnik LDAP je onemogočeno."
+
+msgid "Disabling the ssl verify check can lead to security attacks."
+msgstr "Onemogočanje preverjanja SSL lahko vodi v varnostne napade."
+
+msgid "Attacker can alter the certificate and can perform man-in-the-middle attack."
+msgstr "Napadalec lahko spremeni certifikat in izvede napad 'man-in-the-middle'."
+
+msgid "To fix this, you can set PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER environment variable to true."
+msgstr "Za odpravo nastavite spremenljivko okolja PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER na true."
+
+msgid "Or set passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer to true in {0}."
+msgstr "Ali nastavite passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer na true v {0}."
+
+msgid "A mapping rule for username attribute could not be found for directory type: {0}"
+msgstr "Prezlikovalnega pravila za atribut uporabniškega imena ni bilo mogoče najti za vrsto imenika: {0}"
+
+msgid "A mapping rule for ID attribute could not be found for directory type: {0}"
+msgstr "Prezlikovalnega pravila za atribut ID ni bilo mogoče najti za vrsto imenika: {0}"
+
+msgid "Mapping rules could not be found for directory type: {0}"
+msgstr "Prezlikovalnih pravil ni bilo mogoče najti za vrsto imenika: {0}"
+
+msgid "A group name is required."
+msgstr "Ime skupine je zahtevano."
+
+msgid "A group member does not match the expected DN format."
+msgstr "Član skupine se ne ujema s pričakovanim formatom DN."
+
+msgid "The {0} configuration should be a valid string"
+msgstr "Nastavitev {0} mora biti veljaven niz"
+
+msgid "Invalid directory type for domain: {0}"
+msgstr "Neveljavna vrsta imenika za domeno: {0}"
+
+msgid "Directory type could not be found for domain: {0}"
+msgstr "Vrste imenika ni bilo mogoče najti za domeno: {0}"
+
+msgid "LDAP Object class could not be found: {0}"
+msgstr "Razreda LDAP ni bilo mogoče najti: {0}"
+
+msgid "SSO"
+msgstr "SSO"
+
+msgid "Directory Sync"
+msgstr "Sinhronizacija imenika"
+
+msgid "SCIM"
+msgstr "SCIM"
+
+msgid "Only administrators are allowed to create/update MFA policies settings."
+msgstr "Samo administratorji lahko ustvarijo/posodobijo nastavitve politike MFA."
+
+msgid "Could not validate the MFA policies settings."
+msgstr "Ni bilo mogoče preveriti nastavitev politike MFA."
+
+msgid "The policy field is required."
+msgstr "Potrebno je polje politike."
+
+msgid "The type of the policy should be one of the following: {0}."
+msgstr "Tip politike bi moral biti en od naslednjih: {0}."
+
+msgid "The remember me for a month field is required."
+msgstr "Potrebno je polje zapomni me za mesec."
+
+msgid "The remember me for a month should be a boolean type."
+msgstr "Polje zapomni me za mesec bi moral biti boolean tip."
+
+msgid "You edited the MFA policy"
+msgstr "Uredili ste politiko MFA"
+
+msgid "{0} edited the MFA policy"
+msgstr "{0} je uredil politiko MFA"
+
+msgid "The MFA policy has been updated, the new configuration is as follow:"
+msgstr "Politika MFA je bila posodobljena, nova konfiguracija je naslednja:"
+
+msgid "Policy: {0}"
+msgstr "Politika: {0}"
+
+msgid "Remember me for a month: {0}"
+msgstr "Zapomni me za mesec: {0}"
+
+msgid "Some of your passwords are expired."
+msgstr "Nekatera vaša gesla so potekla."
+
+msgid "Some of your passwords are expiring in {0} days."
+msgstr "Nekatera vaša gesla bodo potekla čez {0} dni."
+
+msgid "Some of your passwords are expired or expiring in {0} days."
+msgstr "Nekatera vaša gesla so že potekla ali pa bodo potekla čez {0} dni."
+
+msgid "The send password about to expire setting should be a boolean."
+msgstr "Nastavitev Pošlji geslo pred iztekom veljavnosti mora biti logična vrednost."
+
+msgid "Password expiry email notifications are disabled."
+msgstr "E-poštna obvestila o poteku gesel so onemogočena."
+
+msgid "An array of arrays is expected."
+msgstr "Pričakovano je polje polj."
+
+msgid "The expiry date is required."
+msgstr "Datum poteka je obvezen."
+
+msgid "The identifier should be unique: {0}."
+msgstr "Identifikator mora biti enoličen: {0}."
+
+msgid "You are not allowed to update these resources."
+msgstr "Ni vam dovoljeno posodabljati teh virov."
+
+msgid "You are not allowed to update this resource: {0}"
+msgstr "Nimate dovoljenja za posodabljanje tega vira: {0}"
+
+msgid "The resource with ID {0} does not exist."
+msgstr "Vira z ID-jem {0} ni."
+
+msgid "You edited the password policy"
+msgstr "Uredili ste politiko gesel"
+
+msgid "{0} edited the password policy"
+msgstr "{0} je uredil politiko gesel"
+
+msgid "Only administrators are allowed to create/update password policies settings."
+msgstr "Le skrbniki smejo ustvarjati/posodabljati nastavitve politik gesel."
+
+msgid "The password policy settings has been updated by {0}."
+msgstr "Nastavitve politike gesel je posodobil {0}."
+
+msgid "you"
+msgstr "vi"
+
+msgid "view it in passbolt"
+msgstr "oglejte si jo v Passbolt"
+
+msgid "The SCIM setting id should be a valid UUID."
+msgstr "ID nastavitve SCIM mora biti veljaven UUID."
+
+msgid "The identifier of the default user should be a valid UUID."
+msgstr "Identifikator privzetega uporabnika mora biti veljaven UUID."
+
+msgid "The user is not active, disabled or does not exist."
+msgstr "Uporabnik ni aktiven, je onemogočen ali ne obstaja."
+
+msgid "The Setting ID cannot be passed on update."
+msgstr "ID nastavitve ni mogoče posredovati pri posodobitvi."
+
+msgid "The secret token should not be empty."
+msgstr "Skrivni žeton ne sme biti prazen."
+
+msgid "The ID for the SCIM settings should not be empty."
+msgstr "ID nastavitev SCIM ne sme biti prazen."
+
+msgid "The ID for the SCIM settings should be a valid UUID."
+msgstr "ID nastavitev SCIM mora biti veljaven UUID."
+
+msgid "The SCIM secret token is expired, you are requested to rotate it."
+msgstr ""
+
+msgid "Simultaneous SCIM and session authentication is not permitted."
+msgstr "Sočasno overjanje SCIM in seje ni dovoljeno."
+
+msgid "SCIM settings endpoints are disabled."
+msgstr "Končne točke nastavitev SCIM so onemogočene."
+
+msgid "An entry for the same related entity already exists"
+msgstr "Vnos za isto povezano entiteto že obstaja."
+
+msgid "An entry with the same `scim_name` and `foreign_model` already exist."
+msgstr ""
+
+msgid "Users"
+msgstr "Uporabniki"
+
+msgid "Groups"
+msgstr "Skupine"
+
+msgid "The secret token format is incorrect."
+msgstr "Format skrivnega žetona je nepravilen."
+
+msgid "SCIM plugin is enabled."
+msgstr "Vtičnik SCIM je omogočen."
+
+msgid "SCIM plugin is disabled."
+msgstr "Vtičnik SCIM je onemogočen."
+
+msgid "The SCIM secret token is not expired."
+msgstr ""
+
+msgid "Rotate the SCIM secret token in the administration settings."
+msgstr ""
+
+msgid "The SCIM settings could not be decrypted with the server gpg key."
+msgstr "SCIM nastavitev ni bilo mogoče dešifrirati s strežniškim GPG ključem."
+
+msgid "The SCIM settings could not be encrypted with the server gpg key."
+msgstr "SCIM nastavitev ni bilo mogoče šifrirati s strežniškim GPG ključem."
+
+msgid "Could not validate the SCIM settings found in database."
+msgstr "Ni bilo mogoče preveriti SCIM nastavitev, najdenih v podatkovni bazi."
+
+msgid "The SCIM setting identifier should be a valid UUID."
+msgstr "Identifikator nastavitve SCIM mora biti veljaven UUID."
+
+msgid "Could not validate the SCIM settings."
+msgstr "SCIM nastavitev ni bilo mogoče preveriti."
+
+msgid "The SCIM plugin is disabled."
+msgstr "Vtičnik SCIM je onemogočen."
+
+msgid "Please delete previous settings before creating again."
+msgstr "Pred ponovnim ustvarjanjem izbrišite prejšnje nastavitve."
+
+msgid "The uuid in the url doesn't match any known setting record."
+msgstr "UUID v URL-ju se ne ujema z nobenim znanim zapisom nastavitve."
+
+msgid "The SCIM secret token expiry configuration is invalid."
+msgstr ""
+
+msgid "Missing or invalid SCIM user in configuration settings"
+msgstr ""
+
+msgid "An unexpected error occurred while creating the user in the database"
+msgstr ""
+
+msgid "An administrator user cannot be suspended via SCIM."
+msgstr ""
+
+msgid "Email"
+msgstr "E-naslov"
+
+msgid "External id"
+msgstr "Zunanji ID"
+
+msgid "Invalid Schema"
+msgstr "Neveljavna shema"
+
+msgid "Invalid ResourceType"
+msgstr "Neveljaven ResourceType"
+
+msgid "SsoRecover plugin is disabled."
+msgstr "Vtičnik SsoRecover je onemogočen."
+
+msgid "The SSO state type is invalid."
+msgstr "Tip stanja SSO ni veljaven."
+
+msgid "CSRF issue. The state in URL and Cookies do not match."
+msgstr "Problem CSRF. Stanje v URL in piškotkih se ne ujemata."
+
+msgid "CSRF issue. The state in request data does not match with cookie value."
+msgstr "Težava CSRF. Stanje v podatkih zahteve se ne ujema z vrednostjo piškotka."
+
+msgid "The state is required in cookie."
+msgstr "Stanje je potrebno v piškotku."
+
+msgid "The token is required in URL parameters."
+msgstr "Žeton je potreben v parametrih URL."
+
+msgid "The state is required in URL parameters."
+msgstr "Stanje je potrebno v parametrih URL."
+
+msgid "The code is required in URL parameters."
+msgstr "Koda je potrebna v parametrih URL."
+
+msgid "The code is required in request data."
+msgstr "V podatkih zahteve je potrebna koda."
+
+msgid "The user id is required in URL parameters."
+msgstr "ID uporabnika je potreben v parametrih URL."
+
+msgid "The settings id is required in URL parameters."
+msgstr "ID nastavitve je potreben v parametrih URL."
+
+msgid "The user does not exist or is not active."
+msgstr "Uporabnik ne obstaja ali ni aktiven."
+
+msgid "The SSO setting does not exist."
+msgstr "Nastavitev SSO ne obstaja."
+
+msgid "Information about the key is required."
+msgstr "Potrebne so informacije o ključu."
+
+msgid "The SSO key id should be a uuid."
+msgstr "ID ključa SSO bi moral biti uuid."
+
+msgid "The key could not be found"
+msgstr "Ključa ni bilo mogoče najti"
+
+msgid "The SSO setting id should be a uuid."
+msgstr "ID nastavitve SSO bi moral biti uuid."
+
+msgid "The SSO settings were activated."
+msgstr "Nastavitve SSO so bile aktivirane."
+
+msgid "The draft setting was saved."
+msgstr "Nastavitev osnutka je bila shranjena."
+
+msgid "The SSO settings were deleted."
+msgstr "Nastavitve SSO so bile izbrisane."
+
+msgid "Ajax/Json request not supported."
+msgstr "Zahteva Ajax/Json ni podprta."
+
+msgid "A provider is required."
+msgstr "Ponudnik je potreben."
+
+msgid "The provider is not supported."
+msgstr "Ponudnik ni podprt."
+
+msgid "Data is required."
+msgstr "Podatki so potrebni."
+
+msgid "Data must be an array of properties."
+msgstr "Podatki morajo biti seznam lastnosti."
+
+msgid "The email claim should not be empty."
+msgstr "Trditev e-pošte ne sme biti prazna."
+
+msgid "The email claim is too large."
+msgstr "Email zahtevek je prevelik."
+
+msgid "The email claim should be one of the following: {0}."
+msgstr "Trditev e-pošte mora biti ena izmed naslednjih: {0}."
+
+msgid "A URL is required."
+msgstr "URL je potreben"
+
+msgid "The URL should not be empty."
+msgstr "URL ne sme biti prazno."
+
+msgid "The URL is not supported."
+msgstr "URL ni podprt"
+
+msgid "A tenant id is required."
+msgstr "Potreben je ID najemnika"
+
+msgid "The tenant id should not be empty."
+msgstr "ID najemnika ne sme biti prazen"
+
+msgid "The tenant id should be a valid UUID."
+msgstr "ID najemnika mora biti veljaven UUID"
+
+msgid "A client id is required."
+msgstr "Potreben je ID stranke"
+
+msgid "The client id should not be empty."
+msgstr "ID stranke ne sme biti prazen"
+
+msgid "The client id should be a valid UUID."
+msgstr "ID stranke mora biti veljaven UUID"
+
+msgid "A client secret is required."
+msgstr "Potrebna je skrivna ključ stranke"
+
+msgid "The client secret should be a valid string."
+msgstr "Skrivni ključ stranke mora biti veljaven niz"
+
+msgid "The client secret is too large."
+msgstr "Skrivni ključ stranke je prevelik"
+
+msgid "A client secret expiry is required."
+msgstr "Potreben je potek skrivnega ključa stranke"
+
+msgid "The expiry should not be empty."
+msgstr "Potek ne sme biti prazen"
+
+msgid "The prompt should not be empty."
+msgstr "Poziv ne sme biti prazen."
+
+msgid "The prompt should be one of the following: {0}."
+msgstr "Poziv mora biti eden izmed naslednjih: {0}."
+
+msgid "The login hint should be a boolean."
+msgstr "Namig za prijavo mora biti logična vrednost."
+
+msgid "The client id is too large."
+msgstr "ID odjemalca je prevelik."
+
+msgid "A base URL is required."
+msgstr "Zahtevana je osnovna URL."
+
+msgid "The base URL should not be empty."
+msgstr "Osnovna URL ne sme biti prazna."
+
+msgid "The base URL is too large."
+msgstr "Osnovna URL je prevelika."
+
+msgid "The OpenID configuration path should be a valid BMP-UTF8 string."
+msgstr "Pot konfiguracije OpenID mora biti veljaven niz BMP-UTF8."
+
+msgid "The OpenID configuration path is too large."
+msgstr "Pot konfiguracije OpenID je prevelika."
+
+msgid "The client id should be a valid BMP-UTF8 string."
+msgstr "ID odjemalca mora biti veljaven niz BMP-UTF8."
+
+msgid "The scope should be a valid string."
+msgstr "Obseg (scope) mora biti veljaven niz."
+
+msgid "The scope is too large."
+msgstr "Obseg (scope) je prevelik."
+
+msgid "The URL must be a valid PingOne authentication domain."
+msgstr ""
+
+msgid "An environment id is required."
+msgstr ""
+
+msgid "The environment id should not be empty."
+msgstr ""
+
+msgid "The environment id should be a valid UUID."
+msgstr ""
+
+msgid "SSO settings edit endpoints are disabled."
+msgstr "Končne točke za urejanje nastavitev SSO so onemogočene."
+
+msgid "The user is not active."
+msgstr "Uporabnik ni aktiven"
+
+msgid "The status length is not supported."
+msgstr "Dolžina stanja ni podprta"
+
+msgid "The status is not supported."
+msgstr "Stanje ni podprto"
+
+msgid "The nonce should be a valid ASCII string."
+msgstr "Nonce bi moral biti veljaven niz ASCII"
+
+msgid "The nonce length should be minimum {0} characters."
+msgstr "Dolžina nonce bi morala biti najmanj {0} znakov"
+
+msgid "The nonce length should be maximum {0} characters."
+msgstr "Dolžina nonce bi morala biti največ {0} znakov"
+
+msgid "A nonce is required."
+msgstr "Potreben je nonce"
+
+msgid "The nonce should not be empty."
+msgstr "Nonce ne sme biti prazen"
+
+msgid "The type length should be maximum {0} characters."
+msgstr "Dolžina tipa bi morala biti največ {0} znakov"
+
+msgid "The state should be a valid ASCII string."
+msgstr "Stanje bi moral biti veljaven niz ASCII"
+
+msgid "The state length should be minimum {0} characters."
+msgstr "Dolžina stanja bi morala biti najmanj {0} znakov"
+
+msgid "The state length should be maximum {0} characters."
+msgstr "Dolžina stanja bi morala biti največ {0} znakov"
+
+msgid "The SSO settings identifier should be a valid UUID."
+msgstr "Identifikator nastavitev SSO bi moral biti veljaven UUID"
+
+msgid "The SSO settings identifier should not be empty."
+msgstr "Identifikator nastavitev SSO ne sme biti prazen"
+
+msgid "The user agent should be a valid ASCII string."
+msgstr "Uporabniški agent bi moral biti veljaven niz ASCII"
+
+msgid "The user agent length should be maximum {0} characters."
+msgstr "Dolžina uporabniškega agenta bi morala biti največ {0} znakov"
+
+msgid "A user agent is required."
+msgstr "Potreben je uporabniški agent"
+
+msgid "The user agent should not be empty."
+msgstr "Uporabniški agent ne sme biti prazen"
+
+msgid "The IP length should be maximum {0} characters."
+msgstr "Dolžina IP bi morala biti največ {0} znakov"
+
+msgid "An IP is required."
+msgstr "Potreben je IP"
+
+msgid "The IP should not be empty."
+msgstr "IP ne sme biti prazen"
+
+msgid "This nonce is already in use."
+msgstr "Ta nonce je že v uporabi."
+
+msgid "This state is already in use."
+msgstr "To stanje je že v uporabi."
+
+msgid "The SSO setting identifier does not exist."
+msgstr "Identifikator nastavitve SSO ne obstaja."
+
+msgid "The user identifier does not exist."
+msgstr "Identifikator uporabnika ne obstaja."
+
+msgid "The provided nonce is invalid."
+msgstr "Navedeni nonce ni veljaven."
+
+msgid "The URL should start with https://"
+msgstr "URL mora začeti s https://"
+
+msgid "The provided state is invalid."
+msgstr "Navedeno stanje ni veljavno."
+
+msgid "The type of the SSO state is invalid."
+msgstr "Tip stanja SSO ni veljaven."
+
+msgid "{0} activated the SSO setting"
+msgstr "{0} je aktiviral nastavitev SSO"
+
+msgid "{0} deleted the SSO setting"
+msgstr "{0} je izbrisal nastavitev SSO"
+
+msgid "Users are unable to log in via Azure SSO"
+msgstr "Uporabniki se ne morejo prijaviti prek Azure SSO"
+
+msgid "Single sign-on failed."
+msgstr "Enotna prijava ni uspela."
+
+msgid "Provider error: \"{0}\""
+msgstr "Napaka ponudnika: \"{0}\""
+
+msgid "Azure SSO secret expiry date is near"
+msgstr "Datum poteka skrivnosti Azure SSO se bliža"
+
+msgid "SSL certification validation for SSO instance is enabled."
+msgstr "Preverjanje SSL certifikata za instanco SSO je omogočeno."
+
+msgid "SSL certification validation for SSO instance is disabled."
+msgstr "Preverjanje SSL certifikata za instanco SSO je onemogočeno."
+
+msgid "To fix this, you can set PASSBOLT_SECURITY_SSO_SSL_VERIFY environment variable to true."
+msgstr "Za odpravo nastavite spremenljivko okolja PASSBOLT_SECURITY_SSO_SSL_VERIFY na true."
+
+msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
+msgstr "Ali nastavite passbolt.security.sso.sslVerify na true v {0}."
+
+msgid "The endpoints for updating the SSO configurations are disabled."
+msgstr "Končne točke za posodabljanje konfiguracij SSO so onemogočene."
+
+msgid "The endpoints for updating the SSO configurations are enabled."
+msgstr "Končne točke za posodabljanje konfiguracij SSO so omogočene."
+
+msgid "It is recommended to disable endpoints for updating the SSO configurations."
+msgstr "Priporočamo, da onemogočite končne točke za posodabljanje konfiguracij SSO."
+
+msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
+msgstr "Nastavite okoljsko spremenljivko PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED na true."
+
+msgid "The user is missing for the SSO state."
+msgstr "Uporabnik manjka za stanje SSO."
+
+msgid "Email not provided by provider."
+msgstr "E-pošta ni bila zagotovljena s strani ponudnika."
+
+msgid "Username mismatch."
+msgstr "Uporabniško ime se ne ujema."
+
+msgid "Invalid nonce."
+msgstr "Neveljaven nonce."
+
+msgid "Invalid provider. Expected AD FS."
+msgstr "Neveljaven ponudnik. Pričakovan AD FS."
+
+msgid "Invalid provider data. Expected AD FS settings."
+msgstr "Neveljavni podatki ponudnika. Pričakovane so nastavitve AD FS."
+
+msgid "No valid SSO settings found."
+msgstr "Ni veljavnih nastavitev SSO."
+
+msgid "You must authenticate with Azure again."
+msgstr "Znova se morate preveriti pri Azure."
+
+msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
+msgstr "V nastavitvi `passbolt.security.sso.sslCafile` je naveden neveljaven vrednost"
+
+msgid "Provided root CA file does not exist"
+msgstr "Navedena datoteka osnovnega CA ne obstaja"
+
+msgid "Invalid provider. Expected PingOne."
+msgstr ""
+
+msgid "Invalid provider data. Expected PingOne settings."
+msgstr ""
+
+msgid "The user id should be a valid UUID."
+msgstr "ID uporabnika mora biti veljaven UUID."
+
+msgid "The authentication token does not exist."
+msgstr "Žetona za avtentikacijo ni."
+
+msgid "The SSO authentication token is invalid."
+msgstr "Žeton za SSO avtentikacijo ni veljaven."
+
+msgid "Settings id is missing."
+msgstr "Manjka ID nastavitve."
+
+msgid "User id mismatch."
+msgstr "ID uporabnika se ne ujema."
+
+msgid "Token IP is missing."
+msgstr "Manjka IP žeton."
+
+msgid "User IP mismatch."
+msgstr "IP uporabnika se ne ujema"
+
+msgid "User agent is missing."
+msgstr "Manjka uporabniški agent."
+
+msgid "User agent mismatch."
+msgstr "Uporabniški agent se ne ujema."
+
+msgid "Settings mismatch."
+msgstr "Nastavitve se ne ujemajo."
+
+msgid "The SSO key could not be saved."
+msgstr "Ključa SSO ni bilo mogoče shraniti."
+
+msgid "The SSO key does not exist."
+msgstr "Ključ SSO ne obstaja."
+
+msgid "The SSO key could not be deleted."
+msgstr "Ključa SSO ni bilo mogoče izbrisati."
+
+msgid "Could not update the SSO settings."
+msgstr "Nastavitve SSO ni bilo mogoče posodobiti."
+
+msgid "The settings status is invalid."
+msgstr "Stanje nastavitev je neveljavno."
+
+msgid "Invalid status."
+msgstr "Neveljavno stanje."
+
+msgid "Could not delete the SSO settings."
+msgstr "Nastavitve SSO ni bilo mogoče izbrisati."
+
+msgid "Could not delete the draft SSO settings."
+msgstr "Nastavitev osnutka SSO ni bilo mogoče izbrisati."
+
+msgid "The SSO settings do not exist."
+msgstr "Nastavitve SSO ne obstajajo."
+
+msgid "The SSO setting cannot be decrypted."
+msgstr "Nastavitev SSO ni mogoče dešifrirati."
+
+msgid "The SSO setting cannot be decoded."
+msgstr "Nastavitev SSO ni mogoče dekodirati."
+
+msgid "Only administrators can create SSO settings."
+msgstr "Samo administratorji lahko ustvarijo SSO nastavitve."
+
+msgid "Something went wrong when validating the single-sign on settings."
+msgstr "Pri validaciji nastavitev enotne prijave je prišlo do napake."
+
+msgid "It is not possible to save the SSO settings."
+msgstr "Ni mogoče shraniti nastavitev SSO."
+
+msgid "The SSO state is invalid."
+msgstr "Stanje SSO ni veljavno."
+
+msgid "The SSO state is expired."
+msgstr "Stanje SSO je poteklo."
+
+msgid "The SSO state could not be saved."
+msgstr "Stanje SSO ni bilo mogoče shraniti."
+
+msgid "The SSO state does not exist."
+msgstr "Stanje SSO ne obstaja."
+
+msgid "Could not save the SSO state, invalid nonce."
+msgstr "Stanje SSO ni bilo mogoče shraniti, neveljaven nonce."
+
+msgid "Could not save the SSO state, please try again later."
+msgstr "Stanje SSO ni bilo mogoče shraniti, prosimo, poskusite kasneje."
+
+msgid "The {0} claim is not present, please contact your administrator."
+msgstr "Trditev {0} ni na voljo, prosimo, obrnite se na svojega skrbnika."
+
+msgid "Cannot parse JWKS endpoint response."
+msgstr "Ni mogoče prebrati odziva končne točke JWKS."
+
+msgid "Invalid JWKS endpoint response. Keys missing."
+msgstr "Neveljaven odziv končne točke JWKS. Manjkajo ključi."
+
+msgid "Failed to read certificate: {0}"
+msgstr "Ni bilo mogoče prebrati certifikata: {0}"
+
+msgid "Failed to read public key from certificate: {0}"
+msgstr "Ni bilo mogoče prebrati javnega ključa iz certifikata: {0}"
+
+msgid "Failed to public key properties from certificate: {0}"
+msgstr "Ni bilo mogoče prebrati lastnosti javnega ključa iz certifikata: {0}"
+
+msgid "JWT token is missing."
+msgstr "Manjka JWT žeton."
+
+msgid "Unable to decode JWT token."
+msgstr "Ni mogoče dekodirati JWT žetona."
+
+msgid "The {0} configuration value should be a string or NULL."
+msgstr "Vrednost nastavitve {0} mora biti niz ali NULL."
+
+msgid "The {0} configuration value should be one of the following: {1}."
+msgstr "Vrednost nastavitve {0} mora biti ena izmed naslednjih: {1}."
+
+msgid "Single-sign on was a success"
+msgstr "Enotna prijava je bila uspešna"
+
+msgid "Users are unable to log in via Azure SSO."
+msgstr "Uporabniki se ne morejo prijaviti prek Azure SSO."
+
+msgid "This can happen when the client secret of Azure AD is expired, or the SSO configurations (client credentials) are invalid."
+msgstr "Do tega lahko pride, če je skrivnost Azure AD potekla ali če so nastavitve SSO (poverilnice stranke) neveljavne."
+
+msgid "See Azure error response below:"
+msgstr "Oglejte si spodnji odziv napake Azure:"
+
+msgid "Error: {0}"
+msgstr "Napaka: {0}"
+
+msgid "Error description: {0}"
+msgstr "Opis napake: {0}"
+
+msgid "To fix this, you as an administrator have to update the Azure SSO credentials."
+msgstr "Za odpravo morate kot skrbnik posodobiti poverilnice Azure SSO."
+
+msgid "Update it in passbolt"
+msgstr "Posodobite jih v Passbolt"
+
+msgid "The client secret expiry date of your Azure AD instance is {0}."
+msgstr "Datum poteka skrivnosti vaše instance Azure AD je {0}."
+
+msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
+msgstr "Upoštevajte, da se uporabniki Passbolt po datumu poteka skrivnosti ne bodo mogli prijaviti prek Azure SSO."
+
+msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
+msgstr "Priporočamo, da to popravite v Azure in posodobite zadnje podatke v Passbolt."
+
+msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
+msgstr "Ponudnik SSO {0} je bil uspešno preizkušen in aktiviran s strani {1}."
+
+msgid "All users can now use Single Sign-on to perform authentication."
+msgstr "Vsi uporabniki lahko zdaj uporabljajo enotno prijavo za izvedbo avtentikacije."
+
+msgid "Viewq  it in passbolt"
+msgstr "Ogled v Passbolt"
+
+msgid "The SSO setting has been deleted by {0}."
+msgstr "Nastavitev SSO je bila izbrisana s strani {0}."
+
+msgid "The authentication token does not exist or has been deleted."
+msgstr "Žetona za avtentikacijo ni ali je bil izbrisan."
+
+msgid "The authentication token has been expired."
+msgstr "Žeton za avtentikacijo je potekel."
+
+msgid "Could not validate the SSO recover request."
+msgstr "Ni bilo mogoče preveriti zahteve za obnovo SSO."
+
+msgid "The email is required in URL parameters."
+msgstr "V parametrih URL je zahtevana e-pošta."
+
+msgid "The case field is required."
+msgstr "Potrebno je polje primer."
+
+msgid "The case is not supported. Only \"default\" case is supported."
+msgstr "Primer ni podprt. Podprt je le primer \"privzeto\"."
+
+msgid "The token field is required."
+msgstr "Žeton je obvezen."
+
+msgid "Access to this service requires an invitation. "
+msgstr "Za dostop do te storitve je potrebno povabilo."
+
+msgid "Please contact your administrator to request an invitation link."
+msgstr "Za zahtevo za povezavo za povabilo se obrnite na svojega skrbnika."
+
+msgid "Subscription key data is required."
+msgstr "Podatki naročniškega ključa so zahtevani."
+
+msgid "The subscription was created."
+msgstr "Naročnina je bila ustvarjena."
+
+msgid "The subscription was updated."
+msgstr "Naročnina je bila posodobljena."
+
+msgid "The subscription is valid."
+msgstr "Naročnina je veljavna."
+
+msgid "Subscription key could not be found."
+msgstr "Naročniškega ključa ni bilo mogoče najti."
+
+msgid "The subscription cannot be verified. Parse error."
+msgstr "Naročnine ni mogoče preveriti. Napaka v obdelavi (parse)."
+
+msgid "The subscription format is not valid. Invalid format."
+msgstr "Format naročnine ni veljaven. Neveljaven format."
+
+msgid "The subscription key cannot be verified."
+msgstr "Naročniškega ključa ni bilo mogoče preveriti."
+
+msgid "The passbolt OpenPGP public key could not be found."
+msgstr "Passbolt OpenPGP javnega ključa ni bilo mogoče najti."
+
+msgid "A users quantity is required."
+msgstr "Zahtevano je število uporabnikov."
+
+msgid "The users quantity should not be empty."
+msgstr "Število uporabnikov ne sme biti prazno."
+
+msgid "The users limit is exceeded."
+msgstr "Presežena je omejitev števila uporabnikov."
+
+msgid "The key should have been created in the past."
+msgstr "Ključ bi moral biti ustvarjen v preteklosti."
+
+msgid "An expiry date is required."
+msgstr "Zahtevan je datum poteka."
+
+msgid "The subscription is expired."
+msgstr "Naročnina je potekla."
+
+msgid "A customer identifier is required."
+msgstr "Zahtevan je identifikator stranke."
+
+msgid "A subscription identifier is required."
+msgstr "Zahtevan je identifikator naročnine."
+
+msgid "The format of the subscription id is not valid."
+msgstr "Format identifikatorja naročnine ni veljaven."
+
+msgid "Only admin can create or update subscription information."
+msgstr "Samo skrbnik lahko ustvari ali posodobi informacije o naročnini."
+
+msgid "The subscription key format is not valid."
+msgstr "Format naročniškega ključa ni veljaven."
+
+msgid "Subscription is valid and up to date."
+msgstr "Naročnina je veljavna in posodobljena."
+
+msgid "Subscription cannot be found or is invalid/expired."
+msgstr "Naročnine ni mogoče najti ali je neveljavna/potekla."
+
+msgid "Subscription invalid/expired ({0})."
+msgstr "Naročnina je neveljavna/potekla ({0})."
+
+msgid "Subscription expired ({0})."
+msgstr "Naročnina je potekla ({0})."
+
+msgid "Subscription user count has been exceeded ({0}/{1})."
+msgstr "Preseženo je število uporabnikov naročnine ({0}/{1})."
+
+msgid "Subscription will expire in {0} days."
+msgstr "Naročnina bo potekla čez {0} dni."
+
+msgid "Subscription soon exceeds user count ({0}/{1})."
+msgstr "Naročnina bo kmalu presegla število uporabnikov ({0}/{1})."
+
+msgid "Subscription invalid or expired."
+msgstr "Naročnina je neveljavna ali je potekla."
+
+msgid "Subscription key format error."
+msgstr "Napaka v formatu naročniškega ključa."
+
+msgid "Subscription key signature error."
+msgstr "Napaka v podpisu naročniškega ključa."
+
+msgid "Subscription key validation error."
+msgstr "Napaka pri preverjanju naročniškega ključa."
+
+msgid "It looks like you could use some help."
+msgstr "Videti je, da bi vam prišla prav pomoč."
+
+msgid "We are here for you. You can contact us at sales@passbolt.com"
+msgstr "Tu smo za vas. Kontaktirate nas lahko na sales@passbolt.com"
+
+msgid "Thanks for choosing Passbolt Pro"
+msgstr "Hvala, ker ste izbrali Passbolt Pro"
+
+msgid "Below are your subscription key details"
+msgstr "Spodaj so podrobnosti vašega naročniškega ključa"
+
+msgid "<error>Not Available</error>"
+msgstr "<error>Ni na voljo</error>"
+
+msgid "Customer id:\t{0}"
+msgstr "Identifikacijska številka stranke:\t{0}"
+
+msgid "<error>{0} (currently: {1}) - Exceeded</error>"
+msgstr "<error>{0} (trenutno: {1}) - Prekoračeno</error>"
+
+msgid "<info>{0} (currently: {1})</info>"
+msgstr "<info>{0} (trenutno: {1})</info>"
+
+msgid "Users limit:\t{0}"
+msgstr "Omejitev števila uporabnikov:\t{0}"
+
+msgid "Valid from:\t<info>{0}</info>"
+msgstr "Veljavno od:\t<info>{0}</info>"
+
+msgid "Expires on:\t<error>{0} (expired)</error>"
+msgstr "Poteče:\t<error>{0} (poteklo)</error>"
+
+msgid "Expires on:\t<info>{0} (in {1} days)</info>"
+msgstr "Poteče:\t<info>{0} (čez {1} dni)</info>"
+
+msgid "For any question / feedback / subscription renewal,"
+msgstr "Za kakršnakoli vprašanja / povratne informacije / podaljšanje naročnine,"
+
+msgid "kindly contact us at <info>sales@passbolt.com</info>"
+msgstr "se prosimo obrnite na <info>sales@passbolt.com</info>"
+
+msgid "Only administrators can view the subscription details."
+msgstr "Le skrbniki lahko pregledajo podrobnosti naročnine."
+
+msgid "The file {0} could not be found."
+msgstr "Datoteke {0} ni mogoče najti."
+
+msgid "The file {0} could not be read."
+msgstr "Datoteke {0} ni mogoče prebrati."
+
+msgid "No active admins were found."
+msgstr "Ni bilo najdenih aktivnih skrbnikov."
+
+msgid "Only administrators can update the subscription details."
+msgstr "Le skrbniki lahko posodobijo podrobnosti naročnine."
+
+msgid "The tags data should be a string or an array."
+msgstr "Podatki oznak morajo biti niz ali tabela."
+
+msgid "Could not validate request data."
+msgstr "Ni bilo mogoče potrditi podatkov zahteve."
+
+msgid "The tag id is not valid."
+msgstr "ID oznake ni veljaven."
+
+msgid "The tag does not exist."
+msgstr "Oznaka ne obstaja."
+
+msgid "You do not have the permission to delete shared tags."
+msgstr "Nimate dovoljenja za izbris skupnih oznak."
+
+msgid "The tag has been deleted successfully."
+msgstr "Oznaka je bila uspešno izbrisana."
+
+msgid "You do not have the permission to update shared tags."
+msgstr "Nimate dovoljenja za posodobitev skupnih oznak."
+
+msgid "The tag has been updated successfully."
+msgstr "Oznaka je bila uspešno posodobljena."
+
+msgid "The tag identifier should be a valid UUID."
+msgstr "Identifikator oznake mora biti veljaven UUID."
+
+msgid "The tag is missing or does not belong to current user."
+msgstr "Oznaka manjka ali ne pripada trenutnemu uporabniku."
+
+msgid "The is shared should be a boolean type."
+msgstr "Polje \"is shared\" mora biti boolean tipa."
+
+msgid "The tags plugin is in read-only mode."
+msgstr "Vtičnik Oznake je v načinu samo za branje."
+
+msgid "The tag should not be empty."
+msgstr "Oznaka ne sme biti prazna."
+
+msgid "A tag is required."
+msgstr "Potrebna je oznaka."
+
+msgid "The tag should be a valid BMP-UTF8 string."
+msgstr "Oznaka mora biti veljaven niz BMP-UTF8."
+
+msgid "The tag length should be maximum {0} characters."
+msgstr "Dolžina oznake mora biti največ {0} znakov."
+
+msgid "The shared status should be a valid boolean."
+msgstr "Stanje skupnosti mora biti veljaven boolean."
+
+msgid "A shared status is required."
+msgstr "Potrebno je stanje skupnosti."
+
+msgid "The tag metadata OpenPGP message cannot be parsed or is not for the intended recipient."
+msgstr "Sporočila OpenPGP metapodatkov oznake ni mogoče obdelati ali ni namenjeno predvidenemu prejemniku."
+
+msgid "Error while building tag DTO."
+msgstr "Pri gradnji Tag DTO je prišlo do napake."
+
+msgid "Could not validate tags data."
+msgstr "Podatke o oznakah ni mogoče preveriti."
+
+msgid "Unable to build tag entity"
+msgstr "Ni mogoče ustvariti entitete oznake"
+
+msgid "No tags to migrate."
+msgstr "Ni oznak za migracijo."
+
+msgid "Tag ID \"{0}\" is already V5"
+msgstr "Oznaka z ID \"{0}\" je že V5"
+
+msgid "No user found for the personal tag id: \"{0}\"."
+msgstr "Za osebno oznako z ID \"{0}\" ni najdenega uporabnika."
+
+msgid "User contain data missing for the tag id: \"{0}\"."
+msgstr "Podatki o uporabniku manjkajo za oznako z ID \"{0}\"."
+
+msgid "Unable to migrate tag id: {0} to V5."
+msgstr "Ni mogoče migrirati oznake z ID: {0} na V5."
+
+msgid "The tag metadata key data could not be updated."
+msgstr "Podatkov metapodatkovnega ključa oznake ni bilo mogoče posodobiti."
+
+msgid "Could not save the tags, try again later."
+msgstr "Oznak ni bilo mogoče shraniti, poskusite znova pozneje."
+
+msgid "You do not have the permission to edit shared tags on this resource."
+msgstr "Nimate dovoljenja za urejanje skupnih oznak na tem viru."
+
+msgid "Unable to save the tag."
+msgstr "Oznake ni mogoče shraniti."
+
+msgid "You do not have the permission to change a personal tag into shared tag."
+msgstr "Nimate dovoljenja za spremembo osebne oznake v deljeno oznako."
+
+msgid "The settings selected by your administrator prevent from downgrading tag."
+msgstr "Izbrane nastavitve skrbnika preprečujejo znižanje različice oznake."
+
+msgid "Could not retrieve the user passphrase policies."
+msgstr "Ni bilo mogoče pridobiti pravil za uporabniško geslo."
+
+msgid "The entropy minimum is required."
+msgstr "Zahtevana je minimalna entropija."
+
+msgid "The entropy minimum should be between {0} and {1}."
+msgstr "Minimalna entropija mora biti med {0} in {1}."
+
+msgid "You edited the user passphrase policy"
+msgstr "Uredili ste politiko uporabniškega gesla"
+
+msgid "{0} edited the user passphrase policy"
+msgstr "{0} je uredil politiko uporabniškega gesla"
+
+msgid "Could not validate the user passphrase policies settings."
+msgstr "Ni bilo mogoče preveriti nastavitev pravil za uporabniško geslo."
+
+msgid "Only administrators are allowed to create/update user passphrase policies settings."
+msgstr "Samo skrbniki lahko ustvarjajo/posodabljajo nastavitve pravil za uporabniško geslo."
+
+msgid "The user passphrase policy settings has been updated by {0}."
+msgstr "Nastavitve politike uporabniškega gesla je posodobil {0}."
 
 msgid "Error"
 msgstr "Napaka"
@@ -5247,9 +7257,6 @@ msgstr "Uporabniku manjka šifrirni ključ za deljene metapodatke vira. Prosimo,
 
 msgid "View users"
 msgstr "Poglej uporabnike"
-
-msgid "You have initiated an account recovery!"
-msgstr "Začeli ste postopek obnove računa!"
 
 msgid "Welcome back!"
 msgstr "Dobrodošli nazaj!"

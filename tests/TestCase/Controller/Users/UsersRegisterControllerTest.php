@@ -18,6 +18,7 @@ namespace App\Test\TestCase\Controller\Users;
 
 use App\Controller\Users\UsersRecoverController;
 use App\Model\Entity\Role;
+use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
@@ -37,11 +38,6 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
     use SelfRegistrationTestTrait;
-
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions',
-        'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Favorites', 'app.Base/Secrets',
-    ];
 
     public function setUp(): void
     {
@@ -104,6 +100,8 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
      */
     public function testUsersRegisterController_Success(array $data): void
     {
+        RoleFactory::make()->user()->persist();
+
         date_default_timezone_set($data['timezone']);
 
         $this->postJson('/users/register.json', $data);
@@ -151,6 +149,9 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
     public function testUsersRegisterController_Success_CannotModifyNotAccessibleFields(): void
     {
         // Not allowed to edit: id, active, deleted, created, modified, role_id
+        RoleFactory::make()->guest()->persist();
+        RoleFactory::make()->admin()->persist();
+        RoleFactory::make()->user()->persist();
         $roles = TableRegistry::getTableLocator()->get('Roles');
         $adminRoleId = $roles->getIdByName(Role::ADMIN);
         $userRoleId = $roles->getIdByName(Role::USER);
@@ -225,7 +226,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             ],
         ];
         foreach ($fails as $case => $data) {
-            $this->post('/users/register.json', $data);
+            $this->post('/users/register.json?api-version=v2', $data);
             $result = json_decode($this->_getBodyAsString());
             $this->assertEquals('400', $result->header->code, 'Validation should fail when ' . $case);
             $this->assertResponseError();
@@ -234,6 +235,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
 
     public function testUsersRegisterController_Error_MissingCsrfToken(): void
     {
+        RoleFactory::make()->guest()->persist();
         $this->disableCsrfToken();
         $this->post('/users/register');
         $this->assertResponseCode(403);
@@ -254,6 +256,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             ],
             'locale' => 'fr-FR',
         ];
+        RoleFactory::make()->guest()->persist();
         $this->post('/users/register', $data);
         $this->assertResponseCode(404);
     }
@@ -264,6 +267,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
      */
     public function testUsersRegisterController_Error_PreventUserEnumeration(): void
     {
+        RoleFactory::make()->guest()->persist();
         Configure::write(UsersRecoverController::PREVENT_EMAIL_ENUMERATION_CONFIG_KEY, true);
 
         $deleted = UserFactory::make()->user()->deleted()->persist();

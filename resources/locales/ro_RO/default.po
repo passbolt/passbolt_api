@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2026-04-02 11:49+0000\n"
-"PO-Revision-Date: 2026-04-02 13:48\n"
+"POT-Creation-Date: 2026-04-02 12:51+0000\n"
+"PO-Revision-Date: 2026-04-02 14:13\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,8 @@ msgstr ""
 "X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "X-Crowdin-Project-ID: 2\n"
 "X-Crowdin-Language: ro\n"
-"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/default.po\n"
-"X-Crowdin-File-ID: 212\n"
+"X-Crowdin-File: /[passbolt.passbolt-pro-api] release/resources/locales/en_UK/default.po\n"
+"X-Crowdin-File-ID: 220\n"
 "Language: ro_RO\n"
 
 msgid "You need to login to access this location."
@@ -1089,6 +1089,12 @@ msgstr "Câmpul trebuie să fie nul la crearea unui nou înregistrări."
 
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "Identificatorul cheii ar trebui să fie un șir de 8 caractere hexazecimale."
+
+msgid "The provided IP is invalid."
+msgstr "Adresa IP furnizată este invalidă."
+
+msgid "The provided user agent is invalid."
+msgstr "User agent-ul furnizat este invalid."
 
 msgid "{0} updated your memberships in several groups"
 msgstr "{0} ți-a actualizat statutul de membru în mai multe grupuri"
@@ -4780,6 +4786,15 @@ msgstr "Este necesar un status pentru forțează SSL."
 msgid "The force ssl setting should be a valid boolean."
 msgstr "Setarea pentru forțează SSL ar trebui să fie un boolean valid."
 
+msgid "A subscription key is required."
+msgstr "O cheie de abonare este necesară."
+
+msgid "The subscription key should not be empty."
+msgstr "Cheia de abonare nu trebuie să fie goală."
+
+msgid "The subscription format is not valid."
+msgstr "Formatul abonamentului nu este valid."
+
 msgid "The passbolt config is writable."
 msgstr "Configurația Passbolt permite scrierea."
 
@@ -4981,12 +4996,6 @@ msgstr "Sau selectați un fișier din calculator"
 msgid "Some binary things are happening..."
 msgstr "Se întâmplă unele lucruri binare..."
 
-msgid "Passbolt Pro activation."
-msgstr "Activare Passbolt Pro."
-
-msgid "Copy paste your Passbolt Pro subscription key here"
-msgstr "Copiați și inserați cheia de abonament Passbolt Pro aici"
-
 msgid "Choose your preferences."
 msgstr "Alege-ți preferințele."
 
@@ -5005,8 +5014,14 @@ msgstr "Forțați SSL?"
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
 msgstr "Forțarea SSL înseamnă că Passbolt nu va accepta conexiuni care provin dintr-un protocol nesigur. Dacă SSL este forțat, serverul dumneavoastră trebuie să fie configurat pentru HTTPS. Este foarte recomandat să faceți acest lucru."
 
-msgid "Welcome to Passbolt! Let's get started with the configuration."
-msgstr "Bine ați venit la Passbolt! Să începem configurarea."
+msgid "Passbolt Pro activation."
+msgstr "Activare Passbolt Pro."
+
+msgid "Copy paste your Passbolt Pro subscription key here"
+msgstr "Copiați și inserați cheia de abonament Passbolt Pro aici"
+
+msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
+msgstr "Bine ați venit la Passbolt Pro! Să începem configurarea."
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "Felicitări! Mediul tău este gata pentru Passbolt."
@@ -5071,12 +5086,6 @@ msgstr "Ajutor"
 msgid "Need help? You can find more information on how to install passbolt in the official online help."
 msgstr "Ai nevoie de ajutor? Mai multe informații despre cum să instalezi Passbolt găsești pe site-ul de help online."
 
-msgid "What subscription key?"
-msgstr "Care cheie pentru abonare?"
-
-msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
-msgstr "Cheia de abonare este un fișier care v-a fost trimis când ați achiziționat Passbolt Pro. Avem nevoie de o cheie de abonament pentru a activa caracteristicile Pro Passbolt."
-
 msgid "Send test email"
 msgstr "Trimite e-mail de test"
 
@@ -5097,6 +5106,2007 @@ msgstr "De ce am nevoie de un server SMTP?"
 
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "Passbolt are nevoie de un server SMTP pentru a trimite e-mail-uri de invitație după crearea unui cont și pentru a trimite ulterior notificări e-mail."
+
+msgid "What subscription key?"
+msgstr "Care cheie pentru abonare?"
+
+msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
+msgstr "Cheia de abonare este un fișier care v-a fost trimis când ați achiziționat Passbolt Pro. Avem nevoie de o cheie de abonament pentru a activa caracteristicile Pro Passbolt."
+
+msgid "The user id is invalid."
+msgstr "Id-ul utilizatorului este invalid."
+
+msgid "The authentication token id is invalid."
+msgstr "Id-ul token-ului de autentificare este invalid."
+
+msgid "Only guests are allowed to create an account recovery request."
+msgstr "Doar vizitatorii au permisiunea de a crea o cerere de recuperare a contului."
+
+msgid "Invalid request. Please provide the required data."
+msgstr "Cerere invalidă. Vă rugăm să furnizați datele necesare."
+
+msgid "The request id is invalid."
+msgstr "Id-ul cererii este invalid."
+
+msgid "Please provide a valid request id."
+msgstr "Vă rugăm să furnizați un id valid pentru cerere."
+
+msgid "You cannot reuse the account recovery key."
+msgstr "Nu puteți reutiliza cheia de recuperare a contului."
+
+msgid "A policy is required."
+msgstr "Este necesar să existe o politică."
+
+msgid "The policy name should not be empty."
+msgstr "Numele politicii nu trebuie să fie gol."
+
+msgid "The policy should be one of the following: {0}."
+msgstr "Politica ar trebui să fie una dintre următoarele: {0}."
+
+msgid "The public key identifier should be a valid UUID."
+msgstr "Identificatorul cheii publice ar trebui să fie un UUID valabil."
+
+msgid "The public key identifier should not be empty."
+msgstr "Identificatorul cheii publice nu trebuie să fie gol."
+
+msgid "The identifier of the user who created the organization policy should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a creat politica organizației ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who created the organization policy is required."
+msgstr "Identificatorul utilizatorului care a creat politica organizației este necesar."
+
+msgid "The identifier of the user who created the organization policy should not be empty."
+msgstr "Identificatorul utilizatorului care a creat politica organizației nu trebuie să fie gol."
+
+msgid "The identifier of the user who modified the organization policy should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a modificat politica organizației ar trebui să fie un UUID valabil."
+
+msgid "The identifier of the user who modified the organization policy is required."
+msgstr "Identificatorul utilizatorului care a modificat politica organizației este obligatoriu."
+
+msgid "The identifier of the user who modified the organization policy should not be empty."
+msgstr "Identificatorul utilizatorului care a modificat politica organizației nu trebuie să fie gol."
+
+msgid "Could not validate policy data."
+msgstr "Nu s-au putut valida datele politicii."
+
+msgid "The armored key is too big."
+msgstr "Cheia blindată este prea mare."
+
+msgid "The \"deleted\" field should be a valid date."
+msgstr "Câmpul \"șters\" trebuie să fie o dată validă."
+
+msgid "The identifier of the user who created the organization public key should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a creat cheia publică a organizației ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who created the organization public key is required."
+msgstr "Identificatorul utilizatorului care a creat cheia publică a organizației este necesar."
+
+msgid "The identifier of the user who created the organization public key should not be empty."
+msgstr "Identificatorul utilizatorului care a creat cheia publică a organizației nu trebuie să fie gol."
+
+msgid "The identifier of the user who modified the organization public key should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a modificat cheia publică a organizației ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who modified the organization public key is required."
+msgstr "Identificatorul utilizatorului care a modificat cheia publică a organizației este necesar."
+
+msgid "The identifier of the user who modified the organization public key should not be empty."
+msgstr "Identificatorul utilizatorului care a modificat cheia publică a organizației nu trebuie să fie gol."
+
+msgid "You cannot reuse the user keys."
+msgstr "Nu puteți reutiliza cheile utilizatorului."
+
+msgid "You cannot reuse account recovery organization public keys."
+msgstr "Nu puteți reutiliza cheile publice ale organizației pentru recuperarea contului."
+
+msgid "You cannot reuse the metadata keys."
+msgstr "Nu puteți reutiliza cheile metadatelor."
+
+msgid "Could not validate public key data."
+msgstr "Nu s-au putut valida datele cheii publice."
+
+msgid "The recipient_foreign_model should be a valid string."
+msgstr "Recipient_foreign_model ar trebui să fie un șir valid."
+
+msgid "The recipient_foreign_model must be provided."
+msgstr "Recipient_foreign_model trebuie furnizat."
+
+msgid "The recipient_foreign_model should not be empty."
+msgstr "Recipient_foreign_model nu are trebui să fie gol."
+
+msgid "The recipient_foreign_model must be one of the following: {0}."
+msgstr "Recipient_foreign_model trebuie să fie unul dintre următoarele: {0}."
+
+msgid "The data should be a valid string."
+msgstr "Datele ar trebui să fie un șir valid."
+
+msgid "The data is too big."
+msgstr "Datele sunt prea lungi."
+
+msgid "The identifier of the user who created the private key passwords should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a creat parolele cheii private ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who created the private key passwords is required."
+msgstr "Identificatorul utilizatorului care a creat parolele cheii private este necesar."
+
+msgid "The identifier of the user who created the private key passwords should not be empty."
+msgstr "Identificatorul utilizatorului care a creat parolele cheii private nu trebuie să fie gol."
+
+msgid "The identifier of the user who modified the private key passwords should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a modificat parolele cheii private ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who modified the private key passwords is required."
+msgstr "Identificatorul utilizatorului care a modificat parolele cheii private este necesar."
+
+msgid "The identifier of the user who modified the private key passwords should not be empty."
+msgstr "Identificatorul utilizatorului care a modificat parolele cheii private nu trebuie să fie gol."
+
+msgid "The private key identifier should be a valid UUID."
+msgstr "Identificatorul cheii private ar trebui să fie un UUID valid."
+
+msgid "A private key identifier is required."
+msgstr "Un identificator al cheii private este necesar."
+
+msgid "The private key identifier should not be empty."
+msgstr "Identificatorul cheii private nu trebuie să fie gol."
+
+msgid "Could not validate password data."
+msgstr "Nu s-au putut valida datele parolei."
+
+msgid "The identifier of the user who created the private key  should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a creat cheia privată ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who created the private key  is required."
+msgstr "Identificatorul utilizatorului care a creat cheia privată este necesar."
+
+msgid "The identifier of the user who created the private key  should not be empty."
+msgstr "Identificatorul utilizatorului care a creat cheia privată nu trebuie să fie gol."
+
+msgid "The identifier of the user who modified the private key  should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a modificat cheia privată ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who modified the private key is required."
+msgstr "Identificatorul utilizatorului care a modificat cheia privată este necesar."
+
+msgid "The identifier of the user who modified the private key  should not be empty."
+msgstr "Identificatorul utilizatorului care a modificat cheia privată nu trebuie să fie gol."
+
+msgid "The account recovery private key is not valid."
+msgstr "Cheia privată de recuperare a contului nu este validă."
+
+msgid "The status should not be a valid string."
+msgstr "Statusul nu trebuie să fie un șir valid."
+
+msgid "This status is not supported."
+msgstr "Acest status nu este suportat."
+
+msgid "The status length should be maximum {0} characters."
+msgstr "Lungimea statusului ar trebui să fie de maxim {0} caractere."
+
+msgid "The identifier of the user who created the request should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a creat cererea ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who created the request is required."
+msgstr "Identificatorul utilizatorului care a creat cererea este necesar."
+
+msgid "The identifier of the user who created the request should not be empty."
+msgstr "Identificatorul utilizatorului care a creat cererea nu trebuie să fie gol."
+
+msgid "The identifier of the user who modified the request should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a modificat cererea ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who modified the request is required."
+msgstr "Identificatorul utilizatorului care a modificat cererea este necesar."
+
+msgid "The identifier of the user who modified the request should not be empty."
+msgstr "Identificatorul utilizatorului care a modificat cererea nu trebuie să fie gol."
+
+msgid "The request is invalid."
+msgstr "Cererea este invalidă."
+
+msgid "The account request is invalid."
+msgstr "Cerere cont invalidă."
+
+msgid "Invalid response status. Not supported."
+msgstr "Status răspuns invalid. Nu este suportat."
+
+msgid "The responder_foreign_key should not be empty."
+msgstr "Responder_foreign_key nu are trebui să fie gol."
+
+msgid "The responder_foreign_key should be a valid UUID."
+msgstr "Responder_foreign_key ar trebui să fie valid UUID."
+
+msgid "The responder_foreign_model should be a valid string."
+msgstr "Responder_foreign_key ar trebui să fie un șir valid."
+
+msgid "The responder_foreign_model should not be empty."
+msgstr "Responder_foreign_model nu are trebui să fie gol."
+
+msgid "The responder_foreign_model must be one of the following: {0}."
+msgstr "Responder_foreign_model trebuie să fie unul dintre următoarele: {0}."
+
+msgid "The identifier of the user who created the response should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a creat răspunsul ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who created the response is required."
+msgstr "Identificatorul utilizatorului care a creat răspunsul este necesar."
+
+msgid "The identifier of the user who created the response should not be empty."
+msgstr "Identificatorul utilizatorului care a creat răspunsul nu trebuie să fie gol."
+
+msgid "The identifier of the user who modified the response should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a modificat răspunsul ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who modified the response is required."
+msgstr "Identificatorul utilizatorului care a modificat răspunsul este necesar."
+
+msgid "The identifier of the user who modified the response should not be empty."
+msgstr "Identificatorul utilizatorului care a modificat răspunsul nu trebuie să fie gol."
+
+msgid "The account recovery request response is invalid."
+msgstr "Răspunsul cererii de recuperare a contului nu este validă."
+
+msgid "The status should not be empty"
+msgstr "Statusul nu trebuie să fie gol"
+
+msgid "The status should be one of the following: {0}."
+msgstr "Statusul trebuie să fie unul dintre următoarele: {0}."
+
+msgid "The identifier of the user who created the user settings should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a creat setările de utilizator ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who created the user settings is required."
+msgstr "Identificatorul utilizatorului care a creat setările de utilizator este necesar."
+
+msgid "The identifier of the user who created the user settings should not be empty."
+msgstr "Identificatorul utilizatorului care a creat setările de utilizator nu trebuie să fie gol."
+
+msgid "The identifier of the user who modified the user settings should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a modificat setările utilizatorului ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who modified the user settings is required."
+msgstr "Identificatorul utilizatorului care a modificat setările de utilizator este necesar."
+
+msgid "The identifier of the user who modified the user settings should not be empty."
+msgstr "Identificatorul utilizatorului care a modificat setările utilizatorului nu trebuie să fie gol."
+
+msgid "This user already has an account recovery setting"
+msgstr "Acest utilizator are deja o setare de recuperare cont"
+
+msgid "The account recovery user setting is not valid."
+msgstr "Setarea de utilizator pentru recuperarea contului nu este validă."
+
+msgid "You have disabled the account recovery."
+msgstr "Ați dezactivat recuperarea contului."
+
+msgid "{0} has disabled the account recovery."
+msgstr "{0} a dezactivat recuperarea contului."
+
+msgid "You have set the account recovery organization policy to {0}."
+msgstr "Ați setat politica organizației pentru recuperarea contului la {0}."
+
+msgid "{0} has set the account recovery organization policy to {1}."
+msgstr "{0} a setat politica organizației pentru recuperarea contului la {1}."
+
+msgid "You have updated the account recovery organization policy to {0}."
+msgstr "Ați actualizat politica organizației pentru recuperarea contului la {0}."
+
+msgid "{0} has updated the account recovery organization policy to {1}."
+msgstr "{0} a actualizat politica organizației pentru recuperarea contului la {1}."
+
+msgid "Suspicious account recovery request issued from IP {0} for {1}"
+msgstr "Cerere suspectă de recuperare a contului emisă de la IP-ul {0} pentru {1}"
+
+msgid "{0} has initiated a recovery request"
+msgstr "{0} a inițiat o cerere de recuperare a contului"
+
+msgid "You have initiated a recovery request"
+msgstr "Ați inițiat o cerere de recuperare"
+
+msgid "Recovery request approved!"
+msgstr "Cerere de recuperare aprobată!"
+
+msgid "approved"
+msgstr "aprobat"
+
+msgid "rejected"
+msgstr "refuzată"
+
+msgid "Account recovery response set to {0}."
+msgstr "Răspunsul de recuperare a contului setat la {0}."
+
+msgid "Account recovery response set to {0} by {1}."
+msgstr "Răspunsul de recuperare a contului setat la {0} de {1}."
+
+msgid "Recovery request denied!"
+msgstr "Cerere de recuperare refuzată!"
+
+msgid "Could not validate key revocation."
+msgstr "Nu s-a putut valida revocarea cheii."
+
+msgid "The fingerprint should match the one from the currently active key."
+msgstr "Amprenta trebuie să se potrivească cu cea din cheia activă în prezent."
+
+msgid "Account recovery is disabled."
+msgstr "Recuperarea contului este dezactivată."
+
+msgid "The account recovery organization public key is not set."
+msgstr "Cheia publică de recuperare cont organizație nu este setată."
+
+msgid "Invalid request. No policy change."
+msgstr "Cerere invalidă. Nicio politică nu a fost modificată."
+
+msgid "Invalid request. Revoked key is required for key rotation."
+msgstr "Cerere invalidă. Cheia revocată este necesară pentru rotirea cheii."
+
+msgid "Invalid request. New key is required for key rotation."
+msgstr "Cerere invalidă. Este necesară o nouă cheie pentru rotirea cheii."
+
+msgid "Invalid request. An organization recovery public key is required."
+msgstr "Cerere invalidă. Este necesară o cheie publică de recuperare a organizației."
+
+msgid "Invalid request. Revoked key or passwords are not required."
+msgstr "Cerere invalidă. Cheia sau parolele revocate nu sunt necesare."
+
+msgid "Invalid request. New key or passwords are not required."
+msgstr "Cerere invalidă. Parole sau cheie nouă nu sunt necesare."
+
+msgid "Invalid request. Keys are required for this change."
+msgstr "Cerere invalidă. Pentru această modificare sunt necesare chei."
+
+msgid "Invalid request. Passwords are required for this change."
+msgstr "Cerere invalidă. Pentru această modificare sunt necesare parole."
+
+msgid "An organization public key is required."
+msgstr "Este necesară o cheie publică a organizației."
+
+msgid "The public_key_id must match current policy public_key_id."
+msgstr "Public_key_id trebuie sa fie compatibilă cu politica actuală public_key_id."
+
+msgid "An invalid number of passwords sent. Expected {0} and got {1}."
+msgstr "Un număr invalid de parole trimise. Se aștepta {0} și am primit {1}."
+
+msgid "The message is not encrypted for the right recipient."
+msgstr "Mesajul nu este criptat pentru destinatarul potrivit."
+
+msgid "Recovery request cannot be created when organization policy is disabled."
+msgstr "Cererea de recuperare nu poate fi creată atunci când politica organizațională este dezactivată."
+
+msgid "Recovery request cannot be created when user is not enrolled."
+msgstr "Cererea de recuperare nu poate fi creată atunci când utilizatorul nu este înregistrat."
+
+msgid "The authentication token is not valid or has expired."
+msgstr "Token-ul de autentificare nu este valid sau a expirat."
+
+msgid "The account recovery request could not be found."
+msgstr "Cererea de recuperare a contului nu a putut fi găsită."
+
+msgid "The request is already completed."
+msgstr "Solicitarea este deja finalizată."
+
+msgid "Recovery response cannot be created when organization policy is disabled."
+msgstr "Răspunsul de recuperare nu poate fi creat atunci când politica organizației este dezactivată."
+
+msgid "Could not validate response data."
+msgstr "Nu s-au putut valida datele răspunsului."
+
+msgid "The account recovery response data is not required."
+msgstr "Datele răspunsului de recuperare a contului nu sunt necesare."
+
+msgid "The account recovery response data is required."
+msgstr "Datele răspunsului de recuperare a contului sunt necesare."
+
+msgid "The user is not enrolled in the account recovery program."
+msgstr "Utilizatorul nu este înscris în programul de recuperare a contului."
+
+msgid "User account recovery settings cannot be edited."
+msgstr "Setările pentru recuperarea contului utilizatorului nu pot fi editate."
+
+msgid "The account recovery is mandatory and cannot be rejected."
+msgstr "Recuperarea contului este obligatorie și nu poate fi refuzată."
+
+msgid "Invalid request. You cannot opt-out."
+msgstr "Cerere invalidă. Nu puteți opta pentru excludere."
+
+msgid "The status must be set to approved."
+msgstr "Statusul trebuie setat ca aprobat."
+
+msgid "Invalid request. You cannot both opt-out and provide backup."
+msgstr "Cerere invalidă. Nu puteți opta atât pentru excluderea voluntară, cât și pentru copia de rezervă."
+
+msgid "The private key backup must be provided."
+msgstr "Trebuie furnizată copia de rezervă a cheii private."
+
+msgid "Invalid request. Private key or password are missing."
+msgstr "Cerere invalidă. Cheia privată sau parola lipsesc."
+
+msgid "Could not validate private key data."
+msgstr "Nu s-au putut valida datele cheii private."
+
+msgid "The account recovery request identifier should be a valid UUID."
+msgstr "Identificatorul cererii de recuperare a contului trebuie să fie un UUID valid."
+
+msgid "The account recovery request status is not approved."
+msgstr "Statusul cererii de recuperare a contului nu este aprobat."
+
+msgid "Account recovery is disabled. Key backup is not supported."
+msgstr "Recuperarea contului este dezactivată. Copia de rezervă a cheilor nu este suportată."
+
+msgid "Account recovery is mandatory. Please provide the mandatory data."
+msgstr "Recuperarea contului este obligatorie. Vă rugăm să furnizați datele obligatorii."
+
+msgid "Account Recovery Disabled"
+msgstr "Recuperare cont dezactivată"
+
+msgid "Account Recovery Enabled"
+msgstr "Recuperare cont activată"
+
+msgid "The fingerprint of the organization public key is {0}."
+msgstr "Amprenta cheii publice a organizației este {0}."
+
+msgid "Account Recovery Updated"
+msgstr "Recuperare cont actualizată"
+
+msgid "{0} has initiated an account recovery request"
+msgstr "{0} a inițiat o cerere de recuperare a contului"
+
+msgid "Recovery request"
+msgstr "Solicitare recuperare"
+
+msgid "{0} has initiated an account recovery request."
+msgstr "{0} a inițiat o cerere de recuperare a contului."
+
+msgid "Since you’re authorized to handle account recovery requests, please process this one."
+msgstr ""
+
+msgid "You will need your organization recovery key to continue."
+msgstr "Veți avea nevoie de cheia de recuperare a organizației dvs. pentru a continua."
+
+msgid "Review the recovery request"
+msgstr "Revizuiți cererea de recuperare"
+
+msgid "Suspicious recovery request"
+msgstr "Cerere de recuperare suspectă"
+
+msgid "An account recovery request was attempted from a user with client IP {0} for {1}."
+msgstr "O cerere de recuperare a contului a fost încercată de un utilizator cu client IP {0} pentru {1}."
+
+msgid "The request could not be found in the database."
+msgstr "Cererea nu a putut fi găsită în baza de date."
+
+msgid "This is a potential security threat."
+msgstr "Aceasta este o potențială amenințare de securitate."
+
+msgid "You have initiated an account recovery!"
+msgstr "Ați inițiat recuperarea contului!"
+
+msgid "Recovery Request"
+msgstr "Solicitare recuperare"
+
+msgid "You just requested an account recovery."
+msgstr "Tocmai ați solicitat o recuperare a contului."
+
+msgid "Your administrator have been informed and will follow up with you."
+msgstr "Administratorul a fost informat și vă va contacta."
+
+msgid "If you did not make this request please inform your administrator."
+msgstr "Dacă nu ați făcut această solicitare, vă rugăm să informați administratorul."
+
+msgid "You have updated a recovery request to {0}."
+msgstr "Ați actualizat o cerere de recuperare la {0}."
+
+msgid "You have set the status of the account recovery request initiated by {0} ({1}) to {2}."
+msgstr "Ați setat starea cererii de recuperare a contului, inițiată de {0} ({1}) la {2}."
+
+msgid "{0} ({1}) has updated a recovery request to {2}."
+msgstr "{0} ({1}) a actualizat o cerere de recuperare la {2}."
+
+msgid "{0} ({1}) has set the status of the request initiated by {2} ({3}) to {4}."
+msgstr "{0} ({1}) a setat starea cererii inițiate de {2} ({3}) la {4}."
+
+msgid "{0} ({1}) has approved your recovery request."
+msgstr "{0} ({1}) a aprobat cererea ta de recuperare."
+
+msgid "Your organization recovery contacts have reviewed and approved your account recovery request."
+msgstr "Contactele organizației dumneavoastră pentru recuperarea contului au examinat și aprobat cererea de recuperare a contului."
+
+msgid "Please click on the link below to continue."
+msgstr "Vă rugăm să faceți clic pe link-ul de mai jos pentru a continua."
+
+msgid "Important"
+msgstr "Important"
+
+msgid "Please use the same computer and browser that you used to initiate the request."
+msgstr "Te rugăm să folosești același computer și browser pe care le-ai folosit pentru a iniția solicitarea."
+
+msgid "Complete account recovery"
+msgstr "Finalizați recuperarea contului"
+
+msgid "{0} ({1}) has denied your recovery request."
+msgstr "{0} ({1}) a refuzat cererea de recuperare."
+
+msgid "Your organization recovery contacts have reviewed and rejected your account recovery request."
+msgstr "Contactele organizației dumneavoastră pentru recuperarea contului au examinat și refuzat cererea de recuperare a contului."
+
+msgid "Only administrators can view user logs."
+msgstr "Doar administratorii pot vizualiza log-urile utilizatorilor."
+
+msgid "The user {0} could not be added to group {1} because there is no matching directory entry in passbolt."
+msgstr "Utilizatorul {0} nu a putut fi adăugat în grupul {1} deoarece contul său a fost șters deja din Passbolt."
+
+msgid "The user {0} could not be added to the group {1} because the membership has been removed in passbolt"
+msgstr "Utilizatorul {0} nu a putut fi adăugat la grupul {1} deoarece contul său a fost șters deja din Passbolt"
+
+msgid "The user {0} was not synced with existing membership for group {1} because the membership was created before."
+msgstr "Utilizatorul {0} nu a fost sincronizat la lista de membrii existentă pentru grupul {1} deoarece lista a fost creată înainte."
+
+msgid "The user {0} was successfully added to the group {1}."
+msgstr "Utilizatorul {0} a fost adăugat cu succes în grupul {1}."
+
+msgid "The user {0} could not be added to the group {1} because their account was priorly deleted in passbolt."
+msgstr "Utilizatorul {0} nu a putut fi adăugat în grupul {1} deoarece contul său a fost șters anterior în Passbolt."
+
+msgid "The user {0} could not be added to the group {1} because they have not yet activated their account."
+msgstr "Utilizatorul {0} nu a putut fi adăugat în grupul {1} deoarece nu și-a activat încă contul."
+
+msgid "The user {0} could not be added to the group {1} because of validation issues."
+msgstr "Utilizatorul {0} nu a putut fi adăugat în grupul {1} din cauza unor probleme de validare."
+
+msgid "The user {0} could not be added to the group {1} because of an internal error."
+msgstr "Utilizatorul {0} nu a putut fi adăugat în grupul {1} din cauza unei erori interne."
+
+msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
+msgstr "Utilizatorul {0} nu poate fi adăugat automat la grupul {1}. O cerere e-mail a fost trimisă managerului de grup pentru a o face manual."
+
+msgid "The user {0} was successfully removed from the group {1}."
+msgstr "Utilizatorul {0} a fost șters cu succes din grupul {1}."
+
+msgid "The user {0} could not be removed from the group {1} because it is the only group manager."
+msgstr "Utilizatorul {0} nu a putut fi șters din grupul {1} deoarece este singurul manager de grup."
+
+msgid "The user {0} could not be removed from the group {1} because some validation issues."
+msgstr "Utilizatorul {0} nu a putut fi adăugat în grupul {1} din cauza unor probleme de validare."
+
+msgid "The user {0} could not be removed from the group {1} because of an internal error."
+msgstr "Utilizatorul {0} nu a putut fi șters din grupul {1} din cauza unei erori interne."
+
+msgid "The user {0} was successfully synced with the group {1}."
+msgstr "Utilizatorul {0} a fost sincronizat cu succes cu grupul {1}."
+
+msgid "The group {0} has been successfully renamed to {1}."
+msgstr "Grupul {0} a fost redenumit cu succes în {1}."
+
+msgid "The group {0} could not be renamed to {1}."
+msgstr "Grupul {0} nu a putut fi redenumit în {1}."
+
+msgid "The passbolt {0} {1} was not deleted because it is marked as to be ignored."
+msgstr "Passbolt {0} {1} nu a fost ștearsă deoarece este marcată ca fiind ignorată."
+
+msgid "The directory {0} {1} was not deleted because it is ignored."
+msgstr "Directorul {0} {1} nu a fost șters deoarece este ignorat."
+
+msgid "The directory user {0} was already suspended in passbolt."
+msgstr "Utilizatorul din director {0} a fost deja suspendat în Passbolt."
+
+msgid "The directory {0} {1} was already deleted in passbolt."
+msgstr "Directorul {0} {1} a fost deja șters din Passbolt."
+
+msgid "The user {0} could not be deleted because they are the only owner of one or more passwords."
+msgstr "Utilizatorul {0} nu a putut fi șters deoarece este singurul proprietar al uneia sau mai multor parole."
+
+msgid "The {0} {1} could not be deleted because they are the only manager of one or more groups."
+msgstr "{0} {1} nu a putut fi șters deoarece este singurul manager al unuia sau mai multor grupuri."
+
+msgid "The user {0} was successfully suspended."
+msgstr "Utilizatorul {0} a fost suspendat cu succes."
+
+msgid "The {0} {1} was successfully deleted."
+msgstr "{0} {1} a fost șters cu succes."
+
+msgid "The {0} {1} could not be suspended because of an internal error. Please try again later."
+msgstr "{0} {1} nu a putut fi suspendat din cauza unei erori interne. Vă rugăm să încercați din nou mai târziu."
+
+msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
+msgstr "{0} {1} nu a putut fi șters din cauza unei erori interne. Vă rugăm să încercați din nou mai târziu."
+
+msgid "The {0} {1} was not synced because the passbolt {0} is marked as to be ignored."
+msgstr "{0} {1} nu a fost sincronizat deoarece Passbolt {0} este marcată ca fiind ignorată."
+
+msgid "The {0} {1} was not synced because the directory {0} is marked as to be ignored."
+msgstr "{0} {1} nu a fost sincronizat deoarece directorul {0} este marcat ca fiind ignorat."
+
+msgid "The {0} {1} was successfully added to passbolt."
+msgstr "{0} {1} a fost adăugat cu succes în Passbolt."
+
+msgid "The {0} {1} could not be added because of data validation issues."
+msgstr "{0} {1} nu a putut fi adăugat din cauza unor probleme de validare a datelor."
+
+msgid "The {0} {1} could not be added because of an internal error. Please try again later."
+msgstr "{0} {1} nu a putut fi adăugat din cauza unei erori interne. Vă rugăm să încercați din nou mai târziu."
+
+msgid "The previously suspended {0} {1} was not unsuspended."
+msgstr "{0} {1} suspendat anterior nu a fost reactivat."
+
+msgid "The previously deleted {0} {1} was not re-added to passbolt."
+msgstr "{0} {1} șters precedent nu a fost re-adăugat în Passbolt."
+
+msgid "The previously suspended {0} {1} was unsuspended."
+msgstr "{0} {1} suspendat anterior a fost reactivat."
+
+msgid "The previously deleted {0} {1} was re-added to passbolt."
+msgstr "{0} {1} șters precedent a fost readăugat în Passbolt."
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of validation errors."
+msgstr "{0} {1} șters nu a putut fi readăugat în Passbolt, din cauza unor erori de validare."
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of an internal error."
+msgstr "{0} {1} șters nu a putut fi readăugat în Passbolt, din cauza unor erori interne."
+
+msgid "The {0} {1} was mapped with an existing {0} in passbolt."
+msgstr "{0} {1} a fost asociat cu un {0} existent în Passbolt."
+
+msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after."
+msgstr "{0} {1} nu a putut fi asociat cu un {0} existent în Passbolt, deoarece a fost creat după aceea."
+
+msgid "The user {0} full name has been successfully updated to {1} {2}."
+msgstr "Numele complet al utilizatorului {0} a fost actualizat cu succes la {1} {2}."
+
+msgid "The user {0} full name could not be updated to {1} {2}."
+msgstr "Numele complet al utilizatorului {0} nu a putut fi actualizat la {1} {2}."
+
+msgid "The record model is not valid."
+msgstr "Modelul înregistrării nu este valid."
+
+msgid "The record is currently ignored as part of directory synchronization."
+msgstr "Înregistrarea este în prezent ignorată ca parte a sincronizării directorului."
+
+msgid "The record is currently not ignored as part of directory synchronization."
+msgstr "Înregistrarea nu este în prezent ignorată ca parte a sincronizării directorului."
+
+msgid "The record will be ignored in the next directory synchronization."
+msgstr "Înregistrarea va fi ignorată în următoarea sincronizare a directorului."
+
+msgid "The record id is not valid."
+msgstr "Id-ul înregistrării nu este valid."
+
+msgid "The record does not exist."
+msgstr "Înregistrarea nu există."
+
+msgid "The record could not be unmarked as ignored. Please try again later."
+msgstr "Înregistrarea nu a putut fi debifată ca fiind ignorată. Vă rugăm să încercați din nou mai târziu."
+
+msgid "The record will not be ignored in the next directory synchronization."
+msgstr "Înregistrarea nu va fi ignorată în următoarea sincronizare a directorului."
+
+msgid "Could not validate settings."
+msgstr "Nu s-au putut valida setările."
+
+msgid "Could not save the settings. {0}"
+msgstr "Nu s-au putut salva setările. {0}"
+
+msgid "The directory structure cannot be retrieved."
+msgstr "Structura directorului nu poate fi preluată."
+
+msgid "There was an issue while retrieving the invalid entries."
+msgstr "A apărut o problemă în timpul recuperării intrărilor invalide."
+
+msgid "The synchronization was done successfully."
+msgstr "Sincronizarea a fost efectuată cu succes."
+
+msgid "The simulation was done successfully."
+msgstr "Simularea a fost făcută cu succes."
+
+msgid "Need at least one domain configuration."
+msgstr "Este necesară cel puțin o configurare de domeniu."
+
+msgid "The connection name `{0}` should not contain dots"
+msgstr "Numele conexiunii `{0}` nu trebuie să conțină puncte"
+
+msgid "Invalid connection name"
+msgstr "Nume de conexiune invalid"
+
+msgid "The identifier of the default admin user is required."
+msgstr "Identificatorul utilizatorului de administrator implicit este necesar."
+
+msgid "The identifier of the default admin user should not be empty."
+msgstr "Identificatorul utilizatorului implicit de administrator nu trebuie să fie gol."
+
+msgid "The identifier of the default admin user should be a valid UUID."
+msgstr "Identificatorul utilizatorului implicit de administrator ar trebui să fie un UUID valid."
+
+msgid "The admin user does not exist."
+msgstr "Utilizatorul admin nu există."
+
+msgid "The identifier of the default group admin user is required."
+msgstr "Identificatorul utilizatorului de administrator grup implicit este necesar."
+
+msgid "The identifier of the default group admin user should not be empty."
+msgstr "Identificatorul administratorului de grup implicit nu trebuie să fie gol."
+
+msgid "The identifier of the default group admin user should be a valid UUID."
+msgstr "Identificatorul administratorului de grup implicit ar trebui să fie un UUID valid."
+
+msgid "The group admin user does not exist."
+msgstr "Utilizatorul administrator de grup nu există."
+
+msgid "The group object class should be a valid BMP-UTF8 string."
+msgstr "Clasa obiectului de grup ar trebui să fie un șir valid BMP-UTF8."
+
+msgid "The user object class should be a valid BMP-UTF8 string."
+msgstr "Clasa obiectului de user ar trebui să fie un șir valid BMP-UTF8."
+
+msgid "The user path should be a valid BMP-UTF8 string."
+msgstr "Calea utilizatorului ar trebui să fie un șir valid BMP-UTF8."
+
+msgid "The group custom filter should be a valid BMP-UTF8 string."
+msgstr "Filtrul personalizat de grup ar trebui să fie un șir BMP-UTF8 valid."
+
+msgid "The user custom filter should be a valid BMP-UTF8 string."
+msgstr "Filtrul personalizat de utilizator ar trebui să fie un șir BMP-UTF8 valid."
+
+msgid "The email prefix/suffix setting should be a valid boolean."
+msgstr "Setarea prefix/sufix e-mail ar trebui să fie un boolean valid."
+
+msgid "The email prefix should be a valid BMP-UTF8 string."
+msgstr "Prefixul e-mail-ului ar trebui să fie un șir valid BMP-UTF8."
+
+msgid "The email suffix should be a valid BMP-UTF8 string."
+msgstr "Sufixul e-mail-ului ar trebui să fie un șir valid BMP-UTF8."
+
+msgid "The users parent group should be a valid BMP-UTF8 string."
+msgstr "Grupul părinte al utilizatorilor ar trebui să fie un șir valid BMP-UTF8."
+
+msgid "The groups parent group should be a valid BMP-UTF8 string."
+msgstr "Grupul părinte al grupurilor ar trebui să fie un șir valid BMP-UTF8."
+
+msgid "The enabled users only setting should be a boolean."
+msgstr "Setarea pentru doar utilizatorii activați ar trebui să fie booleană."
+
+msgid "The sync of created users setting should be a boolean."
+msgstr "Setarea pentru sincronizarea utilizatorilor creați ar trebui să fie un boolean."
+
+msgid "The sync of updated users setting should be a boolean."
+msgstr "Setarea pentru sincronizarea utilizatorilor actualizați ar trebui să fie un boolean."
+
+msgid "The sync of deleted users setting should be a boolean."
+msgstr "Setarea pentru sincronizarea utilizatorilor șterși ar trebui să fie un boolean."
+
+msgid "The sync of created groups setting should be a boolean."
+msgstr "Setarea pentru sincronizarea grupurilor create ar trebui să fie un boolean."
+
+msgid "The sync of deleted groups setting should be a boolean."
+msgstr "Setarea pentru sincronizarea grupurilor șterse ar trebui să fie un boolean."
+
+msgid "The sync of updated groups setting should be a boolean."
+msgstr "Setarea pentru sincronizarea grupurilor modificate ar trebui să fie un boolean."
+
+msgid "The fields mapping should be a valid array."
+msgstr "Mapping-ul câmpurilor ar trebui să fie un șir valid."
+
+msgid "A directory type is required."
+msgstr "Este necesar un tip de director."
+
+msgid "The directory type should not be empty."
+msgstr "Tipul de director nu trebuie să fie gol."
+
+msgid "The directory type should be one of the following: {0}."
+msgstr "Tipul de director trebuie să fie unul dintre următoarele: {0}."
+
+msgid "A domain name is required."
+msgstr "Este necesar un nume de domeniu."
+
+msgid "The domain name should not be empty."
+msgstr "Numele domeniului nu trebuie să fie gol."
+
+msgid "The domain name should be a valid BMP-UTF8 string."
+msgstr "Numele domeniului trebuie să fie un șir valid BMP-UTF8."
+
+msgid "The base DN should be a valid BMP-UTF8 string."
+msgstr "DN-ul de bază ar trebui să fie un șir valid BMP-UTF8."
+
+msgid "At least one host is required."
+msgstr "Cel puțin un host este necesar."
+
+msgid "The hosts should be a valid array."
+msgstr "Host-urile ar trebui să fie un șir valid."
+
+msgid "The port number should not be empty."
+msgstr "Numărul portului nu trebuie să fie gol."
+
+msgid "The port number should be between 0 and 65535"
+msgstr "Numărul portului ar trebui să fie între 0 și 65535"
+
+msgid "A connection type is required."
+msgstr "Un tip de conexiune este necesar."
+
+msgid "The connection type should not be empty."
+msgstr "Tipul de conexiune nu trebuie să fie gol."
+
+msgid "The connection type should be one of the following: {0}."
+msgstr "Tipul de conexiune trebuie să fie unul dintre următoarele: {0}."
+
+msgid "An authentication type is required."
+msgstr "Este necesar un tip de autentificare."
+
+msgid "The authentication type should not be empty."
+msgstr "Tipul de autentificare nu trebuie să fie gol."
+
+msgid "The authentication type should be one of the following: {0}."
+msgstr "Tipul de autentificare ar trebui să fie unul dintre următoarele: {0}."
+
+msgid "The map for this field is required."
+msgstr "Mapping-ul pentru acest câmp este necesar."
+
+msgid "The map value should not be empty."
+msgstr "Valoarea mapping-ului nu trebuie să fie goală."
+
+msgid "The field name should be a valid BMP-UTF8 string."
+msgstr "Numele câmpului ar trebui să fie un șir BMP-UTF8 valid."
+
+msgid "The map value length should be maximum {0} characters."
+msgstr "Lungimea valorii mapping-ului ar trebui să fie de maximum {0} caractere."
+
+msgid "The map value should not be from forbidden fields."
+msgstr "Valoarea mapping-ului nu trebuie să provină din câmpuri interzise."
+
+msgid "The map configuration for `{0}` fields is required."
+msgstr "Configurația mapping-ului pentru câmpurile `{0}` este necesară."
+
+msgid "The group object class length should be maximum {0} characters."
+msgstr "Lungimea clasei obiectului grup ar trebui să fie de maximum {0} caractere."
+
+msgid "The group object class should not be from forbidden fields."
+msgstr "Clasa obiectului grup nu trebuie să provină din câmpuri interzise."
+
+msgid "The user object class length should be maximum {0} characters."
+msgstr "Lungimea clasei obiectului utilizator ar trebui să fie de maximum {0} caractere."
+
+msgid "The user object class should not be from forbidden fields."
+msgstr "Clasa obiectului utilizator nu trebuie să provină din câmpuri interzise."
+
+msgid "The user custom filter length should be maximum {0} characters."
+msgstr "Lungimea filtrului personalizat de utilizator ar trebui să fie de maximum {0} caractere."
+
+msgid "The user custom filter contains the forbidden field."
+msgstr "Filtrul personalizat de utilizator conține câmpul interzis."
+
+msgid "The group custom filter length should be maximum {0} characters."
+msgstr "Lungimea filtrului personalizat de grup ar trebui să fie de maximum {0} caractere."
+
+msgid "The group custom filter contains the forbidden field."
+msgstr "Filtrul personalizat de grup conține câmpul interzis."
+
+msgid "The field fallbacks should be a valid array."
+msgstr "Valorile de rezervă ale câmpului ar trebui să fie un șir valid."
+
+msgid "The field fallbacks should not be empty."
+msgstr "Valorile de rezervă ale câmpului nu trebuie să fie goale."
+
+msgid "The field fallbacks keys should be one of the following: {0}."
+msgstr "Cheile valorilor de rezervă ale câmpului ar trebui să fie unele dintre următoarele: {0}."
+
+msgid "The fallback field value should be a valid BMP-UTF8 string."
+msgstr "Valoarea câmpului de rezervă ar trebui să fie un șir BMP-UTF8 valid."
+
+msgid "The fallback field value length should be maximum {0} characters."
+msgstr "Lungimea valorii câmpului de rezervă ar trebui să fie de maximum {0} caractere."
+
+msgid "The fallback field value should not be from forbidden fields."
+msgstr "Valoarea câmpului de rezervă nu trebuie să provină din câmpuri interzise."
+
+msgid "The directory type in fallback fields should be a valid array."
+msgstr "Tipul de director în valorile de rezervă ar trebui să fie un șir valid."
+
+msgid "Directory sync settings endpoints are disabled."
+msgstr "Punctele finale ale setărilor de sincronizare a directorului sunt dezactivate."
+
+msgid "The directory name should be a valid UTF8 string."
+msgstr "Numele directorului ar trebui să fie un șir UTF8 valid."
+
+msgid "The directory_name length should be maximum {0} characters."
+msgstr "Lungimea numelui directorului ar trebui să fie de maximum {0} caractere."
+
+msgid "A directory name is required."
+msgstr "Este necesar un nume de director."
+
+msgid "The directory should not be empty."
+msgstr "Directorul nu trebuie să fie gol."
+
+msgid "Could not validate directory entry data."
+msgstr "Nu s-au putut valida datele de intrare ale director-ului."
+
+msgid "The associated record could not be found."
+msgstr "Înregistrarea asociată nu a putut fi găsită."
+
+msgid "This record is already marked as to be ignored."
+msgstr "Această înregistrare este deja marcată ca fiind ignorată."
+
+msgid "This is not a valid record to ignore."
+msgstr "Aceasta nu este o înregistrare validă pentru a fi ignorată."
+
+msgid "The parent identifier should be a valid UUID."
+msgstr "Identificatorul părinte ar trebui să fie un UUID valid."
+
+msgid "A parent identifier is required."
+msgstr "Este necesar un identificator părinte."
+
+msgid "The child identifier should be a valid UUID."
+msgstr "Identificatorul copil ar trebui să fie un UUID valid."
+
+msgid "The child identifier is required."
+msgstr "Identificatorul copil este necesar."
+
+msgid "Directory Settings are invalid. Please check your config and try again."
+msgstr "Setările de director sunt invalide. Verifică configurația și încearcă din nou."
+
+msgid "New directory settings could not be saved."
+msgstr "Noile setări de director nu au putut fi salvate."
+
+msgid "The endpoints for updating the users directory configurations are disabled."
+msgstr "Punctele finale pentru actualizarea configurațiilor directorului de utilizatori sunt dezactivate."
+
+msgid "The endpoints for updating the users directory configurations are enabled."
+msgstr "Punctele finale pentru actualizarea configurațiilor directorului de utilizatori sunt activate."
+
+msgid "It is recommended to disable endpoints for updating the users directory configurations."
+msgstr "Este recomandat să dezactivați punctele finale pentru actualizarea configurațiilor directorului de utilizatori."
+
+msgid "Set the PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED environment variable to true."
+msgstr "Setați variabila de mediu PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED la true."
+
+msgid "Or set {0} to true in {1}."
+msgstr "Sau setați {0} la true în {1}."
+
+msgid "SSL certification verification for LDAP server is enabled."
+msgstr "Verificarea certificatului SSL pentru serverul LDAP este activată."
+
+msgid "SSL certification verification for LDAP server is disabled."
+msgstr "Verificarea certificatului SSL pentru serverul LDAP este dezactivată."
+
+msgid "Disabling the ssl verify check can lead to security attacks."
+msgstr "Dezactivarea verificării SSL poate duce la atacuri de securitate."
+
+msgid "Attacker can alter the certificate and can perform man-in-the-middle attack."
+msgstr "Atacatorul poate modifica certificatul și poate efectua un atac de tip man-in-the-middle."
+
+msgid "To fix this, you can set PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER environment variable to true."
+msgstr "Pentru a remedia, puteți seta variabila de mediu PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER la true."
+
+msgid "Or set passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer to true in {0}."
+msgstr "Sau setați passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer la true în {0}."
+
+msgid "A mapping rule for username attribute could not be found for directory type: {0}"
+msgstr "Nu s-a găsit nicio regulă de mapping pentru atributul username pentru tipul de director: {0}"
+
+msgid "A mapping rule for ID attribute could not be found for directory type: {0}"
+msgstr "Nu s-a găsit nicio regulă de mapping pentru atributul ID pentru tipul de director: {0}"
+
+msgid "Mapping rules could not be found for directory type: {0}"
+msgstr "Nu s-au găsit reguli de mapping pentru tipul de director: {0}"
+
+msgid "A group name is required."
+msgstr "Un nume de grup este necesar."
+
+msgid "A group member does not match the expected DN format."
+msgstr "Un membru al grupului nu se potrivește cu formatul DN așteptat."
+
+msgid "The {0} configuration should be a valid string"
+msgstr "Configurația {0} ar trebui să fie un șir valid"
+
+msgid "Invalid directory type for domain: {0}"
+msgstr "Tip de director invalid pentru domeniul: {0}"
+
+msgid "Directory type could not be found for domain: {0}"
+msgstr "Nu s-a putut găsi tipul de director pentru domeniul: {0}"
+
+msgid "LDAP Object class could not be found: {0}"
+msgstr "Clasa obiect LDAP nu a putut fi găsită: {0}"
+
+msgid "SSO"
+msgstr "SSO"
+
+msgid "Directory Sync"
+msgstr "Sincronizare director"
+
+msgid "SCIM"
+msgstr "SCIM"
+
+msgid "Only administrators are allowed to create/update MFA policies settings."
+msgstr "Numai administratorii au permisiunea de a crea/actualiza setări de politici MFA."
+
+msgid "Could not validate the MFA policies settings."
+msgstr "Nu s-au putut valida setările de politici MFA."
+
+msgid "The policy field is required."
+msgstr "Câmpul politicii este necesar."
+
+msgid "The type of the policy should be one of the following: {0}."
+msgstr "Tipul politicii ar trebui să fie unul dintre următoarele: {0}."
+
+msgid "The remember me for a month field is required."
+msgstr "Câmpul „Ține-mă minte pentru o lună” este necesar."
+
+msgid "The remember me for a month should be a boolean type."
+msgstr "Câmpul „Ține-mă minte pentru o lună” ar trebui să fie de tip boolean."
+
+msgid "You edited the MFA policy"
+msgstr "Ați editat politica MFA"
+
+msgid "{0} edited the MFA policy"
+msgstr "{0} a editat politica MFA"
+
+msgid "The MFA policy has been updated, the new configuration is as follow:"
+msgstr "Politica MFA a fost actualizată, noua configurare este următoarea:"
+
+msgid "Policy: {0}"
+msgstr "Politică: {0}"
+
+msgid "Remember me for a month: {0}"
+msgstr "Ține-mă minte pentru o lună: {0}"
+
+msgid "Some of your passwords are expired."
+msgstr "Unele dintre parolele dvs. au expirat."
+
+msgid "Some of your passwords are expiring in {0} days."
+msgstr "Unele dintre parolele dvs. expiră în {0} zile."
+
+msgid "Some of your passwords are expired or expiring in {0} days."
+msgstr "Unele dintre parolele dvs. au expirat sau vor expira în {0} zile."
+
+msgid "The send password about to expire setting should be a boolean."
+msgstr "Setarea de trimitere a parolei care urmează să expire ar trebui să fie booleană."
+
+msgid "Password expiry email notifications are disabled."
+msgstr "Notificările prin email pentru expirarea parolei sunt dezactivate."
+
+msgid "An array of arrays is expected."
+msgstr "Este așteptat un șir de șiruri."
+
+msgid "The expiry date is required."
+msgstr "Data de expirare este necesară."
+
+msgid "The identifier should be unique: {0}."
+msgstr "Identificatorul ar trebui să fie unic: {0}."
+
+msgid "You are not allowed to update these resources."
+msgstr "Nu aveți permisiunea să actualizați aceste resurse."
+
+msgid "You are not allowed to update this resource: {0}"
+msgstr "Nu aveți permisiunea să actualizați această resursă: {0}"
+
+msgid "The resource with ID {0} does not exist."
+msgstr "Resursa cu ID-ul {0} nu există."
+
+msgid "You edited the password policy"
+msgstr "Ați editat politica de parolă"
+
+msgid "{0} edited the password policy"
+msgstr "{0} a editat politica de parolă"
+
+msgid "Only administrators are allowed to create/update password policies settings."
+msgstr "Doar administratorii pot crea/actualiza setări de politici de parolă."
+
+msgid "The password policy settings has been updated by {0}."
+msgstr "Setările politicii de parolă au fost actualizate de {0}."
+
+msgid "you"
+msgstr "dvs"
+
+msgid "view it in passbolt"
+msgstr "vizualizați-le în Passbolt"
+
+msgid "The SCIM setting id should be a valid UUID."
+msgstr "Id-ul setării SCIM ar trebui să fie un UUID valid."
+
+msgid "The identifier of the default user should be a valid UUID."
+msgstr "Identificatorul utilizatorului implicit ar trebui să fie un UUID valid."
+
+msgid "The user is not active, disabled or does not exist."
+msgstr "Utilizatorul nu este activ, este dezactivat sau nu există."
+
+msgid "The Setting ID cannot be passed on update."
+msgstr "ID-ul setării nu poate fi transmis la actualizare."
+
+msgid "The secret token should not be empty."
+msgstr "Token-ul secret nu trebuie să fie gol."
+
+msgid "The ID for the SCIM settings should not be empty."
+msgstr "ID-ul setărilor SCIM nu trebuie să fie gol."
+
+msgid "The ID for the SCIM settings should be a valid UUID."
+msgstr "ID-ul setărilor SCIM ar trebui să fie un UUID valid."
+
+msgid "The SCIM secret token is expired, you are requested to rotate it."
+msgstr ""
+
+msgid "Simultaneous SCIM and session authentication is not permitted."
+msgstr "Autentificarea simultană SCIM și pe sesiune nu este permisă."
+
+msgid "SCIM settings endpoints are disabled."
+msgstr "Punctele finale ale setărilor SCIM sunt dezactivate."
+
+msgid "An entry for the same related entity already exists"
+msgstr "Există deja o intrare pentru aceeași entitate asociată."
+
+msgid "An entry with the same `scim_name` and `foreign_model` already exist."
+msgstr ""
+
+msgid "Users"
+msgstr "Utilizatori"
+
+msgid "Groups"
+msgstr "Grupuri"
+
+msgid "The secret token format is incorrect."
+msgstr "Formatul token-ului secret este incorect."
+
+msgid "SCIM plugin is enabled."
+msgstr "Pluginul SCIM este activat."
+
+msgid "SCIM plugin is disabled."
+msgstr "Pluginul SCIM este dezactivat."
+
+msgid "The SCIM secret token is not expired."
+msgstr ""
+
+msgid "Rotate the SCIM secret token in the administration settings."
+msgstr ""
+
+msgid "The SCIM settings could not be decrypted with the server gpg key."
+msgstr "Setările SCIM nu au putut fi decriptate cu cheia gpg a serverului."
+
+msgid "The SCIM settings could not be encrypted with the server gpg key."
+msgstr "Setările SCIM nu au putut fi criptate cu cheia gpg a serverului."
+
+msgid "Could not validate the SCIM settings found in database."
+msgstr "Nu s-au putut valida setările SCIM găsite în baza de date."
+
+msgid "The SCIM setting identifier should be a valid UUID."
+msgstr "Identificatorul setării SCIM ar trebui să fie un UUID valid."
+
+msgid "Could not validate the SCIM settings."
+msgstr "Nu s-au putut valida setările SCIM."
+
+msgid "The SCIM plugin is disabled."
+msgstr "Pluginul SCIM este dezactivat."
+
+msgid "Please delete previous settings before creating again."
+msgstr "Vă rugăm să ștergeți setările anterioare înainte de a crea din nou."
+
+msgid "The uuid in the url doesn't match any known setting record."
+msgstr "UUID-ul din URL nu se potrivește cu nicio înregistrare de setări cunoscută."
+
+msgid "The SCIM secret token expiry configuration is invalid."
+msgstr ""
+
+msgid "Missing or invalid SCIM user in configuration settings"
+msgstr ""
+
+msgid "An unexpected error occurred while creating the user in the database"
+msgstr ""
+
+msgid "An administrator user cannot be suspended via SCIM."
+msgstr ""
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "External id"
+msgstr "ID extern"
+
+msgid "Invalid Schema"
+msgstr "Schemă invalidă"
+
+msgid "Invalid ResourceType"
+msgstr "Tip de resursă invalid"
+
+msgid "SsoRecover plugin is disabled."
+msgstr "Plugin-ul SsoRecover este dezactivat."
+
+msgid "The SSO state type is invalid."
+msgstr "Tipul stării SSO este invalid."
+
+msgid "CSRF issue. The state in URL and Cookies do not match."
+msgstr "Problemă CSRF. Starea din URL și cookie-uri nu corespunde."
+
+msgid "CSRF issue. The state in request data does not match with cookie value."
+msgstr "Problemă CSRF. Starea din datele de cerere nu corespunde cu valoarea din cookie."
+
+msgid "The state is required in cookie."
+msgstr "Starea este necesară în cookie."
+
+msgid "The token is required in URL parameters."
+msgstr "Token-ul este necesar în parametrii URL."
+
+msgid "The state is required in URL parameters."
+msgstr "Starea este necesară în parametrii URL."
+
+msgid "The code is required in URL parameters."
+msgstr "Codul este necesar în parametrii URL."
+
+msgid "The code is required in request data."
+msgstr "Codul este necesar în datele de cerere."
+
+msgid "The user id is required in URL parameters."
+msgstr "ID-ul utilizatorului este necesar în parametrii URL."
+
+msgid "The settings id is required in URL parameters."
+msgstr "ID-ul setărilor este necesar în parametrii URL."
+
+msgid "The user does not exist or is not active."
+msgstr "Utilizatorul nu există sau nu este activ."
+
+msgid "The SSO setting does not exist."
+msgstr "Setarea SSO nu există."
+
+msgid "Information about the key is required."
+msgstr "Sunt necesare informații despre cheie."
+
+msgid "The SSO key id should be a uuid."
+msgstr "ID-ul cheii SSO ar trebui să fie un UUID."
+
+msgid "The key could not be found"
+msgstr "Cheia nu a putut fi găsită"
+
+msgid "The SSO setting id should be a uuid."
+msgstr "ID-ul setării SSO ar trebui să fie un UUID."
+
+msgid "The SSO settings were activated."
+msgstr "Setările SSO au fost activate."
+
+msgid "The draft setting was saved."
+msgstr "Setarea draft a fost salvată."
+
+msgid "The SSO settings were deleted."
+msgstr "Setările SSO au fost șterse."
+
+msgid "Ajax/Json request not supported."
+msgstr "Solicitare Ajax/Json nu este suportată."
+
+msgid "A provider is required."
+msgstr "Este necesar un furnizor."
+
+msgid "The provider is not supported."
+msgstr "Furnizorul nu este suportat."
+
+msgid "Data is required."
+msgstr "Datele sunt necesare."
+
+msgid "Data must be an array of properties."
+msgstr "Datele trebuie să fie un șir de proprietăți."
+
+msgid "The email claim should not be empty."
+msgstr "Valoarea claim-ului de email nu trebuie să fie goală."
+
+msgid "The email claim is too large."
+msgstr "Valoarea claim-ului de email este prea mare."
+
+msgid "The email claim should be one of the following: {0}."
+msgstr "Valoarea claim-ului de email ar trebui să fie una dintre următoarele: {0}."
+
+msgid "A URL is required."
+msgstr "Este necesar un URL."
+
+msgid "The URL should not be empty."
+msgstr "URL-ul nu trebuie să fie gol."
+
+msgid "The URL is not supported."
+msgstr "URL-ul nu este suportat."
+
+msgid "A tenant id is required."
+msgstr "Este necesar un id de chiriaș."
+
+msgid "The tenant id should not be empty."
+msgstr "Id-ul chiriașului nu trebuie să fie gol."
+
+msgid "The tenant id should be a valid UUID."
+msgstr "ID-ul chiriașului ar trebui să fie un UUID valid."
+
+msgid "A client id is required."
+msgstr "Este necesar un client id."
+
+msgid "The client id should not be empty."
+msgstr "Client id-ul nu trebuie să fie gol."
+
+msgid "The client id should be a valid UUID."
+msgstr "Client id-ul ar trebui să fie un UUID valid."
+
+msgid "A client secret is required."
+msgstr "Este necesar un secret de client."
+
+msgid "The client secret should be a valid string."
+msgstr "Secretul de client ar trebui să fie un șir valid."
+
+msgid "The client secret is too large."
+msgstr "Secretul de client este prea mare."
+
+msgid "A client secret expiry is required."
+msgstr "Este necesară o expirare pentru secretul de client."
+
+msgid "The expiry should not be empty."
+msgstr "Data de expirare nu trebuie să fie goală."
+
+msgid "The prompt should not be empty."
+msgstr "Prompt-ul nu trebuie să fie gol."
+
+msgid "The prompt should be one of the following: {0}."
+msgstr "Prompt-ul ar trebui să fie unul dintre următoarele: {0}."
+
+msgid "The login hint should be a boolean."
+msgstr "Indicația de autentificare ar trebui să fie booleană."
+
+msgid "The client id is too large."
+msgstr "Id-ul clientului este prea mare."
+
+msgid "A base URL is required."
+msgstr "Este necesar un URL de bază."
+
+msgid "The base URL should not be empty."
+msgstr "URL-ul de bază nu trebuie să fie gol."
+
+msgid "The base URL is too large."
+msgstr "URL-ul de bază este prea mare."
+
+msgid "The OpenID configuration path should be a valid BMP-UTF8 string."
+msgstr "Calea de configurare OpenID ar trebui să fie un șir BMP-UTF8 valid."
+
+msgid "The OpenID configuration path is too large."
+msgstr "Calea de configurare OpenID este prea mare."
+
+msgid "The client id should be a valid BMP-UTF8 string."
+msgstr "Client id-ul ar trebui să fie un șir BMP-UTF8 valid."
+
+msgid "The scope should be a valid string."
+msgstr "Domeniul ar trebui să fie un șir valid."
+
+msgid "The scope is too large."
+msgstr "Domeniul este prea mare."
+
+msgid "The URL must be a valid PingOne authentication domain."
+msgstr ""
+
+msgid "An environment id is required."
+msgstr ""
+
+msgid "The environment id should not be empty."
+msgstr ""
+
+msgid "The environment id should be a valid UUID."
+msgstr ""
+
+msgid "SSO settings edit endpoints are disabled."
+msgstr "Punctele finale pentru editarea setărilor SSO sunt dezactivate."
+
+msgid "The user is not active."
+msgstr "Utilizatorul nu este activ."
+
+msgid "The status length is not supported."
+msgstr "Lungimea statusului nu este suportată."
+
+msgid "The status is not supported."
+msgstr "Statusul nu este suportat."
+
+msgid "The nonce should be a valid ASCII string."
+msgstr "Nonce-ul ar trebui să fie un șir ASCII valid."
+
+msgid "The nonce length should be minimum {0} characters."
+msgstr "Lungimea nonce-ului ar trebui să fie de minimum {0} caractere."
+
+msgid "The nonce length should be maximum {0} characters."
+msgstr "Lungimea nonce-ului ar trebui să fie de maximum {0} caractere."
+
+msgid "A nonce is required."
+msgstr "Este necesar un nonce."
+
+msgid "The nonce should not be empty."
+msgstr "Nonce-ul nu trebuie să fie gol."
+
+msgid "The type length should be maximum {0} characters."
+msgstr "Lungimea tipului ar trebui să fie de maximum {0} caractere."
+
+msgid "The state should be a valid ASCII string."
+msgstr "Starea ar trebui să fie un șir ASCII valid."
+
+msgid "The state length should be minimum {0} characters."
+msgstr "Lungimea stării ar trebui să fie de minimum {0} caractere."
+
+msgid "The state length should be maximum {0} characters."
+msgstr "Lungimea stării ar trebui să fie de maximum {0} caractere."
+
+msgid "The SSO settings identifier should be a valid UUID."
+msgstr "Identificatorul setărilor SSO ar trebui să fie un UUID valid."
+
+msgid "The SSO settings identifier should not be empty."
+msgstr "Identificatorul setărilor SSO nu trebuie să fie gol."
+
+msgid "The user agent should be a valid ASCII string."
+msgstr "User agent-ul ar trebui să fie un șir ASCII valid."
+
+msgid "The user agent length should be maximum {0} characters."
+msgstr "Lungimea user agent-ului ar trebui să fie de maximum {0} caractere."
+
+msgid "A user agent is required."
+msgstr "Este necesar un user agent."
+
+msgid "The user agent should not be empty."
+msgstr "User agent-ul nu trebuie să fie gol."
+
+msgid "The IP length should be maximum {0} characters."
+msgstr "Lungimea IP-ului ar trebui să fie de maximum {0} caractere."
+
+msgid "An IP is required."
+msgstr "Este necesar un IP."
+
+msgid "The IP should not be empty."
+msgstr "IP-ul nu trebuie să fie gol."
+
+msgid "This nonce is already in use."
+msgstr "Acest nonce este deja în uz."
+
+msgid "This state is already in use."
+msgstr "Această stare este deja în uz."
+
+msgid "The SSO setting identifier does not exist."
+msgstr "Identificatorul setării SSO nu există."
+
+msgid "The user identifier does not exist."
+msgstr "Identificatorul utilizatorului nu există."
+
+msgid "The provided nonce is invalid."
+msgstr "Nonce-ul furnizat este invalid."
+
+msgid "The URL should start with https://"
+msgstr "URL-ul ar trebui să înceapă cu https://"
+
+msgid "The provided state is invalid."
+msgstr "Starea furnizată este invalidă."
+
+msgid "The type of the SSO state is invalid."
+msgstr "Tipul stării SSO este invalid."
+
+msgid "{0} activated the SSO setting"
+msgstr "{0} a activat setarea SSO"
+
+msgid "{0} deleted the SSO setting"
+msgstr "{0} a șters setarea SSO"
+
+msgid "Users are unable to log in via Azure SSO"
+msgstr "Utilizatorii nu se pot autentifica prin Azure SSO"
+
+msgid "Single sign-on failed."
+msgstr "Conectare unică eșuată."
+
+msgid "Provider error: \"{0}\""
+msgstr "Eroare furnizor: \"{0}\""
+
+msgid "Azure SSO secret expiry date is near"
+msgstr "Data de expirare a secretului Azure SSO se apropie"
+
+msgid "SSL certification validation for SSO instance is enabled."
+msgstr "Validarea certificării SSL pentru instanța SSO este activată."
+
+msgid "SSL certification validation for SSO instance is disabled."
+msgstr "Validarea certificării SSL pentru instanța SSO este dezactivată."
+
+msgid "To fix this, you can set PASSBOLT_SECURITY_SSO_SSL_VERIFY environment variable to true."
+msgstr "Pentru a remedia acest lucru, puteți seta variabila de mediu PASSBOLT_SECURITY_SSO_SSL_VERIFY la true."
+
+msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
+msgstr "Sau setați passbolt.security.sso.sslVerify pe true în {0}."
+
+msgid "The endpoints for updating the SSO configurations are disabled."
+msgstr "Punctele finale pentru actualizarea configurațiilor SSO sunt dezactivate."
+
+msgid "The endpoints for updating the SSO configurations are enabled."
+msgstr "Punctele finale pentru actualizarea configurațiilor SSO sunt activate."
+
+msgid "It is recommended to disable endpoints for updating the SSO configurations."
+msgstr "Se recomandă dezactivarea punctelor finale pentru actualizarea configurațiilor SSO."
+
+msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
+msgstr "Setați variabila de mediu PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED la true."
+
+msgid "The user is missing for the SSO state."
+msgstr "Utilizatorul lipsește pentru starea SSO."
+
+msgid "Email not provided by provider."
+msgstr "Furnizorul nu a furnizat adresa de email."
+
+msgid "Username mismatch."
+msgstr "Numele de utilizator nu corespunde."
+
+msgid "Invalid nonce."
+msgstr "Nonce invalid."
+
+msgid "Invalid provider. Expected AD FS."
+msgstr "Furnizor invalid. Se aștepta AD FS."
+
+msgid "Invalid provider data. Expected AD FS settings."
+msgstr "Datele furnizorului sunt invalide. Se așteptau setările AD FS."
+
+msgid "No valid SSO settings found."
+msgstr "Nu au fost găsite setări SSO valide."
+
+msgid "You must authenticate with Azure again."
+msgstr "Trebuie să vă autentificați din nou cu Azure."
+
+msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
+msgstr "Valoare invalidă furnizată în configurația `passbolt.security.sso.sslCafile`"
+
+msgid "Provided root CA file does not exist"
+msgstr "Fișierul root CA furnizat nu există"
+
+msgid "Invalid provider. Expected PingOne."
+msgstr ""
+
+msgid "Invalid provider data. Expected PingOne settings."
+msgstr ""
+
+msgid "The user id should be a valid UUID."
+msgstr "ID-ul utilizatorului ar trebui să fie un UUID valid."
+
+msgid "The authentication token does not exist."
+msgstr "Token-ul de autentificare nu există."
+
+msgid "The SSO authentication token is invalid."
+msgstr "Token-ul de autentificare SSO este invalid."
+
+msgid "Settings id is missing."
+msgstr "Id-ul setărilor lipsește."
+
+msgid "User id mismatch."
+msgstr "Id-ul utilizatorului nu corespunde."
+
+msgid "Token IP is missing."
+msgstr "Adresa IP a token-ului lipsește."
+
+msgid "User IP mismatch."
+msgstr "Adresa IP a utilizatorului nu corespunde."
+
+msgid "User agent is missing."
+msgstr "User agent lipsește."
+
+msgid "User agent mismatch."
+msgstr "User agent nu corespunde."
+
+msgid "Settings mismatch."
+msgstr "Setările nu corespund."
+
+msgid "The SSO key could not be saved."
+msgstr "Cheia SSO nu a putut fi salvată."
+
+msgid "The SSO key does not exist."
+msgstr "Cheia SSO nu există."
+
+msgid "The SSO key could not be deleted."
+msgstr "Cheia SSO nu a putut fi ștearsă."
+
+msgid "Could not update the SSO settings."
+msgstr "Nu s-au putut actualiza setările SSO."
+
+msgid "The settings status is invalid."
+msgstr "Statusul setărilor este invalid."
+
+msgid "Invalid status."
+msgstr "Status invalid."
+
+msgid "Could not delete the SSO settings."
+msgstr "Nu s-au putut șterge setările SSO."
+
+msgid "Could not delete the draft SSO settings."
+msgstr "Nu s-au putut șterge setările SSO de tip draft."
+
+msgid "The SSO settings do not exist."
+msgstr "Setările SSO nu există."
+
+msgid "The SSO setting cannot be decrypted."
+msgstr "Setarea SSO nu poate fi decriptată."
+
+msgid "The SSO setting cannot be decoded."
+msgstr "Setarea SSO nu poate fi decodificată."
+
+msgid "Only administrators can create SSO settings."
+msgstr "Doar administratorii pot crea setări SSO."
+
+msgid "Something went wrong when validating the single-sign on settings."
+msgstr "Ceva a mers prost la validarea setărilor Single Sign-on."
+
+msgid "It is not possible to save the SSO settings."
+msgstr "Nu este posibil să salvați setările SSO."
+
+msgid "The SSO state is invalid."
+msgstr "Starea SSO este invalidă."
+
+msgid "The SSO state is expired."
+msgstr "Starea SSO este expirată."
+
+msgid "The SSO state could not be saved."
+msgstr "Starea SSO nu a putut fi salvată."
+
+msgid "The SSO state does not exist."
+msgstr "Starea SSO nu există."
+
+msgid "Could not save the SSO state, invalid nonce."
+msgstr "Nu s-a putut salva starea SSO, nonce invalid."
+
+msgid "Could not save the SSO state, please try again later."
+msgstr "Nu s-a putut salva starea SSO, te rugăm să încerci din nou mai târziu."
+
+msgid "The {0} claim is not present, please contact your administrator."
+msgstr "Claim-ul {0} nu este prezent, vă rugăm să contactați administratorul."
+
+msgid "Cannot parse JWKS endpoint response."
+msgstr "Nu se poate analiza răspunsul endpoint-ului JWKS."
+
+msgid "Invalid JWKS endpoint response. Keys missing."
+msgstr "Răspuns endpoint JWKS invalid. Lipsesc chei."
+
+msgid "Failed to read certificate: {0}"
+msgstr "Nu s-a putut citi certificatul: {0}"
+
+msgid "Failed to read public key from certificate: {0}"
+msgstr "Nu s-a putut citi cheia publică din certificat: {0}"
+
+msgid "Failed to public key properties from certificate: {0}"
+msgstr "Nu s-au putut prelua proprietățile cheii publice din certificat: {0}"
+
+msgid "JWT token is missing."
+msgstr "Token JWT lipsește."
+
+msgid "Unable to decode JWT token."
+msgstr "Nu s-a putut decoda token-ul JWT."
+
+msgid "The {0} configuration value should be a string or NULL."
+msgstr "Valoarea de configurare {0} ar trebui să fie un șir de caractere sau NULL."
+
+msgid "The {0} configuration value should be one of the following: {1}."
+msgstr "Valoarea de configurare {0} ar trebui să fie una dintre următoarele: {1}."
+
+msgid "Single-sign on was a success"
+msgstr "Autentificarea unică a reușit"
+
+msgid "Users are unable to log in via Azure SSO."
+msgstr "Utilizatorii nu se pot autentifica prin Azure SSO."
+
+msgid "This can happen when the client secret of Azure AD is expired, or the SSO configurations (client credentials) are invalid."
+msgstr "Acest lucru se poate întâmpla când secretul clientului din Azure AD a expirat sau configurațiile SSO (credite de client) sunt invalide."
+
+msgid "See Azure error response below:"
+msgstr "Vedeți mai jos răspunsul de eroare Azure:"
+
+msgid "Error: {0}"
+msgstr "Eroare: {0}"
+
+msgid "Error description: {0}"
+msgstr "Descriere eroare: {0}"
+
+msgid "To fix this, you as an administrator have to update the Azure SSO credentials."
+msgstr "Pentru a remedia, dumneavoastră, ca administrator, trebuie să actualizați datele de autentificare Azure SSO."
+
+msgid "Update it in passbolt"
+msgstr "Actualizați-l în Passbolt"
+
+msgid "The client secret expiry date of your Azure AD instance is {0}."
+msgstr "Data de expirare a secretului clientului pentru instanța dumneavoastră Azure AD este {0}."
+
+msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
+msgstr "Rețineți că utilizatorii Passbolt nu se vor putea autentifica prin Azure SSO după data de expirare a secretului."
+
+msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
+msgstr "Vă sfătuim să remediați acest lucru din partea Azure și să actualizați cele mai recente detalii în Passbolt."
+
+msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
+msgstr "Furnizorul SSO {0} a fost testat cu succes și activat de {1}. "
+
+msgid "All users can now use Single Sign-on to perform authentication."
+msgstr "Toți utilizatorii pot acum să utilizeze Single Sign-on pentru a se autentifica."
+
+msgid "Viewq  it in passbolt"
+msgstr "Vizualizați-l în Passbolt"
+
+msgid "The SSO setting has been deleted by {0}."
+msgstr "Setarea SSO a fost ștearsă de {0}."
+
+msgid "The authentication token does not exist or has been deleted."
+msgstr "Token-ul de autentificare nu există sau a fost șters."
+
+msgid "The authentication token has been expired."
+msgstr "Token-ul de autentificare a expirat."
+
+msgid "Could not validate the SSO recover request."
+msgstr "Nu s-a putut valida cererea de recuperare SSO."
+
+msgid "The email is required in URL parameters."
+msgstr "Adresa de email este necesară în parametrii URL."
+
+msgid "The case field is required."
+msgstr "Câmpul case este necesar."
+
+msgid "The case is not supported. Only \"default\" case is supported."
+msgstr "Valoarea case nu este suportată. Este suportată doar valoarea \"default\"."
+
+msgid "The token field is required."
+msgstr "Câmpul token este necesar."
+
+msgid "Access to this service requires an invitation. "
+msgstr "Accesul la acest serviciu necesită o invitație. "
+
+msgid "Please contact your administrator to request an invitation link."
+msgstr "Vă rugăm să contactați administratorul dvs. pentru a solicita un link de invitație."
+
+msgid "Subscription key data is required."
+msgstr "Datele cheii de abonare sunt obligatorii."
+
+msgid "The subscription was created."
+msgstr "Abonamentul a fost creat."
+
+msgid "The subscription was updated."
+msgstr "Abonamentul a fost actualizat."
+
+msgid "The subscription is valid."
+msgstr "Abonamentul este valid."
+
+msgid "Subscription key could not be found."
+msgstr "Nu s-a putut găsi cheia de abonare."
+
+msgid "The subscription cannot be verified. Parse error."
+msgstr "Abonamentul nu poate fi verificat. Eroare la procesare."
+
+msgid "The subscription format is not valid. Invalid format."
+msgstr "Formatul de abonare nu este valid. Format invalid."
+
+msgid "The subscription key cannot be verified."
+msgstr "Cheia de abonare nu poate fi verificată."
+
+msgid "The passbolt OpenPGP public key could not be found."
+msgstr "Cheia publică Passbolt OpenPGP nu a putut fi găsită."
+
+msgid "A users quantity is required."
+msgstr "Un număr de utilizatori este necesar."
+
+msgid "The users quantity should not be empty."
+msgstr "Numărul utilizatorilor nu trebuie să fie gol."
+
+msgid "The users limit is exceeded."
+msgstr "Limita numărului de utilizatori este depășită."
+
+msgid "The key should have been created in the past."
+msgstr "Cheia ar fi trebuit creată în trecut."
+
+msgid "An expiry date is required."
+msgstr "Este necesară o dată de expirare."
+
+msgid "The subscription is expired."
+msgstr "Abonamentul a expirat."
+
+msgid "A customer identifier is required."
+msgstr "Un identificator de client este necesar."
+
+msgid "A subscription identifier is required."
+msgstr "Un identificator de abonament este necesar."
+
+msgid "The format of the subscription id is not valid."
+msgstr "Formatul Id-ului de abonament nu este valid."
+
+msgid "Only admin can create or update subscription information."
+msgstr "Numai administratorul poate crea sau actualiza informațiile despre abonament."
+
+msgid "The subscription key format is not valid."
+msgstr "Formatul cheii de abonare nu este valid."
+
+msgid "Subscription is valid and up to date."
+msgstr "Abonamentul este valid și actualizat."
+
+msgid "Subscription cannot be found or is invalid/expired."
+msgstr "Abonamentul nu poate fi găsit sau este invalid/expirat."
+
+msgid "Subscription invalid/expired ({0})."
+msgstr "Abonament invalid/expirat ({0})."
+
+msgid "Subscription expired ({0})."
+msgstr "Abonament expirat ({0})."
+
+msgid "Subscription user count has been exceeded ({0}/{1})."
+msgstr "Numărul maxim de utilizatori al abonamentului a fost depășit ({0}/{1})."
+
+msgid "Subscription will expire in {0} days."
+msgstr "Abonamentul va expira în {0} zile."
+
+msgid "Subscription soon exceeds user count ({0}/{1})."
+msgstr "Abonamentul va depăși în curând numărul de utilizatori permis ({0}/{1})."
+
+msgid "Subscription invalid or expired."
+msgstr "Abonament invalid sau expirat."
+
+msgid "Subscription key format error."
+msgstr "Eroare de format pentru cheia de abonament."
+
+msgid "Subscription key signature error."
+msgstr "Eroare de semnătură a cheii de abonament."
+
+msgid "Subscription key validation error."
+msgstr "Eroare de validare a cheii de abonament."
+
+msgid "It looks like you could use some help."
+msgstr "Se pare că aveți nevoie de ajutor."
+
+msgid "We are here for you. You can contact us at sales@passbolt.com"
+msgstr "Noi suntem aici pentru dumneavoastră. Ne puteți contacta la sales@passbolt.com"
+
+msgid "Thanks for choosing Passbolt Pro"
+msgstr "Vă mulțumim că ați ales Passbolt Pro"
+
+msgid "Below are your subscription key details"
+msgstr "Mai jos sunt detaliile cheii dumneavoastră de abonament"
+
+msgid "<error>Not Available</error>"
+msgstr "<error>Nu este disponibil</error>"
+
+msgid "Customer id:\t{0}"
+msgstr "Id client:\t{0}"
+
+msgid "<error>{0} (currently: {1}) - Exceeded</error>"
+msgstr "<error>{0} (în prezent: {1}) - Depășit</error>"
+
+msgid "<info>{0} (currently: {1})</info>"
+msgstr "<info>{0} (în prezent: {1})</info>"
+
+msgid "Users limit:\t{0}"
+msgstr "Limită utilizatori:\t{0}"
+
+msgid "Valid from:\t<info>{0}</info>"
+msgstr "Valabil de la:\t<info>{0}</info>"
+
+msgid "Expires on:\t<error>{0} (expired)</error>"
+msgstr "Expiră la:\t<error>{0} (expirat)</error>"
+
+msgid "Expires on:\t<info>{0} (in {1} days)</info>"
+msgstr "Expiră la:\t<info>{0} (în {1} zile)</info>"
+
+msgid "For any question / feedback / subscription renewal,"
+msgstr "Pentru orice întrebare / feedback / reînnoirea abonamentului,"
+
+msgid "kindly contact us at <info>sales@passbolt.com</info>"
+msgstr "vă rugăm să ne contactați la <info>sales@passbolt.com</info>"
+
+msgid "Only administrators can view the subscription details."
+msgstr "Doar administratorii pot vizualiza detaliile abonamentului."
+
+msgid "The file {0} could not be found."
+msgstr "Fișierul {0} nu a putut fi găsit."
+
+msgid "The file {0} could not be read."
+msgstr "Fișierul {0} nu a putut fi citit."
+
+msgid "No active admins were found."
+msgstr "Nici un administrator activ nu a fost găsit."
+
+msgid "Only administrators can update the subscription details."
+msgstr "Doar administratorii pot actualiza detaliile abonamentului."
+
+msgid "The tags data should be a string or an array."
+msgstr "Datele etichetelor ar trebui să fie un șir sau un șir de valori."
+
+msgid "Could not validate request data."
+msgstr "Nu s-au putut valida datele cererii."
+
+msgid "The tag id is not valid."
+msgstr "Id-ul etichetei nu este valid."
+
+msgid "The tag does not exist."
+msgstr "Eticheta nu există."
+
+msgid "You do not have the permission to delete shared tags."
+msgstr "Nu aveți permisiunea de a șterge etichete partajate."
+
+msgid "The tag has been deleted successfully."
+msgstr "Eticheta a fost ștearsă cu succes."
+
+msgid "You do not have the permission to update shared tags."
+msgstr "Nu aveți permisiunea de a actualiza etichete partajate."
+
+msgid "The tag has been updated successfully."
+msgstr "Eticheta a fost actualizată cu succes."
+
+msgid "The tag identifier should be a valid UUID."
+msgstr "Identificatorul etichetei ar trebui să fie un UUID valid."
+
+msgid "The tag is missing or does not belong to current user."
+msgstr "Eticheta lipsește sau nu aparține utilizatorului curent."
+
+msgid "The is shared should be a boolean type."
+msgstr "Valoarea is shared ar trebui să fie de tip boolean."
+
+msgid "The tags plugin is in read-only mode."
+msgstr "Pluginul de etichete este în modul doar citire."
+
+msgid "The tag should not be empty."
+msgstr "Eticheta nu trebuie să fie goală."
+
+msgid "A tag is required."
+msgstr "Este necesară o etichetă."
+
+msgid "The tag should be a valid BMP-UTF8 string."
+msgstr "Eticheta trebuie să fie un șir valid BMP-UTF8."
+
+msgid "The tag length should be maximum {0} characters."
+msgstr "Lungimea etichetei ar trebui să fie de maximum {0} caractere."
+
+msgid "The shared status should be a valid boolean."
+msgstr "Statutul partajat ar trebui să fie un boolean valid."
+
+msgid "A shared status is required."
+msgstr "Un status partajat este necesar."
+
+msgid "The tag metadata OpenPGP message cannot be parsed or is not for the intended recipient."
+msgstr "Mesajul OpenPGP de metadata al etichetei nu poate fi analizat sau nu este destinat destinatarului corespunzător."
+
+msgid "Error while building tag DTO."
+msgstr "Eroare la construirea obiectului DTO pentru etichetă."
+
+msgid "Could not validate tags data."
+msgstr "Nu s-au putut valida datele etichetei."
+
+msgid "Unable to build tag entity"
+msgstr "Imposibil de construit entitatea etichetă"
+
+msgid "No tags to migrate."
+msgstr "Nu există etichete de migrat."
+
+msgid "Tag ID \"{0}\" is already V5"
+msgstr "Eticheta cu ID \"{0}\" este deja V5"
+
+msgid "No user found for the personal tag id: \"{0}\"."
+msgstr "Nu s-a găsit niciun utilizator pentru eticheta personală cu id-ul: \"{0}\"."
+
+msgid "User contain data missing for the tag id: \"{0}\"."
+msgstr "Utilizatorul nu conține date pentru eticheta cu id-ul: \"{0}\"."
+
+msgid "Unable to migrate tag id: {0} to V5."
+msgstr "Imposibil de migrat eticheta cu id-ul: {0} la V5."
+
+msgid "The tag metadata key data could not be updated."
+msgstr "Datele cheii de metadate ale etichetei nu au putut fi actualizate."
+
+msgid "Could not save the tags, try again later."
+msgstr "Etichetele nu au putut fi salvate, încercați mai târziu."
+
+msgid "You do not have the permission to edit shared tags on this resource."
+msgstr "Nu aveți permisiunea de a edita etichetele partajate ale acestei resurse."
+
+msgid "Unable to save the tag."
+msgstr "Imposibil de salvat eticheta."
+
+msgid "You do not have the permission to change a personal tag into shared tag."
+msgstr "Nu aveți permisiunea să schimbați o etichetă personală într-o etichetă partajată."
+
+msgid "The settings selected by your administrator prevent from downgrading tag."
+msgstr "Setările alese de administrator vă împiedică să retrogradați eticheta."
+
+msgid "Could not retrieve the user passphrase policies."
+msgstr "Nu s-au putut prelua politicile de frază de acces pentru utilizator."
+
+msgid "The entropy minimum is required."
+msgstr "Valoarea minimă a entropiei este necesară."
+
+msgid "The entropy minimum should be between {0} and {1}."
+msgstr "Valoarea minimă a entropiei ar trebui să fie între {0} și {1}."
+
+msgid "You edited the user passphrase policy"
+msgstr "Ați editat politica de frază de acces pentru utilizator"
+
+msgid "{0} edited the user passphrase policy"
+msgstr "{0} a editat politica de frază de acces pentru utilizator"
+
+msgid "Could not validate the user passphrase policies settings."
+msgstr "Nu s-au putut valida setările politicilor de frază de acces pentru utilizator."
+
+msgid "Only administrators are allowed to create/update user passphrase policies settings."
+msgstr "Doar administratorii pot crea/actualiza setările politicilor de frază de acces pentru utilizator."
+
+msgid "The user passphrase policy settings has been updated by {0}."
+msgstr "Setările politicii de frază de acces pentru utilizator au fost actualizate de {0}."
 
 msgid "Error"
 msgstr "Eroare"
@@ -5247,9 +7257,6 @@ msgstr "Îi lipsește cheii acestui utilizator cheia de criptare pentru metadata
 
 msgid "View users"
 msgstr "Vizualizează utilizatorii"
-
-msgid "You have initiated an account recovery!"
-msgstr "Ați inițiat recuperarea contului!"
 
 msgid "Welcome back!"
 msgstr "Bine ați revenit!"

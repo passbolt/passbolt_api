@@ -24,11 +24,6 @@ use Passbolt\Reports\Utility\ReportInterface;
 
 class ReportsViewControllerTest extends AppIntegrationTestCase
 {
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups',
-        'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Comments',
-    ];
-
     public function testReportsViewControllerError_ThrowErrorWhenNotAuthenticated()
     {
         $slug = 'sample-report';

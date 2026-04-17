@@ -39,6 +39,7 @@ use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Passbolt\Scim\Model\Entity\ScimEntry;
 
 /**
  * Users Model
@@ -47,6 +48,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\GpgkeysTable&\Cake\ORM\Association\HasOne $Gpgkeys
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
  * @property \App\Model\Table\ProfilesTable&\Cake\ORM\Association\HasOne $Profiles
+ * @property \Passbolt\Scim\Model\Table\ScimEntriesTable&\Cake\ORM\Association\HasOne $ScimEntries
  * @property \App\Model\Table\GroupsUsersTable&\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsToMany $Groups
  * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasMany $EntitiesHistory
@@ -56,7 +58,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\User|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\User patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\User[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\User findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, ?callable $callback = null, array $options = [])
+ * @method \App\Model\Entity\User findOrCreate(\Cake\ORM\Query\SelectQuery|callable|array $search, callable|array|null $callback = null, array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @property \App\Model\Table\AuthenticationTokensTable&\Cake\ORM\Association\HasMany $AuthenticationTokens
  * @property \Passbolt\Log\Model\Table\ActionLogsTable&\Cake\ORM\Association\HasMany $ActionLogs
@@ -519,6 +521,23 @@ class UsersTable extends Table implements TableCleanupProviderInterface
 
         // Mark gpg ke as deleted
         $this->Gpgkeys->updateAll(['deleted' => true], ['user_id' => $user->id]);
+
+        // Mark scim_entry as deleted
+        if ($this->hasAssociation('ScimEntries')) {
+            $this->ScimEntries->updateAll(['deleted' => date('Y-m-d H:s:i')], [
+                'foreign_key' => $user->id,
+                'foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
+            ]);
+        }
+
+        // Delete all tags
+        if (Configure::read('passbolt.plugins.tags.enabled')) {
+            $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
+            $ResourcesTags->deleteAll(['user_id' => $user->id]);
+            /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
+            $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
+            $Tags->deleteAllUnusedTags();
+        }
 
         // Mark user as deleted
         $user->deleted = true;
