@@ -133,7 +133,6 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         Configure::delete('passbolt.plugins.multiFactorAuthentication.enabled');
         Configure::delete('passbolt.plugins.log.enabled');
 
-        $this->app->setSolutionBootstrapper(new BaseSolutionBootstrapper());
         $this->app->bootstrap();
         $this->app->pluginBootstrap();
 

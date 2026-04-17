@@ -221,31 +221,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     }
 
     /**
-     * This enables to inject a different main plugin name as the default one
-     * defined in config/default.php
-     *
-     * @param \App\BaseSolutionBootstrapper $solutionBootstrapper Class loading all the plugins
-     * @return void
-     */
-    public function setSolutionBootstrapper(BaseSolutionBootstrapper $solutionBootstrapper): void
-    {
-        $this->solutionBootstrapper = $solutionBootstrapper;
-    }
-
-    /**
-     * @return \App\BaseSolutionBootstrapper|null
-     */
-    public function getSolutionBootstrapper(): ?BaseSolutionBootstrapper
-    {
-        if (is_null($this->solutionBootstrapper)) {
-            $this->initEdition();
-            $this->initSolutionBootstrapper();
-        }
-
-        return $this->solutionBootstrapper;
-    }
-
-    /**
      * Register core emails notification and settings
      * Register core email digests
      *
