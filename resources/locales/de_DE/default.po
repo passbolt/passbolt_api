@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-04-02 12:51+0000\n"
-"PO-Revision-Date: 2026-04-02 14:13\n"
+"PO-Revision-Date: 2026-04-20 20:53\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +74,7 @@ msgid "The request data can not be empty."
 msgstr "Die Anfragedaten dürfen nicht leer sein."
 
 msgid "You are already logged in."
-msgstr ""
+msgstr "Sie sind bereits eingeloggt."
 
 msgid "You are successfully logged in."
 msgstr "Sie sind erfolgreich angemeldet."
@@ -278,13 +278,13 @@ msgid "The resource has been updated successfully."
 msgstr "Die Ressource wurde erfolgreich aktualisiert."
 
 msgid "The role was deleted."
-msgstr ""
+msgstr "Die Rolle wurde gelöscht."
 
 msgid "The role identifier is not valid."
 msgstr ""
 
 msgid "The role was successfully updated."
-msgstr ""
+msgstr "Die Rolle wurde erfolgreich aktualisiert."
 
 msgid "The secret does not exist."
 msgstr "Das Geheimnis existiert nicht."
@@ -950,7 +950,7 @@ msgid "The name should be a valid BMP-UTF8 string."
 msgstr "Der Name sollte eine gültige BMP-UTF8-Zeichenkette sein."
 
 msgid "The name should not be greater than 50 characters."
-msgstr ""
+msgstr "Der Name darf nicht länger als 50 Zeichen sein."
 
 msgid "The name should not be reserved role."
 msgstr ""
@@ -1034,7 +1034,7 @@ msgid "The username is already in use."
 msgstr "Dieser Benutzername wird bereits verwendet."
 
 msgid "The role does not exist."
-msgstr ""
+msgstr "Die Rolle existiert nicht."
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "Der Benutzer darf nicht alleiniger Eigentümer geteilter Inhalte sein. Übertragen Sie das Eigentum auf andere Benutzer."
@@ -1172,10 +1172,10 @@ msgid "{0} edited the resource {1}"
 msgstr "{0} hat die Ressource {1} bearbeitet"
 
 msgid "{0} created a new role {1}"
-msgstr ""
+msgstr "{0} hat die Rolle {1} erstellt"
 
 msgid "{0} updated the role {1}"
-msgstr ""
+msgstr "{0} hat die Rolle {1} aktualisiert"
 
 msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} kann die Kontowiederherstellung nicht abschließen!"
@@ -1211,7 +1211,7 @@ msgid "Welcome to passbolt, {0}!"
 msgstr "Willkommen bei passbolt, {0}!"
 
 msgid "Your role has been updated"
-msgstr ""
+msgstr "Ihre Rolle wurde aktualisiert"
 
 msgid "The purify subject setting should be a boolean."
 msgstr "Die Einstellung Purify-Subject sollte ein Boolean sein."
