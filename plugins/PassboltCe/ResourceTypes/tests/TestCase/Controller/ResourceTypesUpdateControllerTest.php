@@ -59,6 +59,7 @@ class ResourceTypesUpdateControllerTest extends AppIntegrationTestCaseV5
             [ResourceType::SLUG_V5_DEFAULT],
             [ResourceType::SLUG_V5_CUSTOM_FIELD_STANDALONE],
             [ResourceType::SLUG_V5_NOTE],
+            [ResourceType::SLUG_V5_PIN_CODE],
         ];
     }
 
