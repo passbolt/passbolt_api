@@ -55,6 +55,7 @@ class ResourceType extends Entity
     public const SLUG_V5_DEFAULT_WITH_TOTP = 'v5-default-with-totp';
     public const SLUG_V5_CUSTOM_FIELD_STANDALONE = 'v5-custom-fields';
     public const SLUG_V5_NOTE = 'v5-note';
+    public const SLUG_V5_PIN_CODE = 'v5-pin-code';
     public const V5_RESOURCE_TYPE_SLUGS = [
         self::SLUG_V5_PASSWORD_STRING,
         self::SLUG_V5_DEFAULT,
@@ -62,6 +63,7 @@ class ResourceType extends Entity
         self::SLUG_V5_DEFAULT_WITH_TOTP,
         self::SLUG_V5_CUSTOM_FIELD_STANDALONE,
         self::SLUG_V5_NOTE,
+        self::SLUG_V5_PIN_CODE,
     ];
 
     protected array $_accessible = [
@@ -128,6 +130,7 @@ class ResourceType extends Entity
             UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT_WITH_TOTP),
             UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_V5_CUSTOM_FIELD_STANDALONE),
             UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_V5_NOTE),
+            UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_V5_PIN_CODE),
         ];
     }
 }
