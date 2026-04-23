@@ -58,8 +58,7 @@ class UsersTableFindIndexTest extends TestCase
     }
 
     /**
-     * Last logged in value is calculated result value from action logs if `users.last_logged_in` field value is null.
-     * Otherwise, it should return `users.last_logged_in` field value.
+     * Last logged in value should be from `users.last_logged_in` table field.
      *
      * @covers \App\Model\Traits\Users\UsersFindersTrait
      * @return void

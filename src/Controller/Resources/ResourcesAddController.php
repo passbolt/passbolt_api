@@ -19,6 +19,7 @@ namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 use App\Service\Resources\ResourcesAddService;
+use Cake\Core\Configure;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
@@ -62,6 +63,10 @@ class ResourcesAddController extends AppController
                 'secret' => true, 'permission' => true,
             ],
         ];
+        if (Configure::read('passbolt.plugins.tags.enabled')) {
+            $options['contain']['tag'] = true;
+        }
+
         /** @var \App\Model\Table\ResourcesTable $Resources */
         $Resources = $this->fetchTable('Resources');
         $resource = $Resources->findView($this->User->id(), $resource->id, $options)->firstOrFail();

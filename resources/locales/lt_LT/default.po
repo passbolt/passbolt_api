@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2026-04-02 11:49+0000\n"
-"PO-Revision-Date: 2026-04-02 13:48\n"
+"POT-Creation-Date: 2026-04-02 12:51+0000\n"
+"PO-Revision-Date: 2026-04-02 14:13\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,8 @@ msgstr ""
 "X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "X-Crowdin-Project-ID: 2\n"
 "X-Crowdin-Language: lt\n"
-"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/default.po\n"
-"X-Crowdin-File-ID: 212\n"
+"X-Crowdin-File: /[passbolt.passbolt-pro-api] release/resources/locales/en_UK/default.po\n"
+"X-Crowdin-File-ID: 220\n"
 "Language: lt_LT\n"
 
 msgid "You need to login to access this location."
@@ -1089,6 +1089,12 @@ msgstr "Kuriant naują įrašą šis laukas turi būti null."
 
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "Pagrindinį identifikatorių turėtų sudaryti 8 šešioliktainiai simboliai."
+
+msgid "The provided IP is invalid."
+msgstr "Nurodytas IP neteisingas."
+
+msgid "The provided user agent is invalid."
+msgstr "Nurodytas naudotojo agentas neteisingas."
 
 msgid "{0} updated your memberships in several groups"
 msgstr "{0} atnaujino jūsų narystes keliose grupėse"
@@ -4780,6 +4786,15 @@ msgstr "Reikalinga priverstinė ssl būsena."
 msgid "The force ssl setting should be a valid boolean."
 msgstr "Priverstinis ssl nustatymas turi būti tinkamas loginis dydis."
 
+msgid "A subscription key is required."
+msgstr "Reikalingas prenumeratos raktas."
+
+msgid "The subscription key should not be empty."
+msgstr "Prenumeratos raktas neturi būti tuščias."
+
+msgid "The subscription format is not valid."
+msgstr "Prenumeratos formatas negalioja."
+
 msgid "The passbolt config is writable."
 msgstr "„Pasbolt“ konfigūracija yra įrašoma."
 
@@ -4981,12 +4996,6 @@ msgstr "Arba pasirinkite failą iš savo kompiuterio"
 msgid "Some binary things are happening..."
 msgstr "Vyksta kai kurie dvilypiai dalykai..."
 
-msgid "Passbolt Pro activation."
-msgstr "\"Passbolt Pro\" aktyvavimas."
-
-msgid "Copy paste your Passbolt Pro subscription key here"
-msgstr "Nukopijuokite ir įklijuokite savo \"Passbolt Pro\" prenumeratos raktą čia"
-
 msgid "Choose your preferences."
 msgstr "Pasirinkite savo nuostatas."
 
@@ -5005,8 +5014,14 @@ msgstr "Priversti SSL?"
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
 msgstr "Priverstinis SSL reiškia, kad „passbolt“ nepriims ryšių, gaunamų iš nesaugaus protokolo. Jei SSL yra priverstinis, jūsų serveris turi būti sukonfigūruotas HTTPS. Labai rekomenduojama tai padaryti."
 
-msgid "Welcome to Passbolt! Let's get started with the configuration."
-msgstr "Sveiki atvykę į Passbolt! Pradėkime nuo konfigūracijos.\n"
+msgid "Passbolt Pro activation."
+msgstr "\"Passbolt Pro\" aktyvavimas."
+
+msgid "Copy paste your Passbolt Pro subscription key here"
+msgstr "Nukopijuokite ir įklijuokite savo \"Passbolt Pro\" prenumeratos raktą čia"
+
+msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
+msgstr "Sveiki atvykę į Passbolt Pro! Pradėkime nuo konfigūracijos."
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "Geras! Jūsų aplinka paruošta slaptažodžiui."
@@ -5071,12 +5086,6 @@ msgstr "Pagalba"
 msgid "Need help? You can find more information on how to install passbolt in the official online help."
 msgstr "Reikia pagalbos? Daugiau informacijos apie tai, kaip įdiegti Passbolt, rasite oficialiame internetiniame žinyne."
 
-msgid "What subscription key?"
-msgstr "Koks prenumeratos raktas?"
-
-msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
-msgstr "Prenumeratos raktas yra failas, kuris buvo išsiųstas jums įsigijus \"Passbolt Pro\". Mums reikia prenumeratos rakto, kad galėtume suaktyvinti „Passbolt Pro“ funkcijas."
-
 msgid "Send test email"
 msgstr "Siųsti bandomąjį el.laišką"
 
@@ -5097,6 +5106,2007 @@ msgstr "Kodėl man reikia SMTP serverio?"
 
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "„Passbolt“ reikalingas smtp serveris, kad sukūrus paskyrą būtų išsiųsti kvietimai ir el. pašto pranešimai."
+
+msgid "What subscription key?"
+msgstr "Koks prenumeratos raktas?"
+
+msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
+msgstr "Prenumeratos raktas yra failas, kuris buvo išsiųstas jums įsigijus \"Passbolt Pro\". Mums reikia prenumeratos rakto, kad galėtume suaktyvinti „Passbolt Pro“ funkcijas."
+
+msgid "The user id is invalid."
+msgstr "Vartotojo id neteisingas."
+
+msgid "The authentication token id is invalid."
+msgstr "Autentifikavimo prieigos rakto id neteisingas."
+
+msgid "Only guests are allowed to create an account recovery request."
+msgstr "Tik svečiams leidžiama kurti paskyros atkūrimo užklausą."
+
+msgid "Invalid request. Please provide the required data."
+msgstr "Neteisingas prašymas. Pateikite reikiamus duomenis."
+
+msgid "The request id is invalid."
+msgstr "Užklausos id neteisingas."
+
+msgid "Please provide a valid request id."
+msgstr "Pateikite galiojantį užklausos id."
+
+msgid "You cannot reuse the account recovery key."
+msgstr "Negalite pakartotinai naudoti paskyros atkūrimo rakto."
+
+msgid "A policy is required."
+msgstr "Reikalinga politika."
+
+msgid "The policy name should not be empty."
+msgstr "Politikos pavadinimas neturi būti tuščias."
+
+msgid "The policy should be one of the following: {0}."
+msgstr "Politika turi būti viena iš šių: {0}."
+
+msgid "The public key identifier should be a valid UUID."
+msgstr "Viešojo rakto identifikatorius turi būti galiojantis UUID."
+
+msgid "The public key identifier should not be empty."
+msgstr "Viešojo rakto identifikatorius neturi būti tuščias."
+
+msgid "The identifier of the user who created the organization policy should be a valid UUID."
+msgstr "Organizacijos politiką sukūrusio naudotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who created the organization policy is required."
+msgstr "Būtinas organizacijos politiką sukūrusio naudotojo identifikatorius."
+
+msgid "The identifier of the user who created the organization policy should not be empty."
+msgstr "Organizacijos politiką sukūrusio naudotojo identifikatorius neturi būti tuščias."
+
+msgid "The identifier of the user who modified the organization policy should be a valid UUID."
+msgstr "Organizacijos politiką pakeitusio naudotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who modified the organization policy is required."
+msgstr "Būtinas organizacijos politiką pakeitusio naudotojo identifikatorius."
+
+msgid "The identifier of the user who modified the organization policy should not be empty."
+msgstr "Organizacijos politiką pakeitusio naudotojo identifikatorius neturi būti tuščias."
+
+msgid "Could not validate policy data."
+msgstr "Nepavyko patvirtinti politikos duomenų."
+
+msgid "The armored key is too big."
+msgstr "Šarvuotas raktas per didelis."
+
+msgid "The \"deleted\" field should be a valid date."
+msgstr "Lauke „ištrinta“ turi būti nurodyta galiojanti data."
+
+msgid "The identifier of the user who created the organization public key should be a valid UUID."
+msgstr "Organizacijos viešąjį raktą sukūrusio naudotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who created the organization public key is required."
+msgstr "Būtinas vartotojo, sukūrusio organizacijos viešąjį raktą, identifikatorius."
+
+msgid "The identifier of the user who created the organization public key should not be empty."
+msgstr "Organizacijos viešąjį raktą sukūrusio vartotojo identifikatorius neturi būti tuščias."
+
+msgid "The identifier of the user who modified the organization public key should be a valid UUID."
+msgstr "Organizacijos viešąjį raktą pakeitusio naudotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who modified the organization public key is required."
+msgstr "Būtinas vartotojo, pakeitusio organizacijos viešąjį raktą, identifikatorius."
+
+msgid "The identifier of the user who modified the organization public key should not be empty."
+msgstr "Organizacijos viešąjį raktą pakeitusio naudotojo identifikatorius neturi būti tuščias."
+
+msgid "You cannot reuse the user keys."
+msgstr "Negalite pakartotinai naudoti vartotojo raktų."
+
+msgid "You cannot reuse account recovery organization public keys."
+msgstr "Negalite pakartotinai naudoti paskyros atkūrimo organizacijos viešųjų raktų."
+
+msgid "You cannot reuse the metadata keys."
+msgstr "Negalite pakartotinai naudoti metaduomenų raktų."
+
+msgid "Could not validate public key data."
+msgstr "Nepavyko patvirtinti viešojo rakto duomenų."
+
+msgid "The recipient_foreign_model should be a valid string."
+msgstr "Recipient_foreign_model turi būti tinkama eilutė."
+
+msgid "The recipient_foreign_model must be provided."
+msgstr "Recipient_foreign_model turi būti pateiktas."
+
+msgid "The recipient_foreign_model should not be empty."
+msgstr "Recipient_foreign_model neturi būti tuščias."
+
+msgid "The recipient_foreign_model must be one of the following: {0}."
+msgstr "Recipient_foreign_model turi būti vienas iš šių: {0}."
+
+msgid "The data should be a valid string."
+msgstr "Duomenys turi būti tinkama eilutė."
+
+msgid "The data is too big."
+msgstr "Duomenys per dideli."
+
+msgid "The identifier of the user who created the private key passwords should be a valid UUID."
+msgstr "Privataus rakto slaptažodžius sukūrusio vartotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who created the private key passwords is required."
+msgstr "Būtinas vartotojo, kuris sukūrė privataus rakto slaptažodį, identifikatorius."
+
+msgid "The identifier of the user who created the private key passwords should not be empty."
+msgstr "Privataus rakto slaptažodžius sukūrusio vartotojo identifikatorius neturi būti tuščias."
+
+msgid "The identifier of the user who modified the private key passwords should be a valid UUID."
+msgstr "Privataus rakto slaptažodžius pakeitusio vartotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who modified the private key passwords is required."
+msgstr "Reikalingas vartotojo, kuris pakeitė privataus rakto slaptažodį, identifikatorius."
+
+msgid "The identifier of the user who modified the private key passwords should not be empty."
+msgstr "Privataus rakto slaptažodžius pakeitusio vartotojo identifikatoriaus laukas neturi būti tuščias."
+
+msgid "The private key identifier should be a valid UUID."
+msgstr "Privataus rakto identifikatorius turi būti galiojantis UUID."
+
+msgid "A private key identifier is required."
+msgstr "Reikalingas privataus rakto identifikatorius."
+
+msgid "The private key identifier should not be empty."
+msgstr "Privataus rakto identifikatoriaus laukas neturi būti tuščias."
+
+msgid "Could not validate password data."
+msgstr "Nepavyko patvirtinti slaptažodžio duomenų."
+
+msgid "The identifier of the user who created the private key  should be a valid UUID."
+msgstr "Privatųjį raktą sukūrusio vartotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who created the private key  is required."
+msgstr "Privatųjį raktą sukūrusio vartotojo identifikatorius būtinas."
+
+msgid "The identifier of the user who created the private key  should not be empty."
+msgstr "Privatųjį raktą sukūrusio vartotojo identifikatorius neturi būti tuščias."
+
+msgid "The identifier of the user who modified the private key  should be a valid UUID."
+msgstr "Privatųjį raktą pakeitusio vartotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who modified the private key is required."
+msgstr "Privatųjį raktą pakeitusio vartotojo identifikatorius būtinas."
+
+msgid "The identifier of the user who modified the private key  should not be empty."
+msgstr "Privatųjį raktą pakeitusio vartotojo identifikatorius neturi būti tuščias."
+
+msgid "The account recovery private key is not valid."
+msgstr "Paskyros atkūrimo privatus raktas negalioja."
+
+msgid "The status should not be a valid string."
+msgstr "Būsena neturėtų būti tinkama eilutė."
+
+msgid "This status is not supported."
+msgstr "Ši būsena nepalaikoma."
+
+msgid "The status length should be maximum {0} characters."
+msgstr "Būsenos ilgis turi būti daugiausia {0} simbolių."
+
+msgid "The identifier of the user who created the request should be a valid UUID."
+msgstr "Užklausą sukūrusio vartotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who created the request is required."
+msgstr "Būtinas užklausą sukūrusio vartotojo identifikatorius."
+
+msgid "The identifier of the user who created the request should not be empty."
+msgstr "Užklausą sukūrusio vartotojo identifikatorius neturi būti tuščias."
+
+msgid "The identifier of the user who modified the request should be a valid UUID."
+msgstr "Užklausą pakeitusio naudotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who modified the request is required."
+msgstr "Būtinas užklausą pakeitusio vartotojo identifikatorius."
+
+msgid "The identifier of the user who modified the request should not be empty."
+msgstr "Užklausą pakeitusio vartotojo identifikatoriaus laukas neturi būti tuščias."
+
+msgid "The request is invalid."
+msgstr "Prašymas negalioja."
+
+msgid "The account request is invalid."
+msgstr "Paskyros užklausa negalioja."
+
+msgid "Invalid response status. Not supported."
+msgstr "Netinkama atsakymo būsena. Nepalaikoma."
+
+msgid "The responder_foreign_key should not be empty."
+msgstr "Responder_foreign_key neturi būti tuščias."
+
+msgid "The responder_foreign_key should be a valid UUID."
+msgstr "Responder_foreign_key turi būti galiojantis UUID."
+
+msgid "The responder_foreign_model should be a valid string."
+msgstr "Responder_foreign_model turi būti tinkama eilutė."
+
+msgid "The responder_foreign_model should not be empty."
+msgstr "Responder_foreign_model neturi būti tuščias."
+
+msgid "The responder_foreign_model must be one of the following: {0}."
+msgstr "Responder_foreign_model turi būti vienas iš šių: {0}."
+
+msgid "The identifier of the user who created the response should be a valid UUID."
+msgstr "Atsakymą sukūrusio vartotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who created the response is required."
+msgstr "Būtinas atsakymą sukūrusio vartotojo identifikatorius."
+
+msgid "The identifier of the user who created the response should not be empty."
+msgstr "Atsakymą sukūrusio vartotojo identifikatorius neturi būti tuščias."
+
+msgid "The identifier of the user who modified the response should be a valid UUID."
+msgstr "Atsakymą pakeitusio vartotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who modified the response is required."
+msgstr "Būtinas atsakymą pakeitusio vartotojo identifikatorius."
+
+msgid "The identifier of the user who modified the response should not be empty."
+msgstr "Atsakymą pakeitusio vartotojo identifikatorius neturi būti tuščias."
+
+msgid "The account recovery request response is invalid."
+msgstr "Paskyros atkūrimo užklausos atsakymas negalioja."
+
+msgid "The status should not be empty"
+msgstr "Padėtis neturi būti tuščia"
+
+msgid "The status should be one of the following: {0}."
+msgstr "Būsena turi būti viena iš šių: {0}."
+
+msgid "The identifier of the user who created the user settings should be a valid UUID."
+msgstr "Vartotojo nuostatas sukūrusio naudotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who created the user settings is required."
+msgstr "Būtinas vartotojo, sukūrusio vartotojo nuostatas, identifikatorius."
+
+msgid "The identifier of the user who created the user settings should not be empty."
+msgstr "Vartotojo nuostatas sukūrusio naudotojo identifikatorius neturi būti tuščias."
+
+msgid "The identifier of the user who modified the user settings should be a valid UUID."
+msgstr "Vartotojo nuostatas pakeitusio naudotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who modified the user settings is required."
+msgstr "Būtinas vartotojo, pakeitusio vartotojo nuostatas, identifikatorius."
+
+msgid "The identifier of the user who modified the user settings should not be empty."
+msgstr "Vartotojo nuostatas pakeitusio naudotojo identifikatorius neturi būti tuščias."
+
+msgid "This user already has an account recovery setting"
+msgstr "Šis vartotojas jau turi paskyros atkūrimo nustatymą"
+
+msgid "The account recovery user setting is not valid."
+msgstr "Paskyros atkūrimo vartotojo nustatymas negalioja."
+
+msgid "You have disabled the account recovery."
+msgstr "Jūs išjungėte paskyros atkūrimą."
+
+msgid "{0} has disabled the account recovery."
+msgstr "{0} išjungė paskyros atkūrimą."
+
+msgid "You have set the account recovery organization policy to {0}."
+msgstr "Nustatėte paskyros atkūrimo organizacijos politiką į {0}."
+
+msgid "{0} has set the account recovery organization policy to {1}."
+msgstr "{0} nustatė paskyros atkūrimo organizacijos politiką į {1}."
+
+msgid "You have updated the account recovery organization policy to {0}."
+msgstr "Atnaujinote paskyros atkūrimo organizacijos politiką į {0}."
+
+msgid "{0} has updated the account recovery organization policy to {1}."
+msgstr "{0} atnaujino paskyros atkūrimo organizacijos politiką į {1}."
+
+msgid "Suspicious account recovery request issued from IP {0} for {1}"
+msgstr "Įtartina paskyros atkūrimo užklausa iš IP {0}, skirta {1}"
+
+msgid "{0} has initiated a recovery request"
+msgstr "{0} pradėjo atkūrimo užklausą"
+
+msgid "You have initiated a recovery request"
+msgstr "Pradėjote paskyros atkūrimo užklausą"
+
+msgid "Recovery request approved!"
+msgstr "Atkūrimo užklausa patvirtinta!"
+
+msgid "approved"
+msgstr "patvirtinta"
+
+msgid "rejected"
+msgstr "atmesta"
+
+msgid "Account recovery response set to {0}."
+msgstr "Paskyros atkūrimo atsakymas nustatytas kaip {0}."
+
+msgid "Account recovery response set to {0} by {1}."
+msgstr "Paskyros atkūrimo atsakymas nustatytas į {0} naudotojo {1}."
+
+msgid "Recovery request denied!"
+msgstr "Atkūrimo užklausa atmesta!"
+
+msgid "Could not validate key revocation."
+msgstr "Nepavyko patvirtinti rakto atšaukimo."
+
+msgid "The fingerprint should match the one from the currently active key."
+msgstr "Pirštų atspaudas turėtų sutapti su šiuo metu aktyvaus rakto atspaudu."
+
+msgid "Account recovery is disabled."
+msgstr "Paskyros atkūrimas išjungtas."
+
+msgid "The account recovery organization public key is not set."
+msgstr "Paskyros atkūrimo organizacijos viešasis raktas nenustatytas."
+
+msgid "Invalid request. No policy change."
+msgstr "Neteisingas prašymas. Jokio politikos pakeitimo."
+
+msgid "Invalid request. Revoked key is required for key rotation."
+msgstr "Neteisingas prašymas. Norint rotuoti raktą, būtinas atšauktas raktas."
+
+msgid "Invalid request. New key is required for key rotation."
+msgstr "Neteisingas prašymas. Norint rotuoti raktą, būtinas naujas raktas."
+
+msgid "Invalid request. An organization recovery public key is required."
+msgstr "Neteisingas prašymas. Būtinas organizacijos atkūrimo viešasis raktas."
+
+msgid "Invalid request. Revoked key or passwords are not required."
+msgstr "Neteisingas prašymas. Atšauktas raktas ar slaptažodžiai nebūtini."
+
+msgid "Invalid request. New key or passwords are not required."
+msgstr "Neteisingas prašymas. Naujas raktas ar slaptažodžiai nebūtini."
+
+msgid "Invalid request. Keys are required for this change."
+msgstr "Neteisingas prašymas. Šiam pakeitimui reikalingi raktai."
+
+msgid "Invalid request. Passwords are required for this change."
+msgstr "Neteisingas prašymas. Norint atlikti šį pakeitimą, reikalingi slaptažodžiai."
+
+msgid "An organization public key is required."
+msgstr "Būtinas organizacijos viešasis raktas."
+
+msgid "The public_key_id must match current policy public_key_id."
+msgstr "Public_key_id turi sutapti su dabartine policy public_key_id reikšme."
+
+msgid "An invalid number of passwords sent. Expected {0} and got {1}."
+msgstr "Neteisingas siunčiamų slaptažodžių kiekis. Tikėtasi {0}, bet gauta {1}."
+
+msgid "The message is not encrypted for the right recipient."
+msgstr "Žinutė nėra užšifruota tinkamam gavėjui."
+
+msgid "Recovery request cannot be created when organization policy is disabled."
+msgstr "Atkūrimo užklausos sukurti negalima, kai organizacijos politika išjungta."
+
+msgid "Recovery request cannot be created when user is not enrolled."
+msgstr "Atkūrimo užklausa negali būti sukurta, kai vartotojas neužsiregistravęs."
+
+msgid "The authentication token is not valid or has expired."
+msgstr "Autentifikavimo prieigos raktas negalioja arba pasibaigęs."
+
+msgid "The account recovery request could not be found."
+msgstr "Nepavyko rasti paskyros atkūrimo užklausos."
+
+msgid "The request is already completed."
+msgstr "Prašymas jau įvykdytas."
+
+msgid "Recovery response cannot be created when organization policy is disabled."
+msgstr "Atkūrimo atsakymo sukurti negalima, kai organizacijos politika išjungta."
+
+msgid "Could not validate response data."
+msgstr "Nepavyko patvirtinti atsakymo duomenų."
+
+msgid "The account recovery response data is not required."
+msgstr "Paskyros atkūrimo atsakymo duomenų nereikia."
+
+msgid "The account recovery response data is required."
+msgstr "Reikalingi paskyros atkūrimo atsakymo duomenys."
+
+msgid "The user is not enrolled in the account recovery program."
+msgstr "Vartotojas nėra įtrauktas į paskyros atkūrimo programą."
+
+msgid "User account recovery settings cannot be edited."
+msgstr "Vartotojo paskyros atkūrimo nustatymų redaguoti negalima."
+
+msgid "The account recovery is mandatory and cannot be rejected."
+msgstr "Paskyros atkūrimas yra privalomas ir jo negalima atmesti."
+
+msgid "Invalid request. You cannot opt-out."
+msgstr "Neteisingas prašymas. Negalite atsisakyti."
+
+msgid "The status must be set to approved."
+msgstr "Būsena turi būti nustatyta kaip patvirtinta."
+
+msgid "Invalid request. You cannot both opt-out and provide backup."
+msgstr "Neteisingas prašymas. Negalite tuo pačiu metu atsisakyti ir pateikti atsarginę kopiją."
+
+msgid "The private key backup must be provided."
+msgstr "Būtina pateikti privačiojo rakto atsarginę kopiją."
+
+msgid "Invalid request. Private key or password are missing."
+msgstr "Neteisingas prašymas. Trūksta privataus rakto ar slaptažodžio."
+
+msgid "Could not validate private key data."
+msgstr "Nepavyko patvirtinti privataus rakto duomenų."
+
+msgid "The account recovery request identifier should be a valid UUID."
+msgstr "Paskyros atkūrimo užklausos identifikatorius turi būti galiojantis UUID."
+
+msgid "The account recovery request status is not approved."
+msgstr "Paskyros atkūrimo užklausos būsena nėra patvirtinta."
+
+msgid "Account recovery is disabled. Key backup is not supported."
+msgstr "Paskyros atkūrimas išjungtas. Rakto atsarginė kopija nepalaikoma."
+
+msgid "Account recovery is mandatory. Please provide the mandatory data."
+msgstr "Paskyros atkūrimas privalomas. Pateikite būtinus duomenis."
+
+msgid "Account Recovery Disabled"
+msgstr "Paskyros atkūrimas išjungtas"
+
+msgid "Account Recovery Enabled"
+msgstr "Paskyros atkūrimas įjungtas"
+
+msgid "The fingerprint of the organization public key is {0}."
+msgstr "Organizacijos viešojo rakto pirštų atspaudas yra {0}."
+
+msgid "Account Recovery Updated"
+msgstr "Paskyros atkūrimas atnaujintas"
+
+msgid "{0} has initiated an account recovery request"
+msgstr "{0} pradėjo paskyros atkūrimo užklausą"
+
+msgid "Recovery request"
+msgstr "Atkūrimo užklausa"
+
+msgid "{0} has initiated an account recovery request."
+msgstr "{0} pradėjo paskyros atkūrimo užklausą."
+
+msgid "Since you’re authorized to handle account recovery requests, please process this one."
+msgstr ""
+
+msgid "You will need your organization recovery key to continue."
+msgstr "Norėdami tęsti, jums reikės organizacijos atkūrimo rakto."
+
+msgid "Review the recovery request"
+msgstr "Peržiūrėkite atkūrimo užklausą"
+
+msgid "Suspicious recovery request"
+msgstr "Įtartina atkūrimo užklausa"
+
+msgid "An account recovery request was attempted from a user with client IP {0} for {1}."
+msgstr "Vartotojas, kurio kliento IP {0}, bandė pateikti paskyros atkūrimo užklausą skirtą {1}."
+
+msgid "The request could not be found in the database."
+msgstr "Prašymo rasti duomenų bazėje nepavyko."
+
+msgid "This is a potential security threat."
+msgstr "Tai galima saugumo grėsmė."
+
+msgid "You have initiated an account recovery!"
+msgstr "Pradėjote paskyros atkūrimą!"
+
+msgid "Recovery Request"
+msgstr "Atkūrimo užklausa"
+
+msgid "You just requested an account recovery."
+msgstr "Ką tik pateikėte paskyros atkūrimo užklausą."
+
+msgid "Your administrator have been informed and will follow up with you."
+msgstr "Jūsų administratorius buvo informuotas ir susisieks su jumis."
+
+msgid "If you did not make this request please inform your administrator."
+msgstr "Jei šio prašymo neteikėte, informuokite savo administratorių."
+
+msgid "You have updated a recovery request to {0}."
+msgstr "Atnaujinote atkūrimo užklausą į {0}."
+
+msgid "You have set the status of the account recovery request initiated by {0} ({1}) to {2}."
+msgstr "Nustatėte paskyros atkūrimo užklausos, kurią inicijavo {0} ({1}), būseną į {2}."
+
+msgid "{0} ({1}) has updated a recovery request to {2}."
+msgstr "{0} ({1}) atnaujino atkūrimo užklausą į {2}."
+
+msgid "{0} ({1}) has set the status of the request initiated by {2} ({3}) to {4}."
+msgstr "{0} ({1}) nustatė prašymo, kurį inicijavo {2} ({3}), būseną į {4}."
+
+msgid "{0} ({1}) has approved your recovery request."
+msgstr "{0} ({1}) patvirtino jūsų atkūrimo užklausą."
+
+msgid "Your organization recovery contacts have reviewed and approved your account recovery request."
+msgstr "Organizacijos atkūrimo kontaktai peržiūrėjo ir patvirtino jūsų paskyros atkūrimo užklausą."
+
+msgid "Please click on the link below to continue."
+msgstr "Norėdami tęsti, spustelėkite žemiau esančią nuorodą."
+
+msgid "Important"
+msgstr "Svarbu"
+
+msgid "Please use the same computer and browser that you used to initiate the request."
+msgstr "Naudokite tą patį kompiuterį ir naršyklę, kuriuos naudojote inicijuodami prašymą."
+
+msgid "Complete account recovery"
+msgstr "Užbaigti paskyros atkūrimą"
+
+msgid "{0} ({1}) has denied your recovery request."
+msgstr "{0} ({1}) atmetė jūsų atkūrimo užklausą."
+
+msgid "Your organization recovery contacts have reviewed and rejected your account recovery request."
+msgstr "Organizacijos atkūrimo kontaktai peržiūrėjo ir atmetė jūsų paskyros atkūrimo užklausą."
+
+msgid "Only administrators can view user logs."
+msgstr "Tik administratoriai gali peržiūrėti naudotojų žurnalus."
+
+msgid "The user {0} could not be added to group {1} because there is no matching directory entry in passbolt."
+msgstr "Naudotojo {0} nepavyko įtraukti į grupę {1}, nes nėra atitinkamo katalogo įrašo \"passbolt'e\"."
+
+msgid "The user {0} could not be added to the group {1} because the membership has been removed in passbolt"
+msgstr "Naudotojo {0} nepavyko įtraukti į grupę {1}, nes narystė buvo pašalinta slaptažodžiu"
+
+msgid "The user {0} was not synced with existing membership for group {1} because the membership was created before."
+msgstr "Naudotojas {0} nebuvo sinchronizuotas su esama grupės {1} naryste, nes narystė buvo sukurta anksčiau."
+
+msgid "The user {0} was successfully added to the group {1}."
+msgstr "Vartotojas {0} sėkmingai įtrauktas į grupę {1}."
+
+msgid "The user {0} could not be added to the group {1} because their account was priorly deleted in passbolt."
+msgstr "Naudotojo {0} nepavyko įtraukti į grupę {1}, nes jo paskyra anksčiau buvo ištrinta naudojant „Passbolt“."
+
+msgid "The user {0} could not be added to the group {1} because they have not yet activated their account."
+msgstr "Naudotojo {0} nepavyko įtraukti į grupę {1}, nes jis dar nesuaktyvino savo paskyros."
+
+msgid "The user {0} could not be added to the group {1} because of validation issues."
+msgstr "Naudotojo {0} nepavyko pridėti prie grupės {1} dėl patvirtinimo problemų."
+
+msgid "The user {0} could not be added to the group {1} because of an internal error."
+msgstr "Naudotojo {0} nepavyko pridėti prie grupės {1} dėl vidinės klaidos."
+
+msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
+msgstr "Naudotojo {0} negalima automatiškai pridėti prie grupės {1}. Grupės vadovui (-ams) buvo išsiųstas prašymas tai padaryti rankiniu būdu."
+
+msgid "The user {0} was successfully removed from the group {1}."
+msgstr "Naudotojas {0} sėkmingai pašalintas iš grupės {1}."
+
+msgid "The user {0} could not be removed from the group {1} because it is the only group manager."
+msgstr "Naudotojo {0} nepavyko pašalinti iš grupės {1}, nes jis yra vienintelis grupės valdytojas."
+
+msgid "The user {0} could not be removed from the group {1} because some validation issues."
+msgstr "Naudotojo {0} nepavyko pašalinti iš grupės {1} dėl tam tikrų patvirtinimo problemų."
+
+msgid "The user {0} could not be removed from the group {1} because of an internal error."
+msgstr "Naudotojo {0} nepavyko pašalinti iš grupės {1} dėl vidinės klaidos."
+
+msgid "The user {0} was successfully synced with the group {1}."
+msgstr "Naudotojas {0} sėkmingai sinchronizuotas su grupe {1}."
+
+msgid "The group {0} has been successfully renamed to {1}."
+msgstr "Grupės {0} pavadinimas sėkmingai pakeistas į {1}."
+
+msgid "The group {0} could not be renamed to {1}."
+msgstr "Nepavyko pervadinti grupės {0} į {1}."
+
+msgid "The passbolt {0} {1} was not deleted because it is marked as to be ignored."
+msgstr "Slaptažodis {0} {1} nebuvo ištrintas, nes pažymėtas kaip ignoruojamas."
+
+msgid "The directory {0} {1} was not deleted because it is ignored."
+msgstr "Katalogas {0} {1} nebuvo ištrintas, nes jo nepaisoma."
+
+msgid "The directory user {0} was already suspended in passbolt."
+msgstr "Katalogo naudotojas {0} jau buvo sustabdytas \"passbolt'e\"."
+
+msgid "The directory {0} {1} was already deleted in passbolt."
+msgstr "Katalogas {0} {1} jau buvo ištrintas \"passbolt'e\"."
+
+msgid "The user {0} could not be deleted because they are the only owner of one or more passwords."
+msgstr "Naudotojo {0} nepavyko ištrinti, nes jis yra vienintelis vieno ar daugiau slaptažodžių savininkas."
+
+msgid "The {0} {1} could not be deleted because they are the only manager of one or more groups."
+msgstr "{0} {1} nepavyko ištrinti, nes jie yra vieninteliai vienos ar kelių grupių valdytojai."
+
+msgid "The user {0} was successfully suspended."
+msgstr "Naudotojas {0} sėkmingai sustabdytas."
+
+msgid "The {0} {1} was successfully deleted."
+msgstr "{0} {1} sėkmingai ištrinta."
+
+msgid "The {0} {1} could not be suspended because of an internal error. Please try again later."
+msgstr "{0} {1} nepavyko sustabdyti dėl vidinės klaidos. Pabandykite dar kartą vėliau."
+
+msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
+msgstr "{0} {1} nepavyko ištrinti dėl vidinės klaidos. Pabandykite dar kartą vėliau."
+
+msgid "The {0} {1} was not synced because the passbolt {0} is marked as to be ignored."
+msgstr "{0} {1} nebuvo sinchronizuotas, nes slaptažodis {0} pažymėtas kaip ignoruojamas."
+
+msgid "The {0} {1} was not synced because the directory {0} is marked as to be ignored."
+msgstr "{0} {1} nebuvo sinchronizuotas, nes katalogas {0} pažymėtas kaip ignoruojamas."
+
+msgid "The {0} {1} was successfully added to passbolt."
+msgstr "{0} {1} sėkmingai pridėtas prie slaptažodžio."
+
+msgid "The {0} {1} could not be added because of data validation issues."
+msgstr "Nepavyko pridėti {0} {1} dėl duomenų tikrinimo problemų."
+
+msgid "The {0} {1} could not be added because of an internal error. Please try again later."
+msgstr "{0} {1} nepavyko pridėti dėl vidinės klaidos. Pabandykite dar kartą vėliau."
+
+msgid "The previously suspended {0} {1} was not unsuspended."
+msgstr "Anksčiau sustabdytas {0} {1} nebuvo vėl įjungtas."
+
+msgid "The previously deleted {0} {1} was not re-added to passbolt."
+msgstr "Anksčiau ištrintas {0} {1} nebuvo iš naujo pridėtas prie slaptažodžio."
+
+msgid "The previously suspended {0} {1} was unsuspended."
+msgstr "Anksčiau sustabdytas {0} {1} buvo vėl įjungtas."
+
+msgid "The previously deleted {0} {1} was re-added to passbolt."
+msgstr "Anksčiau ištrintas {0} {1} buvo iš naujo pridėtas prie slaptažodžio."
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of validation errors."
+msgstr "Ištrinto {0} {1} nepavyko iš naujo pridėti prie slaptažodžio dėl patvirtinimo klaidų."
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of an internal error."
+msgstr "Ištrinto {0} {1} nepavyko iš naujo pridėti prie slaptažodžio dėl vidinės klaidos."
+
+msgid "The {0} {1} was mapped with an existing {0} in passbolt."
+msgstr "{0} {1} buvo susietas su esamu {0} slaptažodžiu."
+
+msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after."
+msgstr "{0} {1} nepavyko susieti su esamu {0} slaptažodžiu, nes jis buvo sukurtas vėliau."
+
+msgid "The user {0} full name has been successfully updated to {1} {2}."
+msgstr "Naudotojo {0} vardas sėkmingai atnaujintas į {1} {2}."
+
+msgid "The user {0} full name could not be updated to {1} {2}."
+msgstr "Nepavyko atnaujinti vartotojo {0} vardo į {1} {2}."
+
+msgid "The record model is not valid."
+msgstr "Įrašo modelis negalioja."
+
+msgid "The record is currently ignored as part of directory synchronization."
+msgstr "Įrašas šiuo metu ignoruojamas kaip katalogų sinchronizavimo dalis."
+
+msgid "The record is currently not ignored as part of directory synchronization."
+msgstr "Įrašas šiuo metu nėra ignoruojamas kaip katalogų sinchronizavimo dalis."
+
+msgid "The record will be ignored in the next directory synchronization."
+msgstr "Kito katalogo sinchronizavimo metu įrašas bus ignoruojamas."
+
+msgid "The record id is not valid."
+msgstr "Įrašo ID negalioja."
+
+msgid "The record does not exist."
+msgstr "Įrašas neegzistuoja."
+
+msgid "The record could not be unmarked as ignored. Please try again later."
+msgstr "Įrašas negalėjo būti atžymėtas kaip ignoruojamas. Pabandykite dar kartą vėliau."
+
+msgid "The record will not be ignored in the next directory synchronization."
+msgstr "Kito katalogo sinchronizavimo metu įrašas nebus ignoruojamas."
+
+msgid "Could not validate settings."
+msgstr "Nepavyko patvirtinti nustatymų."
+
+msgid "Could not save the settings. {0}"
+msgstr "Nepavyko išsaugoti nustatymų. {0}"
+
+msgid "The directory structure cannot be retrieved."
+msgstr "Negalima gauti katalogo struktūros."
+
+msgid "There was an issue while retrieving the invalid entries."
+msgstr "Gaunant netinkamus įrašus iškilo problema."
+
+msgid "The synchronization was done successfully."
+msgstr "Sinchronizavimas buvo atliktas sėkmingai."
+
+msgid "The simulation was done successfully."
+msgstr "Modeliavimas buvo atliktas sėkmingai."
+
+msgid "Need at least one domain configuration."
+msgstr "Reikalinga bent viena domeno konfigūracija."
+
+msgid "The connection name `{0}` should not contain dots"
+msgstr "Ryšio pavadinime „{0}“ neturėtų būti taškų"
+
+msgid "Invalid connection name"
+msgstr "Netinkamas ryšio pavadinimas"
+
+msgid "The identifier of the default admin user is required."
+msgstr "Būtinas numatytojo administratoriaus vartotojo identifikatorius."
+
+msgid "The identifier of the default admin user should not be empty."
+msgstr "Numatytojo administratoriaus vartotojo identifikatoriaus laukas neturi būti tuščias."
+
+msgid "The identifier of the default admin user should be a valid UUID."
+msgstr "Numatytojo administratoriaus naudotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The admin user does not exist."
+msgstr "Administratoriaus vartotojo nėra."
+
+msgid "The identifier of the default group admin user is required."
+msgstr "Būtinas numatytojo grupės administratoriaus vartotojo identifikatorius."
+
+msgid "The identifier of the default group admin user should not be empty."
+msgstr "Numatytosios grupės administratoriaus vartotojo identifikatoriaus laukas neturi būti tuščias."
+
+msgid "The identifier of the default group admin user should be a valid UUID."
+msgstr "Numatytosios grupės administratoriaus naudotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The group admin user does not exist."
+msgstr "Grupės administratoriaus naudotojas neegzistuoja."
+
+msgid "The group object class should be a valid BMP-UTF8 string."
+msgstr "Grupės objekto klasė turi būti tinkama BMP-UTF8 eilutė."
+
+msgid "The user object class should be a valid BMP-UTF8 string."
+msgstr "Vartotojo objekto klasė turi būti tinkama BMP-UTF8 eilutė."
+
+msgid "The user path should be a valid BMP-UTF8 string."
+msgstr "Vartotojo kelias turi būti tinkama BMP-UTF8 eilutė."
+
+msgid "The group custom filter should be a valid BMP-UTF8 string."
+msgstr "Grupės pasirinktinio filtro reikšmė turi būti galiojanti BMP-UTF8 eilutė."
+
+msgid "The user custom filter should be a valid BMP-UTF8 string."
+msgstr "Naudotojo pasirinktinio filtro reikšmė turi būti galiojanti BMP-UTF8 eilutė."
+
+msgid "The email prefix/suffix setting should be a valid boolean."
+msgstr "El. pašto priešdėlio / priesagos nustatymas turi būti tinkamas loginis dydis."
+
+msgid "The email prefix should be a valid BMP-UTF8 string."
+msgstr "El. pašto priešdėlis turi būti tinkama BMP-UTF8 eilutė."
+
+msgid "The email suffix should be a valid BMP-UTF8 string."
+msgstr "El. pašto priesaga turi būti tinkama BMP-UTF8 eilutė."
+
+msgid "The users parent group should be a valid BMP-UTF8 string."
+msgstr "Pagrindinė vartotojų grupė turi būti tinkama BMP-UTF8 eilutė."
+
+msgid "The groups parent group should be a valid BMP-UTF8 string."
+msgstr "Pirminė grupių grupė turi būti tinkama BMP-UTF8 eilutė."
+
+msgid "The enabled users only setting should be a boolean."
+msgstr "Nustatymas „tik įgalinti vartotojai“ turėtų būti loginis."
+
+msgid "The sync of created users setting should be a boolean."
+msgstr "Sukurtų vartotojų sinchronizavimo nustatymas turi būti loginis."
+
+msgid "The sync of updated users setting should be a boolean."
+msgstr "Atnaujintų vartotojų sinchronizavimo nustatymas turi būti loginio tipo."
+
+msgid "The sync of deleted users setting should be a boolean."
+msgstr "Ištrintų vartotojų sinchronizavimo nustatymas turi būti loginio tipo."
+
+msgid "The sync of created groups setting should be a boolean."
+msgstr "Sukurtų grupių sinchronizavimo nustatymas turi būti loginis."
+
+msgid "The sync of deleted groups setting should be a boolean."
+msgstr "Ištrintų grupių sinchronizavimo nustatymas turi būti loginis."
+
+msgid "The sync of updated groups setting should be a boolean."
+msgstr "Atnaujintų grupių sinchronizavimo nustatymas turi būti loginis."
+
+msgid "The fields mapping should be a valid array."
+msgstr "Laukų susiejimas turi būti galiojantis masyvas."
+
+msgid "A directory type is required."
+msgstr "Reikalingas katalogo tipas."
+
+msgid "The directory type should not be empty."
+msgstr "Katalogo tipas neturi būti tuščias."
+
+msgid "The directory type should be one of the following: {0}."
+msgstr "Katalogo tipas turėtų būti vienas iš šių: {0}."
+
+msgid "A domain name is required."
+msgstr "Reikalingas domeno pavadinimas."
+
+msgid "The domain name should not be empty."
+msgstr "Domeno pavadinimas neturi būti tuščias."
+
+msgid "The domain name should be a valid BMP-UTF8 string."
+msgstr "Domeno pavadinimas turi būti tinkama BMP-UTF8 eilutė."
+
+msgid "The base DN should be a valid BMP-UTF8 string."
+msgstr "Bazinis DN (angl. \"distinguished name\") turi būti galiojanti BMP-UTF8 eilutė."
+
+msgid "At least one host is required."
+msgstr "Reikalingas bent vienas serveris."
+
+msgid "The hosts should be a valid array."
+msgstr "„hosts“ reikšmė turi būti galiojantis masyvas."
+
+msgid "The port number should not be empty."
+msgstr "Praėjimo numeris neturi būti tuščias."
+
+msgid "The port number should be between 0 and 65535"
+msgstr "Praėjimo numeris turi būti nuo 0 iki 65535"
+
+msgid "A connection type is required."
+msgstr "Būtinas ryšio tipas."
+
+msgid "The connection type should not be empty."
+msgstr "Ryšio tipo laukas neturi būti tuščias."
+
+msgid "The connection type should be one of the following: {0}."
+msgstr "Ryšio tipas turi būti vienas iš šių: {0}."
+
+msgid "An authentication type is required."
+msgstr "Būtinas autentifikavimo tipas."
+
+msgid "The authentication type should not be empty."
+msgstr "Autentifikavimo tipas neturėtų būti tuščias."
+
+msgid "The authentication type should be one of the following: {0}."
+msgstr "Autentifikavimo tipas turi būti vienas iš šių: {0}."
+
+msgid "The map for this field is required."
+msgstr "Šio lauko susiejimas būtinas."
+
+msgid "The map value should not be empty."
+msgstr "Susiejimo reikšmė neturėtų būti tuščia."
+
+msgid "The field name should be a valid BMP-UTF8 string."
+msgstr "Lauko pavadinimas turi būti galiojanti BMP-UTF8 eilutė."
+
+msgid "The map value length should be maximum {0} characters."
+msgstr "Susiejimo reikšmės ilgis turi būti ne daugiau kaip {0} simbolių."
+
+msgid "The map value should not be from forbidden fields."
+msgstr "Susiejimo reikšmė neturėtų būti iš uždraustų laukų."
+
+msgid "The map configuration for `{0}` fields is required."
+msgstr "Būtina pateikti „{0}“ laukų susiejimo konfigūraciją."
+
+msgid "The group object class length should be maximum {0} characters."
+msgstr "Grupės objekto klasės ilgis turi būti ne daugiau kaip {0} simbolių."
+
+msgid "The group object class should not be from forbidden fields."
+msgstr "Grupės objekto klasė neturėtų būti iš uždraustų laukų."
+
+msgid "The user object class length should be maximum {0} characters."
+msgstr "Vartotojo objekto klasės ilgis turi būti ne daugiau kaip {0} simbolių."
+
+msgid "The user object class should not be from forbidden fields."
+msgstr "Vartotojo objekto klasė neturėtų būti iš uždraustų laukų."
+
+msgid "The user custom filter length should be maximum {0} characters."
+msgstr "Naudotojo pasirinktinio filtro ilgis turi būti ne daugiau kaip {0} simbolių."
+
+msgid "The user custom filter contains the forbidden field."
+msgstr "Naudotojo pasirinktinio filtro reikšmėje yra uždraustas laukas."
+
+msgid "The group custom filter length should be maximum {0} characters."
+msgstr "Grupės pasirinktinio filtro ilgis turi būti ne daugiau kaip {0} simbolių."
+
+msgid "The group custom filter contains the forbidden field."
+msgstr "Grupės pasirinktinio filtro reikšmėje yra uždraustas laukas."
+
+msgid "The field fallbacks should be a valid array."
+msgstr "Lauko „fallbacks“ reikšmė turi būti teisingas masyvas."
+
+msgid "The field fallbacks should not be empty."
+msgstr "Lauko „fallbacks“ reikšmė negali būti tuščia."
+
+msgid "The field fallbacks keys should be one of the following: {0}."
+msgstr "Lauko „fallbacks“ raktai turi būti vieni iš šių: {0}."
+
+msgid "The fallback field value should be a valid BMP-UTF8 string."
+msgstr "Atsarginio lauko vertė turi būti tinkama BMP-UTF8 eilutė."
+
+msgid "The fallback field value length should be maximum {0} characters."
+msgstr "Atsarginio lauko vertės ilgis turi būti ne daugiau kaip {0} simboliai."
+
+msgid "The fallback field value should not be from forbidden fields."
+msgstr "Atsarginio lauko vertė neturi būti iš uždraustų laukų sąrašo."
+
+msgid "The directory type in fallback fields should be a valid array."
+msgstr "Katalogo tipas atsarginiuose laukuose turi būti tinkamas masyvas."
+
+msgid "Directory sync settings endpoints are disabled."
+msgstr "Katalogo sinchronizavimo nustatymų galiniai taškai išjungti."
+
+msgid "The directory name should be a valid UTF8 string."
+msgstr "Katalogo pavadinimas turi būti tinkama UTF8 eilutė."
+
+msgid "The directory_name length should be maximum {0} characters."
+msgstr "katalogo_pavadinimo ilgis turi būti daugiausia {0} simbolių."
+
+msgid "A directory name is required."
+msgstr "Reikalingas katalogo pavadinimas."
+
+msgid "The directory should not be empty."
+msgstr "Katalogas neturi būti tuščias."
+
+msgid "Could not validate directory entry data."
+msgstr "Nepavyko patvirtinti katalogo įvesties duomenų."
+
+msgid "The associated record could not be found."
+msgstr "Susieto įrašo rasti nepavyko."
+
+msgid "This record is already marked as to be ignored."
+msgstr "Šis įrašas jau pažymėtas kaip ignoruojamas."
+
+msgid "This is not a valid record to ignore."
+msgstr "Tai nėra tinkamas įrašas ignoruoti."
+
+msgid "The parent identifier should be a valid UUID."
+msgstr "Pirminis identifikatorius turi būti galiojantis UUID."
+
+msgid "A parent identifier is required."
+msgstr "Būtinas pirminis identifikatorius."
+
+msgid "The child identifier should be a valid UUID."
+msgstr "Antrinis identifikatorius turi būti galiojantis UUID."
+
+msgid "The child identifier is required."
+msgstr "Būtinas antrinis identifikatorius."
+
+msgid "Directory Settings are invalid. Please check your config and try again."
+msgstr "Katalogo nustatymai netinkami. Patikrinkite konfigūraciją ir bandykite dar kartą."
+
+msgid "New directory settings could not be saved."
+msgstr "Nepavyko išsaugoti naujų katalogo nustatymų."
+
+msgid "The endpoints for updating the users directory configurations are disabled."
+msgstr "Vartotojų katalogo konfigūracijų naujinimo galiniai taškai yra išjungti."
+
+msgid "The endpoints for updating the users directory configurations are enabled."
+msgstr "Vartotojų katalogo konfigūracijų naujinimo galiniai taškai yra įjungti."
+
+msgid "It is recommended to disable endpoints for updating the users directory configurations."
+msgstr "Rekomenduojama išjungti vartotojų katalogo konfigūracijų naujinimo galinius taškus."
+
+msgid "Set the PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED environment variable to true."
+msgstr "Nustatykite PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED aplinkos kintamąjį į true."
+
+msgid "Or set {0} to true in {1}."
+msgstr "Arba nustatykite {0} į true faile {1}."
+
+msgid "SSL certification verification for LDAP server is enabled."
+msgstr "SSL sertifikato tikrinimas LDAP serveriui įjungtas."
+
+msgid "SSL certification verification for LDAP server is disabled."
+msgstr "SSL sertifikato tikrinimas LDAP serveriui išjungtas."
+
+msgid "Disabling the ssl verify check can lead to security attacks."
+msgstr "Išjungus ssl patikros tikrinimą gali kilti saugumo atakų."
+
+msgid "Attacker can alter the certificate and can perform man-in-the-middle attack."
+msgstr "Puolėjas gali pakeisti sertifikatą ir atlikti \"man-in-the-middle\" ataką."
+
+msgid "To fix this, you can set PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER environment variable to true."
+msgstr "Norėdami išspręsti šią problemą, nustatykite PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER aplinkos kintamąjį į true."
+
+msgid "Or set passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer to true in {0}."
+msgstr "Arba faile {0} nustatykite passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer į true."
+
+msgid "A mapping rule for username attribute could not be found for directory type: {0}"
+msgstr "Nepavyko rasti naudotojo vardo atributo susiejimo taisyklės katalogo tipui: {0}"
+
+msgid "A mapping rule for ID attribute could not be found for directory type: {0}"
+msgstr "Nepavyko rasti ID atributo susiejimo taisyklės katalogo tipui: {0}"
+
+msgid "Mapping rules could not be found for directory type: {0}"
+msgstr "Nepavyko rasti susiejimo taisyklių katalogo tipui: {0}"
+
+msgid "A group name is required."
+msgstr "Reikalingas grupės pavadinimas."
+
+msgid "A group member does not match the expected DN format."
+msgstr "Grupės narys neatitinka numatyto DN (domeno pavadinimo) formato."
+
+msgid "The {0} configuration should be a valid string"
+msgstr "{0} konfigūracija turi būti tinkama eilutė"
+
+msgid "Invalid directory type for domain: {0}"
+msgstr "Netinkamas katalogo tipas domenui: {0}"
+
+msgid "Directory type could not be found for domain: {0}"
+msgstr "Nepavyko rasti katalogo tipo domenui: {0}"
+
+msgid "LDAP Object class could not be found: {0}"
+msgstr "Nepavyko rasti LDAP objekto klasės: {0}"
+
+msgid "SSO"
+msgstr "SSO"
+
+msgid "Directory Sync"
+msgstr "Katalogo sinchronizavimas"
+
+msgid "SCIM"
+msgstr "SCIM"
+
+msgid "Only administrators are allowed to create/update MFA policies settings."
+msgstr "Tik administratoriams leidžiama kurti/atnaujinti kelių veiksnių autentifikavimo MFA politikos nustatymus."
+
+msgid "Could not validate the MFA policies settings."
+msgstr "Nepavyko patvirtinti kelių veiksnių autentifikavimo MFA politikos nustatymų."
+
+msgid "The policy field is required."
+msgstr "Būtinas politikos laukas."
+
+msgid "The type of the policy should be one of the following: {0}."
+msgstr "Politikos tipas turi būti vienas iš šių: {0}."
+
+msgid "The remember me for a month field is required."
+msgstr "Reikalingas laukas „prisiminti mėnesiui“."
+
+msgid "The remember me for a month should be a boolean type."
+msgstr "„Prisiminti mėnesiui“ turėtų būti loginio tipo."
+
+msgid "You edited the MFA policy"
+msgstr "Redagavote MFA politiką"
+
+msgid "{0} edited the MFA policy"
+msgstr "{0} redagavo MFA politiką"
+
+msgid "The MFA policy has been updated, the new configuration is as follow:"
+msgstr "MFA politika atnaujinta, naujoji konfigūracija yra tokia:"
+
+msgid "Policy: {0}"
+msgstr "Politika: {0}"
+
+msgid "Remember me for a month: {0}"
+msgstr "Prisiminti mėnesiui: {0}"
+
+msgid "Some of your passwords are expired."
+msgstr "Kai kurie jūsų slaptažodžiai pasibaigę."
+
+msgid "Some of your passwords are expiring in {0} days."
+msgstr "Kai kurie jūsų slaptažodžiai baigs galioti po {0} dienų."
+
+msgid "Some of your passwords are expired or expiring in {0} days."
+msgstr "Kai kurie jūsų slaptažodžiai yra pasibaigę arba baigs galioti po {0} dienų."
+
+msgid "The send password about to expire setting should be a boolean."
+msgstr "Nustatymas „Siųsti įspėjimą apie besibaigiantį slaptažodį“ turėtų būti loginis."
+
+msgid "Password expiry email notifications are disabled."
+msgstr "Slaptažodžio galiojimo el. laiškų pranešimai išjungti."
+
+msgid "An array of arrays is expected."
+msgstr "Tikimasi masyvo, sudaryto iš masyvų."
+
+msgid "The expiry date is required."
+msgstr "Reikalingas galiojimo laikas."
+
+msgid "The identifier should be unique: {0}."
+msgstr "Identifikatorius turi būti unikalus: {0}."
+
+msgid "You are not allowed to update these resources."
+msgstr "Jums neleidžiama atnaujinti šių šaltinių."
+
+msgid "You are not allowed to update this resource: {0}"
+msgstr "Jums neleidžiama atnaujinti šio šaltinio: {0}"
+
+msgid "The resource with ID {0} does not exist."
+msgstr "Išteklis su ID {0} neegzistuoja."
+
+msgid "You edited the password policy"
+msgstr "Redagavote slaptažodžio politiką"
+
+msgid "{0} edited the password policy"
+msgstr "{0} redagavo slaptažodžio politiką"
+
+msgid "Only administrators are allowed to create/update password policies settings."
+msgstr "Tik administratoriai gali kurti/atnaujinti slaptažodžių politikos nustatymus."
+
+msgid "The password policy settings has been updated by {0}."
+msgstr "Slaptažodžio politikos nustatymus atnaujino {0}."
+
+msgid "you"
+msgstr "jūs "
+
+msgid "view it in passbolt"
+msgstr "peržiūrėkite jį „passbolt'e“."
+
+msgid "The SCIM setting id should be a valid UUID."
+msgstr "SCIM nustatymo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the default user should be a valid UUID."
+msgstr "Numatytojo naudotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The user is not active, disabled or does not exist."
+msgstr "Naudotojas neaktyvus, išjungtas arba neegzistuoja."
+
+msgid "The Setting ID cannot be passed on update."
+msgstr "Nustatymo ID negali būti perduodamas atnaujinant."
+
+msgid "The secret token should not be empty."
+msgstr "Slaptas prieigos tokenas neturėtų būti tuščias."
+
+msgid "The ID for the SCIM settings should not be empty."
+msgstr "SCIM nustatymų ID neturėtų būti tuščias."
+
+msgid "The ID for the SCIM settings should be a valid UUID."
+msgstr "SCIM nustatymų ID turi būti galiojantis UUID."
+
+msgid "The SCIM secret token is expired, you are requested to rotate it."
+msgstr ""
+
+msgid "Simultaneous SCIM and session authentication is not permitted."
+msgstr "Simultaniškas SCIM ir sesijos autentifikavimas neleidžiamas."
+
+msgid "SCIM settings endpoints are disabled."
+msgstr "SCIM nustatymų galiniai taškai išjungti."
+
+msgid "An entry for the same related entity already exists"
+msgstr "Įrašas tai pačiai susijusiai esybei jau egzistuoja."
+
+msgid "An entry with the same `scim_name` and `foreign_model` already exist."
+msgstr ""
+
+msgid "Users"
+msgstr "Vartotojai"
+
+msgid "Groups"
+msgstr "Grupės"
+
+msgid "The secret token format is incorrect."
+msgstr "Slapto prieigos tokeno formatas neteisingas."
+
+msgid "SCIM plugin is enabled."
+msgstr "SCIM papildinys įjungtas."
+
+msgid "SCIM plugin is disabled."
+msgstr "SCIM papildinys išjungtas."
+
+msgid "The SCIM secret token is not expired."
+msgstr ""
+
+msgid "Rotate the SCIM secret token in the administration settings."
+msgstr ""
+
+msgid "The SCIM settings could not be decrypted with the server gpg key."
+msgstr "Nepavyko iššifruoti SCIM nustatymų naudojant serverio GPG raktą."
+
+msgid "The SCIM settings could not be encrypted with the server gpg key."
+msgstr "Nepavyko užšifruoti SCIM nustatymų naudojant serverio GPG raktą."
+
+msgid "Could not validate the SCIM settings found in database."
+msgstr "Nepavyko patvirtinti duomenų bazėje rastų SCIM nustatymų."
+
+msgid "The SCIM setting identifier should be a valid UUID."
+msgstr "SCIM nustatymo identifikatorius turi būti galiojantis UUID."
+
+msgid "Could not validate the SCIM settings."
+msgstr "Nepavyko patvirtinti SCIM nustatymų."
+
+msgid "The SCIM plugin is disabled."
+msgstr "SCIM papildinys išjungtas."
+
+msgid "Please delete previous settings before creating again."
+msgstr "Prieš sukurdami iš naujo, ištrinkite ankstesnius nustatymus."
+
+msgid "The uuid in the url doesn't match any known setting record."
+msgstr "URL esantis uuid nesutampa su jokiu žinomu nustatymo įrašu."
+
+msgid "The SCIM secret token expiry configuration is invalid."
+msgstr ""
+
+msgid "Missing or invalid SCIM user in configuration settings"
+msgstr ""
+
+msgid "An unexpected error occurred while creating the user in the database"
+msgstr ""
+
+msgid "An administrator user cannot be suspended via SCIM."
+msgstr ""
+
+msgid "Email"
+msgstr "Elektroninis paštas"
+
+msgid "External id"
+msgstr "Išorinis ID"
+
+msgid "Invalid Schema"
+msgstr "Netinkama schema"
+
+msgid "Invalid ResourceType"
+msgstr "Netinkamas ResourceType"
+
+msgid "SsoRecover plugin is disabled."
+msgstr "SsoRecover įskiepis išjungtas."
+
+msgid "The SSO state type is invalid."
+msgstr "SSO būsenos tipas neteisingas."
+
+msgid "CSRF issue. The state in URL and Cookies do not match."
+msgstr "CSRF problema. URL ir slapukų būsena nesutampa.\n"
+
+msgid "CSRF issue. The state in request data does not match with cookie value."
+msgstr "CSRF klaida. Duomenų prašyme esanti būsena nesutampa su slapuko verte."
+
+msgid "The state is required in cookie."
+msgstr "Slapuke būtina nurodyti būseną.\n"
+
+msgid "The token is required in URL parameters."
+msgstr "Ženklas būtinas URL parametruose.\n"
+
+msgid "The state is required in URL parameters."
+msgstr "Būseną būtina nurodyti URL parametruose.\n"
+
+msgid "The code is required in URL parameters."
+msgstr "Kodas būtinas URL parametruose.\n"
+
+msgid "The code is required in request data."
+msgstr "Prašyme būtina nurodyti kodą."
+
+msgid "The user id is required in URL parameters."
+msgstr "URL parametruose būtinas vartotojo ID.\n"
+
+msgid "The settings id is required in URL parameters."
+msgstr "Nustatymų ID būtinas URL parametruose.\n"
+
+msgid "The user does not exist or is not active."
+msgstr "Vartotojo nėra arba jis nėra aktyvus."
+
+msgid "The SSO setting does not exist."
+msgstr "SSO nustatymas neegzistuoja."
+
+msgid "Information about the key is required."
+msgstr "Reikalinga informacija apie raktą."
+
+msgid "The SSO key id should be a uuid."
+msgstr "SSO rakto ID turėtų būti uuid.\n"
+
+msgid "The key could not be found"
+msgstr "Raktas nerastas"
+
+msgid "The SSO setting id should be a uuid."
+msgstr "SSO nustatymo ID turėtų būti uuid.\n"
+
+msgid "The SSO settings were activated."
+msgstr "SSO nustatymai buvo suaktyvinti."
+
+msgid "The draft setting was saved."
+msgstr "Juodraščio nustatymas išsaugotas.\n"
+
+msgid "The SSO settings were deleted."
+msgstr "SSO nustatymai buvo ištrinti."
+
+msgid "Ajax/Json request not supported."
+msgstr "Ajax/Json užklausa nepalaikoma."
+
+msgid "A provider is required."
+msgstr "Būtinas tiekėjas."
+
+msgid "The provider is not supported."
+msgstr "Tiekėjas nepalaikomas."
+
+msgid "Data is required."
+msgstr "Reikalingi duomenys."
+
+msgid "Data must be an array of properties."
+msgstr "Duomenys turi būti ypatybių masyvas.\n"
+
+msgid "The email claim should not be empty."
+msgstr "Reikšmė email claim neturėtų būti tuščia."
+
+msgid "The email claim is too large."
+msgstr "El. pašto teiginys per didelis."
+
+msgid "The email claim should be one of the following: {0}."
+msgstr "Email claim reikšmė turi būti viena iš šių: {0}."
+
+msgid "A URL is required."
+msgstr "Reikalingas URL."
+
+msgid "The URL should not be empty."
+msgstr "URL neturėtų būti tuščias."
+
+msgid "The URL is not supported."
+msgstr "URL nepalaikomas."
+
+msgid "A tenant id is required."
+msgstr "Reikalinga laikinojo valdytojo identifikacija."
+
+msgid "The tenant id should not be empty."
+msgstr "Laikinojo valdytojo identifikacija neturėtų būti tuščia.\n"
+
+msgid "The tenant id should be a valid UUID."
+msgstr "Laikinojo valdytojo identifikacija turi būti galiojantis UUID."
+
+msgid "A client id is required."
+msgstr "Reikalinga kliento identifikacija. "
+
+msgid "The client id should not be empty."
+msgstr "Kiliento identifikacija neturėtų būti tuščia.\n"
+
+msgid "The client id should be a valid UUID."
+msgstr "Kliento Identifikacija turi būti galiojantis UUID.\n"
+
+msgid "A client secret is required."
+msgstr "Būtina kliento paslaptis.\n"
+
+msgid "The client secret should be a valid string."
+msgstr "Kliento paslaptis turi būti tinkama eilutė.\n"
+
+msgid "The client secret is too large."
+msgstr "Kliento paslaptis per didelė.\n"
+
+msgid "A client secret expiry is required."
+msgstr "Būtinas kliento paslapties galiojimo laikas.\n"
+
+msgid "The expiry should not be empty."
+msgstr "Galiojimo laikas neturi būti tuščias.\n"
+
+msgid "The prompt should not be empty."
+msgstr "Raginimas neturėtų būti tuščias."
+
+msgid "The prompt should be one of the following: {0}."
+msgstr "Raginimas turi būti vienas iš šių: {0}."
+
+msgid "The login hint should be a boolean."
+msgstr "Prisijungimo užuomina turi būti loginė reikšmė."
+
+msgid "The client id is too large."
+msgstr "Kliento ID per didelis."
+
+msgid "A base URL is required."
+msgstr "Reikalingas bazinis URL."
+
+msgid "The base URL should not be empty."
+msgstr "Bazinis URL neturėtų būti tuščias."
+
+msgid "The base URL is too large."
+msgstr "Bazinis URL per didelis."
+
+msgid "The OpenID configuration path should be a valid BMP-UTF8 string."
+msgstr "OpenID konfigūracijos kelias turi būti galiojanti BMP-UTF8 eilutė."
+
+msgid "The OpenID configuration path is too large."
+msgstr "OpenID konfigūracijos kelias per didelis."
+
+msgid "The client id should be a valid BMP-UTF8 string."
+msgstr "Kliento ID turėtų būti galiojanti BMP-UTF8 eilutė."
+
+msgid "The scope should be a valid string."
+msgstr "Reikšmė „scope“ turi būti tinkama eilutė."
+
+msgid "The scope is too large."
+msgstr "Reikšmė „scope“ per didelė."
+
+msgid "The URL must be a valid PingOne authentication domain."
+msgstr ""
+
+msgid "An environment id is required."
+msgstr ""
+
+msgid "The environment id should not be empty."
+msgstr ""
+
+msgid "The environment id should be a valid UUID."
+msgstr ""
+
+msgid "SSO settings edit endpoints are disabled."
+msgstr "SSO nustatymų redagavimo galiniai taškai išjungti."
+
+msgid "The user is not active."
+msgstr "Vartotojas neaktyvus."
+
+msgid "The status length is not supported."
+msgstr "Būsenos ilgis nepalaikomas.\n"
+
+msgid "The status is not supported."
+msgstr "Būsena nepalaikoma.\n"
+
+msgid "The nonce should be a valid ASCII string."
+msgstr "„nonce“ turi būti galiojanti ASCII eilutė."
+
+msgid "The nonce length should be minimum {0} characters."
+msgstr "„nonce“ ilgis turi būti ne mažiau nei {0} simbolių."
+
+msgid "The nonce length should be maximum {0} characters."
+msgstr "„nonce“ ilgis turi būti ne daugiau kaip {0} simbolių."
+
+msgid "A nonce is required."
+msgstr "Reikalingas „nonce“."
+
+msgid "The nonce should not be empty."
+msgstr "„nonce“ neturėtų būti tuščias."
+
+msgid "The type length should be maximum {0} characters."
+msgstr "Tipo ilgis turi būti ne daugiau kaip {0} simbolių."
+
+msgid "The state should be a valid ASCII string."
+msgstr "Būsena turi būti galiojanti ASCII eilutė."
+
+msgid "The state length should be minimum {0} characters."
+msgstr "Būsenos ilgis turi būti ne mažiau nei {0} simbolių."
+
+msgid "The state length should be maximum {0} characters."
+msgstr "Būsenos ilgis turi būti ne daugiau kaip {0} simbolių."
+
+msgid "The SSO settings identifier should be a valid UUID."
+msgstr "SSO nustatymų identifikatorius turi būti galiojantis UUID."
+
+msgid "The SSO settings identifier should not be empty."
+msgstr "SSO nustatymų identifikatorius neturėtų būti tuščias."
+
+msgid "The user agent should be a valid ASCII string."
+msgstr "Naudotojo agentas turi būti galiojanti ASCII eilutė."
+
+msgid "The user agent length should be maximum {0} characters."
+msgstr "Naudotojo agento ilgis turi būti ne daugiau nei {0} simbolių."
+
+msgid "A user agent is required."
+msgstr "Reikalingas naudotojo agentas."
+
+msgid "The user agent should not be empty."
+msgstr "Naudotojo agentas neturėtų būti tuščias."
+
+msgid "The IP length should be maximum {0} characters."
+msgstr "IP ilgis turi būti ne daugiau nei {0} simbolių."
+
+msgid "An IP is required."
+msgstr "Reikalingas IP."
+
+msgid "The IP should not be empty."
+msgstr "IP neturėtų būti tuščias."
+
+msgid "This nonce is already in use."
+msgstr "Šis „nonce“ jau naudojamas."
+
+msgid "This state is already in use."
+msgstr "Ši būsena jau naudojama."
+
+msgid "The SSO setting identifier does not exist."
+msgstr "Tokio SSO nustatymų identifikatoriaus nėra."
+
+msgid "The user identifier does not exist."
+msgstr "Nėra tokio vartotojo identifikatoriaus."
+
+msgid "The provided nonce is invalid."
+msgstr "Pateiktas „nonce“ neteisingas."
+
+msgid "The URL should start with https://"
+msgstr "URL turėtų prasidėti „https://“"
+
+msgid "The provided state is invalid."
+msgstr "Pateikta būsena neteisinga."
+
+msgid "The type of the SSO state is invalid."
+msgstr "SSO būsenos tipas neteisingas."
+
+msgid "{0} activated the SSO setting"
+msgstr "{0} suaktyvino SSO nustatymą"
+
+msgid "{0} deleted the SSO setting"
+msgstr "{0} ištrynė SSO nustatymą"
+
+msgid "Users are unable to log in via Azure SSO"
+msgstr "Naudotojai negali prisijungti per Azure SSO"
+
+msgid "Single sign-on failed."
+msgstr "Vienkartinis prisijungimas nepavyko."
+
+msgid "Provider error: \"{0}\""
+msgstr "Teikėjo klaida: „{0}“\n"
+
+msgid "Azure SSO secret expiry date is near"
+msgstr "Netrukus baigsis Azure SSO slapties galiojimo laikas"
+
+msgid "SSL certification validation for SSO instance is enabled."
+msgstr "SSL sertifikavimo patikra SSO egzemplioriui įjungta."
+
+msgid "SSL certification validation for SSO instance is disabled."
+msgstr "SSL sertifikavimo patikra SSO egzemplioriui išjungta."
+
+msgid "To fix this, you can set PASSBOLT_SECURITY_SSO_SSL_VERIFY environment variable to true."
+msgstr "Norėdami tai ištaisyti, galite nustatyti PASSBOLT_SECURITY_SSO_SSL_VERIFY aplinkos kintamąjį į true."
+
+msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
+msgstr "Arba nustatykite passbolt.security.sso.sslVerify į true faile {0}."
+
+msgid "The endpoints for updating the SSO configurations are disabled."
+msgstr "SSO konfigūracijų atnaujinimo galiniai taškai yra išjungti."
+
+msgid "The endpoints for updating the SSO configurations are enabled."
+msgstr "SSO konfigūracijų atnaujinimo galiniai taškai yra įjungti."
+
+msgid "It is recommended to disable endpoints for updating the SSO configurations."
+msgstr "Rekomenduojama išjungti SSO konfigūracijų atnaujinimo galinius taškus."
+
+msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
+msgstr "Nustatykite aplinkos kintamąjį PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED į true."
+
+msgid "The user is missing for the SSO state."
+msgstr "SSO būsenai trūksta vartotojo."
+
+msgid "Email not provided by provider."
+msgstr "El. pašto adresas nepateiktas teikėjo.\n"
+
+msgid "Username mismatch."
+msgstr "Vartotojo vardo neatitikimas."
+
+msgid "Invalid nonce."
+msgstr "Neteisingas „nonce“."
+
+msgid "Invalid provider. Expected AD FS."
+msgstr "Neteisingas teikėjas. Tikėtasi AD FS."
+
+msgid "Invalid provider data. Expected AD FS settings."
+msgstr "Neteisingi teikėjo duomenys. Tikėtasi AD FS nustatymai."
+
+msgid "No valid SSO settings found."
+msgstr "Nerasta galiojančių SSO nustatymų."
+
+msgid "You must authenticate with Azure again."
+msgstr "Turite dar kartą prisijungti prie Azure."
+
+msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
+msgstr "Neteisinga vertė pateikta `passbolt.security.sso.sslCafile` konfigūracijoje"
+
+msgid "Provided root CA file does not exist"
+msgstr "Pateiktas šakninis CA failas neegzistuoja"
+
+msgid "Invalid provider. Expected PingOne."
+msgstr ""
+
+msgid "Invalid provider data. Expected PingOne settings."
+msgstr ""
+
+msgid "The user id should be a valid UUID."
+msgstr "Vartotojo ID turi būti galiojantis UUID."
+
+msgid "The authentication token does not exist."
+msgstr "Autentifikavimo prieigos rakto nėra."
+
+msgid "The SSO authentication token is invalid."
+msgstr "SSO autentifikavimo prieigos raktas neteisingas."
+
+msgid "Settings id is missing."
+msgstr "Trūksta nustatymų ID."
+
+msgid "User id mismatch."
+msgstr "Vartotojo ID neatitinka."
+
+msgid "Token IP is missing."
+msgstr "Trūksta prieigos rakto IP."
+
+msgid "User IP mismatch."
+msgstr "Vartotojo IP neatitinka."
+
+msgid "User agent is missing."
+msgstr "Trūksta naudotojo agento."
+
+msgid "User agent mismatch."
+msgstr "Naudotojo agentas neatitinka."
+
+msgid "Settings mismatch."
+msgstr "Nustatymai neatitinka."
+
+msgid "The SSO key could not be saved."
+msgstr "Nepavyko išsaugoti SSO rakto."
+
+msgid "The SSO key does not exist."
+msgstr "SSO rakto nėra."
+
+msgid "The SSO key could not be deleted."
+msgstr "Nepavyko ištrinti SSO rakto."
+
+msgid "Could not update the SSO settings."
+msgstr "Nepavyko atnaujinti SSO nustatymų."
+
+msgid "The settings status is invalid."
+msgstr "Nustatymų būsena netinkama."
+
+msgid "Invalid status."
+msgstr "Neteisinga būsena."
+
+msgid "Could not delete the SSO settings."
+msgstr "Nepavyko ištrinti SSO nustatymų."
+
+msgid "Could not delete the draft SSO settings."
+msgstr "Nepavyko ištrinti SSO juodraščio nustatymų."
+
+msgid "The SSO settings do not exist."
+msgstr "SSO nustatymų nėra."
+
+msgid "The SSO setting cannot be decrypted."
+msgstr "Nepavyksta iššifruoti SSO nustatymo."
+
+msgid "The SSO setting cannot be decoded."
+msgstr "Nepavyksta dekoduoti SSO nustatymo."
+
+msgid "Only administrators can create SSO settings."
+msgstr "Tik administratoriai gali kurti SSO nustatymus."
+
+msgid "Something went wrong when validating the single-sign on settings."
+msgstr "Kažkas nepavyko tikrinant vieno prisijungimo nustatymus."
+
+msgid "It is not possible to save the SSO settings."
+msgstr "Neįmanoma išsaugoti SSO nustatymų."
+
+msgid "The SSO state is invalid."
+msgstr "SSO būsena neteisinga."
+
+msgid "The SSO state is expired."
+msgstr "SSO būsena baigėsi."
+
+msgid "The SSO state could not be saved."
+msgstr "Nepavyko išsaugoti SSO būsenos."
+
+msgid "The SSO state does not exist."
+msgstr "SSO būsenos nėra."
+
+msgid "Could not save the SSO state, invalid nonce."
+msgstr "Nepavyko išsaugoti SSO būsenos, „nonce“ neteisingas."
+
+msgid "Could not save the SSO state, please try again later."
+msgstr "Nepavyko išsaugoti SSO būsenos, bandykite dar kartą vėliau."
+
+msgid "The {0} claim is not present, please contact your administrator."
+msgstr "Nėra {0} claim reikšmės, kreipkitės į administratorių."
+
+msgid "Cannot parse JWKS endpoint response."
+msgstr "Nepavyksta išanalizuoti JWKS galinio taško atsakymo."
+
+msgid "Invalid JWKS endpoint response. Keys missing."
+msgstr "Neteisingas JWKS galinio taško atsakymas. Trūksta raktų."
+
+msgid "Failed to read certificate: {0}"
+msgstr "Nepavyko perskaityti sertifikato: {0}"
+
+msgid "Failed to read public key from certificate: {0}"
+msgstr "Nepavyko perskaityti viešojo rakto iš sertifikato: {0}"
+
+msgid "Failed to public key properties from certificate: {0}"
+msgstr "Nepavyko gauti viešojo rakto savybių iš sertifikato: {0}"
+
+msgid "JWT token is missing."
+msgstr "Trūksta JWT prieigos rakto."
+
+msgid "Unable to decode JWT token."
+msgstr "Nepavyksta dekoduoti JWT prieigos rakto."
+
+msgid "The {0} configuration value should be a string or NULL."
+msgstr "{0} konfigūracijos reikšmė turi būti eilutė arba NULL."
+
+msgid "The {0} configuration value should be one of the following: {1}."
+msgstr "{0} konfigūracijos reikšmė turi būti viena iš šių: {1}."
+
+msgid "Single-sign on was a success"
+msgstr "Vieno prisijungimo autentifikavimas pavyko"
+
+msgid "Users are unable to log in via Azure SSO."
+msgstr "Naudotojai negali prisijungti per Azure SSO."
+
+msgid "This can happen when the client secret of Azure AD is expired, or the SSO configurations (client credentials) are invalid."
+msgstr "Taip gali nutikti, jei Azure AD slaptis nebegalioja, arba SSO konfigūracijos (kliento kredencialai) yra neteisingos."
+
+msgid "See Azure error response below:"
+msgstr "Žr. „Azure“ klaidos atsakymą žemiau:"
+
+msgid "Error: {0}"
+msgstr "Klaida: {0}"
+
+msgid "Error description: {0}"
+msgstr "Klaidos aprašymas: {0}"
+
+msgid "To fix this, you as an administrator have to update the Azure SSO credentials."
+msgstr "Norėdami tai ištaisyti, jūs, kaip administratorius, turite atnaujinti Azure SSO prisijungimo duomenis."
+
+msgid "Update it in passbolt"
+msgstr "Atnaujinkite tai „Passbolt“ sistemoje"
+
+msgid "The client secret expiry date of your Azure AD instance is {0}."
+msgstr "Jūsų Azure AD egzemplioriaus slapties galiojimo laikas yra {0}."
+
+msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
+msgstr "Atkreipkite dėmesį, kad „Passbolt“ naudotojai negalės prisijungti per Azure SSO pasibaigus slapties galiojimo laikui."
+
+msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
+msgstr "Patariame išspręsti šią problemą Azure pusėje ir atnaujinti naujausią informaciją „Passbolt“ sistemoje."
+
+msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
+msgstr "SSO teikėjas {0} sėkmingai išbandytas ir suaktyvintas naudotojo {1}. "
+
+msgid "All users can now use Single Sign-on to perform authentication."
+msgstr "Dabar visi vartotojai gali naudoti vieno prisijungimo funkciją autentifikacijai."
+
+msgid "Viewq  it in passbolt"
+msgstr "Peržiūrėkite „passbolt'e“"
+
+msgid "The SSO setting has been deleted by {0}."
+msgstr "SSO nustatymą ištrynė {0}."
+
+msgid "The authentication token does not exist or has been deleted."
+msgstr "Autentifikavimo prieigos rakto nėra arba jis buvo ištrintas."
+
+msgid "The authentication token has been expired."
+msgstr "Baigėsi autentifikavimo prieigos rakto galiojimo laikas."
+
+msgid "Could not validate the SSO recover request."
+msgstr "Nepavyko patvirtinti SSO atkūrimo užklausos."
+
+msgid "The email is required in URL parameters."
+msgstr "El. paštas būtinas URL parametruose."
+
+msgid "The case field is required."
+msgstr "Būtinas laukas „case“."
+
+msgid "The case is not supported. Only \"default\" case is supported."
+msgstr "Formatas „case“ nepalaikomas. Palaikomas tik „default“."
+
+msgid "The token field is required."
+msgstr "Būtinas „token“ laukas."
+
+msgid "Access to this service requires an invitation. "
+msgstr "Norint pasiekti šią paslaugą, reikia pakvietimo. "
+
+msgid "Please contact your administrator to request an invitation link."
+msgstr "Susisiekite su administratoriumi ir paprašykite kvietimo nuorodos."
+
+msgid "Subscription key data is required."
+msgstr "Reikalingi prenumeratos rakto duomenys."
+
+msgid "The subscription was created."
+msgstr "Prenumerata sukurta."
+
+msgid "The subscription was updated."
+msgstr "Prenumerata buvo atnaujinta."
+
+msgid "The subscription is valid."
+msgstr "Prenumerata galioja."
+
+msgid "Subscription key could not be found."
+msgstr "Nepavyko rasti prenumeratos rakto."
+
+msgid "The subscription cannot be verified. Parse error."
+msgstr "Prenumeratos negalima patvirtinti. Analizavimo klaida."
+
+msgid "The subscription format is not valid. Invalid format."
+msgstr "Prenumeratos formatas negalioja. Netinkamas formatas."
+
+msgid "The subscription key cannot be verified."
+msgstr "Prenumeratos rakto patvirtinti negalima."
+
+msgid "The passbolt OpenPGP public key could not be found."
+msgstr "Nepavyko rasti slaptažodžio OpenPGP viešojo rakto."
+
+msgid "A users quantity is required."
+msgstr "Reikalingas vartotojų kiekis."
+
+msgid "The users quantity should not be empty."
+msgstr "Reikalingas vartotojų kiekis."
+
+msgid "The users limit is exceeded."
+msgstr "Viršytas naudotojų limitas."
+
+msgid "The key should have been created in the past."
+msgstr "Raktas turėjo būti sukurtas praeityje."
+
+msgid "An expiry date is required."
+msgstr "Reikalingas galiojimo laikas."
+
+msgid "The subscription is expired."
+msgstr "Prenumerata pasibaigė."
+
+msgid "A customer identifier is required."
+msgstr "Būtinas kliento identifikatorius."
+
+msgid "A subscription identifier is required."
+msgstr "Reikalingas prenumeratos identifikatorius."
+
+msgid "The format of the subscription id is not valid."
+msgstr "Netinkamas prenumeratos identifikatoriaus formatas. "
+
+msgid "Only admin can create or update subscription information."
+msgstr "Tik administratorius gali kurti arba atnaujinti prenumeratos informaciją."
+
+msgid "The subscription key format is not valid."
+msgstr "Prenumeratos rakto formatas netinkamas."
+
+msgid "Subscription is valid and up to date."
+msgstr "Prenumerata galiojanti ir atnaujinta."
+
+msgid "Subscription cannot be found or is invalid/expired."
+msgstr "Prenumerata nerasta arba ji negaliojanti / pasibaigusi."
+
+msgid "Subscription invalid/expired ({0})."
+msgstr "Prenumerata negaliojanti / pasibaigusi ({0})."
+
+msgid "Subscription expired ({0})."
+msgstr "Prenumerata pasibaigė ({0})."
+
+msgid "Subscription user count has been exceeded ({0}/{1})."
+msgstr "Viršytas prenumeratos vartotojų skaičius ({0}/{1})."
+
+msgid "Subscription will expire in {0} days."
+msgstr "Prenumeratos galiojimas baigsis už {0} dienų."
+
+msgid "Subscription soon exceeds user count ({0}/{1})."
+msgstr "Prenumeratoje greitai bus viršytas vartotojų skaičius ({0}/{1})."
+
+msgid "Subscription invalid or expired."
+msgstr "Prenumerata negaliojanti arba pasibaigusi."
+
+msgid "Subscription key format error."
+msgstr "Prenumeratos rakto formato klaida."
+
+msgid "Subscription key signature error."
+msgstr "Prenumeratos rakto parašo klaida."
+
+msgid "Subscription key validation error."
+msgstr "Prenumeratos rakto patvirtinimo klaida."
+
+msgid "It looks like you could use some help."
+msgstr "Panašu, kad jums praverstų pagalba."
+
+msgid "We are here for you. You can contact us at sales@passbolt.com"
+msgstr "Mes esame pasiruošę padėti. Su mumis galite susisiekti adresu sales@passbolt.com"
+
+msgid "Thanks for choosing Passbolt Pro"
+msgstr "Ačiū, kad pasirinkote „Passbolt Pro“"
+
+msgid "Below are your subscription key details"
+msgstr "Žemiau pateikiamos jūsų prenumeratos rakto detalės"
+
+msgid "<error>Not Available</error>"
+msgstr "<error>Nepasiekiama</error>"
+
+msgid "Customer id:\t{0}"
+msgstr "Vartotojo id:\t{0}"
+
+msgid "<error>{0} (currently: {1}) - Exceeded</error>"
+msgstr "<error>{0} (šiuo metu: {1}) - viršyta</error>"
+
+msgid "<info>{0} (currently: {1})</info>"
+msgstr "<info>{0} (šiuo metu: {1})</info>"
+
+msgid "Users limit:\t{0}"
+msgstr "Vartotojų apribojimas:\t{0}"
+
+msgid "Valid from:\t<info>{0}</info>"
+msgstr "Galioja nuo:\t<info>{0}</info>"
+
+msgid "Expires on:\t<error>{0} (expired)</error>"
+msgstr "Galioja iki:\t<error>{0} (pasibaigęs)</error>"
+
+msgid "Expires on:\t<info>{0} (in {1} days)</info>"
+msgstr "Galioja iki:\t<info>{0} (po {1} dienų)</info>"
+
+msgid "For any question / feedback / subscription renewal,"
+msgstr "Jei turite klausimų / atsiliepimų / norite pratęsti prenumeratą,"
+
+msgid "kindly contact us at <info>sales@passbolt.com</info>"
+msgstr "maloniai susisiekite su mumis adresu <info>sales@passbolt.com</info>"
+
+msgid "Only administrators can view the subscription details."
+msgstr "Išsamią prenumeratos informaciją gali peržiūrėti tik administratoriai."
+
+msgid "The file {0} could not be found."
+msgstr "Failo {0} nepavyko rasti."
+
+msgid "The file {0} could not be read."
+msgstr "Failo {0} nepavyko nuskaityti."
+
+msgid "No active admins were found."
+msgstr "Aktyvių administratorių nerasta."
+
+msgid "Only administrators can update the subscription details."
+msgstr "Tik administratoriai gali atnaujinti prenumeratos informaciją."
+
+msgid "The tags data should be a string or an array."
+msgstr "Žymų duomenys turėtų būti eilutė arba masyvas."
+
+msgid "Could not validate request data."
+msgstr "Nepavyko patvirtinti užklausos duomenų."
+
+msgid "The tag id is not valid."
+msgstr "Žymos ID negalioja."
+
+msgid "The tag does not exist."
+msgstr "Žyma neegzistuoja."
+
+msgid "You do not have the permission to delete shared tags."
+msgstr "Neturite leidimo ištrinti bendrinamų žymų."
+
+msgid "The tag has been deleted successfully."
+msgstr "Žyma sėkmingai ištrinta."
+
+msgid "You do not have the permission to update shared tags."
+msgstr "Neturite leidimo atnaujinti bendrinamų žymų."
+
+msgid "The tag has been updated successfully."
+msgstr "Žyma sėkmingai atnaujinta."
+
+msgid "The tag identifier should be a valid UUID."
+msgstr "Žymos identifikatorius turi būti galiojantis UUID."
+
+msgid "The tag is missing or does not belong to current user."
+msgstr "Žyma nerasta arba nepriklauso dabartiniam vartotojui."
+
+msgid "The is shared should be a boolean type."
+msgstr "Parametras \"is shared\" turi būti loginio tipo."
+
+msgid "The tags plugin is in read-only mode."
+msgstr "Žymių papildinys yra tik skaitymo režime."
+
+msgid "The tag should not be empty."
+msgstr "Žyma neturi būti tuščia."
+
+msgid "A tag is required."
+msgstr "Reikalinga žyma."
+
+msgid "The tag should be a valid BMP-UTF8 string."
+msgstr "Žyma turi būti tinkama BMP-UTF8 eilutė."
+
+msgid "The tag length should be maximum {0} characters."
+msgstr "Žymos ilgis turi būti ne daugiau kaip {0} simboliai."
+
+msgid "The shared status should be a valid boolean."
+msgstr "Bendrinama būsena turi būti tinkama loginė vertė."
+
+msgid "A shared status is required."
+msgstr "Būtina bendrinama būsena."
+
+msgid "The tag metadata OpenPGP message cannot be parsed or is not for the intended recipient."
+msgstr "Negalima išanalizuoti žymos metaduomenų \"OpenPGP\" pranešimo arba jis skirtas kitam gavėjui."
+
+msgid "Error while building tag DTO."
+msgstr "Klaida kuriant žymos DTO."
+
+msgid "Could not validate tags data."
+msgstr "Nepavyko patvirtinti žymų duomenų."
+
+msgid "Unable to build tag entity"
+msgstr "Nepavyko sukurti žymos objekto"
+
+msgid "No tags to migrate."
+msgstr "Nėra žymų perkėlimui."
+
+msgid "Tag ID \"{0}\" is already V5"
+msgstr "Žymos ID \"{0}\" jau yra V5"
+
+msgid "No user found for the personal tag id: \"{0}\"."
+msgstr "Nerastas vartotojas asmeninei žymai su id: \"{0}\"."
+
+msgid "User contain data missing for the tag id: \"{0}\"."
+msgstr "Trūksta vartotojo duomenų žymai su id: \"{0}\"."
+
+msgid "Unable to migrate tag id: {0} to V5."
+msgstr "Nepavyko perkelti žymos su id: {0} į V5."
+
+msgid "The tag metadata key data could not be updated."
+msgstr "Nepavyko atnaujinti žymos metaduomenų rakto duomenų."
+
+msgid "Could not save the tags, try again later."
+msgstr "Nepavyko išsaugoti žymų, bandykite dar kartą vėliau."
+
+msgid "You do not have the permission to edit shared tags on this resource."
+msgstr "Neturite leidimo redaguoti bendrinamų šio šaltinio žymų."
+
+msgid "Unable to save the tag."
+msgstr "Nepavyko išsaugoti žymos."
+
+msgid "You do not have the permission to change a personal tag into shared tag."
+msgstr "Neturite leidimo keisti asmeninę žymą į bendrinamą žymą."
+
+msgid "The settings selected by your administrator prevent from downgrading tag."
+msgstr "Jūsų administratoriaus pasirinkti nustatymai neleidžia pažeminti žymos versijos."
+
+msgid "Could not retrieve the user passphrase policies."
+msgstr "Nepavyko gauti vartotojo slaptafrazės politikos nustatymų."
+
+msgid "The entropy minimum is required."
+msgstr "Reikalingas minimalus entropijos kiekis."
+
+msgid "The entropy minimum should be between {0} and {1}."
+msgstr "Entropijos vertė turėtų būti tarp {0} ir {1}."
+
+msgid "You edited the user passphrase policy"
+msgstr "Redagavote vartotojo slaptafrazės politiką"
+
+msgid "{0} edited the user passphrase policy"
+msgstr "{0} redagavo vartotojo slaptafrazės politiką"
+
+msgid "Could not validate the user passphrase policies settings."
+msgstr "Nepavyko patvirtinti vartotojo slaptafrazės politikos nustatymų."
+
+msgid "Only administrators are allowed to create/update user passphrase policies settings."
+msgstr "Tik administratoriai gali kurti/atnaujinti vartotojo slaptafrazės politikos nustatymus."
+
+msgid "The user passphrase policy settings has been updated by {0}."
+msgstr "Vartotojo slaptafrazės politikos nustatymus atnaujino {0}."
 
 msgid "Error"
 msgstr "Klaida"
@@ -5247,9 +7257,6 @@ msgstr "Šiam naudotojui trūksta šifravimo rakto bendrinamų išteklių metadu
 
 msgid "View users"
 msgstr "Peržiūrėti vartotojus"
-
-msgid "You have initiated an account recovery!"
-msgstr "Pradėjote paskyros atkūrimą!"
 
 msgid "Welcome back!"
 msgstr "Sveiki sugrįžę!"

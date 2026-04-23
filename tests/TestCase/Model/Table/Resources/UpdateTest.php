@@ -17,10 +17,12 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Resources;
 
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -42,19 +44,6 @@ class UpdateTest extends AppTestCase
      * @var OpenPGPBackend gpg
      */
     public $gpg;
-
-    public array $fixtures = [
-        'app.Base/Groups',
-        'app.Base/GroupsUsers',
-        'app.Base/Users',
-        'app.Base/Roles',
-        'app.Base/Gpgkeys',
-        'app.Base/Profiles',
-        'app.Base/Permissions',
-        'app.Base/ResourceTypes',
-        'app.Base/Resources',
-        'app.Base/Secrets',
-    ];
 
     public function setUp(): void
     {
@@ -137,14 +126,18 @@ class UpdateTest extends AppTestCase
 
     public function testResourceUpdate()
     {
-        $ownerId = UuidFactory::uuid('user.id.ada');
-        $modifierId = UuidFactory::uuid('user.id.betty');
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
+        RoleFactory::make()->guest()->persist();
+        $owner = UserFactory::make()->user()->withAdaKey()->persist();
+        $modifier = UserFactory::make()->user()->withValidGpgKey()->persist();
+        $resourceId = ResourceFactory::make()
+            ->withCreatorAndPermission($owner)
+            ->withSecretsFor([$owner])
+            ->persist()->get('id');
         $resource = $this->Resources->get($resourceId, contain: ['Secrets']);
 
         // Get the dummy resource updated data.
         $data = $this->_getUpdatedDummydata($resource, [
-            'modified_by' => $modifierId,
+            'modified_by' => $modifier->id,
         ]);
 
         // Save the entity.
@@ -164,18 +157,18 @@ class UpdateTest extends AppTestCase
         $this->assertEquals($data['uri'], $resource->uri);
         $this->assertEquals($data['description'], $resource->description);
         $this->assertEquals(false, $resource->deleted);
-        $this->assertEquals($ownerId, $resource->created_by);
-        $this->assertEquals($modifierId, $resource->modified_by);
+        $this->assertEquals($owner->id, $resource->created_by);
+        $this->assertEquals($modifier->id, $resource->modified_by);
 
         // Check the creator attribute
         $this->assertNotNull($resource->creator);
         $this->assertUserAttributes($resource->creator);
-        $this->assertEquals($ownerId, $resource->creator->id);
+        $this->assertEquals($owner->id, $resource->creator->id);
 
         // Check the modifier attribute
         $this->assertNotNull($resource->modifier);
         $this->assertUserAttributes($resource->modifier);
-        $this->assertEquals($modifierId, $resource->modifier->id);
+        $this->assertEquals($modifier->id, $resource->modifier->id);
 
         // Check the secret attribute
         $this->assertNotEmpty($resource->secrets);
@@ -191,8 +184,9 @@ class UpdateTest extends AppTestCase
 
     public function testResourceUpdateWithoutSecrets()
     {
-        $modifierId = UuidFactory::uuid('user.id.betty');
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
+        RoleFactory::make()->guest()->persist();
+        $modifier = UserFactory::make()->user()->withValidGpgKey()->persist();
+        $resourceId = ResourceFactory::make()->persist()->get('id');
         $resource = $this->Resources->get($resourceId, contain: ['Secrets']);
 
         // Store the secrets before update, and tests their integrity after update.
@@ -201,7 +195,7 @@ class UpdateTest extends AppTestCase
 
         // Get the dummy resource updated data.
         $data = $this->_getUpdatedDummydata($resource);
-        $data['modified_by'] = $modifierId;
+        $data['modified_by'] = $modifier->id;
 
         // Save the entity.
         $options = self::getEntityDefaultOptions();
@@ -225,7 +219,12 @@ class UpdateTest extends AppTestCase
     public function testErrorRuleSecretsProvided_SecretMissing()
     {
         // Get the dummy resource updated data.
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        RoleFactory::make()->guest()->persist();
+        [$owner, $other] = UserFactory::make(2)->user()->withValidGpgKey()->persist();
+        $resourceId = ResourceFactory::make()
+            ->withPermissionsFor([$owner, $other])
+            ->withSecretsFor([$owner, $other])
+            ->persist()->get('id');
         $resource = $this->Resources->get($resourceId, contain: ['Secrets']);
         $data = $this->_getUpdatedDummydata($resource);
         unset($data['secrets'][0]);
@@ -240,15 +239,19 @@ class UpdateTest extends AppTestCase
 
     public function testErrorRuleSecretsProvided_InsertAnUnwantedSecret()
     {
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        RoleFactory::make()->guest()->persist();
+        [$owner, $other] = UserFactory::make(2)->user()->withValidGpgKey()->persist();
+        $resourceId = ResourceFactory::make()
+            ->withPermissionsFor([$owner])
+            ->withSecretsFor([$owner])
+            ->persist()->get('id');
         $resource = $this->Resources->get($resourceId, contain: ['Secrets']);
 
         // Get the dummy resource updated data.
         $data = $this->_getUpdatedDummydata($resource);
-        $userId = UuidFactory::uuid('user.id.edith');
         $data['secrets'][] = [
-            'user_id' => $userId,
-            'data' => $this->_encryptSecret($userId, 'Update secret data'),
+            'user_id' => $other->id,
+            'data' => $this->_encryptSecret($other->id, 'Update secret data'),
         ];
 
         // Save the entity.
@@ -260,7 +263,8 @@ class UpdateTest extends AppTestCase
 
     public function testErrorResourceNotSoftDeleted()
     {
-        $resourceId = UuidFactory::uuid('resource.id.jquery');
+        RoleFactory::make()->guest()->persist();
+        $resourceId = ResourceFactory::make()->setDeleted()->persist()->get('id');
         $resource = $this->Resources->get($resourceId);
 
         // Get the dummy resource updated data.

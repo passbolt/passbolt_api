@@ -21,6 +21,7 @@ use App\Authenticator\SessionIdentificationService;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Command\PassboltBuildCommandsListener;
 use App\Command\SqlExportCommand;
+use App\Command\SubscriptionCheckCommand;
 use App\Middleware\ApiVersionMiddleware;
 use App\Middleware\AssertFullBaseUrlMiddleware;
 use App\Middleware\ContainerInjectorMiddleware;
@@ -41,6 +42,9 @@ use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Service\Avatars\AvatarsConfigurationService;
 use App\Service\Cookie\AbstractSecureCookieService;
 use App\Service\Cookie\DefaultSecureCookieService;
+use App\Service\Subscriptions\DefaultSubscriptionCheckInCommandService;
+use App\Service\Subscriptions\EditionManager;
+use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use App\ServiceProvider\CommandServiceProvider;
 use App\ServiceProvider\HealthcheckServiceProvider;
 use App\ServiceProvider\ResourceServiceProvider;
@@ -59,6 +63,7 @@ use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\Client;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Http\MiddlewareQueue;
@@ -85,6 +90,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      * @var \App\BaseSolutionBootstrapper|null
      */
     private ?BaseSolutionBootstrapper $solutionBootstrapper = null;
+
+    private ?EditionManager $editionManager = null;
 
     /**
      * Setup the PSR-7 middleware passbolt application will use.
@@ -176,8 +183,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $this->addCorePlugins()
             ->addVendorPlugins();
 
-        // Load feature plugins
-        $this->getSolutionBootstrapper()->addFeaturePlugins($this);
+        $this->initEdition();
+        $this->initSolutionBootstrapper();
 
         if (PHP_SAPI === 'cli') {
             $this->addCliDevelopmentPlugins();
@@ -188,28 +195,28 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     }
 
     /**
-     * This enables to inject a different main plugin name as the default one
-     * defined in config/default.php
+     * Boot edition manager which will determine the plugins to be loaded and behavior of the application.
      *
-     * @param \App\BaseSolutionBootstrapper $solutionBootstrapper Class loading all the plugins
      * @return void
      */
-    public function setSolutionBootstrapper(BaseSolutionBootstrapper $solutionBootstrapper): void
+    private function initEdition(): void
     {
-        $this->solutionBootstrapper = $solutionBootstrapper;
+        $this->editionManager = new EditionManager();
+        $this->editionManager->boot();
     }
 
     /**
-     * @return \App\BaseSolutionBootstrapper
+     * @return void
      */
-    public function getSolutionBootstrapper(): BaseSolutionBootstrapper
+    private function initSolutionBootstrapper(): void
     {
-        if (is_null($this->solutionBootstrapper)) {
-            $className = Configure::readOrFail('passbolt.featurePluginAdder');
-            $this->solutionBootstrapper = new $className();
+        $solutionBootstrapperClass = $this->editionManager->getSolutionBootstrapperClass();
+        if (is_null($solutionBootstrapperClass)) {
+            throw new InternalErrorException('SolutionBootstrapper class not found. Call initEdition() before initialization.'); // phpcs:ignore
         }
 
-        return $this->solutionBootstrapper;
+        $this->solutionBootstrapper = new $solutionBootstrapperClass();
+        $this->solutionBootstrapper->addFeaturePlugins($this);
     }
 
     /**
@@ -315,6 +322,10 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         if (PHP_SAPI === 'cli') {
             $container->addServiceProvider(new CommandServiceProvider());
         }
+        $container->add(
+            SubscriptionCheckInCommandServiceInterface::class,
+            DefaultSubscriptionCheckInCommandService::class
+        );
         $container->addServiceProvider(new HealthcheckServiceProvider());
     }
 
@@ -364,6 +375,10 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         // Alias sql_export to mysql_export, this is to keep BC
         $commands->add('passbolt mysql_export', SqlExportCommand::class);
+
+        // Alias license_check to subscription_check for retro compatibility
+        $commands->add('passbolt license_check', SubscriptionCheckCommand::class);
+        $commands->add('passbolt subscription_check', SubscriptionCheckCommand::class);
 
         return $commands;
     }

@@ -22,6 +22,7 @@ use Passbolt\PasswordExpiry\Model\Dto\PasswordExpirySettingsDto;
 use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 use Passbolt\PasswordExpiry\Test\Lib\PasswordExpiryTestTrait;
+use Passbolt\PasswordExpiryPolicies\PasswordExpiryPoliciesPlugin;
 
 /**
  * @covers \Passbolt\PasswordExpiry\Controller\PasswordExpirySettingsGetController
@@ -34,6 +35,7 @@ class PasswordExpirySettingsGetControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->enableFeaturePlugin(PasswordExpiryPlugin::class);
+        $this->disableFeaturePlugin(PasswordExpiryPoliciesPlugin::class);
     }
 
     public function testPasswordExpiryGetController_Authentication()

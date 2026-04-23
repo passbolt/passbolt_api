@@ -1,0 +1,7 @@
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:Error"
+    ],
+    "status": 400,
+    "detail": "The user identifier should be a valid UUID."
+}

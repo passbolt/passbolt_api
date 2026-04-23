@@ -81,4 +81,14 @@ class Group extends Entity
 
         return false;
     }
+
+    /**
+     * In future deleted may become a date, so accessing this function instead of the props is better
+     *
+     * @return bool if group is soft-deleted
+     */
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
 }
