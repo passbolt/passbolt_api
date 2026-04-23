@@ -20,7 +20,6 @@ use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
-use Passbolt\Subscription\Command\SubscriptionCheckCommand;
 use Passbolt\Subscription\Command\SubscriptionImportCommand;
 use Passbolt\Subscription\Service\Healthcheck\Application\SubscriptionKeyApplicationHealthcheck;
 use Passbolt\Subscription\Service\Subscriptions\EeSubscriptionCheckInCommandService;
@@ -34,9 +33,6 @@ class SubscriptionPlugin extends BasePlugin
      */
     public function console($commands): CommandCollection
     {
-        // Alias license_check to subscription_check for retro compatibility
-        $commands->add('passbolt license_check', SubscriptionCheckCommand::class);
-        $commands->add('passbolt subscription_check', SubscriptionCheckCommand::class);
         $commands->add('passbolt subscription_import', SubscriptionImportCommand::class);
 
         return $commands;
@@ -47,14 +43,9 @@ class SubscriptionPlugin extends BasePlugin
      */
     public function services(ContainerInterface $container): void
     {
-        if ($container->has(SubscriptionCheckInCommandServiceInterface::class)) {
-            $container
-                ->extend(SubscriptionCheckInCommandServiceInterface::class)
-                ->setConcrete(EeSubscriptionCheckInCommandService::class);
-            $container->add(SubscriptionCheckCommand::class)->addArguments([
-                SubscriptionCheckInCommandServiceInterface::class,
-            ]);
-        }
+        $container
+            ->extend(SubscriptionCheckInCommandServiceInterface::class)
+            ->setConcrete(EeSubscriptionCheckInCommandService::class);
 
         $container->add(SubscriptionKeyGetService::class);
         $container

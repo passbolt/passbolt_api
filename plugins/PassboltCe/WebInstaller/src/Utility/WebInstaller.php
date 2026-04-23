@@ -19,6 +19,7 @@ namespace Passbolt\WebInstaller\Utility;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
@@ -30,11 +31,14 @@ use Cake\Utility\Hash;
 use Exception;
 use Migrations\Migrations;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSetService;
+use Passbolt\Subscription\SubscriptionPlugin;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 use Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService;
 
 class WebInstaller
 {
+    use FeaturePluginAwareTrait;
+
     protected ?Session $session = null;
 
     /**
@@ -164,7 +168,9 @@ class WebInstaller
         $this->installDatabase();
         $this->createFirstUser();
         $this->saveSmtpSettingsInDb();
-        $this->importSubscription(); // Pro Only
+        if ($this->isFeaturePluginEnabled(SubscriptionPlugin::class)) {
+            $this->importSubscription(); // Pro Only
+        }
         $this->saveSettings();
         $this->deleteTmpFiles();
         $configFolderPermissionService->changeConfigFolderPermission();

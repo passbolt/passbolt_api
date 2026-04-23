@@ -16,13 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\Ee\Test\TestCase;
 
+use App\Service\Subscriptions\EditionManager;
 use App\Test\Lib\SolutionBootstrapperTestCase;
 use App\Test\TestCase\BaseSolutionBootstrapperTest;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
 use Cake\Core\PluginCollection;
 use Cake\TestSuite\IntegrationTestTrait;
-use Passbolt\Ee\EeSolutionBootstrapper;
 use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\PasswordExpiryPolicies\PasswordExpiryPoliciesPlugin;
 use Passbolt\PasswordPoliciesUpdate\PasswordPoliciesUpdatePlugin;
@@ -82,6 +82,12 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/Scim',
         'Passbolt/SecretRevisions',
     ];
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        Configure::write('passbolt.edition', EditionManager::EDITION_PRO);
+    }
 
     public function testEeSolutionBootstrapper_Application_Bootstrap(): void
     {
@@ -153,7 +159,6 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
 
     protected function getPlugins(): PluginCollection
     {
-        $this->app->setSolutionBootstrapper(new EeSolutionBootstrapper());
         $this->app->bootstrap();
         $this->app->pluginBootstrap();
 
