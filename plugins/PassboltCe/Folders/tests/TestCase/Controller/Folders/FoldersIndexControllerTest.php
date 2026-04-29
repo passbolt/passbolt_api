@@ -18,24 +18,14 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
-use App\Test\Fixture\Alt0\SecretsFixture;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\ResourcesFixture;
-use App\Test\Fixture\Base\ResourceTypesFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\UsersFixture;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\GroupsModelTrait;
-use App\Test\Lib\Model\GroupsUsersModelTrait;
-use App\Test\Lib\Model\PermissionsModelTrait;
-use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
+use Passbolt\Folders\Test\Factory\FolderFactory;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * @see \Passbolt\Folders\Controller\Folders\FoldersIndexController
@@ -44,44 +34,19 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 class FoldersIndexControllerTest extends FoldersIntegrationTestCase
 {
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
     use GroupsModelTrait;
-    use GroupsUsersModelTrait;
-    use PermissionsModelTrait;
-
-    public array $fixtures = [
-        GpgkeysFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        RolesFixture::class,
-        UsersFixture::class,
-        ResourcesFixture::class,
-        ResourceTypesFixture::class,
-        SecretsFixture::class,
-        GroupsFixture::class,
-    ];
-
-    private function insertFixtureCase2()
-    {
-        // Ada has access to folder Lovelace and Something as a OWNER
-        // Lovelace (Ada:O) ; Something (Ada:O)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B'], [$userId => Permission::OWNER]);
-        $folderC = $this->addFolderFor(['name' => 'C'], [$userId => Permission::OWNER]);
-
-        return [$folderA, $folderB, $folderC];
-    }
 
     /**
      * @return void
      */
     public function testFoldersIndexFilterByIdSuccess()
     {
-        [$folderA, $folderB, $folderC] = $this->insertFixtureCase2(); // phpcs:ignore
+        // Ada has access to folderA, folderB and folderC as a OWNER
+        // A (Ada:O) ; B (Ada:O); C (Ada:O)
+        $userA = UserFactory::make()->user()->persist();
+        [$folderA, $folderB, $folderC] = FolderFactory::make(3)->withPermissionsFor([$userA])->persist();
 
-        $this->authenticateAs('ada');
+        $this->logInAs($userA);
 
         $this->getJson('/folders.json?api-version=2&filter[has-id][]=' . $folderA->id . '&filter[has-id][]=' . $folderB->id);
         $this->assertSuccess();
@@ -90,7 +55,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $folderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
         $this->assertContains($folderA->id, $folderIds);
         $this->assertContains($folderB->id, $folderIds);
-        $this->assertNotContains(UuidFactory::uuid('folder.id.other'), $this->_responseJsonBody);
+        $this->assertNotContains($folderC->id, $this->_responseJsonBody);
     }
 
     /**
@@ -98,9 +63,12 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
      */
     public function testFoldersIndexFilterByIdSuccessOnOneId()
     {
-        [$folderA, $folderB, $folderC] = $this->insertFixtureCase2(); // phpcs:ignore
+        // Ada has access to folderA, folderB and folderC as a OWNER
+        // A (Ada:O) ; B (Ada:O); C (Ada:O)
+        $userA = UserFactory::make()->user()->persist();
+        [$folderA, $folderB, $folderC] = FolderFactory::make(3)->withPermissionsFor([$userA])->persist();
 
-        $this->authenticateAs('ada');
+        $this->logInAs($userA);
 
         $this->getJson('/folders.json?api-version=2&filter[has-id]=' . $folderA->id);
         $this->assertSuccess();
@@ -108,120 +76,123 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $this->assertCount(1, $this->_responseJsonBody);
         $folderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
         $this->assertContains($folderA->id, $folderIds);
-        $this->assertNotContains(UuidFactory::uuid('folder.id.other'), $this->_responseJsonBody);
+        $this->assertNotContains($folderB->id, $this->_responseJsonBody);
+        $this->assertNotContains($folderC->id, $this->_responseJsonBody);
     }
 
-    private function insertFixtureCase3()
+    public function testFoldersIndexFilterHasParentSuccess()
     {
-        // Relations are expressed as follow: folder_parent_id => [child_folder_id]
-        $folderRelations = [
-            UuidFactory::uuid('folder.id.a') => [],
-            UuidFactory::uuid('folder.id.c') => [
-                UuidFactory::uuid('folder.id.e'),
-            ],
-            UuidFactory::uuid('folder.id.d') => [
-                UuidFactory::uuid('folder.id.f'),
-                UuidFactory::uuid('folder.id.g'),
-            ],
-        ];
+        // Ada is OWNER of folder A
+        // Ada has OWNER on folder B
+        // Ada is OWNER of folder C
+        // Ada is OWNER of folder D
+        // Ada is OWNER of folder E
+        // Ada is OWNER of folder F
+        // Ada sees D in B
+        // Ada sees E in C
+        // Ada sees F in C
+        // ----
+        // A (Ada:O)
+        //
+        // B (Ada:O)
+        // |- D (Ada:O)
+        //
+        // C (Ada:O)
+        // |- E (Ada:R)
+        // |- F (Ada:O)
+        $userA = UserFactory::make()->user()->persist();
+        [$folderA, $folderB, $folderC] = FolderFactory::make(3)
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA])
+            ->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderD */
+        $folderD = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA], $folderB)
+            ->persist();
+        [$folderE, $folderF] = FolderFactory::make(2)
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA], $folderC)
+            ->persist();
 
-        $userId = UuidFactory::uuid('user.id.ada');
-        foreach ($folderRelations as $folderParentId => $childrenFolders) {
-            $this->addFolderFor(['id' => $folderParentId, ], [$userId => Permission::OWNER]);
-            foreach ($childrenFolders as $childrenFolderId) {
-                $this->addFolderFor(['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId, ], [$userId => Permission::OWNER]);
-            }
-        }
-    }
-
-    public static function provideFoldersIndexFilterHasParentSuccessRelations()
-    {
-        return [
+        $cases = [
             'When has parent is false' => [
-                [false],
-                [
-                    UuidFactory::uuid('folder.id.a'),
-                    UuidFactory::uuid('folder.id.c'),
-                    UuidFactory::uuid('folder.id.d'),
+                'filter' => [false],
+                'expected' => [
+                    $folderA->id,
+                    $folderB->id,
+                    $folderC->id,
                 ],
             ],
             'When has-parent is single and return only 1 item' => [
-                [
-                    UuidFactory::uuid('folder.id.c'),
+                'filter' => [
+                    $folderB->id,
                 ],
-                [
-                    UuidFactory::uuid('folder.id.e'),
+                'expected' => [
+                    $folderD->id,
                 ],
             ],
             'When has-parent is single and return more than 1 item' => [
-                [
-                    UuidFactory::uuid('folder.id.d'),
+                'filter' => [
+                    $folderC->id,
                 ],
-                [
-                    UuidFactory::uuid('folder.id.f'),
-                    UuidFactory::uuid('folder.id.g'),
+                'expected' => [
+                    $folderE->id,
+                    $folderF->id,
                 ],
             ],
             'When has-parent is multiple and return 1 item' => [
-                [
-                    UuidFactory::uuid('folder.id.a'), // has no children
-                    UuidFactory::uuid('folder.id.c'), // has 1 child
+                'filter' => [
+                    $folderA->id, // has no children
+                    $folderB->id, // has 1 child
                 ],
-                [
-                    UuidFactory::uuid('folder.id.e'),
+                'expected' => [
+                    $folderD->id,
                 ],
             ],
             'When has-parent is multiple and return more than 1 item' => [
-                [
-                    UuidFactory::uuid('folder.id.c'), // has 1 child
-                    UuidFactory::uuid('folder.id.d'), // has 2 children
+                'filter' => [
+                    $folderB->id, // has 1 child
+                    $folderC->id, // has 2 children
                 ],
-                [
-                    UuidFactory::uuid('folder.id.e'),
-                    UuidFactory::uuid('folder.id.f'),
-                    UuidFactory::uuid('folder.id.g'),
+                'expected' => [
+                    $folderD->id,
+                    $folderE->id,
+                    $folderF->id,
                 ],
             ],
             'When has-parent is mixed with root and ids' => [
-                [
+                'filter' => [
                     false, // has no children
-                    UuidFactory::uuid('folder.id.c'),
+                    $folderB->id,
                 ],
-                [
-                    UuidFactory::uuid('folder.id.e'),
-                    UuidFactory::uuid('folder.id.a'),
-                    UuidFactory::uuid('folder.id.c'),
-                    UuidFactory::uuid('folder.id.d'),
+                'expected' => [
+                    $folderD->id,
+                    $folderA->id,
+                    $folderB->id,
+                    $folderC->id,
                 ],
             ],
         ];
-    }
 
-    /**
-     * @dataProvider provideFoldersIndexFilterHasParentSuccessRelations
-     * @param mixed $hasParentFilterId
-     * @param array $expectedFolderChildrenIds
-     * @return void
-     */
-    public function testFoldersIndexFilterHasParentSuccess($hasParentFilterId, array $expectedFolderChildrenIds)
-    {
-        $this->insertFixtureCase3();
-        $this->authenticateAs('ada');
+        $this->logInAs($userA);
 
-        $queryParameters = http_build_query([
-            'api-version' => 2,
-            'filter' => [
-                'has-parent' => $hasParentFilterId,
-            ],
-        ]);
+        foreach ($cases as $case) {
+            $queryParameters = http_build_query([
+                'api-version' => 2,
+                'filter' => [
+                    'has-parent' => $case['filter'],
+                ],
+            ]);
 
-        $this->getJson('/folders.json?' . $queryParameters);
-        $this->assertSuccess();
+            $this->getJson('/folders.json?' . $queryParameters);
+            $this->assertSuccess();
 
-        $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+            $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
 
-        foreach ($expectedFolderChildrenIds as $expectedFolderChildrenId) {
-            $this->assertContains($expectedFolderChildrenId, $resultFolderIds);
+            foreach ($case['expected'] as $expectedFolderChildrenId) {
+                $this->assertContains($expectedFolderChildrenId, $resultFolderIds);
+            }
         }
     }
 
@@ -230,11 +201,27 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
      */
     public function testFoldersIndexFilterHasParentNoArrayBracketNotation()
     {
-        $this->insertFixtureCase3();
-        $this->authenticateAs('ada');
+        // Ada has OWNER on folder B
+        // Ada is OWNER of folder D
+        // Ada sees D in B
+        // A (Ada:O)
+        // B (Ada:O)
+        // |- D (Ada:O)
+        $userA = UserFactory::make()->user()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderB */
+        $folderB = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA])
+            ->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderD */
+        $folderD = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA], $folderB)
+            ->persist();
+        $this->logInAs($userA);
 
-        $hasParentFilterId = UuidFactory::uuid('folder.id.c');
-        $expectedFolderChildrenIds = [UuidFactory::uuid('folder.id.e'),];
+        $hasParentFilterId = $folderB->id;
+        $expectedFolderChildrenIds = [$folderD->id,];
 
         $this->getJson('/folders.json?api-version=2&filter[has-parent]=' . $hasParentFilterId);
         $this->assertSuccess();
@@ -246,75 +233,257 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         }
     }
 
-    /**
-     * @dataProvider provideFoldersIndexFilterHasParentSuccessRelations
-     * @param mixed $hasParentFilterId
-     * @param array $expectedFolderChildrenIds
-     * @return void
-     */
-    public function testFoldersIndexFilterHasParentAndFilterSuccess($hasParentFilterId, array $expectedFolderChildrenIds)
+    public function testFoldersIndexFilterHasParentAndFilterSuccess()
     {
-        $this->insertFixtureCase3();
-        $this->authenticateAs('ada');
+        // Ada is OWNER of folder A
+        // Ada has OWNER on folder B
+        // Ada is OWNER of folder C
+        // Ada is OWNER of folder D
+        // Ada is OWNER of folder E
+        // Ada is OWNER of folder F
+        // Ada sees D in B
+        // Ada sees E in C
+        // Ada sees F in C
+        // ----
+        // A (Ada:O)
+        //
+        // B (Ada:O)
+        // |- D (Ada:O)
+        //
+        // C (Ada:O)
+        // |- E (Ada:R)
+        // |- F (Ada:O)
+        $userA = UserFactory::make()->user()->persist();
+        [$folderA, $folderB, $folderC] = FolderFactory::make(3)
+            ->patchData(['name' => 'test-folder'])
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA])
+            ->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderD */
+        $folderD = FolderFactory::make(['name' => 'test-folder'])
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA], $folderB)
+            ->persist();
+        [$folderE, $folderF] = FolderFactory::make(2)
+            ->patchData(['name' => 'test-folder'])
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA], $folderC)
+            ->persist();
 
-        $queryParameters = http_build_query([
-            'api-version' => 2,
-            'filter' => [
-                'has-parent' => $hasParentFilterId,
-                'search' => UuidFactory::uuid('folder.id.name'),
+        $cases = [
+            'When has parent is false' => [
+                'filter' => [false],
+                'expected' => [
+                    $folderA->id,
+                    $folderB->id,
+                    $folderC->id,
+                ],
             ],
-        ]);
+            'When has-parent is single and return only 1 item' => [
+                'filter' => [
+                    $folderB->id,
+                ],
+                'expected' => [
+                    $folderD->id,
+                ],
+            ],
+            'When has-parent is single and return more than 1 item' => [
+                'filter' => [
+                    $folderC->id,
+                ],
+                'expected' => [
+                    $folderE->id,
+                    $folderF->id,
+                ],
+            ],
+            'When has-parent is multiple and return 1 item' => [
+                'filter' => [
+                    $folderA->id, // has no children
+                    $folderB->id, // has 1 child
+                ],
+                'expected' => [
+                    $folderD->id,
+                ],
+            ],
+            'When has-parent is multiple and return more than 1 item' => [
+                'filter' => [
+                    $folderB->id, // has 1 child
+                    $folderC->id, // has 2 children
+                ],
+                'expected' => [
+                    $folderD->id,
+                    $folderE->id,
+                    $folderF->id,
+                ],
+            ],
+            'When has-parent is mixed with root and ids' => [
+                'filter' => [
+                    false, // has no children
+                    $folderB->id,
+                ],
+                'expected' => [
+                    $folderD->id,
+                    $folderA->id,
+                    $folderB->id,
+                    $folderC->id,
+                ],
+            ],
+        ];
 
-        $this->getJson('/folders.json?' . $queryParameters);
-        $this->assertSuccess();
+        $this->logInAs($userA);
 
-        $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+        foreach ($cases as $case) {
+            $queryParameters = http_build_query([
+                'api-version' => 2,
+                'filter' => [
+                    'has-parent' => $case['filter'],
+                    'search' => $folderA->name,
+                ],
+            ]);
 
-        foreach ($expectedFolderChildrenIds as $expectedFolderChildrenId) {
-            $this->assertContains($expectedFolderChildrenId, $resultFolderIds);
+            $this->getJson('/folders.json?' . $queryParameters);
+            $this->assertSuccess();
+
+            $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+
+            foreach ($case['expected'] as $expectedId) {
+                $this->assertContains($expectedId, $resultFolderIds);
+            }
         }
     }
 
-    /**
-     * @dataProvider provideFoldersIndexFilterHasParentSuccessRelations
-     * @param mixed $hasParentFilterId
-     * @param array $expectedFolderChildrenIds
-     * @return void
-     */
-    public function testFoldersIndexFilterHasParentAndFilterSuccess_NoResult($hasParentFilterId, array $expectedFolderChildrenIds)
+    public function testFoldersIndexFilterHasParentAndFilterSuccess_NoResult()
     {
-        $this->insertFixtureCase3();
-        $this->authenticateAs('ada');
+        // Ada is OWNER of folder A
+        // Ada has OWNER on folder B
+        // Ada is OWNER of folder C
+        // Ada is OWNER of folder D
+        // Ada is OWNER of folder E
+        // Ada is OWNER of folder F
+        // Ada sees D in B
+        // Ada sees E in C
+        // Ada sees F in C
+        // ----
+        // A (Ada:O)
+        //
+        // B (Ada:O)
+        // |- D (Ada:O)
+        //
+        // C (Ada:O)
+        // |- E (Ada:R)
+        // |- F (Ada:O)
+        $userA = UserFactory::make()->user()->persist();
+        [$folderA, $folderB, $folderC] = FolderFactory::make(3)
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA])
+            ->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderD */
+        $folderD = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA], $folderB)
+            ->persist();
+        [$folderE, $folderF] = FolderFactory::make(2)
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA], $folderC)
+            ->persist();
 
-        $queryParameters = http_build_query([
-            'api-version' => 2,
-            'filter' => [
-                'has-parent' => $hasParentFilterId,
-                'search' => 'nope',
+        $cases = [
+            'When has parent is false' => [
+                'filter' => [false],
+                'expected' => [
+                    $folderA->id,
+                    $folderB->id,
+                    $folderC->id,
+                ],
             ],
-        ]);
+            'When has-parent is single and return only 1 item' => [
+                'filter' => [
+                    $folderB->id,
+                ],
+                'expected' => [
+                    $folderD->id,
+                ],
+            ],
+            'When has-parent is single and return more than 1 item' => [
+                'filter' => [
+                    $folderC->id,
+                ],
+                'expected' => [
+                    $folderE->id,
+                    $folderF->id,
+                ],
+            ],
+            'When has-parent is multiple and return 1 item' => [
+                'filter' => [
+                    $folderA->id, // has no children
+                    $folderB->id, // has 1 child
+                ],
+                'expected' => [
+                    $folderD->id,
+                ],
+            ],
+            'When has-parent is multiple and return more than 1 item' => [
+                'filter' => [
+                    $folderB->id, // has 1 child
+                    $folderC->id, // has 2 children
+                ],
+                'expected' => [
+                    $folderD->id,
+                    $folderE->id,
+                    $folderF->id,
+                ],
+            ],
+            'When has-parent is mixed with root and ids' => [
+                'filter' => [
+                    false, // has no children
+                    $folderB->id,
+                ],
+                'expected' => [
+                    $folderD->id,
+                    $folderA->id,
+                    $folderB->id,
+                    $folderC->id,
+                ],
+            ],
+        ];
 
-        $this->getJson('/folders.json?' . $queryParameters);
-        $this->assertSuccess();
+        $this->logInAs($userA);
 
-        $this->assertEmpty(Hash::extract($this->_responseJsonBody, '{n}.id'));
+        foreach ($cases as $case) {
+            $queryParameters = http_build_query([
+                'api-version' => 2,
+                'filter' => [
+                    'has-parent' => $case['filter'],
+                    'search' => 'nope',
+                ],
+            ]);
+
+            $this->getJson('/folders.json?' . $queryParameters);
+            $this->assertSuccess();
+
+            $this->assertEmpty(Hash::extract($this->_responseJsonBody, '{n}.id'));
+        }
     }
 
     public function testFoldersIndexSuccess_ContainChildrenResources()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-
-        // Insert fixtures.
         // Ada has access to folder A, R1 and R2 as a OWNER
         // Ada see resources R1 and R2 in folder A
         // A (Ada:O)
         // |- R1 (Ada:O)
         // |- R2 (Ada:O)
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $resource1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-        $resource2 = $this->addResourceFor(['name' => 'R2', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $userA = UserFactory::make()->user()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA])
+            ->persist();
+        [$resourceA, $resourceB] = ResourceFactory::make(2)
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA], $folderA)
+            ->persist();
 
-        $this->authenticateAs('ada');
+        $this->loginAs($userA);
         $this->getJson('/folders.json?contain[children_resources]=1&api-version=2');
         $this->assertSuccess();
 
@@ -330,30 +499,35 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
             $this->assertObjectNotHasAttribute('_joinData', $childResource);
         }
         $childrenResourceIds = Hash::extract($folder->children_resources, '{n}.id');
-        $this->assertContains($resource1->get('id'), $childrenResourceIds);
-        $this->assertContains($resource2->get('id'), $childrenResourceIds);
+        $this->assertContains($resourceA->get('id'), $childrenResourceIds);
+        $this->assertContains($resourceB->get('id'), $childrenResourceIds);
     }
 
     public function testFoldersIndexSuccess_ContainChildrenFolders()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-
-        // Insert fixtures.
         // Ada has access to folder A, B and C as a OWNER
         // Ada see folder folders B and C in A
         // A (Ada:O)
         // |- B (Ada:O)
         // |- C (Ada:O)
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $resource1 = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-        $resource2 = $this->addFolderFor(['name' => 'C', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $userA = UserFactory::make()->user()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA])
+            ->persist();
+        [$folderB, $folderC] = FolderFactory::make(2)
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA], $folderA)
+            ->persist();
 
-        $this->authenticateAs('ada');
+        $this->loginAs($userA);
         $this->getJson('/folders.json?contain[children_folders]=1&api-version=2');
         $this->assertSuccess();
 
         $result = $this->_responseJsonBody;
-        $folder = $result[0];
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = current(array_filter((array)$result, fn ($f) => $f->id === $folderA->id));
 
         $this->assertFolderAttributes($folder);
         $this->assertNotEmpty($folder->children_folders);
@@ -363,25 +537,27 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
             $this->assertObjectNotHasAttribute('_joinData', $childFolder);
         }
         $childrenFolderIds = Hash::extract($folder->children_folders, '{n}.id');
-        $this->assertContains($resource1->id, $childrenFolderIds);
-        $this->assertContains($resource2->id, $childrenFolderIds);
+        $this->assertContains($folderB->id, $childrenFolderIds);
+        $this->assertContains($folderC->id, $childrenFolderIds);
     }
 
     public function testFoldersIndexSuccess_ContainPermission()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-
-        // Insert fixtures.
-        // Ada has access to folder A, B and C as a OWNER
-        // Ada see folder folders B and C in A
+        // Ada has access to folder A as a OWNER
+        // Ada has access to folder B as a UPDATE
+        // Ada has access to folder C as a READ
         // A (Ada:O)
-        // |- B (Ada:O)
-        // |- C (Ada:O)
-        $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $this->addFolderFor(['name' => 'B'], [$userId => Permission::UPDATE]);
-        $this->addFolderFor(['name' => 'C'], [$userId => Permission::READ]);
+        // B (Ada:U)
+        // C (Ada:R)
+        $userA = UserFactory::make()->user()->persist();
+        // Folder A
+        FolderFactory::make()->withPermissionsFor([$userA])->persist();
+        // Folder B
+        FolderFactory::make()->withPermissionsFor([$userA], Permission::UPDATE)->persist();
+        // Folder C
+        FolderFactory::make()->withPermissionsFor([$userA], Permission::READ)->persist();
 
-        $this->authenticateAs('ada');
+        $this->loginAs($userA);
         $this->getJson('/folders.json?contain[permission]=1&api-version=2');
         $this->assertSuccess();
 
@@ -397,19 +573,21 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersIndexSuccess_ContainPermissions()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-
-        // Insert fixtures.
-        // Ada has access to folder A, B and C as a OWNER
-        // Ada see folder folders B and C in A
+        // Ada has access to folder A as a OWNER
+        // Ada has access to folder B as a UPDATE
+        // Ada has access to folder C as a READ
         // A (Ada:O)
-        // |- B (Ada:O)
-        // |- C (Ada:O)
-        $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $this->addFolderFor(['name' => 'B'], [$userId => Permission::UPDATE]);
-        $this->addFolderFor(['name' => 'C'], [$userId => Permission::READ]);
+        // B (Ada:U)
+        // C (Ada:R)
+        $userA = UserFactory::make()->user()->persist();
+        // Folder A
+        FolderFactory::make()->withPermissionsFor([$userA])->persist();
+        // Folder B
+        FolderFactory::make()->withPermissionsFor([$userA], Permission::UPDATE)->persist();
+        // Folder C
+        FolderFactory::make()->withPermissionsFor([$userA], Permission::READ)->persist();
 
-        $this->authenticateAs('ada');
+        $this->loginAs($userA);
         $this->getJson('/folders.json?contain[permissions]=1&api-version=2');
         $this->assertSuccess();
 
@@ -427,9 +605,21 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersIndexSuccess_ContainPermissionsGroup()
     {
-        $this->insertContainPermissionsGroupFixture();
+        // Ada is OWNER of folder A
+        // GroupA is OWNER of folder A
+        // Ada is manager of group GroupA
+        // Betty is user of group GroupA
+        // ---
+        // A (Ada:O, G1:O)
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $groupA = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        // FolderA
+        FolderFactory::make()->withPermissionsFor([$userA, $groupA])->persist();
 
-        $this->authenticateAs('ada');
+        $this->loginAs($userA);
         $this->getJson('/folders.json?contain[permissions]=1&contain[permissions.group]=1&api-version=2');
         $this->assertSuccess();
 
@@ -451,25 +641,11 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         }
     }
 
-    public function insertContainPermissionsGroupFixture()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $groupData = [
-            'groups_users' => [
-                ['user_id' => $userAId, 'is_admin' => true],
-                ['user_id' => $userBId],
-            ],
-        ];
-        $group = $this->addGroup($groupData);
-        $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER], [$group->id => Permission::OWNER]);
-    }
-
     public function testFoldersIndexSuccess_ContainPermissionsUserProfile()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $this->authenticateAs('ada');
+        $userA = UserFactory::make()->user()->persist();
+        FolderFactory::make()->withPermissionsFor([$userA])->persist();
+        $this->logInAs($userA);
         $this->getJson('/folders.json?contain[permissions.user.profile]=1&api-version=2');
 
         $this->assertSuccess();
