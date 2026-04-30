@@ -19,14 +19,14 @@ namespace App\Test\TestCase\Model\Table\Permissions;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
 {
-    public array $fixtures = ['app.Alt0/Permissions', 'app.Alt0/GroupsUsers', 'app.Base/Resources'];
-
     /**
      * Test subject
      *
@@ -48,258 +48,352 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
 
     public function testFindShardResourceUserIsSoleOwner_OwnsNothing_DelUserCase0()
     {
-        $userId = UuidFactory::uuid('user.id.irene');
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        $userA = UserFactory::make()->user()->persist();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_SoleOwnerNotSharedResource_DelUserCase1()
     {
-        $userId = UuidFactory::uuid('user.id.jean');
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        $userA = UserFactory::make()->user()->persist();
+        ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->persist();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithUser_DelUserCase2()
     {
-        $userId = UuidFactory::uuid('user.id.kathleen');
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
-        $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.mocha'));
+        $this->assertEquals($resources[0], $resource->id);
     }
 
     public function testFindShardResourceUserIsSoleOwner_SharedResourceWithMe_DelUserCase3()
     {
-        $userId = UuidFactory::uuid('user.id.lynne');
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userB->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithGroup_DelUserCase4()
     {
-        $userId = UuidFactory::uuid('user.id.marlyn');
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userB])->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
-        $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.nodejs'));
+        $this->assertEquals($resources[0], $resource->id);
     }
 
     public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithSoleManagerEmptyGroup_DelUserCase5()
     {
-        $userId = UuidFactory::uuid('user.id.nancy');
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        $userA = UserFactory::make()->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
-        $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.openpgpjs'));
+        $this->assertEquals($resources[0], $resource->id);
     }
 
     public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_SoleOwnerSharedResourceWithSoleManagerEmptyGroup_DelUserCase5()
     {
-        $userId = UuidFactory::uuid('user.id.nancy');
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
+        $userA = UserFactory::make()->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_OwnerSharedResourceAlongWithSoleManagerEmptyGroup_DelUserCase6()
     {
-        $userId = UuidFactory::uuid('user.id.nancy');
-        $groupLId = UuidFactory::uuid('group.id.leadership_team');
-        $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+        $userA = UserFactory::make()->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
 
         // CONTEXTUAL TEST CHANGES Make the group also owner of the resource
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => $groupLId,
-            'aco_foreign_key' => $resourceOId,
+            'aro_foreign_key' => $group->id,
+            'aco_foreign_key' => $resource->id,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_OwnerSharedResourceAlongWithSoleManagerEmptyGroup_DelUserCase6()
     {
-        $userId = UuidFactory::uuid('user.id.nancy');
-        $groupLId = UuidFactory::uuid('group.id.leadership_team');
-        $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+        $userA = UserFactory::make()->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
 
         // CONTEXTUAL TEST CHANGES Make the group also owner of the resource
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => $groupLId,
-            'aco_foreign_key' => $resourceOId,
+            'aro_foreign_key' => $group->id,
+            'aco_foreign_key' => $resource->id,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_indirectlyOwnerSharedResourceWithSoleManagerEmptyGroup_DelUserCase7()
     {
-        $userId = UuidFactory::uuid('user.id.nancy');
-        $groupLId = UuidFactory::uuid('group.id.leadership_team');
-        $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+        $userA = UserFactory::make()->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
 
         // CONTEXTUAL TEST CHANGES Remove the direct permission of nancy
-        $this->Permissions->deleteAll(['aro_foreign_key IN' => $userId, 'aco_foreign_key' => $resourceOId]);
+        $this->Permissions->deleteAll(['aro_foreign_key IN' => $userA->id, 'aco_foreign_key' => $resource->id]);
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => $groupLId,
-            'aco_foreign_key' => $resourceOId,
+            'aro_foreign_key' => $group->id,
+            'aco_foreign_key' => $resource->id,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indirectlyOwnerSharedResourceWithSoleManagerEmptyGroup_DelUserCase7()
     {
-        $userId = UuidFactory::uuid('user.id.nancy');
-        $groupLId = UuidFactory::uuid('group.id.leadership_team');
-        $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+        $userA = UserFactory::make()->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
 
         // CONTEXTUAL TEST CHANGES Remove the direct permission of nancy
-        $this->Permissions->deleteAll(['aro_foreign_key IN' => $userId, 'aco_foreign_key' => $resourceOId]);
+        $this->Permissions->deleteAll(['aro_foreign_key IN' => $userA->id, 'aco_foreign_key' => $resource->id]);
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => $groupLId,
-            'aco_foreign_key' => $resourceOId,
+            'aro_foreign_key' => $group->id,
+            'aco_foreign_key' => $resource->id,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_OwnerAlongWithSoleManagerOfNotEmptyGroup_DelUserCase10()
     {
-        $userId = UuidFactory::uuid('user.id.orna');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        ResourceFactory::make()->withPermissionsFor([$userA, $group])->persist();
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_OwnerAlongWithSoleManagerOfNotEmptyGroup_DelUserCase10()
     {
-        $userId = UuidFactory::uuid('user.id.orna');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        ResourceFactory::make()->withPermissionsFor([$userA, $group])->persist();
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_indireclyOwnerWithSoleManagerOfNotEmptyGroup_DelUserCase11()
     {
-        $userId = UuidFactory::uuid('user.id.orna');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $group])->persist();
 
         // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
         $this->Permissions->deleteAll([
-            'aro_foreign_key' => $userId,
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.linux'),
+            'aro_foreign_key' => $userA->id,
+            'aco_foreign_key' => $resource->id,
         ]);
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indireclyOwnerWithSoleManagerOfNotEmptyGroup_DelUserCase11()
     {
-        $userId = UuidFactory::uuid('user.id.orna');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $group])->persist();
 
         // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
         $this->Permissions->deleteAll([
-            'aro_foreign_key' => $userId,
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.linux'),
+            'aro_foreign_key' => $userA->id,
+            'aco_foreign_key' => $resource->id,
         ]);
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_DelUserCase12()
     {
-        $userId = UuidFactory::uuid('user.id.ursula');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        ResourceFactory::make()
+            ->withPermissionsFor([$group])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_DelUserCase12()
     {
-        $userId = UuidFactory::uuid('user.id.ursula');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$group])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
-        $this->assertTrue(in_array(UuidFactory::uuid('resource.id.phpunit'), $resources));
+        $this->assertTrue(in_array($resource->id, $resources));
     }
 
     public function testFindShardResourceUserIsSoleOwner_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroups_DelUserCase13()
     {
-        $userId = UuidFactory::uuid('user.id.wang');
+        $userA = UserFactory::make()->user()->persist();
+        [$groupA, $groupB] = GroupFactory::make(2)->withGroupsManagersFor([$userA])->persist();
+        ResourceFactory::make()->withPermissionsFor([$groupA, $groupB])->persist();
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroups_DelUserCase13()
     {
-        $userId = UuidFactory::uuid('user.id.wang');
+        $userA = UserFactory::make()->user()->persist();
+        [$groupA, $groupB] = GroupFactory::make(2)->withGroupsManagersFor([$userA])->persist();
+        ResourceFactory::make()->withPermissionsFor([$groupA, $groupB])->persist();
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_DelUserCase14()
     {
-        $userId = UuidFactory::uuid('user.id.yvonne');
+        [$userA, $userB, $userC] = UserFactory::make(3)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        ResourceFactory::make()
+            ->withPermissionsFor([$group])
+            ->withPermissionsFor([$userC], Permission::READ)
+            ->persist();
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_DelUserCase14()
     {
-        $userId = UuidFactory::uuid('user.id.yvonne');
+        [$userA, $userB, $userC] = UserFactory::make(3)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        ResourceFactory::make()
+            ->withPermissionsFor([$group])
+            ->withPermissionsFor([$userC], Permission::READ)
+            ->persist();
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithNotEmptyGroup_DelUserCase15()
     {
-        $userId = UuidFactory::uuid('user.id.orna');
-        $groupMId = UuidFactory::uuid('group.id.management');
-        $resourceLId = UuidFactory::uuid('resource.id.linux');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $group])->persist();
 
         // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => $groupMId,
-            'aco_foreign_key' => $resourceLId,
+            'aro_foreign_key' => $group->id,
+            'aco_foreign_key' => $resource->id,
         ])->first();
         $permission->type = Permission::READ;
         $this->Permissions->save($permission);
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
-        $this->assertTrue(in_array($resourceLId, $resources));
+        $this->assertTrue(in_array($resource->id, $resources));
     }
 
     public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_SoleOwnerSharedResourceWithNotEmptyGroup_DelUserCase15()
     {
-        $userId = UuidFactory::uuid('user.id.orna');
-        $groupMId = UuidFactory::uuid('group.id.management');
-        $resourceLId = UuidFactory::uuid('resource.id.linux');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $group])->persist();
 
         // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => $groupMId,
-            'aco_foreign_key' => $resourceLId,
+            'aro_foreign_key' => $group->id,
+            'aco_foreign_key' => $resource->id,
         ])->first();
         $permission->type = Permission::READ;
         $this->Permissions->save($permission);
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userA->id, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
-        $this->assertTrue(in_array($resourceLId, $resources));
+        $this->assertTrue(in_array($resource->id, $resources));
     }
 }

@@ -66,7 +66,7 @@
         "ext-curl": "*",
         "ext-ldap": "*",
         "ext-iconv": "*",
-        "composer/composer": "^2.9.5",
+        "composer/composer": "^2.9.7",
         "cakephp/cakephp": "^5.2.12",
         "cakephp/migrations": "^4.0.0",
         "cakephp/plugin-installer": "^2.0",

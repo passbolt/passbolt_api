@@ -33,8 +33,8 @@ class ResourceTypesDataCommand extends DataCommand
     {
         return [
             [
-                'id' => UuidFactory::uuid('resource-types.id.password-string'),
-                'slug' => 'password-string',
+                'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_STRING),
+                'slug' => ResourceType::SLUG_PASSWORD_STRING,
                 'name' => 'Simple password',
                 'description' => 'The original passbolt resource type, where the secret is a non empty string.',
                 'definition' => json_encode([
@@ -68,8 +68,8 @@ class ResourceTypesDataCommand extends DataCommand
                 'modified' => date('Y-m-d H:i:s'),
             ],
             [
-                'id' => UuidFactory::uuid('resource-types.id.password-and-description'),
-                'slug' => 'password-and-description',
+                'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_AND_DESCRIPTION),
+                'slug' => ResourceType::SLUG_PASSWORD_AND_DESCRIPTION,
                 'name' => 'Password with description',
                 'description' => 'A resource with the password and the description encrypted.',
                 'definition' => json_encode([
@@ -270,7 +270,7 @@ class ResourceTypesDataCommand extends DataCommand
                 'modified' => date('Y-m-d H:i:s'),
             ],
             [
-                'id' => UuidFactory::uuid('resource-types.id.v5-password-string'),
+                'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_PASSWORD_STRING),
                 'slug' => ResourceType::SLUG_V5_PASSWORD_STRING,
                 'name' => 'Simple Password (Deprecated)',
                 'description' => 'The original passbolt resource type, kept for backward compatibility reasons.',
@@ -279,7 +279,7 @@ class ResourceTypesDataCommand extends DataCommand
                 'modified' => date('Y-m-d H:i:s'),
             ],
             [
-                'id' => UuidFactory::uuid('resource-types.id.v5-default'),
+                'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT),
                 'slug' => ResourceType::SLUG_V5_DEFAULT,
                 'name' => 'Default resource type',
                 'description' => 'The new default resource type introduced with v5.',
@@ -288,7 +288,7 @@ class ResourceTypesDataCommand extends DataCommand
                 'modified' => date('Y-m-d H:i:s'),
             ],
             [
-                'id' => UuidFactory::uuid('resource-types.id.v5-totp-standalone'),
+                'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_TOTP_STANDALONE),
                 'slug' => ResourceType::SLUG_V5_TOTP_STANDALONE,
                 'name' => 'Standalone TOTP',
                 'description' => 'The new standalone TOTP resource type introduced with v5.',
@@ -297,7 +297,7 @@ class ResourceTypesDataCommand extends DataCommand
                 'modified' => date('Y-m-d H:i:s'),
             ],
             [
-                'id' => UuidFactory::uuid('resource-types.id.v5-default-with-totp'),
+                'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT_WITH_TOTP),
                 'slug' => ResourceType::SLUG_V5_DEFAULT_WITH_TOTP,
                 'name' => 'Default resource type with TOTP',
                 'description' => 'The new default resource type with a TOTP introduced with v5.',
@@ -306,7 +306,7 @@ class ResourceTypesDataCommand extends DataCommand
                 'modified' => date('Y-m-d H:i:s'),
             ],
             [
-                'id' => UuidFactory::uuid('resource-types.id.v5-custom-fields'),
+                'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_CUSTOM_FIELD_STANDALONE),
                 'slug' => ResourceType::SLUG_V5_CUSTOM_FIELD_STANDALONE,
                 'name' => 'Standalone custom fields',
                 'description' => 'A resource with standalone custom fields.',
@@ -315,10 +315,19 @@ class ResourceTypesDataCommand extends DataCommand
                 'modified' => date('Y-m-d H:i:s'),
             ],
             [
-                'id' => UuidFactory::uuid('resource-types.id.v5-note'),
+                'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_NOTE),
                 'slug' => ResourceType::SLUG_V5_NOTE,
                 'name' => 'Standalone note',
                 'description' => 'A resource with standalone notes.',
+                'definition' => json_encode([]),
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_PIN_CODE),
+                'slug' => ResourceType::SLUG_V5_PIN_CODE,
+                'name' => 'Standalone pin code',
+                'description' => 'A resource with a standalone pin code.',
                 'definition' => json_encode([]),
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),

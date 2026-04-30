@@ -38,6 +38,10 @@ class ResourceTypesScenario implements FixtureScenarioInterface
                 'slug' => ResourceType::SLUG_V5_NOTE,
                 'definition' => SlugDefinition::v5Note(),
             ],
+            [
+                'slug' => ResourceType::SLUG_V5_PIN_CODE,
+                'definition' => SlugDefinition::v5PinCode(),
+            ],
         ])->persist();
     }
 }
