@@ -38,6 +38,7 @@ use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
+use Cake\ORM\TableRegistry;
 use Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException;
 use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
@@ -155,6 +156,13 @@ class InstallCommand extends PassboltCommand
                 $io->abort($e->getMessage());
             }
         }
+        // The Passbolt/Log.Actions table caches its catalogue in memory under
+        // the key `table.actions.all`. The cache is only invalidated when the
+        // application itself inserts a new action row, so wiping the database
+        // here would otherwise leave the cache pointing at rows that no longer
+        // exist, breaking the Activity tab on subsequent runs.
+        /** @psalm-suppress UndefinedMagicMethod */
+        TableRegistry::getTableLocator()->get('Passbolt/Log.Actions')->clearCache();
 
         // Quick mode - exit on success
         if ($args->getOption('quick')) {
