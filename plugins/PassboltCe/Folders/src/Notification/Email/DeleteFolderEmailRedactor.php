@@ -27,6 +27,7 @@ use Cake\Event\Event;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Service\Folders\FoldersDeleteService;
 use Passbolt\Locale\Service\LocaleService;
@@ -96,9 +97,14 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
         }
 
         $operator = $this->usersTable->findFirstForEmail($uac->getId());
+        $sendDeleteSelfEmail = EmailNotificationSettings::get('send.folder.deleteSelf');
         /** @var array<\App\Model\Entity\User> $recipients */
         $recipients = $this->findUsersUsernameToSendEmailTo($users);
         foreach ($recipients as $recipient) {
+            if ($recipient->id === $operator->id && !$sendDeleteSelfEmail) {
+                continue;
+            }
+
             $email = $this->createEmail($recipient, $operator, $folder);
             $emailCollection->addEmail($email);
         }

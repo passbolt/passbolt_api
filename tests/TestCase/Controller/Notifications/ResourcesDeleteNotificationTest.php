@@ -45,6 +45,7 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
     public function testResourcesDeleteNotification_NotificationEnabled(): void
     {
         $this->setEmailNotificationSetting('send.password.delete', true);
+        $this->setEmailNotificationSetting('send.password.deleteSelf', false);
 
         RoleFactory::make()->guest()->persist();
         [$user, $user2] = UserFactory::make(2)->user()->active()->persist();
@@ -60,6 +61,44 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
         $this->assertEmailInBatchContains('deleted the password', $user2->username);
         $this->assertEmailWithRecipientIsInNotQueue($user->username);
         $this->assertEmailWithRecipientIsInNotQueue($disabled->username);
+    }
+
+    public function testResourcesDeleteNotification_SelfDeleteNotificationEnabled(): void
+    {
+        $this->setEmailNotificationSetting('send.password.delete', true);
+        $this->setEmailNotificationSetting('send.password.deleteSelf', true);
+
+        RoleFactory::make()->guest()->persist();
+        [$user, $user2] = UserFactory::make(2)->user()->active()->persist();
+        ResourceTypeFactory::make()->default()->persist();
+        $r = ResourceFactory::make(['name' => 'Secret A'])->withPermissionsFor([$user, $user2])->persist();
+
+        $this->logInAs($user);
+        $this->deleteJson('/resources/' . $r->id . '.json');
+        $this->assertSuccess();
+
+        $this->assertEmailSubject($user->username, 'You deleted the password Secret A');
+        $this->assertEmailInBatchContains('You deleted the password Secret A', $user->username);
+        $this->assertEmailInBatchContains('deleted the password', $user2->username);
+    }
+
+    public function testResourcesDeleteNotification_PrivateResourceSelfDeleteNotificationEnabled(): void
+    {
+        $this->setEmailNotificationSetting('send.password.delete', true);
+        $this->setEmailNotificationSetting('send.password.deleteSelf', true);
+
+        RoleFactory::make()->guest()->persist();
+        $user = UserFactory::make()->user()->active()->persist();
+        ResourceTypeFactory::make()->default()->persist();
+        $r = ResourceFactory::make(['name' => 'Secret A'])->withPermissionsFor([$user])->persist();
+
+        $this->logInAs($user);
+        $this->deleteJson('/resources/' . $r->id . '.json');
+        $this->assertSuccess();
+
+        $this->assertEmailQueueCount(1);
+        $this->assertEmailSubject($user->username, 'You deleted the password Secret A');
+        $this->assertEmailInBatchContains('You deleted the password Secret A', $user->username);
     }
 
     public function testResourcesDeleteNotification_NotificationDisabled(): void

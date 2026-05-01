@@ -29,6 +29,7 @@ use App\Service\Resources\ResourcesUpdateService;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\Locale\Service\LocaleService;
 
 class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
@@ -105,9 +106,15 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
             $secretsDataById = Hash::combine($secrets, '{n}.user_id', '{n}.data');
         }
 
-        // Send emails to everybody that can see the resource
+        $sendUpdateSelfEmail = EmailNotificationSettings::get('send.password.updateSelf');
+
+        // Send emails to everybody that can see the resource. The updater is controlled separately.
         /** @var \App\Model\Entity\User $user */
         foreach ($users as $user) {
+            if ($user->id === $owner->id && !$sendUpdateSelfEmail) {
+                continue;
+            }
+
             $emailCollection->addEmail(
                 $this->createUpdateEmail(
                     $user,

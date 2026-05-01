@@ -73,6 +73,8 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
             'show.username' => true,
             'send.comment.add' => true,
             'send.password.create' => true,
+            'send.password.updateSelf' => true,
+            'send.password.deleteSelf' => false,
             'send.password.share' => true,
             'send.password.update' => true,
             'send.password.delete' => true,
@@ -111,6 +113,8 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
             'send.comment.add' => false,
             'send.password.create' => true,
             'send.password.share' => false,
+            'send.password.updateSelf' => false,
+            'send.password.deleteSelf' => true,
         ];
 
         $uac = UserFactory::make()->admin()->persistedUAC();

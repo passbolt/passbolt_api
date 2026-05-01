@@ -94,12 +94,11 @@ class ResourcesDeleteController extends AppController
 
         // Get the list of users who have access to the resource
         // useful to do now to notify users later, since it wont be possible to after delete
-        // The logged in user will not be notified.
+        // The logged in user self-notification is controlled by send.password.deleteSelf.
         $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
         $users = $this->Users
             ->findIndex(Role::USER, $options)
             ->find('locale')
-            ->where(['Users.id !=' => $this->User->id()])
             ->all();
 
         // Update the entity to delete=1, clear uri/desc/username and drop associated permissions
@@ -144,7 +143,7 @@ class ResourcesDeleteController extends AppController
      * Send email notification
      *
      * @param \App\Model\Entity\Resource $resource Resource
-     * @param \Cake\Datasource\ResultSetInterface $users Users who had access to the resource, deleter excluded
+     * @param \Cake\Datasource\ResultSetInterface $users Users who had access to the resource
      * @return void
      */
     protected function _notifyUser(Resource $resource, ResultSetInterface $users): void

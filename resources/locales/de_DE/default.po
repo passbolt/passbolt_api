@@ -1273,6 +1273,9 @@ msgstr "Die Einstellung \"Senden wenn ein Passwort geteilt wird\" sollte ein Boo
 msgid "The send on password updated setting should be a boolean."
 msgstr "Die Einstellung \"Senden beim Aktualisieren eines Passworts\" sollte ein Boolean sein."
 
+msgid "The send on password update creator setting should be a boolean."
+msgstr "Die Einstellung zum Benachrichtigen des Erstellers bei einer Passwortaktualisierung sollte ein Boolean sein."
+
 msgid "The send on password deleted setting should be a boolean."
 msgstr "Die Einstellung \"Senden, wenn ein Passwort gelöscht wird\" sollte ein Boolean sein."
 
