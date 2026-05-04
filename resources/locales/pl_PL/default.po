@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-04-02 11:49+0000\n"
-"PO-Revision-Date: 2026-04-12 21:44\n"
+"PO-Revision-Date: 2026-04-28 08:24\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -950,10 +950,10 @@ msgid "The name should be a valid BMP-UTF8 string."
 msgstr "Imię powinno być prawidłowym ciągiem BMP-UTF8."
 
 msgid "The name should not be greater than 50 characters."
-msgstr ""
+msgstr "Nazwa nie powinna być dłuższa niż 50 znaków."
 
 msgid "The name should not be reserved role."
-msgstr ""
+msgstr "Nazwa nie powinna być zastrzeżoną rolą."
 
 msgid "The description should be a valid BMP-UTF8 string."
 msgstr "Opis powinien być prawidłowym ciągiem BMP-UTF8."
@@ -962,7 +962,7 @@ msgid "The role cannot be deleted as it is associated with another user."
 msgstr ""
 
 msgid "A reserved role cannot be deleted."
-msgstr ""
+msgstr "Nie można usunąć zarezerwowanej roli."
 
 msgid "A role already exists for the given name."
 msgstr "Rola o tej nazwie już istnieje."
@@ -1205,7 +1205,7 @@ msgid "Welcome to passbolt, {0}!"
 msgstr "Witaj w passbolt, {0}!"
 
 msgid "Your role has been updated"
-msgstr ""
+msgstr "Twoja rola została zaktualizowana"
 
 msgid "The purify subject setting should be a boolean."
 msgstr "Ustawienie oczyszczania elementu powinno być wartością logiczną."
@@ -1604,10 +1604,10 @@ msgid "Run the install script to install the database tables"
 msgstr "Uruchom skrypt instalacyjny, aby zainstalować tabele bazy danych"
 
 msgid "The database version is supported."
-msgstr ""
+msgstr "Ta wersja bazy danych jest obsługiwana."
 
 msgid "The database version is deprecated."
-msgstr ""
+msgstr "Ta wersja bazy danych jest przestarzała."
 
 msgid "The database schema is up to date."
 msgstr "Schemat bazy danych jest aktualny."
@@ -2117,19 +2117,19 @@ msgid "Additional resource types are not enabled on this server."
 msgstr "Dodatkowe typy zasobów nie są włączone na tym serwerze."
 
 msgid "The role could not be saved."
-msgstr ""
+msgstr "Nie udało się zapisać roli."
 
 msgid "Could not save the role, please try again later."
-msgstr ""
+msgstr "Nie udało się zapisać roli, spróbuj ponownie później."
 
 msgid "The role does not exist or deleted."
-msgstr ""
+msgstr "Ta rola nie istnieje lub została usunięta."
 
 msgid "The role could not be deleted."
-msgstr ""
+msgstr "Nie udało się usunąć roli."
 
 msgid "Could not delete the role, please try again later."
-msgstr ""
+msgstr "Nie udało się usunąć roli, spróbuj ponownie później."
 
 msgid "There should be at least 4 roles"
 msgstr "Powinny istnieć co najmniej 4 role"
@@ -2141,10 +2141,10 @@ msgid "Validation success for role {0}"
 msgstr "Weryfikacja roli {0} powiodła się"
 
 msgid "The role could not be updated."
-msgstr ""
+msgstr "Nie udało się zaktualizować roli."
 
 msgid "Could not update the role, please try again later."
-msgstr ""
+msgstr "Nie udało się zaktualizować roli, spróbuj ponownie później."
 
 msgid "Could not validate secrets data."
 msgstr "Nie udało się zweryfikować danych sekretów."
@@ -3617,7 +3617,7 @@ msgid "This functionality is not available using AJAX/JSON."
 msgstr "Ta funkcjonalność jest niedostępna przy użyciu AJAX/JSON."
 
 msgid "This functionality is only available using AJAX/JSON."
-msgstr ""
+msgstr "Ta funkcjonalność dostępna wyłącznie przy użyciu AJAX/JSON."
 
 msgid "This authentication provider is already setup. Disable it first"
 msgstr "Ten dostawca uwierzytelniania jest już skonfigurowany. Najpierw go wyłącz"
@@ -4565,10 +4565,10 @@ msgid "Tenant ID should be a valid UUID."
 msgstr ""
 
 msgid "Client ID should be a valid UUID."
-msgstr ""
+msgstr "ID klienta powinien być prawidłowym UUID."
 
 msgid "Failed to obtain SMTP OAuth2 access token."
-msgstr ""
+msgstr "Nie udało się uzyskać tokenu dostępu SMTP OAuth2."
 
 msgid "SMTP OAuth2 token response from Microsoft did not contain an access token."
 msgstr ""
@@ -5192,10 +5192,10 @@ msgid "View user in passbolt"
 msgstr "Zobacz użytkownika w passbolt"
 
 msgid "A new role {0} has been created."
-msgstr ""
+msgstr "Utworzono nową rolę {0}."
 
 msgid "The role {0} has been renamed to {1}."
-msgstr ""
+msgstr "Nazwa roli {0} została zmieniona na {1}."
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
 msgstr "Ten użytkownik stracił swój klucz prywatny i/lub hasło dostępu i nie może zakończyć procesu odzyskiwania konta."
@@ -5399,16 +5399,16 @@ msgid "{0} resources were shared with you."
 msgstr "udostępniono Ci {0} zasobów."
 
 msgid "{0} changed your role to {1}."
-msgstr ""
+msgstr "Użytkownik {0} zmienił Twoją rolę na {1}."
 
 msgid "You can no longer perform administration tasks."
-msgstr ""
+msgstr "Nie możesz już wykonywać zadań administracyjnych."
 
 msgid "This email is an automatic notification sent by"
 msgstr "Ten email jest automatycznym powiadomieniem wysłanym przez"
 
 msgid "To disable these notifications, contact an administrator."
-msgstr ""
+msgstr "Aby wyłączyć te powiadomienia, skontaktuj się z administratorem."
 
 msgid "The locale {0} is not valid or not supported."
 msgstr "Ustawienie regionalne {0} jest nieprawidłowe lub nie jest obsługiwane."
