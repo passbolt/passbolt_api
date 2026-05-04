@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-04-02 12:51+0000\n"
-"PO-Revision-Date: 2026-04-02 14:13\n"
+"PO-Revision-Date: 2026-04-24 17:55\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Ukrainian\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +74,7 @@ msgid "The request data can not be empty."
 msgstr "Дані запиту не можуть бути порожніми."
 
 msgid "You are already logged in."
-msgstr ""
+msgstr "Ви вже увійшли."
 
 msgid "You are successfully logged in."
 msgstr "Ви успішно увійшли."
@@ -278,13 +278,13 @@ msgid "The resource has been updated successfully."
 msgstr "Ресурс успішно оновлено."
 
 msgid "The role was deleted."
-msgstr ""
+msgstr "Роль видалено."
 
 msgid "The role identifier is not valid."
 msgstr ""
 
 msgid "The role was successfully updated."
-msgstr ""
+msgstr "Роль успішно оновлено."
 
 msgid "The secret does not exist."
 msgstr "Секрет не існує."
@@ -959,7 +959,7 @@ msgid "The description should be a valid BMP-UTF8 string."
 msgstr "Опис має бути дійсним рядком BMP-UTF8."
 
 msgid "The role cannot be deleted as it is associated with another user."
-msgstr ""
+msgstr "Роль не може бути видалена, оскільки вона пов'язана з іншим користувачем."
 
 msgid "A reserved role cannot be deleted."
 msgstr ""
@@ -1034,7 +1034,7 @@ msgid "The username is already in use."
 msgstr "Імʼя користувача вже використовується."
 
 msgid "The role does not exist."
-msgstr ""
+msgstr "Ролі не існує."
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "Користувач не повинен бути єдиним власником спільного вмісту, передайте власність іншим користувачам."
@@ -1172,10 +1172,10 @@ msgid "{0} edited the resource {1}"
 msgstr "{0} відредагував(ла) ресурс {1}"
 
 msgid "{0} created a new role {1}"
-msgstr ""
+msgstr "{0} створив(ла) нову роль {1}"
 
 msgid "{0} updated the role {1}"
-msgstr ""
+msgstr "{0} оновив(ла) роль {1}"
 
 msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} не може завершити процес відновлення облікового запису!"
@@ -1211,7 +1211,7 @@ msgid "Welcome to passbolt, {0}!"
 msgstr "Ласкаво просимо до Passbolt, {0}!"
 
 msgid "Your role has been updated"
-msgstr ""
+msgstr "Вашу роль було оновлено"
 
 msgid "The purify subject setting should be a boolean."
 msgstr "Налаштування теми очищення має бути логічним значенням."
@@ -1610,10 +1610,10 @@ msgid "Run the install script to install the database tables"
 msgstr "Запустіть скрипт встановлення, щоб встановити таблиці бази даних"
 
 msgid "The database version is supported."
-msgstr ""
+msgstr "Версія бази даних підтримується."
 
 msgid "The database version is deprecated."
-msgstr ""
+msgstr "Застаріла версія бази даних."
 
 msgid "The database schema is up to date."
 msgstr "Схема бази даних актуально оновлена."
@@ -2123,10 +2123,10 @@ msgid "Additional resource types are not enabled on this server."
 msgstr "Додаткові типи ресурсів не увімкнені на цьому сервері."
 
 msgid "The role could not be saved."
-msgstr ""
+msgstr "Роль не може бути збережена."
 
 msgid "Could not save the role, please try again later."
-msgstr ""
+msgstr "Не вдалося зберегти цю роль, спробуйте ще раз пізніше."
 
 msgid "The role does not exist or deleted."
 msgstr ""
