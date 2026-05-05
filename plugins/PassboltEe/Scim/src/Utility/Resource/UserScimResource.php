@@ -432,7 +432,7 @@ class UserScimResource implements ScimResourceInterface
         ]);
         if (!$this->ScimEntries->save($scimEntry, ['lockForUpdate' => true])) {
             Log::error('Unable to save the scim entity');
-            Log::error(print_r($this->$scimEntry, return: true));
+            $this->logScimDebug('createScimEntry', $scimEntry);
 
             throw new ConflictException(
                 __('An unexpected error occurred while creating the user in the database'),
@@ -671,7 +671,7 @@ class UserScimResource implements ScimResourceInterface
             }
         }
 
-        $this->updateDatabaseUser($userPatchData, $scimEntryPatchData, $patchRequest);
+        $this->updateDatabaseUser($userPatchData, $scimEntryPatchData);
         // Set the object properties with the updated information
         $this->setFromDatabase($this->userEntity->id);
 
@@ -725,15 +725,14 @@ class UserScimResource implements ScimResourceInterface
      *
      * @param array $userPatchData
      * @param array $scimEntryPatchData
-     * @param mixed $requestData
      * @return bool
      * @throws \Exception
      */
-    protected function updateDatabaseUser(array $userPatchData, array $scimEntryPatchData, mixed $requestData): bool
+    protected function updateDatabaseUser(array $userPatchData, array $scimEntryPatchData): bool
     {
         return $this->Users
             ->getConnection()
-            ->transactional(function () use ($userPatchData, $scimEntryPatchData, $requestData) {
+            ->transactional(function () use ($userPatchData, $scimEntryPatchData) {
                 $this->assertAdminSuspendAllowed($userPatchData);
 
                 if ($userPatchData) {
@@ -753,8 +752,7 @@ class UserScimResource implements ScimResourceInterface
                     ]);
                     if (!$this->Users->save($this->userEntity, ['atomic' => false])) {
                         ScimLog::error('Unable to update the user from the request data');
-                        ScimLog::error(print_r($requestData, return: true));
-                        ScimLog::error(print_r($this->userEntity, return: true));
+                        $this->logScimDebug('updateDatabaseUser/user', $userPatchData, $this->userEntity);
 
                         throw new ConflictException(
                             $this->getValidationErrorMessage($this->userEntity),
@@ -784,8 +782,7 @@ class UserScimResource implements ScimResourceInterface
                         ])
                     ) {
                         ScimLog::error('Unable to update the scim entry from the request data');
-                        ScimLog::error(print_r($requestData, return: true));
-                        ScimLog::error(print_r($scimEntry, return: true));
+                        $this->logScimDebug('updateDatabaseUser/scim_entry', $scimEntryPatchData, $scimEntry);
 
                         throw new ConflictException(
                             $this->getValidationErrorMessage($scimEntry),
@@ -834,7 +831,7 @@ class UserScimResource implements ScimResourceInterface
             $userPatchData['disabled'] = $this->getDisabledValue((bool)$active);
         }
 
-        $this->updateDatabaseUser($userPatchData, $scimEntryPatchData, $putRequestData);
+        $this->updateDatabaseUser($userPatchData, $scimEntryPatchData);
         // Set the object properties with the updated information
         $this->setFromDatabase($this->userEntity->id);
 
@@ -1003,5 +1000,27 @@ class UserScimResource implements ScimResourceInterface
         }
 
         return trim(implode(' ', $nameParts));
+    }
+
+    /**
+     * Emit a debug-level dump of SCIM payloads for troubleshooting failed saves.
+     *
+     * Gated behind `passbolt.plugins.scim.logScimRequests` (off by default) so
+     * SCIM payloads — which carry PII (userName, emails, names) — are not
+     * written to the log unless an admin opts in. Payloads are JSON-encoded into
+     * the SCIM log channel; for entities, this respects `_hidden` fields.
+     *
+     * @param string $context short identifier for the failure site
+     * @param mixed ...$payloads values to JSON-encode and emit
+     * @return void
+     */
+    private function logScimDebug(string $context, mixed ...$payloads): void
+    {
+        if (!Configure::read('passbolt.plugins.scim.logScimRequests', false)) {
+            return;
+        }
+        foreach ($payloads as $payload) {
+            ScimLog::debug($context . ': ' . json_encode($payload));
+        }
     }
 }

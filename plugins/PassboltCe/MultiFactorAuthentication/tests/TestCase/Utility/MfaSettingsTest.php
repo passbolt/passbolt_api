@@ -32,15 +32,6 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 class MfaSettingsTest extends MfaIntegrationTestCase
 {
     /**
-     * @var array
-     */
-    public array $fixtures = [
-        'plugin.Passbolt/AccountSettings.AccountSettings',
-        'app.Base/Users',
-        'app.Base/Roles',
-    ];
-
-    /**
      * @var \Cake\ORM\Table
      */
     protected $OrganizationSettings;
@@ -83,7 +74,8 @@ class MfaSettingsTest extends MfaIntegrationTestCase
         parent::setUp();
         $this->OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
 
-        $this->uac = $this->mockUserAccessControl('ada');
+        $userA = UserFactory::make()->user()->persist();
+        $this->uac = $this->makeUac($userA);
         $this->defaultAccountConfig = [
             MfaSettings::PROVIDERS => [
                 MfaSettings::PROVIDER_TOTP,
@@ -107,7 +99,7 @@ class MfaSettingsTest extends MfaIntegrationTestCase
         $this->assertInstanceOf(MfaOrgSettings::class, $settings->getOrganizationSettings());
         $this->assertNull($settings->getAccountSettings());
 
-        $this->mockMfaAccountSettings('ada', $this->defaultAccountConfig);
+        $this->mockMfaAccountSettings($this->uac, $this->defaultAccountConfig);
         $settings = MfaSettings::get($this->uac);
         $this->assertInstanceOf(MfaAccountSettings::class, $settings->getAccountSettings());
     }
@@ -121,7 +113,7 @@ class MfaSettingsTest extends MfaIntegrationTestCase
         $orgSettings = ['providers' => [MfaSettings::PROVIDER_TOTP => true]];
         $this->mockMfaOrgSettings($orgSettings, 'configure');
         $accountSettings = $this->defaultAccountConfig;
-        $this->mockMfaAccountSettings('ada', $accountSettings);
+        $this->mockMfaAccountSettings($this->uac, $accountSettings);
         $settings = MfaSettings::get($this->uac);
 
         $status = $settings->getProvidersStatuses();
@@ -142,7 +134,7 @@ class MfaSettingsTest extends MfaIntegrationTestCase
         $orgSettings = ['providers' => [MfaSettings::PROVIDER_TOTP => true]];
         $this->mockMfaOrgSettings($orgSettings, 'configure');
         $accountSettings = $this->defaultAccountConfig;
-        $this->mockMfaAccountSettings('ada', $accountSettings);
+        $this->mockMfaAccountSettings($this->uac, $accountSettings);
         $settings = MfaSettings::get($this->uac);
 
         $providers = $settings->getEnabledProviders();
@@ -169,7 +161,7 @@ class MfaSettingsTest extends MfaIntegrationTestCase
         $orgSettings = ['providers' => [MfaSettings::PROVIDER_TOTP => true]];
         $this->mockMfaOrgSettings($orgSettings, 'configure');
         $accountSettings = $this->defaultAccountConfig;
-        $this->mockMfaAccountSettings('ada', $accountSettings);
+        $this->mockMfaAccountSettings($this->uac, $accountSettings);
         $settings = MfaSettings::get($this->uac);
 
         $providersUrls = $settings->getProvidersVerifyUrls(true);
@@ -186,7 +178,7 @@ class MfaSettingsTest extends MfaIntegrationTestCase
         $orgSettings = ['providers' => [MfaSettings::PROVIDER_TOTP => true]];
         $this->mockMfaOrgSettings($orgSettings, 'configure');
         $accountSettings = $this->defaultAccountConfig;
-        $this->mockMfaAccountSettings('ada', $accountSettings);
+        $this->mockMfaAccountSettings($this->uac, $accountSettings);
         $settings = MfaSettings::get($this->uac);
 
         $defaultUrl = $settings->getDefaultVerifyUrl(false);
@@ -204,7 +196,7 @@ class MfaSettingsTest extends MfaIntegrationTestCase
         $orgSettings = ['providers' => [MfaSettings::PROVIDER_TOTP => true]];
         $this->mockMfaOrgSettings($orgSettings, 'configure');
         $accountSettings = $this->defaultAccountConfig;
-        $this->mockMfaAccountSettings('ada', $accountSettings);
+        $this->mockMfaAccountSettings($this->uac, $accountSettings);
         $settings = MfaSettings::get($this->uac);
 
         $defaultUrl = $settings->getDefaultVerifyUrl(false);
@@ -251,7 +243,7 @@ class MfaSettingsTest extends MfaIntegrationTestCase
                 MfaAccountSettings::OTP_PROVISIONING_URI => MfaOtpFactory::generateTOTP($this->uac),
             ],
         ];
-        $this->mockMfaAccountSettings('ada', $accountSettings);
+        $this->mockMfaAccountSettings($this->uac, $accountSettings);
         $settings = MfaSettings::get($this->uac);
 
         $status = $settings->getProvidersStatuses();

@@ -141,6 +141,14 @@ class ResourceTypeFactory extends CakephpBaseFactory
         ]);
     }
 
+    public function v5PinCode(): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_PIN_CODE),
+            'slug' => ResourceType::SLUG_V5_PIN_CODE,
+        ]);
+    }
+
     public function deleted(?Date $deleted = null): self
     {
         if (is_null($deleted)) {

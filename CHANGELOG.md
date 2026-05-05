@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.12.0-test.1] - 2026-04-30
+### Added
+- PB-50963 Test package with PRO dependencies
+
 ## [5.11.0] - 2026-04-09
 ### Added
 - PB-49875 OAuth support for smtp authentication
