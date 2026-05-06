@@ -89,6 +89,18 @@ try {
     }
 }
 
+// Workaround for cakephp/cakephp#19407: Session::_defaultConfig() only applies the
+// SameSite=Lax default to the 'php' preset. Set it explicitly so cache/database/cake
+// presets get it too. Remove once cakephp/cakephp ships the fix.
+// The ini key contains literal dots, so it must be set inside the array — not via
+// a dotted Configure path, which Configure::write would interpret as nesting.
+$sessionIni = (array)Configure::read('Session.ini');
+if (!isset($sessionIni['session.cookie_samesite'])) {
+    $sessionIni['session.cookie_samesite'] = 'Lax';
+    Configure::write('Session.ini', $sessionIni);
+}
+unset($sessionIni);
+
 /**
  * Overwrite these paths. This is a helper to ensure CakePHP3 to 4 retro-compatibility
  * It will also be helpful if we ever have multiple plugin directories. Same goes for locales.
