@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\TestData\Command\Base;
 
 use App\Utility\UuidFactory;
+use Passbolt\ResourceTypes\Model\Definition\SlugDefinition;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\TestData\Lib\DataCommand;
 
@@ -274,7 +275,7 @@ class ResourceTypesDataCommand extends DataCommand
                 'slug' => ResourceType::SLUG_V5_PASSWORD_STRING,
                 'name' => 'Simple Password (Deprecated)',
                 'description' => 'The original passbolt resource type, kept for backward compatibility reasons.',
-                'definition' => json_encode([]),
+                'definition' => SlugDefinition::v5PasswordString(),
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
             ],
@@ -283,7 +284,7 @@ class ResourceTypesDataCommand extends DataCommand
                 'slug' => ResourceType::SLUG_V5_DEFAULT,
                 'name' => 'Default resource type',
                 'description' => 'The new default resource type introduced with v5.',
-                'definition' => json_encode([]),
+                'definition' => SlugDefinition::v5Default(),
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
             ],
@@ -292,7 +293,7 @@ class ResourceTypesDataCommand extends DataCommand
                 'slug' => ResourceType::SLUG_V5_TOTP_STANDALONE,
                 'name' => 'Standalone TOTP',
                 'description' => 'The new standalone TOTP resource type introduced with v5.',
-                'definition' => json_encode([]),
+                'definition' => SlugDefinition::v5Totp(),
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
             ],
@@ -301,7 +302,7 @@ class ResourceTypesDataCommand extends DataCommand
                 'slug' => ResourceType::SLUG_V5_DEFAULT_WITH_TOTP,
                 'name' => 'Default resource type with TOTP',
                 'description' => 'The new default resource type with a TOTP introduced with v5.',
-                'definition' => json_encode([]),
+                'definition' => SlugDefinition::v5DefaultTotp(),
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
             ],
@@ -310,7 +311,7 @@ class ResourceTypesDataCommand extends DataCommand
                 'slug' => ResourceType::SLUG_V5_CUSTOM_FIELD_STANDALONE,
                 'name' => 'Standalone custom fields',
                 'description' => 'A resource with standalone custom fields.',
-                'definition' => json_encode([]),
+                'definition' => SlugDefinition::v5CustomFields(),
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
             ],
@@ -319,7 +320,7 @@ class ResourceTypesDataCommand extends DataCommand
                 'slug' => ResourceType::SLUG_V5_NOTE,
                 'name' => 'Standalone note',
                 'description' => 'A resource with standalone notes.',
-                'definition' => json_encode([]),
+                'definition' => SlugDefinition::v5Note(),
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
             ],
@@ -328,7 +329,7 @@ class ResourceTypesDataCommand extends DataCommand
                 'slug' => ResourceType::SLUG_V5_PIN_CODE,
                 'name' => 'Standalone pin code',
                 'description' => 'A resource with a standalone pin code.',
-                'definition' => json_encode([]),
+                'definition' => SlugDefinition::v5PinCode(),
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
             ],
