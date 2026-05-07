@@ -1,10 +1,11 @@
 Release song: https://www.youtube.com/watch?v=GXbOROT0OuA
 
-Passbolt 5.12.0-test.1
+Passbolt 5.12.0-test.3
 
-## [5.12.0-test.1] - 2026-05-07
+## [5.12.0-test.3] - 2026-05-07
 ### Added
 - PB-51081 Add pin code resource type
+- PB-51516 Enable Safari by default
 
 ### Security
 - PB-50625 Fix GHSA-F886-M6HF-6M8V security vulnerability advisory (Medium)
