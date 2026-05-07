@@ -184,6 +184,13 @@ class SlugDefinition
         ],
     ];
 
+    private static array $pinCodeSecretPropertySchemaV5 = [
+        'type' => 'string',
+        'minLength' => 4,
+        'maxLength' => 12,
+        'pattern' => '^\d+$',
+    ];
+
     /**
      * @return string|false
      */
@@ -624,6 +631,36 @@ class SlugDefinition
                 ],
                 'properties' => [
                     'object_type' => self::$objectTypeSecretPropertySchemaV5,
+                    'description' => self::$descriptionSecretPropertySchemaV5,
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @return string|false
+     */
+    public static function v5PinCode(): string|false
+    {
+        return json_encode([
+            'resource' => [
+                'type' => 'object',
+                'required' => ['name'],
+                'properties' => [
+                    'name' => self::$nameMetadataPropertySchemaV5,
+                    'description' => self::$descriptionMetadataPropertySchemaV5,
+                    'icon' => self::$iconMetadataPropertySchemaV5,
+                ],
+            ],
+            'secret' => [
+                'type' => 'object',
+                'required' => [
+                    'pin_code',
+                    'object_type',
+                ],
+                'properties' => [
+                    'object_type' => self::$objectTypeSecretPropertySchemaV5,
+                    'pin_code' => self::$pinCodeSecretPropertySchemaV5,
                     'description' => self::$descriptionSecretPropertySchemaV5,
                 ],
             ],

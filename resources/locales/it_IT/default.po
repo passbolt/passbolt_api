@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2026-04-02 11:49+0000\n"
-"PO-Revision-Date: 2026-04-02 13:48\n"
+"POT-Creation-Date: 2026-04-02 12:51+0000\n"
+"PO-Revision-Date: 2026-04-02 14:13\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,8 @@ msgstr ""
 "X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "X-Crowdin-Project-ID: 2\n"
 "X-Crowdin-Language: it\n"
-"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/default.po\n"
-"X-Crowdin-File-ID: 212\n"
+"X-Crowdin-File: /[passbolt.passbolt-pro-api] release/resources/locales/en_UK/default.po\n"
+"X-Crowdin-File-ID: 220\n"
 "Language: it_IT\n"
 
 msgid "You need to login to access this location."
@@ -1089,6 +1089,12 @@ msgstr "Il campo deve essere null quando si crea un nuovo record."
 
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "L'identificatore della chiave dovrebbe essere una stringa di 8 caratteri esadecimali."
+
+msgid "The provided IP is invalid."
+msgstr "L'IP del provider non è valido."
+
+msgid "The provided user agent is invalid."
+msgstr "Lo user agent del provider non è valido."
 
 msgid "{0} updated your memberships in several groups"
 msgstr "{0} ha aggiornato la tua appartenenza a diversi gruppi"
@@ -4780,6 +4786,15 @@ msgstr "È richiesto uno stato di forza ssl."
 msgid "The force ssl setting should be a valid boolean."
 msgstr "L'impostazione della forza ssl dovrebbe essere un booleano valido."
 
+msgid "A subscription key is required."
+msgstr "È richiesta una chiave di sottoscrizione."
+
+msgid "The subscription key should not be empty."
+msgstr "La chiave di abbonamento non deve essere vuota."
+
+msgid "The subscription format is not valid."
+msgstr "Formato dell'abbonamento non valido."
+
 msgid "The passbolt config is writable."
 msgstr "La configurazione di passbolt è scrivibile."
 
@@ -4981,12 +4996,6 @@ msgstr "Oppure seleziona un file dal computer"
 msgid "Some binary things are happening..."
 msgstr "Alcune cose binarie stanno accadendo..."
 
-msgid "Passbolt Pro activation."
-msgstr "Attivazione Passbolt Pro."
-
-msgid "Copy paste your Passbolt Pro subscription key here"
-msgstr "Copia e incolla qui la tua chiave di abbonamento Passbolt Pro"
-
 msgid "Choose your preferences."
 msgstr "Scegli le tue preferenze."
 
@@ -5005,8 +5014,14 @@ msgstr "Forza SSL?"
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
 msgstr "Forzare SSL significa che passbolt non accetta connessioni provenienti da un protocollo non sicuro. Se SSL è forzato, il tuo server deve essere configurato per HTTPS. È altamente raccomandato di farlo."
 
-msgid "Welcome to Passbolt! Let's get started with the configuration."
-msgstr "Benvenuto su Passbolt! Comincia la configurazione."
+msgid "Passbolt Pro activation."
+msgstr "Attivazione Passbolt Pro."
+
+msgid "Copy paste your Passbolt Pro subscription key here"
+msgstr "Copia e incolla qui la tua chiave di abbonamento Passbolt Pro"
+
+msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
+msgstr "Benvenuto su Passbolt Pro! Cominciamo con la configurazione."
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "Bello! Il tuo ambiente è pronto per passbolt."
@@ -5071,12 +5086,6 @@ msgstr "Aiuto"
 msgid "Need help? You can find more information on how to install passbolt in the official online help."
 msgstr "Hai bisogno di aiuto? Puoi trovare maggiori informazioni su come installare passbolt nella guida ufficiale."
 
-msgid "What subscription key?"
-msgstr "Quale chiave di abbonamento?"
-
-msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
-msgstr "La chiave di abbonamento è un file, che ti è stato inviato al momento dell'acquisto di Passbolt Pro. Abbiamo bisogno della chiave di abbonamento per attivare le funzioni Passbolt Pro di Passbolt."
-
 msgid "Send test email"
 msgstr "Invia e-mail di prova"
 
@@ -5097,6 +5106,2007 @@ msgstr "A cosa serve un server SMTP?"
 
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "Passbolt usa un server SMTP per inviare e-mail di invito dopo la creazione di un account, e per inviare notifiche via e-mail."
+
+msgid "What subscription key?"
+msgstr "Quale chiave di abbonamento?"
+
+msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
+msgstr "La chiave di abbonamento è un file, che ti è stato inviato al momento dell'acquisto di Passbolt Pro. Abbiamo bisogno della chiave di abbonamento per attivare le funzioni Passbolt Pro di Passbolt."
+
+msgid "The user id is invalid."
+msgstr "L'id utente non è valido."
+
+msgid "The authentication token id is invalid."
+msgstr "L'id del token di autenticazione non è valido."
+
+msgid "Only guests are allowed to create an account recovery request."
+msgstr "Solo gli ospiti possono creare una richiesta di recupero dell'account."
+
+msgid "Invalid request. Please provide the required data."
+msgstr "Richiesta non valida. Si prega di fornire i dati richiesti."
+
+msgid "The request id is invalid."
+msgstr "L'id della richiesta non è valido."
+
+msgid "Please provide a valid request id."
+msgstr "Si prega di fornire un id di richiesta valido."
+
+msgid "You cannot reuse the account recovery key."
+msgstr "Non puoi riutilizzare la chiave di recupero dell\\u0027account."
+
+msgid "A policy is required."
+msgstr "È necessaria una politica."
+
+msgid "The policy name should not be empty."
+msgstr "Il nome della politica non deve essere vuoto."
+
+msgid "The policy should be one of the following: {0}."
+msgstr "Il criterio dovrebbe essere uno dei seguenti: {0}."
+
+msgid "The public key identifier should be a valid UUID."
+msgstr "L'identificatore della chiave pubblica dovrebbe essere un UUID valido."
+
+msgid "The public key identifier should not be empty."
+msgstr "L'identificatore della chiave pubblica non dovrebbe essere vuoto."
+
+msgid "The identifier of the user who created the organization policy should be a valid UUID."
+msgstr "L'identificatore dell'utente che ha creato il criterio dell'organizzazione dovrebbe essere un UUID valido."
+
+msgid "The identifier of the user who created the organization policy is required."
+msgstr "È richiesto l'identificativo dell'utente che ha creato il criterio di organizzazione."
+
+msgid "The identifier of the user who created the organization policy should not be empty."
+msgstr "L'identificatore dell'utente che ha creato il criterio dell'organizzazione non dovrebbe essere vuoto."
+
+msgid "The identifier of the user who modified the organization policy should be a valid UUID."
+msgstr "L'identificatore dell'utente che ha modificato il criterio dell'organizzazione dovrebbe essere un UUID valido."
+
+msgid "The identifier of the user who modified the organization policy is required."
+msgstr "È richiesto l'identificativo dell'utente che ha modificato il criterio di organizzazione."
+
+msgid "The identifier of the user who modified the organization policy should not be empty."
+msgstr "L'identificatore dell'utente che ha modificato il criterio dell'organizzazione non deve essere vuoto."
+
+msgid "Could not validate policy data."
+msgstr "Impossibile convalidare i dati dei criteri."
+
+msgid "The armored key is too big."
+msgstr "La chiave blindata è troppo grande."
+
+msgid "The \"deleted\" field should be a valid date."
+msgstr "Il campo \"cancellato\" deve essere una data valida."
+
+msgid "The identifier of the user who created the organization public key should be a valid UUID."
+msgstr "L'identificatore dell'utente che ha creato la chiave pubblica dell'organizzazione deve essere un UUID valido."
+
+msgid "The identifier of the user who created the organization public key is required."
+msgstr "È richiesto l'identificativo dell'utente che ha creato la chiave pubblica dell'organizzazione."
+
+msgid "The identifier of the user who created the organization public key should not be empty."
+msgstr "L'identificatore dell'utente che ha creato la chiave pubblica dell'organizzazione non deve essere vuoto."
+
+msgid "The identifier of the user who modified the organization public key should be a valid UUID."
+msgstr "L'identificatore dell'utente che ha modificato la chiave pubblica dell'organizzazione deve essere un UUID valido."
+
+msgid "The identifier of the user who modified the organization public key is required."
+msgstr "È richiesto l'identificatore dell'utente che ha modificato la chiave pubblica dell'organizzazione."
+
+msgid "The identifier of the user who modified the organization public key should not be empty."
+msgstr "L'identificatore dell'utente che ha modificato la chiave pubblica dell'organizzazione non deve essere vuoto."
+
+msgid "You cannot reuse the user keys."
+msgstr "Non è possibile riutilizzare le chiavi utente."
+
+msgid "You cannot reuse account recovery organization public keys."
+msgstr "Non è possibile riutilizzare le chiavi pubbliche dell'organizzazione di recupero account."
+
+msgid "You cannot reuse the metadata keys."
+msgstr "Non puoi riutilizzare le chiavi dei metadati."
+
+msgid "Could not validate public key data."
+msgstr "Impossibile convalidare i dati della chiave pubblica."
+
+msgid "The recipient_foreign_model should be a valid string."
+msgstr "Il recipient_foreign_model deve essere una stringa valida."
+
+msgid "The recipient_foreign_model must be provided."
+msgstr "Il recipient_foreign_model deve essere fornito."
+
+msgid "The recipient_foreign_model should not be empty."
+msgstr "Il recipient_foreign_model non deve essere vuoto."
+
+msgid "The recipient_foreign_model must be one of the following: {0}."
+msgstr "Il ricevent_foreign_model deve essere uno dei seguenti: {0}."
+
+msgid "The data should be a valid string."
+msgstr "I dati devono essere una stringa valida."
+
+msgid "The data is too big."
+msgstr "I dati sono troppo grandi."
+
+msgid "The identifier of the user who created the private key passwords should be a valid UUID."
+msgstr "L'identificatore dell'utente che ha creato le password della chiave privata deve essere un UUID valido."
+
+msgid "The identifier of the user who created the private key passwords is required."
+msgstr "È richiesto l'identificativo dell'utente che ha creato le password della chiave privata."
+
+msgid "The identifier of the user who created the private key passwords should not be empty."
+msgstr "L'identificatore dell'utente che ha creato le password della chiave privata non deve essere vuoto."
+
+msgid "The identifier of the user who modified the private key passwords should be a valid UUID."
+msgstr "L'identificatore dell'utente che ha modificato le password della chiave privata deve essere un UUID valido."
+
+msgid "The identifier of the user who modified the private key passwords is required."
+msgstr "È richiesto l'identificativo dell'utente che ha modificato le password della chiave privata."
+
+msgid "The identifier of the user who modified the private key passwords should not be empty."
+msgstr "L'identificativo dell'utente che ha modificato le password della chiave privata non deve essere vuoto."
+
+msgid "The private key identifier should be a valid UUID."
+msgstr "L'identificatore della chiave privata deve essere un UUID valido."
+
+msgid "A private key identifier is required."
+msgstr "È richiesto un identificatore di chiave privata."
+
+msgid "The private key identifier should not be empty."
+msgstr "L'identificatore della chiave privata non deve essere vuoto."
+
+msgid "Could not validate password data."
+msgstr "Impossibile convalidare i dati della password."
+
+msgid "The identifier of the user who created the private key  should be a valid UUID."
+msgstr "L'identificativo dell'utente che ha creato la chiave privata deve essere un UUID valido."
+
+msgid "The identifier of the user who created the private key  is required."
+msgstr "È richiesto l'identificativo dell'utente che ha creato la chiave privata."
+
+msgid "The identifier of the user who created the private key  should not be empty."
+msgstr "L'identificativo dell'utente che ha creato la chiave privata non deve essere vuoto."
+
+msgid "The identifier of the user who modified the private key  should be a valid UUID."
+msgstr "L'identificativo dell'utente che ha modificato la chiave privata deve essere un UUID valido."
+
+msgid "The identifier of the user who modified the private key is required."
+msgstr "È richiesto l'identificativo dell'utente che ha modificato la chiave privata."
+
+msgid "The identifier of the user who modified the private key  should not be empty."
+msgstr "L'identificativo dell'utente che ha modificato la chiave privata non deve essere vuoto."
+
+msgid "The account recovery private key is not valid."
+msgstr "La chiave privata di recupero account non è valida."
+
+msgid "The status should not be a valid string."
+msgstr "Lo stato non dovrebbe essere una stringa valida."
+
+msgid "This status is not supported."
+msgstr "Questo stato non è supportato."
+
+msgid "The status length should be maximum {0} characters."
+msgstr "Lo stato deve avere una lunghezza massima di {0} caratteri."
+
+msgid "The identifier of the user who created the request should be a valid UUID."
+msgstr "L'identificativo dell'utente che ha creato la richiesta deve essere un UUID valido."
+
+msgid "The identifier of the user who created the request is required."
+msgstr "È richiesto l'identificativo dell'utente che ha creato la richiesta."
+
+msgid "The identifier of the user who created the request should not be empty."
+msgstr "L'identificativo dell'utente che ha creato la richiesta non deve essere vuoto."
+
+msgid "The identifier of the user who modified the request should be a valid UUID."
+msgstr "L'identificativo dell'utente che ha modificato la richiesta deve essere un UUID valido."
+
+msgid "The identifier of the user who modified the request is required."
+msgstr "È richiesto l'identificativo dell'utente che ha modificato la richiesta."
+
+msgid "The identifier of the user who modified the request should not be empty."
+msgstr "L'identificativo dell'utente che ha modificato la richiesta non deve essere vuoto."
+
+msgid "The request is invalid."
+msgstr "Richiesta non valida."
+
+msgid "The account request is invalid."
+msgstr "La richiesta dell'account non è valida."
+
+msgid "Invalid response status. Not supported."
+msgstr "Stato della risposta non valido. Non supportato."
+
+msgid "The responder_foreign_key should not be empty."
+msgstr "Il responder_foreign_key non deve essere vuoto."
+
+msgid "The responder_foreign_key should be a valid UUID."
+msgstr "Il responder_foreign_key deve essere un UUID valido."
+
+msgid "The responder_foreign_model should be a valid string."
+msgstr "Il responder_foreign_model deve essere una stringa valida."
+
+msgid "The responder_foreign_model should not be empty."
+msgstr "Il responder_foreign_model non deve essere vuoto."
+
+msgid "The responder_foreign_model must be one of the following: {0}."
+msgstr "Il responder_foreign_model deve essere uno dei seguenti: {0}."
+
+msgid "The identifier of the user who created the response should be a valid UUID."
+msgstr "L'identificativo dell'utente che ha creato la risposta deve essere un UUID valido."
+
+msgid "The identifier of the user who created the response is required."
+msgstr "È richiesto l'identificativo dell'utente che ha creato la risposta."
+
+msgid "The identifier of the user who created the response should not be empty."
+msgstr "L'identificativo dell'utente che ha creato la risposta non deve essere vuoto."
+
+msgid "The identifier of the user who modified the response should be a valid UUID."
+msgstr "L'identificativo dell'utente che ha modificato la risposta deve essere un UUID valido."
+
+msgid "The identifier of the user who modified the response is required."
+msgstr "È richiesto l'identificativo dell'utente che ha modificato la risposta."
+
+msgid "The identifier of the user who modified the response should not be empty."
+msgstr "L'identificativo dell'utente che ha modificato la risposta non deve essere vuoto."
+
+msgid "The account recovery request response is invalid."
+msgstr "La risposta alla richiesta di recupero account non è valida."
+
+msgid "The status should not be empty"
+msgstr "Lo stato non dovrebbe essere vuoto"
+
+msgid "The status should be one of the following: {0}."
+msgstr "Lo stato dovrebbe essere uno dei seguenti: {0}."
+
+msgid "The identifier of the user who created the user settings should be a valid UUID."
+msgstr "L'identificativo dell'utente che ha creato le impostazioni utente deve essere un UUID valido."
+
+msgid "The identifier of the user who created the user settings is required."
+msgstr "È richiesto l'identificativo dell'utente che ha creato le impostazioni utente."
+
+msgid "The identifier of the user who created the user settings should not be empty."
+msgstr "L'identificativo dell'utente che ha creato le impostazioni utente non deve essere vuoto."
+
+msgid "The identifier of the user who modified the user settings should be a valid UUID."
+msgstr "L'identificativo dell'utente che ha modificato le impostazioni utente deve essere un UUID valido."
+
+msgid "The identifier of the user who modified the user settings is required."
+msgstr "È richiesto l'identificativo dell'utente che ha modificato le impostazioni utente."
+
+msgid "The identifier of the user who modified the user settings should not be empty."
+msgstr "L'identificativo dell'utente che ha modificato le impostazioni utente non deve essere vuoto."
+
+msgid "This user already has an account recovery setting"
+msgstr "Questo utente ha già un'impostazione di recupero account"
+
+msgid "The account recovery user setting is not valid."
+msgstr "L'impostazione utente per il recupero account non è valida."
+
+msgid "You have disabled the account recovery."
+msgstr "Hai disabilitato il recupero account."
+
+msgid "{0} has disabled the account recovery."
+msgstr "{0} ha disabilitato il recupero account."
+
+msgid "You have set the account recovery organization policy to {0}."
+msgstr "Hai impostato i criteri dell'organizzazione per il recupero account su {0}."
+
+msgid "{0} has set the account recovery organization policy to {1}."
+msgstr "{0} ha impostato i criteri dell'organizzazione per il recupero account su {1}."
+
+msgid "You have updated the account recovery organization policy to {0}."
+msgstr "Hai aggiornato i criteri dell'organizzazione per il recupero account su {0}."
+
+msgid "{0} has updated the account recovery organization policy to {1}."
+msgstr "{0} ha aggiornato i criteri dell'organizzazione per il recupero account su {1}."
+
+msgid "Suspicious account recovery request issued from IP {0} for {1}"
+msgstr "Richiesta di recupero account sospetta inviata dall'IP {0} per {1}"
+
+msgid "{0} has initiated a recovery request"
+msgstr "{0} ha avviato una richiesta di recupero"
+
+msgid "You have initiated a recovery request"
+msgstr "Hai avviato una richiesta di recupero"
+
+msgid "Recovery request approved!"
+msgstr "Richiesta di recupero approvata!"
+
+msgid "approved"
+msgstr "approvato"
+
+msgid "rejected"
+msgstr "rifiutato"
+
+msgid "Account recovery response set to {0}."
+msgstr "Risposta di recupero account impostata su {0}."
+
+msgid "Account recovery response set to {0} by {1}."
+msgstr "Risposta di recupero account impostata su {0} da {1}."
+
+msgid "Recovery request denied!"
+msgstr "Richiesta di recupero negata!"
+
+msgid "Could not validate key revocation."
+msgstr "Impossibile convalidare la revoca della chiave."
+
+msgid "The fingerprint should match the one from the currently active key."
+msgstr "L'impronta digitale deve corrispondere a quella della chiave attualmente attiva."
+
+msgid "Account recovery is disabled."
+msgstr "Il recupero account è disattivato."
+
+msgid "The account recovery organization public key is not set."
+msgstr "La chiave pubblica dell'organizzazione per il recupero account non è impostata."
+
+msgid "Invalid request. No policy change."
+msgstr "Richiesta non valida. Nessuna modifica al criterio."
+
+msgid "Invalid request. Revoked key is required for key rotation."
+msgstr "Richiesta non valida. È richiesta la chiave revocata per la rotazione della chiave."
+
+msgid "Invalid request. New key is required for key rotation."
+msgstr "Richiesta non valida. È richiesta una nuova chiave per la rotazione della chiave."
+
+msgid "Invalid request. An organization recovery public key is required."
+msgstr "Richiesta non valida. È richiesta una chiave pubblica di ripristino dell'organizzazione."
+
+msgid "Invalid request. Revoked key or passwords are not required."
+msgstr "Richiesta non valida. Non sono richieste password o chiavi revocate."
+
+msgid "Invalid request. New key or passwords are not required."
+msgstr "Richiesta non valida. Non sono richieste nuove chiavi o password."
+
+msgid "Invalid request. Keys are required for this change."
+msgstr "Richiesta non valida. Per questa modifica sono richieste chiavi."
+
+msgid "Invalid request. Passwords are required for this change."
+msgstr "Richiesta non valida. Per questa modifica sono richieste password."
+
+msgid "An organization public key is required."
+msgstr "È richiesta una chiave pubblica dell'organizzazione."
+
+msgid "The public_key_id must match current policy public_key_id."
+msgstr "Il public_key_id deve corrispondere all'attuale criterio public_key_id."
+
+msgid "An invalid number of passwords sent. Expected {0} and got {1}."
+msgstr "Numero di password inviate non valido.. Atteso {0} ottenuto {1}."
+
+msgid "The message is not encrypted for the right recipient."
+msgstr "Questo messaggio non è cifrato per il destinatario corretto."
+
+msgid "Recovery request cannot be created when organization policy is disabled."
+msgstr "Non è possibile generare una richiesta di recupero quanto il criterio dell'organizzazione è disattivato."
+
+msgid "Recovery request cannot be created when user is not enrolled."
+msgstr "Non è possibile generare una richiesta di recupero quando l'utente non è iscritto."
+
+msgid "The authentication token is not valid or has expired."
+msgstr "Il token di autenticazione non è valido o è scaduto."
+
+msgid "The account recovery request could not be found."
+msgstr "Non è stato possibile trovare la richiesta di recupero dell'account."
+
+msgid "The request is already completed."
+msgstr "La richiesta è già stata completata."
+
+msgid "Recovery response cannot be created when organization policy is disabled."
+msgstr "Non è possibile generare una risposta di recupero quando i criteri dell'organizzazione sono disattivati."
+
+msgid "Could not validate response data."
+msgstr "Impossibile convalidare i dati della risposta."
+
+msgid "The account recovery response data is not required."
+msgstr "I dati di risposta del recupero account non sono richiesti."
+
+msgid "The account recovery response data is required."
+msgstr "I dati di risposta del recupero account sono richiesti."
+
+msgid "The user is not enrolled in the account recovery program."
+msgstr "L'utente non è iscritto al programma di recupero account."
+
+msgid "User account recovery settings cannot be edited."
+msgstr "Le impostazioni di recupero account dell'utente non possono essere modificate."
+
+msgid "The account recovery is mandatory and cannot be rejected."
+msgstr "Il recupero account è obbligatorio, e non può essere rifiutato."
+
+msgid "Invalid request. You cannot opt-out."
+msgstr "Richiesta non valida. Impossibile rinunciare."
+
+msgid "The status must be set to approved."
+msgstr "Lo stato deve essere impostato su \"approvato\"."
+
+msgid "Invalid request. You cannot both opt-out and provide backup."
+msgstr "Richiesta non valida. Impossibile rinunciare e fornire backup al tempo stesso."
+
+msgid "The private key backup must be provided."
+msgstr "Deve essere fornito il backup della chiave privata."
+
+msgid "Invalid request. Private key or password are missing."
+msgstr "Richiesta non valida. Password o chiave privata mancanti."
+
+msgid "Could not validate private key data."
+msgstr "Impossibile convalidare i dati della chiave privata."
+
+msgid "The account recovery request identifier should be a valid UUID."
+msgstr "L'identificatore della richiesta di recupero account deve essere un UUID valido."
+
+msgid "The account recovery request status is not approved."
+msgstr "Lo stato della richiesta di recupero account non è approvato."
+
+msgid "Account recovery is disabled. Key backup is not supported."
+msgstr "Il recupero account è disattivato. Il backup della chiave non è supportato."
+
+msgid "Account recovery is mandatory. Please provide the mandatory data."
+msgstr "Il recupero dell'account è obbligatorio. Si prega di fornire i dati obbligatori."
+
+msgid "Account Recovery Disabled"
+msgstr "Recupero Account Disattivato"
+
+msgid "Account Recovery Enabled"
+msgstr "Recupero Account Attivato"
+
+msgid "The fingerprint of the organization public key is {0}."
+msgstr "L'impronta digitale della chiave pubblica dell'organizzazione è {0}."
+
+msgid "Account Recovery Updated"
+msgstr "Recupero Account Aggiornato"
+
+msgid "{0} has initiated an account recovery request"
+msgstr "{0} ha avviato una richiesta di recupero account"
+
+msgid "Recovery request"
+msgstr "Richiesta di recupero"
+
+msgid "{0} has initiated an account recovery request."
+msgstr "{0} ha avviato una richiesta di recupero account."
+
+msgid "Since you’re authorized to handle account recovery requests, please process this one."
+msgstr ""
+
+msgid "You will need your organization recovery key to continue."
+msgstr "Per continuare serve la chiave di recupero della tua organizzazione."
+
+msgid "Review the recovery request"
+msgstr "Rivedere la richiesta di recupero"
+
+msgid "Suspicious recovery request"
+msgstr "Richiesta di recupero sospetta"
+
+msgid "An account recovery request was attempted from a user with client IP {0} for {1}."
+msgstr "È stato effettuato un tentativo di richiesta di recupero account da parte di un utente con IP client {0} per {1}."
+
+msgid "The request could not be found in the database."
+msgstr "La richiesta non è stata trovata nel database."
+
+msgid "This is a potential security threat."
+msgstr "Potenziale minaccia per la sicurezza."
+
+msgid "You have initiated an account recovery!"
+msgstr "Hai avviato un recupero account!"
+
+msgid "Recovery Request"
+msgstr "Richiesta di recupero"
+
+msgid "You just requested an account recovery."
+msgstr "Hai richiesto il recupero di un account."
+
+msgid "Your administrator have been informed and will follow up with you."
+msgstr "L'amministratore è stato informato, e si metterà in contatto con te."
+
+msgid "If you did not make this request please inform your administrator."
+msgstr "Se non hai fatto tu questa richiesta, contatta il tuo amministratore."
+
+msgid "You have updated a recovery request to {0}."
+msgstr "Hai aggiornato una richiesta di recupero a {0}."
+
+msgid "You have set the status of the account recovery request initiated by {0} ({1}) to {2}."
+msgstr "Hai impostato lo stato della richiesta di recupero dell'account avviata da {0} ({1}) su {2}."
+
+msgid "{0} ({1}) has updated a recovery request to {2}."
+msgstr "{0} ({1}) ha aggiornato una richiesta di recupero a {2}."
+
+msgid "{0} ({1}) has set the status of the request initiated by {2} ({3}) to {4}."
+msgstr "{0} ({1}) ha impostato lo stato della richiesta avviata da {2} ({3}) su {4}."
+
+msgid "{0} ({1}) has approved your recovery request."
+msgstr "{0} ({1}) ha approvato la tua richiesta di recupero."
+
+msgid "Your organization recovery contacts have reviewed and approved your account recovery request."
+msgstr "I contatti di recupero dell'organizzazione hanno esaminato e approvato la tua richiesta di recupero dell'account."
+
+msgid "Please click on the link below to continue."
+msgstr "Per continuare, clicca sul link che trovi qui sotto."
+
+msgid "Important"
+msgstr "Importante"
+
+msgid "Please use the same computer and browser that you used to initiate the request."
+msgstr "Si prega di utilizzare lo stesso computer e lo stesso browser utilizzati per avviare la richiesta."
+
+msgid "Complete account recovery"
+msgstr "Completa il recupero dell'account"
+
+msgid "{0} ({1}) has denied your recovery request."
+msgstr "{0} ({1}) ha respinto la richiesta di recupero."
+
+msgid "Your organization recovery contacts have reviewed and rejected your account recovery request."
+msgstr "I contatti di recupero dell'organizzazione hanno esaminato e respinto la tua richiesta di recupero dell'account."
+
+msgid "Only administrators can view user logs."
+msgstr "Solo gli amministratori possono visualizzare i log utente."
+
+msgid "The user {0} could not be added to group {1} because there is no matching directory entry in passbolt."
+msgstr "Non è stato possibile aggiungere l'utente {0} al gruppo {1}, in quanto non c'è una directory corrispondente in Passbolt."
+
+msgid "The user {0} could not be added to the group {1} because the membership has been removed in passbolt"
+msgstr "Non è stato possibile aggiungere l'utente {0} al gruppo {1}, in quanto l'iscrizione è stata revocata in Passbolt"
+
+msgid "The user {0} was not synced with existing membership for group {1} because the membership was created before."
+msgstr "Non è stato possibile sincronizzare l'uteente {0} con l'iscrizione esistente per il gruppo {1}, in quanto l'iscrizione è stata creata prima."
+
+msgid "The user {0} was successfully added to the group {1}."
+msgstr "L'utente {0} è stato aggiunto al gruppo {1} con successo."
+
+msgid "The user {0} could not be added to the group {1} because their account was priorly deleted in passbolt."
+msgstr "Non è stato possibile aggiungere l'utente {0} al gruppo {1}, in quanto il suo account Passbolt era stato eliminato in precedenza."
+
+msgid "The user {0} could not be added to the group {1} because they have not yet activated their account."
+msgstr "Non è stato possibile aggiungere l'utente {0} al gruppo {1}, in quanto non ha ancora provveduto ad attivare il suo account."
+
+msgid "The user {0} could not be added to the group {1} because of validation issues."
+msgstr "L'utente {0} non è stato aggiunto al gruppo {1} per problemi di validazione."
+
+msgid "The user {0} could not be added to the group {1} because of an internal error."
+msgstr "L'utente {0} non è stato aggiunto al gruppo {1} a causa di un errore interno."
+
+msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
+msgstr "L'utente {0} non può essere aggiunto al gruppo {1} in automatico. È stata inviata una e-mail di richiesta di aggiunta manuale al/ai responsabile/i del gruppo."
+
+msgid "The user {0} was successfully removed from the group {1}."
+msgstr "L'utente {0} è stato rimosso dal gruppo {1} con successo."
+
+msgid "The user {0} could not be removed from the group {1} because it is the only group manager."
+msgstr "L'utente {0} non è stato rimosso dal gruppo {1} in quanto unico responsabile del gruppo."
+
+msgid "The user {0} could not be removed from the group {1} because some validation issues."
+msgstr "L'utente {0} non è stato rimosso dal gruppo {1} a causa di alcuni problemi di validazione."
+
+msgid "The user {0} could not be removed from the group {1} because of an internal error."
+msgstr "L'utente {0} non è stato rimosso dal gruppo {1} a causa di un errore interno."
+
+msgid "The user {0} was successfully synced with the group {1}."
+msgstr "L'utente {0} è stato sincronizzato con il gruppo {1} con successo."
+
+msgid "The group {0} has been successfully renamed to {1}."
+msgstr "Il grruppo {0} è stato rinominato con successo come {1}."
+
+msgid "The group {0} could not be renamed to {1}."
+msgstr "Non è stato possibile rinominare il gruppo {0} come {1}."
+
+msgid "The passbolt {0} {1} was not deleted because it is marked as to be ignored."
+msgstr "Passbolt {0} {1} non è stato eliminato perché è contrassegnato come da ignorare."
+
+msgid "The directory {0} {1} was not deleted because it is ignored."
+msgstr "La directory {0} {1} non è stata eliminata perchè è ignorata."
+
+msgid "The directory user {0} was already suspended in passbolt."
+msgstr "L'utente di directory {0} era già stato sospeso in Passbolt."
+
+msgid "The directory {0} {1} was already deleted in passbolt."
+msgstr "La directory {0} {1} è stata già eliminata in Passbolt."
+
+msgid "The user {0} could not be deleted because they are the only owner of one or more passwords."
+msgstr "L'utente {0} non è stato eliminato in quanto unico proprietario di una o più password."
+
+msgid "The {0} {1} could not be deleted because they are the only manager of one or more groups."
+msgstr "Il {0} {1} non può essere eliminato perché sono l'unico manager di uno o più gruppi."
+
+msgid "The user {0} was successfully suspended."
+msgstr "L'utente {0} è stato sospeso con successo."
+
+msgid "The {0} {1} was successfully deleted."
+msgstr "Il {0} {1} è stato eliminato con successo."
+
+msgid "The {0} {1} could not be suspended because of an internal error. Please try again later."
+msgstr "Non è stato possibile sospendere il {0} {1} a causa di un errore interno. Riprova più tardi."
+
+msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
+msgstr "Non è stato possibile eliminare {0} {1} a causa di un errore interno. Riprova più tardi."
+
+msgid "The {0} {1} was not synced because the passbolt {0} is marked as to be ignored."
+msgstr "{0} {1} non è stato sincronizzato perché il passbolt {0} è contrassegnato come da ignorare."
+
+msgid "The {0} {1} was not synced because the directory {0} is marked as to be ignored."
+msgstr "Il {0} {1} non è stato sincronizzato perché la directory {0} è contrassegnata per essere ignorata."
+
+msgid "The {0} {1} was successfully added to passbolt."
+msgstr "Il {0} {1} è stato aggiunto con successo a passbolt."
+
+msgid "The {0} {1} could not be added because of data validation issues."
+msgstr "Impossibile aggiungere {0} {1} a causa di problemi di convalida dei dati."
+
+msgid "The {0} {1} could not be added because of an internal error. Please try again later."
+msgstr "Non è stato possibile aggiungere {0} {1} a causa di un errore interno. Riprova più tardi."
+
+msgid "The previously suspended {0} {1} was not unsuspended."
+msgstr "Il {0} {1} precedentemente sospeso non è stato riattivato."
+
+msgid "The previously deleted {0} {1} was not re-added to passbolt."
+msgstr "Il {0} {1} precedentemente eliminato, non è stato ri-aggiunto a Passbolt."
+
+msgid "The previously suspended {0} {1} was unsuspended."
+msgstr "Il {0} {1} precedentemente sospeso è stato riattivato."
+
+msgid "The previously deleted {0} {1} was re-added to passbolt."
+msgstr "Il {0} {1} precedentemente eliminato, è stato ri-aggiunto a Passbolt."
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of validation errors."
+msgstr "Non è stato possibile riaggiungere a Passbolt {0} {1} eliminato a causa di errori di validazione."
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of an internal error."
+msgstr "Non è stato possibile riaggiungere a Passbolt {0} {1} eliminato a causa di un errore interno."
+
+msgid "The {0} {1} was mapped with an existing {0} in passbolt."
+msgstr "{0} {1} è stato mappato con un {0} esistente nel passbolt."
+
+msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after."
+msgstr "Impossibile mappare {0} {1} con un {0} esistente in passbolt perché è stato creato dopo."
+
+msgid "The user {0} full name has been successfully updated to {1} {2}."
+msgstr "Il nome completo dell'utente {0} è stato aggiornato con successo a {1} {2}."
+
+msgid "The user {0} full name could not be updated to {1} {2}."
+msgstr "Non è stato possibile aggiornare il nome completo dell'utente {0} a {1} {2}."
+
+msgid "The record model is not valid."
+msgstr "Il modello di registrazione non è valido."
+
+msgid "The record is currently ignored as part of directory synchronization."
+msgstr "Il record è attualmente ignorato come parte della sincronizzazione della directory."
+
+msgid "The record is currently not ignored as part of directory synchronization."
+msgstr "Il record non è attualmente ignorato come parte della sincronizzazione della directory."
+
+msgid "The record will be ignored in the next directory synchronization."
+msgstr "Il record verrà ignorato nella prossima sincronizzazione della directory."
+
+msgid "The record id is not valid."
+msgstr "Id del record non è valido."
+
+msgid "The record does not exist."
+msgstr "Il record non esiste."
+
+msgid "The record could not be unmarked as ignored. Please try again later."
+msgstr "Il record non può essere deselezionato come ignorato. Riprova più tardi."
+
+msgid "The record will not be ignored in the next directory synchronization."
+msgstr "Il record non verrà ignorato nella prossima sincronizzazione della directory."
+
+msgid "Could not validate settings."
+msgstr "Impossibile validare le impostazioni."
+
+msgid "Could not save the settings. {0}"
+msgstr "Impossibile salvare le impostazioni. {0}"
+
+msgid "The directory structure cannot be retrieved."
+msgstr "Impossibile recuperare la struttura della directory."
+
+msgid "There was an issue while retrieving the invalid entries."
+msgstr "Si è verificato un problema durante il recupero delle voci non valide."
+
+msgid "The synchronization was done successfully."
+msgstr "Sincronizzazione avvenuta con successo."
+
+msgid "The simulation was done successfully."
+msgstr "Simulazione avvenuta con successo."
+
+msgid "Need at least one domain configuration."
+msgstr "È necessaria almeno una configurazione di dominio."
+
+msgid "The connection name `{0}` should not contain dots"
+msgstr "Il nome connessione`{0}`non dovrebbe contenere punti"
+
+msgid "Invalid connection name"
+msgstr "Nome connessione non valido"
+
+msgid "The identifier of the default admin user is required."
+msgstr "Inserire l'identificatore dell'amministratore predefinito."
+
+msgid "The identifier of the default admin user should not be empty."
+msgstr "L'identificatore dell'amministratore predefinito non deve essere vuoto."
+
+msgid "The identifier of the default admin user should be a valid UUID."
+msgstr "L'identificatore dell'amministratore predefinito deve essere un UUID valido."
+
+msgid "The admin user does not exist."
+msgstr "L'utente amministratore non esiste."
+
+msgid "The identifier of the default group admin user is required."
+msgstr "Inserire l'identificatore dell'amministratore del gruppo predefinito."
+
+msgid "The identifier of the default group admin user should not be empty."
+msgstr "L'identificatore dell'amministratore del gruppo predefinito non deve essere vuoto."
+
+msgid "The identifier of the default group admin user should be a valid UUID."
+msgstr "L'identificatore dell'amministratore del gruppo predefinito deve essere un UUID valido."
+
+msgid "The group admin user does not exist."
+msgstr "L'amministratore del gruppo non esiste."
+
+msgid "The group object class should be a valid BMP-UTF8 string."
+msgstr "La classe di oggetti di gruppo deve essere una stringa BMP-UTF8 valida."
+
+msgid "The user object class should be a valid BMP-UTF8 string."
+msgstr "La classe dell'oggetto utente deve essere una stringa BMP-UTF8 valida."
+
+msgid "The user path should be a valid BMP-UTF8 string."
+msgstr "Il path utente deve essere una stringa BMP-UTF8 valida."
+
+msgid "The group custom filter should be a valid BMP-UTF8 string."
+msgstr "Il filtro di gruppo personalizzato dovrebbe essere una stringa BMP-UTF8 valida."
+
+msgid "The user custom filter should be a valid BMP-UTF8 string."
+msgstr "Il filtro utente personalizzato dovrebbe essere una stringa BMP-UTF8 valida."
+
+msgid "The email prefix/suffix setting should be a valid boolean."
+msgstr "L'impostazione \"prefisso/suffisso e-mail\" deve essere un valore booleano valido."
+
+msgid "The email prefix should be a valid BMP-UTF8 string."
+msgstr "Il prefisso e-mail deve essere una stringa BMP-UTF8 valida."
+
+msgid "The email suffix should be a valid BMP-UTF8 string."
+msgstr "Il suffisso e-mail deve essere una stringa BMP-UTF8 valida."
+
+msgid "The users parent group should be a valid BMP-UTF8 string."
+msgstr "Il gruppo padre utenti deve essere una stringa BMP-UTF8 valida."
+
+msgid "The groups parent group should be a valid BMP-UTF8 string."
+msgstr "Il gruppo padre deve essere una stringa BMP-UTF8 valida."
+
+msgid "The enabled users only setting should be a boolean."
+msgstr "L'impostazione \"solo utenti abilitati\" deve essere un valore booleano."
+
+msgid "The sync of created users setting should be a boolean."
+msgstr "L'impostazione \"sincronizza gli utenti creati\" deve essere un valore booleano."
+
+msgid "The sync of updated users setting should be a boolean."
+msgstr "L'impostazione \"sincronizzazione degli utenti aggiornati\" dovrebbe essere un valore booleano."
+
+msgid "The sync of deleted users setting should be a boolean."
+msgstr "L'impostazione \"sincronizzazione degli utenti eliminati\" deve essere un valore booleano."
+
+msgid "The sync of created groups setting should be a boolean."
+msgstr "L'impostazione \"sincronizzazione dei gruppi creati\" deve essere un valore booleano."
+
+msgid "The sync of deleted groups setting should be a boolean."
+msgstr "L'impostazione \"sincronizzazione dei gruppi eliminati\" deve essere un valore booleano."
+
+msgid "The sync of updated groups setting should be a boolean."
+msgstr "L'impostazione \"sincronizzazione dei gruppi aggiornati\" deve essere un valore booleano."
+
+msgid "The fields mapping should be a valid array."
+msgstr "La mappatura dei campi dovrebbe essere un array valido."
+
+msgid "A directory type is required."
+msgstr "Inserire un tipo di directory."
+
+msgid "The directory type should not be empty."
+msgstr "Il tipo di directory non deve essere vuoto."
+
+msgid "The directory type should be one of the following: {0}."
+msgstr "Il tipo di directory deve essere uno dei seguenti: {0}."
+
+msgid "A domain name is required."
+msgstr "È richiesto un nome di dominio."
+
+msgid "The domain name should not be empty."
+msgstr "Il nome di dominio non deve essere vuoto."
+
+msgid "The domain name should be a valid BMP-UTF8 string."
+msgstr "Il nome di dominio deve essere una stringa BMP-UTF8 valida."
+
+msgid "The base DN should be a valid BMP-UTF8 string."
+msgstr "Base DN deve essere una stringa BMP-UTF8 valida."
+
+msgid "At least one host is required."
+msgstr "È richiesto almeno un host."
+
+msgid "The hosts should be a valid array."
+msgstr "Gli host dovrebbero essere un array valido."
+
+msgid "The port number should not be empty."
+msgstr "Il numero di porta non deve essere vuoto."
+
+msgid "The port number should be between 0 and 65535"
+msgstr "Il numero di porta deve essere un valore compreso tra 0 e 65535"
+
+msgid "A connection type is required."
+msgstr "Inserire un tipo di connessione."
+
+msgid "The connection type should not be empty."
+msgstr "Il tipo di connessione non deve essere vuoto."
+
+msgid "The connection type should be one of the following: {0}."
+msgstr "Il tipo di connessione deve essere uno dei seguenti: {0}."
+
+msgid "An authentication type is required."
+msgstr "È richiesto un tipo di autenticazione."
+
+msgid "The authentication type should not be empty."
+msgstr "Il tipo di autenticazione non dovrebbe essere vuoto."
+
+msgid "The authentication type should be one of the following: {0}."
+msgstr "Il tipo di autenticazione dovrebbe essere uno dei seguenti: {0}."
+
+msgid "The map for this field is required."
+msgstr "La map per questo campo è obbligatoria."
+
+msgid "The map value should not be empty."
+msgstr "Il valore della map non dovrebbe essere vuoto."
+
+msgid "The field name should be a valid BMP-UTF8 string."
+msgstr "Il nome del campo dovrebbe essere una stringa BMP-UTF8 valida."
+
+msgid "The map value length should be maximum {0} characters."
+msgstr "Il valore della map dovrebbe avere una lunghezza massima di {0} caratteri."
+
+msgid "The map value should not be from forbidden fields."
+msgstr "Il valore della map non dovrebbe provenire da campi proibiti."
+
+msgid "The map configuration for `{0}` fields is required."
+msgstr "La configurazione della map per i campi `{0}` è obbligatoria."
+
+msgid "The group object class length should be maximum {0} characters."
+msgstr "La classe dell'oggetto gruppo dovrebbe averee una lunghezza massima di {0} caratteri."
+
+msgid "The group object class should not be from forbidden fields."
+msgstr "La classe dell'oggetto gruppo non dovrebbe provenire da campi proibiti."
+
+msgid "The user object class length should be maximum {0} characters."
+msgstr "La classe dell'oggetto utente dovrebbe avere una lunghezza massima di {0} caratteri."
+
+msgid "The user object class should not be from forbidden fields."
+msgstr "La classe dell'oggetto utente non dovrebbe provenire da campi proibiti."
+
+msgid "The user custom filter length should be maximum {0} characters."
+msgstr "Il filtro utente personalizzato dovrebbe avere una lunghezza massima di {0} caratteri."
+
+msgid "The user custom filter contains the forbidden field."
+msgstr "Il filtro utente personalizzato contiene il campo proibito."
+
+msgid "The group custom filter length should be maximum {0} characters."
+msgstr "Il filtro di gruppo personalizzato dovrebbe avere una lunghezza massima di {0} caratteri."
+
+msgid "The group custom filter contains the forbidden field."
+msgstr "Il filtro di gruppo personalizzato contiene il campo proibito."
+
+msgid "The field fallbacks should be a valid array."
+msgstr "I fallback di campo dovrebbero essere un array valido."
+
+msgid "The field fallbacks should not be empty."
+msgstr "I fallback di campo non dovrebbero essere vuoti."
+
+msgid "The field fallbacks keys should be one of the following: {0}."
+msgstr "Le chiavi dei fallback di campo dovrebbero essere una delle seguenti: {0}."
+
+msgid "The fallback field value should be a valid BMP-UTF8 string."
+msgstr "Il valore del fallback di campo dovrebbe essere una stringa BMP-UTF8 valida."
+
+msgid "The fallback field value length should be maximum {0} characters."
+msgstr "La lunghezza del valore del fallback di campo dovrebbe essere al massimo di {0} caratteri."
+
+msgid "The fallback field value should not be from forbidden fields."
+msgstr "Il valore del fallback di campo non dovrebbe provenire da campi proibiti."
+
+msgid "The directory type in fallback fields should be a valid array."
+msgstr "Il tipo di directory nei campi fallback dovrebbe essere un array valido."
+
+msgid "Directory sync settings endpoints are disabled."
+msgstr "Gli endpoint impostazioni di sincronizzazione directory sono disabilitati."
+
+msgid "The directory name should be a valid UTF8 string."
+msgstr "Il nome della directory deve essere una stringa UTF8 valida."
+
+msgid "The directory_name length should be maximum {0} characters."
+msgstr "Il nome della directory deve avere una lunghezza massima di {0} caratteri."
+
+msgid "A directory name is required."
+msgstr "Inserire un nome della directory."
+
+msgid "The directory should not be empty."
+msgstr "La directory non deve essere vuota."
+
+msgid "Could not validate directory entry data."
+msgstr "Impossibile validare dati di accesso alla directory."
+
+msgid "The associated record could not be found."
+msgstr "Impossibile trovare il record associato."
+
+msgid "This record is already marked as to be ignored."
+msgstr "Questo record è già contrassegnato come da ignorare."
+
+msgid "This is not a valid record to ignore."
+msgstr "Non è un record valido da ignorare."
+
+msgid "The parent identifier should be a valid UUID."
+msgstr "L'identificatore padre deve essere un UUID valido."
+
+msgid "A parent identifier is required."
+msgstr "Un identificatore padre è obbligatorio."
+
+msgid "The child identifier should be a valid UUID."
+msgstr "L'identificatore figlio deve essere un UUID valido."
+
+msgid "The child identifier is required."
+msgstr "L'identificatore figlio è obbligatorio."
+
+msgid "Directory Settings are invalid. Please check your config and try again."
+msgstr "Impostazioni della directory non valide. Controlla la configurazione e riprova."
+
+msgid "New directory settings could not be saved."
+msgstr "Non è stato possibile salvare le nuove impostazioni della directory."
+
+msgid "The endpoints for updating the users directory configurations are disabled."
+msgstr "Gli endpoint per l'aggiornamento delle configurazioni della directory utente sono disabilitati."
+
+msgid "The endpoints for updating the users directory configurations are enabled."
+msgstr "Gli endpoint per l'aggiornamento delle configurazioni della directory utente sono abilitati."
+
+msgid "It is recommended to disable endpoints for updating the users directory configurations."
+msgstr "È consigliato disabilitare gli endpoint per l'aggiornamento delle configurazioni della directory utente."
+
+msgid "Set the PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED environment variable to true."
+msgstr "Imposta la variabile d'ambiente PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED su true."
+
+msgid "Or set {0} to true in {1}."
+msgstr "Oppure imposta {0} su true in {1}."
+
+msgid "SSL certification verification for LDAP server is enabled."
+msgstr "La verifica del certificato SSL per il server LDAP è abilitata."
+
+msgid "SSL certification verification for LDAP server is disabled."
+msgstr "La verifica del certificato SSL per il server LDAP è disabilitata."
+
+msgid "Disabling the ssl verify check can lead to security attacks."
+msgstr "Disabilitare il controllo di verifica ssl può portare ad attacchi alla sicurezza."
+
+msgid "Attacker can alter the certificate and can perform man-in-the-middle attack."
+msgstr "Un aggressore può alterare il certificato ed eseguire un attacco man-in-the-middle."
+
+msgid "To fix this, you can set PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER environment variable to true."
+msgstr "Per risolvere, puoi impostare la variabile d'ambiente PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER su true."
+
+msgid "Or set passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer to true in {0}."
+msgstr "Oppure imposta passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer su true in {0}."
+
+msgid "A mapping rule for username attribute could not be found for directory type: {0}"
+msgstr "Non è stato possibile individuare una regola di mappatura per l'attributo \"nome utente\" nel tipo di directory: {0}"
+
+msgid "A mapping rule for ID attribute could not be found for directory type: {0}"
+msgstr "Non è stato possibile individuare una regola di mappatura per l'attributo \"ID\" nel tipo di directory: {0}"
+
+msgid "Mapping rules could not be found for directory type: {0}"
+msgstr "Non è stato possibile individuare le regole di mappatura per il tipo di directory: {0}"
+
+msgid "A group name is required."
+msgstr "Inserire un nome del gruppo."
+
+msgid "A group member does not match the expected DN format."
+msgstr "Un membro del gruppo non corrisponde al formato DN previsto."
+
+msgid "The {0} configuration should be a valid string"
+msgstr "La configurazione {0} dovrebbe essere una stringa valida"
+
+msgid "Invalid directory type for domain: {0}"
+msgstr "Tipo di directory non valido per il dominio: {0}"
+
+msgid "Directory type could not be found for domain: {0}"
+msgstr "Non è stato possibile trovare il tipo di directory per il dominio: {0}"
+
+msgid "LDAP Object class could not be found: {0}"
+msgstr "Non è stato possibile trovare la classe dell'oggetto LDAP: {0}"
+
+msgid "SSO"
+msgstr "Single Sign-On (SSO)"
+
+msgid "Directory Sync"
+msgstr "Sincronizzazione della directory"
+
+msgid "SCIM"
+msgstr "SCIM"
+
+msgid "Only administrators are allowed to create/update MFA policies settings."
+msgstr "Solo gli amministratori possono creare/aggiornare le impostazioni dei criteri MFA."
+
+msgid "Could not validate the MFA policies settings."
+msgstr "Non è stato possibile convalidare le impostazioni dei criteri MFA."
+
+msgid "The policy field is required."
+msgstr "Il campo \"criterio\" è obbligatorio."
+
+msgid "The type of the policy should be one of the following: {0}."
+msgstr "Il tipo del criterio deve essere uno dei seguenti: {0}."
+
+msgid "The remember me for a month field is required."
+msgstr "Il campo \"ricordami per un mese\" è obbligatorio."
+
+msgid "The remember me for a month should be a boolean type."
+msgstr "Il \"ricordami per un mese\" deve essere un booleano."
+
+msgid "You edited the MFA policy"
+msgstr "Hai modificato i criteri MFA"
+
+msgid "{0} edited the MFA policy"
+msgstr "{0} ha modificato i criteri MFA"
+
+msgid "The MFA policy has been updated, the new configuration is as follow:"
+msgstr "I criteri MFA sono stati aggiornati, la nuova configurazione è la seguente:"
+
+msgid "Policy: {0}"
+msgstr "Criterio: {0}"
+
+msgid "Remember me for a month: {0}"
+msgstr "Ricordami per un mese: {0}"
+
+msgid "Some of your passwords are expired."
+msgstr "Alcune delle tue password sono scadute."
+
+msgid "Some of your passwords are expiring in {0} days."
+msgstr "Alcune delle tue password scadranno tra {0} giorni."
+
+msgid "Some of your passwords are expired or expiring in {0} days."
+msgstr "Alcune delle tue password sono scadute o scadranno tra {0} giorni."
+
+msgid "The send password about to expire setting should be a boolean."
+msgstr "L'impostazione per l'invio della password in scadenza deve essere un booleano."
+
+msgid "Password expiry email notifications are disabled."
+msgstr "Le notifiche email per la scadenza della password sono disattivate."
+
+msgid "An array of arrays is expected."
+msgstr "È previsto un array di array."
+
+msgid "The expiry date is required."
+msgstr "La data di scadenza è obbligatoria."
+
+msgid "The identifier should be unique: {0}."
+msgstr "L'identificatore dovrebbe essere univoco: {0}."
+
+msgid "You are not allowed to update these resources."
+msgstr "Non ti è consentito aggiornare queste risorse."
+
+msgid "You are not allowed to update this resource: {0}"
+msgstr "Non ti è consentito aggiornare questa risorsa: {0}"
+
+msgid "The resource with ID {0} does not exist."
+msgstr "La risorsa con ID {0} non esiste."
+
+msgid "You edited the password policy"
+msgstr "Hai modificato i criteri della password"
+
+msgid "{0} edited the password policy"
+msgstr "{0} ha modificato i criteri della password"
+
+msgid "Only administrators are allowed to create/update password policies settings."
+msgstr "Solo gli amministratori possono creare/aggiornare le impostazioni dei criteri della password."
+
+msgid "The password policy settings has been updated by {0}."
+msgstr "Le impostazioni dei criteri della password sono state aggiornate da {0}."
+
+msgid "you"
+msgstr "tu"
+
+msgid "view it in passbolt"
+msgstr "visualizza in Passbolt"
+
+msgid "The SCIM setting id should be a valid UUID."
+msgstr "L'ID dell'impostazione SCIM deve essere un UUID valido."
+
+msgid "The identifier of the default user should be a valid UUID."
+msgstr "L'identificatore dell'utente predefinito deve essere un UUID valido."
+
+msgid "The user is not active, disabled or does not exist."
+msgstr "L'utente non è attivo, è disabilitato o non esiste."
+
+msgid "The Setting ID cannot be passed on update."
+msgstr "L'ID dell'impostazione non può essere passato per l'aggiornamento."
+
+msgid "The secret token should not be empty."
+msgstr "Il token segreto non deve essere vuoto."
+
+msgid "The ID for the SCIM settings should not be empty."
+msgstr "L'ID delle impostazioni SCIM non deve essere vuoto."
+
+msgid "The ID for the SCIM settings should be a valid UUID."
+msgstr "L'ID delle impostazioni SCIM deve essere un UUID valido."
+
+msgid "The SCIM secret token is expired, you are requested to rotate it."
+msgstr ""
+
+msgid "Simultaneous SCIM and session authentication is not permitted."
+msgstr "L'autenticazione simultanea SCIM e di sessione non è consentita."
+
+msgid "SCIM settings endpoints are disabled."
+msgstr "Endpoint impostazioni SCIM disabilitati."
+
+msgid "An entry for the same related entity already exists"
+msgstr "Esiste già una voce per la stessa entità correlata"
+
+msgid "An entry with the same `scim_name` and `foreign_model` already exist."
+msgstr ""
+
+msgid "Users"
+msgstr "Utenti"
+
+msgid "Groups"
+msgstr "Gruppi"
+
+msgid "The secret token format is incorrect."
+msgstr "Il formato del token segreto non è corretto."
+
+msgid "SCIM plugin is enabled."
+msgstr "Il plugin SCIM è abilitato."
+
+msgid "SCIM plugin is disabled."
+msgstr "Il plugin SCIM è disattivato."
+
+msgid "The SCIM secret token is not expired."
+msgstr ""
+
+msgid "Rotate the SCIM secret token in the administration settings."
+msgstr ""
+
+msgid "The SCIM settings could not be decrypted with the server gpg key."
+msgstr "Non è stato possibile decrittare le impostazioni SCIM con la chiave gpg del server."
+
+msgid "The SCIM settings could not be encrypted with the server gpg key."
+msgstr "Non è stato possibile crittografare le impostazioni SCIM con la chiave gpg del server."
+
+msgid "Could not validate the SCIM settings found in database."
+msgstr "Non è stato possibile convalidare le impostazioni SCIM trovate nel database."
+
+msgid "The SCIM setting identifier should be a valid UUID."
+msgstr "L'identificatore dell'impostazione SCIM deve essere un UUID valido."
+
+msgid "Could not validate the SCIM settings."
+msgstr "Non è stato possibile convalidare le impostazioni SCIM."
+
+msgid "The SCIM plugin is disabled."
+msgstr "Il plugin SCIM è disattivato."
+
+msgid "Please delete previous settings before creating again."
+msgstr "Elimina le impostazioni precedenti prima di crearne di nuove."
+
+msgid "The uuid in the url doesn't match any known setting record."
+msgstr "L'UUID nell'URL non corrisponde ad alcuna impostazione conosciuta."
+
+msgid "The SCIM secret token expiry configuration is invalid."
+msgstr ""
+
+msgid "Missing or invalid SCIM user in configuration settings"
+msgstr ""
+
+msgid "An unexpected error occurred while creating the user in the database"
+msgstr ""
+
+msgid "An administrator user cannot be suspended via SCIM."
+msgstr ""
+
+msgid "Email"
+msgstr "E-Mail"
+
+msgid "External id"
+msgstr "ID esterno"
+
+msgid "Invalid Schema"
+msgstr "Schema non valido"
+
+msgid "Invalid ResourceType"
+msgstr "ResourceType non valido"
+
+msgid "SsoRecover plugin is disabled."
+msgstr "Il plugin SsoRecover è disattivato."
+
+msgid "The SSO state type is invalid."
+msgstr "Il tipo di stato SSO non è valido."
+
+msgid "CSRF issue. The state in URL and Cookies do not match."
+msgstr "Problema CSRF. Lo stato nell'URL e nei cookie non corrisponde."
+
+msgid "CSRF issue. The state in request data does not match with cookie value."
+msgstr "Problema di CSRF. Lo stato nei dati della richiesta non corrisponde al valore del cookie."
+
+msgid "The state is required in cookie."
+msgstr "Lo stato è richiesto nel cookie."
+
+msgid "The token is required in URL parameters."
+msgstr "Il token è richiesto nei parametri URL."
+
+msgid "The state is required in URL parameters."
+msgstr "Lo stato è richiesto nei parametri URL."
+
+msgid "The code is required in URL parameters."
+msgstr "Il codice è richiesto nei parametri URL."
+
+msgid "The code is required in request data."
+msgstr "Il codice è richiesto nei dati della richiesta."
+
+msgid "The user id is required in URL parameters."
+msgstr "L'ID utente è richiesto nei parametri URL."
+
+msgid "The settings id is required in URL parameters."
+msgstr "L'ID impostazioni è richiesto nei parametri URL."
+
+msgid "The user does not exist or is not active."
+msgstr "L'utente non esiste o non è attivo."
+
+msgid "The SSO setting does not exist."
+msgstr "L'impostazione SSO non esiste."
+
+msgid "Information about the key is required."
+msgstr "Sono richieste informazioni sulla chiave."
+
+msgid "The SSO key id should be a uuid."
+msgstr "L'ID della chiave SSO deve essere un UUID."
+
+msgid "The key could not be found"
+msgstr "La chiave non è stata trovata"
+
+msgid "The SSO setting id should be a uuid."
+msgstr "L'ID dell'impostazione SSO deve essere un UUId."
+
+msgid "The SSO settings were activated."
+msgstr "Le impostazioni SSO sono state attivate."
+
+msgid "The draft setting was saved."
+msgstr "La bozza di impostazione è stata salvata."
+
+msgid "The SSO settings were deleted."
+msgstr "Le impostazioni SSO sono state cancellate."
+
+msgid "Ajax/Json request not supported."
+msgstr "Richiesta Ajax/Json non supportata."
+
+msgid "A provider is required."
+msgstr "È richiesto un provider."
+
+msgid "The provider is not supported."
+msgstr "Il provider non è supportato."
+
+msgid "Data is required."
+msgstr "Sono richiesti dati."
+
+msgid "Data must be an array of properties."
+msgstr "I dati devono essere un array di proprietà."
+
+msgid "The email claim should not be empty."
+msgstr "La claim dell'email non dovrebbe essere vuota."
+
+msgid "The email claim is too large."
+msgstr "La claim dell'email è troppo grande."
+
+msgid "The email claim should be one of the following: {0}."
+msgstr "La claim dell'email dovrebbe essere una delle seguenti: {0}."
+
+msgid "A URL is required."
+msgstr "È richiesto un URL."
+
+msgid "The URL should not be empty."
+msgstr "L'URL non deve essere vuoto."
+
+msgid "The URL is not supported."
+msgstr "L'URL non è supportato."
+
+msgid "A tenant id is required."
+msgstr "È richiesto un ID tenant."
+
+msgid "The tenant id should not be empty."
+msgstr "L'ID tenant non deve essere vuoto."
+
+msgid "The tenant id should be a valid UUID."
+msgstr "L'ID tenant deve essere un UUID valido."
+
+msgid "A client id is required."
+msgstr "È richiesto un ID client."
+
+msgid "The client id should not be empty."
+msgstr "L'ID client non deve essere vuoto."
+
+msgid "The client id should be a valid UUID."
+msgstr "L'ID client deve essere un UUID valido."
+
+msgid "A client secret is required."
+msgstr "È richiesto un segreto client."
+
+msgid "The client secret should be a valid string."
+msgstr "Il segreto client deve essere una stringa valida."
+
+msgid "The client secret is too large."
+msgstr "Il segreto client è troppo grande."
+
+msgid "A client secret expiry is required."
+msgstr "È richiesta una scadenza per il segreto client."
+
+msgid "The expiry should not be empty."
+msgstr "La scadenza non deve essere vuota."
+
+msgid "The prompt should not be empty."
+msgstr "Il prompt non deve essere vuoto."
+
+msgid "The prompt should be one of the following: {0}."
+msgstr "Il prompt deve essere uno dei seguenti: {0}."
+
+msgid "The login hint should be a boolean."
+msgstr "L'indicazione di login deve essere un valore booleano."
+
+msgid "The client id is too large."
+msgstr "L'id client è troppo grande."
+
+msgid "A base URL is required."
+msgstr "È richiesto un URL di base."
+
+msgid "The base URL should not be empty."
+msgstr "L'URL di base non deve essere vuoto."
+
+msgid "The base URL is too large."
+msgstr "L'URL di base è troppo grande."
+
+msgid "The OpenID configuration path should be a valid BMP-UTF8 string."
+msgstr "Il percorso di configurazione di OpenID deve essere una stringa BMP-UTF8 valida."
+
+msgid "The OpenID configuration path is too large."
+msgstr "Il percorso di configurazione di OpenID è troppo grande."
+
+msgid "The client id should be a valid BMP-UTF8 string."
+msgstr "L'ID client deve esseree una stringa BMP-UTF8 valida."
+
+msgid "The scope should be a valid string."
+msgstr "Lo scope deve esseree una stringa valida."
+
+msgid "The scope is too large."
+msgstr "Lo scope è troppo grande."
+
+msgid "The URL must be a valid PingOne authentication domain."
+msgstr ""
+
+msgid "An environment id is required."
+msgstr ""
+
+msgid "The environment id should not be empty."
+msgstr ""
+
+msgid "The environment id should be a valid UUID."
+msgstr ""
+
+msgid "SSO settings edit endpoints are disabled."
+msgstr "Endpoint di modifica impostazioni SSO disabilitati."
+
+msgid "The user is not active."
+msgstr "L'utente non è attivo."
+
+msgid "The status length is not supported."
+msgstr "La lunghezza dello stato non è supportata."
+
+msgid "The status is not supported."
+msgstr "Lo stato non è supportato."
+
+msgid "The nonce should be a valid ASCII string."
+msgstr "Il nonce deve essere una stringa ASCII valida."
+
+msgid "The nonce length should be minimum {0} characters."
+msgstr "Il nonce deve avere una lunghezza minima di {0} caratteri."
+
+msgid "The nonce length should be maximum {0} characters."
+msgstr "Il nonce deve avere una lunghezza massima di {0} caratteri."
+
+msgid "A nonce is required."
+msgstr "È richiesto un nonce."
+
+msgid "The nonce should not be empty."
+msgstr "Il nonce non deve essere vuoto."
+
+msgid "The type length should be maximum {0} characters."
+msgstr "Il tipo deve avere una lunghezza massima di {0} carartteri."
+
+msgid "The state should be a valid ASCII string."
+msgstr "Lo stato deve essere una stringa ASCII valida."
+
+msgid "The state length should be minimum {0} characters."
+msgstr "Lo stato deve avere una lunghezza minima di {0} caratteri."
+
+msgid "The state length should be maximum {0} characters."
+msgstr "Lo stato deve avere una lunghezza massima di {0} caratteri."
+
+msgid "The SSO settings identifier should be a valid UUID."
+msgstr "L'identificatore delle impostazioni SSO deve essere un UUID valido."
+
+msgid "The SSO settings identifier should not be empty."
+msgstr "L'identificatore delle impostazioni SSO non deve essere vuoto."
+
+msgid "The user agent should be a valid ASCII string."
+msgstr "Lo user agent deve essere una stringa ASCII valida."
+
+msgid "The user agent length should be maximum {0} characters."
+msgstr "Lo user agent deve avere una lunghezza massima di {0} caratteri."
+
+msgid "A user agent is required."
+msgstr "È richiesto uno user agent."
+
+msgid "The user agent should not be empty."
+msgstr "Lo user agent non deve essere vuoto."
+
+msgid "The IP length should be maximum {0} characters."
+msgstr "L'IP deve avere una lunghezza massima di {0} caratteri."
+
+msgid "An IP is required."
+msgstr "È richiesto un IP."
+
+msgid "The IP should not be empty."
+msgstr "L'IP non deve essere vuoto."
+
+msgid "This nonce is already in use."
+msgstr "Nonce già in uso."
+
+msgid "This state is already in use."
+msgstr "Stato già in uso."
+
+msgid "The SSO setting identifier does not exist."
+msgstr "L'identificatore delle impostazioni SSO non esiste."
+
+msgid "The user identifier does not exist."
+msgstr "L'identificativo utente non esiste."
+
+msgid "The provided nonce is invalid."
+msgstr "Il nonce del provider non è valido."
+
+msgid "The URL should start with https://"
+msgstr "L'URL dovrebbe iniziare con https://"
+
+msgid "The provided state is invalid."
+msgstr "Stato del provider non valido."
+
+msgid "The type of the SSO state is invalid."
+msgstr "Il tipo dello stato SSO non è valido."
+
+msgid "{0} activated the SSO setting"
+msgstr "{0} ha attivato le impostazioni SSO"
+
+msgid "{0} deleted the SSO setting"
+msgstr "{0} ha eliminato le impostazioni SSO"
+
+msgid "Users are unable to log in via Azure SSO"
+msgstr "Gli utenti non possono accedere tramite Azure SSO"
+
+msgid "Single sign-on failed."
+msgstr "Single sign-on non riuscito."
+
+msgid "Provider error: \"{0}\""
+msgstr "Errore del provider: \"{0}\""
+
+msgid "Azure SSO secret expiry date is near"
+msgstr "La data di scadenza del secret di Azure SSO è vicina"
+
+msgid "SSL certification validation for SSO instance is enabled."
+msgstr "La convalida del certificato SSL per l'istanza SSO è abilitata."
+
+msgid "SSL certification validation for SSO instance is disabled."
+msgstr "La convalida del certificato SSL per l'istanza SSO è disabilitata."
+
+msgid "To fix this, you can set PASSBOLT_SECURITY_SSO_SSL_VERIFY environment variable to true."
+msgstr "Per risolvere, puoi impostare la variabile d'ambiente PASSBOLT_SECURITY_SSO_SSL_VERIFY su true."
+
+msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
+msgstr "Oppure imposta passbolt.security.sso.sslVerify su true in {0}."
+
+msgid "The endpoints for updating the SSO configurations are disabled."
+msgstr "Gli endpoint per l'aggiornamento delle configurazioni SSO sono disabilitati."
+
+msgid "The endpoints for updating the SSO configurations are enabled."
+msgstr "Gli endpoint per l'aggiornamento delle configurazioni SSO sono abilitati."
+
+msgid "It is recommended to disable endpoints for updating the SSO configurations."
+msgstr "Si raccomanda di disabilitare gli endpoint per l'aggiornamento delle configurazioni SSO."
+
+msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
+msgstr "Imposta la variabile d'ambiente PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED su true."
+
+msgid "The user is missing for the SSO state."
+msgstr "Manca l'utente per lo stato SSO."
+
+msgid "Email not provided by provider."
+msgstr "Email non fornita dal provider."
+
+msgid "Username mismatch."
+msgstr "Il nome utente non corrisponde."
+
+msgid "Invalid nonce."
+msgstr "Nonce non valido."
+
+msgid "Invalid provider. Expected AD FS."
+msgstr "Provider non valido. Previsto AD FS."
+
+msgid "Invalid provider data. Expected AD FS settings."
+msgstr "Dati del provider non validi. Sono previste impostazioni AD FS."
+
+msgid "No valid SSO settings found."
+msgstr "Nessuna impostazione SSO valida trovata."
+
+msgid "You must authenticate with Azure again."
+msgstr "Devi effettuare di nuovo l'autenticazione con Azure."
+
+msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
+msgstr "Valore non valido fornito nella configurazione `passbolt.security.sso.sslCafile`"
+
+msgid "Provided root CA file does not exist"
+msgstr "Il file root CA fornito non esiste"
+
+msgid "Invalid provider. Expected PingOne."
+msgstr ""
+
+msgid "Invalid provider data. Expected PingOne settings."
+msgstr ""
+
+msgid "The user id should be a valid UUID."
+msgstr "L'ID utente deve essere un UUID valido."
+
+msgid "The authentication token does not exist."
+msgstr "Il token di autenticazione non esiste."
+
+msgid "The SSO authentication token is invalid."
+msgstr "Il token di autenticazione SSO non è valido."
+
+msgid "Settings id is missing."
+msgstr "ID impostazioni mancante."
+
+msgid "User id mismatch."
+msgstr "L'ID utente non corrisponde."
+
+msgid "Token IP is missing."
+msgstr "IP del token mancante."
+
+msgid "User IP mismatch."
+msgstr "L'IP utente non corrisponde."
+
+msgid "User agent is missing."
+msgstr "User agent mancante."
+
+msgid "User agent mismatch."
+msgstr "Lo user agent non corrisponde."
+
+msgid "Settings mismatch."
+msgstr "Le impostazioni non corrispondono."
+
+msgid "The SSO key could not be saved."
+msgstr "Non è stato possibile salvare la chiave SSO."
+
+msgid "The SSO key does not exist."
+msgstr "La chiave SSO non esiste."
+
+msgid "The SSO key could not be deleted."
+msgstr "Non è stato possibile eliminare la chiave SSO."
+
+msgid "Could not update the SSO settings."
+msgstr "Non è stato possibile aggiornare le impostazioni SSO."
+
+msgid "The settings status is invalid."
+msgstr "Lo stato delle impostazioni non è valido."
+
+msgid "Invalid status."
+msgstr "Stato non valido."
+
+msgid "Could not delete the SSO settings."
+msgstr "Non è stato possibile eliminare le impostazioni SSO."
+
+msgid "Could not delete the draft SSO settings."
+msgstr "Non è stato possibile eliminare la bozza di impostazioni SSO."
+
+msgid "The SSO settings do not exist."
+msgstr "Le impostazioni SSO non esistono."
+
+msgid "The SSO setting cannot be decrypted."
+msgstr "Impossibile decifrare le impostazioni SSO."
+
+msgid "The SSO setting cannot be decoded."
+msgstr "Impossibile decodificare l'impostazione SSO."
+
+msgid "Only administrators can create SSO settings."
+msgstr "Solo gli amministratori possono creare le impostazioni SSO."
+
+msgid "Something went wrong when validating the single-sign on settings."
+msgstr "Qualcosa è andato storto durante la validazione delle impostazioni single sign-on."
+
+msgid "It is not possible to save the SSO settings."
+msgstr "Non è possibile salvare le impostazioni SSO."
+
+msgid "The SSO state is invalid."
+msgstr "Lo stato SSO non è valido."
+
+msgid "The SSO state is expired."
+msgstr "Lo stato SSO è scaduto."
+
+msgid "The SSO state could not be saved."
+msgstr "Non è stato possibile salvare lo stato SSO."
+
+msgid "The SSO state does not exist."
+msgstr "Lo stato SSO non esiste."
+
+msgid "Could not save the SSO state, invalid nonce."
+msgstr "Non è stato possibile salvare lo stato SSO, nonce non valido."
+
+msgid "Could not save the SSO state, please try again later."
+msgstr "Non è stato possibile salvare lo stato SSO, riprova più tardi."
+
+msgid "The {0} claim is not present, please contact your administrator."
+msgstr "La claim {0} non è presente, contatta il tuo amministratore."
+
+msgid "Cannot parse JWKS endpoint response."
+msgstr "Impossibile analizzare la risposta dell'endpoint JWKS."
+
+msgid "Invalid JWKS endpoint response. Keys missing."
+msgstr "Risposta dell'endpoint JWKS non valida. Chiavi mancanti."
+
+msgid "Failed to read certificate: {0}"
+msgstr "Lettura del certificato non riuscita: {0}"
+
+msgid "Failed to read public key from certificate: {0}"
+msgstr "Lettura della chiave pubblica non riuscita dal certificato: {0}"
+
+msgid "Failed to public key properties from certificate: {0}"
+msgstr "Lettura delle proprietà della chiave pubblica non riuscita dal certificato: {0}"
+
+msgid "JWT token is missing."
+msgstr "Token JWT mancante."
+
+msgid "Unable to decode JWT token."
+msgstr "Impossibile decodificare il token JWT."
+
+msgid "The {0} configuration value should be a string or NULL."
+msgstr "Il valore di configurazione {0} dovrebbe essere una stringa o NULL."
+
+msgid "The {0} configuration value should be one of the following: {1}."
+msgstr "Il valore di configurazione {0} dovrebbe essere uno dei seguenti: {1}."
+
+msgid "Single-sign on was a success"
+msgstr "Single-sign on avvenuto con successo"
+
+msgid "Users are unable to log in via Azure SSO."
+msgstr "Gli utenti non possono accedere tramite Azure SSO."
+
+msgid "This can happen when the client secret of Azure AD is expired, or the SSO configurations (client credentials) are invalid."
+msgstr "Ciò può accadere se il client secret di Azure AD è scaduto o se le configurazioni SSO (credenziali client) non sono valide."
+
+msgid "See Azure error response below:"
+msgstr "Consulta la risposta di errore di Azure qui sotto:"
+
+msgid "Error: {0}"
+msgstr "Errore: {0}"
+
+msgid "Error description: {0}"
+msgstr "Descrizione dell'errore: {0}"
+
+msgid "To fix this, you as an administrator have to update the Azure SSO credentials."
+msgstr "Per risolvere, come amministratore devi aggiornare le credenziali SSO di Azure."
+
+msgid "Update it in passbolt"
+msgstr "Aggiornalo in Passbolt"
+
+msgid "The client secret expiry date of your Azure AD instance is {0}."
+msgstr "La data di scadenza del client secret della tua istanza Azure AD è {0}."
+
+msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
+msgstr "Nota che gli utenti di Passbolt non potranno accedere tramite Azure SSO dopo la data di scadenza del client."
+
+msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
+msgstr "Ti consigliamo di risolvere la questione in Azure e di aggiornare i dettagli più recenti in Passbolt."
+
+msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
+msgstr "Il provider SSO {0} è stato testato e attivato con successo da {1}. "
+
+msgid "All users can now use Single Sign-on to perform authentication."
+msgstr "Da questo momento tutti gli utenti possono utilizzare il Single Sign-On per eseguire l'autenticazione."
+
+msgid "Viewq  it in passbolt"
+msgstr "Visualizza in passbolt"
+
+msgid "The SSO setting has been deleted by {0}."
+msgstr "L'impostazione SSO è stata eliminata da {0}."
+
+msgid "The authentication token does not exist or has been deleted."
+msgstr "Il token di autenticazione non esiste o è stato eliminato."
+
+msgid "The authentication token has been expired."
+msgstr "Il token di autenticazione è scaduto."
+
+msgid "Could not validate the SSO recover request."
+msgstr "Impossibile convalidare la richiesta di recupero SSO."
+
+msgid "The email is required in URL parameters."
+msgstr "L'email è richiesta nei parametri URL."
+
+msgid "The case field is required."
+msgstr "Il campo \"case\" è obbligatorio."
+
+msgid "The case is not supported. Only \"default\" case is supported."
+msgstr "Il case non è supportato. È supportato solo il case \"default\"."
+
+msgid "The token field is required."
+msgstr "Il campo \"token\" è obbligatorio."
+
+msgid "Access to this service requires an invitation. "
+msgstr "L'accesso a questo servizio richiede l'invito. "
+
+msgid "Please contact your administrator to request an invitation link."
+msgstr "Si prega di contattare l'amministratore per richiedere un link di invito."
+
+msgid "Subscription key data is required."
+msgstr "Inserire i dati della chiave di abbonamento."
+
+msgid "The subscription was created."
+msgstr "Creazione abbonamento avvenuta."
+
+msgid "The subscription was updated."
+msgstr "Aggiornamento abbonamento avvenuto."
+
+msgid "The subscription is valid."
+msgstr "L'abbonamento è valido."
+
+msgid "Subscription key could not be found."
+msgstr "Chiave di abbonamento non trovata."
+
+msgid "The subscription cannot be verified. Parse error."
+msgstr "Impossibile verificare l'abbonamento. Errore di analisi."
+
+msgid "The subscription format is not valid. Invalid format."
+msgstr "Il formato dell'abbonamento non è valido. Formato non valido."
+
+msgid "The subscription key cannot be verified."
+msgstr "Impossibile verificare la chiave di abbonamento."
+
+msgid "The passbolt OpenPGP public key could not be found."
+msgstr "Non è stato possibile trovare la chiave pubblica OpenPGP."
+
+msgid "A users quantity is required."
+msgstr "È richiesta una quantità di utenti."
+
+msgid "The users quantity should not be empty."
+msgstr "La quantità utenti non può essere vuota."
+
+msgid "The users limit is exceeded."
+msgstr "Limite utenti superato."
+
+msgid "The key should have been created in the past."
+msgstr "La chiave avrebbe dovuto essere creata in passato."
+
+msgid "An expiry date is required."
+msgstr "Inserire una data di scadenza."
+
+msgid "The subscription is expired."
+msgstr "L'abbonamento è scaduto."
+
+msgid "A customer identifier is required."
+msgstr "Un identificativo cliente è obbligatorio."
+
+msgid "A subscription identifier is required."
+msgstr "Inserire un identificatore di abbonamento."
+
+msgid "The format of the subscription id is not valid."
+msgstr "Formato dell'id di abbonamento non valido."
+
+msgid "Only admin can create or update subscription information."
+msgstr "Solo l'amministratore può creare o aggiornare le informazioni di abbonamento."
+
+msgid "The subscription key format is not valid."
+msgstr "Formato della chiave di abbonamento non valido."
+
+msgid "Subscription is valid and up to date."
+msgstr "L\\u0027abbonamento è valido e aggiornato."
+
+msgid "Subscription cannot be found or is invalid/expired."
+msgstr "Impossibile trovare l\\u0027abbonamento o non è valido/scaduto."
+
+msgid "Subscription invalid/expired ({0})."
+msgstr "Abbonamento non valido/scaduto ({0})."
+
+msgid "Subscription expired ({0})."
+msgstr "L\\u0027abbonamento è scaduto ({0})."
+
+msgid "Subscription user count has been exceeded ({0}/{1})."
+msgstr "Il numero di utenti dell\\u0027abbonamento è stato superato ({0}/{1})."
+
+msgid "Subscription will expire in {0} days."
+msgstr "L\\u0027abbonamento scadrà tra {0} giorni."
+
+msgid "Subscription soon exceeds user count ({0}/{1})."
+msgstr "L\\u0027abbonamento presto supererà il numero di utenti consentiti ({0}/{1})."
+
+msgid "Subscription invalid or expired."
+msgstr "Abbonamento non valido o scaduto."
+
+msgid "Subscription key format error."
+msgstr "Errore di formato della chiave di abbonamento."
+
+msgid "Subscription key signature error."
+msgstr "Errore di firma della chiave di abbonamento."
+
+msgid "Subscription key validation error."
+msgstr "Errore di convalida della chiave di abbonamento."
+
+msgid "It looks like you could use some help."
+msgstr "Sembra che tu abbia bisogno di aiuto."
+
+msgid "We are here for you. You can contact us at sales@passbolt.com"
+msgstr "Siamo qui per te. Puoi contattarci all'indirizzo sales@passbolt.com"
+
+msgid "Thanks for choosing Passbolt Pro"
+msgstr "Grazie per aver scelto Passbolt Pro"
+
+msgid "Below are your subscription key details"
+msgstr "Di seguito i dettagli della tua chiave di abbonamento"
+
+msgid "<error>Not Available</error>"
+msgstr "<error>Non disponibile</error>"
+
+msgid "Customer id:\t{0}"
+msgstr "ID cliente:\\t{0}"
+
+msgid "<error>{0} (currently: {1}) - Exceeded</error>"
+msgstr "<error>{0} (attualmente: {1}) - Superato</error>"
+
+msgid "<info>{0} (currently: {1})</info>"
+msgstr "<info>{0} (attualmente: {1})</info>"
+
+msgid "Users limit:\t{0}"
+msgstr "Limite utenti:\t{0}"
+
+msgid "Valid from:\t<info>{0}</info>"
+msgstr "Valido dal:\t<info>{0}</info>"
+
+msgid "Expires on:\t<error>{0} (expired)</error>"
+msgstr "Scade il:\t<error>{0} (scaduto)</error>"
+
+msgid "Expires on:\t<info>{0} (in {1} days)</info>"
+msgstr "Scade il:\t<info>{0} (tra {1} giorni)</info>"
+
+msgid "For any question / feedback / subscription renewal,"
+msgstr "Per qualsiasi domanda / feedback / rinnovo dell'abbonamento,"
+
+msgid "kindly contact us at <info>sales@passbolt.com</info>"
+msgstr "ti invitiamo a contattarci a <info>sales@passbolt.com</info>"
+
+msgid "Only administrators can view the subscription details."
+msgstr "Solo gli amministratori possono vedere i dettagli dell'abbonamento."
+
+msgid "The file {0} could not be found."
+msgstr "Impossibile trovare il file {0}."
+
+msgid "The file {0} could not be read."
+msgstr "Impossibile leggere il file {0}."
+
+msgid "No active admins were found."
+msgstr "Nessun amministratore attivo trovato."
+
+msgid "Only administrators can update the subscription details."
+msgstr "Solo gli amministratori possono aggiornare i dettagli dell'abbonamento."
+
+msgid "The tags data should be a string or an array."
+msgstr "I dati dei tag devono essere una stringa o un array."
+
+msgid "Could not validate request data."
+msgstr "Impossibile convalidare i dati della richiesta."
+
+msgid "The tag id is not valid."
+msgstr "L'id dell'etichetta non è valido."
+
+msgid "The tag does not exist."
+msgstr "Il tag non esiste."
+
+msgid "You do not have the permission to delete shared tags."
+msgstr "Non hai il permesso di eliminare le etichette condivise."
+
+msgid "The tag has been deleted successfully."
+msgstr "L'etichetta è stata eliminata con successo."
+
+msgid "You do not have the permission to update shared tags."
+msgstr "Non hai i permessi per aggiornare i tags condivisi."
+
+msgid "The tag has been updated successfully."
+msgstr "Etichetta aggiornata con successo."
+
+msgid "The tag identifier should be a valid UUID."
+msgstr "L\\u0027identificatore del tag deve essere un UUID valido."
+
+msgid "The tag is missing or does not belong to current user."
+msgstr "Il tag è mancante o non appartiene all\\u0027utente attuale."
+
+msgid "The is shared should be a boolean type."
+msgstr "Il campo \"is shared\" deve essere di tipo booleano."
+
+msgid "The tags plugin is in read-only mode."
+msgstr "Il plugin dei tag è in modalità di sola lettura."
+
+msgid "The tag should not be empty."
+msgstr "L'etichetta non può essere vuota."
+
+msgid "A tag is required."
+msgstr "È richiesto un tag."
+
+msgid "The tag should be a valid BMP-UTF8 string."
+msgstr "L'etichetta dovrebbe essere una stringa BMP-UTF8 valida."
+
+msgid "The tag length should be maximum {0} characters."
+msgstr "Il nome deve avere una lunghezza massima di {0} caratteri."
+
+msgid "The shared status should be a valid boolean."
+msgstr "Lo status condiviso dovrebbe essere un booleano valido."
+
+msgid "A shared status is required."
+msgstr "È necessario uno stato condiviso."
+
+msgid "The tag metadata OpenPGP message cannot be parsed or is not for the intended recipient."
+msgstr "Impossibile analizzare il messaggio OpenPGP dei metadati del tag o non è destinato al destinatario previsto."
+
+msgid "Error while building tag DTO."
+msgstr "Errore durante la creazione del DTO del tag."
+
+msgid "Could not validate tags data."
+msgstr "Impossibile convalidare i dati delle etichette."
+
+msgid "Unable to build tag entity"
+msgstr "Impossibile creare l\\u0027entità del tag"
+
+msgid "No tags to migrate."
+msgstr "Nessun tag da migrare."
+
+msgid "Tag ID \"{0}\" is already V5"
+msgstr "Il tag con ID \"{0}\" è già V5"
+
+msgid "No user found for the personal tag id: \"{0}\"."
+msgstr "Nessun utente trovato per il tag personale con id: \"{0}\"."
+
+msgid "User contain data missing for the tag id: \"{0}\"."
+msgstr "Dati utente mancanti per il tag con id: \"{0}\"."
+
+msgid "Unable to migrate tag id: {0} to V5."
+msgstr "Impossibile migrare il tag con id: {0} a V5."
+
+msgid "The tag metadata key data could not be updated."
+msgstr "Non è stato possibile aggiornare i dati della chiave di metadati del tag."
+
+msgid "Could not save the tags, try again later."
+msgstr "Impossibile salvare i tag, riprova più tardi."
+
+msgid "You do not have the permission to edit shared tags on this resource."
+msgstr "Non hai il permesso di modificare le etichette condivise su questa risorsa."
+
+msgid "Unable to save the tag."
+msgstr "Impossibile salvare il tag."
+
+msgid "You do not have the permission to change a personal tag into shared tag."
+msgstr "Non hai l\\u0027autorizzazione per convertire un tag personale in tag condiviso."
+
+msgid "The settings selected by your administrator prevent from downgrading tag."
+msgstr "Le impostazioni selezionate dall\\u0027amministratore impediscono il downgrade del tag."
+
+msgid "Could not retrieve the user passphrase policies."
+msgstr "Non è stato possibile recuperare i criteri della passphrase utente."
+
+msgid "The entropy minimum is required."
+msgstr "Il valore minimo di entropia è obbligatorio."
+
+msgid "The entropy minimum should be between {0} and {1}."
+msgstr "Il valore minimo di entropia dovrebbe essere compreso tra {0} e {1}."
+
+msgid "You edited the user passphrase policy"
+msgstr "Hai modificato i criteri della passphrase utente"
+
+msgid "{0} edited the user passphrase policy"
+msgstr "{0} ha modificato i criteri della passphrase utente"
+
+msgid "Could not validate the user passphrase policies settings."
+msgstr "Non è stato possibile convalidare le impostazioni dei criteri della passphrase utente."
+
+msgid "Only administrators are allowed to create/update user passphrase policies settings."
+msgstr "Solo gli amministratori possono creare/aggiornare le impostazioni dei criteri della passphrase utente."
+
+msgid "The user passphrase policy settings has been updated by {0}."
+msgstr "Le impostazioni dei criteri della passphrase utente sono stati aggiornati da {0}."
 
 msgid "Error"
 msgstr "Errore"
@@ -5247,9 +7257,6 @@ msgstr "A questo utente manca la chiave di crittografia per i metadati della ris
 
 msgid "View users"
 msgstr "Visualizza utenti"
-
-msgid "You have initiated an account recovery!"
-msgstr "Hai avviato un recupero account!"
 
 msgid "Welcome back!"
 msgstr "Bentornato!"

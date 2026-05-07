@@ -67,7 +67,7 @@ class PublicKeyWritableWebInstallerHealthcheck extends AbstractGpgHealthcheck
         $publicKeyPath = $this->getPublicServerKey();
 
         return [
-            __('Ensure the file {0} is writable by the webserver user.', CONFIG . 'gpg' . DS . $publicKeyPath),
+            __('Ensure the file {0} is writable by the webserver user.', $publicKeyPath),
             __('you can try:'),
             'sudo chown ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . CONFIG . 'gpg',
             'sudo chmod 775 $(find ' . CONFIG . 'gpg -type d)',

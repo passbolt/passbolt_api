@@ -23,6 +23,7 @@ use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
+use Cake\Cache\Cache;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
 use Cake\Http\Client;
@@ -30,10 +31,13 @@ use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Faker\Factory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
+use Passbolt\Log\Model\Table\ActionsTable;
+use Passbolt\Subscription\Test\DummySubscriptionTrait;
 
 class InstallCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use DummySubscriptionTrait;
     use HealthcheckRequestTestTrait;
     use EmailNotificationSettingsTestTrait;
     use EmailQueueTrait;
@@ -48,6 +52,8 @@ class InstallCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->emptyDirectory(CACHE . 'database' . DS);
+        $this->persistValidSubscription();
+        $this->setUpPathAndPublicSubscriptionKey();
         $this->loadNotificationSettings();
         $this->mockService(Client::class, function () {
             return $this->getMockedHealthcheckStatusRequest();
@@ -83,6 +89,22 @@ class InstallCommandTest extends AppTestCase
     {
         $this->exec('passbolt install --quick -q');
         $this->assertExitError();
+    }
+
+    /**
+     * The actions catalogue cache survives database wipes (it lives in the
+     * cache layer, not the DB), so re-running `install` must invalidate it —
+     * otherwise action_logs rows reference catalogue ids that no longer exist
+     * and the Activity tab in the UI ends up empty.
+     */
+    public function testInstallCommandClearsActionsCache()
+    {
+        Cache::write(ActionsTable::CACHE_KEY, 'sentinel-stale-catalogue');
+        $this->assertSame('sentinel-stale-catalogue', Cache::read(ActionsTable::CACHE_KEY));
+
+        $this->exec('passbolt install --quick -q');
+
+        $this->assertNull(Cache::read(ActionsTable::CACHE_KEY));
     }
 
     /**

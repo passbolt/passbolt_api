@@ -18,34 +18,17 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Model\Table\Users;
 
 use App\Model\Entity\Permission;
-use App\Test\Fixture\Base\FavoritesFixture;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\SecretsFixture;
-use App\Test\Fixture\Base\UsersFixture;
-use App\Utility\UuidFactory;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 class SoftDeleteTest extends FoldersTestCase
 {
     use FoldersModelTrait;
-    use FoldersRelationsModelTrait;
-
-    public array $fixtures = [
-        FavoritesFixture::class,
-        GpgkeysFixture::class,
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        SecretsFixture::class,
-        UsersFixture::class,
-        RolesFixture::class,
-    ];
 
     /**
      * @var \App\Model\Table\UsersTable
@@ -60,211 +43,172 @@ class SoftDeleteTest extends FoldersTestCase
 
     public function testUsersSoftDeleteSuccess_PersonalFolder()
     {
-        [$folderA, $userAId] = $this->insertFixture_PersonalFolder();
-        $user = $this->usersTable->get($userAId);
+        /** @var \App\Model\Entity\User $userA */
+        $userA = UserFactory::make()->user()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withFoldersRelationsFor([$userA])
+            ->persist();
 
-        $this->assertNotFalse($this->usersTable->softDelete($user));
+        $this->assertNotFalse($this->usersTable->softDelete($userA));
 
         // Assert the user is deleted as long as the folder and the folders relations
-        $this->assertUserIsSoftDeleted($userAId);
+        $this->assertUserIsSoftDeleted($userA->id);
         $this->assertFolderNotExist($folderA->id);
-        $this->assertFolderRelationNotExist($folderA->id, $userAId);
-    }
-
-    private function insertFixture_PersonalFolder()
-    {
-        // Ada is OWNER of folder A
-        // ---
-        // A (Ada:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
-
-        return [$folderA, $userAId];
+        $this->assertFolderRelationNotExist($folderA->id, $userA->id);
     }
 
     public function testUsersSoftDeleteError_SoleOwnerFolder_FolderSharedWithUser()
-    {
-        [$folderA, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
-        $user = $this->usersTable->get($userAId);
-        $this->usersTable->softDelete($user);
-
-        // Assert errors
-        $errors = $user->getErrors();
-        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedContent']);
-
-        // Assert nothing has been updated/deleted
-        $this->assertUserIsNotSoftDeleted($userAId);
-        $this->assertFolder($folderA->id);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
-    }
-
-    private function insertFixture_SoleOwnerFolder_FolderSharedWithUser()
     {
         // Ada is OWNER of folder A
         // Betty has READ on folder A
         // ---
         // A (Ada:O, Betty:R)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->withFoldersRelationsFor([$userA, $userB])
+            ->persist();
 
-        return [$folderA, $userAId, $userBId];
+        $this->usersTable->softDelete($userA);
+
+        // Assert errors
+        $errors = $userA->getErrors();
+        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedContent']);
+
+        // Assert nothing has been updated/deleted
+        $this->assertUserIsNotSoftDeleted($userA->id);
+        $this->assertFolder($folderA->id);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userA->id, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userB->id, FoldersRelation::ROOT);
     }
 
     public function testUsersSoftDeleteSuccess_NotSoleOwnerFolder_FolderSharedWithUser()
-    {
-        [$folderA, $userAId, $userBId] = $this->insertFixture_NotSoleOwnerFolder_FolderSharedWithUser();
-        $user = $this->usersTable->get($userAId);
-        $result = $this->usersTable->softDelete($user);
-        $this->assertNotFalse($result);
-
-        // Assert the user is soft deleted but the folder is not.
-        $this->assertUserIsSoftDeleted($userAId);
-        $this->assertFolder($folderA->id);
-        $this->assertFolderRelationNotExist($folderA->id, $userAId);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
-    }
-
-    private function insertFixture_NotSoleOwnerFolder_FolderSharedWithUser()
     {
         // Ada is OWNER of folder A
         // Betty is OWNER of folder A
         // ---
         // A (Ada:O, Betty:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA, $userB])
+            ->withFoldersRelationsFor([$userA, $userB])
+            ->persist();
 
-        return [$folderA, $userAId, $userBId];
-    }
-
-    public function testUsersSoftDeleteSuccess_NotOwnerFolder_FolderSharedWithUser()
-    {
-        [$folderA, $userAId, $userBId] = $this->insertFixture_NotOwnerFolder_FolderSharedWithUser();
-        $user = $this->usersTable->get($userAId);
-        $result = $this->usersTable->softDelete($user);
+        $result = $this->usersTable->softDelete($userA);
         $this->assertNotFalse($result);
 
         // Assert the user is soft deleted but the folder is not.
-        $this->assertUserIsSoftDeleted($userAId);
+        $this->assertUserIsSoftDeleted($userA->id);
         $this->assertFolder($folderA->id);
-        $this->assertFolderRelationNotExist($folderA->id, $userAId);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
+        $this->assertFolderRelationNotExist($folderA->id, $userA->id);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userB->id, FoldersRelation::ROOT);
     }
 
-    private function insertFixture_NotOwnerFolder_FolderSharedWithUser()
+    public function testUsersSoftDeleteSuccess_NotOwnerFolder_FolderSharedWithUser()
     {
         // Ada has READ on folder A
         // Betty is OWNER of folder A
         // ---
         // A (Ada:R, Betty:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA], Permission::READ)
+            ->withPermissionsFor([$userB])
+            ->withFoldersRelationsFor([$userA, $userB])
+            ->persist();
 
-        return [$folderA, $userAId, $userBId];
+        $result = $this->usersTable->softDelete($userA);
+        $this->assertNotFalse($result);
+
+        // Assert the user is soft deleted but the folder is not.
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertFolder($folderA->id);
+        $this->assertFolderRelationNotExist($folderA->id, $userA->id);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userB->id, FoldersRelation::ROOT);
     }
 
     public function testUsersSoftDeleteError_SoleOwnerFolder_FolderSharedWithGroup_UserIsOnlyGroupMember()
     {
-        [$folderA, $g1, $userAId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithGroup_UserIsOnlyGroupMember(); // phpcs:ignore
-        $user = $this->usersTable->get($userAId);
+        // Ada is OWNER of folder A
+        // G1 has READ on folder A
+        // Ada is group manager of G1
+        // ---
+        // A (Ada:O, G1:R)
+        /** @var \App\Model\Entity\User $userA */
+        $userA = UserFactory::make()->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->withFoldersRelationsFor([$userA, $group])
+            ->persist();
 
-        $result = $this->usersTable->softDelete($user);
+        $result = $this->usersTable->softDelete($userA);
         $this->assertNotFalse($result);
 
         // Assert the user is deleted as long as the folder and the folders relations
-        $this->assertUserIsSoftDeleted($userAId);
+        $this->assertUserIsSoftDeleted($userA->id);
         $this->assertFolderNotExist($folderA->id);
-        $this->assertFolderRelationNotExist($folderA->id, $userAId);
-    }
-
-    private function insertFixture_SoleOwnerFolder_FolderSharedWithGroup_UserIsOnlyGroupMember()
-    {
-        // Ada has READ on folder A
-        // G1 is OWNER of folder A
-        // Ada is group manager of G1
-        // ---
-        // A (Ada:R, G1:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $groupData = [
-            'groups_users' => [
-                ['user_id' => $userAId, 'is_admin' => true],
-            ],
-        ];
-        $g1 = $this->addGroup($groupData);
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER], [$g1->id => Permission::READ]);
-
-        return [$folderA, $g1, $userAId];
+        $this->assertFolderRelationNotExist($folderA->id, $userA->id);
     }
 
     public function testUsersSoftDeleteError_SoleOwnerFolder_FolderSharedWithGroup()
     {
-        [$folderA, $g1, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithGroup(); // phpcs:ignore
-        $user = $this->usersTable->get($userAId);
-        $this->usersTable->softDelete($user);
+        // Ada is OWNER of folder A
+        // G1 has READ on folder A
+        // Betty is group manager of G1
+        // ---
+        // A (Ada:O, G1:R)
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userB])->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->withFoldersRelationsFor([$userA, $userB])
+            ->persist();
+
+        $this->usersTable->softDelete($userA);
 
         // Assert errors
-        $errors = $user->getErrors();
+        $errors = $userA->getErrors();
         $this->assertNotEmpty($errors['id']['soleOwnerOfSharedContent']);
 
         // Assert nothing has been updated/deleted
-        $this->assertUserIsNotSoftDeleted($userAId);
+        $this->assertUserIsNotSoftDeleted($userA->id);
         $this->assertFolder($folderA->id);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
-    }
-
-    private function insertFixture_SoleOwnerFolder_FolderSharedWithGroup()
-    {
-        // Ada has READ on folder A
-        // G1 is OWNER of folder A
-        // Betty is group manager of G1
-        // ---
-        // A (Ada:R, G1:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $groupData = [
-            'groups_users' => [
-                ['user_id' => $userBId, 'is_admin' => true],
-            ],
-        ];
-        $g1 = $this->addGroup($groupData);
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER], [$g1->id => Permission::READ]);
-
-        return [$folderA, $g1, $userAId, $userBId];
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userA->id, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userB->id, FoldersRelation::ROOT);
     }
 
     public function testUsersSoftDeleteError_GroupIsSoleOwnerFolder_UserIsOnlyGroupMember()
     {
-        [$folderA, $g1, $userAId] = $this->insertFixture_GroupIsSoleOwnerFolder_UserIsOnlyGroupMember(); // phpcs:ignore
-        $user = $this->usersTable->get($userAId);
-
-        $result = $this->usersTable->softDelete($user);
-        $this->assertNotFalse($result);
-
-        // Assert the user is deleted as long as the folder and the folders relations
-        $this->assertUserIsSoftDeleted($userAId);
-        $this->assertFolderNotExist($folderA->id);
-        $this->assertFolderRelationNotExist($folderA->id, $userAId);
-    }
-
-    private function insertFixture_GroupIsSoleOwnerFolder_UserIsOnlyGroupMember()
-    {
-        // G1 is OWNER of folder A
+        // G1 has READ on folder A
         // Ada is group manager of G1
         // ---
         // A (G1:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $groupData = [
-            'groups_users' => [
-                ['user_id' => $userAId, 'is_admin' => true],
-            ],
-        ];
-        $g1 = $this->addGroup($groupData);
-        $folderA = $this->addFolderFor(['name' => 'A'], [], [$g1->id => Permission::READ]);
+        /** @var \App\Model\Entity\User $userA */
+        $userA = UserFactory::make()->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$userA])->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$group], Permission::READ)
+            ->withFoldersRelationsFor([$userA])
+            ->persist();
 
-        return [$folderA, $g1, $userAId];
+        $result = $this->usersTable->softDelete($userA);
+        $this->assertNotFalse($result);
+
+        // Assert the user is deleted as long as the folder and the folders relations
+        $this->assertUserIsSoftDeleted($userA->id);
+        $this->assertFolderNotExist($folderA->id);
+        $this->assertFolderRelationNotExist($folderA->id, $userA->id);
     }
 }

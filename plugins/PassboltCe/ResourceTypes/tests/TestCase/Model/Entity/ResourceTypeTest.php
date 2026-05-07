@@ -38,5 +38,6 @@ class ResourceTypeTest extends TestCase
         $this->assertEquals(ResourceType::SLUG_V5_DEFAULT_WITH_TOTP, 'v5-default-with-totp');
         $this->assertEquals(ResourceType::SLUG_V5_CUSTOM_FIELD_STANDALONE, 'v5-custom-fields');
         $this->assertEquals(ResourceType::SLUG_V5_NOTE, 'v5-note');
+        $this->assertEquals(ResourceType::SLUG_V5_PIN_CODE, 'v5-pin-code');
     }
 }

@@ -1,0 +1,20 @@
+{
+    "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:ResourceType"
+    ],
+    "id": "User",
+    "name": "User",
+    "endpoint": "Users",
+    "description": "https:\/\/tools.ietf.org\/html\/rfc7643#section-8.7.1",
+    "schema": "urn:ietf:params:scim:schemas:core:2.0:User",
+    "schemaExtensions": [
+        {
+            "schema": "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User",
+            "required": false
+        }
+    ],
+    "meta": {
+        "location": "PLACEHOLDER_API_URLscim\/v2\/PLACEHOLDER_SETTING_ID\/ResourceTypes\/User",
+        "resourceType": "ResourceType"
+    }
+}
