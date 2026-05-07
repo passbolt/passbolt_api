@@ -18,6 +18,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
+use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
@@ -30,12 +31,6 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaAccountSettingsTest extends MfaIntegrationTestCase
 {
-    public array $fixtures = [
-        'plugin.Passbolt/AccountSettings.AccountSettings',
-         'app.Base/Users',
-        'app.Base/Roles',
-    ];
-
     /**
      * @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable
      */
@@ -56,7 +51,8 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaAccountSettings_GetEmpty()
     {
-        $uac = $this->mockUserAccessControl('ada');
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
         $this->expectException(RecordNotFoundException::class);
         MfaAccountSettings::get($uac);
     }
@@ -79,7 +75,8 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaAccountSettings_GetTOTPSuccess()
     {
-        $uac = $this->mockUserAccessControl('ada');
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
         $uri = MfaOtpFactory::generateTOTP($uac);
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP],
@@ -88,7 +85,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
                 MfaAccountSettings::OTP_PROVISIONING_URI => $uri,
             ],
         ];
-        $this->mockMfaAccountSettings('ada', $data);
+        $this->mockMfaAccountSettings($uac, $data);
         $settings = MfaAccountSettings::get($uac);
         $this->assertNotEmpty($settings);
         $this->assertEquals($settings->getEnabledProviders(), [MfaSettings::PROVIDER_TOTP]);
@@ -104,7 +101,8 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaAccountSettings_GetMixedSuccess()
     {
-        $uac = $this->mockUserAccessControl('ada');
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
         $uri = MfaOtpFactory::generateTOTP($uac);
         $data = [
             MfaSettings::PROVIDERS => [
@@ -120,7 +118,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
                 // missing YUBIKEY_ID
             ],
         ];
-        $this->mockMfaAccountSettings('ada', $data);
+        $this->mockMfaAccountSettings($uac, $data);
         $settings = MfaAccountSettings::get($uac);
         $this->assertNotEmpty($settings);
 
@@ -137,24 +135,25 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
     public function testMfaAccountSettings_GetProviderInvalid()
     {
         // No providers
-        $uac = $this->mockUserAccessControl('ada');
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
         $data = [];
-        $this->mockMfaAccountSettings('ada', $data);
+        $this->mockMfaAccountSettings($uac, $data);
         $settings = MfaAccountSettings::get($uac);
         $ready = $settings->isProviderReady(MfaSettings::PROVIDER_YUBIKEY);
         $this->assertFalse($ready);
 
         // Empty providers
-        $uac = $this->mockUserAccessControl('ada');
+        $uac = $this->makeUac($userA);
         $data = [MfaSettings::PROVIDERS => []];
-        $this->mockMfaAccountSettings('ada', $data);
+        $this->mockMfaAccountSettings($uac, $data);
         $settings = MfaAccountSettings::get($uac);
         $ready = $settings->isProviderReady(MfaSettings::PROVIDER_YUBIKEY);
         $this->assertFalse($ready);
 
         // Not present provider config
         $data = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP]];
-        $this->mockMfaAccountSettings('ada', $data);
+        $this->mockMfaAccountSettings($uac, $data);
         $settings = MfaAccountSettings::get($uac);
         $ready = $settings->isProviderReady(MfaSettings::PROVIDER_TOTP);
         $this->assertFalse($ready);
@@ -167,14 +166,15 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
     public function testMfaAccountSettings_GetTOTPNotReady()
     {
         // Incomplete TOTP config
-        $uac = $this->mockUserAccessControl('ada');
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP],
             MfaSettings::PROVIDER_TOTP => [
                 MfaAccountSettings::VERIFIED => DateTime::now(),
             ],
         ];
-        $this->mockMfaAccountSettings('ada', $data);
+        $this->mockMfaAccountSettings($uac, $data);
         $settings = MfaAccountSettings::get($uac);
         $ready = $settings->isProviderReady(MfaSettings::PROVIDER_TOTP);
         $this->assertFalse($ready);
@@ -186,7 +186,8 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaAccountSettings_GetYubikeySuccess()
     {
-        $uac = $this->mockUserAccessControl('ada');
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_YUBIKEY],
             MfaSettings::PROVIDER_YUBIKEY => [
@@ -194,7 +195,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
                 MfaAccountSettings::YUBIKEY_ID => 'something',
             ],
         ];
-        $this->mockMfaAccountSettings('ada', $data);
+        $this->mockMfaAccountSettings($uac, $data);
         $settings = MfaAccountSettings::get($uac);
         $ready = $settings->isProviderReady(MfaSettings::PROVIDER_YUBIKEY);
         $this->assertTrue($ready);
@@ -207,14 +208,15 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
     public function testMfaAccountSettings_GetWithYubikeyNotReady()
     {
         // Incomplete Yubikey config
-        $uac = $this->mockUserAccessControl('ada');
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_YUBIKEY],
             MfaSettings::PROVIDER_YUBIKEY => [
                 MfaAccountSettings::VERIFIED => DateTime::now(),
             ],
         ];
-        $this->mockMfaAccountSettings('ada', $data);
+        $this->mockMfaAccountSettings($uac, $data);
         $settings = MfaAccountSettings::get($uac);
         $ready = $settings->isProviderReady(MfaSettings::PROVIDER_YUBIKEY);
         $this->assertFalse($ready);
@@ -227,12 +229,13 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
     public function testMfaAccountSettings_GetWithProviderDuoNotReady()
     {
         // Incomplete Duo config
-        $uac = $this->mockUserAccessControl('ada');
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO],
             MfaSettings::PROVIDER_DUO => [],
         ];
-        $this->mockMfaAccountSettings('ada', $data);
+        $this->mockMfaAccountSettings($uac, $data);
         $settings = MfaAccountSettings::get($uac);
         $ready = $settings->isProviderReady(MfaSettings::PROVIDER_DUO);
         $this->assertFalse($ready);
@@ -244,7 +247,8 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaAccountSettings_EnableProvider()
     {
-        $uac = $this->mockUserAccessControl('ada');
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
         MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_DUO);
         $settings = MfaAccountSettings::get($uac);
         $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_DUO));
@@ -276,7 +280,8 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
     public function testMfaAccountSettings_EnableAndDisableProvider()
     {
         // Enable two providers
-        $uac = $this->mockUserAccessControl('ada');
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
         MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_DUO);
         MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_YUBIKEY, [
             MfaAccountSettings::YUBIKEY_ID => 'yubikey_id',
@@ -303,7 +308,8 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
     public function testMfaAccountSettings_GetProviderStatus()
     {
         // Enable all providers one is badly configured
-        $uac = $this->mockUserAccessControl('ada');
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
         MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_DUO);
         MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_YUBIKEY, [
             MfaAccountSettings::YUBIKEY_ID => 'yubikey_id',

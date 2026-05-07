@@ -969,4 +969,77 @@ class SlugDefinitionTest extends TestCase
         $result = SlugDefinition::v5Note();
         $this->assertEquals($expected, $result);
     }
+
+    public function testV5PinCode(): void
+    {
+        $expected = json_encode([
+            'resource' => [
+                'type' => 'object',
+                'required' => ['name'],
+                'properties' => [
+                    'name' => [
+                        'type' => 'string',
+                        'maxLength' => 255,
+                    ],
+                    'description' => [
+                        'anyOf' => [
+                            ['type' => 'string', 'maxLength' => 10000],
+                            ['type' => 'null'],
+                        ],
+                    ],
+                    'icon' => [
+                        'type' => 'object',
+                        'required' => [],
+                        'properties' => [
+                            'type' => [
+                                'type' => 'string',
+                                'enum' => ['keepass-icon-set', 'passbolt-icon-set'],
+                            ],
+                            'value' => [
+                                'type' => 'integer',
+                                'minimum' => 0,
+                            ],
+                            'background_color' => [
+                                'anyOf' => [
+                                    [
+                                        'type' => 'string',
+                                        'pattern' => '^#(?:[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$',
+                                    ],
+                                    ['type' => 'null'],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'secret' => [
+                'type' => 'object',
+                'required' => [
+                    'pin_code',
+                    'object_type',
+                ],
+                'properties' => [
+                    'object_type' => [
+                        'type' => 'string',
+                        'enum' => ['PASSBOLT_SECRET_DATA'],
+                    ],
+                    'pin_code' => [
+                        'type' => 'string',
+                        'minLength' => 4,
+                        'maxLength' => 12,
+                        'pattern' => '^\d+$',
+                    ],
+                    'description' => [
+                        'anyOf' => [
+                            ['type' => 'string', 'maxLength' => 50000],
+                            ['type' => 'null'],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $result = SlugDefinition::v5PinCode();
+        $this->assertEquals($expected, $result);
+    }
 }

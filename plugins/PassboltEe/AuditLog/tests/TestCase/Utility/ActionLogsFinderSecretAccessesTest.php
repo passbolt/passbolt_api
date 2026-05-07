@@ -18,8 +18,9 @@ declare(strict_types=1);
 namespace Passbolt\AuditLog\Test\TestCase\Utility;
 
 use App\Model\Entity\Role;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
-use App\Utility\UuidFactory;
 use Passbolt\AuditLog\Test\Lib\ActionLogsOperationsTestTrait;
 use Passbolt\AuditLog\Utility\ActionLogResultsParser;
 use Passbolt\AuditLog\Utility\ResourceActionLogsFinder;
@@ -29,30 +30,27 @@ class ActionLogsFinderSecretAccessesTest extends LogIntegrationTestCase
 {
     use ActionLogsOperationsTestTrait;
 
-    public array $fixtures = [
-        'app.Base/Users',
-        'app.Base/Profiles',
-        'app.Base/Resources',
-        'app.Base/ResourceTypes',
-        'app.Base/Permissions',
-        'app.Base/Secrets',
-    ];
-
     public function testAuditLogsActionLogsFinderSecretAccessSingle()
     {
-        $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->simulateMultipleResourceGetWithSecrets($uac, [$resourceId]);
+        /** @var \App\Model\Entity\User $userA */
+        $userA = UserFactory::make()->user()->persist();
+        /** @var \App\Model\Entity\Resource $resourceA */
+        $resourceA = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA])
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
+        $this->simulateMultipleResourceGetWithSecrets($uac, [$resourceA->id]);
 
         $ActionLogsFinder = new ResourceActionLogsFinder();
-        $actionLogs = $ActionLogsFinder->find($uac, $resourceId);
-        $actionLogs = (new ActionLogResultsParser($actionLogs->all(), ['resources' => [$resourceId]]))->parse();
+        $actionLogs = $ActionLogsFinder->find($uac, $resourceA->id);
+        $actionLogs = (new ActionLogResultsParser($actionLogs->all(), ['resources' => [$resourceA->id]]))->parse();
 
         $this->assertEquals(count($actionLogs), 1);
         $this->assertEquals($actionLogs[0]['type'], 'Resource.Secrets.read');
         $this->assertTrue(isset($actionLogs[0]['data']));
         $this->assertTrue(isset($actionLogs[0]['data']['resource']));
-        $this->assertEquals($actionLogs[0]['data']['resource']['id'], $resourceId);
+        $this->assertEquals($actionLogs[0]['data']['resource']['id'], $resourceA->id);
     }
 
     /**
@@ -64,18 +62,25 @@ class ActionLogsFinderSecretAccessesTest extends LogIntegrationTestCase
      */
     public function testAuditLogsActionLogsFinderSecretAccessMultiple()
     {
-        $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->simulateMultipleResourceGetWithSecrets($uac, [$resourceId, UuidFactory::uuid('resource.id.cakephp')]);
+        /** @var \App\Model\Entity\User $userA */
+        $userA = UserFactory::make()->user()->persist();
+        /** @var \App\Model\Entity\Resource $resourceA */
+        /** @var \App\Model\Entity\Resource $resourceB */
+        [$resourceA, $resourceB] = ResourceFactory::make(2)
+            ->withPermissionsFor([$userA])
+            ->withSecretsFor([$userA])
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
+        $this->simulateMultipleResourceGetWithSecrets($uac, [$resourceA->id, $resourceB->id]);
 
         $ActionLogsFinder = new ResourceActionLogsFinder();
-        $actionLogs = $ActionLogsFinder->find($uac, $resourceId);
-        $actionLogs = (new ActionLogResultsParser($actionLogs->all(), ['resources' => [$resourceId]]))->parse();
+        $actionLogs = $ActionLogsFinder->find($uac, $resourceA->id);
+        $actionLogs = (new ActionLogResultsParser($actionLogs->all(), ['resources' => [$resourceA->id]]))->parse();
 
         $this->assertEquals(count($actionLogs), 1);
         $this->assertEquals($actionLogs[0]['type'], 'Resource.Secrets.read');
         $this->assertTrue(isset($actionLogs[0]['data']));
         $this->assertTrue(isset($actionLogs[0]['data']['resource']));
-        $this->assertEquals($actionLogs[0]['data']['resource']['id'], UuidFactory::uuid('resource.id.apache'));
+        $this->assertEquals($actionLogs[0]['data']['resource']['id'], $resourceA->id);
     }
 }

@@ -14,9 +14,8 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\Subscription\Command;
+namespace App\Command;
 
-use App\Command\PassboltCommand;
 use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
