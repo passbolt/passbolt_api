@@ -17,14 +17,13 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\GroupsUsers;
 
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class FindGroupsWhereUserIsOnlyMemberTest extends AppTestCase
 {
-    public array $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
-
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
@@ -44,25 +43,36 @@ class FindGroupsWhereUserIsOnlyMemberTest extends AppTestCase
 
     public function testFindGroupsWhereUserIsNotInAnyGroupsTest()
     {
-        // Ada is not manager of any group
-        $userId = UuidFactory::uuid('user.id.ada');
-        $result = $this->GroupsUsers->findGroupsWhereUserOnlyMember($userId)->all()->extract('group_id')->toArray();
+        // userA is not manager of any group
+        $userA = UserFactory::make()->user()->persist();
+        $result = $this->GroupsUsers->findGroupsWhereUserOnlyMember($userA->id)->all()->extract('group_id')->toArray();
         $this->assertEmpty($result);
     }
 
     public function testFindGroupsWhereUserIsNotAloneInAnyGroupsTest()
     {
-        // Ping is many groups but not alone
-        $userId = UuidFactory::uuid('user.id.ping');
-        $result = $this->GroupsUsers->findGroupsWhereUserOnlyMember($userId)->all()->extract('group_id')->toArray();
+        // userA is in many groups but not alone
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
+        GroupFactory::make()
+            ->withGroupsManagersFor([$userA])
+            ->withGroupsUsersFor([$userB])
+            ->persist();
+        GroupFactory::make()
+            ->withGroupsManagersFor([$userB])
+            ->withGroupsUsersFor([$userA])
+            ->persist();
+        $result = $this->GroupsUsers->findGroupsWhereUserOnlyMember($userA->id)->all()->extract('group_id')->toArray();
         $this->assertEmpty($result);
     }
 
     public function testFindGroupsWhereUserIsAloneInManyGroupsTest()
     {
         // Admin is manager of a bunch of empty groups
-        $userId = UuidFactory::uuid('user.id.admin');
-        $result = $this->GroupsUsers->findGroupsWhereUserOnlyMember($userId)->all()->extract('group_id')->toArray();
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        GroupFactory::make(6)->withGroupsManagersFor([$userA])->persist();
+        GroupFactory::make()->withGroupsManagersFor([$userA, $userB])->persist();
+        $result = $this->GroupsUsers->findGroupsWhereUserOnlyMember($userA->id)->all()->extract('group_id')->toArray();
         $this->assertNotEmpty($result);
         $this->assertGreaterThan(5, count($result));
     }

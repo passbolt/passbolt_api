@@ -44,6 +44,7 @@ class SubscriptionControllerTestCase extends AppIntegrationTestCase
         parent::setUp();
         $this->setUpPathAndPublicSubscriptionKey();
         $this->Subscriptions = TableRegistry::getTableLocator()->get('Passbolt/Subscription.Subscriptions');
+        $this->enableFeaturePlugin('Subscription');
         MfaSettings::clear();
     }
 

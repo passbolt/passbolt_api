@@ -25,7 +25,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\TestData\Lib\PermissionMatrix;
 
-class FindIndexTest extends AppTestCase
+class FindIndexWithStaticFixturesTest extends AppTestCase
 {
     public array $fixtures = [
         'app.Base/Users',

@@ -32,6 +32,7 @@ require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
 use App\Mailer\Transport\DebugTransport;
 use App\Mailer\Transport\SmtpTransport;
+use App\Service\Subscriptions\EditionManager;
 use Cake\Cache\Cache;
 use Cake\Database\Type\JsonType;
 use Cake\Database\TypeFactory;
@@ -65,6 +66,11 @@ try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
     Configure::load('default', 'default', false); // passbolt default config
+    Configure::load('version', 'default', true);
+    if (Configure::read('passbolt.edition') === EditionManager::EDITION_PRO) {
+        Configure::load('pro', 'default', true); // pro default config
+    }
+
     Configure::load('audit_logs', 'default', true); // audit logs config
     if (\file_exists(CONFIG . DS . 'passbolt.php')) {
         Configure::load('passbolt', 'default', true); // merge with default config
@@ -76,13 +82,24 @@ try {
             Configure::write('Email.default.from', array_slice($from, -1, count($from))); // pick the last one
         }
     }
-    Configure::load('version', 'default', true);
 } catch (\Exception $e) {
     // let cli handle issues
     if (!$isCli) {
         exit($e->getMessage() . "\n");
     }
 }
+
+// Workaround for cakephp/cakephp#19407: Session::_defaultConfig() only applies the
+// SameSite=Lax default to the 'php' preset. Set it explicitly so cache/database/cake
+// presets get it too. Remove once cakephp/cakephp ships the fix.
+// The ini key contains literal dots, so it must be set inside the array — not via
+// a dotted Configure path, which Configure::write would interpret as nesting.
+$sessionIni = (array)Configure::read('Session.ini');
+if (!isset($sessionIni['session.cookie_samesite'])) {
+    $sessionIni['session.cookie_samesite'] = 'Lax';
+    Configure::write('Session.ini', $sessionIni);
+}
+unset($sessionIni);
 
 /**
  * Overwrite these paths. This is a helper to ensure CakePHP3 to 4 retro-compatibility

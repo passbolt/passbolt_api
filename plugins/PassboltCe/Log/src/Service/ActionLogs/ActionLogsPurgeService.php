@@ -189,8 +189,17 @@ class ActionLogsPurgeService
             'UserLogs.viewByResource',
             'UsersIndex.index',
             'UsersView.view',
+            'MetadataKeysIndex.index',
+            'MetadataKeysSettingsGet.get',
+            'MetadataSessionKeysGet.get',
+            'MetadataTypesSettingsGet.get',
             'MfaVerifyAjaxError.get',
             'MfaPoliciesSettingsGet.get',
+            'PasswordExpirySettingsGet.get',
+            'PasswordPoliciesSettingsGet.get',
+            'RbacsView.viewForCurrentRole',
+            'SecretRevisionsSettingsGet.get',
+            'SsoSettingsViewCurrent.viewCurrent',
         ]);
     }
 }
