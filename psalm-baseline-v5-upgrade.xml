@@ -92,7 +92,6 @@
   </file>
   <file src="plugins/PassboltCe/Folders/tests/TestCase/Controller/Folders/FoldersIndexControllerTest.php">
     <InvalidArgument>
-      <code><![CDATA[$folder->children_folders]]></code>
       <code><![CDATA[$folder->children_resources]]></code>
     </InvalidArgument>
   </file>
@@ -926,6 +925,989 @@
       <code><![CDATA[getSchemaCollection]]></code>
     </UndefinedInterfaceMethod>
   </file>
+  <file src="plugins/PassboltCe/WebInstaller/tests/TestCase/Utility/WebInstallerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/src/Model/Table/AccountRecoveryOrganizationPoliciesTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy[]]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/src/Model/Table/AccountRecoveryOrganizationPublicKeysTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey[]]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/src/Model/Table/AccountRecoveryPrivateKeyPasswordsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[]]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword newEmptyEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/src/Model/Table/AccountRecoveryPrivateKeysTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey[]]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey newEmptyEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/src/Model/Table/AccountRecoveryRequestsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[]]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest newEmptyEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/src/Model/Table/AccountRecoveryResponsesTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse[]]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse newEmptyEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/src/Model/Table/AccountRecoveryUserSettingsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting[]]]></code>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting newEmptyEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/Factory/AccountRecoveryRequestFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[AccountRecoveryRequestFactory]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/Scenario/Request/ResponseCreateScenario.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$authenticationToken->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Controller/AccountRecoveryContinue/AccountRecoveryContinueControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Controller/AccountRecoveryRequests/AccountRecoveryRequestsCreateControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->profile]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Controller/AccountRecoveryRequests/AccountRecoveryRequestsViewControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$request->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Controller/AccountRecoveryResponses/AccountRecoveryResponsesCreateControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$oldApprovedRequest->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Controller/AccountRecoveryUserSettings/AccountRecoveryUserSettingsSetControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$policy->account_recovery_organization_public_key]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Controller/Setup/RecoverCompleteControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$request->id]]></code>
+      <code><![CDATA[$user->authentication_tokens]]></code>
+      <code><![CDATA[$user->gpgkey]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Controller/Setup/RecoverStartControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$policy->account_recovery_organization_public_key]]></code>
+      <code><![CDATA[$policy->created]]></code>
+      <code><![CDATA[$policy->created_by]]></code>
+      <code><![CDATA[$policy->id]]></code>
+      <code><![CDATA[$policy->modified]]></code>
+      <code><![CDATA[$policy->modified_by]]></code>
+      <code><![CDATA[$policy->policy]]></code>
+      <code><![CDATA[$policy->public_key_id]]></code>
+      <code><![CDATA[$setting->user]]></code>
+      <code><![CDATA[$token->token]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Controller/Setup/SetupCompleteControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$policy->account_recovery_organization_public_key]]></code>
+      <code><![CDATA[$policy->account_recovery_organization_public_key]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Controller/Setup/SetupStartControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$policy->account_recovery_organization_public_key]]></code>
+      <code><![CDATA[$policy->id]]></code>
+      <code><![CDATA[$policy->policy]]></code>
+      <code><![CDATA[$policy->public_key_id]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Controller/Users/UsersIndexContainPendingAccountRecoveryRequestControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$pendingRequest->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Controller/Users/UsersViewContainAccountRecoveryUserSettingsControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$setting->user]]></code>
+      <code><![CDATA[$setting->user]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/EndToEnd/AccountRecoveryOptInHappyPathEndToEndTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+    </InvalidPropertyFetch>
+    <InvalidReturnType>
+      <code><![CDATA[void]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Model/Table/AccountRecoveryPrivateKeysTableTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Model/Table/AccountRecoveryRequestsTableTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Model/Table/AccountRecoveryUserSettingsTableTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[AccountRecoveryUserSettingFactory::make()->withUser()->persist()->user]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Service/AccountRecoveryOrganizationPolicies/AccountRecoveryOrganizationPolicyGetServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[AccountRecoveryOrganizationPolicyFactory::make()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->with('Creator', UserFactory::make()->deleted()->withAvatar())
+            ->persist()
+            ->creator]]></code>
+      <code><![CDATA[AccountRecoveryOrganizationPolicyFactory::make()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->with('Creator', UserFactory::make()->with('Gpgkeys')->withAvatar())
+            ->persist()
+            ->creator]]></code>
+      <code><![CDATA[AccountRecoveryOrganizationPolicyFactory::make()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->with('Creator', UserFactory::make()->withAvatar())
+            ->persist()
+            ->creator]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Service/AccountRecoveryRequests/AccountRecoveryRequestCreateServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Service/AccountRecoveryRequests/AccountRecoveryRequestGetServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$request->id]]></code>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Service/AccountRecoveryUserDeleteService/AccountRecoveryUserDeleteServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$token->id]]></code>
+      <code><![CDATA[$user2->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Service/AccountRecoveryUserSettings/AccountRecoveryUserSettingsSetServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$policy->account_recovery_organization_public_key]]></code>
+      <code><![CDATA[$policy->account_recovery_organization_public_key]]></code>
+      <code><![CDATA[$policy->account_recovery_organization_public_key]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Service/Setup/AccountRecoveryRecoverCompleteServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$request->account_recovery_responses]]></code>
+      <code><![CDATA[$request->id]]></code>
+      <code><![CDATA[$user->authentication_tokens]]></code>
+      <code><![CDATA[$user->authentication_tokens]]></code>
+      <code><![CDATA[$user->authentication_tokens]]></code>
+      <code><![CDATA[$user->gpgkey]]></code>
+      <code><![CDATA[$user->gpgkey]]></code>
+      <code><![CDATA[$user->gpgkey]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Service/Setup/AccountRecoverySetupCompleteServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$policy->account_recovery_organization_public_key]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+      <code><![CDATA[$token->user]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AuditLog/src/Utility/ActionLogResultsParser.php">
+    <UndefinedMagicPropertyAssignment>
+      <code><![CDATA[$permission->folder]]></code>
+    </UndefinedMagicPropertyAssignment>
+  </file>
+  <file src="plugins/PassboltEe/AuditLog/tests/TestCase/Controller/UserLogsControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->profile]]></code>
+      <code><![CDATA[$user->role_id]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AuditLog/tests/TestCase/Controller/Users/UsersDeleteControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->profile]]></code>
+      <code><![CDATA[$user->role_id]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AuditLog/tests/TestCase/Controller/Users/UsersRecoverControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/AuditLog/tests/TestCase/Utility/FolderActionLogsFinderTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$folder->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->role]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/DirectorySync/src/Model/Table/DirectoryEntriesTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryEntry]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryEntry]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryEntry[]]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryEntry|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryEntry>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryEntry>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryEntry>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryEntry>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryEntry get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/DirectorySync/src/Model/Table/DirectoryIgnoreTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[]]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/DirectorySync/src/Model/Table/DirectoryRelationsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryRelation]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryRelation]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryRelation[]]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryRelation|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryRelation>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryRelation>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryRelation>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryRelation>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+  </file>
+  <file src="plugins/PassboltEe/DirectorySync/src/Model/Table/DirectoryReportsItemsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[]]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/DirectorySync/src/Model/Table/DirectoryReportsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReport]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReport]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReport[]]]></code>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReport|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReport>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReport>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReport>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReport>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\DirectorySync\Model\Entity\DirectoryReport get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/MfaPolicies/tests/TestCase/Controller/MfaPoliciesSettingsSetControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$jane->username]]></code>
+      <code><![CDATA[$john->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Scim/src/Model/Table/ScimEntriesTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\Scim\Model\Entity\ScimEntry]]></code>
+      <code><![CDATA[\Passbolt\Scim\Model\Entity\ScimEntry]]></code>
+      <code><![CDATA[\Passbolt\Scim\Model\Entity\ScimEntry|false]]></code>
+      <code><![CDATA[array<\Passbolt\Scim\Model\Entity\ScimEntry>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Scim\Model\Entity\ScimEntry>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Scim\Model\Entity\ScimEntry>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Scim\Model\Entity\ScimEntry>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Scim\Model\Entity\ScimEntry>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/src/Model/Table/SsoKeysTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoKey]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoKey]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoKey[]]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoKey|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoKey>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoKey>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoKey>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoKey>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoKey get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/Sso/src/Model/Table/SsoSettingsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoSetting]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoSetting]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoSetting[]]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoSetting|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoSetting>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoSetting>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoSetting>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoSetting>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/Sso/src/Model/Table/SsoStatesTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoState]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoState]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoState[]]]></code>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoState|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoState>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoState>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoState>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Sso\Model\Entity\SsoState>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoState newEmptyEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/Sso/src/Service/Sso/Azure/SsoAzureService.php">
+    <RedundantCondition>
+      <code><![CDATA[$data->email_claim]]></code>
+      <code><![CDATA[$data->url]]></code>
+    </RedundantCondition>
+    <TypeDoesNotContainType>
+      <code><![CDATA[null]]></code>
+      <code><![CDATA[null]]></code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/Factory/SsoStateFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[SsoStateFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Sso\Model\Entity\SsoState getEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Google/SsoGoogleStage2ControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$admin->id]]></code>
+      <code><![CDATA[$admin->id]]></code>
+      <code><![CDATA[$admin->id]]></code>
+      <code><![CDATA[$admin->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$ssoState->state]]></code>
+      <code><![CDATA[$ssoState->state]]></code>
+      <code><![CDATA[$ssoState->state]]></code>
+      <code><![CDATA[$ssoState->state]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Keys/SsoKeysCreateControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Keys/SsoKeysDeleteControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$key->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Keys/SsoKeysGetControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$key->created_by]]></code>
+      <code><![CDATA[$key->created_by]]></code>
+      <code><![CDATA[$key->data]]></code>
+      <code><![CDATA[$key->data]]></code>
+      <code><![CDATA[$key->id]]></code>
+      <code><![CDATA[$key->id]]></code>
+      <code><![CDATA[$key->id]]></code>
+      <code><![CDATA[$key->id]]></code>
+      <code><![CDATA[$key->modified_by]]></code>
+      <code><![CDATA[$key->modified_by]]></code>
+      <code><![CDATA[$key->user_id]]></code>
+      <code><![CDATA[$key->user_id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$ssoAuthToken->token]]></code>
+      <code><![CDATA[$ssoAuthToken->token]]></code>
+      <code><![CDATA[$token->token]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Settings/SsoSettingsActivateControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$ssoAuthToken->token]]></code>
+      <code><![CDATA[$ssoAuthToken->token]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Settings/SsoSettingsDeleteControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Settings/SsoSettingsViewControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Model/Table/SsoAuthenticationTokensTableTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Model/Table/SsoStatesTableTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoState->state]]></code>
+      <code><![CDATA[$ssoState->state]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Notification/Email/SsoSettings/SsoSettingsActivatedEmailRedactorTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$admin1->username]]></code>
+      <code><![CDATA[$operator->id]]></code>
+      <code><![CDATA[$operator->profile]]></code>
+      <code><![CDATA[$operator->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Notification/Email/SsoSettings/SsoSettingsActiveDeletedEmailRedactorTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$admin1->username]]></code>
+      <code><![CDATA[$operator->id]]></code>
+      <code><![CDATA[$operator->profile]]></code>
+      <code><![CDATA[$operator->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Service/Sso/AbstractSsoAzureServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$ssoState->nonce]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->role]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Service/SsoAuthenticationTokens/SsoAuthenticationTokenGetServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Service/SsoKeys/SsoKeysDeleteServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$key->id]]></code>
+      <code><![CDATA[$key->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Service/SsoKeys/SsoKeysGetServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$key->created_by]]></code>
+      <code><![CDATA[$key->data]]></code>
+      <code><![CDATA[$key->id]]></code>
+      <code><![CDATA[$key->id]]></code>
+      <code><![CDATA[$key->modified_by]]></code>
+      <code><![CDATA[$key->user_id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$ssoAuthToken->token]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Service/SsoSettings/SsoSettingsActivateServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$ssoAuthToken->token]]></code>
+      <code><![CDATA[$ssoAuthToken->token]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Service/SsoSettings/SsoSettingsDeleteServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$setting->id]]></code>
+      <code><![CDATA[$setting->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Service/SsoSettings/SsoSettingsGetServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSettingActive->id]]></code>
+      <code><![CDATA[$ssoSettingActive->status]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Service/SsoSettings/SsoSettingsSetServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Service/SsoStates/SsoStatesAssertServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$ssoState->deleted]]></code>
+      <code><![CDATA[$ssoState->ip]]></code>
+      <code><![CDATA[$ssoState->ip]]></code>
+      <code><![CDATA[$ssoState->ip]]></code>
+      <code><![CDATA[$ssoState->ip]]></code>
+      <code><![CDATA[$ssoState->ip]]></code>
+      <code><![CDATA[$ssoState->state]]></code>
+      <code><![CDATA[$ssoState->user_agent]]></code>
+      <code><![CDATA[$ssoState->user_agent]]></code>
+      <code><![CDATA[$ssoState->user_agent]]></code>
+      <code><![CDATA[$ssoState->user_agent]]></code>
+      <code><![CDATA[$ssoState->user_agent]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->role]]></code>
+      <code><![CDATA[$user->role]]></code>
+      <code><![CDATA[$user->role]]></code>
+      <code><![CDATA[$user->role]]></code>
+      <code><![CDATA[$user->role]]></code>
+      <code><![CDATA[$user->role]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Service/SsoStates/SsoStatesGetServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$ssoState->id]]></code>
+      <code><![CDATA[$ssoState->ip]]></code>
+      <code><![CDATA[$ssoState->sso_settings_id]]></code>
+      <code><![CDATA[$ssoState->state]]></code>
+      <code><![CDATA[$ssoState->state]]></code>
+      <code><![CDATA[$ssoState->user_agent]]></code>
+      <code><![CDATA[$ssoState->user_id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Sso/tests/TestCase/Service/SsoStates/SsoStatesSetServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/SsoRecover/tests/TestCase/Controller/Azure/AzureRecoverSuccessControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/SsoRecover/tests/TestCase/Controller/Google/GoogleRecoverSuccessControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/SsoRecover/tests/TestCase/Controller/RecoverStartControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$settings->id]]></code>
+      <code><![CDATA[$ssoAuthToken->token]]></code>
+      <code><![CDATA[$ssoAuthToken->token]]></code>
+      <code><![CDATA[$ssoAuthToken->token]]></code>
+      <code><![CDATA[$ssoAuthToken->token]]></code>
+      <code><![CDATA[$ssoAuthToken->token]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/SsoRecover/tests/TestCase/Service/SsoRecoverAssertServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$ssoSetting->id]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/SsoRecover/tests/TestCase/Service/SsoRecoverStartServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltEe/Subscription/src/Error/Exception/Subscriptions/SubscriptionValidationException.php">
+    <TypeDoesNotContainType>
+      <code><![CDATA[is_object($this->keyDto)]]></code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="plugins/PassboltEe/Tags/src/Model/Table/ResourcesTagsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\ResourcesTag]]></code>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\ResourcesTag]]></code>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\ResourcesTag[]]]></code>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\ResourcesTag|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\ResourcesTag>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\ResourcesTag>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\ResourcesTag>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\ResourcesTag>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\ResourcesTag get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/Tags/src/Model/Table/TagsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\Tag]]></code>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\Tag]]></code>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\Tag[]]]></code>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\Tag|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\Tag>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\Tag>|iterable<\Cake\Datasource\EntityInterface>]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\Tag>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\Tags\Model\Entity\Tag>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\Tag get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/Tags/tests/Factory/ResourcesTagFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[ResourcesTagFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\ResourcesTag getEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltEe/Tags/tests/Factory/TagFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[TagFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Tags\Model\Entity\Tag getEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
   <file src="src/Controller/Settings/SettingsIndexController.php">
     <InvalidConstantAssignmentValue>
       <code><![CDATA[SETTINGS_VISIBILITY_KEY = 'settingsVisibility']]></code>
@@ -953,6 +1935,7 @@
       <code><![CDATA[iterable<\App\Model\Entity\AuthenticationToken>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
     </ImplementedReturnTypeMismatch>
     <MoreSpecificImplementedParamType>
+      <code><![CDATA[\App\Model\Entity\AuthenticationToken get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
       <code><![CDATA[\App\Model\Entity\AuthenticationToken get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
     </MoreSpecificImplementedParamType>
   </file>
@@ -1144,9 +2127,6 @@
       <code><![CDATA[iterable<\App\Model\Entity\User>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
       <code><![CDATA[iterable<\App\Model\Entity\User>|iterable<\Cake\Datasource\EntityInterface>|false]]></code>
     </ImplementedReturnTypeMismatch>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[\App\Model\Entity\User get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)]]></code>
-    </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Model/Traits/Resources/ResourcesFindersTrait.php">
     <TypeDoesNotContainType>

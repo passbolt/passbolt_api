@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Model\Validation;
 
+use Cake\ORM\Query;
 use Passbolt\Metadata\Form\Upgrade\MetadataBatchUpgradeForm;
 
 class MetadataFoldersBatchUpgradeValidationService extends MetadataBatchUpgradeValidationService
@@ -34,5 +35,15 @@ class MetadataFoldersBatchUpgradeValidationService extends MetadataBatchUpgradeV
     public function getForm(): MetadataBatchUpgradeForm
     {
         return new MetadataBatchUpgradeForm();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function queryEntitiesFromIds(array $entityIds): Query
+    {
+        $foldersQuery = parent::queryEntitiesFromIds($entityIds);
+
+        return $foldersQuery->select(['Folders.name']);
     }
 }

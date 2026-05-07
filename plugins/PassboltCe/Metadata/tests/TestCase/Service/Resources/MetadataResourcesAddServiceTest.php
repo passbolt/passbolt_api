@@ -215,7 +215,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
             $this->service->add($uac, new MetadataResourceDto($payload));
         } catch (ValidationException $exception) {
             $this->assertSame(
-                'The resource type should be one of the following: v5-password-string, v5-default, v5-totp-standalone, v5-default-with-totp, v5-custom-fields, v5-note.',
+                'The resource type should be one of the following: v5-password-string, v5-default, v5-totp-standalone, v5-default-with-totp, v5-custom-fields, v5-note, v5-pin-code.',
                 $exception->getErrors()['resource_type_id']['inList']
             );
         }

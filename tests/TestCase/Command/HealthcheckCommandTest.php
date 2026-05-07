@@ -35,6 +35,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
+use Passbolt\Subscription\Test\SubscriptionFactory;
 
 class HealthcheckCommandTest extends AppTestCase
 {
@@ -158,6 +159,8 @@ class HealthcheckCommandTest extends AppTestCase
         Configure::write('passbolt.js.build', 'production');
         Configure::write('passbolt.email.send', '');
         $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
+
+        $this->mockSubscriptionKey();
 
         $this->exec('passbolt healthcheck -d test --application');
 
@@ -344,5 +347,19 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertErrorContains('[WARN] PHP version less than 50 will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment.');
 
         $this->assertErrorContains('1 error(s) found. Hang in there');
+    }
+
+    /**
+     * @return void
+     */
+    protected function mockSubscriptionKey(): void
+    {
+        $licenseDevPublicKey = PLUGINS . 'PassboltEe' . DS . 'Subscription' . DS . 'tests' . DS . 'Fixture' . DS . 'gpg' . DS . 'subscription_dev_public.key';
+        Configure::write('passbolt.plugins.subscription.subscriptionKey.public', $licenseDevPublicKey);
+
+        $content = file_get_contents(PLUGINS . 'PassboltEe' . DS . 'Subscription' . DS . 'tests' . DS . 'Fixture' . DS . 'subscription' . DS . 'subscription_dev');
+        SubscriptionFactory::make([
+            'value' => $content,
+        ])->persist();
     }
 }

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2026-04-02 11:49+0000\n"
-"PO-Revision-Date: 2026-04-02 13:48\n"
+"POT-Creation-Date: 2026-04-02 12:51+0000\n"
+"PO-Revision-Date: 2026-04-02 14:13\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,8 @@ msgstr ""
 "X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "X-Crowdin-Project-ID: 2\n"
 "X-Crowdin-Language: sv\n"
-"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/default.po\n"
-"X-Crowdin-File-ID: 212\n"
+"X-Crowdin-File: /[passbolt.passbolt-pro-api] release/resources/locales/en_UK/default.po\n"
+"X-Crowdin-File-ID: 220\n"
 "Language: sv_SE\n"
 
 msgid "You need to login to access this location."
@@ -1089,6 +1089,12 @@ msgstr "\"Fältet måste vara null när du skapar en ny post.\""
 
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "Nyckeln identifierare bör vara en sträng av 8 hexadecimala tecken."
+
+msgid "The provided IP is invalid."
+msgstr "Den angivna IP-adressen är ogiltig."
+
+msgid "The provided user agent is invalid."
+msgstr "Den angivna användaragenten är ogiltig."
 
 msgid "{0} updated your memberships in several groups"
 msgstr "{0} uppdaterade ditt medlemskap i flera grupper"
@@ -4780,6 +4786,15 @@ msgstr "En tvingande ssl status krävs."
 msgid "The force ssl setting should be a valid boolean."
 msgstr "Den tvingande ssl inställningen bör vara en giltig boolean."
 
+msgid "A subscription key is required."
+msgstr "En prenumerationsnyckel krävs."
+
+msgid "The subscription key should not be empty."
+msgstr "Prenumerationsnyckeln får inte vara tom."
+
+msgid "The subscription format is not valid."
+msgstr "Prenumerationsformatet är inte giltigt."
+
 msgid "The passbolt config is writable."
 msgstr "Konfigurationen för passbolt är skrivbar."
 
@@ -4981,12 +4996,6 @@ msgstr "Eller välj en fil från din dator"
 msgid "Some binary things are happening..."
 msgstr "Några binära saker händer..."
 
-msgid "Passbolt Pro activation."
-msgstr "Aktivering av Passbolt Pro."
-
-msgid "Copy paste your Passbolt Pro subscription key here"
-msgstr "Kopiera och klistra in din Passbolt Pro-prenumerationsnyckel här"
-
 msgid "Choose your preferences."
 msgstr "Välj dina preferenser."
 
@@ -5005,8 +5014,14 @@ msgstr "Tvinga SSL?"
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
 msgstr "Att tvinga SSL innebär att passbolt inte kommer att acceptera anslutningar som kommer från ett icke säkert protokoll. Om SSL är tvingat måste din server konfigureras för HTTPS. Det rekommenderas starkt att du gör det."
 
-msgid "Welcome to Passbolt! Let's get started with the configuration."
-msgstr "Välkommen till Passbolt! Kom igång med konfigurationen."
+msgid "Passbolt Pro activation."
+msgstr "Aktivering av Passbolt Pro."
+
+msgid "Copy paste your Passbolt Pro subscription key here"
+msgstr "Kopiera och klistra in din Passbolt Pro-prenumerationsnyckel här"
+
+msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
+msgstr "Välkommen till Passbolt Pro! Kom igång med konfigurationen."
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "Bra jobbat! Din miljö är redo för passbolt."
@@ -5071,12 +5086,6 @@ msgstr "Hjälp"
 msgid "Need help? You can find more information on how to install passbolt in the official online help."
 msgstr "Behöver du hjälp? Du hittar mer information om hur du installerar passbolt i den officiella online-hjälpen."
 
-msgid "What subscription key?"
-msgstr "Vilken prenumerationsnyckel?"
-
-msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
-msgstr "Prenumerationsnyckeln är en fil som skickades till dig när du köpte Passbolt Pro. Vi behöver en prenumerationsnyckeln för att kunna aktivera Pro-funktionerna i passbolt."
-
 msgid "Send test email"
 msgstr "Skicka testmeddelande"
 
@@ -5097,6 +5106,2007 @@ msgstr "Varför behöver jag en SMTP-server?"
 
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "Passbolt behöver en SMTP-server för att kunna skicka inbjudningsmail efter att ett konto har skapats och för att kunna skicka e-postmeddelanden."
+
+msgid "What subscription key?"
+msgstr "Vilken prenumerationsnyckel?"
+
+msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
+msgstr "Prenumerationsnyckeln är en fil som skickades till dig när du köpte Passbolt Pro. Vi behöver en prenumerationsnyckeln för att kunna aktivera Pro-funktionerna i passbolt."
+
+msgid "The user id is invalid."
+msgstr "Användar-id är ogiltigt."
+
+msgid "The authentication token id is invalid."
+msgstr "Autentiseringstoken-id är ogiltigt."
+
+msgid "Only guests are allowed to create an account recovery request."
+msgstr "Endast gäster kan skapa en kontåterställningsförfrågan."
+
+msgid "Invalid request. Please provide the required data."
+msgstr "Ogiltig förfrågan. Vänligen ange nödvändiga data."
+
+msgid "The request id is invalid."
+msgstr "Förfrågnings-id är ogiltigt."
+
+msgid "Please provide a valid request id."
+msgstr "Vänligen ange ett giltigt förfrågnings-id."
+
+msgid "You cannot reuse the account recovery key."
+msgstr "Du kan inte återanvända kontoreparationsnyckeln."
+
+msgid "A policy is required."
+msgstr "En policy krävs."
+
+msgid "The policy name should not be empty."
+msgstr "Policynamnet får inte vara tomt."
+
+msgid "The policy should be one of the following: {0}."
+msgstr "Policyn bör vara en av följande: {0}."
+
+msgid "The public key identifier should be a valid UUID."
+msgstr "Den publika nyckelidentifieraren bör vara ett giltigt UUID."
+
+msgid "The public key identifier should not be empty."
+msgstr "Den publika nyckelidentifieraren får inte vara tom."
+
+msgid "The identifier of the user who created the organization policy should be a valid UUID."
+msgstr "Identifieraren för användaren som skapade organisationspolicyn bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who created the organization policy is required."
+msgstr "Identifieraren för användaren som skapade organisationspolicyn krävs."
+
+msgid "The identifier of the user who created the organization policy should not be empty."
+msgstr "Identifieraren för användaren som skapade organisationspolicyn får inte vara tom."
+
+msgid "The identifier of the user who modified the organization policy should be a valid UUID."
+msgstr "Identifieraren för den användare som ändrade organisationspolicyn bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who modified the organization policy is required."
+msgstr "Identifieraren för den användare som ändrade organisationspolicyn krävs."
+
+msgid "The identifier of the user who modified the organization policy should not be empty."
+msgstr "Identifieraren för den användare som ändrade organisationspolicyn får inte vara tom."
+
+msgid "Could not validate policy data."
+msgstr "Kunde inte validera policydatan."
+
+msgid "The armored key is too big."
+msgstr "Den bepansrade nyckeln är för stor."
+
+msgid "The \"deleted\" field should be a valid date."
+msgstr "Fältet \\\"deleted\\\" bör vara ett giltigt datum."
+
+msgid "The identifier of the user who created the organization public key should be a valid UUID."
+msgstr "Identifieraren för den användare som skapade organisationens publika nyckel bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who created the organization public key is required."
+msgstr "Identifieraren för den användare som skapade organisationens publika nyckel krävs."
+
+msgid "The identifier of the user who created the organization public key should not be empty."
+msgstr "Identifieraren för den användare som skapade organisationens publika nyckel får inte vara tom."
+
+msgid "The identifier of the user who modified the organization public key should be a valid UUID."
+msgstr "Identifieraren för den användare som ändrade organisationens publika nyckel bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who modified the organization public key is required."
+msgstr "Identifieraren för den användare som ändrade organisationens publika nyckel krävs."
+
+msgid "The identifier of the user who modified the organization public key should not be empty."
+msgstr "Identifieraren för den användare som ändrade organisationens publika nyckel får inte vara tom."
+
+msgid "You cannot reuse the user keys."
+msgstr "Du kan inte återanvända användarnycklarna."
+
+msgid "You cannot reuse account recovery organization public keys."
+msgstr "Du kan inte återanvända organisationens publika nycklar för kontoåterställning."
+
+msgid "You cannot reuse the metadata keys."
+msgstr "Du kan inte återanvända metadata-nycklarna."
+
+msgid "Could not validate public key data."
+msgstr "Kunde inte validera publika nyckeldatan."
+
+msgid "The recipient_foreign_model should be a valid string."
+msgstr "Recipient_foreign_model bör vara en giltig sträng."
+
+msgid "The recipient_foreign_model must be provided."
+msgstr "Recipient_foreign_model måste anges."
+
+msgid "The recipient_foreign_model should not be empty."
+msgstr "Recipient_foreign_model får inte vara tom."
+
+msgid "The recipient_foreign_model must be one of the following: {0}."
+msgstr "Recipient_foreign_model måste vara en av följande: {0}."
+
+msgid "The data should be a valid string."
+msgstr "Datan bör vara en giltig sträng."
+
+msgid "The data is too big."
+msgstr "Datan är för stor."
+
+msgid "The identifier of the user who created the private key passwords should be a valid UUID."
+msgstr "Identifieraren för den användare som skapade lösenorden för den privata nyckeln bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who created the private key passwords is required."
+msgstr "Identifieraren för den användare som skapade lösenorden för den privata nyckeln krävs."
+
+msgid "The identifier of the user who created the private key passwords should not be empty."
+msgstr "Identifieraren för den användare som skapade lösenorden för den privata nyckeln får inte vara tom."
+
+msgid "The identifier of the user who modified the private key passwords should be a valid UUID."
+msgstr "Identifieraren för den användare som ändrade lösenorden för den privata nyckeln bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who modified the private key passwords is required."
+msgstr "Identifieraren för den användare som ändrade lösenorden för den privata nyckeln krävs."
+
+msgid "The identifier of the user who modified the private key passwords should not be empty."
+msgstr "Identifieraren för den användare som ändrade lösenorden för den privata nyckeln får inte vara tom."
+
+msgid "The private key identifier should be a valid UUID."
+msgstr "Identifieraren för den privata nyckeln bör vara ett giltigt UUID."
+
+msgid "A private key identifier is required."
+msgstr "En identifierare för den privata nyckeln krävs."
+
+msgid "The private key identifier should not be empty."
+msgstr "Identifieraren för den privata nyckeln får inte vara tom."
+
+msgid "Could not validate password data."
+msgstr "Kunde inte validera lösenordsdata."
+
+msgid "The identifier of the user who created the private key  should be a valid UUID."
+msgstr "Identifieraren för den användare som skapade den privata nyckeln bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who created the private key  is required."
+msgstr "Identifieraren för den användare som skapade den privata nyckeln krävs."
+
+msgid "The identifier of the user who created the private key  should not be empty."
+msgstr "Identifieraren för den användare som skapade den privata nyckeln får inte vara tom."
+
+msgid "The identifier of the user who modified the private key  should be a valid UUID."
+msgstr "Identifieraren för den användare som ändrade den privata nyckeln bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who modified the private key is required."
+msgstr "Identifieraren för den användare som ändrade den privata nyckeln krävs."
+
+msgid "The identifier of the user who modified the private key  should not be empty."
+msgstr "Identifieraren för den användare som ändrade den privata nyckeln får inte vara tom."
+
+msgid "The account recovery private key is not valid."
+msgstr "Den privata nyckeln för kontoåterställning är inte giltig."
+
+msgid "The status should not be a valid string."
+msgstr "Statusen får inte vara en giltig sträng."
+
+msgid "This status is not supported."
+msgstr "Denna status stöds inte."
+
+msgid "The status length should be maximum {0} characters."
+msgstr "Statusens längd bör vara högst {0} tecken."
+
+msgid "The identifier of the user who created the request should be a valid UUID."
+msgstr "Identifieraren för den användare som skapade förfrågan bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who created the request is required."
+msgstr "Identifieraren för den användare som skapade förfrågan krävs."
+
+msgid "The identifier of the user who created the request should not be empty."
+msgstr "Identifieraren för den användare som skapade förfrågan får inte vara tom."
+
+msgid "The identifier of the user who modified the request should be a valid UUID."
+msgstr "Identifieraren för den användare som ändrade förfrågan bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who modified the request is required."
+msgstr "Identifieraren för den användare som ändrade förfrågan krävs."
+
+msgid "The identifier of the user who modified the request should not be empty."
+msgstr "Identifieraren för den användare som ändrade förfrågan får inte vara tom."
+
+msgid "The request is invalid."
+msgstr "Förfrågan är ogiltig."
+
+msgid "The account request is invalid."
+msgstr "Kontoförfrågan är ogiltig."
+
+msgid "Invalid response status. Not supported."
+msgstr "Ogiltig svarsstatus. Stöds inte."
+
+msgid "The responder_foreign_key should not be empty."
+msgstr "Responder_foreign_key får inte vara tom."
+
+msgid "The responder_foreign_key should be a valid UUID."
+msgstr "Responder_foreign_key bör vara ett giltigt UUID."
+
+msgid "The responder_foreign_model should be a valid string."
+msgstr "Responder_foreign_model bör vara en giltig sträng."
+
+msgid "The responder_foreign_model should not be empty."
+msgstr "Responder_foreign_model får inte vara tom."
+
+msgid "The responder_foreign_model must be one of the following: {0}."
+msgstr "Responder_foreign_model måste vara en av följande: {0}."
+
+msgid "The identifier of the user who created the response should be a valid UUID."
+msgstr "Identifieraren för den användare som skapade svaret bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who created the response is required."
+msgstr "Identifieraren för den användare som skapade svaret krävs."
+
+msgid "The identifier of the user who created the response should not be empty."
+msgstr "Identifieraren för den användare som skapade svaret får inte vara tom."
+
+msgid "The identifier of the user who modified the response should be a valid UUID."
+msgstr "Identifieraren för den användare som ändrade svaret bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who modified the response is required."
+msgstr "Identifieraren för den användare som ändrade svaret krävs."
+
+msgid "The identifier of the user who modified the response should not be empty."
+msgstr "Identifieraren för den användare som ändrade svaret får inte vara tom."
+
+msgid "The account recovery request response is invalid."
+msgstr "Svaret på kontoåterställningsförfrågan är ogiltigt."
+
+msgid "The status should not be empty"
+msgstr "Statusen får inte vara tom"
+
+msgid "The status should be one of the following: {0}."
+msgstr "Statusen bör vara en av följande: {0}."
+
+msgid "The identifier of the user who created the user settings should be a valid UUID."
+msgstr "Identifieraren för den användare som skapade användarinställningarna bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who created the user settings is required."
+msgstr "Identifieraren för den användare som skapade användarinställningarna krävs."
+
+msgid "The identifier of the user who created the user settings should not be empty."
+msgstr "Identifieraren för den användare som skapade användarinställningarna får inte vara tom."
+
+msgid "The identifier of the user who modified the user settings should be a valid UUID."
+msgstr "Identifieraren för den användare som ändrade användarinställningarna bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who modified the user settings is required."
+msgstr "Identifieraren för den användare som ändrade användarinställningarna krävs."
+
+msgid "The identifier of the user who modified the user settings should not be empty."
+msgstr "Identifieraren för den användare som ändrade användarinställningarna får inte vara tom."
+
+msgid "This user already has an account recovery setting"
+msgstr "Den här användaren har redan en kontoåterställningsinställning"
+
+msgid "The account recovery user setting is not valid."
+msgstr "Kontoåterställningsinställningen är inte giltig."
+
+msgid "You have disabled the account recovery."
+msgstr "Du har inaktiverat kontoåterställningen."
+
+msgid "{0} has disabled the account recovery."
+msgstr "{0} har inaktiverat kontoåterställningen."
+
+msgid "You have set the account recovery organization policy to {0}."
+msgstr "Du har ställt in organisationens kontoåterställningspolicy till {0}."
+
+msgid "{0} has set the account recovery organization policy to {1}."
+msgstr "{0} har ställt in organisationens kontoåterställningspolicy till {1}."
+
+msgid "You have updated the account recovery organization policy to {0}."
+msgstr "Du har uppdaterat organisationens kontoåterställningspolicy till {0}."
+
+msgid "{0} has updated the account recovery organization policy to {1}."
+msgstr "{0} har uppdaterat organisationens kontoåterställningspolicy till {1}."
+
+msgid "Suspicious account recovery request issued from IP {0} for {1}"
+msgstr "Misstänkt kontåterställningsförfrågan från IP {0} för {1}"
+
+msgid "{0} has initiated a recovery request"
+msgstr "{0} har påbörjat en återställningsförfrågan"
+
+msgid "You have initiated a recovery request"
+msgstr "Du har påbörjat en återställningsförfrågan"
+
+msgid "Recovery request approved!"
+msgstr "Återställningsförfrågan godkänd!"
+
+msgid "approved"
+msgstr "godkänd"
+
+msgid "rejected"
+msgstr "avslagen"
+
+msgid "Account recovery response set to {0}."
+msgstr "Svar på kontåterställning inställt på {0}."
+
+msgid "Account recovery response set to {0} by {1}."
+msgstr "Svar på kontåterställning inställt på {0} av {1}."
+
+msgid "Recovery request denied!"
+msgstr "Återställningsförfrågan avslogs!"
+
+msgid "Could not validate key revocation."
+msgstr "Kunde inte validera nyckelåterkallelse."
+
+msgid "The fingerprint should match the one from the currently active key."
+msgstr "Fingeravtrycket bör matcha det från den nuvarande aktiva nyckeln."
+
+msgid "Account recovery is disabled."
+msgstr "Kontåterställning är inaktiverad."
+
+msgid "The account recovery organization public key is not set."
+msgstr "Den publika nyckeln för organisationens kontåterställning är inte inställd."
+
+msgid "Invalid request. No policy change."
+msgstr "Ogiltig begäran. Ingen policyändring."
+
+msgid "Invalid request. Revoked key is required for key rotation."
+msgstr "Ogiltig begäran. Återkallad nyckel krävs för nyckelrotation."
+
+msgid "Invalid request. New key is required for key rotation."
+msgstr "Ogiltig begäran. Ny nyckel krävs för nyckelrotation."
+
+msgid "Invalid request. An organization recovery public key is required."
+msgstr "Ogiltig begäran. En publik nyckel för organisationens återställning krävs."
+
+msgid "Invalid request. Revoked key or passwords are not required."
+msgstr "Ogiltig begäran. Återkallad nyckel eller lösenord krävs inte."
+
+msgid "Invalid request. New key or passwords are not required."
+msgstr "Ogiltig begäran. Ny nyckel eller lösenord krävs inte."
+
+msgid "Invalid request. Keys are required for this change."
+msgstr "Ogiltig begäran. Nycklar krävs för denna ändring."
+
+msgid "Invalid request. Passwords are required for this change."
+msgstr "Ogiltig begäran. Lösenord krävs för denna ändring."
+
+msgid "An organization public key is required."
+msgstr "En publik nyckel för organisationen krävs."
+
+msgid "The public_key_id must match current policy public_key_id."
+msgstr "Public_key_id måste matcha gällande policy public_key_id."
+
+msgid "An invalid number of passwords sent. Expected {0} and got {1}."
+msgstr "Ett ogiltigt antal lösenord skickades. Förväntade {0} men fick {1}."
+
+msgid "The message is not encrypted for the right recipient."
+msgstr "Meddelandet är inte krypterat för rätt mottagare."
+
+msgid "Recovery request cannot be created when organization policy is disabled."
+msgstr "En återställningsförfrågan kan inte skapas när organisationens policy är inaktiverad."
+
+msgid "Recovery request cannot be created when user is not enrolled."
+msgstr "En återställningsförfrågan kan inte skapas när användaren inte är registrerad."
+
+msgid "The authentication token is not valid or has expired."
+msgstr "Autentiseringstoken är inte giltig eller har gått ut."
+
+msgid "The account recovery request could not be found."
+msgstr "Kontåterställningsförfrågan kunde inte hittas."
+
+msgid "The request is already completed."
+msgstr "Förfrågan är redan slutförd."
+
+msgid "Recovery response cannot be created when organization policy is disabled."
+msgstr "Ett svarsmeddelande för återställning kan inte skapas när organisationens policy är inaktiverad."
+
+msgid "Could not validate response data."
+msgstr "Kunde inte validera svarsdatan."
+
+msgid "The account recovery response data is not required."
+msgstr "Data för kontåterställningssvar krävs inte."
+
+msgid "The account recovery response data is required."
+msgstr "Data för kontåterställningssvar krävs."
+
+msgid "The user is not enrolled in the account recovery program."
+msgstr "Användaren är inte registrerad i programmet för kontåterställning."
+
+msgid "User account recovery settings cannot be edited."
+msgstr "Inställningar för användarens kontåterställning kan inte redigeras."
+
+msgid "The account recovery is mandatory and cannot be rejected."
+msgstr "Kontåterställning är obligatorisk och kan inte avvisas."
+
+msgid "Invalid request. You cannot opt-out."
+msgstr "Ogiltig begäran. Du kan inte välja bort."
+
+msgid "The status must be set to approved."
+msgstr "Statusen måste ställas in på godkänd."
+
+msgid "Invalid request. You cannot both opt-out and provide backup."
+msgstr "Ogiltig begäran. Du kan inte både välja bort och tillhandahålla en säkerhetskopia."
+
+msgid "The private key backup must be provided."
+msgstr "En säkerhetskopia av den privata nyckeln måste tillhandahållas."
+
+msgid "Invalid request. Private key or password are missing."
+msgstr "Ogiltig begäran. Privat nyckel eller lösenord saknas."
+
+msgid "Could not validate private key data."
+msgstr "Kunde inte validera den privata nyckelns data."
+
+msgid "The account recovery request identifier should be a valid UUID."
+msgstr "Identifieraren för kontåterställningsförfrågan bör vara ett giltigt UUID."
+
+msgid "The account recovery request status is not approved."
+msgstr "Status för kontåterställningsförfrågan är inte godkänd."
+
+msgid "Account recovery is disabled. Key backup is not supported."
+msgstr "Kontåterställning är inaktiverad. Nyckelsäkerhetskopia stöds inte."
+
+msgid "Account recovery is mandatory. Please provide the mandatory data."
+msgstr "Kontåterställning är obligatorisk. Var god tillhandahåll de obligatoriska uppgifterna."
+
+msgid "Account Recovery Disabled"
+msgstr "Kontåterställning inaktiverad"
+
+msgid "Account Recovery Enabled"
+msgstr "Kontåterställning aktiverad"
+
+msgid "The fingerprint of the organization public key is {0}."
+msgstr "Fingeravtrycket för organisationens publika nyckel är {0}."
+
+msgid "Account Recovery Updated"
+msgstr "Kontåterställning uppdaterad"
+
+msgid "{0} has initiated an account recovery request"
+msgstr "{0} har startat en kontoåterställningsförfrågan"
+
+msgid "Recovery request"
+msgstr "Återställningsförfrågan"
+
+msgid "{0} has initiated an account recovery request."
+msgstr "\"{0} har initierat en begäran om kontoåterställning.\""
+
+msgid "Since you’re authorized to handle account recovery requests, please process this one."
+msgstr ""
+
+msgid "You will need your organization recovery key to continue."
+msgstr "Du behöver din organisations återställningsnyckel för att fortsätta."
+
+msgid "Review the recovery request"
+msgstr "Granska återställningsförfrågan"
+
+msgid "Suspicious recovery request"
+msgstr "Misstänkt återställningsförfrågan"
+
+msgid "An account recovery request was attempted from a user with client IP {0} for {1}."
+msgstr "En kontåterställningsförfrågan gjordes av en användare med klient-IP {0} för {1}."
+
+msgid "The request could not be found in the database."
+msgstr "Förfrågan kunde inte hittas i databasen."
+
+msgid "This is a potential security threat."
+msgstr "Detta är en potentiell säkerhetsfråga."
+
+msgid "You have initiated an account recovery!"
+msgstr "Du har startat en kontoåterställning!"
+
+msgid "Recovery Request"
+msgstr "Återställningsförfrågan"
+
+msgid "You just requested an account recovery."
+msgstr "Du har just begärt en kontåterställning."
+
+msgid "Your administrator have been informed and will follow up with you."
+msgstr "Din administratör har informerats och kommer att följa upp med dig."
+
+msgid "If you did not make this request please inform your administrator."
+msgstr "Om du inte har gjort denna begäran, vänligen informera din administratör."
+
+msgid "You have updated a recovery request to {0}."
+msgstr "Du har uppdaterat en återställningsförfrågan till {0}."
+
+msgid "You have set the status of the account recovery request initiated by {0} ({1}) to {2}."
+msgstr "Du har ställt in status för den kontåterställningsförfrågan som initierats av {0} ({1}) till {2}."
+
+msgid "{0} ({1}) has updated a recovery request to {2}."
+msgstr "{0} ({1}) har uppdaterat en återställningsförfrågan till {2}."
+
+msgid "{0} ({1}) has set the status of the request initiated by {2} ({3}) to {4}."
+msgstr "{0} ({1}) har ställt in status för förfrågan initierad av {2} ({3}) till {4}."
+
+msgid "{0} ({1}) has approved your recovery request."
+msgstr "{0} ({1}) har godkänt din återställningsförfrågan."
+
+msgid "Your organization recovery contacts have reviewed and approved your account recovery request."
+msgstr "Dina kontakter för organisationsåterställning har granskat och godkänt din kontåterställningsförfrågan."
+
+msgid "Please click on the link below to continue."
+msgstr "Vänligen klicka på länken nedan för att fortsätta."
+
+msgid "Important"
+msgstr "Viktigt"
+
+msgid "Please use the same computer and browser that you used to initiate the request."
+msgstr "Använd samma dator och webbläsare som du använde för att initiera förfrågan."
+
+msgid "Complete account recovery"
+msgstr "Slutför kontåterställning"
+
+msgid "{0} ({1}) has denied your recovery request."
+msgstr "{0} ({1}) har avslagit din återställningsförfrågan."
+
+msgid "Your organization recovery contacts have reviewed and rejected your account recovery request."
+msgstr "Dina kontakter för organisationsåterställning har granskat och avvisat din kontåterställningsförfrågan."
+
+msgid "Only administrators can view user logs."
+msgstr "Endast administratörer kan se användarloggar."
+
+msgid "The user {0} could not be added to group {1} because there is no matching directory entry in passbolt."
+msgstr "Användaren {0} kunde inte läggas till i grupp {1} eftersom det inte finns någon matchande katalogpost i passbolt."
+
+msgid "The user {0} could not be added to the group {1} because the membership has been removed in passbolt"
+msgstr "Användaren {0} kunde inte läggas till i gruppen {1} eftersom medlemskapet har tagits bort i passbolt"
+
+msgid "The user {0} was not synced with existing membership for group {1} because the membership was created before."
+msgstr "Användaren {0} synkroniserades inte med befintligt medlemskap för gruppen {1} eftersom medlemskapet skapades tidigare."
+
+msgid "The user {0} was successfully added to the group {1}."
+msgstr "Användaren {0} lades till i gruppen {1}."
+
+msgid "The user {0} could not be added to the group {1} because their account was priorly deleted in passbolt."
+msgstr "\"Användaren {0} kunde inte läggas till i gruppen {1} eftersom kontot tidigare har tagits bort från Passbolt.\""
+
+msgid "The user {0} could not be added to the group {1} because they have not yet activated their account."
+msgstr "\"Användaren {0} kunde inte läggas till i gruppen {1} eftersom kontot ännu inte är aktiverat.\""
+
+msgid "The user {0} could not be added to the group {1} because of validation issues."
+msgstr "Användaren {0} kan inte läggas till i gruppen {1} på grund av valideringsproblem."
+
+msgid "The user {0} could not be added to the group {1} because of an internal error."
+msgstr "Användaren {0} kunde inte läggas till gruppen {1} på grund av ett internt fel."
+
+msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
+msgstr "Användaren {0} kan inte läggas till i gruppen {1} automatiskt. En begäran skickades med e-post till gruppchefen(cheferna) för att göra det manuellt."
+
+msgid "The user {0} was successfully removed from the group {1}."
+msgstr "Användaren {0} togs bort från gruppen {1}."
+
+msgid "The user {0} could not be removed from the group {1} because it is the only group manager."
+msgstr "Användaren {0} kunde inte tas bort från gruppen {1} eftersom det är den enda gruppchefen."
+
+msgid "The user {0} could not be removed from the group {1} because some validation issues."
+msgstr "Användaren {0} kunde inte tas bort från gruppen {1} eftersom vissa valideringsproblem uppstod."
+
+msgid "The user {0} could not be removed from the group {1} because of an internal error."
+msgstr "Användaren {0} kunde inte tas bort från gruppen {1} på grund av ett internt fel."
+
+msgid "The user {0} was successfully synced with the group {1}."
+msgstr "Användaren {0} har synkroniserats med gruppen {1}."
+
+msgid "The group {0} has been successfully renamed to {1}."
+msgstr "Gruppen {0} har döpts om till {1} med framgång."
+
+msgid "The group {0} could not be renamed to {1}."
+msgstr "Gruppen {0} kunde inte döpas om till {1}."
+
+msgid "The passbolt {0} {1} was not deleted because it is marked as to be ignored."
+msgstr "Passbolt {0} {1} togs inte bort eftersom den är markerad som ignorerad."
+
+msgid "The directory {0} {1} was not deleted because it is ignored."
+msgstr "Katalogen {0} {1} togs inte bort eftersom den ignoreras."
+
+msgid "The directory user {0} was already suspended in passbolt."
+msgstr "Kataloganvändaren {0} har redan stängts av i passbolt."
+
+msgid "The directory {0} {1} was already deleted in passbolt."
+msgstr "Katalogen {0} {1} har redan tagits bort i passbolt."
+
+msgid "The user {0} could not be deleted because they are the only owner of one or more passwords."
+msgstr "Användaren {0} kunde inte tas bort eftersom de är den enda ägaren av ett eller flera lösenord."
+
+msgid "The {0} {1} could not be deleted because they are the only manager of one or more groups."
+msgstr "{0} {1} kunde inte raderas eftersom de är den enda chefen för en eller flera grupper."
+
+msgid "The user {0} was successfully suspended."
+msgstr "Användaren {0} har stängts av."
+
+msgid "The {0} {1} was successfully deleted."
+msgstr "{0} {1} har tagits bort."
+
+msgid "The {0} {1} could not be suspended because of an internal error. Please try again later."
+msgstr "\"{0} {1} kunde inte avstängas på grund av ett internt fel. Försök igen senare.\""
+
+msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
+msgstr "{0} {1} kunde inte tas bort på grund av ett internt fel. Försök igen senare."
+
+msgid "The {0} {1} was not synced because the passbolt {0} is marked as to be ignored."
+msgstr "{0} {1} synkades inte eftersom passbolt {0} är markerad som ignorerad."
+
+msgid "The {0} {1} was not synced because the directory {0} is marked as to be ignored."
+msgstr "{0} {1} synkades inte eftersom katalogen {0} är markerad som ignorerad."
+
+msgid "The {0} {1} was successfully added to passbolt."
+msgstr "{0} {1} har lagts till i passbolt."
+
+msgid "The {0} {1} could not be added because of data validation issues."
+msgstr "{0} {1} kunde inte läggas till på grund av problem med datavalideringen."
+
+msgid "The {0} {1} could not be added because of an internal error. Please try again later."
+msgstr "{0} {1} kunde inte läggas till på grund av ett internt fel. Försök igen senare."
+
+msgid "The previously suspended {0} {1} was not unsuspended."
+msgstr "\"Den tidigare avstängda {0} {1} hävdes inte.\""
+
+msgid "The previously deleted {0} {1} was not re-added to passbolt."
+msgstr "Den tidigare borttagna {0} {1} lades inte till på nytt till passbolt."
+
+msgid "The previously suspended {0} {1} was unsuspended."
+msgstr "\"Den tidigare avstängda {0} {1} hävdes.\""
+
+msgid "The previously deleted {0} {1} was re-added to passbolt."
+msgstr "Den tidigare borttagna {0} {1} lades till på nytt till passbolt."
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of validation errors."
+msgstr "Den borttagna {0} {1} kunde inte läggas till på nytt till passbolt på grund av valideringsfel."
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of an internal error."
+msgstr "Den borttagna {0} {1} kunde inte läggas till på nytt till passbolt på grund av ett internt fel."
+
+msgid "The {0} {1} was mapped with an existing {0} in passbolt."
+msgstr "{0} {1} har mappats med en befintlig {0} i passbolt."
+
+msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after."
+msgstr "{0} {1} kunde inte mappas med en befintlig {0} i passbolt eftersom den skapades efteråt."
+
+msgid "The user {0} full name has been successfully updated to {1} {2}."
+msgstr "Användaren {0} fick sitt fullständiga namn uppdaterat till {1} {2}."
+
+msgid "The user {0} full name could not be updated to {1} {2}."
+msgstr "Det gick inte att uppdatera användaren {0} fullständiga namn till {1} {2}."
+
+msgid "The record model is not valid."
+msgstr "Registreringsmallen är inte giltig."
+
+msgid "The record is currently ignored as part of directory synchronization."
+msgstr "Posten ignoreras för närvarande som en del av katalogsynkroniseringen."
+
+msgid "The record is currently not ignored as part of directory synchronization."
+msgstr "Posten ignoreras för närvarande inte som en del av katalogsynkroniseringen."
+
+msgid "The record will be ignored in the next directory synchronization."
+msgstr "Posten kommer att ignoreras i nästa katalogsynkronisering."
+
+msgid "The record id is not valid."
+msgstr "Post-ID är inte giltigt."
+
+msgid "The record does not exist."
+msgstr "Posten finns inte."
+
+msgid "The record could not be unmarked as ignored. Please try again later."
+msgstr "Posten kunde inte avmarkeras som ignorerad. Försök igen senare."
+
+msgid "The record will not be ignored in the next directory synchronization."
+msgstr "Posten kommer inte att ignoreras i nästa katalogsynkronisering."
+
+msgid "Could not validate settings."
+msgstr "Kunde inte validera inställningarna."
+
+msgid "Could not save the settings. {0}"
+msgstr "Kunde inte spara inställningarna. {0}"
+
+msgid "The directory structure cannot be retrieved."
+msgstr "Katalogstrukturen kan inte hämtas."
+
+msgid "There was an issue while retrieving the invalid entries."
+msgstr "Det uppstod ett problem när de ogiltiga posterna hämtades."
+
+msgid "The synchronization was done successfully."
+msgstr "Synkroniseringen har slutförts."
+
+msgid "The simulation was done successfully."
+msgstr "Simuleringen har utförts."
+
+msgid "Need at least one domain configuration."
+msgstr "Man behöver minst en domänkonfiguration."
+
+msgid "The connection name `{0}` should not contain dots"
+msgstr "Anslutningsnamnet `{0}` bör inte innehålla punkter"
+
+msgid "Invalid connection name"
+msgstr "Ogiltigt anslutningsnamn"
+
+msgid "The identifier of the default admin user is required."
+msgstr "Identifieraren för den förvalda administratörsanvändaren krävs."
+
+msgid "The identifier of the default admin user should not be empty."
+msgstr "Identifieraren för den förvalda administratörsanvändaren bör inte vara tom."
+
+msgid "The identifier of the default admin user should be a valid UUID."
+msgstr "Identifieraren för den förvalda administratörsanvändaren bör vara ett giltigt UUID."
+
+msgid "The admin user does not exist."
+msgstr "Administratörsanvändaren finns inte."
+
+msgid "The identifier of the default group admin user is required."
+msgstr "Identifieraren för den förvalda administratörsanvändaren krävs."
+
+msgid "The identifier of the default group admin user should not be empty."
+msgstr "Identifieraren för den förvalda administratörsanvändaren får inte vara tom."
+
+msgid "The identifier of the default group admin user should be a valid UUID."
+msgstr "Identifieraren för den förvalda administratörsanvändaren bör vara ett giltigt UUID."
+
+msgid "The group admin user does not exist."
+msgstr "Administratörsanvändaren finns inte."
+
+msgid "The group object class should be a valid BMP-UTF8 string."
+msgstr "Gruppens objektklass ska vara en giltig BMP-UTF8-sträng."
+
+msgid "The user object class should be a valid BMP-UTF8 string."
+msgstr "Användarens objektklass ska vara en giltig BMP-UTF8-sträng."
+
+msgid "The user path should be a valid BMP-UTF8 string."
+msgstr "Användarens sökväg bör vara en giltig BMP-UTF8-sträng."
+
+msgid "The group custom filter should be a valid BMP-UTF8 string."
+msgstr "Gruppens anpassade filter bör vara en giltig BMP-UTF8-sträng."
+
+msgid "The user custom filter should be a valid BMP-UTF8 string."
+msgstr "Användarens anpassade filter bör vara en giltig BMP-UTF8-sträng."
+
+msgid "The email prefix/suffix setting should be a valid boolean."
+msgstr "Inställningen för e-postprefix/suffix bör vara en giltig boolean."
+
+msgid "The email prefix should be a valid BMP-UTF8 string."
+msgstr "E-postprefixet bör vara en giltig BMP-UTF8-sträng."
+
+msgid "The email suffix should be a valid BMP-UTF8 string."
+msgstr "E-postsuffix bör vara en giltig BMP-UTF8-sträng."
+
+msgid "The users parent group should be a valid BMP-UTF8 string."
+msgstr "Användarens överordnade grupp bör vara en giltig BMP-UTF8-sträng."
+
+msgid "The groups parent group should be a valid BMP-UTF8 string."
+msgstr "Gruppens överordnade grupp bör vara en giltig BMP-UTF8-sträng."
+
+msgid "The enabled users only setting should be a boolean."
+msgstr "Den aktiverade användarens inställning bör vara en boolean."
+
+msgid "The sync of created users setting should be a boolean."
+msgstr "Synkroniseringen av skapade användare bör vara en boolean."
+
+msgid "The sync of updated users setting should be a boolean."
+msgstr "Synkroniseringen av uppdaterade användare bör vara en boolean."
+
+msgid "The sync of deleted users setting should be a boolean."
+msgstr "Synkroniseringen av borttagna användare bör vara en boolean."
+
+msgid "The sync of created groups setting should be a boolean."
+msgstr "Synkroniseringen av skapade grupper bör vara en boolean."
+
+msgid "The sync of deleted groups setting should be a boolean."
+msgstr "Synkroniseringen av raderade grupper bör vara en boolean."
+
+msgid "The sync of updated groups setting should be a boolean."
+msgstr "Synkroniseringen av uppdaterade grupper bör vara en boolean."
+
+msgid "The fields mapping should be a valid array."
+msgstr "Fältmappningen bör vara en giltig array."
+
+msgid "A directory type is required."
+msgstr "En katalogtyp måste anges."
+
+msgid "The directory type should not be empty."
+msgstr "Katalogtypen får inte vara tom."
+
+msgid "The directory type should be one of the following: {0}."
+msgstr "Katalogtypen bör vara en av följande: {0}."
+
+msgid "A domain name is required."
+msgstr "Ett domännamn krävs."
+
+msgid "The domain name should not be empty."
+msgstr "Domännamnet får inte vara tomt."
+
+msgid "The domain name should be a valid BMP-UTF8 string."
+msgstr "Domännamnet bör vara en giltig BMP-UTF8-sträng."
+
+msgid "The base DN should be a valid BMP-UTF8 string."
+msgstr "Basen DN bör vara en giltig BMP-UTF8-sträng."
+
+msgid "At least one host is required."
+msgstr "Minst en värd krävs."
+
+msgid "The hosts should be a valid array."
+msgstr "Värdarna bör vara en giltig array."
+
+msgid "The port number should not be empty."
+msgstr "Portnumret får inte vara tomt."
+
+msgid "The port number should be between 0 and 65535"
+msgstr "Portnumret bör vara mellan 0 och 65535"
+
+msgid "A connection type is required."
+msgstr "En anslutningstyp krävs."
+
+msgid "The connection type should not be empty."
+msgstr "Anslutningstypen får inte vara tom."
+
+msgid "The connection type should be one of the following: {0}."
+msgstr "Anslutningstypen bör vara en av följande: {0}."
+
+msgid "An authentication type is required."
+msgstr "En autentiseringstyp krävs."
+
+msgid "The authentication type should not be empty."
+msgstr "Autentiseringstypen får inte vara tom."
+
+msgid "The authentication type should be one of the following: {0}."
+msgstr "Autentiseringstypen bör vara en av följande: {0}."
+
+msgid "The map for this field is required."
+msgstr "En mappning för detta fält krävs."
+
+msgid "The map value should not be empty."
+msgstr "Värdet för mappningen får inte vara tomt."
+
+msgid "The field name should be a valid BMP-UTF8 string."
+msgstr "Fältnamnet bör vara en giltig BMP-UTF8-sträng."
+
+msgid "The map value length should be maximum {0} characters."
+msgstr "Längden på mappningsvärdet bör vara högst {0} tecken."
+
+msgid "The map value should not be from forbidden fields."
+msgstr "Mappningsvärdet får inte komma från förbjudna fält."
+
+msgid "The map configuration for `{0}` fields is required."
+msgstr "Konfigurationen för mappning av `{0}`-fälten krävs."
+
+msgid "The group object class length should be maximum {0} characters."
+msgstr "Längden på gruppens objektklass bör vara högst {0} tecken."
+
+msgid "The group object class should not be from forbidden fields."
+msgstr "Gruppens objektklass får inte komma från förbjudna fält."
+
+msgid "The user object class length should be maximum {0} characters."
+msgstr "Längden på användarens objektklass bör vara högst {0} tecken."
+
+msgid "The user object class should not be from forbidden fields."
+msgstr "Användarens objektklass får inte komma från förbjudna fält."
+
+msgid "The user custom filter length should be maximum {0} characters."
+msgstr "Längden på användarens anpassade filter bör vara högst {0} tecken."
+
+msgid "The user custom filter contains the forbidden field."
+msgstr "Användarens anpassade filter innehåller det förbjudna fältet."
+
+msgid "The group custom filter length should be maximum {0} characters."
+msgstr "Längden på gruppens anpassade filter bör vara högst {0} tecken."
+
+msgid "The group custom filter contains the forbidden field."
+msgstr "Gruppens anpassade filter innehåller det förbjudna fältet."
+
+msgid "The field fallbacks should be a valid array."
+msgstr "\"Fältet fallbacks bör vara en giltig matris.\""
+
+msgid "The field fallbacks should not be empty."
+msgstr "\"Fältet fallbacks får inte vara tomt.\""
+
+msgid "The field fallbacks keys should be one of the following: {0}."
+msgstr "\"Fallbacksfältets nycklar bör vara en av följande: {0}.\""
+
+msgid "The fallback field value should be a valid BMP-UTF8 string."
+msgstr "\"Värdet i fallbackfältet bör vara en giltig BMP-UTF8-sträng.\""
+
+msgid "The fallback field value length should be maximum {0} characters."
+msgstr "\"Fallbackfältets värdelängd bör vara högst {0} tecken.\""
+
+msgid "The fallback field value should not be from forbidden fields."
+msgstr "\"Värdet i fallbackfältet bör inte komma från förbjudna fält.\""
+
+msgid "The directory type in fallback fields should be a valid array."
+msgstr "\"Katalogtypen i fallbackfälten bör vara en giltig matris.\""
+
+msgid "Directory sync settings endpoints are disabled."
+msgstr "\"Katalogsynkroniseringens inställningsändpunkter är inaktiverade.\""
+
+msgid "The directory name should be a valid UTF8 string."
+msgstr "Katalognamnet bör vara en giltig UTF8-sträng."
+
+msgid "The directory_name length should be maximum {0} characters."
+msgstr "Katalognamnets längd bör vara maximalt {0} tecken."
+
+msgid "A directory name is required."
+msgstr "Ett katalognamn måste anges."
+
+msgid "The directory should not be empty."
+msgstr "Katalogen får inte vara tom."
+
+msgid "Could not validate directory entry data."
+msgstr "Kunde inte validera data för katalogposten."
+
+msgid "The associated record could not be found."
+msgstr "Det gick inte att hitta den associerade posten."
+
+msgid "This record is already marked as to be ignored."
+msgstr "Denna post är redan markerad för att ignoreras."
+
+msgid "This is not a valid record to ignore."
+msgstr "Detta är inte en giltig post att ignorera."
+
+msgid "The parent identifier should be a valid UUID."
+msgstr "Överordnad identifierare bör vara ett giltigt UUID."
+
+msgid "A parent identifier is required."
+msgstr "En överordnad identifierare krävs."
+
+msgid "The child identifier should be a valid UUID."
+msgstr "Den underordnade identifieraren ska vara ett giltigt UUID."
+
+msgid "The child identifier is required."
+msgstr "Den underordnade identifieraren måste identifieras."
+
+msgid "Directory Settings are invalid. Please check your config and try again."
+msgstr "Kataloginställningarna är ogiltiga. Kontrollera din konfiguration och försök igen."
+
+msgid "New directory settings could not be saved."
+msgstr "Nya kataloginställningar kunde inte sparas."
+
+msgid "The endpoints for updating the users directory configurations are disabled."
+msgstr "\"Ändpunkterna för att uppdatera användarkatalogskonfigurationer är inaktiverade.\""
+
+msgid "The endpoints for updating the users directory configurations are enabled."
+msgstr "\"Ändpunkterna för att uppdatera användarkatalogskonfigurationer är aktiverade.\""
+
+msgid "It is recommended to disable endpoints for updating the users directory configurations."
+msgstr "\"Det rekommenderas att inaktivera ändpunkter för att uppdatera användarkatalogskonfigurationer.\""
+
+msgid "Set the PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED environment variable to true."
+msgstr "\"Ange miljövariabeln PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED till true.\""
+
+msgid "Or set {0} to true in {1}."
+msgstr "\"Eller ange {0} till true i {1}.\""
+
+msgid "SSL certification verification for LDAP server is enabled."
+msgstr "\"SSL-certifieringsverifiering för LDAP-servern är aktiverad.\""
+
+msgid "SSL certification verification for LDAP server is disabled."
+msgstr "\"SSL-certifieringsverifiering för LDAP-servern är inaktiverad.\""
+
+msgid "Disabling the ssl verify check can lead to security attacks."
+msgstr "Att inaktivera SSL-verifieringen kan leda till säkerhetsattacker."
+
+msgid "Attacker can alter the certificate and can perform man-in-the-middle attack."
+msgstr "\"En angripare kan ändra certifikatet och utföra en man-in-the-middle-attack.\""
+
+msgid "To fix this, you can set PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER environment variable to true."
+msgstr "\"För att åtgärda detta kan du ange miljövariabeln PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER till true.\""
+
+msgid "Or set passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer to true in {0}."
+msgstr "\"Eller ange passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer till true i {0}.\""
+
+msgid "A mapping rule for username attribute could not be found for directory type: {0}"
+msgstr "En mappningsregel för användarnamnsattributet kunde inte hittas för katalogtypen: {0}"
+
+msgid "A mapping rule for ID attribute could not be found for directory type: {0}"
+msgstr "En mappningsregel för ID-attributet kunde inte hittas för katalogtypen: {0}"
+
+msgid "Mapping rules could not be found for directory type: {0}"
+msgstr "Mappningsregler kunde inte hittas för katalogtypen: {0}"
+
+msgid "A group name is required."
+msgstr "Ett gruppnamn krävs."
+
+msgid "A group member does not match the expected DN format."
+msgstr "En gruppmedlem matchar inte det förväntade DN-formatet."
+
+msgid "The {0} configuration should be a valid string"
+msgstr "\"Konfigurationen {0} bör vara en giltig sträng\""
+
+msgid "Invalid directory type for domain: {0}"
+msgstr "Ogiltig katalogtyp för domänen: {0}"
+
+msgid "Directory type could not be found for domain: {0}"
+msgstr "Katalogtyp kunde inte hittas för domänen: {0}"
+
+msgid "LDAP Object class could not be found: {0}"
+msgstr "LDAP-objektklassen kunde inte hittas: {0}"
+
+msgid "SSO"
+msgstr "\"SSO\""
+
+msgid "Directory Sync"
+msgstr "\"Katalogsynk\""
+
+msgid "SCIM"
+msgstr "SCIM"
+
+msgid "Only administrators are allowed to create/update MFA policies settings."
+msgstr "Endast administratörer får skapa/uppdatera MFA-policys inställningar."
+
+msgid "Could not validate the MFA policies settings."
+msgstr "Kunde inte validera inställningarna för MFA-policys."
+
+msgid "The policy field is required."
+msgstr "Fältet policy krävs."
+
+msgid "The type of the policy should be one of the following: {0}."
+msgstr "Policytypen bör vara en av följande: {0}."
+
+msgid "The remember me for a month field is required."
+msgstr "Fältet \"kom ihåg mig i en månad\" krävs."
+
+msgid "The remember me for a month should be a boolean type."
+msgstr "\"Kom ihåg mig i en månad\" bör vara en boolean."
+
+msgid "You edited the MFA policy"
+msgstr "Du redigerade MFA-policyn"
+
+msgid "{0} edited the MFA policy"
+msgstr "{0} redigerade MFA-policyn"
+
+msgid "The MFA policy has been updated, the new configuration is as follow:"
+msgstr "MFA-policyn har uppdaterats, den nya konfigurationen är som följer:"
+
+msgid "Policy: {0}"
+msgstr "Policyn: {0}"
+
+msgid "Remember me for a month: {0}"
+msgstr "Kom ihåg mig i en månad: {0}"
+
+msgid "Some of your passwords are expired."
+msgstr "\"Några av dina lösenord har gått ut.\""
+
+msgid "Some of your passwords are expiring in {0} days."
+msgstr "\"Några av dina lösenord går ut om {0} dagar.\""
+
+msgid "Some of your passwords are expired or expiring in {0} days."
+msgstr "\"Några av dina lösenord har gått ut eller går ut om {0} dagar.\""
+
+msgid "The send password about to expire setting should be a boolean."
+msgstr "\"Inställningen för 'skicka lösenord som snart går ut' bör vara en boolean.\""
+
+msgid "Password expiry email notifications are disabled."
+msgstr "\"E-postaviseringar för lösenordsutgång är inaktiverade.\""
+
+msgid "An array of arrays is expected."
+msgstr "\"En matris av matriser förväntas.\""
+
+msgid "The expiry date is required."
+msgstr "\"Utgångsdatum krävs.\""
+
+msgid "The identifier should be unique: {0}."
+msgstr "\"Identifieraren bör vara unik: {0}.\""
+
+msgid "You are not allowed to update these resources."
+msgstr "\"Du har inte behörighet att uppdatera dessa resurser.\""
+
+msgid "You are not allowed to update this resource: {0}"
+msgstr "\"Du har inte behörighet att uppdatera denna resurs: {0}\""
+
+msgid "The resource with ID {0} does not exist."
+msgstr "\"Resursen med ID {0} finns inte.\""
+
+msgid "You edited the password policy"
+msgstr "Du redigerade lösenordspolicyn"
+
+msgid "{0} edited the password policy"
+msgstr "{0} redigerade lösenordspolicyn"
+
+msgid "Only administrators are allowed to create/update password policies settings."
+msgstr "\"Endast administratörer har behörighet att skapa/uppdatera inställningar för lösenordspolicy.\""
+
+msgid "The password policy settings has been updated by {0}."
+msgstr "\"Inställningarna för lösenordspolicy har uppdaterats av {0}.\""
+
+msgid "you"
+msgstr "du"
+
+msgid "view it in passbolt"
+msgstr "visa i passbolt"
+
+msgid "The SCIM setting id should be a valid UUID."
+msgstr "SCIM-inställningens id ska vara ett giltigt UUID."
+
+msgid "The identifier of the default user should be a valid UUID."
+msgstr "Identifieraren för standardanvändaren ska vara ett giltigt UUID."
+
+msgid "The user is not active, disabled or does not exist."
+msgstr "Användaren är inte aktiv, avstängd eller existerar inte."
+
+msgid "The Setting ID cannot be passed on update."
+msgstr "Inställnings-ID:t kan inte skickas vid uppdatering."
+
+msgid "The secret token should not be empty."
+msgstr "Den hemliga token får inte vara tom."
+
+msgid "The ID for the SCIM settings should not be empty."
+msgstr "ID:t för SCIM-inställningarna får inte vara tomt."
+
+msgid "The ID for the SCIM settings should be a valid UUID."
+msgstr "ID:t för SCIM-inställningarna ska vara ett giltigt UUID."
+
+msgid "The SCIM secret token is expired, you are requested to rotate it."
+msgstr ""
+
+msgid "Simultaneous SCIM and session authentication is not permitted."
+msgstr "Samtidig SCIM- och sessionsautentisering är inte tillåten."
+
+msgid "SCIM settings endpoints are disabled."
+msgstr "Ändpunkter för SCIM-inställningar är inaktiverade."
+
+msgid "An entry for the same related entity already exists"
+msgstr "En post för samma relaterade entitet finns redan."
+
+msgid "An entry with the same `scim_name` and `foreign_model` already exist."
+msgstr ""
+
+msgid "Users"
+msgstr "Användare"
+
+msgid "Groups"
+msgstr "Grupper"
+
+msgid "The secret token format is incorrect."
+msgstr "Formatet för den hemliga token är felaktigt."
+
+msgid "SCIM plugin is enabled."
+msgstr "SCIM-insticksmodulen är aktiverad."
+
+msgid "SCIM plugin is disabled."
+msgstr "SCIM-insticksmodulen är inaktiverad."
+
+msgid "The SCIM secret token is not expired."
+msgstr ""
+
+msgid "Rotate the SCIM secret token in the administration settings."
+msgstr ""
+
+msgid "The SCIM settings could not be decrypted with the server gpg key."
+msgstr "SCIM-inställningarna kunde inte dekrypteras med serverns GPG-nyckel."
+
+msgid "The SCIM settings could not be encrypted with the server gpg key."
+msgstr "SCIM-inställningarna kunde inte krypteras med serverns GPG-nyckel."
+
+msgid "Could not validate the SCIM settings found in database."
+msgstr "Kunde inte validera SCIM-inställningarna som hittades i databasen."
+
+msgid "The SCIM setting identifier should be a valid UUID."
+msgstr "Identifieraren för SCIM-inställningen ska vara ett giltigt UUID."
+
+msgid "Could not validate the SCIM settings."
+msgstr "Kunde inte validera SCIM-inställningarna."
+
+msgid "The SCIM plugin is disabled."
+msgstr "SCIM-insticksmodulen är inaktiverad."
+
+msgid "Please delete previous settings before creating again."
+msgstr "Ta bort tidigare inställningar innan du skapar nya."
+
+msgid "The uuid in the url doesn't match any known setting record."
+msgstr "UUID:t i URL:en matchar ingen känd inställningspost."
+
+msgid "The SCIM secret token expiry configuration is invalid."
+msgstr ""
+
+msgid "Missing or invalid SCIM user in configuration settings"
+msgstr ""
+
+msgid "An unexpected error occurred while creating the user in the database"
+msgstr ""
+
+msgid "An administrator user cannot be suspended via SCIM."
+msgstr ""
+
+msgid "Email"
+msgstr "E-post"
+
+msgid "External id"
+msgstr "Externt id"
+
+msgid "Invalid Schema"
+msgstr "Ogiltigt schema"
+
+msgid "Invalid ResourceType"
+msgstr "Ogiltig ResourceType"
+
+msgid "SsoRecover plugin is disabled."
+msgstr "SsoRecover-plugin är inaktiverad."
+
+msgid "The SSO state type is invalid."
+msgstr "SSO-tillståndets typ är ogiltig."
+
+msgid "CSRF issue. The state in URL and Cookies do not match."
+msgstr "CSRF-problem. Tillståndet i URL och cookies matchar inte."
+
+msgid "CSRF issue. The state in request data does not match with cookie value."
+msgstr "\"CSRF-problem. Tillståndet i begärandedata överensstämmer inte med cookie-värdet.\""
+
+msgid "The state is required in cookie."
+msgstr "Tillståndet krävs i cookie."
+
+msgid "The token is required in URL parameters."
+msgstr "Token krävs i URL-parametrarna."
+
+msgid "The state is required in URL parameters."
+msgstr "Tillståndet krävs i URL-parametrarna."
+
+msgid "The code is required in URL parameters."
+msgstr "Koden krävs i URL-parametrarna."
+
+msgid "The code is required in request data."
+msgstr "\"Koden krävs i begärandedata.\""
+
+msgid "The user id is required in URL parameters."
+msgstr "Användar-ID krävs i URL-parametrarna."
+
+msgid "The settings id is required in URL parameters."
+msgstr "Inställnings-ID krävs i URL-parametrarna."
+
+msgid "The user does not exist or is not active."
+msgstr "Användaren existerar inte eller är inte aktiv."
+
+msgid "The SSO setting does not exist."
+msgstr "SSO-inställningen finns inte."
+
+msgid "Information about the key is required."
+msgstr "Information om nyckeln krävs."
+
+msgid "The SSO key id should be a uuid."
+msgstr "SSO-nyckel-id bör vara ett giltigt UUID."
+
+msgid "The key could not be found"
+msgstr "Nyckeln kunde inte hittas"
+
+msgid "The SSO setting id should be a uuid."
+msgstr "SSO-inställnings-id bör vara ett giltigt UUID."
+
+msgid "The SSO settings were activated."
+msgstr "SSO-inställningarna aktiverades."
+
+msgid "The draft setting was saved."
+msgstr "Utkastinställningen sparades."
+
+msgid "The SSO settings were deleted."
+msgstr "SSO-inställningarna raderades."
+
+msgid "Ajax/Json request not supported."
+msgstr "Ajax/Json-förfrågan stöds inte."
+
+msgid "A provider is required."
+msgstr "En leverantör krävs."
+
+msgid "The provider is not supported."
+msgstr "Leverantören stöds inte."
+
+msgid "Data is required."
+msgstr "Data krävs."
+
+msgid "Data must be an array of properties."
+msgstr "Data måste vara en array av egenskaper."
+
+msgid "The email claim should not be empty."
+msgstr "\"E-postkravet får inte vara tomt.\""
+
+msgid "The email claim is too large."
+msgstr "\"E-postkravet är för stort.\""
+
+msgid "The email claim should be one of the following: {0}."
+msgstr "\"E-postkravet bör vara en av följande: {0}.\""
+
+msgid "A URL is required."
+msgstr "En URL krävs."
+
+msgid "The URL should not be empty."
+msgstr "URL: en får inte vara tom."
+
+msgid "The URL is not supported."
+msgstr "URL: en stöds inte."
+
+msgid "A tenant id is required."
+msgstr "En tenant-id krävs."
+
+msgid "The tenant id should not be empty."
+msgstr "Tenant-id får inte vara tom."
+
+msgid "The tenant id should be a valid UUID."
+msgstr "Tenant-id bör vara ett giltigt UUID."
+
+msgid "A client id is required."
+msgstr "Ett client-id krävs."
+
+msgid "The client id should not be empty."
+msgstr "Client-id får inte vara tom."
+
+msgid "The client id should be a valid UUID."
+msgstr "Client-id bör vara ett giltigt UUID."
+
+msgid "A client secret is required."
+msgstr "En klienthemlighet krävs."
+
+msgid "The client secret should be a valid string."
+msgstr "Klienthemligheten bör vara en giltig sträng."
+
+msgid "The client secret is too large."
+msgstr "Klienthemligheten är för stor."
+
+msgid "A client secret expiry is required."
+msgstr "En utgångstid för klienthemligheten krävs."
+
+msgid "The expiry should not be empty."
+msgstr "Utgångstiden får inte vara tom."
+
+msgid "The prompt should not be empty."
+msgstr "Prompten får inte vara tom."
+
+msgid "The prompt should be one of the following: {0}."
+msgstr "Prompten bör vara en av följande: {0}."
+
+msgid "The login hint should be a boolean."
+msgstr "Inloggningshinten bör vara en boolean."
+
+msgid "The client id is too large."
+msgstr "Client-id är för stort."
+
+msgid "A base URL is required."
+msgstr "\"En bas-URL krävs.\""
+
+msgid "The base URL should not be empty."
+msgstr "Bas-URL:n får inte vara tom."
+
+msgid "The base URL is too large."
+msgstr "Bas-URL:n är för stor."
+
+msgid "The OpenID configuration path should be a valid BMP-UTF8 string."
+msgstr "\"OpenID-konfigurationssökvägen bör vara en giltig BMP-UTF8-sträng.\""
+
+msgid "The OpenID configuration path is too large."
+msgstr "\"OpenID-konfigurationssökvägen är för stor.\""
+
+msgid "The client id should be a valid BMP-UTF8 string."
+msgstr "\"Klient-ID bör vara en giltig BMP-UTF8-sträng.\""
+
+msgid "The scope should be a valid string."
+msgstr "\"Scope bör vara en giltig sträng.\""
+
+msgid "The scope is too large."
+msgstr "\"Scope är för stort.\""
+
+msgid "The URL must be a valid PingOne authentication domain."
+msgstr ""
+
+msgid "An environment id is required."
+msgstr ""
+
+msgid "The environment id should not be empty."
+msgstr ""
+
+msgid "The environment id should be a valid UUID."
+msgstr ""
+
+msgid "SSO settings edit endpoints are disabled."
+msgstr "Redigeringsändpunkter för SSO-inställningar är inaktiverade."
+
+msgid "The user is not active."
+msgstr "Användaren är inte aktiv."
+
+msgid "The status length is not supported."
+msgstr "Statuslängden stöds inte."
+
+msgid "The status is not supported."
+msgstr "Statusen stöds inte."
+
+msgid "The nonce should be a valid ASCII string."
+msgstr "Noncen bör vara en giltig ASCII-sträng."
+
+msgid "The nonce length should be minimum {0} characters."
+msgstr "Längden på noncen bör vara minst {0} tecken."
+
+msgid "The nonce length should be maximum {0} characters."
+msgstr "Längden på noncen bör vara högst {0} tecken."
+
+msgid "A nonce is required."
+msgstr "En nonce krävs."
+
+msgid "The nonce should not be empty."
+msgstr "Noncen får inte vara tom."
+
+msgid "The type length should be maximum {0} characters."
+msgstr "Typens längd bör vara högst {0} tecken."
+
+msgid "The state should be a valid ASCII string."
+msgstr "Tillståndet bör vara en giltig ASCII-sträng."
+
+msgid "The state length should be minimum {0} characters."
+msgstr "Längden på tillståndet bör vara minst {0} tecken."
+
+msgid "The state length should be maximum {0} characters."
+msgstr "Längden på tillståndet bör vara högst {0} tecken."
+
+msgid "The SSO settings identifier should be a valid UUID."
+msgstr "Identifieraren för SSO-inställningar bör vara ett giltigt UUID."
+
+msgid "The SSO settings identifier should not be empty."
+msgstr "Identifieraren för SSO-inställningar får inte vara tom."
+
+msgid "The user agent should be a valid ASCII string."
+msgstr "Användaragenten bör vara en giltig ASCII-sträng."
+
+msgid "The user agent length should be maximum {0} characters."
+msgstr "Längden på användaragenten bör vara högst {0} tecken."
+
+msgid "A user agent is required."
+msgstr "En användaragent krävs."
+
+msgid "The user agent should not be empty."
+msgstr "Användaragenten får inte vara tom."
+
+msgid "The IP length should be maximum {0} characters."
+msgstr "Längden på IP-adressen bör vara högst {0} tecken."
+
+msgid "An IP is required."
+msgstr "En IP-adress krävs."
+
+msgid "The IP should not be empty."
+msgstr "IP-adressen får inte vara tom."
+
+msgid "This nonce is already in use."
+msgstr "Denna nonce används redan."
+
+msgid "This state is already in use."
+msgstr "Detta tillstånd används redan."
+
+msgid "The SSO setting identifier does not exist."
+msgstr "Identifieraren för SSO-inställningar finns inte."
+
+msgid "The user identifier does not exist."
+msgstr "Användarens identifierare finns inte."
+
+msgid "The provided nonce is invalid."
+msgstr "Den angivna noncen är ogiltig."
+
+msgid "The URL should start with https://"
+msgstr "URL:n måste börja med https://"
+
+msgid "The provided state is invalid."
+msgstr "Det angivna tillståndet är ogiltigt."
+
+msgid "The type of the SSO state is invalid."
+msgstr "Typen av SSO-tillståndet är ogiltig."
+
+msgid "{0} activated the SSO setting"
+msgstr "{0} aktiverade SSO-inställningen"
+
+msgid "{0} deleted the SSO setting"
+msgstr "{0} raderade SSO-inställningen"
+
+msgid "Users are unable to log in via Azure SSO"
+msgstr "\"Användare kan inte logga in via Azure SSO\""
+
+msgid "Single sign-on failed."
+msgstr "Single sign-on misslyckades."
+
+msgid "Provider error: \"{0}\""
+msgstr "Leverantörsfel: \"{0}\""
+
+msgid "Azure SSO secret expiry date is near"
+msgstr "\"Utgångsdatum för Azure SSO-secret närmar sig\""
+
+msgid "SSL certification validation for SSO instance is enabled."
+msgstr "\"SSL-certifieringsverifiering för SSO-instans är aktiverad.\""
+
+msgid "SSL certification validation for SSO instance is disabled."
+msgstr "\"SSL-certifieringsverifiering för SSO-instans är inaktiverad.\""
+
+msgid "To fix this, you can set PASSBOLT_SECURITY_SSO_SSL_VERIFY environment variable to true."
+msgstr "\"För att åtgärda detta kan du ange miljövariabeln PASSBOLT_SECURITY_SSO_SSL_VERIFY till true.\""
+
+msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
+msgstr "\"Eller ange passbolt.security.sso.sslVerify till true i {0}.\""
+
+msgid "The endpoints for updating the SSO configurations are disabled."
+msgstr "Ändpunkterna för uppdatering av SSO-konfigurationerna är inaktiverade."
+
+msgid "The endpoints for updating the SSO configurations are enabled."
+msgstr "Ändpunkterna för uppdatering av SSO-konfigurationerna är aktiverade."
+
+msgid "It is recommended to disable endpoints for updating the SSO configurations."
+msgstr "Det rekommenderas att inaktivera ändpunkterna för uppdatering av SSO-konfigurationerna."
+
+msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
+msgstr "Sätt miljövariabeln PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED till true."
+
+msgid "The user is missing for the SSO state."
+msgstr "Användaren saknas för SSO-tillståndet."
+
+msgid "Email not provided by provider."
+msgstr "E-post tillhandahölls inte av leverantören."
+
+msgid "Username mismatch."
+msgstr "Användarnamnet matchar inte."
+
+msgid "Invalid nonce."
+msgstr "Ogiltig nonce."
+
+msgid "Invalid provider. Expected AD FS."
+msgstr "\"Ogiltig leverantör. Förväntad AD FS.\""
+
+msgid "Invalid provider data. Expected AD FS settings."
+msgstr "\"Ogiltiga leverantörsdata. Förväntade AD FS-inställningar.\""
+
+msgid "No valid SSO settings found."
+msgstr "Inga giltiga SSO-inställningar hittades."
+
+msgid "You must authenticate with Azure again."
+msgstr "Du måste autentisera dig med Azure igen."
+
+msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
+msgstr "\"Ogiltigt värde angivet i konfigurationen `passbolt.security.sso.sslCafile`\""
+
+msgid "Provided root CA file does not exist"
+msgstr "\"Angiven root-CA-fil finns inte\""
+
+msgid "Invalid provider. Expected PingOne."
+msgstr ""
+
+msgid "Invalid provider data. Expected PingOne settings."
+msgstr ""
+
+msgid "The user id should be a valid UUID."
+msgstr "Användar-id bör vara ett giltigt UUID."
+
+msgid "The authentication token does not exist."
+msgstr "Autentiseringstoken finns inte."
+
+msgid "The SSO authentication token is invalid."
+msgstr "SSO-autentiseringstoken är ogiltig."
+
+msgid "Settings id is missing."
+msgstr "Inställnings-id saknas."
+
+msgid "User id mismatch."
+msgstr "Användar-id matchar inte."
+
+msgid "Token IP is missing."
+msgstr "Token-IP saknas."
+
+msgid "User IP mismatch."
+msgstr "Användar-IP matchar inte."
+
+msgid "User agent is missing."
+msgstr "Användaragent saknas."
+
+msgid "User agent mismatch."
+msgstr "Användaragent matchar inte."
+
+msgid "Settings mismatch."
+msgstr "Inställningarna matchar inte."
+
+msgid "The SSO key could not be saved."
+msgstr "SSO-nyckeln kunde inte sparas."
+
+msgid "The SSO key does not exist."
+msgstr "SSO-nyckeln finns inte."
+
+msgid "The SSO key could not be deleted."
+msgstr "SSO-nyckeln kunde inte raderas."
+
+msgid "Could not update the SSO settings."
+msgstr "Kunde inte uppdatera SSO-inställningarna."
+
+msgid "The settings status is invalid."
+msgstr "Inställningsstatusen är ogiltig."
+
+msgid "Invalid status."
+msgstr "Ogiltig status."
+
+msgid "Could not delete the SSO settings."
+msgstr "Kunde inte radera SSO-inställningarna."
+
+msgid "Could not delete the draft SSO settings."
+msgstr "Kunde inte radera utkastet för SSO-inställningar."
+
+msgid "The SSO settings do not exist."
+msgstr "SSO-inställningarna finns inte."
+
+msgid "The SSO setting cannot be decrypted."
+msgstr "SSO-inställningen kan inte dekrypteras."
+
+msgid "The SSO setting cannot be decoded."
+msgstr "SSO-inställningen kan inte avkodas."
+
+msgid "Only administrators can create SSO settings."
+msgstr "Endast administratörer kan skapa SSO-inställningar."
+
+msgid "Something went wrong when validating the single-sign on settings."
+msgstr "Något gick fel vid validering av single-sign on-inställningarna."
+
+msgid "It is not possible to save the SSO settings."
+msgstr "Det är inte möjligt att spara SSO-inställningarna."
+
+msgid "The SSO state is invalid."
+msgstr "SSO-tillståndet är ogiltigt."
+
+msgid "The SSO state is expired."
+msgstr "SSO-tillståndet har gått ut."
+
+msgid "The SSO state could not be saved."
+msgstr "SSO-tillståndet kunde inte sparas."
+
+msgid "The SSO state does not exist."
+msgstr "SSO-tillståndet finns inte."
+
+msgid "Could not save the SSO state, invalid nonce."
+msgstr "Kunde inte spara SSO-tillståndet, ogiltig nonce."
+
+msgid "Could not save the SSO state, please try again later."
+msgstr "Kunde inte spara SSO-tillståndet, vänligen försök igen senare."
+
+msgid "The {0} claim is not present, please contact your administrator."
+msgstr "\"Kravet {0} finns inte, kontakta din administratör.\""
+
+msgid "Cannot parse JWKS endpoint response."
+msgstr "Kan inte tolka JWKS-endpunktens svar."
+
+msgid "Invalid JWKS endpoint response. Keys missing."
+msgstr "Ogiltigt svar från JWKS-endpunkt. Nycklar saknas."
+
+msgid "Failed to read certificate: {0}"
+msgstr "Det gick inte att läsa certifikatet: {0}"
+
+msgid "Failed to read public key from certificate: {0}"
+msgstr "Det gick inte att läsa den publika nyckeln från certifikatet: {0}"
+
+msgid "Failed to public key properties from certificate: {0}"
+msgstr "Det gick inte att läsa egenskaper för den publika nyckeln från certifikatet: {0}"
+
+msgid "JWT token is missing."
+msgstr "JWT-token saknas."
+
+msgid "Unable to decode JWT token."
+msgstr "Kan inte avkoda JWT-token."
+
+msgid "The {0} configuration value should be a string or NULL."
+msgstr "\"Konfigurationsvärdet {0} bör vara en sträng eller NULL.\""
+
+msgid "The {0} configuration value should be one of the following: {1}."
+msgstr "\"Konfigurationsvärdet {0} bör vara en av följande: {1}.\""
+
+msgid "Single-sign on was a success"
+msgstr "Single-sign on lyckades"
+
+msgid "Users are unable to log in via Azure SSO."
+msgstr "\"Användare kan inte logga in via Azure SSO.\""
+
+msgid "This can happen when the client secret of Azure AD is expired, or the SSO configurations (client credentials) are invalid."
+msgstr "\"Detta kan hända när klienthemligheten för Azure AD har gått ut eller när SSO-konfigurationerna (klientuppgifter) är ogiltiga.\""
+
+msgid "See Azure error response below:"
+msgstr "\"Se Azure-felsvar nedan:\""
+
+msgid "Error: {0}"
+msgstr "\"Fel: {0}\""
+
+msgid "Error description: {0}"
+msgstr "\"Felförklaring: {0}\""
+
+msgid "To fix this, you as an administrator have to update the Azure SSO credentials."
+msgstr "\"För att åtgärda detta måste du som administratör uppdatera Azure SSO-uppgifterna.\""
+
+msgid "Update it in passbolt"
+msgstr "\"Uppdatera det i Passbolt\""
+
+msgid "The client secret expiry date of your Azure AD instance is {0}."
+msgstr "\"Utgångsdatumet för klienthemligheten i din Azure AD-instans är {0}.\""
+
+msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
+msgstr "\"Observera att användare i Passbolt inte kommer att kunna logga in via Azure SSO efter att klientens utgångsdatum har passerat.\""
+
+msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
+msgstr "\"Vi råder dig att åtgärda detta i Azure och uppdatera de senaste uppgifterna i Passbolt.\""
+
+msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
+msgstr "SSO-leverantören {0} har testats och aktiverats framgångsrikt av {1} "
+
+msgid "All users can now use Single Sign-on to perform authentication."
+msgstr "\"Alla användare kan nu använda Single Sign-on för att autentisera sig.\""
+
+msgid "Viewq  it in passbolt"
+msgstr "Visaq  i passbolt"
+
+msgid "The SSO setting has been deleted by {0}."
+msgstr "SSO-inställningen har raderats av {0}."
+
+msgid "The authentication token does not exist or has been deleted."
+msgstr "Autentiseringstoken finns inte eller har raderats."
+
+msgid "The authentication token has been expired."
+msgstr "Autentiseringstoken har gått ut."
+
+msgid "Could not validate the SSO recover request."
+msgstr "Kunde inte validera SSO-återställningsförfrågan."
+
+msgid "The email is required in URL parameters."
+msgstr "E-postadress krävs i URL-parametrarna."
+
+msgid "The case field is required."
+msgstr "Fältet \"case\" krävs."
+
+msgid "The case is not supported. Only \"default\" case is supported."
+msgstr "Case är inte stödd. Endast \"default\" är stödd."
+
+msgid "The token field is required."
+msgstr "Fältet \"token\" krävs."
+
+msgid "Access to this service requires an invitation. "
+msgstr "Åtkomst till denna tjänst kräver en inbjudan. "
+
+msgid "Please contact your administrator to request an invitation link."
+msgstr "Kontakta din administratör för att begära en inbjudningslänk."
+
+msgid "Subscription key data is required."
+msgstr "Prenumerationsnyckeldata krävs."
+
+msgid "The subscription was created."
+msgstr "Prenumerationen har skapats."
+
+msgid "The subscription was updated."
+msgstr "Prenumerationen har uppdaterats."
+
+msgid "The subscription is valid."
+msgstr "Prenumerationen är giltig."
+
+msgid "Subscription key could not be found."
+msgstr "Prenumerationsnyckel kunde inte hittas."
+
+msgid "The subscription cannot be verified. Parse error."
+msgstr "Prenumerationen kan inte verifieras. Fel vid analys."
+
+msgid "The subscription format is not valid. Invalid format."
+msgstr "Prenumerationsformatet är inte giltigt. Ogiltigt format."
+
+msgid "The subscription key cannot be verified."
+msgstr "Prenumerationsnyckeln kan inte verifieras."
+
+msgid "The passbolt OpenPGP public key could not be found."
+msgstr "Det gick inte att hitta den publika nyckeln för passbolt OpenPGP."
+
+msgid "A users quantity is required."
+msgstr "Ett antal användare måste fyllas i."
+
+msgid "The users quantity should not be empty."
+msgstr "Antal användare får inte vara tomt."
+
+msgid "The users limit is exceeded."
+msgstr "Användarens gräns är överskriden."
+
+msgid "The key should have been created in the past."
+msgstr "Nyckeln borde ha skapats i det förflutna."
+
+msgid "An expiry date is required."
+msgstr "Ett utgångsdatum krävs."
+
+msgid "The subscription is expired."
+msgstr "Prenumerationen har löpt ut."
+
+msgid "A customer identifier is required."
+msgstr "En kundidentifierare krävs."
+
+msgid "A subscription identifier is required."
+msgstr "En prenumerationsidentifiering krävs."
+
+msgid "The format of the subscription id is not valid."
+msgstr "Formatet på prenumerations-id är inte giltigt."
+
+msgid "Only admin can create or update subscription information."
+msgstr "Endast administratören kan skapa eller uppdatera prenumerationsinformation."
+
+msgid "The subscription key format is not valid."
+msgstr "Formatet på prenumerationsnyckeln är inte giltigt."
+
+msgid "Subscription is valid and up to date."
+msgstr "Prenumerationen är giltig och uppdaterad."
+
+msgid "Subscription cannot be found or is invalid/expired."
+msgstr "Prenumerationen kan inte hittas eller är ogiltig/har gått ut."
+
+msgid "Subscription invalid/expired ({0})."
+msgstr "Prenumeration ogiltig/utgången ({0})."
+
+msgid "Subscription expired ({0})."
+msgstr "Prenumeration utgången ({0})."
+
+msgid "Subscription user count has been exceeded ({0}/{1})."
+msgstr "Prenumerationens användarantal har överskridits ({0}/{1})."
+
+msgid "Subscription will expire in {0} days."
+msgstr "Prenumerationen löper ut om {0} dagar."
+
+msgid "Subscription soon exceeds user count ({0}/{1})."
+msgstr "Prenumerationen når snart gränsen för användarantal ({0}/{1})."
+
+msgid "Subscription invalid or expired."
+msgstr "Prenumeration ogiltig eller utgången."
+
+msgid "Subscription key format error."
+msgstr "\"Felaktigt format på Subscription key.\""
+
+msgid "Subscription key signature error."
+msgstr "\"Signeringsfel för Subscription key.\""
+
+msgid "Subscription key validation error."
+msgstr "\"Valideringsfel för Subscription key.\""
+
+msgid "It looks like you could use some help."
+msgstr "\"Det verkar som att du kan behöva hjälp.\""
+
+msgid "We are here for you. You can contact us at sales@passbolt.com"
+msgstr "\"Vi finns här för dig. Du kan kontakta oss på sales@passbolt.com\""
+
+msgid "Thanks for choosing Passbolt Pro"
+msgstr "\"Tack för att du väljer Passbolt Pro\""
+
+msgid "Below are your subscription key details"
+msgstr "\"Nedan följer dina detaljer för Subscription key\""
+
+msgid "<error>Not Available</error>"
+msgstr "\"<error>Inte tillgänglig</error>\""
+
+msgid "Customer id:\t{0}"
+msgstr "\"Kundnummer:\\t{0}\""
+
+msgid "<error>{0} (currently: {1}) - Exceeded</error>"
+msgstr "\"<error>{0} (just nu: {1}) - Överskridet</error>\""
+
+msgid "<info>{0} (currently: {1})</info>"
+msgstr "\"<info>{0} (just nu: {1})</info>\""
+
+msgid "Users limit:\t{0}"
+msgstr "\"Användargräns:\\t{0}\""
+
+msgid "Valid from:\t<info>{0}</info>"
+msgstr "\"Giltig från:\\t<info>{0}</info>\""
+
+msgid "Expires on:\t<error>{0} (expired)</error>"
+msgstr "\"Utgår:\\t<error>{0} (utgånget)</error>\""
+
+msgid "Expires on:\t<info>{0} (in {1} days)</info>"
+msgstr "\"Utgår:\\t<info>{0} (om {1} dagar)</info>\""
+
+msgid "For any question / feedback / subscription renewal,"
+msgstr "\"För frågor / feedback / förnyelse av Subscription key,\""
+
+msgid "kindly contact us at <info>sales@passbolt.com</info>"
+msgstr "\"vänligen kontakta oss på <info>sales@passbolt.com</info>\""
+
+msgid "Only administrators can view the subscription details."
+msgstr "Endast administratörer kan se prenumerationsuppgifter."
+
+msgid "The file {0} could not be found."
+msgstr "Filen {0} kunde inte hittas."
+
+msgid "The file {0} could not be read."
+msgstr "Filen {0} kunde inte läsas."
+
+msgid "No active admins were found."
+msgstr "Inga aktiva administratörer hittades."
+
+msgid "Only administrators can update the subscription details."
+msgstr "Endast administratörer kan uppdatera prenumerationsuppgifterna."
+
+msgid "The tags data should be a string or an array."
+msgstr "Taggdata bör vara en sträng eller en array."
+
+msgid "Could not validate request data."
+msgstr "Kunde inte validera förfrågningsdata."
+
+msgid "The tag id is not valid."
+msgstr "Tagg-id är inte giltigt."
+
+msgid "The tag does not exist."
+msgstr "Taggen finns inte."
+
+msgid "You do not have the permission to delete shared tags."
+msgstr "Du har inte behörighet att ta bort delade taggar."
+
+msgid "The tag has been deleted successfully."
+msgstr "Taggen har tagits bort."
+
+msgid "You do not have the permission to update shared tags."
+msgstr "Du har inte behörighet att uppdatera delade taggar."
+
+msgid "The tag has been updated successfully."
+msgstr "Taggen har uppdaterats."
+
+msgid "The tag identifier should be a valid UUID."
+msgstr "Taggidentifieraren bör vara ett giltigt UUID."
+
+msgid "The tag is missing or does not belong to current user."
+msgstr "Taggen saknas eller tillhör inte nuvarande användare."
+
+msgid "The is shared should be a boolean type."
+msgstr "\"is shared\" bör vara av boolesk typ."
+
+msgid "The tags plugin is in read-only mode."
+msgstr "Tagginsticksmodulen är i skrivskyddat läge."
+
+msgid "The tag should not be empty."
+msgstr "Taggen får inte vara tom."
+
+msgid "A tag is required."
+msgstr "En tagg krävs."
+
+msgid "The tag should be a valid BMP-UTF8 string."
+msgstr "Taggen bör vara en giltig BMP-UTF8-sträng."
+
+msgid "The tag length should be maximum {0} characters."
+msgstr "Taggens längd bör vara högst {0} tecken."
+
+msgid "The shared status should be a valid boolean."
+msgstr "Den delade statusen ska vara en giltig boolean."
+
+msgid "A shared status is required."
+msgstr "En delad status krävs."
+
+msgid "The tag metadata OpenPGP message cannot be parsed or is not for the intended recipient."
+msgstr "OpenPGP-meddelandet för taggmetadata kan inte tolkas eller är inte avsett för mottagaren."
+
+msgid "Error while building tag DTO."
+msgstr "Ett fel uppstod när tagg-DTO byggdes."
+
+msgid "Could not validate tags data."
+msgstr "Kunde inte validera taggdata."
+
+msgid "Unable to build tag entity"
+msgstr "Kunde inte bygga tagg-entitet"
+
+msgid "No tags to migrate."
+msgstr "Inga taggar att migrera."
+
+msgid "Tag ID \"{0}\" is already V5"
+msgstr "Tagg-ID \"{0}\" är redan V5"
+
+msgid "No user found for the personal tag id: \"{0}\"."
+msgstr "Ingen användare hittades för den personliga taggen med ID: \"{0}\"."
+
+msgid "User contain data missing for the tag id: \"{0}\"."
+msgstr "Användarens data saknas för taggen med ID: \"{0}\"."
+
+msgid "Unable to migrate tag id: {0} to V5."
+msgstr "Kunde inte migrera tagg med ID: {0} till V5."
+
+msgid "The tag metadata key data could not be updated."
+msgstr "Data för taggens metadata-nyckel kunde inte uppdateras."
+
+msgid "Could not save the tags, try again later."
+msgstr "Kunde inte spara taggarna, försök igen senare."
+
+msgid "You do not have the permission to edit shared tags on this resource."
+msgstr "Du har inte behörighet att redigera delade taggar för denna resurs."
+
+msgid "Unable to save the tag."
+msgstr "Kunde inte spara taggen."
+
+msgid "You do not have the permission to change a personal tag into shared tag."
+msgstr "Du har inte behörighet att ändra en personlig tagg till en delad tagg."
+
+msgid "The settings selected by your administrator prevent from downgrading tag."
+msgstr "Administratörens valda inställningar förhindrar nedgradering av taggen."
+
+msgid "Could not retrieve the user passphrase policies."
+msgstr "\"Kunde inte hämta användarens lösenfraspolicy.\""
+
+msgid "The entropy minimum is required."
+msgstr "\"Det lägsta entropivärdet krävs.\""
+
+msgid "The entropy minimum should be between {0} and {1}."
+msgstr "\"Det lägsta entropivärdet bör vara mellan {0} och {1}.\""
+
+msgid "You edited the user passphrase policy"
+msgstr "\"Du redigerade lösenfraspolicyn för användaren\""
+
+msgid "{0} edited the user passphrase policy"
+msgstr "\"{0} redigerade lösenfraspolicyn för användaren\""
+
+msgid "Could not validate the user passphrase policies settings."
+msgstr "\"Kunde inte validera inställningarna för användarens lösenfraspolicy.\""
+
+msgid "Only administrators are allowed to create/update user passphrase policies settings."
+msgstr "\"Endast administratörer har behörighet att skapa/uppdatera användarens lösenfraspolicyinställningar.\""
+
+msgid "The user passphrase policy settings has been updated by {0}."
+msgstr "\"Inställningarna för användarens lösenfraspolicy har uppdaterats av {0}.\""
 
 msgid "Error"
 msgstr "Fel"
@@ -5247,9 +7257,6 @@ msgstr "Den här användaren saknar krypteringsnyckeln för den delade resursens
 
 msgid "View users"
 msgstr "Visa användare"
-
-msgid "You have initiated an account recovery!"
-msgstr "Du har startat en kontoåterställning!"
 
 msgid "Welcome back!"
 msgstr "Välkommen tillbaka!"

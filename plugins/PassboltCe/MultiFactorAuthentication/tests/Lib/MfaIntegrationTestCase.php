@@ -41,6 +41,7 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->enableFeaturePlugin('MultiFactorAuthentication');
+        $this->enableFeaturePlugin('MfaPolicies');
         $this->enableFeaturePlugin('JwtAuthentication');
         MfaSettings::clear();
     }

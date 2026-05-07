@@ -24,7 +24,7 @@
     "grunt-contrib-watch": "^1.1.0",
     "lockfile-lint": "^4.14.1",
     "openpgp": "^5.11.3",
-    "passbolt-styleguide": "^5.11.2"
+    "passbolt-styleguide": "^5.12.0"
   },
   "scripts": {
     "lint": "npm run lint:lockfile",
@@ -33,5 +33,8 @@
   "dependencies": {
     "micromatch": "^4.0.8",
     "react-router-dom": "^5.3.4"
+  },
+  "overrides": {
+    "uuid": "^14.0.0"
   }
 }

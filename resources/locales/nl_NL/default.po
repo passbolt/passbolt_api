@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2026-04-02 11:49+0000\n"
-"PO-Revision-Date: 2026-04-02 13:48\n"
+"POT-Creation-Date: 2026-04-02 12:51+0000\n"
+"PO-Revision-Date: 2026-04-02 14:13\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,8 @@ msgstr ""
 "X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "X-Crowdin-Project-ID: 2\n"
 "X-Crowdin-Language: nl\n"
-"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/default.po\n"
-"X-Crowdin-File-ID: 212\n"
+"X-Crowdin-File: /[passbolt.passbolt-pro-api] release/resources/locales/en_UK/default.po\n"
+"X-Crowdin-File-ID: 220\n"
 "Language: nl_NL\n"
 
 msgid "You need to login to access this location."
@@ -1089,6 +1089,12 @@ msgstr "Dit veld moet null zijn bij het aanmaken van een nieuw record."
 
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "De sleutel-ID moet een tekenreeks van 8 hexadecimale tekens zijn."
+
+msgid "The provided IP is invalid."
+msgstr "Het opgegeven IP-adres is ongeldig."
+
+msgid "The provided user agent is invalid."
+msgstr "De opgegeven user-agent is ongeldig."
 
 msgid "{0} updated your memberships in several groups"
 msgstr "{0} heeft jouw lidmaatschap in verschillende groepen bijgewerkt"
@@ -4780,6 +4786,15 @@ msgstr "Een geforceerde SSL-status is vereist."
 msgid "The force ssl setting should be a valid boolean."
 msgstr "De geforceerde SSL-instelling moet een geldige Boolean zijn."
 
+msgid "A subscription key is required."
+msgstr "Een abonnementssleutel is vereist."
+
+msgid "The subscription key should not be empty."
+msgstr "De abonnementssleutel moet ingevuld worden."
+
+msgid "The subscription format is not valid."
+msgstr "Het abonnementsformaat is niet geldig."
+
 msgid "The passbolt config is writable."
 msgstr "De configuratie van Passbolt is beschrijfbaar."
 
@@ -4981,12 +4996,6 @@ msgstr "Of selecteer een bestand van je computer"
 msgid "Some binary things are happening..."
 msgstr "Er vinden een aantal binaire zaken plaats..."
 
-msgid "Passbolt Pro activation."
-msgstr "Activering Passbolt Pro."
-
-msgid "Copy paste your Passbolt Pro subscription key here"
-msgstr "Kopieer en plak jouw abonnementssleutel voor Passbolt Pro hier"
-
 msgid "Choose your preferences."
 msgstr "Kies jouw voorkeuren."
 
@@ -5005,8 +5014,14 @@ msgstr "SSL afdwingen?"
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
 msgstr "Het afdwingen van SSL betekent dat Passbolt geen verbindingen accepteert die afkomstig zijn van een onbeveiligd protocol. Als SSL wordt afgedwongen, moet je server geconfigureerd worden voor HTTPS. Het wordt sterk aanbevolen om dit te doen."
 
-msgid "Welcome to Passbolt! Let's get started with the configuration."
-msgstr "Welkom bij Passbolt! Laten we aan de slag gaan met de configuratie."
+msgid "Passbolt Pro activation."
+msgstr "Activering Passbolt Pro."
+
+msgid "Copy paste your Passbolt Pro subscription key here"
+msgstr "Kopieer en plak jouw abonnementssleutel voor Passbolt Pro hier"
+
+msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
+msgstr "Welkom bij Passbolt Pro! Laten we aan de slag gaan met de configuratie."
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "Mooi zo! Jouw omgeving is klaar voor Passbolt."
@@ -5071,12 +5086,6 @@ msgstr "Help"
 msgid "Need help? You can find more information on how to install passbolt in the official online help."
 msgstr "Hulp nodig? Je kunt meer informatie vinden over het installeren van Passbolt in de officiële online hulp."
 
-msgid "What subscription key?"
-msgstr "Welke abonnementssleutel?"
-
-msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
-msgstr "De abonnementssleutel is een bestand dat naar je is verzonden toen je Passbolt Pro kocht. We hebben de abonnementssleutel nodig om de Pro-functies van Passbolt te activeren."
-
 msgid "Send test email"
 msgstr "Test e-mail verzenden"
 
@@ -5097,6 +5106,2007 @@ msgstr "Waarom heb ik een SMTP-server nodig?"
 
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "Passbolt heeft een SMTP-server nodig om uitnodigingse-mails te versturen na het aanmaken van een account en om e-mailnotificaties te verzenden."
+
+msgid "What subscription key?"
+msgstr "Welke abonnementssleutel?"
+
+msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
+msgstr "De abonnementssleutel is een bestand dat naar je is verzonden toen je Passbolt Pro kocht. We hebben de abonnementssleutel nodig om de Pro-functies van Passbolt te activeren."
+
+msgid "The user id is invalid."
+msgstr "De gebruikers-ID is ongeldig."
+
+msgid "The authentication token id is invalid."
+msgstr "De ID van het authenticatietoken is ongeldig."
+
+msgid "Only guests are allowed to create an account recovery request."
+msgstr "Alleen gasten mogen een account-herstelverzoek aanmaken."
+
+msgid "Invalid request. Please provide the required data."
+msgstr "Ongeldig verzoek. Geef de vereiste gegevens op."
+
+msgid "The request id is invalid."
+msgstr "De ID van het verzoek is ongeldig."
+
+msgid "Please provide a valid request id."
+msgstr "Geef een geldig verzoek-ID op."
+
+msgid "You cannot reuse the account recovery key."
+msgstr "Je kunt de herstelsleutel voor het account niet opnieuw gebruiken."
+
+msgid "A policy is required."
+msgstr "Een beleidslijn is vereist."
+
+msgid "The policy name should not be empty."
+msgstr "De beleidsnaam moet ingevuld worden."
+
+msgid "The policy should be one of the following: {0}."
+msgstr "De beleidslijn moet één van de volgende zijn: {0}."
+
+msgid "The public key identifier should be a valid UUID."
+msgstr "De ID van de openbare sleutel moet een geldige UUID zijn."
+
+msgid "The public key identifier should not be empty."
+msgstr "De ID van de openbare sleutel moet ingevuld worden."
+
+msgid "The identifier of the user who created the organization policy should be a valid UUID."
+msgstr "De ID van de gebruiker die het organisatiebeleid heeft aangemaakt, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who created the organization policy is required."
+msgstr "De ID van de gebruiker die het organisatiebeleid heeft gemaakt is vereist."
+
+msgid "The identifier of the user who created the organization policy should not be empty."
+msgstr "De ID van de gebruiker die het organisatiebeleid heeft aangemaakt, moet ingevuld worden."
+
+msgid "The identifier of the user who modified the organization policy should be a valid UUID."
+msgstr "De ID van de gebruiker die het organisatiebeleid heeft gewijzigd, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who modified the organization policy is required."
+msgstr "De ID van de gebruiker die het organisatiebeleid heeft gewijzigd is vereist."
+
+msgid "The identifier of the user who modified the organization policy should not be empty."
+msgstr "De ID van de gebruiker die het organisatiebeleid heeft gewijzigd, moet ingevuld worden."
+
+msgid "Could not validate policy data."
+msgstr "De beleidsgegevens konden niet gevalideerd worden."
+
+msgid "The armored key is too big."
+msgstr "De gepantserde sleutel is te groot."
+
+msgid "The \"deleted\" field should be a valid date."
+msgstr "Het veld \"verwijderd\" moet een geldige datum bevatten."
+
+msgid "The identifier of the user who created the organization public key should be a valid UUID."
+msgstr "De ID van de gebruiker die de openbare sleutel van de organisatie heeft aangemaakt, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who created the organization public key is required."
+msgstr "De ID van de gebruiker die de openbare sleutel van de organisatie heeft aangemaakt is vereist."
+
+msgid "The identifier of the user who created the organization public key should not be empty."
+msgstr "De ID van de gebruiker die de openbare sleutel van de organisatie heeft aangemaakt, moet ingevuld worden."
+
+msgid "The identifier of the user who modified the organization public key should be a valid UUID."
+msgstr "De ID van de gebruiker die de openbare sleutel van de organisatie heeft gewijzigd moet een geldige UUID zijn."
+
+msgid "The identifier of the user who modified the organization public key is required."
+msgstr "De ID van de gebruiker die de openbare sleutel van de organisatie heeft gewijzigd is vereist."
+
+msgid "The identifier of the user who modified the organization public key should not be empty."
+msgstr "De ID van de gebruiker die de openbare sleutel van de organisatie heeft gewijzigd, moet ingevuld worden."
+
+msgid "You cannot reuse the user keys."
+msgstr "Gebruikerssleutels kunnen niet opnieuw gebruikt worden."
+
+msgid "You cannot reuse account recovery organization public keys."
+msgstr "De openbare sleutels voor het herstel van de organisatieaccount kunnen niet opnieuw gebruikt worden."
+
+msgid "You cannot reuse the metadata keys."
+msgstr "Je kunt de metadata-sleutels niet opnieuw gebruiken."
+
+msgid "Could not validate public key data."
+msgstr "De gegevens van de openbare sleutel konden niet worden gevalideerd."
+
+msgid "The recipient_foreign_model should be a valid string."
+msgstr "Het recipient_foreign_model moet een geldige tekenreeks zijn."
+
+msgid "The recipient_foreign_model must be provided."
+msgstr "Het recipient_foreign_model moet opgegeven worden."
+
+msgid "The recipient_foreign_model should not be empty."
+msgstr "Het recipient_foreign_model moet ingevuld worden."
+
+msgid "The recipient_foreign_model must be one of the following: {0}."
+msgstr "Het recipient_foreign_model moet één van de volgende zijn: {0}."
+
+msgid "The data should be a valid string."
+msgstr "De gegevens moeten een geldige tekenreeks zijn."
+
+msgid "The data is too big."
+msgstr "De gegevens zijn te groot."
+
+msgid "The identifier of the user who created the private key passwords should be a valid UUID."
+msgstr "De ID van de gebruiker die de wachtwoorden voor de persoonlijke sleutel heeft aangemaakt, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who created the private key passwords is required."
+msgstr "De ID van de gebruiker die de wachtwoorden voor de persoonlijke sleutel heeft aangemaakt is vereist."
+
+msgid "The identifier of the user who created the private key passwords should not be empty."
+msgstr "De ID van de gebruiker die de wachtwoorden voor de persoonlijke sleutel heeft aangemaakt, moet ingevuld worden."
+
+msgid "The identifier of the user who modified the private key passwords should be a valid UUID."
+msgstr "De ID van de gebruiker die de wachtwoorden voor de persoonlijke sleutel heeft gewijzigd, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who modified the private key passwords is required."
+msgstr "De ID van de gebruiker die de wachtwoorden voor de persoonlijke sleutel heeft gewijzigd is vereist."
+
+msgid "The identifier of the user who modified the private key passwords should not be empty."
+msgstr "De ID van de gebruiker die de wachtwoorden voor de persoonlijke sleutel heeft gewijzigd, moet ingevuld worden."
+
+msgid "The private key identifier should be a valid UUID."
+msgstr "De ID van de privésleutel moet een geldige UUID zijn."
+
+msgid "A private key identifier is required."
+msgstr "De ID van de privésleutel is vereist."
+
+msgid "The private key identifier should not be empty."
+msgstr "De ID van de privésleutel moet ingevuld worden."
+
+msgid "Could not validate password data."
+msgstr "De wachtwoordgegevens konden niet gevalideerd worden."
+
+msgid "The identifier of the user who created the private key  should be a valid UUID."
+msgstr "De ID van de gebruiker die de privésleutel  heeft aangemaakt, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who created the private key  is required."
+msgstr "De ID van de gebruiker die de privésleutel heeft aangemaakt, is vereist."
+
+msgid "The identifier of the user who created the private key  should not be empty."
+msgstr "De ID van de gebruiker die de privésleutel heeft aangemaakt, moet ingevuld worden."
+
+msgid "The identifier of the user who modified the private key  should be a valid UUID."
+msgstr "De ID van de gebruiker die de privésleutel  heeft gewijzigd, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who modified the private key is required."
+msgstr "De ID van de gebruiker die de privésleutel heeft gewijzigd, is vereist."
+
+msgid "The identifier of the user who modified the private key  should not be empty."
+msgstr "De ID van de gebruiker die de privésleutel heeft gewijzigd, moet ingevuld worden."
+
+msgid "The account recovery private key is not valid."
+msgstr "De privésleutel voor accountherstel is niet geldig."
+
+msgid "The status should not be a valid string."
+msgstr "De status mag geen geldige tekenreeks zijn."
+
+msgid "This status is not supported."
+msgstr "Deze status wordt niet ondersteund."
+
+msgid "The status length should be maximum {0} characters."
+msgstr "De status mag maximaal {0} tekens bevatten."
+
+msgid "The identifier of the user who created the request should be a valid UUID."
+msgstr "De ID van de gebruiker die het verzoek heeft aangemaakt, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who created the request is required."
+msgstr "De ID van de gebruiker die het verzoek heeft aangemaakt, is vereist."
+
+msgid "The identifier of the user who created the request should not be empty."
+msgstr "De ID van de gebruiker die het verzoek heeft aangemaakt, moet ingevuld worden."
+
+msgid "The identifier of the user who modified the request should be a valid UUID."
+msgstr "De ID van de gebruiker die het verzoek heeft gewijzigd, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who modified the request is required."
+msgstr "De ID van de gebruiker die het verzoek heeft gewijzigd, is vereist."
+
+msgid "The identifier of the user who modified the request should not be empty."
+msgstr "De ID van de gebruiker die het verzoek heeft gewijzigd, moet ingevuld worden."
+
+msgid "The request is invalid."
+msgstr "Het verzoek is ongeldig."
+
+msgid "The account request is invalid."
+msgstr "Het accountverzoek is ongeldig."
+
+msgid "Invalid response status. Not supported."
+msgstr "Ongeldige responsstatus. Niet ondersteund."
+
+msgid "The responder_foreign_key should not be empty."
+msgstr "De responder_foreign_key moet ingevuld worden."
+
+msgid "The responder_foreign_key should be a valid UUID."
+msgstr "De responder_foreign_key moet een geldige UUID zijn."
+
+msgid "The responder_foreign_model should be a valid string."
+msgstr "Het responder_foreign_model moet een geldige tekenreeks zijn."
+
+msgid "The responder_foreign_model should not be empty."
+msgstr "Het responder_foreign_model moet ingevuld worden."
+
+msgid "The responder_foreign_model must be one of the following: {0}."
+msgstr "Het responder_foreign_model moet een van de volgende zijn: {0}."
+
+msgid "The identifier of the user who created the response should be a valid UUID."
+msgstr "De ID van de gebruiker die de respons heeft aangemaakt, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who created the response is required."
+msgstr "De ID van de gebruiker die de respons heeft aangemaakt, is vereist."
+
+msgid "The identifier of the user who created the response should not be empty."
+msgstr "De ID van de gebruiker die de respons heeft aangemaakt, moet ingevuld worden."
+
+msgid "The identifier of the user who modified the response should be a valid UUID."
+msgstr "De ID van de gebruiker die de respons heeft gewijzigd, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who modified the response is required."
+msgstr "De ID van de gebruiker die de respons heeft gewijzigd, is vereist."
+
+msgid "The identifier of the user who modified the response should not be empty."
+msgstr "De ID van de gebruiker die de respons heeft gewijzigd, moet ingevuld worden."
+
+msgid "The account recovery request response is invalid."
+msgstr "De respons op het accountherstelverzoek is ongeldig."
+
+msgid "The status should not be empty"
+msgstr "De status moet ingevuld worden"
+
+msgid "The status should be one of the following: {0}."
+msgstr "De status moet een van de volgende zijn: {0}."
+
+msgid "The identifier of the user who created the user settings should be a valid UUID."
+msgstr "De ID van de gebruiker die de gebruikersinstellingen heeft aangemaakt, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who created the user settings is required."
+msgstr "De ID van de gebruiker die de gebruikersinstellingen heeft aangemaakt, is vereist."
+
+msgid "The identifier of the user who created the user settings should not be empty."
+msgstr "De ID van de gebruiker die de gebruikersinstellingen heeft aangemaakt, moet ingevuld worden."
+
+msgid "The identifier of the user who modified the user settings should be a valid UUID."
+msgstr "De ID van de gebruiker die de gebruikersinstellingen heeft gewijzigd, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who modified the user settings is required."
+msgstr "De ID van de gebruiker die de gebruikersinstellingen heeft gewijzigd, is vereist."
+
+msgid "The identifier of the user who modified the user settings should not be empty."
+msgstr "De ID van de gebruiker die de gebruikersinstellingen heeft gewijzigd, moet ingevuld worden."
+
+msgid "This user already has an account recovery setting"
+msgstr "Deze gebruiker heeft al een accountherstelinstelling"
+
+msgid "The account recovery user setting is not valid."
+msgstr "De accountherstel-gebruikersinstelling is niet geldig."
+
+msgid "You have disabled the account recovery."
+msgstr "Je hebt het accountherstel uitgeschakeld."
+
+msgid "{0} has disabled the account recovery."
+msgstr "{0} heeft het accountherstel uitgeschakeld."
+
+msgid "You have set the account recovery organization policy to {0}."
+msgstr "Je hebt het organisatiebeleid voor accountherstel ingesteld op {0}."
+
+msgid "{0} has set the account recovery organization policy to {1}."
+msgstr "{0} heeft het organisatiebeleid voor accountherstel ingesteld op {1}."
+
+msgid "You have updated the account recovery organization policy to {0}."
+msgstr "Je hebt het organisatiebeleid voor accountherstel bijgewerkt naar {0}."
+
+msgid "{0} has updated the account recovery organization policy to {1}."
+msgstr "{0} heeft het organisatiebeleid voor accountherstel bijgewerkt naar {1}."
+
+msgid "Suspicious account recovery request issued from IP {0} for {1}"
+msgstr "Er is een verdachte account-herstelaanvraag gekomen van IP-adres {0} voor {1}"
+
+msgid "{0} has initiated a recovery request"
+msgstr "{0} heeft een herstelverzoek gestart"
+
+msgid "You have initiated a recovery request"
+msgstr "Je hebt een herstelverzoek gestart"
+
+msgid "Recovery request approved!"
+msgstr "Herstelverzoek goedgekeurd!"
+
+msgid "approved"
+msgstr "goedgekeurd"
+
+msgid "rejected"
+msgstr "afgewezen"
+
+msgid "Account recovery response set to {0}."
+msgstr "Account-herstelreactie ingesteld op {0}."
+
+msgid "Account recovery response set to {0} by {1}."
+msgstr "Account-herstelreactie ingesteld op {0} door {1}."
+
+msgid "Recovery request denied!"
+msgstr "Herstelverzoek geweigerd!"
+
+msgid "Could not validate key revocation."
+msgstr "Het intrekken van de sleutel kon niet gevalideerd worden."
+
+msgid "The fingerprint should match the one from the currently active key."
+msgstr "De vingerafdruk moet overeenkomen met die van de huidige actieve sleutel."
+
+msgid "Account recovery is disabled."
+msgstr "Accountherstel is uitgeschakeld."
+
+msgid "The account recovery organization public key is not set."
+msgstr "De openbare sleutel voor het herstel van de organisatieaccount is niet ingesteld."
+
+msgid "Invalid request. No policy change."
+msgstr "Ongeldig verzoek. Geen beleidswijziging."
+
+msgid "Invalid request. Revoked key is required for key rotation."
+msgstr "Ongeldig verzoek. De ingetrokken sleutel is nodig voor sleutelroulatie."
+
+msgid "Invalid request. New key is required for key rotation."
+msgstr "Ongeldig verzoek. De nieuwe sleutel is nodig voor sleutelroulatie."
+
+msgid "Invalid request. An organization recovery public key is required."
+msgstr "Ongeldig verzoek. Een openbare sleutel voor herstel van de organisatie is vereist."
+
+msgid "Invalid request. Revoked key or passwords are not required."
+msgstr "Ongeldig verzoek. De ingetrokken sleutel of wachtwoorden zijn niet vereist."
+
+msgid "Invalid request. New key or passwords are not required."
+msgstr "Ongeldig verzoek. De nieuwe sleutel of wachtwoorden zijn niet vereist."
+
+msgid "Invalid request. Keys are required for this change."
+msgstr "Ongeldig verzoek. Sleutels zijn vereist voor deze wijziging."
+
+msgid "Invalid request. Passwords are required for this change."
+msgstr "Ongeldig verzoek. Wachtwoorden zijn vereist voor deze wijziging."
+
+msgid "An organization public key is required."
+msgstr "Een openbare sleutel van de organisatie is vereist."
+
+msgid "The public_key_id must match current policy public_key_id."
+msgstr "De ID van de openbare sleutel moet overeenkomen met de huidige beleidsregel public_key_id."
+
+msgid "An invalid number of passwords sent. Expected {0} and got {1}."
+msgstr "Er is een ongeldig aantal wachtwoorden verzonden. Er werden er {0} verwacht en er zijn er {1} ontvangen."
+
+msgid "The message is not encrypted for the right recipient."
+msgstr "Het bericht is niet versleuteld voor de juiste ontvanger."
+
+msgid "Recovery request cannot be created when organization policy is disabled."
+msgstr "Er kan geen herstelverzoek worden aangemaakt als het organisatiebeleid is uitgeschakeld."
+
+msgid "Recovery request cannot be created when user is not enrolled."
+msgstr "Er kan geen herstelverzoek worden aangemaakt als de gebruiker niet is ingeschreven."
+
+msgid "The authentication token is not valid or has expired."
+msgstr "Het authenticatietoken is niet geldig of verlopen."
+
+msgid "The account recovery request could not be found."
+msgstr "Het herstelverzoek voor de account werd niet gevonden."
+
+msgid "The request is already completed."
+msgstr "Het verzoek is al voltooid."
+
+msgid "Recovery response cannot be created when organization policy is disabled."
+msgstr "Er kan geen herstelreactie worden aangemaakt als het organisatiebeleid is uitgeschakeld."
+
+msgid "Could not validate response data."
+msgstr "De reactiegegevens konden niet worden gevalideerd."
+
+msgid "The account recovery response data is not required."
+msgstr "De reactiegegevens van het accountherstel zijn niet vereist."
+
+msgid "The account recovery response data is required."
+msgstr "De reactiegegevens van het accountherstel zijn vereist."
+
+msgid "The user is not enrolled in the account recovery program."
+msgstr "De gebruiker is niet ingeschreven in het account-herstelprogramma."
+
+msgid "User account recovery settings cannot be edited."
+msgstr "De herstelinstellingen van de gebruikersaccount kunnen niet worden bewerkt."
+
+msgid "The account recovery is mandatory and cannot be rejected."
+msgstr "Het herstel van de account is verplicht en kan niet worden afgewezen."
+
+msgid "Invalid request. You cannot opt-out."
+msgstr "Ongeldig verzoek. Je kunt je niet afmelden."
+
+msgid "The status must be set to approved."
+msgstr "De status moet worden ingesteld om goedgekeurd te worden."
+
+msgid "Invalid request. You cannot both opt-out and provide backup."
+msgstr "Ongeldig verzoek. Je kunt niet zowel afmelden als een back-up verstrekken."
+
+msgid "The private key backup must be provided."
+msgstr "Er moet een back-up van de openbare sleutel worden verstrekt."
+
+msgid "Invalid request. Private key or password are missing."
+msgstr "Ongeldig verzoek. Er ontbreekt een persoonlijke sleutel of wachtwoord."
+
+msgid "Could not validate private key data."
+msgstr "De gegevens van de persoonlijke sleutel konden niet worden gevalideerd."
+
+msgid "The account recovery request identifier should be a valid UUID."
+msgstr "De ID van het account-herstelverzoek moet een geldige UUID zijn."
+
+msgid "The account recovery request status is not approved."
+msgstr "De status van het account-herstelverzoek is niet goedgekeurd."
+
+msgid "Account recovery is disabled. Key backup is not supported."
+msgstr "Accountherstel is uitgeschakeld. De back-up van de sleutel wordt niet ondersteund."
+
+msgid "Account recovery is mandatory. Please provide the mandatory data."
+msgstr "Accountherstel is verplicht. Geef de verplichte gegevens op."
+
+msgid "Account Recovery Disabled"
+msgstr "Accountherstel is uitgeschakeld"
+
+msgid "Account Recovery Enabled"
+msgstr "Accountherstel is uitgeschakeld"
+
+msgid "The fingerprint of the organization public key is {0}."
+msgstr "De vingerafdruk van de openbare organisatiesleutel is {0}."
+
+msgid "Account Recovery Updated"
+msgstr "Accountherstel is bijgewerkt"
+
+msgid "{0} has initiated an account recovery request"
+msgstr "{0} is een account-herstelverzoek gestart"
+
+msgid "Recovery request"
+msgstr "Herstelverzoek"
+
+msgid "{0} has initiated an account recovery request."
+msgstr "{0} is een account-herstelverzoek gestart."
+
+msgid "Since you’re authorized to handle account recovery requests, please process this one."
+msgstr ""
+
+msgid "You will need your organization recovery key to continue."
+msgstr "Je hebt je organisatieherstelsleutel nodig om door te gaan."
+
+msgid "Review the recovery request"
+msgstr "Controleer het herstelverzoek"
+
+msgid "Suspicious recovery request"
+msgstr "Verdacht herstelverzoek"
+
+msgid "An account recovery request was attempted from a user with client IP {0} for {1}."
+msgstr "Er is een accountherstelverzoek geprobeerd door een gebruiker met cliënt-IP {0} voor {1}."
+
+msgid "The request could not be found in the database."
+msgstr "Het verzoek kon niet worden gevonden in de database."
+
+msgid "This is a potential security threat."
+msgstr "Dit is een potentieel veiligheidsprobleem."
+
+msgid "You have initiated an account recovery!"
+msgstr "Je hebt het herstel van de account geïnitieerd!"
+
+msgid "Recovery Request"
+msgstr "Herstelverzoek"
+
+msgid "You just requested an account recovery."
+msgstr "Je hebt zojuist een accountherstel aangevraagd."
+
+msgid "Your administrator have been informed and will follow up with you."
+msgstr "Je beheerder is geïnformeerd en zal contact met je opnemen."
+
+msgid "If you did not make this request please inform your administrator."
+msgstr "Als je dit verzoek niet hebt gedaan, breng dan je beheerder op de hoogte."
+
+msgid "You have updated a recovery request to {0}."
+msgstr "Je hebt een herstelverzoek bijgewerkt naar {0}."
+
+msgid "You have set the status of the account recovery request initiated by {0} ({1}) to {2}."
+msgstr "Je hebt de status van het accountherstelverzoek van {0} ({1}) ingesteld op {2}."
+
+msgid "{0} ({1}) has updated a recovery request to {2}."
+msgstr "{0} ({1}) heeft een herstelverzoek bijgewerkt naar {2}."
+
+msgid "{0} ({1}) has set the status of the request initiated by {2} ({3}) to {4}."
+msgstr "{0} ({1}) heeft de status van het verzoek van {2} ({3}) ingesteld op {4}."
+
+msgid "{0} ({1}) has approved your recovery request."
+msgstr "{0} ({1}) heeft je herstelverzoek goedgekeurd."
+
+msgid "Your organization recovery contacts have reviewed and approved your account recovery request."
+msgstr "Je organisatieherstelcontacten hebben je accountherstelverzoek beoordeeld en goedgekeurd."
+
+msgid "Please click on the link below to continue."
+msgstr "Klik op de link hieronder om verder te gaan."
+
+msgid "Important"
+msgstr "Belangrijk"
+
+msgid "Please use the same computer and browser that you used to initiate the request."
+msgstr "Gebruik dezelfde computer en browser die je hebt gebruikt om het verzoek te starten."
+
+msgid "Complete account recovery"
+msgstr "Accountherstel voltooien"
+
+msgid "{0} ({1}) has denied your recovery request."
+msgstr "{0} ({1}) heeft je herstelverzoek geweigerd."
+
+msgid "Your organization recovery contacts have reviewed and rejected your account recovery request."
+msgstr "Je organisatieherstelcontacten hebben je accountherstelverzoek beoordeeld en afgewezen."
+
+msgid "Only administrators can view user logs."
+msgstr "Alleen beheerders kunnen gebruikerslogs bekijken."
+
+msgid "The user {0} could not be added to group {1} because there is no matching directory entry in passbolt."
+msgstr "Gebruiker {0} kon niet worden toegevoegd aan groep {1}, omdat er geen overeenkomende aanmelding in de directory in Passbolt is."
+
+msgid "The user {0} could not be added to the group {1} because the membership has been removed in passbolt"
+msgstr "Gebruiker {0} kon niet worden toegevoegd aan groep {1}, omdat diens lidmaatschap uit Passbolt verwijderd is"
+
+msgid "The user {0} was not synced with existing membership for group {1} because the membership was created before."
+msgstr "Gebruiker {0} werd niet gesynchroniseerd met een bestaand lidmaatschap voor groep {1}, omdat het lidmaatschap al eerder is aangemaakt."
+
+msgid "The user {0} was successfully added to the group {1}."
+msgstr "Gebruiker {0} is met succes toegevoegd aan groep {1}."
+
+msgid "The user {0} could not be added to the group {1} because their account was priorly deleted in passbolt."
+msgstr "Gebruiker {0} kon niet worden toegevoegd aan groep {1}, omdat diens account al eerder uit Passbolt verwijderd is."
+
+msgid "The user {0} could not be added to the group {1} because they have not yet activated their account."
+msgstr "Gebruiker {0} kon niet worden toegevoegd aan groep {1}, omdat deze zijn account nog niet heeft geactiveerd."
+
+msgid "The user {0} could not be added to the group {1} because of validation issues."
+msgstr "Gebruiker {0} kon niet worden toegevoegd aan groep {1} vanwege problemen met de validatie."
+
+msgid "The user {0} could not be added to the group {1} because of an internal error."
+msgstr "Gebruiker {0} kon niet worden toegevoegd aan groep {1} vanwege een interne fout."
+
+msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
+msgstr "Gebruiker {0} kan niet automatisch worden toegevoegd aan groep {1}. Een e-mailverzoek is verstuurd naar de groepbeheerder(s) om dit handmatig te doen."
+
+msgid "The user {0} was successfully removed from the group {1}."
+msgstr "Gebruiker {0} is met succes verwijderd uit groep {1}."
+
+msgid "The user {0} could not be removed from the group {1} because it is the only group manager."
+msgstr "Gebruiker {0} kon niet worden verwijderd uit groep {1}, omdat deze de enige groepsbeheerder is."
+
+msgid "The user {0} could not be removed from the group {1} because some validation issues."
+msgstr "Gebruiker {0} kon niet worden verwijderd uit groep {1}, omdat er enkele problemen met de validatie zijn."
+
+msgid "The user {0} could not be removed from the group {1} because of an internal error."
+msgstr "Gebruiker {0} kon niet worden verwijderd uit groep {1} vanwege een interne fout."
+
+msgid "The user {0} was successfully synced with the group {1}."
+msgstr "Gebruiker {0} is met succes gesynchroniseerd met groep {1}."
+
+msgid "The group {0} has been successfully renamed to {1}."
+msgstr "De groep {0} is succesvol hernoemd naar {1}."
+
+msgid "The group {0} could not be renamed to {1}."
+msgstr "De groep {0} kon niet worden hernoemd naar {1}."
+
+msgid "The passbolt {0} {1} was not deleted because it is marked as to be ignored."
+msgstr "De Passbolt-{0} {1} is niet verwijderd, omdat deze gemarkeerd is om genegeerd te worden."
+
+msgid "The directory {0} {1} was not deleted because it is ignored."
+msgstr "De {0}sdirectory {1} is niet verwijderd, omdat deze genegeerd werd."
+
+msgid "The directory user {0} was already suspended in passbolt."
+msgstr "De directorygebruiker {0} is al opgeschort in Passbolt."
+
+msgid "The directory {0} {1} was already deleted in passbolt."
+msgstr "De {0}sdirectory {1} is al verwijderd in Passbolt."
+
+msgid "The user {0} could not be deleted because they are the only owner of one or more passwords."
+msgstr "Gebruiker {0} kon niet worden verwijderd, omdat deze de enige eigenaar is van een of meer wachtwoorden."
+
+msgid "The {0} {1} could not be deleted because they are the only manager of one or more groups."
+msgstr "De {0} {1} kon niet worden verwijderd, omdat deze de enige beheerder is van één of meer groepen."
+
+msgid "The user {0} was successfully suspended."
+msgstr "De gebruiker {0} is met succes opgeschort."
+
+msgid "The {0} {1} was successfully deleted."
+msgstr "De {0} {1} is met succes verwijderd."
+
+msgid "The {0} {1} could not be suspended because of an internal error. Please try again later."
+msgstr "De {0} {1} kon niet worden geschorst vanwege een interne fout. Probeer het later opnieuw."
+
+msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
+msgstr "De {0} {1} kon niet worden verwijderd vanwege een interne fout. Probeer het later opnieuw."
+
+msgid "The {0} {1} was not synced because the passbolt {0} is marked as to be ignored."
+msgstr "De {0} {1} is niet gesynchroniseerd, omdat de Passbolt-{0} gemarkeerd is om genegeerd te worden."
+
+msgid "The {0} {1} was not synced because the directory {0} is marked as to be ignored."
+msgstr "De {0} {1} is niet gesynchroniseerd, omdat de {0}sdirectory gemarkeerd is om genegeerd te worden."
+
+msgid "The {0} {1} was successfully added to passbolt."
+msgstr "De {0} {1} is met succes toegevoegd aan Passbolt."
+
+msgid "The {0} {1} could not be added because of data validation issues."
+msgstr "De {0} {1} kon niet worden toegevoegd vanwege problemen met gegevensvalidatie."
+
+msgid "The {0} {1} could not be added because of an internal error. Please try again later."
+msgstr "De {0} {1} kon niet worden toegevoegd vanwege een interne fout. Probeer het later opnieuw."
+
+msgid "The previously suspended {0} {1} was not unsuspended."
+msgstr "De eerder geschorste {0} {1} is niet hersteld."
+
+msgid "The previously deleted {0} {1} was not re-added to passbolt."
+msgstr "De eerder verwijderde {0} {1} werd niet opnieuw toegevoegd aan Passbolt."
+
+msgid "The previously suspended {0} {1} was unsuspended."
+msgstr "De eerder geschorste {0} {1} is hersteld."
+
+msgid "The previously deleted {0} {1} was re-added to passbolt."
+msgstr "De eerder verwijderde {0} {1} is opnieuw toegevoegd aan Passbolt."
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of validation errors."
+msgstr "De verwijderde {0} {1} kon niet opnieuw worden toegevoegd aan Passbolt door fouten in de validatie."
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of an internal error."
+msgstr "De verwijderde {0} {1} kon niet opnieuw worden toegevoegd aan Passbolt vanwege een interne fout."
+
+msgid "The {0} {1} was mapped with an existing {0} in passbolt."
+msgstr "De {0} {1} is gecombineerd met een bestaande {0} in Passbolt."
+
+msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after."
+msgstr "De {0} {1} kon niet worden gecombineerd met een bestaande {0} in Passbolt, omdat deze pas later is aangemaakt."
+
+msgid "The user {0} full name has been successfully updated to {1} {2}."
+msgstr "De volledige naam van gebruiker {0} is succesvol bijgewerkt naar {1} {2}."
+
+msgid "The user {0} full name could not be updated to {1} {2}."
+msgstr "De volledige naam van gebruiker {0} kon niet worden bijgewerkt naar {1} {2}."
+
+msgid "The record model is not valid."
+msgstr "Het inschrijvingsmodel is niet geldig."
+
+msgid "The record is currently ignored as part of directory synchronization."
+msgstr "De inschrijving wordt momenteel genegeerd als onderdeel van de synchronisatie van de directory."
+
+msgid "The record is currently not ignored as part of directory synchronization."
+msgstr "De inschrijving wordt momenteel niet genegeerd als onderdeel van de synchronisatie van de directory."
+
+msgid "The record will be ignored in the next directory synchronization."
+msgstr "De inschrijving zal genegeerd worden in de volgende synchronisatie van de directory."
+
+msgid "The record id is not valid."
+msgstr "De ID van de inschrijving is niet geldig."
+
+msgid "The record does not exist."
+msgstr "De inschrijving bestaat niet."
+
+msgid "The record could not be unmarked as ignored. Please try again later."
+msgstr "De markering van de inschrijving als genegeerd kan niet ongedaan worden gemaakt. Probeer het later nogmaals."
+
+msgid "The record will not be ignored in the next directory synchronization."
+msgstr "De inschrijving zal niet genegeerd worden bij de volgende synchronisatie van de directory."
+
+msgid "Could not validate settings."
+msgstr "De instellingen konden niet worden gevalideerd."
+
+msgid "Could not save the settings. {0}"
+msgstr "De instellingen konden niet worden opgeslagen. {0}"
+
+msgid "The directory structure cannot be retrieved."
+msgstr "De structuur van de directory kan niet opgehaald worden."
+
+msgid "There was an issue while retrieving the invalid entries."
+msgstr "Er was een probleem bij het ophalen van de ongeldige aanmeldingen."
+
+msgid "The synchronization was done successfully."
+msgstr "De synchronisatie is met succes uitgevoerd."
+
+msgid "The simulation was done successfully."
+msgstr "De simulatie is met succes uitgevoerd."
+
+msgid "Need at least one domain configuration."
+msgstr "Er is minstens één domeinconfiguratie nodig."
+
+msgid "The connection name `{0}` should not contain dots"
+msgstr "De verbindingsnaam `{0}` mag geen punten bevatten"
+
+msgid "Invalid connection name"
+msgstr "Ongeldige verbindingsnaam"
+
+msgid "The identifier of the default admin user is required."
+msgstr "De ID van de standaard beheerder-gebruiker is vereist."
+
+msgid "The identifier of the default admin user should not be empty."
+msgstr "De ID van de standaard beheerder-gebruiker moet ingevuld worden."
+
+msgid "The identifier of the default admin user should be a valid UUID."
+msgstr "De ID van de standaard beheerder-gebruiker moet een geldige UUID zijn."
+
+msgid "The admin user does not exist."
+msgstr "De beheerder-gebruiker bestaat niet."
+
+msgid "The identifier of the default group admin user is required."
+msgstr "De ID van de standaard groepsbeheerder-gebruiker is vereist."
+
+msgid "The identifier of the default group admin user should not be empty."
+msgstr "De ID van de standaard groepsbeheerder-gebruiker moet ingevuld worden."
+
+msgid "The identifier of the default group admin user should be a valid UUID."
+msgstr "De ID van de standaard groepsbeheerder-gebruiker moet een geldige UUID zijn."
+
+msgid "The group admin user does not exist."
+msgstr "De groepsbeheerder-gebruiker bestaat niet."
+
+msgid "The group object class should be a valid BMP-UTF8 string."
+msgstr "De objectklasse van de groep moet een geldige BMP-UTF8 tekenreeks zijn."
+
+msgid "The user object class should be a valid BMP-UTF8 string."
+msgstr "De objectklasse van de gebruiker moet een geldige BMP-UTF8 tekenreeks zijn."
+
+msgid "The user path should be a valid BMP-UTF8 string."
+msgstr "Het gebruikerspad moet een geldige BMP-UTF8 tekenreeks zijn."
+
+msgid "The group custom filter should be a valid BMP-UTF8 string."
+msgstr "De groepscustomfilter moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The user custom filter should be a valid BMP-UTF8 string."
+msgstr "De gebruikerscustomfilter moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The email prefix/suffix setting should be a valid boolean."
+msgstr "De voorvoegsel-/achtervoegselinstelling voor e-mail moet een geldige Boolean zijn."
+
+msgid "The email prefix should be a valid BMP-UTF8 string."
+msgstr "Het voorvoegsel van de e-mail moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The email suffix should be a valid BMP-UTF8 string."
+msgstr "Het achtervoegsel van de e-mail moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The users parent group should be a valid BMP-UTF8 string."
+msgstr "De bovenliggende gebruikersgroep moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The groups parent group should be a valid BMP-UTF8 string."
+msgstr "De bovenliggende groep moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The enabled users only setting should be a boolean."
+msgstr "De instelling voor \"alleen ingeschakelde gebruikers\" moet een Boolean zijn."
+
+msgid "The sync of created users setting should be a boolean."
+msgstr "De instelling voor synchronisatie van nieuw aangemaakte gebruikers moet een Boolean zijn."
+
+msgid "The sync of updated users setting should be a boolean."
+msgstr "De instelling voor synchronisatie van bijgewerkte gebruikers moet een Boolean zijn."
+
+msgid "The sync of deleted users setting should be a boolean."
+msgstr "De instelling voor synchronisatie van verwijderde gebruikers moet een Boolean zijn."
+
+msgid "The sync of created groups setting should be a boolean."
+msgstr "De instelling voor synchronisatie van nieuw aangemaakte groepen moet een Boolean zijn."
+
+msgid "The sync of deleted groups setting should be a boolean."
+msgstr "De instelling voor synchronisatie van verwijderde groepen moet een Boolean zijn."
+
+msgid "The sync of updated groups setting should be a boolean."
+msgstr "De synchronisatie van de bijgewerkte groepeninstelling moet een Boolean zijn."
+
+msgid "The fields mapping should be a valid array."
+msgstr "De veldenmapping moet een geldige array zijn."
+
+msgid "A directory type is required."
+msgstr "Een type directory is vereist."
+
+msgid "The directory type should not be empty."
+msgstr "Het type directory moet ingevuld worden."
+
+msgid "The directory type should be one of the following: {0}."
+msgstr "Het type directory moet één van de volgende zijn: {0}."
+
+msgid "A domain name is required."
+msgstr "Een domeinnaam is vereist."
+
+msgid "The domain name should not be empty."
+msgstr "De domeinnaam moet ingevuld worden."
+
+msgid "The domain name should be a valid BMP-UTF8 string."
+msgstr "De domeinnaam moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The base DN should be a valid BMP-UTF8 string."
+msgstr "De basis-DN moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "At least one host is required."
+msgstr "Er is minstens één host vereist."
+
+msgid "The hosts should be a valid array."
+msgstr "De hosts moeten een geldige array zijn."
+
+msgid "The port number should not be empty."
+msgstr "Het poortnummer moet ingevuld worden."
+
+msgid "The port number should be between 0 and 65535"
+msgstr "Het poortnummer moet tussen de 0 en 65535 liggen"
+
+msgid "A connection type is required."
+msgstr "Een verbindingstype is vereist."
+
+msgid "The connection type should not be empty."
+msgstr "Het verbindingstype moet ingevuld worden."
+
+msgid "The connection type should be one of the following: {0}."
+msgstr "Het verbindingstype moet een van de volgende zijn: {0}."
+
+msgid "An authentication type is required."
+msgstr "Een authenticatietype is vereist."
+
+msgid "The authentication type should not be empty."
+msgstr "Het authenticatietype moet ingevuld worden."
+
+msgid "The authentication type should be one of the following: {0}."
+msgstr "Het authenticatietype moet een van de volgende zijn: {0}."
+
+msgid "The map for this field is required."
+msgstr "De mapping voor dit veld is vereist."
+
+msgid "The map value should not be empty."
+msgstr "De mappingwaarde moet ingevuld worden."
+
+msgid "The field name should be a valid BMP-UTF8 string."
+msgstr "De veldnaam moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The map value length should be maximum {0} characters."
+msgstr "De mappingwaarde mag maximaal {0} tekens bevatten."
+
+msgid "The map value should not be from forbidden fields."
+msgstr "De mappingwaarde mag niet uit verboden velden komen."
+
+msgid "The map configuration for `{0}` fields is required."
+msgstr "De mapconfiguratie voor `{0}`-velden is vereist."
+
+msgid "The group object class length should be maximum {0} characters."
+msgstr "De groepsobjectklasse mag maximaal {0} tekens bevatten."
+
+msgid "The group object class should not be from forbidden fields."
+msgstr "De groepsobjectklasse mag niet uit verboden velden komen."
+
+msgid "The user object class length should be maximum {0} characters."
+msgstr "De gebruikersobjectklasse mag maximaal {0} tekens bevatten."
+
+msgid "The user object class should not be from forbidden fields."
+msgstr "De gebruikersobjectklasse mag niet uit verboden velden komen."
+
+msgid "The user custom filter length should be maximum {0} characters."
+msgstr "De maximale lengte van de gebruikerscustomfilter is {0} tekens."
+
+msgid "The user custom filter contains the forbidden field."
+msgstr "De gebruikerscustomfilter bevat het verboden veld."
+
+msgid "The group custom filter length should be maximum {0} characters."
+msgstr "De maximale lengte van de groepscustomfilter is {0} tekens."
+
+msgid "The group custom filter contains the forbidden field."
+msgstr "De groepscustomfilter bevat het verboden veld."
+
+msgid "The field fallbacks should be a valid array."
+msgstr "Het veld fallbacks moet een geldige array zijn."
+
+msgid "The field fallbacks should not be empty."
+msgstr "Het veld fallbacks mag niet leeg zijn."
+
+msgid "The field fallbacks keys should be one of the following: {0}."
+msgstr "De sleutels van het veld fallbacks moeten een van de volgende zijn: {0}."
+
+msgid "The fallback field value should be a valid BMP-UTF8 string."
+msgstr "De fallback-veldwaarde moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The fallback field value length should be maximum {0} characters."
+msgstr "De fallback-veldwaarde mag maximaal {0} tekens bevatten."
+
+msgid "The fallback field value should not be from forbidden fields."
+msgstr "De waarde van het fallback-veld mag niet afkomstig zijn uit verboden velden."
+
+msgid "The directory type in fallback fields should be a valid array."
+msgstr "Het directorytype in fallback-velden moet een geldige array zijn."
+
+msgid "Directory sync settings endpoints are disabled."
+msgstr "Directorysynchronisatie-instellingendpoints zijn uitgeschakeld."
+
+msgid "The directory name should be a valid UTF8 string."
+msgstr "De naam van de directory moet een geldige UTF8-tekenreeks zijn."
+
+msgid "The directory_name length should be maximum {0} characters."
+msgstr "De naam van de directory mag maximaal {0} tekens bevatten."
+
+msgid "A directory name is required."
+msgstr "Een naam voor de directory is vereist."
+
+msgid "The directory should not be empty."
+msgstr "De directory moet ingevuld worden."
+
+msgid "Could not validate directory entry data."
+msgstr "De invoergegevens van de directory konden niet worden gevalideerd."
+
+msgid "The associated record could not be found."
+msgstr "De bijbehorende inschrijving kon niet worden gevonden."
+
+msgid "This record is already marked as to be ignored."
+msgstr "Deze inschrijving is al gemarkeerd om genegeerd te worden."
+
+msgid "This is not a valid record to ignore."
+msgstr "Dit is geen geldige inschrijving om te negeren."
+
+msgid "The parent identifier should be a valid UUID."
+msgstr "De bovenliggende ID moet een geldige UUID zijn."
+
+msgid "A parent identifier is required."
+msgstr "Een bovenliggende ID is vereist."
+
+msgid "The child identifier should be a valid UUID."
+msgstr "De onderliggende ID moet een geldige UUID zijn."
+
+msgid "The child identifier is required."
+msgstr "De onderliggende ID is vereist."
+
+msgid "Directory Settings are invalid. Please check your config and try again."
+msgstr "Directory-instellingen zijn ongeldig. Controleer je configuratie en probeer het opnieuw."
+
+msgid "New directory settings could not be saved."
+msgstr "Nieuwe directory-instellingen konden niet worden opgeslagen."
+
+msgid "The endpoints for updating the users directory configurations are disabled."
+msgstr "De endpoints voor het bijwerken van de gebruikersdirectoryconfiguraties zijn uitgeschakeld."
+
+msgid "The endpoints for updating the users directory configurations are enabled."
+msgstr "De endpoints voor het bijwerken van de gebruikersdirectoryconfiguraties zijn ingeschakeld."
+
+msgid "It is recommended to disable endpoints for updating the users directory configurations."
+msgstr "Het wordt aanbevolen de endpoints voor het bijwerken van de gebruikersdirectoryconfiguraties uit te schakelen."
+
+msgid "Set the PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED environment variable to true."
+msgstr "Stel de omgevingsvariabele PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED in op true."
+
+msgid "Or set {0} to true in {1}."
+msgstr "Of stel {0} in op true in {1}."
+
+msgid "SSL certification verification for LDAP server is enabled."
+msgstr "De SSL-certificaatverificatie voor de LDAP-server is ingeschakeld."
+
+msgid "SSL certification verification for LDAP server is disabled."
+msgstr "De SSL-certificaatverificatie voor de LDAP-server is uitgeschakeld."
+
+msgid "Disabling the ssl verify check can lead to security attacks."
+msgstr "Als u de ssl-verificatie uitschakelt, kan dit tot beveiligingsaanvallen leiden."
+
+msgid "Attacker can alter the certificate and can perform man-in-the-middle attack."
+msgstr "Een aanvaller kan het certificaat wijzigen en een man-in-the-middle-aanval uitvoeren."
+
+msgid "To fix this, you can set PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER environment variable to true."
+msgstr "Om dit te verhelpen kunt u de omgevingsvariabele PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER op true zetten."
+
+msgid "Or set passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer to true in {0}."
+msgstr "Of stel passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer in op true in {0}."
+
+msgid "A mapping rule for username attribute could not be found for directory type: {0}"
+msgstr "Er kon geen mappingregel voor het gebruikersnaamattribuut worden gevonden voor directorytype: {0}"
+
+msgid "A mapping rule for ID attribute could not be found for directory type: {0}"
+msgstr "Er kon geen mappingregel voor het ID-attribuut worden gevonden voor directorytype: {0}"
+
+msgid "Mapping rules could not be found for directory type: {0}"
+msgstr "Er konden geen mappingregels worden gevonden voor directorytype: {0}"
+
+msgid "A group name is required."
+msgstr "Een groepsnaam is vereist."
+
+msgid "A group member does not match the expected DN format."
+msgstr "Een groepslid komt niet overeen met het verwachte DN-formaat."
+
+msgid "The {0} configuration should be a valid string"
+msgstr "De {0}-configuratie moet een geldige tekenreeks zijn"
+
+msgid "Invalid directory type for domain: {0}"
+msgstr "Ongeldig directorytype voor domein: {0}"
+
+msgid "Directory type could not be found for domain: {0}"
+msgstr "Het directorytype kon niet worden gevonden voor domein: {0}"
+
+msgid "LDAP Object class could not be found: {0}"
+msgstr "LDAP-objectklasse kon niet worden gevonden: {0}"
+
+msgid "SSO"
+msgstr "Eenmalige aanmelding (SSO)"
+
+msgid "Directory Sync"
+msgstr "Directory-synchronisatie"
+
+msgid "SCIM"
+msgstr "SCIM"
+
+msgid "Only administrators are allowed to create/update MFA policies settings."
+msgstr "Alleen beheerders kunnen MFA-beleidsinstellingen maken/bijwerken."
+
+msgid "Could not validate the MFA policies settings."
+msgstr "Kon de MFA-beleidsinstellingen niet valideren."
+
+msgid "The policy field is required."
+msgstr "Het beleidsveld is vereist."
+
+msgid "The type of the policy should be one of the following: {0}."
+msgstr "Het type van de beleidslijn moet een van de volgende zijn: {0}."
+
+msgid "The remember me for a month field is required."
+msgstr "Het veld \"Herinner me een maand\" is vereist."
+
+msgid "The remember me for a month should be a boolean type."
+msgstr "\"Herinner me een maand\" zou een Booleaans type moeten zijn."
+
+msgid "You edited the MFA policy"
+msgstr "Je hebt het MFA-beleid bewerkt"
+
+msgid "{0} edited the MFA policy"
+msgstr "{0} heeft het MFA-beleid bewerkt"
+
+msgid "The MFA policy has been updated, the new configuration is as follow:"
+msgstr "Het MFA-beleid is bijgewerkt, de nieuwe configuratie is als volgt:"
+
+msgid "Policy: {0}"
+msgstr "Beleid: {0}"
+
+msgid "Remember me for a month: {0}"
+msgstr "Herinner me een maand: {0}"
+
+msgid "Some of your passwords are expired."
+msgstr "Sommige van je wachtwoorden zijn verlopen."
+
+msgid "Some of your passwords are expiring in {0} days."
+msgstr "Sommige van je wachtwoorden verlopen over {0} dagen."
+
+msgid "Some of your passwords are expired or expiring in {0} days."
+msgstr "Sommige van je wachtwoorden zijn verlopen of verlopen over {0} dagen."
+
+msgid "The send password about to expire setting should be a boolean."
+msgstr "De instelling voor \"verzenden voordat een wachtwoord verloopt\" moet een Boolean zijn."
+
+msgid "Password expiry email notifications are disabled."
+msgstr "E-mailmeldingen voor wachtwoordverval zijn uitgeschakeld."
+
+msgid "An array of arrays is expected."
+msgstr "Er wordt een array van arrays verwacht."
+
+msgid "The expiry date is required."
+msgstr "De vervaldatum is vereist."
+
+msgid "The identifier should be unique: {0}."
+msgstr "De ID moet uniek zijn: {0}."
+
+msgid "You are not allowed to update these resources."
+msgstr "Je bent niet gemachtigd om deze middelen bij te werken."
+
+msgid "You are not allowed to update this resource: {0}"
+msgstr "Je bent niet gemachtigd om dit middel bij te werken: {0}"
+
+msgid "The resource with ID {0} does not exist."
+msgstr "Het middel met ID {0} bestaat niet."
+
+msgid "You edited the password policy"
+msgstr "Je hebt het wachtwoordbeleid bewerkt"
+
+msgid "{0} edited the password policy"
+msgstr "{0} heeft het wachtwoordbeleid bewerkt"
+
+msgid "Only administrators are allowed to create/update password policies settings."
+msgstr "Alleen beheerders kunnen wachtwoordbeleidsinstellingen maken/bijwerken."
+
+msgid "The password policy settings has been updated by {0}."
+msgstr "De wachtwoordbeleidsinstellingen zijn bijgewerkt door {0}."
+
+msgid "you"
+msgstr "jij"
+
+msgid "view it in passbolt"
+msgstr "bekijk het in Passbolt"
+
+msgid "The SCIM setting id should be a valid UUID."
+msgstr "De SCIM-instellings-ID moet een geldig UUID zijn."
+
+msgid "The identifier of the default user should be a valid UUID."
+msgstr "De ID van de standaardgebruiker moet een geldig UUID zijn."
+
+msgid "The user is not active, disabled or does not exist."
+msgstr "De gebruiker is niet actief, is uitgeschakeld of bestaat niet."
+
+msgid "The Setting ID cannot be passed on update."
+msgstr "De instellings-ID kan niet worden meegegeven bij een update."
+
+msgid "The secret token should not be empty."
+msgstr "Het geheime token mag niet leeg zijn."
+
+msgid "The ID for the SCIM settings should not be empty."
+msgstr "De ID voor de SCIM-instellingen mag niet leeg zijn."
+
+msgid "The ID for the SCIM settings should be a valid UUID."
+msgstr "De ID voor de SCIM-instellingen moet een geldig UUID zijn."
+
+msgid "The SCIM secret token is expired, you are requested to rotate it."
+msgstr ""
+
+msgid "Simultaneous SCIM and session authentication is not permitted."
+msgstr "Gelijktijdige SCIM- en sessie-authenticatie is niet toegestaan."
+
+msgid "SCIM settings endpoints are disabled."
+msgstr "Endpoints voor SCIM-instellingen zijn uitgeschakeld."
+
+msgid "An entry for the same related entity already exists"
+msgstr "Er bestaat al een item voor dezelfde gerelateerde entiteit."
+
+msgid "An entry with the same `scim_name` and `foreign_model` already exist."
+msgstr ""
+
+msgid "Users"
+msgstr "Gebruikers"
+
+msgid "Groups"
+msgstr "Groepen"
+
+msgid "The secret token format is incorrect."
+msgstr "Het formaat van het geheime token is onjuist."
+
+msgid "SCIM plugin is enabled."
+msgstr "SCIM-plugin is ingeschakeld."
+
+msgid "SCIM plugin is disabled."
+msgstr "SCIM-plugin is uitgeschakeld."
+
+msgid "The SCIM secret token is not expired."
+msgstr ""
+
+msgid "Rotate the SCIM secret token in the administration settings."
+msgstr ""
+
+msgid "The SCIM settings could not be decrypted with the server gpg key."
+msgstr "De SCIM-instellingen konden niet worden ontsleuteld met de server-GPG-sleutel."
+
+msgid "The SCIM settings could not be encrypted with the server gpg key."
+msgstr "De SCIM-instellingen konden niet worden versleuteld met de server-GPG-sleutel."
+
+msgid "Could not validate the SCIM settings found in database."
+msgstr "De SCIM-instellingen die in de database staan, konden niet worden gevalideerd."
+
+msgid "The SCIM setting identifier should be a valid UUID."
+msgstr "De ID van de SCIM-instelling moet een geldig UUID zijn."
+
+msgid "Could not validate the SCIM settings."
+msgstr "De SCIM-instellingen konden niet worden gevalideerd."
+
+msgid "The SCIM plugin is disabled."
+msgstr "SCIM-plugin is uitgeschakeld."
+
+msgid "Please delete previous settings before creating again."
+msgstr "Verwijder eerst de vorige instellingen voordat je opnieuw creëert."
+
+msgid "The uuid in the url doesn't match any known setting record."
+msgstr "De UUID in de URL komt niet overeen met een bekende instellingsrecord."
+
+msgid "The SCIM secret token expiry configuration is invalid."
+msgstr ""
+
+msgid "Missing or invalid SCIM user in configuration settings"
+msgstr ""
+
+msgid "An unexpected error occurred while creating the user in the database"
+msgstr ""
+
+msgid "An administrator user cannot be suspended via SCIM."
+msgstr ""
+
+msgid "Email"
+msgstr "E-mailadres"
+
+msgid "External id"
+msgstr "Externe ID"
+
+msgid "Invalid Schema"
+msgstr "Ongeldig schema"
+
+msgid "Invalid ResourceType"
+msgstr "Ongeldig ResourceType"
+
+msgid "SsoRecover plugin is disabled."
+msgstr "SsoRecover-plugin is uitgeschakeld."
+
+msgid "The SSO state type is invalid."
+msgstr "Het type SSO-status is ongeldig."
+
+msgid "CSRF issue. The state in URL and Cookies do not match."
+msgstr "CSRF-probleem. De status in de URL en cookies komen niet overeen."
+
+msgid "CSRF issue. The state in request data does not match with cookie value."
+msgstr "CSRF-probleem. De status in de aanvraaggegevens komt niet overeen met de cookiewaarde."
+
+msgid "The state is required in cookie."
+msgstr "De status is vereist in de cookie."
+
+msgid "The token is required in URL parameters."
+msgstr "Het token is vereist in URL-parameters."
+
+msgid "The state is required in URL parameters."
+msgstr "De status is vereist in URL-parameters."
+
+msgid "The code is required in URL parameters."
+msgstr "De code is vereist in URL-parameters."
+
+msgid "The code is required in request data."
+msgstr "De code is vereist in de aanvraaggegevens."
+
+msgid "The user id is required in URL parameters."
+msgstr "De gebruikers-ID is vereist in URL-parameters."
+
+msgid "The settings id is required in URL parameters."
+msgstr "Het instellingen-ID is vereist in URL-parameters."
+
+msgid "The user does not exist or is not active."
+msgstr "De gebruiker bestaat niet of is niet actief."
+
+msgid "The SSO setting does not exist."
+msgstr "De SSO-instelling bestaat niet."
+
+msgid "Information about the key is required."
+msgstr "Informatie over de sleutel is vereist."
+
+msgid "The SSO key id should be a uuid."
+msgstr "De SSO-sleutel-ID moet een UUID zijn."
+
+msgid "The key could not be found"
+msgstr "De sleutel kon niet worden gevonden"
+
+msgid "The SSO setting id should be a uuid."
+msgstr "Het SSO-instellings-ID moet een UUID zijn."
+
+msgid "The SSO settings were activated."
+msgstr "De SSO-instellingen zijn geactiveerd."
+
+msgid "The draft setting was saved."
+msgstr "De conceptinstelling is opgeslagen."
+
+msgid "The SSO settings were deleted."
+msgstr "De SSO-instellingen zijn verwijderd."
+
+msgid "Ajax/Json request not supported."
+msgstr "Ajax/Json-verzoek niet ondersteund."
+
+msgid "A provider is required."
+msgstr "Een provider is vereist."
+
+msgid "The provider is not supported."
+msgstr "De provider wordt niet ondersteund."
+
+msgid "Data is required."
+msgstr "Gegevens zijn vereist."
+
+msgid "Data must be an array of properties."
+msgstr "Gegevens moeten een array van eigenschappen zijn."
+
+msgid "The email claim should not be empty."
+msgstr "De e-mailclaim moet ingevuld worden."
+
+msgid "The email claim is too large."
+msgstr "De e-mailclaim is te groot."
+
+msgid "The email claim should be one of the following: {0}."
+msgstr "De e-mailclaim moet een van de volgende zijn: {0}."
+
+msgid "A URL is required."
+msgstr "Een URL is vereist."
+
+msgid "The URL should not be empty."
+msgstr "De URL moet ingevuld worden."
+
+msgid "The URL is not supported."
+msgstr "De URL wordt niet ondersteund."
+
+msgid "A tenant id is required."
+msgstr "Een tenant-ID is vereist."
+
+msgid "The tenant id should not be empty."
+msgstr "De tenant-ID moet ingevuld worden."
+
+msgid "The tenant id should be a valid UUID."
+msgstr "De tenant-ID moet een geldige UUID zijn."
+
+msgid "A client id is required."
+msgstr "Een client-ID is vereist."
+
+msgid "The client id should not be empty."
+msgstr "De client-ID moet ingevuld worden."
+
+msgid "The client id should be a valid UUID."
+msgstr "De client-ID moet een geldige UUID zijn."
+
+msgid "A client secret is required."
+msgstr "Een client-secret is vereist."
+
+msgid "The client secret should be a valid string."
+msgstr "De client-secret moet een geldige tekenreeks zijn."
+
+msgid "The client secret is too large."
+msgstr "De client-secret is te groot."
+
+msgid "A client secret expiry is required."
+msgstr "Een vervaldatum voor de client-secret is vereist."
+
+msgid "The expiry should not be empty."
+msgstr "De vervaldatum moet ingevuld worden."
+
+msgid "The prompt should not be empty."
+msgstr "De prompt moet ingevuld worden."
+
+msgid "The prompt should be one of the following: {0}."
+msgstr "De prompt moet een van de volgende zijn: {0}."
+
+msgid "The login hint should be a boolean."
+msgstr "De loginhint moet een Boolean zijn."
+
+msgid "The client id is too large."
+msgstr "De client-ID is te groot."
+
+msgid "A base URL is required."
+msgstr "Een basis-URL is vereist."
+
+msgid "The base URL should not be empty."
+msgstr "De basis-URL moet ingevuld worden."
+
+msgid "The base URL is too large."
+msgstr "De basis-URL is te groot."
+
+msgid "The OpenID configuration path should be a valid BMP-UTF8 string."
+msgstr "Het OpenID-configuratiepad moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The OpenID configuration path is too large."
+msgstr "Het OpenID-configuratiepad is te groot."
+
+msgid "The client id should be a valid BMP-UTF8 string."
+msgstr "De client-ID moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The scope should be a valid string."
+msgstr "De scope moet een geldige tekenreeks zijn."
+
+msgid "The scope is too large."
+msgstr "De scope is te groot."
+
+msgid "The URL must be a valid PingOne authentication domain."
+msgstr ""
+
+msgid "An environment id is required."
+msgstr ""
+
+msgid "The environment id should not be empty."
+msgstr ""
+
+msgid "The environment id should be a valid UUID."
+msgstr ""
+
+msgid "SSO settings edit endpoints are disabled."
+msgstr "Bewerkingsendpoints voor SSO-instellingen zijn uitgeschakeld."
+
+msgid "The user is not active."
+msgstr "De gebruiker is niet actief."
+
+msgid "The status length is not supported."
+msgstr "De statuslengte wordt niet ondersteund."
+
+msgid "The status is not supported."
+msgstr "De status wordt niet ondersteund."
+
+msgid "The nonce should be a valid ASCII string."
+msgstr "De nonce moet een geldige ASCII-tekenreeks zijn."
+
+msgid "The nonce length should be minimum {0} characters."
+msgstr "De nonce moet minimaal {0} tekens lang zijn."
+
+msgid "The nonce length should be maximum {0} characters."
+msgstr "De nonce mag maximaal {0} tekens lang zijn."
+
+msgid "A nonce is required."
+msgstr "Een nonce is vereist."
+
+msgid "The nonce should not be empty."
+msgstr "De nonce moet ingevuld worden."
+
+msgid "The type length should be maximum {0} characters."
+msgstr "De maximale lengte voor het type is {0} tekens."
+
+msgid "The state should be a valid ASCII string."
+msgstr "De status moet een geldige ASCII-tekenreeks zijn."
+
+msgid "The state length should be minimum {0} characters."
+msgstr "De status moet minimaal {0} tekens bevatten."
+
+msgid "The state length should be maximum {0} characters."
+msgstr "De status mag maximaal {0} tekens bevatten."
+
+msgid "The SSO settings identifier should be a valid UUID."
+msgstr "De SSO-instellingen-ID moet een geldige UUID zijn."
+
+msgid "The SSO settings identifier should not be empty."
+msgstr "De SSO-instellingen-ID moet ingevuld worden."
+
+msgid "The user agent should be a valid ASCII string."
+msgstr "De user-agent moet een geldige ASCII-tekenreeks zijn."
+
+msgid "The user agent length should be maximum {0} characters."
+msgstr "De user-agent mag maximaal {0} tekens bevatten."
+
+msgid "A user agent is required."
+msgstr "Een user-agent is vereist."
+
+msgid "The user agent should not be empty."
+msgstr "De user-agent moet ingevuld worden."
+
+msgid "The IP length should be maximum {0} characters."
+msgstr "De IP-adreslengte mag maximaal {0} tekens bevatten."
+
+msgid "An IP is required."
+msgstr "Een IP-adres is vereist."
+
+msgid "The IP should not be empty."
+msgstr "Het IP-adres moet ingevuld worden."
+
+msgid "This nonce is already in use."
+msgstr "Deze nonce is al in gebruik."
+
+msgid "This state is already in use."
+msgstr "Deze status is al in gebruik."
+
+msgid "The SSO setting identifier does not exist."
+msgstr "De SSO-instellingen-ID bestaat niet."
+
+msgid "The user identifier does not exist."
+msgstr "De gebruikers-ID bestaat niet."
+
+msgid "The provided nonce is invalid."
+msgstr "De opgegeven nonce is ongeldig."
+
+msgid "The URL should start with https://"
+msgstr "De URL moet beginnen met https://"
+
+msgid "The provided state is invalid."
+msgstr "De opgegeven status is ongeldig."
+
+msgid "The type of the SSO state is invalid."
+msgstr "Het type van de SSO-status is ongeldig."
+
+msgid "{0} activated the SSO setting"
+msgstr "{0} heeft de SSO-instelling geactiveerd"
+
+msgid "{0} deleted the SSO setting"
+msgstr "{0} heeft de SSO-instelling verwijderd"
+
+msgid "Users are unable to log in via Azure SSO"
+msgstr "Gebruikers kunnen niet inloggen via Azure SSO"
+
+msgid "Single sign-on failed."
+msgstr "Single sign-on mislukt."
+
+msgid "Provider error: \"{0}\""
+msgstr "Provider-fout: \"{0}\""
+
+msgid "Azure SSO secret expiry date is near"
+msgstr "De vervaldatum van de Azure SSO-gegevens is nabij"
+
+msgid "SSL certification validation for SSO instance is enabled."
+msgstr "De SSL-certificaatvalidatie voor SSO-instance is ingeschakeld."
+
+msgid "SSL certification validation for SSO instance is disabled."
+msgstr "De SSL-certificaatvalidatie voor SSO-instance is uitgeschakeld."
+
+msgid "To fix this, you can set PASSBOLT_SECURITY_SSO_SSL_VERIFY environment variable to true."
+msgstr "Om dit te verhelpen kunt u de omgevingsvariabele PASSBOLT_SECURITY_SSO_SSL_VERIFY op true zetten."
+
+msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
+msgstr "Of stel passbolt.security.sso.sslVerify in op true in {0}."
+
+msgid "The endpoints for updating the SSO configurations are disabled."
+msgstr "De endpoints voor het bijwerken van de SSO-configuraties zijn uitgeschakeld."
+
+msgid "The endpoints for updating the SSO configurations are enabled."
+msgstr "De endpoints voor het bijwerken van de SSO-configuraties zijn ingeschakeld."
+
+msgid "It is recommended to disable endpoints for updating the SSO configurations."
+msgstr "Het wordt aanbevolen de endpoints voor het bijwerken van de SSO-configuraties uit te schakelen."
+
+msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
+msgstr "Stel de omgevingsvariabele PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED in op true."
+
+msgid "The user is missing for the SSO state."
+msgstr "De gebruiker ontbreekt voor de SSO-status."
+
+msgid "Email not provided by provider."
+msgstr "E-mail niet verstrekt door de provider."
+
+msgid "Username mismatch."
+msgstr "Gebruikersnaam komt niet overeen."
+
+msgid "Invalid nonce."
+msgstr "Ongeldige nonce."
+
+msgid "Invalid provider. Expected AD FS."
+msgstr "Ongeldige provider. Verwacht AD FS."
+
+msgid "Invalid provider data. Expected AD FS settings."
+msgstr "Ongeldige providergegevens. Verwacht AD FS-instellingen."
+
+msgid "No valid SSO settings found."
+msgstr "Geen geldige SSO-instellingen gevonden."
+
+msgid "You must authenticate with Azure again."
+msgstr "Je moet opnieuw bij Azure aanmelden."
+
+msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
+msgstr "Ongeldige waarde opgegeven in `passbolt.security.sso.sslCafile` configuratie"
+
+msgid "Provided root CA file does not exist"
+msgstr "Het opgegeven root CA-bestand bestaat niet"
+
+msgid "Invalid provider. Expected PingOne."
+msgstr ""
+
+msgid "Invalid provider data. Expected PingOne settings."
+msgstr ""
+
+msgid "The user id should be a valid UUID."
+msgstr "De gebruikers-ID moet een geldige UUID zijn."
+
+msgid "The authentication token does not exist."
+msgstr "Het authenticatietoken bestaat niet."
+
+msgid "The SSO authentication token is invalid."
+msgstr "Het SSO-authenticatietoken is ongeldig."
+
+msgid "Settings id is missing."
+msgstr "De instellingen-ID ontbreekt."
+
+msgid "User id mismatch."
+msgstr "Gebruikers-ID komt niet overeen."
+
+msgid "Token IP is missing."
+msgstr "Token-IP ontbreekt."
+
+msgid "User IP mismatch."
+msgstr "IP-adres van gebruiker komt niet overeen."
+
+msgid "User agent is missing."
+msgstr "User-agent ontbreekt."
+
+msgid "User agent mismatch."
+msgstr "User-agent komt niet overeen."
+
+msgid "Settings mismatch."
+msgstr "Instellingen komen niet overeen."
+
+msgid "The SSO key could not be saved."
+msgstr "De SSO-sleutel kon niet worden opgeslagen."
+
+msgid "The SSO key does not exist."
+msgstr "De SSO-sleutel bestaat niet."
+
+msgid "The SSO key could not be deleted."
+msgstr "De SSO-sleutel kon niet worden verwijderd."
+
+msgid "Could not update the SSO settings."
+msgstr "Kan de SSO-instellingen niet bijwerken."
+
+msgid "The settings status is invalid."
+msgstr "De status van de instellingen is ongeldig."
+
+msgid "Invalid status."
+msgstr "Ongeldige status."
+
+msgid "Could not delete the SSO settings."
+msgstr "Kan de SSO-instellingen niet verwijderen."
+
+msgid "Could not delete the draft SSO settings."
+msgstr "Kan de concept SSO-instellingen niet verwijderen."
+
+msgid "The SSO settings do not exist."
+msgstr "De SSO-instellingen bestaan niet."
+
+msgid "The SSO setting cannot be decrypted."
+msgstr "De SSO-instelling kan niet worden ontsleuteld."
+
+msgid "The SSO setting cannot be decoded."
+msgstr "De SSO-instelling kan niet worden gedecodeerd."
+
+msgid "Only administrators can create SSO settings."
+msgstr "Alleen beheerders kunnen SSO-instellingen maken."
+
+msgid "Something went wrong when validating the single-sign on settings."
+msgstr "Er is iets misgegaan bij het valideren van de single sign-on-instellingen."
+
+msgid "It is not possible to save the SSO settings."
+msgstr "Het is niet mogelijk om de SSO-instellingen op te slaan."
+
+msgid "The SSO state is invalid."
+msgstr "De SSO-status is ongeldig."
+
+msgid "The SSO state is expired."
+msgstr "De SSO-status is verlopen."
+
+msgid "The SSO state could not be saved."
+msgstr "De SSO-status kon niet worden opgeslagen."
+
+msgid "The SSO state does not exist."
+msgstr "De SSO-status bestaat niet."
+
+msgid "Could not save the SSO state, invalid nonce."
+msgstr "Kon de SSO-status niet opslaan, ongeldige nonce."
+
+msgid "Could not save the SSO state, please try again later."
+msgstr "Kon de SSO-status niet opslaan, probeer het later opnieuw."
+
+msgid "The {0} claim is not present, please contact your administrator."
+msgstr "De {0}-claim is niet aanwezig, neem contact op met je beheerder."
+
+msgid "Cannot parse JWKS endpoint response."
+msgstr "Kan JWKS-endpointantwoord niet parseren."
+
+msgid "Invalid JWKS endpoint response. Keys missing."
+msgstr "Ongeldig JWKS-endpointantwoord. Sleutels ontbreken."
+
+msgid "Failed to read certificate: {0}"
+msgstr "Kan het certificaat niet lezen: {0}"
+
+msgid "Failed to read public key from certificate: {0}"
+msgstr "Kan de openbare sleutel niet lezen uit het certificaat: {0}"
+
+msgid "Failed to public key properties from certificate: {0}"
+msgstr "Kan de eigenschappen van de openbare sleutel uit het certificaat niet lezen: {0}"
+
+msgid "JWT token is missing."
+msgstr "JWT-token ontbreekt."
+
+msgid "Unable to decode JWT token."
+msgstr "Kan JWT-token niet decoderen."
+
+msgid "The {0} configuration value should be a string or NULL."
+msgstr "De {0} configuratiewaarde moet een tekenreeks of NULL zijn."
+
+msgid "The {0} configuration value should be one of the following: {1}."
+msgstr "De {0}-configuratiewaarde moet een van de volgende zijn: {1}."
+
+msgid "Single-sign on was a success"
+msgstr "Single sign-on is geslaagd"
+
+msgid "Users are unable to log in via Azure SSO."
+msgstr "Gebruikers kunnen niet inloggen via Azure SSO."
+
+msgid "This can happen when the client secret of Azure AD is expired, or the SSO configurations (client credentials) are invalid."
+msgstr "Dit kan gebeuren als de client secret van Azure AD is verlopen of de SSO-configuraties (client credentials) ongeldig zijn."
+
+msgid "See Azure error response below:"
+msgstr "Zie de foutreactie van Azure hieronder:"
+
+msgid "Error: {0}"
+msgstr "Fout: {0}"
+
+msgid "Error description: {0}"
+msgstr "Foutbeschrijving: {0}"
+
+msgid "To fix this, you as an administrator have to update the Azure SSO credentials."
+msgstr "Om dit te verhelpen moet u als beheerder de Azure SSO-gegevens bijwerken."
+
+msgid "Update it in passbolt"
+msgstr "Werk deze bij in Passbolt"
+
+msgid "The client secret expiry date of your Azure AD instance is {0}."
+msgstr "De vervaldatum van de client secret van uw Azure AD-instantie is {0}."
+
+msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
+msgstr "Houd er rekening mee dat Passbolt-gebruikers niet meer via Azure SSO kunnen inloggen na de verloopdatum van de client."
+
+msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
+msgstr "Wij raden u aan dit aan de Azure-kant op te lossen en de nieuwste gegevens in Passbolt bij te werken."
+
+msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
+msgstr "De SSO-provider {0} is succesvol getest en geactiveerd door {1}. "
+
+msgid "All users can now use Single Sign-on to perform authentication."
+msgstr "Alle gebruikers kunnen nu Single Sign-on gebruiken voor authenticatie."
+
+msgid "Viewq  it in passbolt"
+msgstr "Bekijk het in Passbolt"
+
+msgid "The SSO setting has been deleted by {0}."
+msgstr "De SSO-instelling is verwijderd door {0}."
+
+msgid "The authentication token does not exist or has been deleted."
+msgstr "Het authenticatietoken bestaat niet of is verwijderd."
+
+msgid "The authentication token has been expired."
+msgstr "Het authenticatietoken is verlopen."
+
+msgid "Could not validate the SSO recover request."
+msgstr "Kon het SSO-herstelverzoek niet valideren."
+
+msgid "The email is required in URL parameters."
+msgstr "Het e-mailadres is vereist in de URL-parameters."
+
+msgid "The case field is required."
+msgstr "Het case-veld is vereist."
+
+msgid "The case is not supported. Only \"default\" case is supported."
+msgstr "De case wordt niet ondersteund. Alleen \"default\" case wordt ondersteund."
+
+msgid "The token field is required."
+msgstr "Het token-veld is vereist."
+
+msgid "Access to this service requires an invitation. "
+msgstr "Een uitnodiging is vereist voor toegang tot deze service. "
+
+msgid "Please contact your administrator to request an invitation link."
+msgstr "Neem contact op met je beheerder om een uitnodigingslink aan te vragen."
+
+msgid "Subscription key data is required."
+msgstr "Gegevens van de abonnementssleutel zijn vereist."
+
+msgid "The subscription was created."
+msgstr "Het abonnement is aangemaakt."
+
+msgid "The subscription was updated."
+msgstr "Het abonnement is bijgewerkt."
+
+msgid "The subscription is valid."
+msgstr "Het abonnement is geldig."
+
+msgid "Subscription key could not be found."
+msgstr "De abonnementssleutel werd niet gevonden."
+
+msgid "The subscription cannot be verified. Parse error."
+msgstr "Het abonnement kan niet geverifieerd worden. Verwerkingsfout."
+
+msgid "The subscription format is not valid. Invalid format."
+msgstr "Het abonnementsformaat is niet geldig. Ongeldig formaat."
+
+msgid "The subscription key cannot be verified."
+msgstr "De abonnementssleutel kan niet geverifieerd worden."
+
+msgid "The passbolt OpenPGP public key could not be found."
+msgstr "De openbare Passbolt OpenPGP-sleutel kon niet worden gevonden."
+
+msgid "A users quantity is required."
+msgstr "Een gebruikersaantal is vereist."
+
+msgid "The users quantity should not be empty."
+msgstr "Het gebruikersaantal moet ingevuld worden."
+
+msgid "The users limit is exceeded."
+msgstr "De gebruikerslimiet is overschreden."
+
+msgid "The key should have been created in the past."
+msgstr "De sleutel had in het verleden aangemaakt moeten worden."
+
+msgid "An expiry date is required."
+msgstr "Een vervaldatum is vereist."
+
+msgid "The subscription is expired."
+msgstr "Het abonnement is verlopen."
+
+msgid "A customer identifier is required."
+msgstr "Een klant-ID is vereist."
+
+msgid "A subscription identifier is required."
+msgstr "Een abonnements-ID is vereist."
+
+msgid "The format of the subscription id is not valid."
+msgstr "Het formaat van het abonnements-ID is niet geldig."
+
+msgid "Only admin can create or update subscription information."
+msgstr "Alleen beheerders kunnen abonnementsgegevens aanmaken of bijwerken."
+
+msgid "The subscription key format is not valid."
+msgstr "Het formaat van de abonnementsleutel is niet geldig."
+
+msgid "Subscription is valid and up to date."
+msgstr "Het abonnement is geldig en up-to-date."
+
+msgid "Subscription cannot be found or is invalid/expired."
+msgstr "Abonnement kan niet worden gevonden of is ongeldig/verlopen."
+
+msgid "Subscription invalid/expired ({0})."
+msgstr "Abonnement ongeldig/verlopen ({0})."
+
+msgid "Subscription expired ({0})."
+msgstr "Abonnement verlopen ({0})."
+
+msgid "Subscription user count has been exceeded ({0}/{1})."
+msgstr "Het aantal gebruikers in het abonnement is overschreden ({0}/{1})."
+
+msgid "Subscription will expire in {0} days."
+msgstr "Het abonnement verloopt over {0} dagen."
+
+msgid "Subscription soon exceeds user count ({0}/{1})."
+msgstr "Het abonnement zal binnenkort het aantal gebruikers overschrijden ({0}/{1})."
+
+msgid "Subscription invalid or expired."
+msgstr "Abonnement ongeldig of verlopen."
+
+msgid "Subscription key format error."
+msgstr "Fout in formaat van de abonnementssleutel."
+
+msgid "Subscription key signature error."
+msgstr "Fout in de handtekening van de abonnementssleutel."
+
+msgid "Subscription key validation error."
+msgstr "Fout bij de validatie van de abonnementssleutel."
+
+msgid "It looks like you could use some help."
+msgstr "Het lijkt erop dat u hulp kunt gebruiken."
+
+msgid "We are here for you. You can contact us at sales@passbolt.com"
+msgstr "Wij zijn er voor u. U kunt contact met ons opnemen via sales@passbolt.com"
+
+msgid "Thanks for choosing Passbolt Pro"
+msgstr "Bedankt dat u voor Passbolt Pro hebt gekozen"
+
+msgid "Below are your subscription key details"
+msgstr "Hieronder staan de details van uw abonnementssleutel"
+
+msgid "<error>Not Available</error>"
+msgstr "<error>Niet beschikbaar</error>"
+
+msgid "Customer id:\t{0}"
+msgstr "Klant-ID:\t{0}"
+
+msgid "<error>{0} (currently: {1}) - Exceeded</error>"
+msgstr "<error>{0} (momenteel: {1}) - Overschreden</error>"
+
+msgid "<info>{0} (currently: {1})</info>"
+msgstr "<info>{0} (momenteel: {1})</info>"
+
+msgid "Users limit:\t{0}"
+msgstr "Gebruikerslimiet:\t{0}"
+
+msgid "Valid from:\t<info>{0}</info>"
+msgstr "Geldig vanaf:\t<info>{0}</info>"
+
+msgid "Expires on:\t<error>{0} (expired)</error>"
+msgstr "Verloopt op:\t<error>{0} (verlopen)</error>"
+
+msgid "Expires on:\t<info>{0} (in {1} days)</info>"
+msgstr "Verloopt op:\t<info>{0} (over {1} dagen)</info>"
+
+msgid "For any question / feedback / subscription renewal,"
+msgstr "Voor vragen / feedback / verlenging van abonnement,"
+
+msgid "kindly contact us at <info>sales@passbolt.com</info>"
+msgstr "neem dan contact met ons op via <info>sales@passbolt.com</info>"
+
+msgid "Only administrators can view the subscription details."
+msgstr "Alleen beheerders kunnen de abonnementsgegevens bekijken."
+
+msgid "The file {0} could not be found."
+msgstr "Het bestand {0} kon niet worden gevonden."
+
+msgid "The file {0} could not be read."
+msgstr "Het bestand {0} kon niet worden gelezen."
+
+msgid "No active admins were found."
+msgstr "Er zijn geen actieve beheerders gevonden."
+
+msgid "Only administrators can update the subscription details."
+msgstr "Alleen beheerders kunnen de abonnementsgegevens bijwerken."
+
+msgid "The tags data should be a string or an array."
+msgstr "De labelgegevens moeten een tekenreeks of een array zijn."
+
+msgid "Could not validate request data."
+msgstr "Kon de verzoekgegevens niet valideren."
+
+msgid "The tag id is not valid."
+msgstr "De ID van het label is niet geldig."
+
+msgid "The tag does not exist."
+msgstr "Het label bestaat niet."
+
+msgid "You do not have the permission to delete shared tags."
+msgstr "Je bent niet bevoegd om gedeelde tags te verwijderen."
+
+msgid "The tag has been deleted successfully."
+msgstr "Het label is met succes verwijderd."
+
+msgid "You do not have the permission to update shared tags."
+msgstr "Je bent niet bevoegd om gedeelde tags bij te werken."
+
+msgid "The tag has been updated successfully."
+msgstr "Het label is met succes bijgewerkt."
+
+msgid "The tag identifier should be a valid UUID."
+msgstr "De ID van het label moet een geldige UUID zijn."
+
+msgid "The tag is missing or does not belong to current user."
+msgstr "Het label ontbreekt of behoort niet toe aan de huidige gebruiker."
+
+msgid "The is shared should be a boolean type."
+msgstr "De 'is shared' moet een booleaanse waarde zijn."
+
+msgid "The tags plugin is in read-only mode."
+msgstr "De tags-plugin staat in read-only-modus."
+
+msgid "The tag should not be empty."
+msgstr "Het label moet ingevuld worden."
+
+msgid "A tag is required."
+msgstr "Een label is vereist."
+
+msgid "The tag should be a valid BMP-UTF8 string."
+msgstr "Het label moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The tag length should be maximum {0} characters."
+msgstr "Het label mag maximaal {0} tekens bevatten."
+
+msgid "The shared status should be a valid boolean."
+msgstr "De gedeelde status moet een geldige Boolean zijn."
+
+msgid "A shared status is required."
+msgstr "Een gedeelde status is vereist."
+
+msgid "The tag metadata OpenPGP message cannot be parsed or is not for the intended recipient."
+msgstr "Het label-metadata OpenPGP-bericht kan niet worden verwerkt of is niet bedoeld voor de beoogde ontvanger."
+
+msgid "Error while building tag DTO."
+msgstr "Fout bij het opbouwen van de label-DTO."
+
+msgid "Could not validate tags data."
+msgstr "De labelgegevens konden niet worden gevalideerd."
+
+msgid "Unable to build tag entity"
+msgstr "Kan label-entiteit niet opbouwen"
+
+msgid "No tags to migrate."
+msgstr "Er zijn geen labels om te migreren."
+
+msgid "Tag ID \"{0}\" is already V5"
+msgstr "Label-ID \"{0}\" is al V5"
+
+msgid "No user found for the personal tag id: \"{0}\"."
+msgstr "Geen gebruiker gevonden voor het persoonlijke label-ID: \\\"{0}\\\"."
+
+msgid "User contain data missing for the tag id: \"{0}\"."
+msgstr "Gebruikersgegevens ontbreken voor het label-ID: \\\"{0}\\\"."
+
+msgid "Unable to migrate tag id: {0} to V5."
+msgstr "Kan label-ID: {0} niet migreren naar V5."
+
+msgid "The tag metadata key data could not be updated."
+msgstr "De metadata-sleutelgegevens van de tag konden niet worden bijgewerkt."
+
+msgid "Could not save the tags, try again later."
+msgstr "De labels konden niet worden opgeslagen, probeer het later opnieuw."
+
+msgid "You do not have the permission to edit shared tags on this resource."
+msgstr "Je bent niet bevoegd om gedeelde labels van dit middel te bewerken."
+
+msgid "Unable to save the tag."
+msgstr "Kan het label niet opslaan."
+
+msgid "You do not have the permission to change a personal tag into shared tag."
+msgstr "Je bent niet bevoegd om een persoonlijk label in een gedeeld label te veranderen."
+
+msgid "The settings selected by your administrator prevent from downgrading tag."
+msgstr "De door je beheerder geselecteerde instellingen voorkomen het downgraden van het label."
+
+msgid "Could not retrieve the user passphrase policies."
+msgstr "Kon de gebruikerswachtwoordzinbeleidsregels niet ophalen."
+
+msgid "The entropy minimum is required."
+msgstr "Het minimum voor entropie is vereist."
+
+msgid "The entropy minimum should be between {0} and {1}."
+msgstr "Het entropieminimum moet tussen {0} en {1} liggen."
+
+msgid "You edited the user passphrase policy"
+msgstr "Je hebt het gebruikerswachtwoordzinbeleid bewerkt"
+
+msgid "{0} edited the user passphrase policy"
+msgstr "{0} heeft het gebruikerswachtwoordzinbeleid bewerkt"
+
+msgid "Could not validate the user passphrase policies settings."
+msgstr "Kon de gebruikerswachtwoordzinbeleidsinstellingen niet valideren."
+
+msgid "Only administrators are allowed to create/update user passphrase policies settings."
+msgstr "Alleen beheerders kunnen gebruikerswachtwoordzinbeleidsinstellingen maken/bijwerken."
+
+msgid "The user passphrase policy settings has been updated by {0}."
+msgstr "De gebruikerswachtwoordzinbeleidsinstellingen zijn bijgewerkt door {0}."
 
 msgid "Error"
 msgstr "Foutmelding"
@@ -5247,9 +7257,6 @@ msgstr "Deze gebruiker mist de versleutelingssleutel voor de gedeelde resource-m
 
 msgid "View users"
 msgstr "Bekijk gebruikers"
-
-msgid "You have initiated an account recovery!"
-msgstr "Je hebt het herstel van de account geïnitieerd!"
 
 msgid "Welcome back!"
 msgstr "Welkom terug!"

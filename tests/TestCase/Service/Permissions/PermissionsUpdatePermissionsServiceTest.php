@@ -21,6 +21,9 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Service\Permissions\PermissionsUpdatePermissionsService;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
@@ -49,11 +52,6 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
      */
     public $service;
 
-    public array $fixtures = [
-        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets',
-        'app.Base/Users',
-    ];
-
     public function setUp(): void
     {
         parent::setUp();
@@ -62,71 +60,76 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
         $this->service = new PermissionsUpdatePermissionsService();
     }
 
+    /**
+     * Fetch the DB permission ID for a given resource + ARO (user or group).
+     *
+     * @param string $resourceId
+     * @param string $aroForeignKeyId
+     * @return string
+     */
+    private function getPermissionId(string $resourceId, string $aroForeignKeyId): string
+    {
+        $permission = $this->Permissions
+            ->find()
+            ->where([
+                'aco_foreign_key' => $resourceId,
+                'aro_foreign_key' => $aroForeignKeyId,
+            ])
+            ->firstOrFail();
+
+        return $permission->id;
+    }
+
     /* UPDATE PERMISSION */
 
     public function testUpdatePermissionsSuccess_UpdateUserPermissions()
     {
-        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdatePermissionsSuccess_UpdateUserPermissions();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $data = [
-            ['id' => UuidFactory::uuid("permission.id.{$resource1->id}-$userBId"), 'type' => Permission::READ],
+            ['id' => $this->getPermissionId($resource->id, $userB->id), 'type' => Permission::READ],
         ];
 
-        $this->service->updatePermissions($uac, 'Resource', $resource1->id, $data);
+        $this->service->updatePermissions($uac, 'Resource', $resource->id, $data);
 
         // Assert permissions
-        $permissions = $this->Permissions->findByAcoForeignKey($resource1->id)->toArray();
+        $permissions = $this->Permissions->findByAcoForeignKey($resource->id)->toArray();
         $this->assertCount(2, $permissions);
-        $this->assertPermission($resource1->id, $userAId, Permission::OWNER);
-        $this->assertPermission($resource1->id, $userBId, Permission::READ);
-    }
-
-    private function insertFixture_UpdatePermissionsSuccess_UpdateUserPermissions()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $for = [$userAId => Permission::OWNER, $userBId => Permission::OWNER];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $for);
-
-        return [$resource1, $userAId, $userBId];
+        $this->assertPermission($resource->id, $userA->id, Permission::OWNER);
+        $this->assertPermission($resource->id, $userB->id, Permission::READ);
     }
 
     public function testUpdatePermissionsSuccess_UpdateGroupPermissions()
     {
-        [$resource1, $userAId, $groupAId] = $this->insertFixture_UpdatePermissionsSuccess_UpdateGroupPermissions();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        $userA = UserFactory::make()->user()->persist();
+        $groupA = GroupFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $groupA])->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $data = [
-            ['id' => UuidFactory::uuid("permission.id.{$resource1->id}-$groupAId"), 'type' => Permission::READ],
+            ['id' => $this->getPermissionId($resource->id, $groupA->id), 'type' => Permission::READ],
         ];
 
-        $this->service->updatePermissions($uac, 'Resource', $resource1->id, $data);
+        $this->service->updatePermissions($uac, 'Resource', $resource->id, $data);
 
         // Assert permissions
-        $permissions = $this->Permissions->findByAcoForeignKey($resource1->id)->toArray();
+        $permissions = $this->Permissions->findByAcoForeignKey($resource->id)->toArray();
         $this->assertCount(2, $permissions);
-        $this->assertPermission($resource1->id, $userAId, Permission::OWNER);
-        $this->assertPermission($resource1->id, $groupAId, Permission::READ);
-    }
-
-    private function insertFixture_UpdatePermissionsSuccess_UpdateGroupPermissions()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $groupAId = UuidFactory::uuid('group.id.accounting');
-        $resource1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$groupAId => Permission::OWNER]);
-
-        return [$resource1, $userAId, $groupAId];
+        $this->assertPermission($resource->id, $userA->id, Permission::OWNER);
+        $this->assertPermission($resource->id, $groupA->id, Permission::READ);
     }
 
     public function testUpdatePermissionsError_UpdateUserPermission_CannotUpdateNotExistingPermission()
     {
-        [$resource1, $userAId] = $this->insertFixture_UpdatePermissionsSuccess_UpdateUserPermissions();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$userA, $userB])->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $data = [
             ['id' => UuidFactory::uuid(), 'type' => Permission::OWNER],
         ];
 
         try {
-            $this->service->updatePermissions($uac, 'Resource', $resource1->id, $data);
+            $this->service->updatePermissions($uac, 'Resource', $resource->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertUpdatePermissionsValidationException($e, '0.id.exists');
@@ -142,10 +145,14 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
 
     public function testUpdatePermissionsError_UpdateUserPermission_CannotUpdateOtherResourcePermission()
     {
-        [$resource1, $resource2, $userAId] = $this->insertFixture_UpdatePermissionsError_UpdateUserPermission_CannotUpdateOtherResourcePermission();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        [$resource1, $resource2] = ResourceFactory::make(2)
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $data = [
-            ['id' => UuidFactory::uuid("permission.id.{$resource2->id}-$userAId"), 'type' => Permission::OWNER],
+            ['id' => $this->getPermissionId($resource2->id, $userA->id), 'type' => Permission::OWNER],
         ];
 
         try {
@@ -156,131 +163,104 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
         }
     }
 
-    private function insertFixture_UpdatePermissionsError_UpdateUserPermission_CannotUpdateOtherResourcePermission()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $resource1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
-        $resource2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
-
-        return [$resource1, $resource2, $userAId, $userBId];
-    }
-
     public function testUpdatePermissionsError_UpdateUserPermission_CannotLetResourceWithoutOwner()
     {
-        [$resource1, $userAId] = $this->insertFixture_UpdateUserPermission_CannotLetResourceWithoutOwner();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $data = [
-            ['id' => UuidFactory::uuid("permission.id.{$resource1->id}-$userAId"), 'type' => Permission::READ],
+            ['id' => $this->getPermissionId($resource->id, $userA->id), 'type' => Permission::READ],
         ];
 
         try {
-            $this->service->updatePermissions($uac, 'Resource', $resource1->id, $data);
+            $this->service->updatePermissions($uac, 'Resource', $resource->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertUpdatePermissionsValidationException($e, 'at_least_one_owner');
         }
     }
 
-    private function insertFixture_UpdateUserPermission_CannotLetResourceWithoutOwner()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $for = [$userAId => Permission::OWNER, $userBId => Permission::READ];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $for);
-
-        return [$resource1, $userAId, $userBId];
-    }
-
     public function testUpdatePermissionsError_UpdateUserPermission_PermissionValidationExceptions()
     {
-        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdateUserPermission_PermissionValidationExceptions();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
 
         // Type is tested
         $data = [
-            ['id' => UuidFactory::uuid("permission.id.{$resource1->id}-$userBId"), 'type' => 10000],
+            ['id' => $this->getPermissionId($resource->id, $userB->id), 'type' => 10000],
         ];
         try {
-            $this->service->updatePermissions($uac, 'Resource', $resource1->id, $data);
+            $this->service->updatePermissions($uac, 'Resource', $resource->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertUpdatePermissionsValidationException($e, '0.type.inList');
         }
     }
 
-    private function insertFixture_UpdateUserPermission_PermissionValidationExceptions()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $for = [$userAId => Permission::OWNER, $userBId => Permission::READ];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $for);
-
-        return [$resource1, $userAId, $userBId];
-    }
-
     /* DELETE PERMISSION */
 
     public function testUpdatePermissionsSuccess_DeleteUserPermissions()
     {
-        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdatePermissionsSuccess_DeleteUserPermissions();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $data = [
-            ['id' => UuidFactory::uuid("permission.id.{$resource1->id}-$userBId"), 'delete' => true],
+            ['id' => $this->getPermissionId($resource->id, $userB->id), 'delete' => true],
         ];
 
-        $this->service->updatePermissions($uac, 'Resource', $resource1->id, $data);
+        $this->service->updatePermissions($uac, 'Resource', $resource->id, $data);
 
         // Assert permissions
-        $permissions = $this->Permissions->findByAcoForeignKey($resource1->id)->toArray();
+        $permissions = $this->Permissions->findByAcoForeignKey($resource->id)->toArray();
         $this->assertCount(1, $permissions);
-        $this->assertPermission($resource1->id, $userAId, Permission::OWNER);
-    }
-
-    private function insertFixture_UpdatePermissionsSuccess_DeleteUserPermissions()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $resource1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
-
-        return [$resource1, $userAId, $userBId];
+        $this->assertPermission($resource->id, $userA->id, Permission::OWNER);
     }
 
     public function testUpdatePermissionsSuccess_DeleteGroupPermissions()
     {
-        [$resource1, $userAId, $groupAId] = $this->insertFixture_UpdatePermissionsSuccess_DeleteGroupPermissions();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        $userA = UserFactory::make()->user()->persist();
+        $groupA = GroupFactory::make()->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$groupA], Permission::READ)
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $data = [
-            ['id' => UuidFactory::uuid("permission.id.{$resource1->id}-$groupAId"), 'delete' => true],
+            ['id' => $this->getPermissionId($resource->id, $groupA->id), 'delete' => true],
         ];
 
-        $this->service->updatePermissions($uac, 'Resource', $resource1->id, $data);
+        $this->service->updatePermissions($uac, 'Resource', $resource->id, $data);
 
         // Assert permissions
-        $permissions = $this->Permissions->findByAcoForeignKey($resource1->id)->toArray();
+        $permissions = $this->Permissions->findByAcoForeignKey($resource->id)->toArray();
         $this->assertCount(1, $permissions);
-        $this->assertPermission($resource1->id, $userAId, Permission::OWNER);
-    }
-
-    private function insertFixture_UpdatePermissionsSuccess_DeleteGroupPermissions()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $groupAId = UuidFactory::uuid('group.id.accounting');
-        $resource1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$groupAId => Permission::READ]);
-
-        return [$resource1, $userAId, $groupAId];
+        $this->assertPermission($resource->id, $userA->id, Permission::OWNER);
     }
 
     public function testUpdatePermissionsError_DeleteUserPermission_CannotUpdateNotExistingPermission()
     {
-        [$resource1, $userAId] = $this->insertFixture_UpdatePermissionsSuccess_DeleteUserPermissions();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $data = [
             ['id' => UuidFactory::uuid(), 'delete' => true],
         ];
 
         try {
-            $this->service->updatePermissions($uac, 'Resource', $resource1->id, $data);
+            $this->service->updatePermissions($uac, 'Resource', $resource->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertUpdatePermissionsValidationException($e, '0.id.exists');
@@ -289,10 +269,14 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
 
     public function testUpdatePermissionsError_DeleteUserPermission_CannotUpdateOtherResourcePermission()
     {
-        [$resource1, $resource2, $userAId] = $this->insertFixture_UpdatePermissionsError_DeleteUserPermission_CannotUpdateOtherResourcePermission();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        [$resource1, $resource2] = ResourceFactory::make(2)
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $data = [
-            ['id' => UuidFactory::uuid("permission.id.{$resource2->id}-$userAId"), 'delete' => true],
+            ['id' => $this->getPermissionId($resource2->id, $userA->id), 'delete' => true],
         ];
 
         try {
@@ -303,106 +287,81 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
         }
     }
 
-    private function insertFixture_UpdatePermissionsError_DeleteUserPermission_CannotUpdateOtherResourcePermission()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $resource1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
-        $resource2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
-
-        return [$resource1, $resource2, $userAId, $userBId];
-    }
-
     public function testUpdatePermissionsError_DeleteUserPermission_CannotLetResourceWithoutOwner()
     {
-        [$resource1, $userAId] = $this->insertFixture_DeleteUserPermission_CannotLetResourceWithoutOwner();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $data = [
-            ['id' => UuidFactory::uuid("permission.id.{$resource1->id}-$userAId"), 'delete' => true],
+            ['id' => $this->getPermissionId($resource->id, $userA->id), 'delete' => true],
         ];
 
         try {
-            $this->service->updatePermissions($uac, 'Resource', $resource1->id, $data);
+            $this->service->updatePermissions($uac, 'Resource', $resource->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertUpdatePermissionsValidationException($e, 'at_least_one_owner');
         }
     }
 
-    private function insertFixture_DeleteUserPermission_CannotLetResourceWithoutOwner()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $for = [$userAId => Permission::OWNER, $userBId => Permission::READ];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $for);
-
-        return [$resource1, $userAId, $userBId];
-    }
-
     /* ADD PERMISSION */
 
     public function testUpdatePermissionsSuccess_AddUserPermissions()
     {
-        [$resource1, $userAId] = $this->insertFixture_UpdatePermissionsSuccess_AddUserPermissions();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userBId = UuidFactory::uuid('user.id.betty');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $data = [
-            ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::READ],
+            ['aro' => 'User', 'aro_foreign_key' => $userB->id, 'type' => Permission::READ],
         ];
 
-        $this->service->updatePermissions($uac, 'Resource', $resource1->id, $data);
+        $this->service->updatePermissions($uac, 'Resource', $resource->id, $data);
 
         // Assert permissions
-        $permissions = $this->Permissions->findByAcoForeignKey($resource1->id)->toArray();
+        $permissions = $this->Permissions->findByAcoForeignKey($resource->id)->toArray();
         $this->assertCount(2, $permissions);
-        $this->assertPermission($resource1->id, $userAId, Permission::OWNER);
-        $this->assertPermission($resource1->id, $userBId, Permission::READ);
-    }
-
-    private function insertFixture_UpdatePermissionsSuccess_AddUserPermissions()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $resource1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER]);
-
-        return [$resource1, $userAId];
+        $this->assertPermission($resource->id, $userA->id, Permission::OWNER);
+        $this->assertPermission($resource->id, $userB->id, Permission::READ);
     }
 
     public function testUpdatePermissionsSuccess_AddGroupPermissions()
     {
-        [$resource1, $userAId] = $this->insertFixture_UpdatePermissionsSuccess_AddGroupPermissions();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $groupAId = UuidFactory::uuid('group.id.accounting');
+        $userA = UserFactory::make()->user()->persist();
+        $groupA = GroupFactory::make()->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $data = [
-            ['aro' => 'Group', 'aro_foreign_key' => $groupAId, 'type' => Permission::READ],
+            ['aro' => 'Group', 'aro_foreign_key' => $groupA->id, 'type' => Permission::READ],
         ];
 
-        $this->service->updatePermissions($uac, 'Resource', $resource1->id, $data);
+        $this->service->updatePermissions($uac, 'Resource', $resource->id, $data);
 
         // Assert permissions
-        $permissions = $this->Permissions->findByAcoForeignKey($resource1->id)->toArray();
+        $permissions = $this->Permissions->findByAcoForeignKey($resource->id)->toArray();
         $this->assertCount(2, $permissions);
-        $this->assertPermission($resource1->id, $userAId, Permission::OWNER);
-        $this->assertPermission($resource1->id, $groupAId, Permission::READ);
-    }
-
-    private function insertFixture_UpdatePermissionsSuccess_AddGroupPermissions()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $resource1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER]);
-
-        return [$resource1, $userAId];
+        $this->assertPermission($resource->id, $userA->id, Permission::OWNER);
+        $this->assertPermission($resource->id, $groupA->id, Permission::READ);
     }
 
     public function testUpdatePermissionsError_AddUserPermission_PermissionValidationExceptions()
     {
-        [$resource1, $userAId] = $this->insertFixture_AddUserPermission_PermissionValidationExceptions();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userBId = UuidFactory::uuid('user.id.betty');
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->persist();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
 
         // Permission aro is tested
-        $data = [['aro' => '', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER]];
+        $data = [['aro' => '', 'aro_foreign_key' => $userB->id, 'type' => Permission::OWNER]];
         try {
-            $this->service->updatePermissions($uac, 'Resource', $resource1->id, $data);
+            $this->service->updatePermissions($uac, 'Resource', $resource->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertUpdatePermissionsValidationException($e, '0.aro._empty');
@@ -411,7 +370,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
         // Permission aro foreign key is tested
         $data = [['aro' => 'User', 'aro_foreign_key' => UuidFactory::uuid(), 'type' => Permission::OWNER]];
         try {
-            $this->service->updatePermissions($uac, 'Resource', $resource1->id, $data);
+            $this->service->updatePermissions($uac, 'Resource', $resource->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertUpdatePermissionsValidationException($e, '0.aro_foreign_key._existsIn');
@@ -420,19 +379,10 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
         // Type is tested
         $data = [['aro' => 'User', 'aro_foreign_key' => UuidFactory::uuid(), 'type' => 42]];
         try {
-            $this->service->updatePermissions($uac, 'Resource', $resource1->id, $data);
+            $this->service->updatePermissions($uac, 'Resource', $resource->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertUpdatePermissionsValidationException($e, '0.type.inList');
         }
-    }
-
-    private function insertFixture_AddUserPermission_PermissionValidationExceptions()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $for = [$userAId => Permission::OWNER];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $for);
-
-        return [$resource1, $userAId];
     }
 }

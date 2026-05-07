@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-
+use App\Utility\UserAction;
 use Migrations\AbstractMigration;
 use Cake\Validation\Validation;
 
