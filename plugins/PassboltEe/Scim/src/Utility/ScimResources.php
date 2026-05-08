@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Scim\Utility;
 
-use Passbolt\Scim\Exception\ScimException;
+use Passbolt\Scim\Exception\BadRequestException;
 use Passbolt\Scim\Utility\Resource\UserScimResource;
 
 /**
@@ -57,7 +57,7 @@ class ScimResources
     {
         $class = self::MAPPING[$type] ?? null;
         if (!$class) {
-            throw new ScimException(sprintf('Invalid Resource type `%s`', $type));
+            throw new BadRequestException(sprintf('Invalid Resource type `%s`', $type), 400);
         }
 
         return new $class();
