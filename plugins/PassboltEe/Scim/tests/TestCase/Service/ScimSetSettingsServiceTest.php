@@ -26,6 +26,7 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\Date;
 use Exception;
 use Passbolt\Scim\Service\ScimSetSettingsService;
@@ -626,7 +627,7 @@ class ScimSetSettingsServiceTest extends AppTestCase
             'secret_token' => ScimSetSettingsService::generateToken(),
         ];
 
-        $this->expectException(BadRequestException::class);
+        $this->expectException(InternalErrorException::class);
         $this->expectExceptionMessage('The SCIM secret token expiry configuration is invalid.');
         $this->service->saveSettings($ua, $data);
     }
