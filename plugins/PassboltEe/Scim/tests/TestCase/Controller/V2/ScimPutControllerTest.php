@@ -112,4 +112,22 @@ class ScimPutControllerTest extends ScimApiIntegrationTestCase
         $expectedResponse = $this->getScimFixtureData(self::FIXTURE_RESPONSE_USERS_VIEW_NOT_FOUND);
         $this->assertResponseEquals($expectedResponse);
     }
+
+    /**
+     * Regression for PB-51541: an unsupported `{resourceType}` segment used to return 500.
+     * It must now return a SCIM-compliant 400 Bad Request via `ScimResources::build()`.
+     */
+    public function testScimControllerUsersPut_InvalidResourceType_ReturnsBadRequest()
+    {
+        $this->configScimAuth();
+        $this->put(
+            $this->getScimEndpoint('InvalidResourceType' . DS . 'e5bb8c65-2dab-51c3-b82b-438c77a8c2e8'),
+            $this->getUserPostData()
+        );
+
+        $this->assertResponseCode(400);
+        $this->assertResponseContains('urn:ietf:params:scim:api:messages:2.0:Error');
+        $this->assertResponseContains('"status": 400');
+        $this->assertResponseContains('Invalid Resource type `InvalidResourceType`');
+    }
 }

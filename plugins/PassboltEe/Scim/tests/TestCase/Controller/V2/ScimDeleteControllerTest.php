@@ -42,4 +42,19 @@ class ScimDeleteControllerTest extends ScimApiIntegrationTestCase
         $scimEntry = $this->getScimEntryByName(self::USER_1_SCIM_NAME, addUser: true, isDeleted: true);
         $this->assertTrue($scimEntry->user->deleted);
     }
+
+    /**
+     * Regression for PB-51541: an unsupported `{resourceType}` segment used to return 500.
+     * It must now return a SCIM-compliant 400 Bad Request via `ScimResources::build()`.
+     */
+    public function testScimControllerUsersDelete_InvalidResourceType_ReturnsBadRequest()
+    {
+        $this->configScimAuth();
+        $this->delete($this->getScimEndpoint('InvalidResourceType' . DS . 'e5bb8c65-2dab-51c3-b82b-438c77a8c2e8'));
+
+        $this->assertResponseCode(400);
+        $this->assertResponseContains('urn:ietf:params:scim:api:messages:2.0:Error');
+        $this->assertResponseContains('"status": 400');
+        $this->assertResponseContains('Invalid Resource type `InvalidResourceType`');
+    }
 }

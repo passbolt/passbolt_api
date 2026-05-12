@@ -141,6 +141,21 @@ class ScimIndexControllerTest extends ScimApiIntegrationTestCase
     }
 
     /**
+     * Regression for PB-51541: an unsupported `{resourceType}` segment used to return 500.
+     * It must now return a SCIM-compliant 400 Bad Request via `ListResponse::fetchResources()`.
+     */
+    public function testScimControllerUsersIndex_InvalidResourceType_ReturnsBadRequest()
+    {
+        $this->configScimAuth();
+        $this->get($this->getScimEndpoint('InvalidResourceType'));
+
+        $this->assertResponseCode(400);
+        $this->assertResponseContains('urn:ietf:params:scim:api:messages:2.0:Error');
+        $this->assertResponseContains('"status": 400');
+        $this->assertResponseContains('The resource type `InvalidResourceType` is not valid');
+    }
+
+    /**
      * Test case for SCIM api call with a configured user with MFA enabled
      *
      * @return void

@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Utility\Object;
 
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Exception;
+use Passbolt\Scim\Exception\BadRequestException;
 use Passbolt\Scim\Exception\ScimException;
 use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Utility\SchemaIdentifier;
@@ -84,10 +84,12 @@ class ListResponse implements ScimObjectInterface
         ?string $filter = null,
     ) {
         if (!ScimResources::isValid($resourceType)) {
-            throw new ScimException(sprintf('The resource type `%s` is not valid', $resourceType));
+            throw new BadRequestException(sprintf('The resource type `%s` is not valid', $resourceType));
         }
         if (!isset(ScimEntry::MODEL_MAP[$resourceType])) {
-            throw new Exception(sprintf('The resource type `%s` has not map for scim entry model', $resourceType));
+            throw new BadRequestException(
+                sprintf('The resource type `%s` has not map for scim entry model', $resourceType)
+            );
         }
 
         if ($startIndex !== null && $startIndex > 0) {
