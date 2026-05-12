@@ -19,6 +19,7 @@ namespace Passbolt\WebInstaller\Controller;
 use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
 use Cake\Core\Exception\CakeException;
+use Passbolt\Subscription\SubscriptionPlugin;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
@@ -54,7 +55,11 @@ class DatabaseController extends WebInstallerController
     {
         parent::initialize();
 
-        $this->stepInfo['previous'] = '/install';
+        if ($this->isFeaturePluginEnabled(SubscriptionPlugin::class)) {
+            $this->stepInfo['previous'] = '/install/subscription';
+        } else {
+            $this->stepInfo['previous'] = '/install';
+        }
         $this->stepInfo['next'] = '/install/gpg_key';
         $this->stepInfo['template'] = 'Pages/database';
 

@@ -1,0 +1,212 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         4.0.0
+ */
+namespace Passbolt\Sso\Utility\OpenId;
+
+use App\Model\Validation\EmailValidationRule;
+use Cake\Core\Configure;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Log\Log;
+use Exception;
+use Firebase\JWT\JWT;
+use League\OAuth2\Client\Token\AccessToken;
+use Passbolt\Sso\Utility\Provider\AbstractOauth2Provider;
+
+/**
+ * Extend BaseAccessToken to include id_token support
+ * id_token is OIDC specific (e.g. on top of OAuth2)
+ */
+class BaseIdToken extends AccessToken
+{
+    /**
+     * @var \Passbolt\Sso\Utility\Provider\AbstractOauth2Provider $provider provider
+     */
+    protected AbstractOauth2Provider $provider;
+
+    /**
+     * @var string
+     */
+    protected string $idToken;
+
+    /**
+     * @var array
+     */
+    protected array $idTokenClaims;
+
+    /**
+     * @param array $options such as access_token, refresh_token and id_token
+     * @param \Passbolt\Sso\Utility\Provider\AbstractOauth2Provider $provider provider
+     * @throws \Cake\Http\Exception\InternalErrorException if keys to verify JWT cannot be fetched or validated
+     * @throws \Cake\Http\Exception\BadRequestException if JWT doesn't validate
+     */
+    public function __construct(array $options, AbstractOauth2Provider $provider)
+    {
+        parent::__construct($options);
+
+        $this->provider = $provider;
+
+        if (empty($options['id_token']) || !is_string($options['id_token'])) {
+            throw new BadRequestException(__('JWT token is missing.'));
+        }
+        $this->idToken = $options['id_token'];
+        unset($this->values['id_token']);
+
+        $keys = $provider->getJwtVerificationKeys();
+        try {
+            /**
+             * To fix "Firebase\JWT\BeforeValidException: Cannot handle token prior" error.
+             *
+             * @link https://github.com/googleapis/google-api-php-client/issues/1630
+             * @link https://stackoverflow.com/questions/53658600/uncaught-exception-firebase-jwt-beforevalidexception-with-message-cannot-hand
+             */
+            JWT::$leeway = Configure::read('passbolt.plugins.sso.security.jwtLeeway');
+
+            $tokenClaims = (array)JWT::decode($this->idToken, $keys);
+        } catch (Exception $exception) {
+            if (Configure::read('passbolt.plugins.sso.debugEnabled')) {
+                Log::error('idToken => ' . json_encode($this->idToken));
+            }
+
+            throw new BadRequestException(__('Unable to decode JWT token.'), 400, $exception);
+        }
+
+        try {
+            $this->assertTokenClaims($tokenClaims);
+        } catch (BadRequestException $exception) {
+            if (Configure::read('passbolt.plugins.sso.debugEnabled')) {
+                Log::error('tokenClaims => ' . json_encode($tokenClaims));
+            }
+
+            throw $exception;
+        }
+
+        $this->idTokenClaims = $tokenClaims;
+    }
+
+    /**
+     * Validate the access token claims from an access token you received in your application.
+     * Note: nbf and exp claims are validated in JWT::decode
+     *
+     * @param array $tokenClaims The token claims from an access token you received in the authorization header.
+     * @throws \Cake\Http\Exception\BadRequestException if any of the claim is invalid
+     * @return void
+     */
+    public function assertTokenClaims(array $tokenClaims): void
+    {
+        if (empty($tokenClaims)) {
+            throw new BadRequestException('No claims');
+        }
+
+        $this->assertAudClaim($tokenClaims);
+        $this->assertIssClaim($tokenClaims);
+        $this->assertEmailClaim($tokenClaims);
+    }
+
+    /**
+     * Validation email claim against application email validation rule
+     *
+     * @param array $tokenClaims claims
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException if the claim does not validate
+     */
+    public function assertEmailClaim(array $tokenClaims): void
+    {
+        $emailClaim = Configure::read('passbolt.plugins.sso.security.oauth2.emailClaimAlias') ?? 'email';
+
+        if (!isset($tokenClaims[$emailClaim]) || !EmailValidationRule::check($tokenClaims[$emailClaim])) {
+            throw new BadRequestException('The email claim is not found or invalid.');
+        }
+    }
+
+    /**
+     * Validate issuer against provider base uri
+     * Allows for trailing slash variations
+     *
+     * @param array $tokenClaims claims
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException if the claim does not validate
+     */
+    public function assertIssClaim(array $tokenClaims): void
+    {
+        if (!isset($tokenClaims['iss']) || !is_string($tokenClaims['iss'])) {
+            throw new BadRequestException('The iss (issuer) parameter is invalid.');
+        }
+
+        $openIdBaseUri = rtrim($this->provider->getOpenIdBaseUri(), '/');
+        $iss = rtrim($tokenClaims['iss'], '/');
+        if ($iss !== $openIdBaseUri) {
+            throw new BadRequestException('The iss (issuer) parameter does not match.');
+        }
+    }
+
+    /**
+     * https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.3
+     *
+     * @param array $tokenClaims claims
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException if the claim does not validate
+     */
+    public function assertAudClaim(array $tokenClaims): void
+    {
+        if (isset($tokenClaims['aud'])) {
+            if (is_string($tokenClaims['aud'])) {
+                $auds[] = $tokenClaims['aud'];
+            } else {
+                $auds = $tokenClaims['aud'];
+            }
+
+            if (is_array($auds)) {
+                if (in_array($this->provider->getClientId(), $auds, true)) {
+                    return;
+                }
+            }
+        }
+
+        throw new BadRequestException('The aud (client id) parameter is invalid.');
+    }
+
+    /**
+     * @return string id_token
+     */
+    public function getIdToken(): string
+    {
+        return $this->idToken;
+    }
+
+    /**
+     * @return array claims from JWT::decode(id_token)
+     */
+    public function getIdTokenClaims(): array
+    {
+        return $this->idTokenClaims;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @psalm-suppress MethodSignatureMustProvideReturnType
+     */
+    public function jsonSerialize()
+    {
+        $parameters = parent::jsonSerialize();
+
+        if ($this->idToken) {
+            $parameters['id_token'] = $this->idToken;
+        }
+
+        return $parameters;
+    }
+}

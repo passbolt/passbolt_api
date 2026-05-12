@@ -23,8 +23,6 @@ use App\Test\Lib\AppIntegrationTestCase;
  */
 class HealthcheckStatusControllerTest extends AppIntegrationTestCase
 {
-    public array $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
-
     public function testHealthcheckStatusOk(): void
     {
         $this->get('/healthcheck/status');
@@ -34,7 +32,7 @@ class HealthcheckStatusControllerTest extends AppIntegrationTestCase
 
     public function testHealthcheckStatusJsonOk(): void
     {
-        $this->getJson('/healthcheck/status.json');
+        $this->getJson('/healthcheck/status.json?api-version=v2');
         $this->assertResponseSuccess();
         $this->assertSame('OK', $this->_responseJson->header->message);
         $this->assertSame('OK', $this->_responseJson->body);

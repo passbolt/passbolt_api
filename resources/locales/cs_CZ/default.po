@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2026-04-02 11:49+0000\n"
-"PO-Revision-Date: 2026-04-02 13:48\n"
+"POT-Creation-Date: 2026-04-02 12:51+0000\n"
+"PO-Revision-Date: 2026-04-02 14:13\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Czech\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,8 @@ msgstr ""
 "X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "X-Crowdin-Project-ID: 2\n"
 "X-Crowdin-Language: cs\n"
-"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/default.po\n"
-"X-Crowdin-File-ID: 212\n"
+"X-Crowdin-File: /[passbolt.passbolt-pro-api] release/resources/locales/en_UK/default.po\n"
+"X-Crowdin-File-ID: 220\n"
 "Language: cs_CZ\n"
 
 msgid "You need to login to access this location."
@@ -1089,6 +1089,12 @@ msgstr "Pole musí být při vytváření nového záznamu prázdné (null)."
 
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "Identifikátor klíče by měl být řetězec o 8 hexadecimálních znacích."
+
+msgid "The provided IP is invalid."
+msgstr "Zadaná IP adresa je neplatná."
+
+msgid "The provided user agent is invalid."
+msgstr "Zadaný user agent je neplatný."
 
 msgid "{0} updated your memberships in several groups"
 msgstr "{0} aktualizoval(a) vaše členství v několika skupinách"
@@ -4780,6 +4786,15 @@ msgstr "Status pro vynucení SSL je vyžadován."
 msgid "The force ssl setting should be a valid boolean."
 msgstr "Nastavení pro vynucení SSL by mělo být platný boolean."
 
+msgid "A subscription key is required."
+msgstr "Licenční klíč je vyžadován."
+
+msgid "The subscription key should not be empty."
+msgstr "Licenční klíč by neměl být prázdný."
+
+msgid "The subscription format is not valid."
+msgstr "Formát předplatného není platný."
+
 msgid "The passbolt config is writable."
 msgstr "Konfigurační soubor passboltu je zapisovatelný."
 
@@ -4981,12 +4996,6 @@ msgstr "Nebo vyberte soubor z vašeho počítače"
 msgid "Some binary things are happening..."
 msgstr "Probíhají nějaké binární operace..."
 
-msgid "Passbolt Pro activation."
-msgstr "Aktivace Passbolt Pro."
-
-msgid "Copy paste your Passbolt Pro subscription key here"
-msgstr "Sem zkopírujte a vložte svůj klíč předplatného Passbolt Pro"
-
 msgid "Choose your preferences."
 msgstr "Vyberte si své preference."
 
@@ -5005,8 +5014,14 @@ msgstr "Vynutit SSL?"
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
 msgstr "Vynucení SSL znamená, že passbolt nebude akceptovat spojení prostřednictvím nezabezpečeného protokolu. Pokud se SSL vynucuje, musí být váš server nakonfigurován pro HTTPS. Důrazně se doporučuje to provést."
 
-msgid "Welcome to Passbolt! Let's get started with the configuration."
-msgstr "Vítejte v passboltu! Pojďme se pustit do konfigurace."
+msgid "Passbolt Pro activation."
+msgstr "Aktivace Passbolt Pro."
+
+msgid "Copy paste your Passbolt Pro subscription key here"
+msgstr "Sem zkopírujte a vložte svůj klíč předplatného Passbolt Pro"
+
+msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
+msgstr "Vítejte v Passbolt Pro! Pojďme začít s konfigurací."
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "Skvělé! Vaše prostředí je připraveno pro passbolt."
@@ -5071,12 +5086,6 @@ msgstr "Nápověda"
 msgid "Need help? You can find more information on how to install passbolt in the official online help."
 msgstr "Potřebujete pomoc? Další informace o instalaci passboltu naleznete v oficiální online nápovědě."
 
-msgid "What subscription key?"
-msgstr "Jaký klíč předplatného?"
-
-msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
-msgstr "Klíč předplatného je soubor, který vám byl zaslán při zakoupení Passbolt Pro. Ke aktivaci funkcí Pro v passboltu potřebujeme tento klíč předplatného."
-
 msgid "Send test email"
 msgstr "Odeslat testovací e-mail"
 
@@ -5097,6 +5106,2007 @@ msgstr "Proč potřebuji SMTP server?"
 
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "Passbolt potřebuje smtp server, aby mohl po vytvoření účtu odesílat e-maily s pozvánkou a odesílat e-mailová upozornění."
+
+msgid "What subscription key?"
+msgstr "Jaký klíč předplatného?"
+
+msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
+msgstr "Klíč předplatného je soubor, který vám byl zaslán při zakoupení Passbolt Pro. Ke aktivaci funkcí Pro v passboltu potřebujeme tento klíč předplatného."
+
+msgid "The user id is invalid."
+msgstr "ID uživatele je neplatné."
+
+msgid "The authentication token id is invalid."
+msgstr "ID ověřovacího tokenu je neplatné."
+
+msgid "Only guests are allowed to create an account recovery request."
+msgstr "Pouze hosté mohou vytvořit žádost o obnovení účtu."
+
+msgid "Invalid request. Please provide the required data."
+msgstr "Neplatný požadavek. Poskytněte prosím požadovaná data."
+
+msgid "The request id is invalid."
+msgstr "ID požadavku je neplatné."
+
+msgid "Please provide a valid request id."
+msgstr "Poskytněte prosím platné ID požadavku."
+
+msgid "You cannot reuse the account recovery key."
+msgstr "Nelze znovu použít klíč pro obnovení účtu."
+
+msgid "A policy is required."
+msgstr "Zásada je vyžadována."
+
+msgid "The policy name should not be empty."
+msgstr "Název zásady by neměl být prázdný."
+
+msgid "The policy should be one of the following: {0}."
+msgstr "Zásada by měla být jedna z následujících: {0}."
+
+msgid "The public key identifier should be a valid UUID."
+msgstr "Identifikátor veřejného klíče by měl být platný UUID."
+
+msgid "The public key identifier should not be empty."
+msgstr "Identifikátor veřejného klíče by neměl být prázdný."
+
+msgid "The identifier of the user who created the organization policy should be a valid UUID."
+msgstr "Identifikátor uživatele, který vytvořil zásady organizace, by měl být platný UUID."
+
+msgid "The identifier of the user who created the organization policy is required."
+msgstr "Identifikátor uživatele, který vytvořil zásady organizace, je povinný."
+
+msgid "The identifier of the user who created the organization policy should not be empty."
+msgstr "Identifikátor uživatele, který vytvořil zásady organizace, by neměl být prázdný."
+
+msgid "The identifier of the user who modified the organization policy should be a valid UUID."
+msgstr "Identifikátor uživatele, který upravil zásady organizace, by měl být platný UUID."
+
+msgid "The identifier of the user who modified the organization policy is required."
+msgstr "Identifikátor uživatele, který upravil zásady organizace, je povinný."
+
+msgid "The identifier of the user who modified the organization policy should not be empty."
+msgstr "Identifikátor uživatele, který upravil zásady organizace, by neměl být prázdný."
+
+msgid "Could not validate policy data."
+msgstr "Nepodařilo se ověřit data zásad."
+
+msgid "The armored key is too big."
+msgstr "Klíč ve formátu ASCII-armored je příliš velký."
+
+msgid "The \"deleted\" field should be a valid date."
+msgstr "Pole \"deleted\" by mělo obsahovat platné datum."
+
+msgid "The identifier of the user who created the organization public key should be a valid UUID."
+msgstr "Identifikátor uživatele, který vytvořil veřejný klíč organizace, by měl být platný UUID."
+
+msgid "The identifier of the user who created the organization public key is required."
+msgstr "Identifikátor uživatele, který vytvořil veřejný klíč organizace, je povinný."
+
+msgid "The identifier of the user who created the organization public key should not be empty."
+msgstr "Identifikátor uživatele, který vytvořil veřejný klíč organizace, by neměl být prázdný."
+
+msgid "The identifier of the user who modified the organization public key should be a valid UUID."
+msgstr "Identifikátor uživatele, který upravil veřejný klíč organizace, by měl být platný UUID."
+
+msgid "The identifier of the user who modified the organization public key is required."
+msgstr "Identifikátor uživatele, který upravil veřejný klíč organizace, je povinný."
+
+msgid "The identifier of the user who modified the organization public key should not be empty."
+msgstr "Identifikátor uživatele, který upravil veřejný klíč organizace, by neměl být prázdný."
+
+msgid "You cannot reuse the user keys."
+msgstr "Nelze znovu použít uživatelské klíče."
+
+msgid "You cannot reuse account recovery organization public keys."
+msgstr "Nelze znovu použít veřejné klíče organizace pro obnovení účtu."
+
+msgid "You cannot reuse the metadata keys."
+msgstr "Nelze znovu použít klíče metadat."
+
+msgid "Could not validate public key data."
+msgstr "Nepodařilo se ověřit data veřejného klíče."
+
+msgid "The recipient_foreign_model should be a valid string."
+msgstr "recipient_foreign_model by měl být platný řetězec."
+
+msgid "The recipient_foreign_model must be provided."
+msgstr "recipient_foreign_model je povinný."
+
+msgid "The recipient_foreign_model should not be empty."
+msgstr "recipient_foreign_model by neměl být prázdný."
+
+msgid "The recipient_foreign_model must be one of the following: {0}."
+msgstr "recipient_foreign_model musí být jedna z následujících hodnot: {0}."
+
+msgid "The data should be a valid string."
+msgstr "Data by měla být platný řetězec."
+
+msgid "The data is too big."
+msgstr "Data jsou příliš velká."
+
+msgid "The identifier of the user who created the private key passwords should be a valid UUID."
+msgstr "Identifikátor uživatele, který vytvořil hesla k soukromému klíči, by měl být platný UUID."
+
+msgid "The identifier of the user who created the private key passwords is required."
+msgstr "Identifikátor uživatele, který vytvořil hesla k soukromému klíči, je povinný."
+
+msgid "The identifier of the user who created the private key passwords should not be empty."
+msgstr "Identifikátor uživatele, který vytvořil hesla k soukromému klíči, by neměl být prázdný."
+
+msgid "The identifier of the user who modified the private key passwords should be a valid UUID."
+msgstr "Identifikátor uživatele, který upravil hesla k soukromému klíči, by měl být platný UUID."
+
+msgid "The identifier of the user who modified the private key passwords is required."
+msgstr "Identifikátor uživatele, který upravil hesla k soukromému klíči, je povinný."
+
+msgid "The identifier of the user who modified the private key passwords should not be empty."
+msgstr "Identifikátor uživatele, který upravil hesla k soukromému klíči, by neměl být prázdný."
+
+msgid "The private key identifier should be a valid UUID."
+msgstr "Identifikátor soukromého klíče by měl být platný UUID."
+
+msgid "A private key identifier is required."
+msgstr "Identifikátor soukromého klíče je povinný."
+
+msgid "The private key identifier should not be empty."
+msgstr "Identifikátor soukromého klíče by neměl být prázdný."
+
+msgid "Could not validate password data."
+msgstr "Nepodařilo se ověřit data hesla."
+
+msgid "The identifier of the user who created the private key  should be a valid UUID."
+msgstr "Identifikátor uživatele, který vytvořil soukromý klíč, by měl být platný UUID."
+
+msgid "The identifier of the user who created the private key  is required."
+msgstr "Identifikátor uživatele, který vytvořil soukromý klíč, je povinný."
+
+msgid "The identifier of the user who created the private key  should not be empty."
+msgstr "Identifikátor uživatele, který vytvořil soukromý klíč, by neměl být prázdný."
+
+msgid "The identifier of the user who modified the private key  should be a valid UUID."
+msgstr "Identifikátor uživatele, který upravil soukromý klíč, by měl být platný UUID."
+
+msgid "The identifier of the user who modified the private key is required."
+msgstr "Identifikátor uživatele, který upravil soukromý klíč, je povinný."
+
+msgid "The identifier of the user who modified the private key  should not be empty."
+msgstr "Identifikátor uživatele, který upravil soukromý klíč, by neměl být prázdný."
+
+msgid "The account recovery private key is not valid."
+msgstr "Soukromý klíč pro obnovení účtu není platný."
+
+msgid "The status should not be a valid string."
+msgstr "Stav by neměl být platný řetězec."
+
+msgid "This status is not supported."
+msgstr "Tento stav není podporován."
+
+msgid "The status length should be maximum {0} characters."
+msgstr "Délka stavu by měla být maximálně {0} znaků."
+
+msgid "The identifier of the user who created the request should be a valid UUID."
+msgstr "Identifikátor uživatele, který vytvořil požadavek, by měl být platný UUID."
+
+msgid "The identifier of the user who created the request is required."
+msgstr "Identifikátor uživatele, který vytvořil požadavek, je povinný."
+
+msgid "The identifier of the user who created the request should not be empty."
+msgstr "Identifikátor uživatele, který vytvořil požadavek, by neměl být prázdný."
+
+msgid "The identifier of the user who modified the request should be a valid UUID."
+msgstr "Identifikátor uživatele, který upravil požadavek, by měl být platný UUID."
+
+msgid "The identifier of the user who modified the request is required."
+msgstr "Identifikátor uživatele, který upravil požadavek, je povinný."
+
+msgid "The identifier of the user who modified the request should not be empty."
+msgstr "Identifikátor uživatele, který upravil požadavek, by neměl být prázdný."
+
+msgid "The request is invalid."
+msgstr "Požadavek je neplatný."
+
+msgid "The account request is invalid."
+msgstr "Požadavek na účet je neplatný."
+
+msgid "Invalid response status. Not supported."
+msgstr "Neplatný stav odpovědi. Není podporován."
+
+msgid "The responder_foreign_key should not be empty."
+msgstr "responder_foreign_key by neměl být prázdný."
+
+msgid "The responder_foreign_key should be a valid UUID."
+msgstr "responder_foreign_key by měl být platný UUID."
+
+msgid "The responder_foreign_model should be a valid string."
+msgstr "responder_foreign_model by měl být platný řetězec."
+
+msgid "The responder_foreign_model should not be empty."
+msgstr "responder_foreign_model by neměl být prázdný."
+
+msgid "The responder_foreign_model must be one of the following: {0}."
+msgstr "responder_foreign_model musí být jedna z následujících hodnot: {0}."
+
+msgid "The identifier of the user who created the response should be a valid UUID."
+msgstr "Identifikátor uživatele, který vytvořil odpověď, by měl být platný UUID."
+
+msgid "The identifier of the user who created the response is required."
+msgstr "Identifikátor uživatele, který vytvořil odpověď, je povinný."
+
+msgid "The identifier of the user who created the response should not be empty."
+msgstr "Identifikátor uživatele, který vytvořil odpověď, by neměl být prázdný."
+
+msgid "The identifier of the user who modified the response should be a valid UUID."
+msgstr "Identifikátor uživatele, který upravil odpověď, by měl být platný UUID."
+
+msgid "The identifier of the user who modified the response is required."
+msgstr "Identifikátor uživatele, který upravil odpověď, je povinný."
+
+msgid "The identifier of the user who modified the response should not be empty."
+msgstr "Identifikátor uživatele, který upravil odpověď, by neměl být prázdný."
+
+msgid "The account recovery request response is invalid."
+msgstr "Odpověď na žádost o obnovení účtu je neplatná."
+
+msgid "The status should not be empty"
+msgstr "Stav by neměl být prázdný"
+
+msgid "The status should be one of the following: {0}."
+msgstr "Stav musí být jeden z následujících: {0}."
+
+msgid "The identifier of the user who created the user settings should be a valid UUID."
+msgstr "Identifikátor uživatele, který vytvořil uživatelská nastavení, by měl být platný UUID."
+
+msgid "The identifier of the user who created the user settings is required."
+msgstr "Identifikátor uživatele, který vytvořil uživatelská nastavení, je povinný."
+
+msgid "The identifier of the user who created the user settings should not be empty."
+msgstr "Identifikátor uživatele, který vytvořil uživatelská nastavení, by neměl být prázdný."
+
+msgid "The identifier of the user who modified the user settings should be a valid UUID."
+msgstr "Identifikátor uživatele, který upravil uživatelská nastavení, by měl být platný UUID."
+
+msgid "The identifier of the user who modified the user settings is required."
+msgstr "Identifikátor uživatele, který upravil uživatelská nastavení, je povinný."
+
+msgid "The identifier of the user who modified the user settings should not be empty."
+msgstr "Identifikátor uživatele, který upravil uživatelská nastavení, by neměl být prázdný."
+
+msgid "This user already has an account recovery setting"
+msgstr "Tento uživatel už má nastaveno obnovení účtu."
+
+msgid "The account recovery user setting is not valid."
+msgstr "Nastavení obnovení účtu uživatele není platné."
+
+msgid "You have disabled the account recovery."
+msgstr "Deaktivovali jste obnovení účtu."
+
+msgid "{0} has disabled the account recovery."
+msgstr "{0} deaktivoval(a) obnovení účtu."
+
+msgid "You have set the account recovery organization policy to {0}."
+msgstr "Nastavili jste zásady obnovení účtu organizace na {0}."
+
+msgid "{0} has set the account recovery organization policy to {1}."
+msgstr "{0} nastavil(a) zásady obnovení účtu organizace na {1}."
+
+msgid "You have updated the account recovery organization policy to {0}."
+msgstr "Aktualizovali jste zásady obnovení účtu organizace na {0}."
+
+msgid "{0} has updated the account recovery organization policy to {1}."
+msgstr "{0} aktualizoval(a) zásady obnovení účtu organizace na {1}."
+
+msgid "Suspicious account recovery request issued from IP {0} for {1}"
+msgstr "Podezřelá žádost o obnovení účtu odeslaná z IP {0} pro {1}"
+
+msgid "{0} has initiated a recovery request"
+msgstr "{0} zahájil(a) žádost o obnovení účtu"
+
+msgid "You have initiated a recovery request"
+msgstr "Zahájili jste žádost o obnovení účtu"
+
+msgid "Recovery request approved!"
+msgstr "Žádost o obnovení účtu schválena!"
+
+msgid "approved"
+msgstr "schváleno"
+
+msgid "rejected"
+msgstr "zamítnuto"
+
+msgid "Account recovery response set to {0}."
+msgstr "Odpověď na obnovení účtu nastavena na {0}."
+
+msgid "Account recovery response set to {0} by {1}."
+msgstr "Odpověď na obnovení účtu nastavena na {0} uživatelem {1}."
+
+msgid "Recovery request denied!"
+msgstr "Žádost o obnovení účtu zamítnuta!"
+
+msgid "Could not validate key revocation."
+msgstr "Nepodařilo se ověřit odvolání klíče."
+
+msgid "The fingerprint should match the one from the currently active key."
+msgstr "Otisk by měl odpovídat aktuálně aktivnímu klíči."
+
+msgid "Account recovery is disabled."
+msgstr "Obnovení účtu je deaktivováno."
+
+msgid "The account recovery organization public key is not set."
+msgstr "Veřejný klíč organizace pro obnovení účtu není nastaven."
+
+msgid "Invalid request. No policy change."
+msgstr "Neplatný požadavek. Zásady nebyly změněny."
+
+msgid "Invalid request. Revoked key is required for key rotation."
+msgstr "Neplatný požadavek. Pro rotaci klíče je vyžadován odvolaný klíč."
+
+msgid "Invalid request. New key is required for key rotation."
+msgstr "Neplatný požadavek. Pro rotaci klíče je vyžadován nový klíč."
+
+msgid "Invalid request. An organization recovery public key is required."
+msgstr "Neplatný požadavek. Je vyžadován veřejný klíč organizace pro obnovení účtu."
+
+msgid "Invalid request. Revoked key or passwords are not required."
+msgstr "Neplatný požadavek. Odvolaný klíč ani hesla nejsou vyžadovány."
+
+msgid "Invalid request. New key or passwords are not required."
+msgstr "Neplatný požadavek. Nový klíč ani hesla nejsou vyžadovány."
+
+msgid "Invalid request. Keys are required for this change."
+msgstr "Neplatný požadavek. Pro tuto změnu jsou vyžadovány klíče."
+
+msgid "Invalid request. Passwords are required for this change."
+msgstr "Neplatný požadavek. Pro tuto změnu jsou vyžadována hesla."
+
+msgid "An organization public key is required."
+msgstr "Veřejný klíč organizace je povinný."
+
+msgid "The public_key_id must match current policy public_key_id."
+msgstr "public_key_id musí odpovídat public_key_id v aktuálních zásadách."
+
+msgid "An invalid number of passwords sent. Expected {0} and got {1}."
+msgstr "Odeslán neplatný počet hesel. Očekáváno {0}, obdrženo {1}."
+
+msgid "The message is not encrypted for the right recipient."
+msgstr "Zpráva není zašifrována pro správného příjemce."
+
+msgid "Recovery request cannot be created when organization policy is disabled."
+msgstr "Žádost o obnovení nelze vytvořit, pokud jsou zásady organizace deaktivovány."
+
+msgid "Recovery request cannot be created when user is not enrolled."
+msgstr "Žádost o obnovení nelze vytvořit, pokud uživatel není zapsán."
+
+msgid "The authentication token is not valid or has expired."
+msgstr "Ověřovací token není platný nebo vypršel."
+
+msgid "The account recovery request could not be found."
+msgstr "Žádost o obnovení účtu nebyla nalezena."
+
+msgid "The request is already completed."
+msgstr "Požadavek je již dokončen."
+
+msgid "Recovery response cannot be created when organization policy is disabled."
+msgstr "Odpověď na obnovení nelze vytvořit, pokud jsou zásady organizace deaktivovány."
+
+msgid "Could not validate response data."
+msgstr "Nepodařilo se ověřit data odpovědi."
+
+msgid "The account recovery response data is not required."
+msgstr "Data odpovědi pro obnovení účtu nejsou vyžadována."
+
+msgid "The account recovery response data is required."
+msgstr "Data odpovědi pro obnovení účtu jsou povinná."
+
+msgid "The user is not enrolled in the account recovery program."
+msgstr "Uživatel není zapsán do programu obnovení účtu."
+
+msgid "User account recovery settings cannot be edited."
+msgstr "Nastavení obnovení účtu uživatele nelze upravit."
+
+msgid "The account recovery is mandatory and cannot be rejected."
+msgstr "Obnovení účtu je povinné a nelze jej odmítnout."
+
+msgid "Invalid request. You cannot opt-out."
+msgstr "Neplatný požadavek. Nemůžete se odhlásit."
+
+msgid "The status must be set to approved."
+msgstr "Stav musí být nastaven na schváleno."
+
+msgid "Invalid request. You cannot both opt-out and provide backup."
+msgstr "Neplatný požadavek. Nemůžete se zároveň odhlásit a poskytnout zálohu."
+
+msgid "The private key backup must be provided."
+msgstr "Je třeba poskytnout zálohu soukromého klíče."
+
+msgid "Invalid request. Private key or password are missing."
+msgstr "Neplatný požadavek. Chybí soukromý klíč nebo heslo."
+
+msgid "Could not validate private key data."
+msgstr "Nepodařilo se ověřit data soukromého klíče."
+
+msgid "The account recovery request identifier should be a valid UUID."
+msgstr "Identifikátor žádosti o obnovení účtu by měl být platný UUID."
+
+msgid "The account recovery request status is not approved."
+msgstr "Stav žádosti o obnovení účtu není schválen."
+
+msgid "Account recovery is disabled. Key backup is not supported."
+msgstr "Obnovení účtu je deaktivováno. Záloha klíče není podporována."
+
+msgid "Account recovery is mandatory. Please provide the mandatory data."
+msgstr "Obnovení účtu je povinné. Poskytněte prosím požadovaná data."
+
+msgid "Account Recovery Disabled"
+msgstr "Obnovení účtu deaktivováno"
+
+msgid "Account Recovery Enabled"
+msgstr "Obnovení účtu aktivováno"
+
+msgid "The fingerprint of the organization public key is {0}."
+msgstr "Otisk veřejného klíče organizace je {0}."
+
+msgid "Account Recovery Updated"
+msgstr "Obnovení účtu aktualizováno"
+
+msgid "{0} has initiated an account recovery request"
+msgstr "{0} zahájil(a) žádost o obnovení účtu"
+
+msgid "Recovery request"
+msgstr "Žádost o obnovení"
+
+msgid "{0} has initiated an account recovery request."
+msgstr "{0} zahájil(a) žádost o obnovení účtu."
+
+msgid "Since you’re authorized to handle account recovery requests, please process this one."
+msgstr ""
+
+msgid "You will need your organization recovery key to continue."
+msgstr "K pokračování budete potřebovat svůj klíč organizace pro obnovení."
+
+msgid "Review the recovery request"
+msgstr "Zkontrolovat žádost o obnovení"
+
+msgid "Suspicious recovery request"
+msgstr "Podezřelá žádost o obnovení"
+
+msgid "An account recovery request was attempted from a user with client IP {0} for {1}."
+msgstr "Byl zaznamenán pokus o obnovení účtu od uživatele s IP {0} pro {1}."
+
+msgid "The request could not be found in the database."
+msgstr "Požadavek nebyl v databázi nalezen."
+
+msgid "This is a potential security threat."
+msgstr "Jedná se o potenciální bezpečnostní hrozbu."
+
+msgid "You have initiated an account recovery!"
+msgstr "Zahájili jste obnovení účtu!"
+
+msgid "Recovery Request"
+msgstr "Žádost o obnovení"
+
+msgid "You just requested an account recovery."
+msgstr "Právě jste požádali o obnovení účtu."
+
+msgid "Your administrator have been informed and will follow up with you."
+msgstr "Váš administrátor byl informován a bude vás kontaktovat."
+
+msgid "If you did not make this request please inform your administrator."
+msgstr "Pokud jste tuto žádost neudělali vy, informujte prosím svého administrátora."
+
+msgid "You have updated a recovery request to {0}."
+msgstr "Aktualizovali jste žádost o obnovení na {0}."
+
+msgid "You have set the status of the account recovery request initiated by {0} ({1}) to {2}."
+msgstr "Nastavili jste stav žádosti o obnovení účtu, kterou zahájil(a) {0} ({1}), na {2}."
+
+msgid "{0} ({1}) has updated a recovery request to {2}."
+msgstr "{0} ({1}) aktualizoval(a) žádost o obnovení na {2}."
+
+msgid "{0} ({1}) has set the status of the request initiated by {2} ({3}) to {4}."
+msgstr "{0} ({1}) nastavil(a) stav požadavku zahájeného {2} ({3}) na {4}."
+
+msgid "{0} ({1}) has approved your recovery request."
+msgstr "{0} ({1}) schválil(a) vaši žádost o obnovení."
+
+msgid "Your organization recovery contacts have reviewed and approved your account recovery request."
+msgstr "Kontakty pro obnovení ve vaší organizaci přezkoumaly a schválily vaši žádost o obnovení účtu."
+
+msgid "Please click on the link below to continue."
+msgstr "Klikněte prosím na níže uvedený odkaz pro pokračování."
+
+msgid "Important"
+msgstr "Důležité"
+
+msgid "Please use the same computer and browser that you used to initiate the request."
+msgstr "Použijte prosím stejný počítač a prohlížeč, jaký jste použili k zahájení žádosti."
+
+msgid "Complete account recovery"
+msgstr "Dokončit obnovení účtu"
+
+msgid "{0} ({1}) has denied your recovery request."
+msgstr "{0} ({1}) zamítl(a) vaši žádost o obnovení."
+
+msgid "Your organization recovery contacts have reviewed and rejected your account recovery request."
+msgstr "Kontakty pro obnovení ve vaší organizaci přezkoumaly a zamítly vaši žádost o obnovení účtu."
+
+msgid "Only administrators can view user logs."
+msgstr "Pouze administrátoři mohou zobrazit uživatelské záznamy."
+
+msgid "The user {0} could not be added to group {1} because there is no matching directory entry in passbolt."
+msgstr "Uživatele {0} nebylo možné přidat do skupiny {1}, protože v Passboltu neexistuje odpovídající záznam v adresáři."
+
+msgid "The user {0} could not be added to the group {1} because the membership has been removed in passbolt"
+msgstr "Uživatele {0} nebylo možné přidat do skupiny {1}, protože členství bylo v Passboltu odstraněno."
+
+msgid "The user {0} was not synced with existing membership for group {1} because the membership was created before."
+msgstr "Uživatel {0} nebyl synchronizován se stávajícím členstvím ve skupině {1}, protože členství bylo vytvořeno dříve."
+
+msgid "The user {0} was successfully added to the group {1}."
+msgstr "Uživatel {0} byl úspěšně přidán do skupiny {1}."
+
+msgid "The user {0} could not be added to the group {1} because their account was priorly deleted in passbolt."
+msgstr "Uživatele {0} nelze přidat do skupiny {1}, protože jeho účet byl dříve v Passboltu smazán."
+
+msgid "The user {0} could not be added to the group {1} because they have not yet activated their account."
+msgstr "Uživatele {0} nelze přidat do skupiny {1}, protože dosud neaktivoval svůj účet."
+
+msgid "The user {0} could not be added to the group {1} because of validation issues."
+msgstr "Uživatele {0} nebylo možné přidat do skupiny {1} kvůli problémům při ověřování."
+
+msgid "The user {0} could not be added to the group {1} because of an internal error."
+msgstr "Uživatele {0} nebylo možné přidat do skupiny {1} kvůli interní chybě."
+
+msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
+msgstr "Uživatele {0} nelze do skupiny {1} přidat automaticky. Správcům skupiny byl odeslán e-mail s žádostí o ruční přidání."
+
+msgid "The user {0} was successfully removed from the group {1}."
+msgstr "Uživatel {0} byl ze skupiny {1} úspěšně odebrán."
+
+msgid "The user {0} could not be removed from the group {1} because it is the only group manager."
+msgstr "Uživatele {0} nebylo možné odebrat ze skupiny {1}, protože je jediným správcem skupiny."
+
+msgid "The user {0} could not be removed from the group {1} because some validation issues."
+msgstr "Uživatele {0} nebylo možné odebrat ze skupiny {1} kvůli problémům při ověřování."
+
+msgid "The user {0} could not be removed from the group {1} because of an internal error."
+msgstr "Uživatele {0} nebylo možné odebrat ze skupiny {1} kvůli interní chybě."
+
+msgid "The user {0} was successfully synced with the group {1}."
+msgstr "Uživatel {0} byl úspěšně synchronizován se skupinou {1}."
+
+msgid "The group {0} has been successfully renamed to {1}."
+msgstr "Skupina {0} byla úspěšně přejmenována na {1}."
+
+msgid "The group {0} could not be renamed to {1}."
+msgstr "Skupinu {0} se nepodařilo přejmenovat na {1}."
+
+msgid "The passbolt {0} {1} was not deleted because it is marked as to be ignored."
+msgstr "Záznam passbolt {0} {1} nebyl odstraněn, protože je označen jako ignorovaný."
+
+msgid "The directory {0} {1} was not deleted because it is ignored."
+msgstr "Adresář {0} {1} nebyl odstraněn, protože je ignorován."
+
+msgid "The directory user {0} was already suspended in passbolt."
+msgstr "Uživatel adresáře {0} již byl v Passbolt pozastaven."
+
+msgid "The directory {0} {1} was already deleted in passbolt."
+msgstr "Adresář {0} {1} již byl v passboltu smazán."
+
+msgid "The user {0} could not be deleted because they are the only owner of one or more passwords."
+msgstr "Uživatel {0} nemohl být odstraněn, protože je jediným vlastníkem jednoho nebo více hesel."
+
+msgid "The {0} {1} could not be deleted because they are the only manager of one or more groups."
+msgstr "{0} {1} nemohl být odstraněn, protože je jediným správcem jedné nebo více skupin."
+
+msgid "The user {0} was successfully suspended."
+msgstr "Uživatel {0} byl úspěšně pozastaven."
+
+msgid "The {0} {1} was successfully deleted."
+msgstr "{0} {1} byl úspěšně odstraněn."
+
+msgid "The {0} {1} could not be suspended because of an internal error. Please try again later."
+msgstr "Objekt {0} {1} nemohl být pozastaven kvůli interní chybě. Zkuste to prosím později."
+
+msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
+msgstr "{0} {1} nemohl být odstraněn kvůli interní chybě. Zkuste to prosím později."
+
+msgid "The {0} {1} was not synced because the passbolt {0} is marked as to be ignored."
+msgstr "{0} {1} nebyl synchronizován, protože passbolt {0} je označen k ignorování."
+
+msgid "The {0} {1} was not synced because the directory {0} is marked as to be ignored."
+msgstr "{0} {1} nebyl synchronizován, protože adresářový {0} je označen k ignorování."
+
+msgid "The {0} {1} was successfully added to passbolt."
+msgstr "{0} {1} byl úspěšně přidán do Passboltu."
+
+msgid "The {0} {1} could not be added because of data validation issues."
+msgstr "{0} {1} se nepodařilo přidat z důvodu problémů s validací dat."
+
+msgid "The {0} {1} could not be added because of an internal error. Please try again later."
+msgstr "{0} {1} se nepodařilo přidat kvůli interní chybě. Zkuste to prosím později."
+
+msgid "The previously suspended {0} {1} was not unsuspended."
+msgstr "Dříve pozastavený {0} {1} nebyl znovu aktivován."
+
+msgid "The previously deleted {0} {1} was not re-added to passbolt."
+msgstr "Dříve smazaný {0} {1} nebyl znovu přidán do Passboltu."
+
+msgid "The previously suspended {0} {1} was unsuspended."
+msgstr "Dříve pozastavený {0} {1} byl znovu aktivován."
+
+msgid "The previously deleted {0} {1} was re-added to passbolt."
+msgstr "Dříve smazaný {0} {1} byl znovu přidán do passboltu."
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of validation errors."
+msgstr "Smazaný {0} {1} nemohl být do passboltu znovu přidán kvůli chybám ověření."
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of an internal error."
+msgstr "Smazaný {0} {1} nemohl být do passboltu znovu přidán kvůli interní chybě."
+
+msgid "The {0} {1} was mapped with an existing {0} in passbolt."
+msgstr "{0} {1} byl spárován s existujícím {0} v Passboltu."
+
+msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after."
+msgstr "{0} {1} nemohl být spárován s existujícím {0} v Passboltu, protože byl vytvořen později."
+
+msgid "The user {0} full name has been successfully updated to {1} {2}."
+msgstr "Celé jméno uživatele {0} bylo úspěšně změněno na {1} {2}."
+
+msgid "The user {0} full name could not be updated to {1} {2}."
+msgstr "Celé jméno uživatele {0} se nepodařilo změnit na {1} {2}."
+
+msgid "The record model is not valid."
+msgstr "Model záznamu není platný."
+
+msgid "The record is currently ignored as part of directory synchronization."
+msgstr "Záznam je aktuálně ignorován v rámci synchronizace adresáře."
+
+msgid "The record is currently not ignored as part of directory synchronization."
+msgstr "Záznam není aktuálně ignorován v rámci synchronizace adresáře."
+
+msgid "The record will be ignored in the next directory synchronization."
+msgstr "Záznam bude při příští synchronizaci adresáře ignorován."
+
+msgid "The record id is not valid."
+msgstr "ID záznamu není platné."
+
+msgid "The record does not exist."
+msgstr "Záznam neexistuje."
+
+msgid "The record could not be unmarked as ignored. Please try again later."
+msgstr "Záznam se nepodařilo označit jako neignorovaný. Zkuste to prosím později."
+
+msgid "The record will not be ignored in the next directory synchronization."
+msgstr "Záznam nebude při příští synchronizaci adresáře ignorován."
+
+msgid "Could not validate settings."
+msgstr "Nepodařilo se ověřit nastavení."
+
+msgid "Could not save the settings. {0}"
+msgstr "Nastavení se nepodařilo uložit. {0}"
+
+msgid "The directory structure cannot be retrieved."
+msgstr "Strukturu adresáře nelze získat."
+
+msgid "There was an issue while retrieving the invalid entries."
+msgstr "Při získávání neplatných položek došlo k problému."
+
+msgid "The synchronization was done successfully."
+msgstr "Synchronizace byla úspěšně dokončena."
+
+msgid "The simulation was done successfully."
+msgstr "Simulace proběhla úspěšně."
+
+msgid "Need at least one domain configuration."
+msgstr "Je potřeba alespoň jedna konfigurace domény."
+
+msgid "The connection name `{0}` should not contain dots"
+msgstr "Název připojení `{0}` by neměl obsahovat tečky"
+
+msgid "Invalid connection name"
+msgstr "Neplatný název připojení"
+
+msgid "The identifier of the default admin user is required."
+msgstr "Je vyžadován identifikátor výchozího administrátora."
+
+msgid "The identifier of the default admin user should not be empty."
+msgstr "Identifikátor výchozího administrátora nesmí být prázdný."
+
+msgid "The identifier of the default admin user should be a valid UUID."
+msgstr "Identifikátor výchozího administrátora musí být platné UUID."
+
+msgid "The admin user does not exist."
+msgstr "Admin uživatel neexistuje."
+
+msgid "The identifier of the default group admin user is required."
+msgstr "Identifikátor výchozího uživatele správce skupiny je povinný."
+
+msgid "The identifier of the default group admin user should not be empty."
+msgstr "Identifikátor výchozího uživatele správce skupiny by neměl být prázdný."
+
+msgid "The identifier of the default group admin user should be a valid UUID."
+msgstr "Identifikátor výchozího uživatele správce skupiny by měl být platný UUID."
+
+msgid "The group admin user does not exist."
+msgstr "Uživatel správce skupiny neexistuje."
+
+msgid "The group object class should be a valid BMP-UTF8 string."
+msgstr "Třída objektu skupiny by měla být platný řetězec BMP-UTF8."
+
+msgid "The user object class should be a valid BMP-UTF8 string."
+msgstr "Třída objektu uživatele by měla být platný řetězec BMP-UTF8."
+
+msgid "The user path should be a valid BMP-UTF8 string."
+msgstr "Cesta uživatele by měla být platný řetězec BMP-UTF8."
+
+msgid "The group custom filter should be a valid BMP-UTF8 string."
+msgstr "Vlastní filtr skupiny by měl být platný BMP-UTF8 řetězec."
+
+msgid "The user custom filter should be a valid BMP-UTF8 string."
+msgstr "Vlastní filtr uživatele by měl být platný BMP-UTF8 řetězec."
+
+msgid "The email prefix/suffix setting should be a valid boolean."
+msgstr "Nastavení e-mailové předpony/přípony by mělo být platný boolean."
+
+msgid "The email prefix should be a valid BMP-UTF8 string."
+msgstr "Předpona e-mailu by měla být platný řetězec BMP-UTF8."
+
+msgid "The email suffix should be a valid BMP-UTF8 string."
+msgstr "Přípona e-mailu by měla být platný řetězec BMP-UTF8."
+
+msgid "The users parent group should be a valid BMP-UTF8 string."
+msgstr "Nadřazená skupina uživatelů by měla být platný řetězec BMP-UTF8."
+
+msgid "The groups parent group should be a valid BMP-UTF8 string."
+msgstr "Nadřazená skupina skupin by měla být platný řetězec BMP-UTF8."
+
+msgid "The enabled users only setting should be a boolean."
+msgstr "Nastavení „pouze povolení uživatelé“ by mělo být platný boolean."
+
+msgid "The sync of created users setting should be a boolean."
+msgstr "Nastavení synchronizace vytvořených uživatelů by mělo být boolean."
+
+msgid "The sync of updated users setting should be a boolean."
+msgstr "Nastavení synchronizace aktualizovaných uživatelů by mělo být typu boolean."
+
+msgid "The sync of deleted users setting should be a boolean."
+msgstr "Nastavení synchronizace odstraněných uživatelů by mělo být boolean."
+
+msgid "The sync of created groups setting should be a boolean."
+msgstr "Nastavení synchronizace vytvořených skupin by mělo být boolean."
+
+msgid "The sync of deleted groups setting should be a boolean."
+msgstr "Nastavení synchronizace smazaných skupin by mělo být boolean."
+
+msgid "The sync of updated groups setting should be a boolean."
+msgstr "Nastavení synchronizace aktualizovaných skupin by mělo být boolean."
+
+msgid "The fields mapping should be a valid array."
+msgstr "Mapování polí by mělo být platné pole."
+
+msgid "A directory type is required."
+msgstr "Typ adresáře je povinný."
+
+msgid "The directory type should not be empty."
+msgstr "Typ adresáře nesmí být prázdný."
+
+msgid "The directory type should be one of the following: {0}."
+msgstr "Typ adresáře musí být jeden z následujících: {0}."
+
+msgid "A domain name is required."
+msgstr "Je vyžadováno doménové jméno."
+
+msgid "The domain name should not be empty."
+msgstr "Název domény nesmí být prázdný."
+
+msgid "The domain name should be a valid BMP-UTF8 string."
+msgstr "Název domény musí být platný řetězec BMP-UTF8."
+
+msgid "The base DN should be a valid BMP-UTF8 string."
+msgstr "Base DN musí být platný řetězec BMP-UTF8."
+
+msgid "At least one host is required."
+msgstr "Je vyžadován alespoň jeden host."
+
+msgid "The hosts should be a valid array."
+msgstr "Hostitelé by měli být platné pole."
+
+msgid "The port number should not be empty."
+msgstr "Číslo portu nesmí být prázdné."
+
+msgid "The port number should be between 0 and 65535"
+msgstr "Číslo portu musí být mezi 0 a 65535"
+
+msgid "A connection type is required."
+msgstr "Typ připojení je povinný."
+
+msgid "The connection type should not be empty."
+msgstr "Typ připojení nesmí být prázdný."
+
+msgid "The connection type should be one of the following: {0}."
+msgstr "Typ připojení musí být jeden z následujících: {0}."
+
+msgid "An authentication type is required."
+msgstr "Typ ověřování je povinný."
+
+msgid "The authentication type should not be empty."
+msgstr "Typ ověřování by neměl být prázdný."
+
+msgid "The authentication type should be one of the following: {0}."
+msgstr "Typ ověřování by měl být jeden z následujících: {0}."
+
+msgid "The map for this field is required."
+msgstr "Mapování pro toto pole je povinné."
+
+msgid "The map value should not be empty."
+msgstr "Hodnota mapování by neměla být prázdná."
+
+msgid "The field name should be a valid BMP-UTF8 string."
+msgstr "Název pole by měl být platný BMP-UTF8 řetězec."
+
+msgid "The map value length should be maximum {0} characters."
+msgstr "Hodnota mapy může mít maximálně {0} znaků."
+
+msgid "The map value should not be from forbidden fields."
+msgstr "Hodnota mapy by neměla pocházet ze zakázaných polí."
+
+msgid "The map configuration for `{0}` fields is required."
+msgstr "Konfigurace mapy pro pole `{0}` je vyžadována."
+
+msgid "The group object class length should be maximum {0} characters."
+msgstr "Třída objektu skupiny může mít maximálně {0} znaků."
+
+msgid "The group object class should not be from forbidden fields."
+msgstr "Třída objektu skupiny by neměla být ze zakázaných polí."
+
+msgid "The user object class length should be maximum {0} characters."
+msgstr "Třída objektu uživatele může mít maximálně {0} znaků."
+
+msgid "The user object class should not be from forbidden fields."
+msgstr "Třída objektu uživatele by neměla být ze zakázaných polí."
+
+msgid "The user custom filter length should be maximum {0} characters."
+msgstr "Vlastní filtr uživatele může mít maximálně {0} znaků."
+
+msgid "The user custom filter contains the forbidden field."
+msgstr "Vlastní filtr uživatele obsahuje zakázané pole."
+
+msgid "The group custom filter length should be maximum {0} characters."
+msgstr "Vlastní filtr skupiny může mít maximálně {0} znaků."
+
+msgid "The group custom filter contains the forbidden field."
+msgstr "Vlastní filtr skupiny obsahuje zakázané pole."
+
+msgid "The field fallbacks should be a valid array."
+msgstr "Pole náhradních hodnot by mělo být platné pole."
+
+msgid "The field fallbacks should not be empty."
+msgstr "Pole náhradních hodnot nesmí být prázdné."
+
+msgid "The field fallbacks keys should be one of the following: {0}."
+msgstr "Klíče náhradních hodnot by měly být jedny z následujících: {0}."
+
+msgid "The fallback field value should be a valid BMP-UTF8 string."
+msgstr "Hodnota náhradního pole by měla být platný řetězec BMP-UTF8."
+
+msgid "The fallback field value length should be maximum {0} characters."
+msgstr "Délka hodnoty náhradního pole by měla být maximálně {0} znaků."
+
+msgid "The fallback field value should not be from forbidden fields."
+msgstr "Hodnota náhradního pole nesmí pocházet ze zakázaných polí."
+
+msgid "The directory type in fallback fields should be a valid array."
+msgstr "Typ adresáře v náhradních polích by měl být platné pole."
+
+msgid "Directory sync settings endpoints are disabled."
+msgstr "Koncové body nastavení synchronizace adresáře jsou deaktivovány."
+
+msgid "The directory name should be a valid UTF8 string."
+msgstr "Název adresáře by měl být platný řetězec UTF8."
+
+msgid "The directory_name length should be maximum {0} characters."
+msgstr "Délka directory_name by měla být maximálně {0} znaků."
+
+msgid "A directory name is required."
+msgstr "Název adresáře je vyžadován."
+
+msgid "The directory should not be empty."
+msgstr "Adresář by neměl být prázdný."
+
+msgid "Could not validate directory entry data."
+msgstr "Nelze ověřit data položky adresáře."
+
+msgid "The associated record could not be found."
+msgstr "Přidružený záznam nebyl nalezen."
+
+msgid "This record is already marked as to be ignored."
+msgstr "Tento záznam je již označen k ignorování."
+
+msgid "This is not a valid record to ignore."
+msgstr "Toto není platný záznam k ignorování."
+
+msgid "The parent identifier should be a valid UUID."
+msgstr "Identifikátor rodiče by měl být platný UUID."
+
+msgid "A parent identifier is required."
+msgstr "Identifikátor rodiče je povinný."
+
+msgid "The child identifier should be a valid UUID."
+msgstr "Identifikátor podřízeného objektu by měl být platný UUID."
+
+msgid "The child identifier is required."
+msgstr "Identifikátor podřízeného objektu je povinný."
+
+msgid "Directory Settings are invalid. Please check your config and try again."
+msgstr "Nastavení adresáře jsou neplatná. Zkontrolujte svou konfiguraci a zkuste to znovu."
+
+msgid "New directory settings could not be saved."
+msgstr "Nová nastavení adresáře se nepodařilo uložit."
+
+msgid "The endpoints for updating the users directory configurations are disabled."
+msgstr "Koncové body pro aktualizaci konfigurace adresářů uživatelů jsou vypnuty."
+
+msgid "The endpoints for updating the users directory configurations are enabled."
+msgstr "Koncové body pro aktualizaci konfigurace adresářů uživatelů jsou zapnuty."
+
+msgid "It is recommended to disable endpoints for updating the users directory configurations."
+msgstr "Doporučuje se vypnout koncové body pro aktualizaci konfigurace adresářů uživatelů."
+
+msgid "Set the PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED environment variable to true."
+msgstr "Nastavte proměnnou prostředí PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED na hodnotu true."
+
+msgid "Or set {0} to true in {1}."
+msgstr "Nebo nastavte {0} na hodnotu true v {1}."
+
+msgid "SSL certification verification for LDAP server is enabled."
+msgstr "Ověřování SSL certifikátu pro LDAP server je povoleno."
+
+msgid "SSL certification verification for LDAP server is disabled."
+msgstr "Ověřování SSL certifikátu pro LDAP server je deaktivováno."
+
+msgid "Disabling the ssl verify check can lead to security attacks."
+msgstr "Vypnutí kontroly ověření SSL může vést k bezpečnostním útokům."
+
+msgid "Attacker can alter the certificate and can perform man-in-the-middle attack."
+msgstr "Útočník může změnit certifikát a provést útok typu man-in-the-middle."
+
+msgid "To fix this, you can set PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER environment variable to true."
+msgstr "Chcete-li to opravit, nastavte proměnnou prostředí PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER na hodnotu true."
+
+msgid "Or set passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer to true in {0}."
+msgstr "Nebo nastavte passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer na true v {0}."
+
+msgid "A mapping rule for username attribute could not be found for directory type: {0}"
+msgstr "Pro typ adresáře {0} nebylo možné nalézt pravidlo mapování pro atribut uživatelského jména."
+
+msgid "A mapping rule for ID attribute could not be found for directory type: {0}"
+msgstr "Pro typ adresáře {0} nebylo možné nalézt pravidlo mapování pro atribut ID."
+
+msgid "Mapping rules could not be found for directory type: {0}"
+msgstr "Pro typ adresáře {0} nebyla nalezena pravidla mapování."
+
+msgid "A group name is required."
+msgstr "Název skupiny je povinný."
+
+msgid "A group member does not match the expected DN format."
+msgstr "Člen skupiny neodpovídá očekávanému formátu DN."
+
+msgid "The {0} configuration should be a valid string"
+msgstr "Konfigurace {0} by měla být platný řetězec"
+
+msgid "Invalid directory type for domain: {0}"
+msgstr "Neplatný typ adresáře pro doménu: {0}"
+
+msgid "Directory type could not be found for domain: {0}"
+msgstr "Pro doménu {0} nebyl nalezen typ adresáře."
+
+msgid "LDAP Object class could not be found: {0}"
+msgstr "LDAP třída objektu nebyla nalezena: {0}"
+
+msgid "SSO"
+msgstr "SSO"
+
+msgid "Directory Sync"
+msgstr "Synchronizace adresáře"
+
+msgid "SCIM"
+msgstr "SCIM"
+
+msgid "Only administrators are allowed to create/update MFA policies settings."
+msgstr "Pouze administrátoři mohou vytvářet nebo aktualizovat nastavení zásad MFA."
+
+msgid "Could not validate the MFA policies settings."
+msgstr "Nepodařilo se ověřit nastavení zásad MFA."
+
+msgid "The policy field is required."
+msgstr "Pole zásady je povinné."
+
+msgid "The type of the policy should be one of the following: {0}."
+msgstr "Typ zásady by měl být jeden z následujících: {0}."
+
+msgid "The remember me for a month field is required."
+msgstr "Pole \"Pamatuj si mě po dobu jednoho měsíce\" je povinné."
+
+msgid "The remember me for a month should be a boolean type."
+msgstr "\"Pamatuj si mě po dobu jednoho měsíce\" by mělo být typu boolean."
+
+msgid "You edited the MFA policy"
+msgstr "Upravili jste zásadu MFA"
+
+msgid "{0} edited the MFA policy"
+msgstr "{0} upravil(a) zásadu MFA"
+
+msgid "The MFA policy has been updated, the new configuration is as follow:"
+msgstr "Zásada MFA byla aktualizována, nová konfigurace je následující:"
+
+msgid "Policy: {0}"
+msgstr "Zásada: {0}"
+
+msgid "Remember me for a month: {0}"
+msgstr "Pamatuj si mě po dobu jednoho měsíce: {0}"
+
+msgid "Some of your passwords are expired."
+msgstr "Některá z vašich hesel jsou expirovaná."
+
+msgid "Some of your passwords are expiring in {0} days."
+msgstr "Některá z vašich hesel vyprší za {0} dní."
+
+msgid "Some of your passwords are expired or expiring in {0} days."
+msgstr "Některá z vašich hesel jsou expirovaná nebo vyprší za {0} dní."
+
+msgid "The send password about to expire setting should be a boolean."
+msgstr "Nastavení zasílání upozornění na blížící se vypršení hesla by mělo být typu boolean."
+
+msgid "Password expiry email notifications are disabled."
+msgstr "E-mailová upozornění na expiraci hesel jsou vypnuta."
+
+msgid "An array of arrays is expected."
+msgstr "Očekává se pole polí."
+
+msgid "The expiry date is required."
+msgstr "Datum expirace je povinné."
+
+msgid "The identifier should be unique: {0}."
+msgstr "Identifikátor by měl být jedinečný: {0}."
+
+msgid "You are not allowed to update these resources."
+msgstr "Nemáte oprávnění aktualizovat tyto prostředky."
+
+msgid "You are not allowed to update this resource: {0}"
+msgstr "Nemáte oprávnění aktualizovat tento prostředek: {0}"
+
+msgid "The resource with ID {0} does not exist."
+msgstr "Prostředek s ID {0} neexistuje."
+
+msgid "You edited the password policy"
+msgstr "Upravili jste zásadu hesla"
+
+msgid "{0} edited the password policy"
+msgstr "{0} upravil(a) zásadu hesla"
+
+msgid "Only administrators are allowed to create/update password policies settings."
+msgstr "Pouze administrátoři mohou vytvářet nebo aktualizovat nastavení zásad hesel."
+
+msgid "The password policy settings has been updated by {0}."
+msgstr "Nastavení zásady hesel byla aktualizována uživatelem {0}."
+
+msgid "you"
+msgstr "vy"
+
+msgid "view it in passbolt"
+msgstr "zobrazit v passbolt"
+
+msgid "The SCIM setting id should be a valid UUID."
+msgstr "Identifikátor nastavení SCIM by měl být platný UUID."
+
+msgid "The identifier of the default user should be a valid UUID."
+msgstr "Identifikátor výchozího uživatele by měl být platný UUID."
+
+msgid "The user is not active, disabled or does not exist."
+msgstr "Uživatel není aktivní, je zakázán nebo neexistuje."
+
+msgid "The Setting ID cannot be passed on update."
+msgstr "ID nastavení nelze předat při aktualizaci."
+
+msgid "The secret token should not be empty."
+msgstr "Tajný token by neměl být prázdný."
+
+msgid "The ID for the SCIM settings should not be empty."
+msgstr "ID nastavení SCIM by nemělo být prázdné."
+
+msgid "The ID for the SCIM settings should be a valid UUID."
+msgstr "ID nastavení SCIM by mělo být platné UUID."
+
+msgid "The SCIM secret token is expired, you are requested to rotate it."
+msgstr ""
+
+msgid "Simultaneous SCIM and session authentication is not permitted."
+msgstr "Současné ověřování pomocí SCIM a relace není povoleno."
+
+msgid "SCIM settings endpoints are disabled."
+msgstr "Koncové body nastavení SCIM jsou zakázány."
+
+msgid "An entry for the same related entity already exists"
+msgstr "Záznam pro stejnou související entitu již existuje"
+
+msgid "An entry with the same `scim_name` and `foreign_model` already exist."
+msgstr ""
+
+msgid "Users"
+msgstr "Uživatelé"
+
+msgid "Groups"
+msgstr "Skupiny"
+
+msgid "The secret token format is incorrect."
+msgstr "Formát tajného tokenu je nesprávný."
+
+msgid "SCIM plugin is enabled."
+msgstr "Plugin SCIM je povolen."
+
+msgid "SCIM plugin is disabled."
+msgstr "Plugin SCIM je zakázán."
+
+msgid "The SCIM secret token is not expired."
+msgstr ""
+
+msgid "Rotate the SCIM secret token in the administration settings."
+msgstr ""
+
+msgid "The SCIM settings could not be decrypted with the server gpg key."
+msgstr "Nastavení SCIM se nepodařilo dešifrovat pomocí serverového klíče GPG."
+
+msgid "The SCIM settings could not be encrypted with the server gpg key."
+msgstr "Nastavení SCIM se nepodařilo zašifrovat pomocí serverového klíče GPG."
+
+msgid "Could not validate the SCIM settings found in database."
+msgstr "Nastavení SCIM nalezená v databázi se nepodařilo ověřit."
+
+msgid "The SCIM setting identifier should be a valid UUID."
+msgstr "Identifikátor nastavení SCIM by měl být platný UUID."
+
+msgid "Could not validate the SCIM settings."
+msgstr "Nastavení SCIM se nepodařilo ověřit."
+
+msgid "The SCIM plugin is disabled."
+msgstr "Plugin SCIM je zakázán."
+
+msgid "Please delete previous settings before creating again."
+msgstr "Před opětovným vytvořením prosím smažte předchozí nastavení."
+
+msgid "The uuid in the url doesn't match any known setting record."
+msgstr "UUID v adrese URL neodpovídá žádnému známému záznamu nastavení."
+
+msgid "The SCIM secret token expiry configuration is invalid."
+msgstr ""
+
+msgid "Missing or invalid SCIM user in configuration settings"
+msgstr ""
+
+msgid "An unexpected error occurred while creating the user in the database"
+msgstr ""
+
+msgid "An administrator user cannot be suspended via SCIM."
+msgstr ""
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "External id"
+msgstr "Externí id"
+
+msgid "Invalid Schema"
+msgstr "Neplatné schéma"
+
+msgid "Invalid ResourceType"
+msgstr "Neplatný ResourceType"
+
+msgid "SsoRecover plugin is disabled."
+msgstr "Modul SsoRecover je deaktivován."
+
+msgid "The SSO state type is invalid."
+msgstr "Typ stavu SSO je neplatný."
+
+msgid "CSRF issue. The state in URL and Cookies do not match."
+msgstr "Problém CSRF. Hodnota state v URL a cookies se neshoduje."
+
+msgid "CSRF issue. The state in request data does not match with cookie value."
+msgstr "Problém CSRF. Stav v datech požadavku neodpovídá hodnotě v cookie."
+
+msgid "The state is required in cookie."
+msgstr "Hodnota state je vyžadována v cookie."
+
+msgid "The token is required in URL parameters."
+msgstr "V parametrech URL je vyžadován token."
+
+msgid "The state is required in URL parameters."
+msgstr "V parametrech URL je vyžadována hodnota state."
+
+msgid "The code is required in URL parameters."
+msgstr "V parametrech URL je vyžadován kód."
+
+msgid "The code is required in request data."
+msgstr "V datech požadavku je vyžadován kód."
+
+msgid "The user id is required in URL parameters."
+msgstr "V parametrech URL je vyžadováno ID uživatele."
+
+msgid "The settings id is required in URL parameters."
+msgstr "V parametrech URL je vyžadováno ID nastavení."
+
+msgid "The user does not exist or is not active."
+msgstr "Uživatel neexistuje nebo není aktivní."
+
+msgid "The SSO setting does not exist."
+msgstr "Nastavení SSO neexistuje."
+
+msgid "Information about the key is required."
+msgstr "Informace o klíči jsou povinné."
+
+msgid "The SSO key id should be a uuid."
+msgstr "ID SSO klíče by mělo být UUID."
+
+msgid "The key could not be found"
+msgstr "Klíč nebyl nalezen"
+
+msgid "The SSO setting id should be a uuid."
+msgstr "ID nastavení SSO by mělo být UUID."
+
+msgid "The SSO settings were activated."
+msgstr "Nastavení SSO byla aktivována."
+
+msgid "The draft setting was saved."
+msgstr "Koncept nastavení byl uložen."
+
+msgid "The SSO settings were deleted."
+msgstr "Nastavení SSO byla odstraněna."
+
+msgid "Ajax/Json request not supported."
+msgstr "Požadavek Ajax/Json není podporován."
+
+msgid "A provider is required."
+msgstr "Poskytovatel je vyžadován."
+
+msgid "The provider is not supported."
+msgstr "Tento poskytovatel není podporován."
+
+msgid "Data is required."
+msgstr "Data jsou povinná."
+
+msgid "Data must be an array of properties."
+msgstr "Data musí být pole vlastností."
+
+msgid "The email claim should not be empty."
+msgstr "Emailový claim by neměl být prázdný."
+
+msgid "The email claim is too large."
+msgstr "E-mailový nárok je příliš velký."
+
+msgid "The email claim should be one of the following: {0}."
+msgstr "Emailový claim by měl být jeden z následujících: {0}."
+
+msgid "A URL is required."
+msgstr "URL je povinná."
+
+msgid "The URL should not be empty."
+msgstr "URL by neměla být prázdná."
+
+msgid "The URL is not supported."
+msgstr "URL není podporována."
+
+msgid "A tenant id is required."
+msgstr "ID tenanta je povinné."
+
+msgid "The tenant id should not be empty."
+msgstr "ID tenanta by nemělo být prázdné."
+
+msgid "The tenant id should be a valid UUID."
+msgstr "ID tenanta by mělo být platný UUID."
+
+msgid "A client id is required."
+msgstr "ID klienta je povinné."
+
+msgid "The client id should not be empty."
+msgstr "ID klienta by nemělo být prázdné."
+
+msgid "The client id should be a valid UUID."
+msgstr "ID klienta by mělo být platný UUID."
+
+msgid "A client secret is required."
+msgstr "Klientské tajemství je povinné."
+
+msgid "The client secret should be a valid string."
+msgstr "Klientské tajemství by mělo být platný řetězec."
+
+msgid "The client secret is too large."
+msgstr "Klientské tajemství je příliš dlouhé."
+
+msgid "A client secret expiry is required."
+msgstr "Je vyžadováno datum expirace klientského tajemství."
+
+msgid "The expiry should not be empty."
+msgstr "Datum expirace by nemělo být prázdné."
+
+msgid "The prompt should not be empty."
+msgstr "Výzva by neměla být prázdná."
+
+msgid "The prompt should be one of the following: {0}."
+msgstr "Výzva by měla být jedna z následujících: {0}."
+
+msgid "The login hint should be a boolean."
+msgstr "login hint by měl být boolean."
+
+msgid "The client id is too large."
+msgstr "ID klienta je příliš dlouhé."
+
+msgid "A base URL is required."
+msgstr "Základní URL je vyžadována."
+
+msgid "The base URL should not be empty."
+msgstr "Základní URL by neměla být prázdná."
+
+msgid "The base URL is too large."
+msgstr "Základní URL je příliš dlouhá."
+
+msgid "The OpenID configuration path should be a valid BMP-UTF8 string."
+msgstr "Cesta konfigurace OpenID by měla být platný BMP-UTF8 řetězec."
+
+msgid "The OpenID configuration path is too large."
+msgstr "Cesta konfigurace OpenID je příliš dlouhá."
+
+msgid "The client id should be a valid BMP-UTF8 string."
+msgstr "ID klienta by mělo být platný BMP-UTF8 řetězec."
+
+msgid "The scope should be a valid string."
+msgstr "Scope by měl být platný řetězec."
+
+msgid "The scope is too large."
+msgstr "Scope je příliš dlouhý."
+
+msgid "The URL must be a valid PingOne authentication domain."
+msgstr ""
+
+msgid "An environment id is required."
+msgstr ""
+
+msgid "The environment id should not be empty."
+msgstr ""
+
+msgid "The environment id should be a valid UUID."
+msgstr ""
+
+msgid "SSO settings edit endpoints are disabled."
+msgstr "Úprava koncových bodů nastavení SSO je zakázána."
+
+msgid "The user is not active."
+msgstr "Uživatel není aktivní."
+
+msgid "The status length is not supported."
+msgstr "Délka stavu není podporována."
+
+msgid "The status is not supported."
+msgstr "Stav není podporován."
+
+msgid "The nonce should be a valid ASCII string."
+msgstr "Nonce by měl být platný ASCII řetězec."
+
+msgid "The nonce length should be minimum {0} characters."
+msgstr "Nonce musí mít minimálně {0} znaků."
+
+msgid "The nonce length should be maximum {0} characters."
+msgstr "Nonce může mít maximálně {0} znaků."
+
+msgid "A nonce is required."
+msgstr "Nonce je požadován."
+
+msgid "The nonce should not be empty."
+msgstr "Nonce by neměl být prázdný."
+
+msgid "The type length should be maximum {0} characters."
+msgstr "Typ může mít maximálně {0} znaků."
+
+msgid "The state should be a valid ASCII string."
+msgstr "State by měl být platný ASCII řetězec."
+
+msgid "The state length should be minimum {0} characters."
+msgstr "State musí mít minimálně {0} znaků."
+
+msgid "The state length should be maximum {0} characters."
+msgstr "State může mít maximálně {0} znaků."
+
+msgid "The SSO settings identifier should be a valid UUID."
+msgstr "Identifikátor nastavení SSO by měl být platný UUID."
+
+msgid "The SSO settings identifier should not be empty."
+msgstr "Identifikátor nastavení SSO by neměl být prázdný."
+
+msgid "The user agent should be a valid ASCII string."
+msgstr "Uživatelský agent by měl být platný ASCII řetězec."
+
+msgid "The user agent length should be maximum {0} characters."
+msgstr "Uživatelský agent může mít maximálně {0} znaků."
+
+msgid "A user agent is required."
+msgstr "Uživatelský agent je vyžadován."
+
+msgid "The user agent should not be empty."
+msgstr "Uživatelský agent by neměl být prázdný."
+
+msgid "The IP length should be maximum {0} characters."
+msgstr "IP adresa může mít maximálně {0} znaků."
+
+msgid "An IP is required."
+msgstr "IP adresa je vyžadována."
+
+msgid "The IP should not be empty."
+msgstr "IP adresa by neměla být prázdná."
+
+msgid "This nonce is already in use."
+msgstr "Tento nonce se již používá."
+
+msgid "This state is already in use."
+msgstr "Tento state se již používá."
+
+msgid "The SSO setting identifier does not exist."
+msgstr "Identifikátor nastavení SSO neexistuje."
+
+msgid "The user identifier does not exist."
+msgstr "Identifikátor uživatele neexistuje."
+
+msgid "The provided nonce is invalid."
+msgstr "Poskytnutý nonce je neplatný."
+
+msgid "The URL should start with https://"
+msgstr "URL by měla začínat na https://"
+
+msgid "The provided state is invalid."
+msgstr "Poskytnutý state je neplatný."
+
+msgid "The type of the SSO state is invalid."
+msgstr "Typ stavu SSO je neplatný."
+
+msgid "{0} activated the SSO setting"
+msgstr "{0} aktivoval(a) nastavení SSO"
+
+msgid "{0} deleted the SSO setting"
+msgstr "{0} odstranil(a) nastavení SSO"
+
+msgid "Users are unable to log in via Azure SSO"
+msgstr "Uživatelé se nemohou přihlásit pomocí Azure SSO"
+
+msgid "Single sign-on failed."
+msgstr "Single sign-on se nezdařil."
+
+msgid "Provider error: \"{0}\""
+msgstr "Chyba poskytovatele: \"{0}\""
+
+msgid "Azure SSO secret expiry date is near"
+msgstr "Datum vypršení tajného klíče Azure SSO se blíží"
+
+msgid "SSL certification validation for SSO instance is enabled."
+msgstr "Ověřování certifikátu SSL pro instanci SSO je povoleno."
+
+msgid "SSL certification validation for SSO instance is disabled."
+msgstr "Ověřování certifikátu SSL pro instanci SSO je zakázáno."
+
+msgid "To fix this, you can set PASSBOLT_SECURITY_SSO_SSL_VERIFY environment variable to true."
+msgstr "Chcete-li to opravit, nastavte proměnnou prostředí PASSBOLT_SECURITY_SSO_SSL_VERIFY na hodnotu true."
+
+msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
+msgstr "Nebo nastavte passbolt.security.sso.sslVerify na hodnotu true v {0}."
+
+msgid "The endpoints for updating the SSO configurations are disabled."
+msgstr "Koncové body pro aktualizaci konfigurací SSO jsou zakázány."
+
+msgid "The endpoints for updating the SSO configurations are enabled."
+msgstr "Koncové body pro aktualizaci konfigurací SSO jsou povoleny."
+
+msgid "It is recommended to disable endpoints for updating the SSO configurations."
+msgstr "Doporučuje se zakázat koncové body pro aktualizaci konfigurací SSO."
+
+msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
+msgstr "Nastavte proměnnou prostředí PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED na hodnotu true."
+
+msgid "The user is missing for the SSO state."
+msgstr "Uživatel pro tento stav SSO chybí."
+
+msgid "Email not provided by provider."
+msgstr "Poskytovatel neposkytl e-mail."
+
+msgid "Username mismatch."
+msgstr "Nesoulad uživatelského jména."
+
+msgid "Invalid nonce."
+msgstr "Neplatný nonce."
+
+msgid "Invalid provider. Expected AD FS."
+msgstr "Neplatný poskytovatel. Očekává se AD FS."
+
+msgid "Invalid provider data. Expected AD FS settings."
+msgstr "Neplatná data poskytovatele. Očekávána nastavení AD FS."
+
+msgid "No valid SSO settings found."
+msgstr "Nebyla nalezena žádná platná nastavení SSO."
+
+msgid "You must authenticate with Azure again."
+msgstr "Musíte se znovu ověřit pomocí Azure."
+
+msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
+msgstr "Poskytnutá hodnota v konfiguraci `passbolt.security.sso.sslCafile` není platná."
+
+msgid "Provided root CA file does not exist"
+msgstr "Zadaný soubor kořenové CA neexistuje."
+
+msgid "Invalid provider. Expected PingOne."
+msgstr ""
+
+msgid "Invalid provider data. Expected PingOne settings."
+msgstr ""
+
+msgid "The user id should be a valid UUID."
+msgstr "ID uživatele by mělo být platný UUID."
+
+msgid "The authentication token does not exist."
+msgstr "Ověřovací token neexistuje."
+
+msgid "The SSO authentication token is invalid."
+msgstr "Ověřovací token SSO je neplatný."
+
+msgid "Settings id is missing."
+msgstr "Chybí ID nastavení."
+
+msgid "User id mismatch."
+msgstr "Nesoulad ID uživatele."
+
+msgid "Token IP is missing."
+msgstr "Tokenu chybí IP adresa."
+
+msgid "User IP mismatch."
+msgstr "Nesoulad IP uživatele."
+
+msgid "User agent is missing."
+msgstr "Chybí user agent."
+
+msgid "User agent mismatch."
+msgstr "Neshoda uživatelského agenta."
+
+msgid "Settings mismatch."
+msgstr "Neshoda nastavení."
+
+msgid "The SSO key could not be saved."
+msgstr "Klíč SSO se nepodařilo uložit."
+
+msgid "The SSO key does not exist."
+msgstr "Klíč SSO neexistuje."
+
+msgid "The SSO key could not be deleted."
+msgstr "Klíč SSO se nepodařilo odstranit."
+
+msgid "Could not update the SSO settings."
+msgstr "Nepodařilo se aktualizovat nastavení SSO."
+
+msgid "The settings status is invalid."
+msgstr "Stav nastavení je neplatný."
+
+msgid "Invalid status."
+msgstr "Neplatný stav."
+
+msgid "Could not delete the SSO settings."
+msgstr "Nepodařilo se odstranit nastavení SSO."
+
+msgid "Could not delete the draft SSO settings."
+msgstr "Nepodařilo se odstranit koncept nastavení SSO."
+
+msgid "The SSO settings do not exist."
+msgstr "Nastavení SSO neexistují."
+
+msgid "The SSO setting cannot be decrypted."
+msgstr "Nastavení SSO nelze dešifrovat."
+
+msgid "The SSO setting cannot be decoded."
+msgstr "Nastavení SSO nelze dekódovat."
+
+msgid "Only administrators can create SSO settings."
+msgstr "Pouze administrátoři mohou vytvářet nastavení SSO."
+
+msgid "Something went wrong when validating the single-sign on settings."
+msgstr "Při ověřování nastavení single sign-on došlo k chybě."
+
+msgid "It is not possible to save the SSO settings."
+msgstr "Nastavení SSO nelze uložit."
+
+msgid "The SSO state is invalid."
+msgstr "Stav SSO je neplatný."
+
+msgid "The SSO state is expired."
+msgstr "Platnost stavu SSO vypršela."
+
+msgid "The SSO state could not be saved."
+msgstr "Stav SSO se nepodařilo uložit."
+
+msgid "The SSO state does not exist."
+msgstr "Stav SSO neexistuje."
+
+msgid "Could not save the SSO state, invalid nonce."
+msgstr "Stav SSO nelze uložit, nonce je neplatný."
+
+msgid "Could not save the SSO state, please try again later."
+msgstr "Stav SSO nelze uložit, zkuste to prosím znovu později."
+
+msgid "The {0} claim is not present, please contact your administrator."
+msgstr "Claim {0} není přítomen, kontaktujte prosím svého administrátora."
+
+msgid "Cannot parse JWKS endpoint response."
+msgstr "Nelze zpracovat odpověď koncového bodu JWKS."
+
+msgid "Invalid JWKS endpoint response. Keys missing."
+msgstr "Neplatná odpověď koncového bodu JWKS. Chybí klíče."
+
+msgid "Failed to read certificate: {0}"
+msgstr "Nepodařilo se přečíst certifikát: {0}"
+
+msgid "Failed to read public key from certificate: {0}"
+msgstr "Nepodařilo se načíst veřejný klíč z certifikátu: {0}"
+
+msgid "Failed to public key properties from certificate: {0}"
+msgstr "Nepodařilo se získat vlastnosti veřejného klíče z certifikátu: {0}"
+
+msgid "JWT token is missing."
+msgstr "Chybí token JWT."
+
+msgid "Unable to decode JWT token."
+msgstr "Token JWT nelze dekódovat."
+
+msgid "The {0} configuration value should be a string or NULL."
+msgstr "Hodnota konfigurace {0} by měla být řetězec nebo NULL."
+
+msgid "The {0} configuration value should be one of the following: {1}."
+msgstr "Hodnota konfigurace {0} by měla být jedna z následujících možností: {1}."
+
+msgid "Single-sign on was a success"
+msgstr "Single sign-on byl úspěšný"
+
+msgid "Users are unable to log in via Azure SSO."
+msgstr "Uživatelé se nemohou přihlásit pomocí Azure SSO."
+
+msgid "This can happen when the client secret of Azure AD is expired, or the SSO configurations (client credentials) are invalid."
+msgstr "K tomu může dojít, když klientský tajný klíč Azure AD vypršel nebo jsou konfigurace SSO (klientské přihlašovací údaje) neplatné."
+
+msgid "See Azure error response below:"
+msgstr "Níže je uvedena chybová odpověď Azure:"
+
+msgid "Error: {0}"
+msgstr "Chyba: {0}"
+
+msgid "Error description: {0}"
+msgstr "Popis chyby: {0}"
+
+msgid "To fix this, you as an administrator have to update the Azure SSO credentials."
+msgstr "Chcete-li to opravit, musíte jako administrátor aktualizovat přihlašovací údaje Azure SSO."
+
+msgid "Update it in passbolt"
+msgstr "Aktualizovat v passboltu"
+
+msgid "The client secret expiry date of your Azure AD instance is {0}."
+msgstr "Datum vypršení klientského tajného klíče vaší instance Azure AD je {0}."
+
+msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
+msgstr "Upozorňujeme, že uživatelé passboltu se po datu vypršení platnosti klientského tajného klíče nebudou moci přihlásit prostřednictvím Azure SSO."
+
+msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
+msgstr "Doporučujeme toto opravit na straně Azure a aktualizovat nejnovější údaje v passboltu."
+
+msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
+msgstr "Poskytovatel SSO {0} byl úspěšně otestován a aktivován uživatelem {1}. "
+
+msgid "All users can now use Single Sign-on to perform authentication."
+msgstr "Všichni uživatelé nyní mohou k ověření používat Single sign-on."
+
+msgid "Viewq  it in passbolt"
+msgstr "Zobrazit v passboltu"
+
+msgid "The SSO setting has been deleted by {0}."
+msgstr "Nastavení SSO bylo odstraněno uživatelem {0}."
+
+msgid "The authentication token does not exist or has been deleted."
+msgstr "Ověřovací token neexistuje nebo byl odstraněn."
+
+msgid "The authentication token has been expired."
+msgstr "Platnost ověřovacího tokenu vypršela."
+
+msgid "Could not validate the SSO recover request."
+msgstr "Nepodařilo se ověřit požadavek na obnovení SSO."
+
+msgid "The email is required in URL parameters."
+msgstr "V parametrech URL je vyžadován e-mail."
+
+msgid "The case field is required."
+msgstr "Pole \"case\" je povinné."
+
+msgid "The case is not supported. Only \"default\" case is supported."
+msgstr "Tento case není podporován. Podporován je pouze \"default\"."
+
+msgid "The token field is required."
+msgstr "Pole token je povinné."
+
+msgid "Access to this service requires an invitation. "
+msgstr "Přístup k této službě vyžaduje pozvánku. "
+
+msgid "Please contact your administrator to request an invitation link."
+msgstr "Obraťte se prosím na správce a požádejte o odkaz na pozvánku."
+
+msgid "Subscription key data is required."
+msgstr "Data licenčního klíče jsou povinná."
+
+msgid "The subscription was created."
+msgstr "Předplatné bylo vytvořeno."
+
+msgid "The subscription was updated."
+msgstr "Předplatné bylo aktualizováno."
+
+msgid "The subscription is valid."
+msgstr "Předplatné je platné."
+
+msgid "Subscription key could not be found."
+msgstr "Licenční klíč nebyl nalezen."
+
+msgid "The subscription cannot be verified. Parse error."
+msgstr "Předplatné nelze ověřit. Chyba analýzy."
+
+msgid "The subscription format is not valid. Invalid format."
+msgstr "Formát předplatného není platný. Neplatný formát."
+
+msgid "The subscription key cannot be verified."
+msgstr "Klíč předplatného nelze ověřit."
+
+msgid "The passbolt OpenPGP public key could not be found."
+msgstr "Veřejný klíč Passbolt OpenPGP nebyl nalezen."
+
+msgid "A users quantity is required."
+msgstr "Je vyžadován počet uživatelů."
+
+msgid "The users quantity should not be empty."
+msgstr "Počet uživatelů by neměl být prázdný."
+
+msgid "The users limit is exceeded."
+msgstr "Byl překročen limit počtu uživatelů."
+
+msgid "The key should have been created in the past."
+msgstr "Klíč by měl být vytvořen v minulosti."
+
+msgid "An expiry date is required."
+msgstr "Datum expirace je povinné."
+
+msgid "The subscription is expired."
+msgstr "Předplatné vypršelo."
+
+msgid "A customer identifier is required."
+msgstr "Identifikátor zákazníka je povinný."
+
+msgid "A subscription identifier is required."
+msgstr "Identifikátor předplatného je povinný."
+
+msgid "The format of the subscription id is not valid."
+msgstr "Formát identifikátoru předplatného není platný."
+
+msgid "Only admin can create or update subscription information."
+msgstr "Pouze administrátor může vytvářet nebo aktualizovat informace o předplatném."
+
+msgid "The subscription key format is not valid."
+msgstr "Formát licenčního klíče není platný."
+
+msgid "Subscription is valid and up to date."
+msgstr "Předplatné je platné a aktuální."
+
+msgid "Subscription cannot be found or is invalid/expired."
+msgstr "Předplatné nelze nalézt nebo je neplatné/platnost vypršela."
+
+msgid "Subscription invalid/expired ({0})."
+msgstr "Předplatné neplatné/vypršelo ({0})."
+
+msgid "Subscription expired ({0})."
+msgstr "Předplatné vypršelo ({0})."
+
+msgid "Subscription user count has been exceeded ({0}/{1})."
+msgstr "Byl překročen limit počtu uživatelů předplatného ({0}/{1})."
+
+msgid "Subscription will expire in {0} days."
+msgstr "Předplatné vyprší za {0} dní."
+
+msgid "Subscription soon exceeds user count ({0}/{1})."
+msgstr "Předplatné brzy překročí limit počtu uživatelů ({0}/{1})."
+
+msgid "Subscription invalid or expired."
+msgstr "Předplatné je neplatné nebo vypršelo."
+
+msgid "Subscription key format error."
+msgstr "Chybný formát licenčního klíče."
+
+msgid "Subscription key signature error."
+msgstr "Chyba podpisu licenčního klíče."
+
+msgid "Subscription key validation error."
+msgstr "Chyba ověření licenčního klíče."
+
+msgid "It looks like you could use some help."
+msgstr "Vypadá to, že byste potřebovali pomoc."
+
+msgid "We are here for you. You can contact us at sales@passbolt.com"
+msgstr "Jsme tu pro vás. Kontaktujte nás na adrese sales@passbolt.com"
+
+msgid "Thanks for choosing Passbolt Pro"
+msgstr "Děkujeme, že jste si vybrali Passbolt Pro"
+
+msgid "Below are your subscription key details"
+msgstr "Níže naleznete informace o vašem licenčním klíči"
+
+msgid "<error>Not Available</error>"
+msgstr "<error>Nedostupné</error>"
+
+msgid "Customer id:\t{0}"
+msgstr "Identifikace zákazníka:\t{0}"
+
+msgid "<error>{0} (currently: {1}) - Exceeded</error>"
+msgstr "<error>{0} (aktuálně: {1}) - Překročeno</error>"
+
+msgid "<info>{0} (currently: {1})</info>"
+msgstr "<info>{0} (aktuálně: {1})</info>"
+
+msgid "Users limit:\t{0}"
+msgstr "Limit uživatelů:\t{0}"
+
+msgid "Valid from:\t<info>{0}</info>"
+msgstr "Platné od:\t<info>{0}</info>"
+
+msgid "Expires on:\t<error>{0} (expired)</error>"
+msgstr "Platnost do:\t<error>{0} (vypršelo)</error>"
+
+msgid "Expires on:\t<info>{0} (in {1} days)</info>"
+msgstr "Platnost do:\t<info>{0} (za {1} dní)</info>"
+
+msgid "For any question / feedback / subscription renewal,"
+msgstr "Pro jakékoli dotazy / zpětnou vazbu / obnovení předplatného,"
+
+msgid "kindly contact us at <info>sales@passbolt.com</info>"
+msgstr "kontaktujte nás prosím na <info>sales@passbolt.com</info>"
+
+msgid "Only administrators can view the subscription details."
+msgstr "Pouze administrátoři mohou zobrazit podrobnosti předplatného."
+
+msgid "The file {0} could not be found."
+msgstr "Soubor {0} nebyl nalezen."
+
+msgid "The file {0} could not be read."
+msgstr "Soubor {0} nelze přečíst."
+
+msgid "No active admins were found."
+msgstr "Nebyli nalezeni žádní aktivní administrátoři."
+
+msgid "Only administrators can update the subscription details."
+msgstr "Pouze administrátoři mohou aktualizovat údaje o předplatném."
+
+msgid "The tags data should be a string or an array."
+msgstr "Data štítků by měla být řetězec nebo pole."
+
+msgid "Could not validate request data."
+msgstr "Nepodařilo se ověřit data požadavku."
+
+msgid "The tag id is not valid."
+msgstr "ID tagu není platné."
+
+msgid "The tag does not exist."
+msgstr "Tag neexistuje."
+
+msgid "You do not have the permission to delete shared tags."
+msgstr "Nemáte oprávnění mazat sdílené tagy."
+
+msgid "The tag has been deleted successfully."
+msgstr "Štítek byl úspěšně odstraněn."
+
+msgid "You do not have the permission to update shared tags."
+msgstr "Nemáte oprávnění aktualizovat sdílené tagy."
+
+msgid "The tag has been updated successfully."
+msgstr "Štítek byl úspěšně aktualizován."
+
+msgid "The tag identifier should be a valid UUID."
+msgstr "Identifikátor štítku by měl být platný UUID."
+
+msgid "The tag is missing or does not belong to current user."
+msgstr "Štítek chybí nebo nepatří aktuálnímu uživateli."
+
+msgid "The is shared should be a boolean type."
+msgstr "Hodnota is shared musí být typu boolean."
+
+msgid "The tags plugin is in read-only mode."
+msgstr "Plugin štítků je v režimu pouze pro čtení."
+
+msgid "The tag should not be empty."
+msgstr "Tag by neměl být prázdný."
+
+msgid "A tag is required."
+msgstr "Tag je povinný."
+
+msgid "The tag should be a valid BMP-UTF8 string."
+msgstr "Tag by měl být platný řetězec BMP-UTF8."
+
+msgid "The tag length should be maximum {0} characters."
+msgstr "Délka tagu by měla být maximálně {0} znaků."
+
+msgid "The shared status should be a valid boolean."
+msgstr "Sdílený stav by měl být platný boolean."
+
+msgid "A shared status is required."
+msgstr "Sdílený stav je povinný."
+
+msgid "The tag metadata OpenPGP message cannot be parsed or is not for the intended recipient."
+msgstr "Zprávu OpenPGP s metadaty štítku nelze zpracovat nebo není určena pro zamýšleného příjemce."
+
+msgid "Error while building tag DTO."
+msgstr "Chyba při sestavování DTO štítku."
+
+msgid "Could not validate tags data."
+msgstr "Nepodařilo se ověřit data tagů."
+
+msgid "Unable to build tag entity"
+msgstr "Nelze vytvořit entitu štítku"
+
+msgid "No tags to migrate."
+msgstr "Žádné štítky k migraci."
+
+msgid "Tag ID \"{0}\" is already V5"
+msgstr "ID štítku \"{0}\" je již V5"
+
+msgid "No user found for the personal tag id: \"{0}\"."
+msgstr "Pro osobní štítek s ID \"{0}\" nebyl nalezen uživatel."
+
+msgid "User contain data missing for the tag id: \"{0}\"."
+msgstr "Uživatel postrádá data pro štítek s ID: \"{0}\"."
+
+msgid "Unable to migrate tag id: {0} to V5."
+msgstr "Štítek s ID: {0} nelze migrovat na V5."
+
+msgid "The tag metadata key data could not be updated."
+msgstr "Data klíče metadat štítku se nepodařilo aktualizovat."
+
+msgid "Could not save the tags, try again later."
+msgstr "Štítky se nepodařilo uložit, zkuste to později."
+
+msgid "You do not have the permission to edit shared tags on this resource."
+msgstr "Nemáte oprávnění upravovat sdílené tagy u tohoto zdroje."
+
+msgid "Unable to save the tag."
+msgstr "Štítek nelze uložit."
+
+msgid "You do not have the permission to change a personal tag into shared tag."
+msgstr "Nemáte oprávnění změnit osobní štítek na sdílený."
+
+msgid "The settings selected by your administrator prevent from downgrading tag."
+msgstr "Nastavení zvolené vaším administrátorem brání downgradování štítku."
+
+msgid "Could not retrieve the user passphrase policies."
+msgstr "Nepodařilo se načíst zásady uživatelských přístupových frází."
+
+msgid "The entropy minimum is required."
+msgstr "Minimální entropie je povinná."
+
+msgid "The entropy minimum should be between {0} and {1}."
+msgstr "Minimální entropie by měla být mezi {0} a {1}."
+
+msgid "You edited the user passphrase policy"
+msgstr "Upravili jste zásadu uživatelské přístupové fráze"
+
+msgid "{0} edited the user passphrase policy"
+msgstr "{0} upravil(a) zásadu uživatelské přístupové fráze"
+
+msgid "Could not validate the user passphrase policies settings."
+msgstr "Nepodařilo se ověřit nastavení zásad uživatelských přístupových frází."
+
+msgid "Only administrators are allowed to create/update user passphrase policies settings."
+msgstr "Pouze administrátoři mohou vytvářet nebo aktualizovat nastavení zásad uživatelských přístupových frází."
+
+msgid "The user passphrase policy settings has been updated by {0}."
+msgstr "Nastavení zásady uživatelských přístupových frází bylo aktualizováno uživatelem {0}."
 
 msgid "Error"
 msgstr "Chyba"
@@ -5247,9 +7257,6 @@ msgstr "Tento uživatel postrádá šifrovací klíč pro metadata sdíleného z
 
 msgid "View users"
 msgstr "Zobrazit uživatele"
-
-msgid "You have initiated an account recovery!"
-msgstr "Zahájili jste obnovení účtu!"
 
 msgid "Welcome back!"
 msgstr "Vítejte zpět!"

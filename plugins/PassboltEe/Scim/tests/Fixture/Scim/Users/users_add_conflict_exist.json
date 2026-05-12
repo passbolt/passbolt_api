@@ -1,0 +1,8 @@
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:Error"
+    ],
+    "status": 409,
+    "detail": "The Users resource with id `PLACEHOLDER_USER_ID_1` could not be created due to a uniqueness conflict",
+    "scimType": "uniqueness"
+}

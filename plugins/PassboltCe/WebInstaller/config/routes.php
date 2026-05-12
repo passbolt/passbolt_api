@@ -31,6 +31,9 @@ $routes->plugin('Passbolt/WebInstaller', ['path' => '/install'], function (Route
     $routes->connect('/system_check', ['controller' => 'SystemCheck', 'action' => 'index'])
         ->setMethods(['GET']);
 
+    $routes->connect('/subscription', ['controller' => 'SubscriptionKey', 'action' => 'index'])
+        ->setMethods(['GET', 'POST']);
+
     $routes->connect('/database', ['controller' => 'Database', 'action' => 'index'])
         ->setMethods(['GET', 'POST']);
 

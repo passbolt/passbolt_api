@@ -1,0 +1,89 @@
+<?php
+
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
+use Cake\Routing\RouteBuilder;
+use Passbolt\Tags\Middleware\TagsReadOnlyModeMiddleware;
+
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->plugin('Passbolt/Tags', ['path' => '/tags'], function (RouteBuilder $routes): void {
+    $routes->setExtensions(['json']);
+    $routes->registerMiddleware(TagsReadOnlyModeMiddleware::class, new TagsReadOnlyModeMiddleware());
+
+    $routes->connect('/', ['prefix' => 'Tags', 'controller' => 'TagsIndex', 'action' => 'index'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/{id}', ['prefix' => 'Tags', 'controller' => 'ResourcesTagsAdd', 'action' => 'addPost'])
+        ->setPass(['id'])
+        ->setMethods(['POST'])
+        ->setMiddleware([TagsReadOnlyModeMiddleware::class]);
+
+    $routes->connect('/{id}', ['prefix' => 'Tags', 'controller' => 'TagsUpdate', 'action' => 'update'])
+        ->setPass(['id'])
+        ->setMethods(['PUT'])
+        ->setMiddleware([TagsReadOnlyModeMiddleware::class]);
+
+    $routes->connect('/{id}', ['prefix' => 'Tags', 'controller' => 'TagsDelete', 'action' => 'delete'])
+        ->setPass(['id'])
+        ->setMethods(['DELETE'])
+        ->setMiddleware([TagsReadOnlyModeMiddleware::class]);
+});
+
+/** @var \Cake\Routing\RouteBuilder $routes */
+$routes->plugin('Passbolt/Tags', ['path' => '/metadata'], function (RouteBuilder $routes): void {
+    $routes->setExtensions(['json']);
+
+    /**
+     * Tags upgrade endpoints.
+     */
+    $routes->scope('/upgrade', function (RouteBuilder $routes): void {
+        $routes->setExtensions(['json']);
+
+        $routes
+            ->connect(
+                '/tags',
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeTagsIndex', 'action' => 'index']
+            )
+            ->setMethods(['GET']);
+
+        $routes
+            ->connect(
+                '/tags',
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeTagsPost', 'action' => 'post']
+            )
+            ->setMethods(['POST']);
+    });
+
+    /**
+     * Key rotation endpoints.
+     */
+    $routes->scope('/rotate-key', function (RouteBuilder $routes): void {
+        $routes->setExtensions(['json']);
+
+        $routes
+            ->connect(
+                '/tags',
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyTagsIndex', 'action' => 'index']
+            )
+            ->setMethods(['GET']);
+
+        $routes
+            ->connect(
+                '/tags',
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyTagsPost', 'action' => 'post']
+            )
+            ->setMethods(['POST']);
+    });
+});

@@ -1,0 +1,14 @@
+{
+    "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:ResourceType"
+    ],
+    "id": "Group",
+    "name": "Group",
+    "endpoint": "Groups",
+    "description": "https:\/\/tools.ietf.org\/html\/rfc7643#section-8.7.1",
+    "schema": "urn:ietf:params:scim:schemas:core:2.0:Group",
+    "meta": {
+        "location": "PLACEHOLDER_API_URLscim\/v2\/PLACEHOLDER_SETTING_ID\/ResourceTypes\/Group",
+        "resourceType": "ResourceType"
+    }
+}

@@ -48,6 +48,7 @@ abstract class SolutionBootstrapperTestCase extends TestCase
         $this->clearPlugins();
         unset($this->app);
 
+        EmailNotificationSettings::flushCache();
         parent::tearDown();
     }
 
@@ -59,6 +60,13 @@ abstract class SolutionBootstrapperTestCase extends TestCase
             $plugins->next();
         }
         $this->assertSame(count($expectedPlugins), $plugins->count());
+    }
+
+    protected function assertPluginListContains(PluginCollection $plugins, array $expectedPlugins)
+    {
+        foreach ($expectedPlugins as $pluginName) {
+            $this->assertTrue($plugins->has($pluginName), "Plugin list should contain the plugin:  $pluginName");
+        }
     }
 
     protected function removePluginFromList(array $list, string $pluginName): array

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase;
 
 use App\BaseSolutionBootstrapper;
+use App\Service\Subscriptions\EditionManager;
 use App\Test\Lib\SolutionBootstrapperTestCase;
 use Cake\Core\Configure;
 use Cake\Core\PluginCollection;
@@ -64,6 +65,18 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/ExportPolicies',
         'Passbolt/SecretRevisions',
     ];
+
+    private ?BaseSolutionBootstrapper $sut = null;
+
+    /**
+     * @inheritDoc
+     */
+    public function setUp(): void
+    {
+        Configure::write('passbolt.edition', EditionManager::EDITION_CE);
+        $this->sut = new BaseSolutionBootstrapper();
+        parent::setUp();
+    }
 
     public function testBaseSolutionBootstrapper_Application_Bootstrap(): void
     {
@@ -120,7 +133,6 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         Configure::delete('passbolt.plugins.multiFactorAuthentication.enabled');
         Configure::delete('passbolt.plugins.log.enabled');
 
-        $this->app->setSolutionBootstrapper(new BaseSolutionBootstrapper());
         $this->app->bootstrap();
         $this->app->pluginBootstrap();
 
@@ -131,7 +143,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
     {
         $this->enableFeaturePlugin(MobilePlugin::class);
 
-        $this->app->getSolutionBootstrapper()->addFeaturePluginIfEnabled($this->app, 'Mobile');
+        $this->sut->addFeaturePluginIfEnabled($this->app, 'Mobile');
         $this->assertTrue($this->app->getPlugins()->has('Passbolt/Mobile'));
 
         $plugin = $this->app->getPlugins()->get('Passbolt/Mobile');
@@ -144,7 +156,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
     {
         $this->enableFeaturePlugin(MobilePlugin::class);
 
-        $this->app->getSolutionBootstrapper()->addFeaturePluginIfEnabled($this->app, 'Mobile', ['routes' => false, 'bootstrap' => false]);
+        $this->sut->addFeaturePluginIfEnabled($this->app, 'Mobile', ['routes' => false, 'bootstrap' => false]);
         $this->assertTrue($this->app->getPlugins()->has('Passbolt/Mobile'));
 
         $plugin = $this->app->getPlugins()->get('Passbolt/Mobile');
@@ -176,9 +188,9 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         $this->assertFalse($this->isFeaturePluginEnabled(MobilePlugin::class));
 
         if ($isEnabledByDefault === null) {
-            $this->app->getSolutionBootstrapper()->addFeaturePluginIfEnabled($this->app, 'mobile');
+            $this->sut->addFeaturePluginIfEnabled($this->app, 'mobile');
         } else {
-            $this->app->getSolutionBootstrapper()->addFeaturePluginIfEnabled($this->app, 'mobile', [], $isEnabledByDefault);
+            $this->sut->addFeaturePluginIfEnabled($this->app, 'mobile', [], $isEnabledByDefault);
         }
         $this->assertFalse($this->app->getPlugins()->has('Passbolt/Mobile'));
     }
@@ -204,7 +216,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         Configure::delete('passbolt.plugins.mobile.enabled');
         $this->assertFalse($this->isFeaturePluginEnabled(MobilePlugin::class));
 
-        $this->app->getSolutionBootstrapper()->addFeaturePluginIfEnabled($this->app, 'mobile', [], $isEnabledByDefault);
+        $this->sut->addFeaturePluginIfEnabled($this->app, 'mobile', [], $isEnabledByDefault);
         $this->assertTrue($this->app->getPlugins()->has('Passbolt/Mobile'));
         $this->assertSame('Passbolt/Mobile', $this->app->getPlugins()->get('Passbolt/Mobile')->getName());
         $plugin = $this->app->getPlugins()->get('Passbolt/Mobile');
@@ -215,7 +227,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
     public function testBaseSolutionBootstrapper_AddFeaturePlugin_On_Non_Existing_Plugin()
     {
         $this->expectNotToPerformAssertions();
-        $this->app->getSolutionBootstrapper()->addFeaturePluginIfEnabled($this->app, 'foo');
+        $this->sut->addFeaturePluginIfEnabled($this->app, 'foo');
     }
 
     public function testBaseSolutionBootstrapper_AddFeaturePlugin_On_Callable_Not_Returning_A_Boolean()
@@ -226,7 +238,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         };
 
         $this->expectException(TypeError::class);
-        $this->app->getSolutionBootstrapper()->addFeaturePluginIfEnabled($this->app, 'Bar', [], $callable);
+        $this->sut->addFeaturePluginIfEnabled($this->app, 'Bar', [], $callable);
     }
 
     public function testBaseSolutionBootstrapper_AddFeaturePlugin_On_Class_Not_A_Plugin()
@@ -234,6 +246,6 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         $className = self::class;
         $this->expectException(InternalErrorException::class);
         $this->expectExceptionMessage("The class {$className} should implement PluginInterface::class.");
-        $this->app->getSolutionBootstrapper()->isFeaturePluginEnabled($className);
+        $this->sut->isFeaturePluginEnabled($className);
     }
 }

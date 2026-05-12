@@ -135,7 +135,7 @@ class SecretAccessesTable extends Table
      *
      * @param \App\Utility\UserAccessControl $uac user access control object
      * @param \App\Model\Entity\Secret|array $secret the secret entity
-     * @return \Cake\Datasource\EntityInterface|mixed|bool|false
+     * @return \Cake\ORM\Entity|mixed|bool|false
      */
     public function createFromSecretEntity(UserAccessControl $uac, Secret|array $secret): mixed
     {

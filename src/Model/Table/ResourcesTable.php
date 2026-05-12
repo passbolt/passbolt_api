@@ -611,6 +611,15 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
         $this->getAssociation('Favorites')
             ->deleteAll(['Favorites.foreign_key' => $resource->id]);
 
+        // Delete all tags
+        if ($this->isFeaturePluginEnabled('Tags')) {
+            $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
+            $ResourcesTags->deleteAll(['resource_id' => $resource->id]);
+            /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
+            $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
+            $Tags->deleteAllUnusedTags();
+        }
+
         // Notify other components about the resource soft delete.
         $event = new Event('Model.Resource.afterSoftDelete', $resource);
         $this->getEventManager()->dispatch($event);
@@ -636,6 +645,17 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
             'foreign_key' => $resourceId,
             'user_id IN' => $usersId,
         ]);
+
+        if ($this->isFeaturePluginEnabled('Tags')) {
+            $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
+            $ResourcesTags->deleteAll([
+                'resource_id' => $resourceId,
+                'user_id IN' => $usersId,
+            ]);
+            /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
+            $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
+            $Tags->deleteAllUnusedTags();
+        }
     }
 
     /**
@@ -671,6 +691,14 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
 
             $Permissions = TableRegistry::getTableLocator()->get('Permissions');
             $Permissions->deleteAll(['aco_foreign_key IN' => $resourceIds]);
+
+            if ($this->isFeaturePluginEnabled('Tags')) {
+                $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
+                $ResourcesTags->deleteAll(['resource_id IN' => $resourceIds]);
+                /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
+                $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
+                $Tags->deleteAllUnusedTags();
+            }
         }
     }
 

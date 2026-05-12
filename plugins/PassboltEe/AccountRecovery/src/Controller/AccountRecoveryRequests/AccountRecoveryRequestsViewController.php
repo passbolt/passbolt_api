@@ -1,0 +1,65 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         3.6.0
+ */
+
+namespace Passbolt\AccountRecovery\Controller\AccountRecoveryRequests;
+
+use App\Controller\AppController;
+use App\Utility\UserAction;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Validation\Validation;
+use Passbolt\Rbacs\Service\ActionAccessControl\RoleActionAccessControlServiceInterface;
+
+class AccountRecoveryRequestsViewController extends AppController
+{
+    /**
+     * List the details of one account recovery request
+     *
+     * @param string $id uuid of the request
+     * @param \Passbolt\Rbacs\Service\ActionAccessControl\RoleActionAccessControlServiceInterface $accessControlService service assessing if the user's role has access to this action
+     * @throws \Cake\Http\Exception\ForbiddenException if the user is not an admin
+     * @throws \Cake\Http\Exception\NotFoundException if request id could not be found
+     * @throws \Cake\Http\Exception\BadRequestException if the id is not a uuid
+     * @return void
+     */
+    public function view(string $id, RoleActionAccessControlServiceInterface $accessControlService): void
+    {
+        $accessControlService->controlUserRoleActionAccess(
+            $this->User->getRoleEntity(),
+            UserAction::getInstance()->getActionId()
+        );
+        if (!Validation::uuid($id)) {
+            throw new BadRequestException(__('Please provide a valid request id.'));
+        }
+
+        // Whitelisted filters and contain parameters
+        $options = $this->QueryString->get([
+            'contain' => [
+                'armored_key', 'account_recovery_private_key_passwords',
+                'account_recovery_request_responses',
+                'creator',
+            ],
+        ]);
+
+        $options['id'] = $id;
+
+        /** @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable $accountRecoveryRequestsTable */
+        $accountRecoveryRequestsTable = $this->fetchTable('Passbolt/AccountRecovery.AccountRecoveryRequests');
+        $request = $accountRecoveryRequestsTable->findView($options)->firstOrFail();
+
+        $this->success(__('The operation was successful.'), $request);
+    }
+}
