@@ -136,6 +136,34 @@ class EmailNotificationSettingsFormTest extends AppTestCase
         );
     }
 
+    public function testNotificationSettingsFormFieldSendPasswordUpdateSelf()
+    {
+        $testCases = [
+            'boolean' => $this->getBooleanTestCases(),
+        ];
+
+        $this->assertFormFieldFormatValidation(
+            EmailNotificationSettingsForm::class,
+            'send_password_updateSelf',
+            self::getDummyData(),
+            $testCases
+        );
+    }
+
+    public function testNotificationSettingsFormFieldSendPasswordDeleteSelf()
+    {
+        $testCases = [
+            'boolean' => $this->getBooleanTestCases(),
+        ];
+
+        $this->assertFormFieldFormatValidation(
+            EmailNotificationSettingsForm::class,
+            'send_password_deleteSelf',
+            self::getDummyData(),
+            $testCases
+        );
+    }
+
     public function testNotificationSettingsFormFieldSendPasswordShare()
     {
         $testCases = [
@@ -348,6 +376,8 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             'show_username' => true,
             'send_comment_add' => true,
             'send_password_create' => true,
+            'send_password_updateSelf' => true,
+            'send_password_deleteSelf' => true,
             'send_password_share' => true,
             'send_password_update' => true,
             'send_password_delete' => true,

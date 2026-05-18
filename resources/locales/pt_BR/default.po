@@ -1273,6 +1273,9 @@ msgstr "A configuração enviar ao compartilhamento de senha deve ser um boolean
 msgid "The send on password updated setting should be a boolean."
 msgstr "A configuração de atualização de senha deve ser booleana."
 
+msgid "The send on password update creator setting should be a boolean."
+msgstr "A configuração para notificar o criador quando uma senha é atualizada deve ser booleana."
+
 msgid "The send on password deleted setting should be a boolean."
 msgstr "A configuração enviar ao excluir a senha deve ser um booleano."
 

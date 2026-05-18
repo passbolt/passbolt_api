@@ -47,6 +47,8 @@ class ResourceUpdateEmailRedactorTest extends AppTestCase
         $this->sut = new ResourceUpdateEmailRedactor();
         $this->loadPlugins(['Passbolt/Locale' => []]);
         RoleFactory::make()->guest()->persist();
+        RoleFactory::make()->user()->persist();
+        RoleFactory::make()->admin()->persist();
         $this->loadNotificationSettings();
     }
 
@@ -84,10 +86,14 @@ class ResourceUpdateEmailRedactorTest extends AppTestCase
             'secrets' => $secrets,
             'isV5' => true,
         ]);
-        $emailCollection = $this->sut->onSubscribedEvent($event);
+        $emails = $this->sut->onSubscribedEvent($event)->getEmails();
+        $emailRecipients = array_map(function ($email) {
+            return $email->getData()['body']['recipient']->id;
+        }, $emails);
 
-        $this->assertCount(3, $emailCollection->getEmails());
-        foreach ($emailCollection->getEmails() as $email) {
+        $this->assertCount(3, $emails);
+        $this->assertContains($owner->id, $emailRecipients);
+        foreach ($emails as $email) {
             $recipient = $email->getData()['body']['recipient'];
             if ($recipient->id === $owner->id) {
                 $this->assertSame('You edited a resource', $email->getSubject());
@@ -97,5 +103,79 @@ class ResourceUpdateEmailRedactorTest extends AppTestCase
 
             $this->assertSame(ResourceUpdateEmailRedactor::TEMPLATE_V5, $email->getTemplate());
         }
+    }
+
+    public function testResourceUpdateEmailRedactor_UsesUpdateNotificationSetting(): void
+    {
+        $this->assertSame('send.password.update', $this->sut->getNotificationSettingPath());
+    }
+
+    public function testResourceUpdateEmailRedactor_DisabledSelfUpdateSkipsModifierButKeepsOtherRecipients(): void
+    {
+        $owner = UserFactory::make()->user()->active()->persist();
+        $recipient = UserFactory::make()->user()->active()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make(['created_by' => $owner->id, 'modified_by' => $owner->id])
+            ->withPermissionsFor([$owner], Permission::OWNER)
+            ->withPermissionsFor([$recipient], Permission::READ)
+            ->withSecretsFor([$owner, $recipient])
+            ->persist();
+        $this->setEmailNotificationSetting('send.password.updateSelf', false);
+
+        $event = new Event(ResourcesUpdateService::UPDATE_SUCCESS_EVENT_NAME);
+        $event->setData([
+            'resource' => $resource,
+            'accessControl' => $this->makeUac($owner),
+            'secrets' => SecretFactory::find()->all()->toArray(),
+            'isV5' => false,
+        ]);
+        $emails = $this->sut->onSubscribedEvent($event)->getEmails();
+
+        $this->assertCount(1, $emails);
+        $this->assertSame($recipient->id, $emails[0]->getData()['body']['recipient']->id);
+    }
+
+    public function testResourceUpdateEmailRedactor_PrivateResourceNotifiesModifierByDefault(): void
+    {
+        $owner = UserFactory::make()->user()->active()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make(['created_by' => $owner->id, 'modified_by' => $owner->id])
+            ->withPermissionsFor([$owner], Permission::OWNER)
+            ->withSecretsFor([$owner])
+            ->persist();
+
+        $event = new Event(ResourcesUpdateService::UPDATE_SUCCESS_EVENT_NAME);
+        $event->setData([
+            'resource' => $resource,
+            'accessControl' => $this->makeUac($owner),
+            'secrets' => SecretFactory::find()->all()->toArray(),
+            'isV5' => false,
+        ]);
+        $emails = $this->sut->onSubscribedEvent($event)->getEmails();
+
+        $this->assertCount(1, $emails);
+        $this->assertSame($owner->id, $emails[0]->getData()['body']['recipient']->id);
+        $this->assertSame('You edited the resource ' . $resource->name, $emails[0]->getSubject());
+    }
+
+    public function testResourceUpdateEmailRedactor_PrivateResourceSkipsModifierWhenSelfUpdateDisabled(): void
+    {
+        $owner = UserFactory::make()->user()->active()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make(['created_by' => $owner->id, 'modified_by' => $owner->id])
+            ->withPermissionsFor([$owner], Permission::OWNER)
+            ->withSecretsFor([$owner])
+            ->persist();
+        $this->setEmailNotificationSetting('send.password.updateSelf', false);
+
+        $event = new Event(ResourcesUpdateService::UPDATE_SUCCESS_EVENT_NAME);
+        $event->setData([
+            'resource' => $resource,
+            'accessControl' => $this->makeUac($owner),
+            'secrets' => SecretFactory::find()->all()->toArray(),
+            'isV5' => false,
+        ]);
+
+        $this->assertCount(0, $this->sut->onSubscribedEvent($event)->getEmails());
     }
 }

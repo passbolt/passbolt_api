@@ -1273,6 +1273,9 @@ msgstr "Nastavitev za pošiljanje ob deljenem geslu mora biti logična vrednost.
 msgid "The send on password updated setting should be a boolean."
 msgstr "Nastavitev za pošiljanje ob posodobljenem geslu mora biti logična vrednost."
 
+msgid "The send on password update creator setting should be a boolean."
+msgstr "Nastavitev za obveščanje ustvarjalca ob posodobitvi gesla mora biti logična vrednost."
+
 msgid "The send on password deleted setting should be a boolean."
 msgstr "Nastavitev za pošiljanje ob izbrisu gesla mora biti logična vrednost."
 

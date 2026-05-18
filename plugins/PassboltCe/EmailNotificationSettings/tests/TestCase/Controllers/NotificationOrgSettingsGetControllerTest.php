@@ -98,6 +98,8 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
         $cases = [
             'send_comment_add' => false,
             'send_password_create' => true,
+            'send_password_updateSelf' => false,
+            'send_password_deleteSelf' => true,
             'send_password_share' => false,
         ];
 
@@ -125,6 +127,8 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
         $cases = [
             'send_comment_add' => false,
             'send_password_create' => true,
+            'send_password_updateSelf' => false,
+            'send_password_deleteSelf' => true,
             'send_password_share' => false,
         ];
 
@@ -154,6 +158,8 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
         $cases = [
             'send_comment_add' => false,
             'send_password_create' => true,
+            'send_password_updateSelf' => false,
+            'send_password_deleteSelf' => true,
             'send_password_share' => false,
         ];
 

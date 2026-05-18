@@ -50,6 +50,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
     {
         parent::setUp();
         $this->setEmailNotificationsSetting('password.create', true);
+        Configure::write('passbolt.email.send.password.updateSelf', false);
         $this->enableFeaturePlugin(ResourceTypesPlugin::class);
         RoleFactory::make()->guest()->persist();
         // enable event tracking
@@ -122,8 +123,8 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
             'isV5',
             true
         );
-        $this->assertEmailQueueCount(2);
-        $this->assertEmailIsInQueue(['email' => $user->username, 'subject' => 'You edited a resource']);
+        $this->assertEmailQueueCount(1);
+        $this->assertEmailWithRecipientIsInNotQueue($user->username);
         $this->assertEmailIsInQueue([
             'email' => $userWithPermission->username,
             'subject' => $user->profile->first_name . ' edited a resource',

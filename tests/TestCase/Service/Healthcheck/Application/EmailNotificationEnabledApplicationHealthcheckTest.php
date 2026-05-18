@@ -56,6 +56,7 @@ class EmailNotificationEnabledApplicationHealthcheckTest extends AppTestCase
     public function testEmailNotificationEnabledApplicationHealthcheck_Success_File(): void
     {
         Configure::write('passbolt.email.send.password.create', true);
+        Configure::write('passbolt.email.send.password.deleteSelf', true);
         Configure::write('passbolt.email.send.comment.add', true);
         Configure::write('passbolt.email.send.user.create', true);
         Configure::write('passbolt.email.send.folder.create', true);
@@ -69,6 +70,7 @@ class EmailNotificationEnabledApplicationHealthcheckTest extends AppTestCase
     {
         $defaults = static::getDefaultEmailNotificationConfig();
         $defaults['send']['password']['create'] = true;
+        $defaults['send']['password']['deleteSelf'] = true;
         EmailNotificationSettingFactory::make()->setField('value', json_encode($defaults))->persist();
         $service = $this->healthcheck->check();
         $this->assertTrue($service->isPassed());

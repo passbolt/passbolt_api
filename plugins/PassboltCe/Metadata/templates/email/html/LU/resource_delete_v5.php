@@ -22,6 +22,7 @@ if (PHP_SAPI === 'cli') {
 $subject = $body['subject'];
 $user = $body['user'];
 $resource = $body['resource'];
+$isOperator = $body['isOperator'];
 
 echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
@@ -32,7 +33,9 @@ echo $this->element('Email/module/avatar',[
     ])
 ]);
 
-$text = __('{0} deleted a password.', Purifier::clean($user['profile']['first_name'] . ' ' . $user['profile']['last_name'])) . '<br/>';
+$text = $isOperator
+    ? __('You deleted a password.') . '<br/>'
+    : __('{0} deleted a password.', Purifier::clean($user['profile']['first_name'] . ' ' . $user['profile']['last_name'])) . '<br/>';
 
 echo $this->element('Email/module/text', ['text' => $text]);
 

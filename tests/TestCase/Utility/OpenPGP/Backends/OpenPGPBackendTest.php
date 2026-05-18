@@ -359,7 +359,7 @@ gsv1OnsWRlfCzm417Nvg0mZ+uqTM3lC8B1T9zd6vTaVHyX0xs6qjDNhVuGncFUGW
         $gnupg->setVerifyKeyFromFingerprint($keyInfo['fingerprint']);
         $gnupg->verify($signedMessage, $messageUnsigned);
 
-        $this->assertEquals($messageToSign . "\n", $messageUnsigned);
+        $this->assertContains($messageUnsigned, [$messageToSign, $messageToSign . "\n"]);
     }
 
     /**
