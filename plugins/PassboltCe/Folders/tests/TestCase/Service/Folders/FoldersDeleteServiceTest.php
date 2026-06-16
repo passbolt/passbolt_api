@@ -25,6 +25,7 @@ use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
+use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\Folders\FoldersDeleteService;
@@ -104,6 +105,27 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         [$userA, $userB] = UserFactory::make(2)->persist();
         /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
         $folderA = FolderFactory::make(['name' => 'A'])->withPermissionsFor([$userA, $userB])->persist();
+
+        $this->service->delete($this->makeUac($userA), $folderA->id);
+
+        $this->assertEmailQueueCount(1);
+        $this->assertSame(0, EmailQueueFactory::find()->where(['email' => $userA->username])->all()->count());
+        $this->assertEmailSubject($userB->username, "{$userA->profile->first_name} deleted the folder A");
+        $this->assertEmailInBatchContains("{$userA->profile->first_name} deleted a folder", $userB->username);
+    }
+
+    public function testFolderDelete_CommonSuccess2_NotifyOperatorAfterDeleteWhenEnabled()
+    {
+        // Ada is OWNER of folder A
+        // Betty is OWNER of folder A
+        // The folder delete self notification is enabled
+        // ---
+        // A (Ada:O, Betty:O)
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make(['name' => 'A'])->withPermissionsFor([$userA, $userB])->persist();
+
+        $this->setEmailNotificationSetting('send.folder.deleteSelf', true);
 
         $this->service->delete($this->makeUac($userA), $folderA->id);
 
@@ -583,9 +605,9 @@ class FoldersDeleteServiceTest extends FoldersTestCase
 
         $this->service->delete($this->makeUac($userA), $folderA->id);
 
-        // All users with access (direct and via group) should be notified
-        $this->assertEmailQueueCount(3);
-        $this->assertEmailSubject($userA->username, 'You deleted the folder A');
+        // All users with access (direct and via group), except the operator, should be notified.
+        $this->assertEmailQueueCount(2);
+        $this->assertSame(0, EmailQueueFactory::find()->where(['email' => $userA->username])->all()->count());
         $this->assertEmailSubject($userB->username, "{$userA->profile->first_name} deleted the folder A");
         $this->assertEmailSubject($userC->username, "{$userA->profile->first_name} deleted the folder A");
     }
@@ -743,7 +765,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $this->assertFolderRelation($resource1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userB->id, null);
     }
 
-    public function testFolderDelete_CommonSuccess4_NotifyOnlyOperatorForPersonalFolder()
+    public function testFolderDelete_CommonSuccess4_DoesNotNotifyOperatorForPersonalFolder()
     {
         // Ada is OWNER of personal folder A (no other users)
         // ---
@@ -755,8 +777,27 @@ class FoldersDeleteServiceTest extends FoldersTestCase
 
         $this->service->delete($this->makeUac($userA), $folderA->id);
 
+        $this->assertEmailQueueCount(0);
+    }
+
+    public function testFolderDelete_CommonSuccess4_NotifyOperatorForPersonalFolderWhenEnabled()
+    {
+        // Ada is OWNER of personal folder A (no other users)
+        // The folder delete self notification is enabled
+        // ---
+        // A (Ada:O)
+        /** @var \App\Model\Entity\User $userA */
+        $userA = UserFactory::make()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
+        $folderA = FolderFactory::make(['name' => 'A'])->withPermissionsFor([$userA])->persist();
+
+        $this->setEmailNotificationSetting('send.folder.deleteSelf', true);
+
+        $this->service->delete($this->makeUac($userA), $folderA->id);
+
         $this->assertEmailQueueCount(1);
         $this->assertEmailSubject($userA->username, 'You deleted the folder A');
+        $this->assertEmailInBatchContains('You deleted a folder', $userA->username);
     }
 
     public function testFolderDelete_CommonSuccess5_NotificationRespectsEmailSettings()

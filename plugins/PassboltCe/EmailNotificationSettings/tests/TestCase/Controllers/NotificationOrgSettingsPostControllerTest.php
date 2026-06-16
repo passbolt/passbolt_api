@@ -119,6 +119,8 @@ class NotificationOrgSettingsPostControllerTest extends AppIntegrationTestCase
             'show_username' => false,
             'send_comment_add' => false,
             'send_password_create' => false,
+            'send_password_updateSelf' => false,
+            'send_password_deleteSelf' => false,
             'send_password_share' => false,
             'send_password_update' => false,
             'send_password_delete' => false,

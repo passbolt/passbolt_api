@@ -33,6 +33,8 @@ class FolderNotificationSettingsDefinition implements EmailNotificationSettingsD
     {
         return $schema
             ->addField('send_folder_create', ['type' => 'boolean', 'default' => false])
+            ->addField('send_folder_updateSelf', ['type' => 'boolean', 'default' => true])
+            ->addField('send_folder_deleteSelf', ['type' => 'boolean', 'default' => false])
             ->addField('send_folder_delete', ['type' => 'boolean', 'default' => true])
             ->addField('send_folder_update', ['type' => 'boolean', 'default' => true])
             ->addField('send_folder_share', ['type' => 'boolean', 'default' => true]);
@@ -46,6 +48,8 @@ class FolderNotificationSettingsDefinition implements EmailNotificationSettingsD
     {
         return $validator
             ->boolean('send_folder_create', __('An email notification setting should be a boolean.'))
+            ->boolean('send_folder_updateSelf', __('An email notification setting should be a boolean.'))
+            ->boolean('send_folder_deleteSelf', __('An email notification setting should be a boolean.'))
             ->boolean('send_folder_delete', __('An email notification setting should be a boolean.'))
             ->boolean('send_folder_update', __('An email notification setting should be a boolean.'))
             ->boolean('send_folder_share', __('An email notification setting should be a boolean.'));

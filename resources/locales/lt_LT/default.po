@@ -1273,6 +1273,9 @@ msgstr "Nustatymas „Siųsti bendrinamą slaptažodį“ turėtų būti loginis
 msgid "The send on password updated setting should be a boolean."
 msgstr "Nustatymas „Siųsti atnaujinus slaptažodį“ turėtų būti loginis."
 
+msgid "The send on password update creator setting should be a boolean."
+msgstr "Nustatymas pranešti kūrėjui, kai slaptažodis atnaujinamas, turi būti loginis."
+
 msgid "The send on password deleted setting should be a boolean."
 msgstr "Nustatymas „Siųsti ištrynus slaptažodį“ turėtų būti loginis."
 

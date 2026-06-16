@@ -27,6 +27,8 @@ class FolderNotificationSettingsDefinitionTest extends TestCase
     public const EXPECTED_FIELDS = [
         'send_folder_delete',
         'send_folder_create',
+        'send_folder_updateSelf',
+        'send_folder_deleteSelf',
         'send_folder_update',
         'send_folder_share',
     ];

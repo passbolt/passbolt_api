@@ -1273,6 +1273,9 @@ msgstr "Le réglage de l'envoi lorsqu'un mot de passe est partagé doit être un
 msgid "The send on password updated setting should be a boolean."
 msgstr "Le réglage de l'envoi lorsqu'un mot de passe est partagé doit être un booléen."
 
+msgid "The send on password update creator setting should be a boolean."
+msgstr "Le réglage de l’envoi au créateur lorsqu’un mot de passe est mis à jour doit être un booléen."
+
 msgid "The send on password deleted setting should be a boolean."
 msgstr "Le réglage de l'envoi lorsqu'un mot de passe est supprimé doit être un booléen."
 

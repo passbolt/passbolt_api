@@ -21,6 +21,7 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
+use Cake\Core\Configure;
 use Cake\I18n\Date;
 use Cake\I18n\DateTime;
 use Passbolt\Folders\Test\Factory\ResourceFactory;
@@ -37,6 +38,7 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
         parent::setUp();
         $this->enableFeaturePlugin(PasswordExpiryPlugin::class);
         PasswordExpirySettingFactory::make()->persist();
+        Configure::write('passbolt.email.send.password.updateSelf', false);
     }
 
     public function testPasswordExpiryResourcesUpdateController_Update_Expiry_Date_In_Future(): void
@@ -59,7 +61,7 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
 
         $resourceUpdated = ResourceFactory::get($resourceToUpdate->id);
         $this->assertFalse($resourceUpdated->isExpired());
-        $this->assertEmailQueueCount(1);
+        $this->assertEmailQueueIsEmpty();
     }
 
     public static function isResourceAlreadyExpired(): array
@@ -105,7 +107,7 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertTrue($resourceUpdated->isExpired());
         // If the resource is already expired, do not notify the owner who is not performing
         // the action, that they have expired emails
-        $expectedEmails = $isResourceAlreadyExpired ? 3 : 4;
+        $expectedEmails = $isResourceAlreadyExpired ? 2 : 3;
         $this->assertEmailQueueCount($expectedEmails);
         $emailDataToOwner = [
             'email' => $ownerWithAccess->username,

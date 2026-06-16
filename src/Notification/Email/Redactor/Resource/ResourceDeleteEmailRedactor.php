@@ -27,6 +27,7 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\Locale\Service\LocaleService;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 
@@ -89,16 +90,20 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         /** @var \Cake\ORM\ResultSet $users */
         $users = $event->getData('users');
 
-        // if there is nobody, give it up. The deleter has already been removed from $users.
+        // if there is nobody, give it up.
         if ($users->count() < 1) {
             return $emailCollection;
         }
 
         $owner = $this->usersTable->findFirstForEmail($deletedBy);
+        $sendDeleteSelfEmail = EmailNotificationSettings::get('send.password.deleteSelf');
 
         /** @var \App\Model\Entity\User $user */
         foreach ($users as $user) {
             if ($user->isDisabled()) {
+                continue;
+            }
+            if ($user->id === $owner->id && !$sendDeleteSelfEmail) {
                 continue;
             }
             $emailCollection->addEmail($this->createDeleteEmail($user, $owner, $resource, $resourceDto->isV5()));
@@ -118,10 +123,15 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            function () use ($owner, $resource, $isV5) {
-                $sub = __('{0} deleted the password {1}', $owner->profile->first_name, $resource->name);
+            function () use ($recipient, $owner, $resource, $isV5) {
+                $isRecipientPerformingTheAction = $recipient->id === $owner->id;
+                $sub = $isRecipientPerformingTheAction
+                    ? __('You deleted the password {0}', $resource->name)
+                    : __('{0} deleted the password {1}', $owner->profile->first_name, $resource->name);
                 if ($isV5) {
-                    $sub = __('{0} deleted a password', $owner->profile->first_name);
+                    $sub = $isRecipientPerformingTheAction
+                        ? __('You deleted a password')
+                        : __('{0} deleted a password', $owner->profile->first_name);
                 }
 
                 return $sub;
@@ -131,6 +141,8 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         $data = [
             'body' => [
                 'user' => $owner,
+                'recipient' => $recipient,
+                'isOperator' => $recipient->id === $owner->id,
                 'subject' => $subject,
                 'resource' => $resource,
                 'showUsername' => $this->getConfig('show.username'),

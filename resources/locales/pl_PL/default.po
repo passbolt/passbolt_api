@@ -1273,6 +1273,9 @@ msgstr "Ustawienie wysyłki po udostępnieniu hasła powinno być wartością lo
 msgid "The send on password updated setting should be a boolean."
 msgstr "Ustawienie wysyłki po zaktualizowaniu hasła powinno być wartością logiczną."
 
+msgid "The send on password update creator setting should be a boolean."
+msgstr "Ustawienie powiadamiania twórcy po zaktualizowaniu hasła powinno być wartością logiczną."
+
 msgid "The send on password deleted setting should be a boolean."
 msgstr "Ustawienie wysyłki po usunięciu hasła powinno być wartością logiczną."
 

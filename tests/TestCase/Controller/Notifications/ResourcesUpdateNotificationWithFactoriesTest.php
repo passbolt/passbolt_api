@@ -49,6 +49,7 @@ class ResourcesUpdateNotificationWithFactoriesTest extends AppIntegrationTestCas
     {
         SecretRevisionsSettingsFactory::make()->setMaxRevisions(2)->persist();
         $this->setEmailNotificationSetting('send.password.update', true);
+        $this->setEmailNotificationSetting('send.password.updateSelf', false);
         // Create users
         RoleFactory::make()->guest()->persist();
         [$userA, $userB, $userC, $userD] = UserFactory::make(4)->withValidGpgKey()->persist();
@@ -83,7 +84,7 @@ class ResourcesUpdateNotificationWithFactoriesTest extends AppIntegrationTestCas
         $this->assertSuccess();
         // Assert email contents
         $this->assertEmailInBatchContains('edited the resource', $userA->username);
-        $this->assertEmailInBatchContains('edited the resource', $userB->username);
+        $this->assertEmailWithRecipientIsInNotQueue($userB->username);
         $this->assertEmailInBatchContains('edited the resource', $userC->username);
         $this->assertEmailInBatchContains('edited the resource', $userD->username);
     }

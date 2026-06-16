@@ -45,6 +45,7 @@ class ResourcesUpdateNotificationTest extends AppIntegrationTestCase
     public function testResourcesUpdateNotification_NotificationEnabled(): void
     {
         $this->setEmailNotificationSetting('send.password.update', true);
+        $this->setEmailNotificationSetting('send.password.updateSelf', true);
 
         RoleFactory::make()->guest()->persist();
         [$user, $user2] = UserFactory::make(2)->user()->active()->persist();
@@ -64,8 +65,81 @@ class ResourcesUpdateNotificationTest extends AppIntegrationTestCase
 
         // check email notification
         $this->assertEmailInBatchContains('edited the resource', $user2->username);
-        $this->assertEmailInBatchContains('edited the resource', $user->username);
+        $this->assertEmailInBatchContains('You edited the resource', $user->username);
         $this->assertEmailWithRecipientIsInNotQueue($disabled->username);
+    }
+
+    public function testResourcesUpdateNotification_DisabledSelfUpdateSkipsModifier(): void
+    {
+        $this->setEmailNotificationSetting('send.password.update', true);
+        $this->setEmailNotificationSetting('send.password.updateSelf', false);
+
+        RoleFactory::make()->guest()->persist();
+        [$user, $user2] = UserFactory::make(2)->user()->active()->persist();
+        ResourceTypeFactory::make()->default()->persist();
+        $r = ResourceFactory::make()->withPermissionsFor([$user, $user2])->persist();
+
+        // Post updated data
+        $this->logInAs($user);
+        $this->putJson('/resources/' . $r->id . '.json', [
+            'name' => 'R1 name updated',
+            'username' => 'R1 username updated',
+            'uri' => 'https://r1-updated.com',
+            'description' => 'R1 description updated',
+        ]);
+        $this->assertSuccess();
+
+        // check email notification
+        $this->assertEmailInBatchContains('edited the resource', $user2->username);
+        $this->assertEmailWithRecipientIsInNotQueue($user->username);
+    }
+
+    public function testResourcesUpdateNotification_PrivateResourceNotifiesModifierByDefault(): void
+    {
+        $this->setEmailNotificationSetting('send.password.update', true);
+        $this->setEmailNotificationSetting('send.password.updateSelf', true);
+
+        RoleFactory::make()->guest()->persist();
+        $user = UserFactory::make()->user()->active()->persist();
+        ResourceTypeFactory::make()->default()->persist();
+        $r = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+
+        // Post updated data
+        $this->logInAs($user);
+        $this->putJson('/resources/' . $r->id . '.json', [
+            'name' => 'R1 name updated',
+            'username' => 'R1 username updated',
+            'uri' => 'https://r1-updated.com',
+            'description' => 'R1 description updated',
+        ]);
+        $this->assertSuccess();
+
+        // check email notification
+        $this->assertEmailInBatchContains('You edited the resource', $user->username);
+    }
+
+    public function testResourcesUpdateNotification_PrivateResourceSkipsModifierWhenSelfUpdateDisabled(): void
+    {
+        $this->setEmailNotificationSetting('send.password.update', true);
+        $this->setEmailNotificationSetting('send.password.updateSelf', false);
+
+        RoleFactory::make()->guest()->persist();
+        $user = UserFactory::make()->user()->active()->persist();
+        ResourceTypeFactory::make()->default()->persist();
+        $r = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+
+        // Post updated data
+        $this->logInAs($user);
+        $this->putJson('/resources/' . $r->id . '.json', [
+            'name' => 'R1 name updated',
+            'username' => 'R1 username updated',
+            'uri' => 'https://r1-updated.com',
+            'description' => 'R1 description updated',
+        ]);
+        $this->assertSuccess();
+
+        // check email notification
+        $this->assertEmailQueueIsEmpty();
     }
 
     public function testResourcesUpdateNotification_NotificationDisabled_Metadata(): void

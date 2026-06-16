@@ -28,6 +28,7 @@ use Cake\Event\Event;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Service\Folders\FoldersUpdateService;
 use Passbolt\Locale\Service\LocaleService;
@@ -105,9 +106,14 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
         }
 
         $operator = $this->usersTable->findFirstForEmail($uac->getId());
+        $sendUpdateSelfEmail = EmailNotificationSettings::get('send.folder.updateSelf');
         /** @var array<\App\Model\Entity\User> $recipients */
         $recipients = $this->findUsersUsernameToSendEmailTo($folder);
         foreach ($recipients as $recipient) {
+            if ($recipient->id === $operator->id && !$sendUpdateSelfEmail) {
+                continue;
+            }
+
             $email = $this->createEmail($recipient, $operator, $folder, $isV5);
             $emailCollection->addEmail($email);
         }

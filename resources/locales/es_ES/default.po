@@ -1273,6 +1273,9 @@ msgstr "La configuración \"enviar al compartir una contraseña\" debe ser un va
 msgid "The send on password updated setting should be a boolean."
 msgstr "La configuración \"enviar al actualizar la contraseña\" debe ser un valor booleano."
 
+msgid "The send on password update creator setting should be a boolean."
+msgstr "La configuración para notificar al creador cuando se actualiza una contraseña debe ser un valor booleano."
+
 msgid "The send on password deleted setting should be a boolean."
 msgstr "La configuración \"enviar al borrar una contraseña\" debe ser un valor booleano."
 

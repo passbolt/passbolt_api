@@ -1273,6 +1273,9 @@ msgstr "Nastavení send on password shared by mělo být platný boolean."
 msgid "The send on password updated setting should be a boolean."
 msgstr "Nastavení send on password updated by mělo být platný boolean."
 
+msgid "The send on password update creator setting should be a boolean."
+msgstr "Nastavení odesílání tvůrci při aktualizaci hesla musí být boolean."
+
 msgid "The send on password deleted setting should be a boolean."
 msgstr "Nastavení send on password deleted by mělo být platný boolean."
 

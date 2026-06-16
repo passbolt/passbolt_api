@@ -28,6 +28,7 @@ use App\Utility\UuidFactory;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
+use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Service\Folders\FoldersUpdateService;
 use Passbolt\Folders\Test\Factory\FolderFactory;
@@ -96,7 +97,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $this->assertEquals('new name', $folderBUpdated->get('name'));
     }
 
-    public function testUpdateFolderSuccess_NotifyUserAfterUpdate()
+    public function testUpdateFolderSuccess_NotifyUsersAfterUpdate()
     {
         // Ada is OWNER of folder A
         // Betty has READ on folder A
@@ -115,6 +116,30 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $this->assertEmailQueueCount(2);
         $this->assertEmailSubject($userA->username, "You edited the folder $name");
         $this->assertEmailInBatchContains('You edited a folder', $userA->username);
+        $this->assertEmailSubject($userB->username, "{$userA->profile->first_name} edited the folder $name");
+        $this->assertEmailInBatchContains("{$userA->profile->first_name} edited a folder", $userB->username);
+    }
+
+    public function testUpdateFolderSuccess_DoesNotNotifyOperatorWhenUpdateSelfDisabled()
+    {
+        $this->setEmailNotificationSetting('send.folder.updateSelf', false);
+
+        // Ada is OWNER of folder A
+        // Betty has READ on folder A
+        // ---
+        // A (Ada:O, Betty:R)
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $folderA = FolderFactory::make()
+            ->withPermissionsFor([$userA])
+            ->withPermissionsFor([$userB], Permission::READ)
+            ->persist();
+
+        $name = 'new name';
+        $dto = MetadataFolderDto::fromArray(['name' => $name]);
+        $this->service->update($this->makeUac($userA), $folderA->get('id'), $dto);
+
+        $this->assertEmailQueueCount(1);
+        $this->assertSame(0, EmailQueueFactory::find()->where(['email' => $userA->username])->all()->count());
         $this->assertEmailSubject($userB->username, "{$userA->profile->first_name} edited the folder $name");
         $this->assertEmailInBatchContains("{$userA->profile->first_name} edited a folder", $userB->username);
     }

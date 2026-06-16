@@ -1273,6 +1273,9 @@ msgstr "De instelling voor \"verzenden zodra een wachtwoord is gedeeld\" moet ee
 msgid "The send on password updated setting should be a boolean."
 msgstr "De instelling voor \"verzenden zodra een wachtwoord is bijgewerkt\" moet een Boolean zijn."
 
+msgid "The send on password update creator setting should be a boolean."
+msgstr "De instelling voor het informeren van de maker wanneer een wachtwoord wordt bijgewerkt moet een Boolean zijn."
+
 msgid "The send on password deleted setting should be a boolean."
 msgstr "De instelling voor \"verzenden zodra een wachtwoord is verwijderd\" moet een Boolean zijn."
 

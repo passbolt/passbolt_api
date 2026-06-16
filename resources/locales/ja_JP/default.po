@@ -1273,6 +1273,9 @@ msgstr "パスワード共有時に送信する設定はブール値でなけれ
 msgid "The send on password updated setting should be a boolean."
 msgstr "パスワード更新時に送信する設定はブール値でなければなりません。"
 
+msgid "The send on password update creator setting should be a boolean."
+msgstr "パスワードが更新されたときに作成者へ送信する設定はブール値でなければなりません。"
+
 msgid "The send on password deleted setting should be a boolean."
 msgstr "パスワード削除時に送信する設定はブール値でなければなりません。"
 
