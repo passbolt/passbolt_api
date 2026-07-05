@@ -488,6 +488,29 @@ class SlugDefinitionTest extends TestCase
                             ],
                         ],
                     ],
+                    'passkeys' => [
+                        'type' => 'array',
+                        'maxItems' => 64,
+                        'items' => [
+                            'type' => 'object',
+                            'required' => ['credential_id', 'rp_id', 'private_key', 'algorithm'],
+                            'properties' => [
+                                'id' => ['type' => 'string', 'format' => 'uuid'],
+                                'credential_id' => ['type' => 'string', 'maxLength' => 1024],
+                                'rp_id' => ['type' => 'string', 'maxLength' => 253],
+                                'user_handle' => ['anyOf' => [['type' => 'string', 'maxLength' => 1024], ['type' => 'null']]],
+                                'user_name' => ['anyOf' => [['type' => 'string', 'maxLength' => 255], ['type' => 'null']]],
+                                'user_display_name' => ['anyOf' => [['type' => 'string', 'maxLength' => 255], ['type' => 'null']]],
+                                'private_key' => ['type' => 'string', 'maxLength' => 4096],
+                                'public_key' => ['anyOf' => [['type' => 'string', 'maxLength' => 4096], ['type' => 'null']]],
+                                'algorithm' => ['type' => 'number'],
+                                'counter' => ['type' => 'number', 'minimum' => 0],
+                                'discoverable' => ['type' => 'boolean'],
+                                'label' => ['anyOf' => [['type' => 'string', 'maxLength' => 255], ['type' => 'null']]],
+                                'created' => ['anyOf' => [['type' => 'string', 'maxLength' => 64], ['type' => 'null']]],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ]);
@@ -656,6 +679,29 @@ class SlugDefinitionTest extends TestCase
                                         ['type' => 'null'],
                                     ],
                                 ],
+                            ],
+                        ],
+                    ],
+                    'passkeys' => [
+                        'type' => 'array',
+                        'maxItems' => 64,
+                        'items' => [
+                            'type' => 'object',
+                            'required' => ['credential_id', 'rp_id', 'private_key', 'algorithm'],
+                            'properties' => [
+                                'id' => ['type' => 'string', 'format' => 'uuid'],
+                                'credential_id' => ['type' => 'string', 'maxLength' => 1024],
+                                'rp_id' => ['type' => 'string', 'maxLength' => 253],
+                                'user_handle' => ['anyOf' => [['type' => 'string', 'maxLength' => 1024], ['type' => 'null']]],
+                                'user_name' => ['anyOf' => [['type' => 'string', 'maxLength' => 255], ['type' => 'null']]],
+                                'user_display_name' => ['anyOf' => [['type' => 'string', 'maxLength' => 255], ['type' => 'null']]],
+                                'private_key' => ['type' => 'string', 'maxLength' => 4096],
+                                'public_key' => ['anyOf' => [['type' => 'string', 'maxLength' => 4096], ['type' => 'null']]],
+                                'algorithm' => ['type' => 'number'],
+                                'counter' => ['type' => 'number', 'minimum' => 0],
+                                'discoverable' => ['type' => 'boolean'],
+                                'label' => ['anyOf' => [['type' => 'string', 'maxLength' => 255], ['type' => 'null']]],
+                                'created' => ['anyOf' => [['type' => 'string', 'maxLength' => 64], ['type' => 'null']]],
                             ],
                         ],
                     ],
@@ -1040,6 +1086,141 @@ class SlugDefinitionTest extends TestCase
         ]);
 
         $result = SlugDefinition::v5PinCode();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testV5Passkey(): void
+    {
+        $expected = json_encode([
+            'resource' => [
+                'type' => 'object',
+                'required' => ['name'],
+                'properties' => [
+                    'name' => [
+                        'type' => 'string',
+                        'maxLength' => 255,
+                    ],
+                    'username' => [
+                        'anyOf' => [
+                            ['type' => 'string', 'maxLength' => 255],
+                            ['type' => 'null'],
+                        ],
+                    ],
+                    'uris' => [
+                        'type' => 'array',
+                        'items' => [
+                            'anyOf' => [
+                                ['type' => 'string', 'maxLength' => 1024],
+                                ['type' => 'null'],
+                            ],
+                        ],
+                        'maxItems' => 32,
+                    ],
+                    'description' => [
+                        'anyOf' => [
+                            ['type' => 'string', 'maxLength' => 10000],
+                            ['type' => 'null'],
+                        ],
+                    ],
+                    'icon' => [
+                        'type' => 'object',
+                        'required' => [],
+                        'properties' => [
+                            'type' => [
+                                'type' => 'string',
+                                'enum' => ['keepass-icon-set', 'passbolt-icon-set'],
+                            ],
+                            'value' => [
+                                'type' => 'integer',
+                                'minimum' => 0,
+                            ],
+                            'background_color' => [
+                                'anyOf' => [
+                                    [
+                                        'type' => 'string',
+                                        'pattern' => '^#(?:[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$',
+                                    ],
+                                    ['type' => 'null'],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'secret' => [
+                'type' => 'object',
+                'required' => [
+                    'object_type',
+                    'passkey',
+                ],
+                'properties' => [
+                    'object_type' => [
+                        'type' => 'string',
+                        'enum' => ['PASSBOLT_SECRET_DATA'],
+                    ],
+                    'passkey' => [
+                        'type' => 'object',
+                        'required' => ['credential_id', 'rp_id', 'private_key', 'algorithm'],
+                        'properties' => [
+                            'credential_id' => [
+                                'type' => 'string',
+                                'maxLength' => 1024,
+                            ],
+                            'rp_id' => [
+                                'type' => 'string',
+                                'maxLength' => 253,
+                            ],
+                            'user_handle' => [
+                                'anyOf' => [
+                                    ['type' => 'string', 'maxLength' => 1024],
+                                    ['type' => 'null'],
+                                ],
+                            ],
+                            'user_name' => [
+                                'anyOf' => [
+                                    ['type' => 'string', 'maxLength' => 255],
+                                    ['type' => 'null'],
+                                ],
+                            ],
+                            'user_display_name' => [
+                                'anyOf' => [
+                                    ['type' => 'string', 'maxLength' => 255],
+                                    ['type' => 'null'],
+                                ],
+                            ],
+                            'private_key' => [
+                                'type' => 'string',
+                                'maxLength' => 4096,
+                            ],
+                            'public_key' => [
+                                'anyOf' => [
+                                    ['type' => 'string', 'maxLength' => 4096],
+                                    ['type' => 'null'],
+                                ],
+                            ],
+                            'algorithm' => [
+                                'type' => 'number',
+                            ],
+                            'counter' => [
+                                'type' => 'number',
+                                'minimum' => 0,
+                            ],
+                            'discoverable' => [
+                                'type' => 'boolean',
+                            ],
+                            'created' => [
+                                'anyOf' => [
+                                    ['type' => 'string', 'maxLength' => 64],
+                                    ['type' => 'null'],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $result = SlugDefinition::v5Passkey();
         $this->assertEquals($expected, $result);
     }
 }

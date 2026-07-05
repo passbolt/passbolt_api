@@ -50,7 +50,7 @@ class MfaOrgSettingsSetServiceTest extends TestCase
         $returnedSettings = $service->setOrgSettings($data, $uac, $duoSdkClientMock);
 
         // Reshape providers, as it is saved in a different format
-        $data['providers'] = ['totp', 'duo', 'yubikey'];
+        $data['providers'] = ['totp', 'duo', 'yubikey', 'webauthn'];
 
         $this->assertEquals($data, $returnedSettings);
         $this->assertSame($data, $this->getMfaOrganizationSettingValue());

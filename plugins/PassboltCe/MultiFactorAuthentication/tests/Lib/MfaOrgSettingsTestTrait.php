@@ -48,6 +48,7 @@ trait MfaOrgSettingsTestTrait
                 MfaSettings::PROVIDER_TOTP => true,
                 MfaSettings::PROVIDER_DUO => true,
                 MfaSettings::PROVIDER_YUBIKEY => true,
+                MfaSettings::PROVIDER_WEBAUTHN => true,
             ],
             MfaSettings::PROVIDER_YUBIKEY => [
                 'clientId' => '12345',

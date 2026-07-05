@@ -191,6 +191,91 @@ class SlugDefinition
         'pattern' => '^\d+$',
     ];
 
+    private static array $passkeySecretPropertySchemaV5 = [
+        'type' => 'object',
+        'required' => ['credential_id', 'rp_id', 'private_key', 'algorithm'],
+        'properties' => [
+            'credential_id' => [
+                'type' => 'string',
+                'maxLength' => 1024,
+            ],
+            'rp_id' => [
+                'type' => 'string',
+                'maxLength' => 253,
+            ],
+            'user_handle' => [
+                'anyOf' => [
+                    ['type' => 'string', 'maxLength' => 1024],
+                    ['type' => 'null'],
+                ],
+            ],
+            'user_name' => [
+                'anyOf' => [
+                    ['type' => 'string', 'maxLength' => 255],
+                    ['type' => 'null'],
+                ],
+            ],
+            'user_display_name' => [
+                'anyOf' => [
+                    ['type' => 'string', 'maxLength' => 255],
+                    ['type' => 'null'],
+                ],
+            ],
+            'private_key' => [
+                'type' => 'string',
+                'maxLength' => 4096,
+            ],
+            'public_key' => [
+                'anyOf' => [
+                    ['type' => 'string', 'maxLength' => 4096],
+                    ['type' => 'null'],
+                ],
+            ],
+            'algorithm' => [
+                'type' => 'number',
+            ],
+            'counter' => [
+                'type' => 'number',
+                'minimum' => 0,
+            ],
+            'discoverable' => [
+                'type' => 'boolean',
+            ],
+            'created' => [
+                'anyOf' => [
+                    ['type' => 'string', 'maxLength' => 64],
+                    ['type' => 'null'],
+                ],
+            ],
+        ],
+    ];
+
+    // An array of passkeys that can live inside any v5 resource secret (alongside password/totp).
+    private static array $passkeysSecretPropertySchemaV5 = [
+        'type' => 'array',
+        'maxItems' => 64,
+        'items' => [
+            'type' => 'object',
+            'required' => ['credential_id', 'rp_id', 'private_key', 'algorithm'],
+            'properties' => [
+                'id' => ['type' => 'string', 'format' => 'uuid'],
+                'credential_id' => ['type' => 'string', 'maxLength' => 1024],
+                'rp_id' => ['type' => 'string', 'maxLength' => 253],
+                'user_handle' => ['anyOf' => [['type' => 'string', 'maxLength' => 1024], ['type' => 'null']]],
+                'user_name' => ['anyOf' => [['type' => 'string', 'maxLength' => 255], ['type' => 'null']]],
+                'user_display_name' => ['anyOf' => [['type' => 'string', 'maxLength' => 255], ['type' => 'null']]],
+                'private_key' => ['type' => 'string', 'maxLength' => 4096],
+                'public_key' => ['anyOf' => [['type' => 'string', 'maxLength' => 4096], ['type' => 'null']]],
+                'algorithm' => ['type' => 'number'],
+                'counter' => ['type' => 'number', 'minimum' => 0],
+                'discoverable' => ['type' => 'boolean'],
+                'label' => ['anyOf' => [['type' => 'string', 'maxLength' => 255], ['type' => 'null']]],
+                'created' => ['anyOf' => [['type' => 'string', 'maxLength' => 64], ['type' => 'null']]],
+                'deleted_at' => ['anyOf' => [['type' => 'string', 'maxLength' => 64], ['type' => 'null']]],
+            ],
+        ],
+    ];
+
     /**
      * @return string|false
      */
@@ -500,6 +585,7 @@ class SlugDefinition
                     'password' => self::$passwordSecretPropertySchemaV5,
                     'description' => self::$descriptionSecretPropertySchemaV5,
                     'custom_fields' => self::$customFieldSecretPropertySchemaV5,
+                    'passkeys' => self::$passkeysSecretPropertySchemaV5,
                 ],
             ],
         ]);
@@ -537,6 +623,7 @@ class SlugDefinition
                     'description' => self::$descriptionSecretPropertySchemaV5,
                     'totp' => self::$totpSecretPropertySchemaV5,
                     'custom_fields' => self::$customFieldSecretPropertySchemaV5,
+                    'passkeys' => self::$passkeysSecretPropertySchemaV5,
                 ],
             ],
         ]);
@@ -662,6 +749,44 @@ class SlugDefinition
                     'object_type' => self::$objectTypeSecretPropertySchemaV5,
                     'pin_code' => self::$pinCodeSecretPropertySchemaV5,
                     'description' => self::$descriptionSecretPropertySchemaV5,
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Passkey resource type.
+     *
+     * A passkey (WebAuthn credential) that Passbolt stores on behalf of a third-party
+     * relying party. The relying party id and user name are kept in the (encrypted)
+     * metadata for display and lookup, while the credential material (private key,
+     * credential id, signature counter, ...) lives in the encrypted secret.
+     *
+     * @return string|false
+     */
+    public static function v5Passkey(): string|false
+    {
+        return json_encode([
+            'resource' => [
+                'type' => 'object',
+                'required' => ['name'],
+                'properties' => [
+                    'name' => self::$nameMetadataPropertySchemaV5,
+                    'username' => self::$usernameMetadataPropertySchemaV5,
+                    'uris' => self::$urisMetadataPropertySchemaV5,
+                    'description' => self::$descriptionMetadataPropertySchemaV5,
+                    'icon' => self::$iconMetadataPropertySchemaV5,
+                ],
+            ],
+            'secret' => [
+                'type' => 'object',
+                'required' => [
+                    'object_type',
+                    'passkey',
+                ],
+                'properties' => [
+                    'object_type' => self::$objectTypeSecretPropertySchemaV5,
+                    'passkey' => self::$passkeySecretPropertySchemaV5,
                 ],
             ],
         ]);

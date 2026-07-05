@@ -103,6 +103,18 @@ class MfaOrganizationSettingFactory extends OrganizationSettingFactory
     }
 
     /**
+     * WebAuthn has no organization level configuration (the relying party is derived from the base
+     * url), so only the provider toggle is set.
+     *
+     * @param bool $isActive Whether the provider is enabled
+     * @return self
+     */
+    public function webauthn(bool $isActive = true): self
+    {
+        return $this->setProviders(MfaSettings::PROVIDER_WEBAUTHN, $isActive);
+    }
+
+    /**
      * @return MfaOrganizationSettingFactory
      */
     public function duoWithTotp()

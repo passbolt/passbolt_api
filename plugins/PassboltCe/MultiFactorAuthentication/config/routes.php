@@ -103,6 +103,53 @@ $routes->plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functi
         ])
         ->setMethods(['GET']);
 
+    /**
+     * WebAuthn (FIDO2)
+     *
+     * Setup and verify each use a two-step ceremony: a "begin" call issues the
+     * PublicKeyCredentialCreationOptions/RequestOptions (challenge), a "finish" call verifies the
+     * attestation/assertion. The GET endpoints render the top-level ceremony pages served from the
+     * passbolt origin so that navigator.credentials.* binds to the correct relying party id.
+     */
+    $routes->connect('/setup/webauthn', ['prefix' => 'Webauthn', 'controller' => 'WebauthnSetupGet', 'action' => 'get'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/setup/webauthn/begin', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnSetupBegin', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
+    $routes->connect('/setup/webauthn/finish', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnSetupFinish', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
+    $routes->connect('/setup/webauthn', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnSetupDelete', 'action' => 'delete',
+        ])
+        ->setMethods(['DELETE']);
+
+    $routes->connect('/setup/webauthn/{credentialId}', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnSetupDelete', 'action' => 'delete',
+        ])
+        ->setPass(['credentialId'])
+        ->setMethods(['DELETE']);
+
+    $routes->connect('/verify/webauthn', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnVerifyGet', 'action' => 'get',
+        ])
+        ->setMethods(['GET']);
+
+    $routes->connect('/verify/webauthn/begin', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnVerifyBegin', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
+    $routes->connect('/verify/webauthn/finish', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnVerifyFinish', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
     $routes->connect('/verify/error', ['controller' => 'MfaVerifyAjaxError', 'action' => 'get'])
         ->setMethods(['GET', 'POST', 'PUT', 'DELETE']);
 

@@ -76,6 +76,11 @@ class EeSolutionBootstrapper extends BaseSolutionBootstrapper
             $app->addPlugin('Passbolt/MultiFactorAuthentication', ['bootstrap' => true, 'routes' => true]);
         }
 
+        $passkeyEnabled = Configure::read('passbolt.plugins.passkeyAuthentication.enabled');
+        if (!isset($passkeyEnabled) || $passkeyEnabled) {
+            $app->addPlugin('Passbolt/PasskeyAuthentication', ['bootstrap' => true, 'routes' => true]);
+        }
+
         $logEnabled = Configure::read('passbolt.plugins.log.enabled');
         if (!isset($logEnabled) || $logEnabled) {
             $app->addPlugin('Passbolt/Log', ['bootstrap' => true, 'routes' => false]);

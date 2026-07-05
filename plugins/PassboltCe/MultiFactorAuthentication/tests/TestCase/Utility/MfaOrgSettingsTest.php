@@ -60,7 +60,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
         Configure::write('passbolt.plugins.multiFactorAuthentication', $this->defaultConfig);
         $settings = MfaOrgSettings::get();
         $this->assertNotEmpty($settings);
-        $this->assertEquals(count($settings->getEnabledProviders()), 3);
+        $this->assertEquals(count($settings->getEnabledProviders()), 4);
     }
 
     /**
@@ -148,6 +148,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_TOTP => false,
             MfaSettings::PROVIDER_DUO => false,
             MfaSettings::PROVIDER_YUBIKEY => false,
+            MfaSettings::PROVIDER_WEBAUTHN => false,
         ];
         $config = $this->defaultConfig;
         $config[MfaSettings::PROVIDERS] = $providers;
@@ -178,6 +179,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_TOTP => false,
             MfaSettings::PROVIDER_DUO => true,
             MfaSettings::PROVIDER_YUBIKEY => false,
+            MfaSettings::PROVIDER_WEBAUTHN => false,
         ]);
     }
 

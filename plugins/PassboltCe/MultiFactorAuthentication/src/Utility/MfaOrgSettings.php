@@ -227,6 +227,12 @@ class MfaOrgSettings
                 } catch (RecordNotFoundException $exception) {
                 }
                 break;
+            case MfaSettings::PROVIDER_WEBAUTHN:
+                // WebAuthn requires no organization-level secret: the relying party id and name
+                // are derived from the application base URL. It is enabled as soon as the
+                // organization has it in its providers list.
+                $result = true;
+                break;
         }
 
         return $result;
@@ -302,6 +308,9 @@ class MfaOrgSettings
                     break;
                 case MfaSettings::PROVIDER_TOTP:
                     // Nothing else to validate
+                    break;
+                case MfaSettings::PROVIDER_WEBAUTHN:
+                    // Nothing else to validate: WebAuthn has no organization-level configuration.
                     break;
                 default:
                     $errors[$provider]['invalidProvider'] = __('Unknown MFA provider: {0}.', $provider);

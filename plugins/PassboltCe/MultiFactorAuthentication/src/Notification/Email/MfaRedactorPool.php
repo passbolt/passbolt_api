@@ -27,6 +27,7 @@ class MfaRedactorPool extends AbstractSubscribedEmailRedactorPool
     {
         return [
             new MfaUserSettingsResetEmailRedactor(),
+            new MfaWebauthnCredentialEmailRedactor(),
         ];
     }
 }

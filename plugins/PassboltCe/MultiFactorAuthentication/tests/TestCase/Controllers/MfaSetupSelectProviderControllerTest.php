@@ -37,8 +37,8 @@ class MfaSetupSelectProviderControllerTest extends MfaIntegrationTestCase
         $this->getJson('https://foo.local/mfa/setup/select.json');
         $this->assertResponseOk();
         $response = $this->getResponseBodyAsArray();
-        $expectedResponse[MfaSettings::ORG_SETTINGS] = [MfaSettings::PROVIDER_TOTP => true, MfaSettings::PROVIDER_DUO => true, MfaSettings::PROVIDER_YUBIKEY => false];
-        $expectedResponse[MfaSettings::ACCOUNT_SETTINGS] = [MfaSettings::PROVIDER_TOTP => false, MfaSettings::PROVIDER_DUO => false, MfaSettings::PROVIDER_YUBIKEY => false];
+        $expectedResponse[MfaSettings::ORG_SETTINGS] = [MfaSettings::PROVIDER_TOTP => true, MfaSettings::PROVIDER_DUO => true, MfaSettings::PROVIDER_YUBIKEY => false, MfaSettings::PROVIDER_WEBAUTHN => false];
+        $expectedResponse[MfaSettings::ACCOUNT_SETTINGS] = [MfaSettings::PROVIDER_TOTP => false, MfaSettings::PROVIDER_DUO => false, MfaSettings::PROVIDER_YUBIKEY => false, MfaSettings::PROVIDER_WEBAUTHN => false];
         $this->assertSame($response, $expectedResponse);
     }
 
@@ -49,8 +49,8 @@ class MfaSetupSelectProviderControllerTest extends MfaIntegrationTestCase
         $this->getJson('http://foo.local/mfa/setup/select.json');
         $this->assertResponseOk();
         $response = $this->getResponseBodyAsArray();
-        $expectedResponse[MfaSettings::ORG_SETTINGS] = [MfaSettings::PROVIDER_TOTP => true, MfaSettings::PROVIDER_DUO => true, MfaSettings::PROVIDER_YUBIKEY => false];
-        $expectedResponse[MfaSettings::ACCOUNT_SETTINGS] = [MfaSettings::PROVIDER_TOTP => false, MfaSettings::PROVIDER_DUO => false, MfaSettings::PROVIDER_YUBIKEY => false];
+        $expectedResponse[MfaSettings::ORG_SETTINGS] = [MfaSettings::PROVIDER_TOTP => true, MfaSettings::PROVIDER_DUO => true, MfaSettings::PROVIDER_YUBIKEY => false, MfaSettings::PROVIDER_WEBAUTHN => false];
+        $expectedResponse[MfaSettings::ACCOUNT_SETTINGS] = [MfaSettings::PROVIDER_TOTP => false, MfaSettings::PROVIDER_DUO => false, MfaSettings::PROVIDER_YUBIKEY => false, MfaSettings::PROVIDER_WEBAUTHN => false];
         $this->assertSame($response, $expectedResponse);
     }
 }

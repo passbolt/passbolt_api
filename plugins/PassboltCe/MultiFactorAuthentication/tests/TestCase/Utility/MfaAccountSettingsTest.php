@@ -322,6 +322,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_YUBIKEY => true,
             MfaSettings::PROVIDER_DUO => true,
             MfaSettings::PROVIDER_TOTP => false,
+            MfaSettings::PROVIDER_WEBAUTHN => false,
         ]);
 
         // Disable one, check there is one provider left
@@ -330,6 +331,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_YUBIKEY => true,
             MfaSettings::PROVIDER_DUO => false,
             MfaSettings::PROVIDER_TOTP => false,
+            MfaSettings::PROVIDER_WEBAUTHN => false,
         ]);
 
         // Disable another one
@@ -338,6 +340,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_YUBIKEY => false,
             MfaSettings::PROVIDER_DUO => false,
             MfaSettings::PROVIDER_TOTP => false,
+            MfaSettings::PROVIDER_WEBAUTHN => false,
         ]);
     }
 }

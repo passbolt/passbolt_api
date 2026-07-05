@@ -149,6 +149,14 @@ class ResourceTypeFactory extends CakephpBaseFactory
         ]);
     }
 
+    public function v5Passkey(): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_PASSKEY),
+            'slug' => ResourceType::SLUG_V5_PASSKEY,
+        ]);
+    }
+
     public function deleted(?Date $deleted = null): self
     {
         if (is_null($deleted)) {
