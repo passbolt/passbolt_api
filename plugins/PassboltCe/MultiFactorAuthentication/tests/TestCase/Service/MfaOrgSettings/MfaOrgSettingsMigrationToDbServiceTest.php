@@ -133,7 +133,7 @@ class MfaOrgSettingsMigrationToDbServiceTest extends TestCase
         $this->service->migrate();
 
         $settingsInDB = $this->getMfaOrganizationSettingValue();
-        $settings['providers'] = ['totp', 'duo', 'yubikey'];
+        $settings['providers'] = ['totp', 'duo', 'yubikey', 'webauthn'];
         $this->assertEquals($settings, $settingsInDB);
     }
 
@@ -149,7 +149,7 @@ class MfaOrgSettingsMigrationToDbServiceTest extends TestCase
         $this->service->migrate();
 
         $settingsInDB = $this->getMfaOrganizationSettingValue();
-        $settings['providers'] = ['duo', 'yubikey', 'totp'];
+        $settings['providers'] = ['duo', 'yubikey', 'webauthn', 'totp'];
         $this->assertEquals($settings, $settingsInDB);
 
         putenv('PASSBOLT_PLUGINS_MFA_PROVIDERS_TOTP');

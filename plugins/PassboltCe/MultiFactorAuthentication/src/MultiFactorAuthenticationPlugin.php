@@ -36,6 +36,11 @@ use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
 use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultRememberAMonthSettingService;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnCredentialsService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnStartAssertionService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnStartRegistrationService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAssertionService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAttestationService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MultiFactorAuthenticationPlugin extends BasePlugin
@@ -123,5 +128,14 @@ class MultiFactorAuthenticationPlugin extends BasePlugin
             ->addArguments([
                 ProcessUserService::class,
             ]);
+
+        // WebAuthn ceremony services. Registered in the container so that the controllers resolve
+        // them through action injection and the tests can replace the "finish" services (which would
+        // otherwise require a real authenticator) with stubs.
+        $container->add(MfaWebauthnStartRegistrationService::class);
+        $container->add(MfaWebauthnVerifyAttestationService::class);
+        $container->add(MfaWebauthnStartAssertionService::class);
+        $container->add(MfaWebauthnVerifyAssertionService::class);
+        $container->add(MfaWebauthnCredentialsService::class);
     }
 }

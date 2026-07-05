@@ -97,6 +97,21 @@ class MfaAccountSettingFactory extends AccountSettingFactory
      * @param \Cake\I18n\DateTime|null $verified Date of verification
      * @return self
      */
+    public function webauthn(?DateTime $verified = null): self
+    {
+        $settings = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_WEBAUTHN]];
+        $settings[MfaSettings::PROVIDER_WEBAUTHN] = [
+            MfaAccountSettings::VERIFIED => $verified ?? DateTime::now(),
+        ];
+        $value = json_encode($settings);
+
+        return $this->patchData(compact('value'));
+    }
+
+    /**
+     * @param \Cake\I18n\DateTime|null $verified Date of verification
+     * @return self
+     */
     public function duoWithTotp(string $uri = 'Foo', ?DateTime $verified = null): self
     {
         $settings = [MfaSettings::PROVIDERS => [

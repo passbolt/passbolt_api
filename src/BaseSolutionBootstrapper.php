@@ -82,6 +82,13 @@ class BaseSolutionBootstrapper
             true
         );
 
+        $this->addFeaturePluginIfEnabled(
+            $app,
+            'PasskeyAuthentication',
+            ['bootstrap' => true, 'routes' => true],
+            true
+        );
+
         $logEnabled = Configure::read('passbolt.plugins.log.enabled');
         if (!isset($logEnabled) || $logEnabled) {
             $app->addPlugin('Passbolt/Log', ['bootstrap' => true, 'routes' => false]);

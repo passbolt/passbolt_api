@@ -333,6 +333,15 @@ class ResourceTypesDataCommand extends DataCommand
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
             ],
+            [
+                'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_PASSKEY),
+                'slug' => ResourceType::SLUG_V5_PASSKEY,
+                'name' => 'Passkey',
+                'description' => 'A passkey (WebAuthn credential) stored on behalf of a third-party website.',
+                'definition' => SlugDefinition::v5Passkey(),
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
+            ],
         ];
     }
 }

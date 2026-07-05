@@ -68,7 +68,7 @@ class MfaOrgSettingsMigrationInDbToDuoV4ServiceTest extends TestCase
 
         $this->service->migrate();
 
-        $settings['providers'] = ['totp', 'duo', 'yubikey'];
+        $settings['providers'] = ['totp', 'duo', 'yubikey', 'webauthn'];
         $settingsInDB = $this->getMfaOrganizationSettingValue();
         $settings[MfaSettings::PROVIDER_DUO] = $this->getDefaultDuoV4OrgSettings();
         $this->assertEquals($settings, $settingsInDB);
@@ -83,7 +83,7 @@ class MfaOrgSettingsMigrationInDbToDuoV4ServiceTest extends TestCase
 
         $this->service->migrate();
 
-        $settings['providers'] = ['totp', 'duo', 'yubikey'];
+        $settings['providers'] = ['totp', 'duo', 'yubikey', 'webauthn'];
         $settingsInDB = $this->getMfaOrganizationSettingValue();
         $this->assertEquals($settings, $settingsInDB);
     }
@@ -98,7 +98,7 @@ class MfaOrgSettingsMigrationInDbToDuoV4ServiceTest extends TestCase
         $this->service->migrate();
 
         $settingsInDB = $this->getMfaOrganizationSettingValue();
-        $settings['providers'] = ['totp', 'yubikey'];
+        $settings['providers'] = ['totp', 'yubikey', 'webauthn'];
         unset($settings[MfaSettings::PROVIDER_DUO]);
         $this->assertEquals($settings, $settingsInDB);
     }
