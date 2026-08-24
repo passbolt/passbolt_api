@@ -1,6 +1,6 @@
-Release song: TBD
+Release song: https://youtu.be/SLNqxQXMV1w?si=O4XNvcGI-_vByG2x
 
-## [5.15.0-test.1] - 2026-08-18
+## [5.15.0] - 2026-08-20
 ### Added
 - PB-53238 Adds a healthcheck to warn users about PHP 8.2 end of life
 - PB-53302 Adds a V5150CreateSessionsTable migration to support database session storage
