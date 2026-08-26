@@ -27,7 +27,11 @@ use App\Utility\UserAction;
 use Cake\Core\Configure;
 use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
+use Passbolt\Folders\Model\Table\FoldersHistoryTable;
+use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Log\Events\ActionLogsModelListener;
+use Passbolt\Log\Model\Entity\EntityHistory;
 use Passbolt\Log\Model\Table\PermissionsHistoryTable;
 
 /**
@@ -39,12 +43,17 @@ class EntitiesHistoryCreateServiceTest extends AppTestCase
 
     private PermissionsHistoryTable $PermissionsHistory;
 
+    private FoldersTable $Folders;
+
+    private FoldersHistoryTable $FoldersHistory;
+
     private ActionLogsModelListener $listener;
 
     public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.log.enabled', true);
+        Configure::write('passbolt.plugins.folders.enabled', true);
         // Model.afterSave fires on the global EventManager; attach the listener there so this test can
         // reach EntitiesHistoryCreateService without going through the HTTP stack. Detached in tearDown
         // to avoid double-listening in downstream tests.
@@ -57,11 +66,23 @@ class EntitiesHistoryCreateServiceTest extends AppTestCase
         /** @var \Passbolt\Log\Model\Table\PermissionsHistoryTable $permissionsHistory */
         $permissionsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.PermissionsHistory');
         $this->PermissionsHistory = $permissionsHistory;
+        /** @var \Passbolt\Folders\Model\Table\FoldersTable $folders */
+        $folders = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+        $this->Folders = $folders;
+        /** @var \Passbolt\Folders\Model\Table\FoldersHistoryTable $foldersHistory */
+        $foldersHistory = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersHistory');
+        $this->FoldersHistory = $foldersHistory;
 
         // Bind belongsTo defensively — the Model.initialize listener may not have fired
         // for Permissions before the Log plugin's event manager was attached in this test.
         if (!$this->Permissions->hasAssociation('PermissionsHistory')) {
             $this->Permissions->belongsTo('Passbolt/Log.PermissionsHistory', [
+                'foreignKey' => 'foreign_key',
+            ]);
+        }
+        if (!$this->Folders->hasAssociation('FoldersHistory')) {
+            $this->Folders->belongsTo('FoldersHistory', [
+                'className' => 'Passbolt/Folders.FoldersHistory',
                 'foreignKey' => 'foreign_key',
             ]);
         }
@@ -71,8 +92,52 @@ class EntitiesHistoryCreateServiceTest extends AppTestCase
     {
         EventManager::instance()->off($this->listener);
         UserAction::destroy();
-        unset($this->Permissions, $this->PermissionsHistory, $this->listener);
+        unset(
+            $this->Permissions,
+            $this->PermissionsHistory,
+            $this->Folders,
+            $this->FoldersHistory,
+            $this->listener
+        );
         parent::tearDown();
+    }
+
+    public function testEntitiesHistoryCreateService_V5FolderCreate_WritesHistoryWithoutPlaintextName(): void
+    {
+        $owner = UserFactory::make()->user()->persist();
+        UserAction::getInstance(
+            new UserAccessControl(Role::USER, $owner->id),
+            'FoldersCreate.create',
+            'POST /folders.json'
+        );
+
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = FolderFactory::make([
+            'created_by' => $owner->id,
+            'modified_by' => $owner->id,
+        ])->v5Fields([
+            'metadata' => 'encrypted-metadata',
+            'metadata_key_id' => null,
+        ])->persist();
+
+        $folderHistory = $this->FoldersHistory
+            ->find()
+            ->where(['folder_id' => $folder->id])
+            ->firstOrFail();
+
+        $this->assertNull($folderHistory->name);
+        $this->assertNotSame($folder->id, $folderHistory->id);
+
+        $entitiesHistory = $this->fetchTable('Passbolt/Log.EntitiesHistory');
+        $entityHistory = $entitiesHistory
+            ->find()
+            ->where([
+                'foreign_model' => 'FoldersHistory',
+                'foreign_key' => $folderHistory->id,
+            ])
+            ->firstOrFail();
+
+        $this->assertSame(EntityHistory::CRUD_CREATE, $entityHistory->crud);
     }
 
     public function testEntitiesHistoryCreateService_PermissionUpdate_WritesFreshSnapshotRow(): void
