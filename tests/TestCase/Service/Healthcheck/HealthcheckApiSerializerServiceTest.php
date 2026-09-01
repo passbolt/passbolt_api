@@ -46,6 +46,8 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
 
     public function testSerialize_ErrorLevelPassing(): void
     {
+        Configure::write(PhpVersionHealthcheck::PHP_MIN_VERSION_CONFIG, PHP_VERSION);
+
         $check = (new PhpVersionHealthcheck())->check();
 
         $result = $this->service->serialize([$check]);
@@ -69,13 +71,15 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
         $this->assertSame('error', $result['Application configuration'][0]['status']);
         $this->assertSame([], $result['Environment'][0]['help']);
         $this->assertSame(
-            ['Set passbolt.selenium.active to false in /var/www/html/config/passbolt.php.'],
+            ['Set passbolt.selenium.active to false in ' . CONFIG . 'passbolt.php.'],
             $result['Application configuration'][0]['help'],
         );
     }
 
     public function testSerialize_WarningLevelPassing(): void
     {
+        Configure::write(NextMinPhpVersionHealthcheck::PHP_NEXT_MIN_VERSION_CONFIG, PHP_VERSION);
+
         $check = (new NextMinPhpVersionHealthcheck())->check();
 
         $result = $this->service->serialize([$check]);
