@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.7.0
+ * @since         5.16.0
  */
 namespace App\Service\Healthcheck;
 
@@ -20,6 +20,11 @@ use Cake\Collection\Collection;
 
 class HealthcheckApiSerializerService
 {
+    public const STATUS_PASS = 'pass';
+    public const STATUS_ERROR = 'error';
+    public const STATUS_WARNING = 'warning';
+    public const STATUS_INFO = 'info';
+
     /**
      * @var \App\Service\Healthcheck\HealthcheckServiceCollector
      */
@@ -36,27 +41,28 @@ class HealthcheckApiSerializerService
     /**
      * Serializes executed healthcheck results, grouped by domain, in input order.
      *
-     * @param array<\App\Service\Healthcheck\HealthcheckServiceInterface> $results Executed healthcheck results.
      * @return array
      */
-    public function serialize(array $results): array
+    public function serialize(): array
     {
-        $grouped = (new Collection($results))
-            ->groupBy(function (HealthcheckServiceInterface $result) {
-                return $result->domain();
-            });
+        $healthcheckServices = new Collection($this->collector->getServices());
+        $grouped = $healthcheckServices->groupBy(function (HealthcheckServiceInterface $healthcheck) {
+                return $healthcheck->domain();
+        });
 
         $body = [];
-        foreach ($grouped as $domain => $domainResults) {
+        foreach ($grouped as $domain => $domainHealthcheckServices) {
             $title = $this->collector->getTitleFromDomain($domain);
 
-            $body[$title] = array_map(function (HealthcheckServiceInterface $result) {
+            $body[$title] = array_map(function (HealthcheckServiceInterface $healthcheck) {
+                $result = $healthcheck->check();
+
                 return [
                     'status' => $this->status($result),
                     'message' => $this->message($result),
                     'help' => $this->help($result),
                     ];
-            }, $domainResults);
+            }, $domainHealthcheckServices);
         }
 
         return $body;
@@ -73,18 +79,18 @@ class HealthcheckApiSerializerService
     private function status(HealthcheckServiceInterface $result): string
     {
         if ($result->level() === HealthcheckServiceCollector::LEVEL_NOTICE) {
-            return 'info';
+            return self::STATUS_INFO;
         }
 
         if ($result->isPassed()) {
-            return 'pass';
+            return self::STATUS_PASS;
         }
 
         if ($result->level() === HealthcheckServiceCollector::LEVEL_WARNING) {
-            return 'warning';
+            return self::STATUS_WARNING;
         }
 
-        return 'error';
+        return self::STATUS_ERROR;
     }
 
     /**

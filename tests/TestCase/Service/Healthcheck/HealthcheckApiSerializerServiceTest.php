@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.7.0
+ * @since         5.16.0
  */
 namespace App\Test\TestCase\Service\Healthcheck;
 
@@ -30,45 +30,52 @@ use Passbolt\Scim\Service\Healthcheck\ScimHealthcheck;
 
 class HealthcheckApiSerializerServiceTest extends AppTestCase
 {
+    /**
+     * @var \App\Service\Healthcheck\HealthcheckServiceCollector
+     */
+    private HealthcheckServiceCollector $collector;
+
+    /**
+     * @var \App\Service\Healthcheck\HealthcheckApiSerializerService
+     */
     private HealthcheckApiSerializerService $service;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = new HealthcheckApiSerializerService(new HealthcheckServiceCollector());
+        $this->collector = new HealthcheckServiceCollector();
+        $this->service = new HealthcheckApiSerializerService($this->collector);
     }
 
     public function tearDown(): void
     {
-        unset($this->service);
+        unset($this->collector, $this->service);
         parent::tearDown();
     }
 
-    public function testSerialize_ErrorLevelPassing(): void
+    public function testHealthcheckApiSerializerServiceTest_ErrorLevelPassing(): void
     {
         Configure::write(PhpVersionHealthcheck::PHP_MIN_VERSION_CONFIG, PHP_VERSION);
 
-        $check = (new PhpVersionHealthcheck())->check();
+        $this->collector->addService(new PhpVersionHealthcheck());
 
-        $result = $this->service->serialize([$check]);
+        $result = $this->service->serialize();
 
-        $this->assertSame('pass', $result['Environment'][0]['status']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_PASS, $result['Environment'][0]['status']);
         $this->assertSame([], $result['Environment'][0]['help']);
     }
 
-    public function testSerialize_ErrorLevelFailing(): void
+    public function testHealthcheckApiSerializerServiceTest_ErrorLevelFailing(): void
     {
         Configure::write(PhpVersionHealthcheck::PHP_MIN_VERSION_CONFIG, '40');
 
-        $check = [
-            (new PhpVersionHealthcheck())->check(),
-            (new SeleniumDisabledApplicationHealthcheck())->check(),
-        ];
+        $this->collector->addService(new PhpVersionHealthcheck());
+        $this->collector->addService(new SeleniumDisabledApplicationHealthcheck());
 
-        $result = $this->service->serialize($check);
+        $result = $this->service->serialize();
 
-        $this->assertSame('error', $result['Environment'][0]['status']);
-        $this->assertSame('error', $result['Application configuration'][0]['status']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_ERROR, $result['Environment'][0]['status']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_ERROR, $result['Application configuration'][0]['status']);
         $this->assertSame([], $result['Environment'][0]['help']);
         $this->assertSame(
             ['Set passbolt.selenium.active to false in ' . CONFIG . 'passbolt.php.'],
@@ -76,31 +83,29 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
         );
     }
 
-    public function testSerialize_WarningLevelPassing(): void
+    public function testHealthcheckApiSerializerServiceTest_WarningLevelPassing(): void
     {
         Configure::write(NextMinPhpVersionHealthcheck::PHP_NEXT_MIN_VERSION_CONFIG, PHP_VERSION);
 
-        $check = (new NextMinPhpVersionHealthcheck())->check();
+        $this->collector->addService(new NextMinPhpVersionHealthcheck());
 
-        $result = $this->service->serialize([$check]);
+        $result = $this->service->serialize();
 
-        $this->assertSame('pass', $result['Environment'][0]['status']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_PASS, $result['Environment'][0]['status']);
         $this->assertSame([], $result['Environment'][0]['help']);
     }
 
-    public function testSerialize_WarningLevelFailing(): void
+    public function testHealthcheckApiSerializerServiceTest_WarningLevelFailing(): void
     {
         Configure::write(NextMinPhpVersionHealthcheck::PHP_NEXT_MIN_VERSION_CONFIG, '50');
 
-        $check = [
-            (new NextMinPhpVersionHealthcheck())->check(),
-            (new PluginEnabledJwtHealthcheck())->check(),
-        ];
+        $this->collector->addService(new NextMinPhpVersionHealthcheck());
+        $this->collector->addService(new PluginEnabledJwtHealthcheck());
 
-        $result = $this->service->serialize($check);
+        $result = $this->service->serialize();
 
-        $this->assertSame('warning', $result['Environment'][0]['status']);
-        $this->assertSame('warning', $result['JWT Authentication'][0]['status']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $result['Environment'][0]['status']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $result['JWT Authentication'][0]['status']);
         $this->assertSame([], $result['Environment'][0]['help']);
         $this->assertSame(
             ['Set the environment variable PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED to true'],
@@ -108,41 +113,39 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
         );
     }
 
-    public function testSerialize_InfoLevelPassing(): void
+    public function testHealthcheckApiSerializerServiceTest_InfoLevelPassing(): void
     {
         $this->enableFeaturePlugin('Scim');
 
-        $check = (new ScimHealthcheck())->check();
+        $this->collector->addService(new ScimHealthcheck());
 
-        $result = $this->service->serialize([$check]);
+        $result = $this->service->serialize();
 
-        $this->assertSame('info', $result['Scim'][0]['status']);
-        $this->assertSame($check->getSuccessMessage(), $result['Scim'][0]['message']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_INFO, $result['Scim'][0]['status']);
+        $this->assertSame('SCIM plugin is enabled.', $result['Scim'][0]['message']);
     }
 
-    public function testSerialize_InfoLevelFailing(): void
+    public function testHealthcheckApiSerializerServiceTest_InfoLevelFailing(): void
     {
         $this->disableFeaturePlugin('Scim');
 
-        $check = (new ScimHealthcheck())->check();
+        $this->collector->addService(new ScimHealthcheck());
 
-        $result = $this->service->serialize([$check]);
+        $result = $this->service->serialize();
 
-        $this->assertSame('info', $result['Scim'][0]['status']);
-        $this->assertSame($check->getFailureMessage(), $result['Scim'][0]['message']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_INFO, $result['Scim'][0]['status']);
+        $this->assertSame('SCIM plugin is disabled.', $result['Scim'][0]['message']);
         $this->assertSame([], $result['Scim'][0]['help']);
     }
 
-    public function testSerialize_DomainGrouping(): void
+    public function testHealthcheckApiSerializerServiceTest_DomainGrouping(): void
     {
-        $check = [
-            (new PhpVersionHealthcheck())->check(),
-            (new AppConfigFileHealthcheck())->check(),
-            (new NextMinPhpVersionHealthcheck())->check(),
-            (new TimeSyncHealthcheck())->check(),
-        ];
+        $this->collector->addService(new PhpVersionHealthcheck());
+        $this->collector->addService(new AppConfigFileHealthcheck());
+        $this->collector->addService(new NextMinPhpVersionHealthcheck());
+        $this->collector->addService(new TimeSyncHealthcheck());
 
-        $result = $this->service->serialize($check);
+        $result = $this->service->serialize();
 
         $this->assertCount(3, $result['Environment']);
         $this->assertCount(1, $result['Config files']);
