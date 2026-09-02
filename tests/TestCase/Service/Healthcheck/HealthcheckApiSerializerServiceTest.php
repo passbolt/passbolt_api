@@ -26,6 +26,7 @@ use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\Jwt\PluginEnabledJwtHealthcheck;
 use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
+use Passbolt\Metadata\Service\Healthcheck\ZeroKnowledge\ServerMetadataKeyAccessInZeroKnowledgeModeHealthcheck;
 use Passbolt\Scim\Service\Healthcheck\ScimHealthcheck;
 
 class HealthcheckApiSerializerServiceTest extends AppTestCase
@@ -149,5 +150,17 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
 
         $this->assertCount(3, $result['Environment']);
         $this->assertCount(1, $result['Config files']);
+    }
+
+    public function testHealthcheckApiSerializerServiceTest_ExcludesSkippedHealthcheck(): void
+    {
+        $this->collector->addService(new PhpVersionHealthcheck());
+        $this->collector->addService(new NextMinPhpVersionHealthcheck());
+        $this->collector->addService(new ServerMetadataKeyAccessInZeroKnowledgeModeHealthcheck());
+
+        $result = $this->service->serialize();
+
+        $this->assertArrayHasKey('Environment', $result);
+        $this->assertArrayNotHasKey('Metadata', $result);
     }
 }

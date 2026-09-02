@@ -46,22 +46,27 @@ class HealthcheckApiSerializerService
     public function serialize(): array
     {
         $healthcheckServices = new Collection($this->collector->getServices());
-        $grouped = $healthcheckServices->groupBy(function (HealthcheckServiceInterface $healthcheck) {
+        $grouped = $healthcheckServices
+            ->map(function (HealthcheckServiceInterface $healthcheckService) {
+                return $healthcheckService->check();
+            })
+            ->reject(function (HealthcheckServiceInterface $healthcheck) {
+                return $healthcheck instanceof SkipHealthcheckInterface && $healthcheck->isSkipped();
+            })
+            ->groupBy(function (HealthcheckServiceInterface $healthcheck) {
                 return $healthcheck->domain();
-        });
+            });
 
         $body = [];
         foreach ($grouped as $domain => $domainHealthcheckServices) {
             $title = $this->collector->getTitleFromDomain($domain);
 
             $body[$title] = array_map(function (HealthcheckServiceInterface $healthcheck) {
-                $result = $healthcheck->check();
-
                 return [
-                    'status' => $this->status($result),
-                    'message' => $this->message($result),
-                    'help' => $this->help($result),
-                    ];
+                    'status' => $this->status($healthcheck),
+                    'message' => $this->message($healthcheck),
+                    'help' => $this->help($healthcheck),
+                ];
             }, $domainHealthcheckServices);
         }
 
