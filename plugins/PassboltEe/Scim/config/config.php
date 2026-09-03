@@ -37,6 +37,9 @@ return [
                         // Disable in the cloud
                         'legacyHashAllowed' => filter_var(env('PASSBOLT_SCIM_SECURITY_SECRET_TOKEN_LEGACY_HASH_ALLOWED', true), FILTER_VALIDATE_BOOLEAN), // phpcs:ignore
                         'expiry' => filter_var(env('PASSBOLT_SCIM_SECURITY_SECRET_TOKEN_EXPIRY', '1 year'), FILTER_CALLBACK, ['options' => new AuthTokenExpiryConfigValidator()]), // phpcs:ignore
+                        // NOTE: Expiry will be enforced by default in the upcoming release.
+                        'enforceExpiry' => filter_var(env('PASSBOLT_SCIM_SECURITY_SECRET_TOKEN_ENFORCE_EXPIRY', false), FILTER_VALIDATE_BOOLEAN), // phpcs:ignore
+                        'warningWindow' => filter_var(env('PASSBOLT_SCIM_SECURITY_SECRET_TOKEN_WARNING_WINDOW', '14 days'), FILTER_CALLBACK, ['options' => new AuthTokenExpiryConfigValidator()]), // phpcs:ignore
                     ],
                     'allowSuspendAdministrators' => filter_var(env('PASSBOLT_PLUGINS_SCIM_SECURITY_ALLOW_SUSPEND_ADMINISTRATORS', false), FILTER_VALIDATE_BOOLEAN), // phpcs:ignore
                     'allowDeleteAdministrators' => filter_var(env('PASSBOLT_PLUGINS_SCIM_SECURITY_ALLOW_DELETE_ADMINISTRATORS', false), FILTER_VALIDATE_BOOLEAN), // phpcs:ignore
