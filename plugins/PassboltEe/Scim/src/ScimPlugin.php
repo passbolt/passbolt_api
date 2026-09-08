@@ -19,6 +19,7 @@ namespace Passbolt\Scim;
 
 use App\Service\Command\GetUserCommandService;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
+use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
@@ -34,6 +35,7 @@ use Passbolt\Scim\Event\ScimContainUserScimEntryListener;
 use Passbolt\Scim\Event\ScimModelInitializeEventListener;
 use Passbolt\Scim\Middleware\ScimAuthMiddleware;
 use Passbolt\Scim\Middleware\ScimLogMiddleware;
+use Passbolt\Scim\Middleware\ScimUnauthenticatedResponseMiddleware;
 use Passbolt\Scim\Service\Healthcheck\ScimHealthcheck;
 use Passbolt\Scim\Service\Healthcheck\ScimSecretTokenExpiryHealthcheck;
 use Passbolt\Scim\Utility\ScimConstants;
@@ -113,6 +115,7 @@ class ScimPlugin extends BasePlugin
     {
         $middlewareQueue
             ->insertAfter(RoutingMiddleware::class, ScimAuthMiddleware::class)
+            ->insertAfter(AuthenticationMiddleware::class, ScimUnauthenticatedResponseMiddleware::class)
             ->insertAfter(BodyParserMiddleware::class, ScimLogMiddleware::class);
 
         return parent::middleware($middlewareQueue);
