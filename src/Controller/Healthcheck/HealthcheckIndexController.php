@@ -69,7 +69,7 @@ class HealthcheckIndexController extends AppController
     ) {
         $this->User->assertIsAdmin();
 
-        if ($this->isGenericResponseRequested()) {
+        if ($this->getRequest()->getQuery('api-version') === 'v5') {
             $this->renderGeneric($healthcheckServiceCollector, $isRequestHttpsSslHealthcheck);
         } else {
             $this->renderLegacy($healthcheckServiceCollector, $isRequestHttpsSslHealthcheck);
@@ -77,31 +77,9 @@ class HealthcheckIndexController extends AppController
     }
 
     /**
-     * Checks whether this instance serves the new generic format.
-     *
-     * Based on the passbolt version  and if it is HTML or JSON request.
-     * HTML requests always get the legacy status page, so they return false here.
-     *
-     * @return bool
-     */
-    private function isGenericResponseRequested(): bool
-    {
-        if (!$this->request->is('json')) {
-            return false;
-        }
-
-        $version = Configure::read('passbolt.version');
-
-        if (!is_string($version) || $version === '') {
-            return false;
-        }
-
-        return version_compare($version, '5.0.0', '>=');
-    }
-
-    /**
      * Returns the full self-description of every registered healthcheck, grouped by
      * domain, so that the administration panel can render any check generically.
+     * Served only when requesting healthcheck.json?api-version=v5
      *
      * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector Health check service collector.
      * @param \App\Service\Healthcheck\Ssl\IsRequestHttpsSslHealthcheck $isRequestHttpsSslHealthcheck SSL enabled health check.
@@ -120,8 +98,7 @@ class HealthcheckIndexController extends AppController
 
     /**
      * Renders the legacy response format.
-     * The response format served before api-version 5, and
-     * for HTML requests. Extracted from index() unchanged.
+     * Extracted from index() unchanged.
      *
      * @deprecated As of v5.17.0, kept for backward compatibility.
      * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector Health check service collector.

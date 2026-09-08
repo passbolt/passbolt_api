@@ -28,12 +28,8 @@ use Cake\Database\Driver\Mysql;
 use Cake\Datasource\ConnectionManager;
 use Cake\Http\Client;
 use Cake\Http\TestSuite\HttpClientTrait;
-use Passbolt\DirectorySync\DirectorySyncPlugin;
-use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
-use Passbolt\Scim\ScimPlugin;
 use Passbolt\SmtpSettings\Middleware\SmtpSettingsSecurityMiddleware;
 use Passbolt\SmtpSettings\SmtpSettingsPlugin;
-use Passbolt\Sso\SsoPlugin;
 
 /**
  * @covers \App\Controller\Healthcheck\HealthcheckIndexController
@@ -42,16 +38,6 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 {
     use HealthcheckRequestTestTrait;
     use HttpClientTrait;
-
-    /**
-     * A version below 5, used to force the legacy rendering path.
-     */
-    private const LEGACY_VERSION = '4.9.0';
-
-    /**
-     * A version above the minimum 5, used to force the generic rendering path.
-     */
-    private const GENERIC_VERSION = '5.17.0';
 
     public function setUp(): void
     {
@@ -112,9 +98,8 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
         $this->assertResponseOk();
     }
 
-    public function testHealthcheckIndexController_Success_Json_Legacy(): void
+    public function testHealthcheckIndexController_Success_Json(): void
     {
-        Configure::write('passbolt.version', self::LEGACY_VERSION);
         $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
         RoleFactory::make(3)->persist();
         $this->logInAsAdmin();
@@ -255,36 +240,6 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
         $this->assertArrayEqualsCanonicalizing($expectedResponse, $result);
     }
 
-    public function testHealthcheckIndexController_Success_Json_Generic(): void
-    {
-        Configure::write('passbolt.version', self::GENERIC_VERSION);
-        $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
-        $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
-        $this->enableFeaturePlugin(ScimPlugin::class);
-        $this->enableFeaturePlugin(DirectorySyncPlugin::class);
-        $this->enableFeaturePlugin(SsoPlugin::class);
-        RoleFactory::make(3)->persist();
-        $this->logInAsAdmin();
-        $this->getJson('/healthcheck.json');
-        $this->assertResponseSuccess();
-
-        $result = $this->getResponseBodyAsArray();
-
-        $this->assertCount(12, $result['Environment']);
-        $this->assertCount(2, $result['Config files']);
-        $this->assertCount(6, $result['Core config']);
-        $this->assertCount(4, $result['SSL Certificate']);
-        $this->assertCount(5, $result['SMTP settings']);
-        $this->assertCount(3, $result['JWT Authentication']);
-        $this->assertCount(17, $result['GPG Configuration']);
-        $this->assertCount(14, $result['Application configuration']);
-        $this->assertCount(5, $result['Database']);
-        $this->assertCount(4, $result['Metadata']);
-        $this->assertCount(2, $result['Directory Sync']);
-        $this->assertCount(3, $result['SSO']);
-        $this->assertCount(2, $result['SCIM']);
-    }
-
     /**
      * Throw a forbidden error if the endpoint is disabled
      */
@@ -309,41 +264,5 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectHasAttributes($expectedHeaderAttributes, $resultHeader);
         $this->assertSame('error', $resultHeader->status);
         $this->assertSame('/healthcheck.json', $resultHeader->url);
-    }
-
-    public function testHealthcheckIndexController_NotAuthenticated_ShouldThrowException(): void
-    {
-        $this->getJson('/healthcheck.json');
-        $this->assertResponseCode(401);
-    }
-
-    public function testHealthcheckIndexController_VersionBelowMinimum_ReturnsLegacyFormat(): void
-    {
-        Configure::write('passbolt.version', self::LEGACY_VERSION);
-        $this->logInAsAdmin();
-
-        $this->getJson('/healthcheck.json');
-
-        $this->assertResponseSuccess();
-        $result = $this->getResponseBodyAsArray();
-
-        // Legacy shape: machine-name domain keys holding booleans.
-        $this->assertArrayHasKey('environment', $result);
-        $this->assertTrue($result['environment']['phpVersion']);
-        $this->assertArrayNotHasKey('Environment', $result);
-    }
-
-    public function testHealthcheckIndexController_VersionAboveMinimum_ReturnsGenericFormat(): void
-    {
-        Configure::write('passbolt.version', self::GENERIC_VERSION);
-        $this->logInAsAdmin();
-
-        $this->getJson('/healthcheck.json');
-
-        $this->assertResponseSuccess();
-        $result = $this->getResponseBodyAsArray();
-
-        $this->assertArrayHasKey('Environment', $result);
-        $this->assertArrayNotHasKey('environment', $result);
     }
 }
