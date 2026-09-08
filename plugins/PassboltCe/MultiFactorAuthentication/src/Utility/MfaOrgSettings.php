@@ -227,6 +227,10 @@ class MfaOrgSettings
                 } catch (RecordNotFoundException $exception) {
                 }
                 break;
+            case MfaSettings::PROVIDER_WEBAUTHN:
+                // WebAuthn has no org-side secrets; the provider is enabled as soon as it is toggled on.
+                $result = true;
+                break;
         }
 
         return $result;
@@ -301,7 +305,8 @@ class MfaOrgSettings
                     }
                     break;
                 case MfaSettings::PROVIDER_TOTP:
-                    // Nothing else to validate
+                case MfaSettings::PROVIDER_WEBAUTHN:
+                    // Nothing else to validate — no org-side secrets.
                     break;
                 default:
                     $errors[$provider]['invalidProvider'] = __('Unknown MFA provider: {0}.', $provider);

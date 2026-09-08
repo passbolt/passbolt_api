@@ -143,6 +143,61 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
      * @group mfaOrgSettings
      * @group mfaOrgSettingsPost
      */
+    public function testMfaOrgSettingsPostController_EnablesWebauthn_WithArrayShape(): void
+    {
+        $this->authenticateAs('admin');
+        $this->postJson('/mfa/settings.json?api-version=v2', [
+            'providers' => [MfaSettings::PROVIDER_WEBAUTHN],
+        ]);
+        $this->assertResponseSuccess();
+        $this->assertContains(MfaSettings::PROVIDER_WEBAUTHN, $this->_responseJsonBody->providers);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     * @group mfaOrgSettingsPost
+     */
+    public function testMfaOrgSettingsPostController_EnablesWebauthn_WithObjectShape(): void
+    {
+        $this->authenticateAs('admin');
+        $this->postJson('/mfa/settings.json?api-version=v2', [
+            'providers' => [
+                MfaSettings::PROVIDER_TOTP => true,
+                MfaSettings::PROVIDER_WEBAUTHN => true,
+            ],
+        ]);
+        $this->assertResponseSuccess();
+        $this->assertContains(MfaSettings::PROVIDER_WEBAUTHN, $this->_responseJsonBody->providers);
+        $this->assertContains(MfaSettings::PROVIDER_TOTP, $this->_responseJsonBody->providers);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     * @group mfaOrgSettingsPost
+     */
+    public function testMfaOrgSettingsPostController_DisablesWebauthn_DropsFromProviderList(): void
+    {
+        $config['providers'] = [
+            MfaSettings::PROVIDER_TOTP => true,
+            MfaSettings::PROVIDER_WEBAUTHN => true,
+        ];
+        $this->mockMfaOrgSettings($config);
+        $this->authenticateAs('admin');
+
+        $this->postJson('/mfa/settings.json?api-version=v2', [
+            'providers' => [MfaSettings::PROVIDER_TOTP],
+        ]);
+        $this->assertResponseSuccess();
+        $this->assertNotContains(MfaSettings::PROVIDER_WEBAUTHN, $this->_responseJsonBody->providers);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     * @group mfaOrgSettingsPost
+     */
     public function testMfaOrgSettingsPostControllerError_WrongConfig()
     {
         $config['providers'] = [MfaSettings::PROVIDER_TOTP => true];
