@@ -38,6 +38,7 @@ use Passbolt\Scim\Middleware\ScimLogMiddleware;
 use Passbolt\Scim\Middleware\ScimUnauthenticatedResponseMiddleware;
 use Passbolt\Scim\Service\Healthcheck\ScimHealthcheck;
 use Passbolt\Scim\Service\Healthcheck\ScimSecretTokenExpiryHealthcheck;
+use Passbolt\Scim\Service\Healthcheck\ScimSecretTokenExpiryWarningHealthcheck;
 use Passbolt\Scim\Utility\ScimConstants;
 
 /**
@@ -81,11 +82,13 @@ class ScimPlugin extends BasePlugin
         // SCIM Health checks
         $container->add(ScimHealthcheck::class);
         $container->add(ScimSecretTokenExpiryHealthcheck::class);
+        $container->add(ScimSecretTokenExpiryWarningHealthcheck::class);
         // Add SCIM health check services to collector
         $container
             ->extend(HealthcheckServiceCollector::class)
             ->addMethodCall('addService', [ScimHealthcheck::class])
-            ->addMethodCall('addService', [ScimSecretTokenExpiryHealthcheck::class]);
+            ->addMethodCall('addService', [ScimSecretTokenExpiryHealthcheck::class])
+            ->addMethodCall('addService', [ScimSecretTokenExpiryWarningHealthcheck::class]);
         $container
             ->extend(BodyParserMiddleware::class)
             ->addMethodCall('addParser', [

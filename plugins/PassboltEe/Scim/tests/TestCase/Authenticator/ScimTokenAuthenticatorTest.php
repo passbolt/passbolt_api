@@ -62,7 +62,6 @@ class ScimTokenAuthenticatorTest extends ScimApiIntegrationTestCase
         $this->get($this->getScimEndpoint('ServiceProviderConfig'));
 
         $this->assertResponseCode(401);
-        debug($this->getResponseBodyAsArray());
     }
 
     public function testScimTokenAuthenticator_ExpiredAndNotEnforced_Returns200AndLogsWarning(): void
