@@ -140,7 +140,13 @@ class V340MigrateASCIIFieldsEncodingTest extends TestCase
     public function isUuid(string $tableName, string $columnName): bool
     {
         // Some columns do not follow the general pattern and are not UUIDs
-        $exceptions = ['email_queue.id', 'gpgkeys.key_id', 'sessions.id'];
+        $exceptions = [
+            'email_queue.id',
+            'gpgkeys.key_id',
+            'sessions.id',
+            // Base64url credential id up to 1364 chars, not a UUID despite the _id suffix.
+            'webauthn_credentials.credential_id',
+        ];
 
         if (in_array("$tableName.$columnName", $exceptions)) {
             return false;
@@ -177,6 +183,9 @@ class V340MigrateASCIIFieldsEncodingTest extends TestCase
             'gpgkeys.type',
             // PHP session ids are case-sensitive opaque tokens; sessions.id is intentionally ascii_bin.
             'sessions.id',
+            // Base64url credential ids are case-sensitive per the alphabet; intentionally ascii_bin
+            // so the unique (credential_id, type) index compares bytes exactly.
+            'webauthn_credentials.credential_id',
         ];
     }
 }
