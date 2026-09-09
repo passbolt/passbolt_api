@@ -36,6 +36,7 @@ use Passbolt\Scim\Event\ScimModelInitializeEventListener;
 use Passbolt\Scim\Middleware\ScimAuthMiddleware;
 use Passbolt\Scim\Middleware\ScimLogMiddleware;
 use Passbolt\Scim\Middleware\ScimUnauthenticatedResponseMiddleware;
+use Passbolt\Scim\Notification\Email\ScimRedactorPool;
 use Passbolt\Scim\Service\Healthcheck\ScimHealthcheck;
 use Passbolt\Scim\Service\Healthcheck\ScimSecretTokenExpiryHealthcheck;
 use Passbolt\Scim\Service\Healthcheck\ScimSecretTokenExpiryWarningHealthcheck;
@@ -71,7 +72,8 @@ class ScimPlugin extends BasePlugin
     {
         $eventManager
             ->on(new ScimModelInitializeEventListener())
-            ->on(new ScimContainUserScimEntryListener());
+            ->on(new ScimContainUserScimEntryListener())
+            ->on(new ScimRedactorPool());
     }
 
     /**
