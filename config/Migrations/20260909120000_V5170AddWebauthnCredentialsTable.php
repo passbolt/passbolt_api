@@ -53,23 +53,19 @@ class V5170AddWebauthnCredentialsTable extends AbstractMigration
                 'limit' => 1364,
                 'encoding' => 'ascii',
                 'collation' => 'ascii_bin',
-                'comment' => 'Base64url-encoded WebAuthn credential id, used to look up the credential at assertion time.',
             ])
             ->addColumn('data', 'text', [
                 'null' => false,
                 'limit' => MysqlAdapter::TEXT_MEDIUM,
-                'comment' => 'Serialised Webauthn\\CredentialRecord — authoritative material, opaque to the ORM.',
             ])
             ->addColumn('sign_count', 'biginteger', [
                 'null' => false,
                 'signed' => false,
                 'default' => 0,
-                'comment' => 'WebAuthn signature counter (uint32 per CTAP spec, stored as unsigned bigint).',
             ])
             ->addColumn('name', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'comment' => 'User-provided friendly name for the credential.',
             ])
             ->addColumn('last_used', 'datetime', [
                 'null' => true,
