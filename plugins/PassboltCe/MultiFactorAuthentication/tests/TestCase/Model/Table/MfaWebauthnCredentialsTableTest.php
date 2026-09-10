@@ -190,10 +190,6 @@ class MfaWebauthnCredentialsTableTest extends TestCase
         $this->assertSame(50, $this->Table->get($credential->id)->sign_count);
     }
 
-    /**
-     * WebAuthn spec §6.1.3 — an authenticator that reports counter=0 on every assertion has
-     * opted out of counter tracking (common on modern Yubikeys). Accept without a bump.
-     */
     public function testMfaWebauthnCredentialsTable_UpdateAfterAssertion_ZeroCounterCounterlessAuthenticator_IsAccepted(): void
     {
         /** @var \App\Model\Entity\User $user */
@@ -219,10 +215,6 @@ class MfaWebauthnCredentialsTableTest extends TestCase
         $this->assertFalse($this->Table->updateAfterAssertion($credential, $zero));
     }
 
-    /**
-     * Two writers race with the same source counter — only one lands, matching the
-     * `sign_count < :new` atomic conditional update guard.
-     */
     public function testMfaWebauthnCredentialsTable_UpdateAfterAssertion_TwoWritesAgainstSameBaseline_OnlyOneWins(): void
     {
         /** @var \App\Model\Entity\User $user */
