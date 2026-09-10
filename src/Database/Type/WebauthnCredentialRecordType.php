@@ -76,9 +76,6 @@ class WebauthnCredentialRecordType extends BaseType
 
     /**
      * Lazily build the Webauthn serializer.
-     * We only need to (de)serialize CredentialRecord — none of the attestation
-     * statement supports contribute to that serialization, so an empty manager
-     * with only the "none" support is enough here.
      *
      * @return \Symfony\Component\Serializer\SerializerInterface
      */
