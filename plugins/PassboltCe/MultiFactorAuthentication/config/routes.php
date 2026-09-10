@@ -111,6 +111,11 @@ $routes->plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functi
         ])
         ->setMethods(['GET']);
 
+    $routes->connect('/setup/webauthn', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnSetupGet', 'action' => 'get',
+        ])
+        ->setMethods(['GET']);
+
     $routes->connect('/verify/error', ['controller' => 'MfaVerifyAjaxError', 'action' => 'get'])
         ->setMethods(['GET', 'POST', 'PUT', 'DELETE']);
 
