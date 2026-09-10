@@ -238,8 +238,9 @@ abstract class WebauthnCredentialsTable extends Table
     }
 
     /**
-     * Clone-detection policy per WebAuthn spec §6.1.3 — a stored+reported zero counter
-     * means the authenticator opted out; otherwise the counter must be strictly increasing.
+     * Clone-detection policy per WebAuthn spec §6.1.1 (Signature Counter Considerations) —
+     * a stored+reported zero counter means the authenticator opted out; otherwise the
+     * counter must be strictly increasing.
      *
      * Write helpers here (and in `deleteAllForUser`) carry an explicit `type` filter —
      * `beforeFind` does not fire on `updateAll` / `deleteAll`.
