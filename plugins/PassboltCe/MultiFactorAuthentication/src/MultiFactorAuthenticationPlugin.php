@@ -34,7 +34,9 @@ use Passbolt\MultiFactorAuthentication\Event\UsersModelInitializeEventListener;
 use Passbolt\MultiFactorAuthentication\Middleware\InjectMfaFormMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
 use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
+use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultMfaWebauthnPolicyService;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultRememberAMonthSettingService;
+use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\MfaWebauthnPolicyInterface;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
 
 class MultiFactorAuthenticationPlugin extends BasePlugin
@@ -95,6 +97,10 @@ class MultiFactorAuthenticationPlugin extends BasePlugin
         $container
             ->add(RememberAMonthSettingInterface::class)
             ->setConcrete(DefaultRememberAMonthSettingService::class);
+
+        $container
+            ->add(MfaWebauthnPolicyInterface::class)
+            ->setConcrete(DefaultMfaWebauthnPolicyService::class);
 
         if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
             $container
