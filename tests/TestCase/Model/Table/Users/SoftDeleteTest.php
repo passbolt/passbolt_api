@@ -26,6 +26,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaWebauthnCredentialFactory;
 use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 use RuntimeException;
 
@@ -535,5 +536,22 @@ class SoftDeleteTest extends AppTestCase
         }
 
         $this->assertUserIsSoftDeleted($user->id);
+    }
+
+    public function testUsersSoftDeleteSuccess_HardDeletesWebauthnCredentialsOfDeletedUser()
+    {
+        [$deletedUser, $survivingUser] = UserFactory::make(2)->user()->persist();
+        MfaWebauthnCredentialFactory::make(2)->withUser($deletedUser)->persist();
+        MfaWebauthnCredentialFactory::make()->withUser($survivingUser)->persist();
+        MfaWebauthnCredentialFactory::make()->withUser($deletedUser)
+            ->patchData(['type' => 'sso'])->persist();
+        MfaWebauthnCredentialFactory::make()->withUser($survivingUser)
+            ->patchData(['type' => 'sso'])->persist();
+
+        $this->assertNotFalse($this->Users->softDelete($deletedUser));
+        $this->assertUserIsSoftDeleted($deletedUser->id);
+
+        $this->assertSame(0, MfaWebauthnCredentialFactory::find()->where(['user_id' => $deletedUser->id])->count());
+        $this->assertSame(2, MfaWebauthnCredentialFactory::find()->where(['user_id' => $survivingUser->id])->count());
     }
 }
