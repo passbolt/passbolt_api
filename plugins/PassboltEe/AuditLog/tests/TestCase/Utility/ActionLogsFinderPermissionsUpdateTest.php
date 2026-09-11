@@ -52,7 +52,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
             'User',
             $userB->id,
             EntityHistory::CRUD_CREATE,
-            Permission::READ
+            Permission::READ,
         );
 
         $ActionLogsFinder = new ResourceActionLogsFinder();
@@ -88,7 +88,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
             'User',
             $userB->id,
             EntityHistory::CRUD_UPDATE,
-            Permission::OWNER
+            Permission::OWNER,
         );
 
         $ActionLogsFinder = new ResourceActionLogsFinder();
@@ -123,7 +123,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
             'User',
             $userB->id,
             EntityHistory::CRUD_DELETE,
-            Permission::OWNER
+            Permission::OWNER,
         );
 
         $ActionLogsFinder = new ResourceActionLogsFinder();

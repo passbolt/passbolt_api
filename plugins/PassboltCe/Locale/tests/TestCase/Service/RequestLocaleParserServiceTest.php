@@ -80,7 +80,7 @@ class RequestLocaleParserServiceTest extends TestCase
 
         $this->assertSame(
             $expected,
-            $service->getLocale()
+            $service->getLocale(),
         );
     }
 
@@ -98,7 +98,7 @@ class RequestLocaleParserServiceTest extends TestCase
         $service = new RequestLocaleParserService($request);
         $this->assertSame(
             $organizationLocale,
-            $service->getLocale()
+            $service->getLocale(),
         );
 
         // Session authenticated
@@ -108,7 +108,7 @@ class RequestLocaleParserServiceTest extends TestCase
         $service = new RequestLocaleParserService($request);
         $this->assertSame(
             $userLocale,
-            $service->getLocale()
+            $service->getLocale(),
         );
 
         // Jwt authenticated
@@ -118,7 +118,7 @@ class RequestLocaleParserServiceTest extends TestCase
         $service = new RequestLocaleParserService($request);
         $this->assertSame(
             $userLocale,
-            $service->getLocale()
+            $service->getLocale(),
         );
     }
 

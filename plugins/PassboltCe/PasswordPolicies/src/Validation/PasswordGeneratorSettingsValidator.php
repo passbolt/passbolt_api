@@ -52,19 +52,19 @@ class PasswordGeneratorSettingsValidator extends Validator
                     'The password generator length should be between {0} and {1}.',
                     self::PASSWORD_GENERATOR_SETTING_LENGTH_MIN,
                     self::PASSWORD_GENERATOR_SETTING_LENGTH_MAX,
-                )
+                ),
             )
             ->requirePresence(
                 'length',
                 true,
-                __('The password generator length is required.')
+                __('The password generator length is required.'),
             );
 
         $this
             ->requirePresence(
                 'mask_upper',
                 true,
-                __('The password generator mask upper is required.')
+                __('The password generator mask upper is required.'),
             )
             ->boolean('mask_upper', __('The password generator mask upper should be a boolean type.'));
 
@@ -72,7 +72,7 @@ class PasswordGeneratorSettingsValidator extends Validator
             ->requirePresence(
                 'mask_lower',
                 true,
-                __('The password generator mask lower is required.')
+                __('The password generator mask lower is required.'),
             )
             ->boolean('mask_lower', __('The password generator mask lower should be a boolean type.'));
 
@@ -80,7 +80,7 @@ class PasswordGeneratorSettingsValidator extends Validator
             ->requirePresence(
                 'mask_digit',
                 true,
-                __('The password generator mask digit is required.')
+                __('The password generator mask digit is required.'),
             )
             ->boolean('mask_digit', __('The password generator mask digit should be a boolean type.'));
 
@@ -88,7 +88,7 @@ class PasswordGeneratorSettingsValidator extends Validator
             ->requirePresence(
                 'mask_parenthesis',
                 true,
-                __('The password generator mask parenthesis is required.')
+                __('The password generator mask parenthesis is required.'),
             )
             ->boolean('mask_parenthesis', __('The password generator mask parenthesis should be a boolean type.'));
 
@@ -96,7 +96,7 @@ class PasswordGeneratorSettingsValidator extends Validator
             ->requirePresence(
                 'mask_emoji',
                 true,
-                __('The password generator mask emoji is required.')
+                __('The password generator mask emoji is required.'),
             )
             ->boolean('mask_emoji', __('The password generator mask emoji should be a boolean type.'));
 
@@ -104,7 +104,7 @@ class PasswordGeneratorSettingsValidator extends Validator
             ->requirePresence(
                 'mask_char1',
                 true,
-                __('The password generator mask char1 is required.')
+                __('The password generator mask char1 is required.'),
             )
             ->boolean('mask_char1', __('The password generator mask char1 should be a boolean type.'));
 
@@ -112,7 +112,7 @@ class PasswordGeneratorSettingsValidator extends Validator
             ->requirePresence(
                 'mask_char2',
                 true,
-                __('The password generator mask char2 is required.')
+                __('The password generator mask char2 is required.'),
             )
             ->boolean('mask_char2', __('The password generator mask char2 should be a boolean type.'));
 
@@ -120,7 +120,7 @@ class PasswordGeneratorSettingsValidator extends Validator
             ->requirePresence(
                 'mask_char3',
                 true,
-                __('The password generator mask char3 is required.')
+                __('The password generator mask char3 is required.'),
             )
             ->boolean('mask_char3', __('The password generator mask char3 should be a boolean type.'));
 
@@ -128,7 +128,7 @@ class PasswordGeneratorSettingsValidator extends Validator
             ->requirePresence(
                 'mask_char4',
                 true,
-                __('The password generator mask char4 is required.')
+                __('The password generator mask char4 is required.'),
             )
             ->boolean('mask_char4', __('The password generator mask char4 should be a boolean type.'));
 
@@ -136,7 +136,7 @@ class PasswordGeneratorSettingsValidator extends Validator
             ->requirePresence(
                 'mask_char5',
                 true,
-                __('The password generator mask char5 is required.')
+                __('The password generator mask char5 is required.'),
             )
             ->boolean('mask_char5', __('The password generator mask char5 should be a boolean type.'));
 
@@ -144,11 +144,11 @@ class PasswordGeneratorSettingsValidator extends Validator
             ->requirePresence(
                 'exclude_look_alike_chars',
                 true,
-                __('The password generator exclude look alike chars is required.')
+                __('The password generator exclude look alike chars is required.'),
             )
             ->boolean(
                 'exclude_look_alike_chars',
-                __('The password generator exclude look alike chars should be a boolean type.')
+                __('The password generator exclude look alike chars should be a boolean type.'),
             );
     }
 

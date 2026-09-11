@@ -30,7 +30,7 @@ class CakePoFilesTest extends TestCase
         foreach ($locales as $locale) {
             $this->assertFileExists(
                 $path . $locale . DS . 'cake.po',
-                'You may paste it from https://github.com/cakephp/localized/tree/4.x/resources/locales'
+                'You may paste it from https://github.com/cakephp/localized/tree/4.x/resources/locales',
             );
         }
     }

@@ -50,7 +50,7 @@ class CustomSslOptionsFormTest extends TestCase
             CustomSslOptionsForm::class,
             'sslVerifyPeer',
             $this->getDummyCustomSslOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -64,7 +64,7 @@ class CustomSslOptionsFormTest extends TestCase
             CustomSslOptionsForm::class,
             'sslVerifyPeerName',
             $this->getDummyCustomSslOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -78,7 +78,7 @@ class CustomSslOptionsFormTest extends TestCase
             CustomSslOptionsForm::class,
             'sslAllowSelfSigned',
             $this->getDummyCustomSslOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -92,7 +92,7 @@ class CustomSslOptionsFormTest extends TestCase
             CustomSslOptionsForm::class,
             'sslCafile',
             $this->getDummyCustomSslOptions(),
-            $testCases
+            $testCases,
         );
     }
 

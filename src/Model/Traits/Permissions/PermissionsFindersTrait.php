@@ -352,7 +352,7 @@ trait PermissionsFindersTrait
     public function findAcosAccessesDiffBetweenGroupAndUser(
         string $acoType,
         string $groupId,
-        string $userId
+        string $userId,
     ): SelectQuery {
         // R = All the resources or folders that are only accessible by a group and not accessible by a user
 
@@ -386,7 +386,7 @@ trait PermissionsFindersTrait
     public function findAcosAccessesDiffBetweenGroupAndUsers(
         string $acoType,
         string $groupId,
-        array $usersIds
+        array $usersIds,
     ): SelectQuery {
         // @todo to document
 
@@ -476,7 +476,7 @@ trait PermissionsFindersTrait
         string $acoType,
         string $acoForeignKey,
         string $aroForeignKey,
-        ?int $permissionType = null
+        ?int $permissionType = null,
     ): bool {
         if (!Validation::uuid($acoForeignKey)) {
             throw new InvalidArgumentException('The aco parameter should be a valid UUID.');

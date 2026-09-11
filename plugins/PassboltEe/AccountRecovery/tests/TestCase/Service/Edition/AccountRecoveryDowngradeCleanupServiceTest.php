@@ -74,7 +74,7 @@ class AccountRecoveryDowngradeCleanupServiceTest extends TestCase
             ->toList();
         $this->assertEqualsCanonicalizing(
             [AuthenticationToken::TYPE_LOGIN, AuthenticationToken::TYPE_REFRESH_TOKEN],
-            $remainingTypes
+            $remainingTypes,
         );
     }
 

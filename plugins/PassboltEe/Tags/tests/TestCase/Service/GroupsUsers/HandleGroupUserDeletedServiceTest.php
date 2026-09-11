@@ -120,11 +120,11 @@ class HandleGroupUserDeletedServiceTest extends TagTestCase
             ->withPermissionsFor([$group])
             ->with(
                 'ResourcesTags',
-                ResourcesTagFactory::make()->with('Users', $user1)->with('Tags')
+                ResourcesTagFactory::make()->with('Users', $user1)->with('Tags'),
             )
             ->with(
                 'ResourcesTags',
-                ResourcesTagFactory::make()->with('Users', $user2)->with('Tags')
+                ResourcesTagFactory::make()->with('Users', $user2)->with('Tags'),
             )
             ->persist();
 

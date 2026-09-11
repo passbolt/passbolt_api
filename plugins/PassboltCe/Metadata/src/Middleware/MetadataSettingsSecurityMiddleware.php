@@ -35,7 +35,7 @@ class MetadataSettingsSecurityMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         if (Configure::read(self::PASSBOLT_SECURITY_METADATA_SETTINGS_EDITION_DISABLED)) {
             throw new ForbiddenException(__('Metadata settings endpoints are disabled.'));

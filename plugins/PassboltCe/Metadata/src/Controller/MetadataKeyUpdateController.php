@@ -51,7 +51,7 @@ class MetadataKeyUpdateController extends AppController
             throw new FormValidationException(__('Could not validate the metadata key data.'), $form);
         }
 
-        $dto = MetadataKeyUpdateDto::fromArray($form->getData());
+        $dto = MetadataKeyUpdateDto::createFromArray($form->getData());
         (new MetadataKeyUpdateService())->update($this->User->getAccessControl(), $id, $dto);
         $this->success(__('The operation was successful.'));
     }

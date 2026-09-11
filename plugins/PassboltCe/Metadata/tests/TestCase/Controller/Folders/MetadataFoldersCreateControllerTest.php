@@ -92,7 +92,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
         $this->assertEventFiredWith(
             FoldersCreateService::FOLDERS_CREATE_FOLDER_EVENT,
             'isV5',
-            true
+            true,
         );
     }
 
@@ -133,7 +133,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
         $this->assertEventFiredWith(
             FoldersCreateService::FOLDERS_CREATE_FOLDER_EVENT,
             'isV5',
-            true
+            true,
         );
     }
 

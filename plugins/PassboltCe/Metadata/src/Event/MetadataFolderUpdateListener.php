@@ -48,7 +48,7 @@ class MetadataFolderUpdateListener implements EventListenerInterface
         $isNameDirty = $entity->isDirty('name');
         $isFolderDowngradeToV4 = IsFolderV5ToV4DowngradeAllowedRule::isFolderDowngradeToV4(
             $entity->getOriginal('name'),
-            $entity->get('name')
+            $entity->get('name'),
         );
         if ($isNameDirty && $isFolderDowngradeToV4) {
             // update entity to set metadata fields to null

@@ -115,7 +115,7 @@ class DecouplePersonalTagsServiceTest extends TestCase
                     'tag_id' => $neverSharedPersonalTag->id,
                     'resource_id IN' => Hash::extract($resources, '{n}.id'),
                 ])
-                ->all()->count()
+                ->all()->count(),
         );
 
         // There are now 3 tags with the same slug, pointing resp. to $user1, $user2 and $user3
@@ -151,13 +151,13 @@ class DecouplePersonalTagsServiceTest extends TestCase
             1,
             ResourcesTagFactory::find()
                 ->where(['user_id' => $user1->get('id'), 'tag_id' => $sharedTag->id])
-                ->all()->count()
+                ->all()->count(),
         );
         $this->assertSame(
             1,
             ResourcesTagFactory::find()
                 ->where(['user_id' => $user2->get('id'), 'tag_id' => $sharedTag->id])
-                ->all()->count()
+                ->all()->count(),
         );
 
         $this->assertSame(2, ResourcesTagFactory::count());
@@ -184,7 +184,7 @@ class DecouplePersonalTagsServiceTest extends TestCase
             2,
             ResourcesTagFactory::find()
                 ->where(['user_id' => $user1->get('id'), 'tag_id' => $neverSharedPersonalTag->id])
-                ->all()->count()
+                ->all()->count(),
         );
 
         $this->assertSame(2, ResourcesTagFactory::count());

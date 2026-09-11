@@ -60,7 +60,7 @@ class AdfsRecoverLoginController extends AbstractSsoController
             null,
             null,
             $this->User->ip(),
-            $this->User->userAgent()
+            $this->User->userAgent(),
         );
 
         $url = $this->getSsoUrlWithCookie(new SsoAdfsService($cookieService), $uac, SsoState::TYPE_SSO_RECOVER);

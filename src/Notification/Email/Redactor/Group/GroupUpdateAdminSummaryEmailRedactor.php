@@ -131,7 +131,7 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
                 $this->_getSummaryUser($updatedUsersIds),
                 $this->_getSummaryUser($removedUsersIds),
                 $whoIsAdmin,
-                $modifiedBy
+                $modifiedBy,
             ));
         }
 
@@ -155,13 +155,13 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
         array $updatedUsers,
         array $removedUsers,
         array $whoIsAdmin,
-        User $modifiedBy
+        User $modifiedBy,
     ): Email {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($modifiedBy, $group) {
                 return __('{0} updated the group {1}', $modifiedBy->profile->first_name, $group->name);
-            }
+            },
         );
         $data = [
             'body' => [
@@ -219,7 +219,7 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
                     'GroupsUsers.group_id' => $group->id,
                     'GroupsUsers.is_admin' => true,
                     'GroupsUsers.user_id NOT IN' => $excludeUsersIds,
-                ]
+                ],
             )
             ->toArray();
 

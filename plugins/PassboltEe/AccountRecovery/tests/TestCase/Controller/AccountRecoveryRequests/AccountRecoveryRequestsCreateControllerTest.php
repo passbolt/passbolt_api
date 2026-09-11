@@ -149,11 +149,11 @@ class AccountRecoveryRequestsCreateControllerTest extends AccountRecoveryIntegra
         $name = $user->profile->first_name . ' ' . $user->profile->last_name;
         $this->assertEmailInBatchContains(
             $name . ' has initiated an account recovery request',
-            $rbacViewer->username
+            $rbacViewer->username,
         );
         $this->assertEmailInBatchNotContains(
             $name . ' has initiated an account recovery request',
-            $user->username
+            $user->username,
         );
     }
 }

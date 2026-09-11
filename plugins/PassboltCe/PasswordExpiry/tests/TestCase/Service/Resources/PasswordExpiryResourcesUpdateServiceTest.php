@@ -75,7 +75,7 @@ class PasswordExpiryResourcesUpdateServiceTest extends AppTestCase
         bool $isFeatureEnabled,
         $expiredFieldInPayload,
         bool $isExpiredBefore,
-        bool $isExpiredAfter
+        bool $isExpiredAfter,
     ) {
         if ($isFeatureEnabled) {
             // Enable the pwd expiry in settings

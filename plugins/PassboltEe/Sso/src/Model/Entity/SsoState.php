@@ -130,7 +130,7 @@ class SsoState extends Entity
     public static function getExpiryDuration(): string
     {
         $expiryDuration = Configure::read(
-            sprintf('passbolt.auth.token.%s.expiry', SsoState::TYPE_SSO_STATE)
+            sprintf('passbolt.auth.token.%s.expiry', SsoState::TYPE_SSO_STATE),
         );
 
         // Fallback to safe default if value is not present in config
@@ -160,7 +160,7 @@ class SsoState extends Entity
     {
         return in_array(
             $this->type,
-            [SsoState::TYPE_SSO_SET_SETTINGS, SsoState::TYPE_SSO_GET_KEY]
+            [SsoState::TYPE_SSO_SET_SETTINGS, SsoState::TYPE_SSO_GET_KEY],
         );
     }
 }

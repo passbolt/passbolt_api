@@ -137,7 +137,7 @@ class AccountRecoveryRequestGetService
         string $requestId,
         string $userId,
         string $token,
-        ?string $clientIp = null
+        ?string $clientIp = null,
     ): AccountRecoveryRequest {
         // Assert policy is not set to disabled
         (new AccountRecoveryOrganizationPolicyGetService())->getOrFail();
@@ -257,7 +257,7 @@ class AccountRecoveryRequestGetService
                 'userId' => $userId,
                 'requestId' => $requestId,
                 'clientIp' => $clientIp,
-            ]
+            ],
         ));
     }
 }

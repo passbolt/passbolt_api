@@ -33,7 +33,7 @@ class MetadataSessionKeyCreateController extends AppController
         $uac = $this->User->getAccessControl();
         $metadataSessionKey = (new MetadataSessionKeyCreateService())->create(
             $uac,
-            $this->getRequest()->getData('data')
+            $this->getRequest()->getData('data'),
         );
         $this->success(__('The operation was successful.'), $metadataSessionKey);
     }

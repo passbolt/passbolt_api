@@ -53,7 +53,7 @@ class SsoOAuth2Stage1DryRunController extends AbstractSsoController
         $url = $this->getSsoUrlWithCookie(
             new SsoOAuth2Service($cookieService, $settingsDto),
             $uac,
-            SsoState::TYPE_SSO_SET_SETTINGS
+            SsoState::TYPE_SSO_SET_SETTINGS,
         );
 
         $this->success(__('The operation was successful.'), $url->jsonSerialize());

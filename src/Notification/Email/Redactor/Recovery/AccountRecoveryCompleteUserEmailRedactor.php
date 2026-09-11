@@ -81,7 +81,7 @@ class AccountRecoveryCompleteUserEmailRedactor implements SubscribedEmailRedacto
             $locale,
             function () {
                 return __('You just completed the account recovery process!');
-            }
+            },
         );
 
         $data = ['body' => compact('user', 'clientIp', 'userAgent'), 'title' => $subject];

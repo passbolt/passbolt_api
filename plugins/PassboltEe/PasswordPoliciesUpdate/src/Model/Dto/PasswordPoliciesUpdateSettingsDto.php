@@ -44,7 +44,7 @@ class PasswordPoliciesUpdateSettingsDto extends PasswordPoliciesSettingsDto
          */
         $passwordPoliciesSettingArray = array_merge(
             $passwordPoliciesSettingArray,
-            $passwordPoliciesSettingArray['value']
+            $passwordPoliciesSettingArray['value'],
         );
         unset($passwordPoliciesSettingArray['value']);
 

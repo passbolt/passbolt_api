@@ -48,7 +48,7 @@ class CommentsUpdateController extends AppController
         $comment = (new CommentsUpdateService())->update(
             $this->User->id(),
             $commentId,
-            Hash::get($this->request->getData(), 'content')
+            Hash::get($this->request->getData(), 'content'),
         );
 
         $this->success(__('The comment was successfully updated.'), $comment);

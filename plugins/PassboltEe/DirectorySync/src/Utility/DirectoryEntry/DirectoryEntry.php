@@ -177,7 +177,7 @@ abstract class DirectoryEntry implements ArrayAccess
             $fieldName,
             $this->mappingRules,
             $first,
-            $this->fallbackFields
+            $this->fallbackFields,
         );
     }
 
@@ -197,7 +197,7 @@ abstract class DirectoryEntry implements ArrayAccess
         string $fieldName,
         array $mappingRules,
         bool $first = true,
-        ?array $fallbackFields = null
+        ?array $fallbackFields = null,
     ): mixed {
         /** @var string $type */
         $type = $ldapObject->getFirstAttribute('objectType');

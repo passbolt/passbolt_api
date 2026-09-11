@@ -50,7 +50,7 @@ class CanSignGpgHealthcheck extends AbstractGpgHealthcheck implements SkipHealth
         $gpg = OpenPGPBackendFactory::get();
         $gpg->setSignKeyFromFingerprint(
             $this->getServerKeyFingerprint(),
-            $this->getServerKeyPassphrase()
+            $this->getServerKeyPassphrase(),
         );
         try {
             $gpg->sign('test message');

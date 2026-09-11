@@ -91,7 +91,7 @@ class ResourcesAfterCreateService
             throw new InternalErrorException(
                 'Could not create the resource folder relation, please try again later.',
                 500,
-                $e
+                $e,
             );
         }
     }
@@ -109,7 +109,7 @@ class ResourcesAfterCreateService
     private function validateParentFolder(
         UserAccessControl $uac,
         Resource $resource,
-        ?string $folderParentId = null
+        ?string $folderParentId = null,
     ): void {
         if (!Validation::uuid($folderParentId)) {
             $errors = ['uuid' => __('The folder parent identifier should be a valid UUID.')];
@@ -136,7 +136,7 @@ class ResourcesAfterCreateService
             PermissionsTable::FOLDER_ACO,
             $folderParentId,
             $userId,
-            Permission::UPDATE
+            Permission::UPDATE,
         );
         if (!$isAllowedToCreateIn) {
             $errors = ['has_folder_access' => __('You are not allowed to create content into the parent folder.')];

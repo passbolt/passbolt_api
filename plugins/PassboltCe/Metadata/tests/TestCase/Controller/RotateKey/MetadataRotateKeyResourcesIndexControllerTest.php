@@ -59,7 +59,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
             ])
             ->with(
                 'ResourceTypes',
-                ResourceTypeFactory::make()->deleted()
+                ResourceTypeFactory::make()->deleted(),
             )
             ->persist();
         // resources shouldn't be returned

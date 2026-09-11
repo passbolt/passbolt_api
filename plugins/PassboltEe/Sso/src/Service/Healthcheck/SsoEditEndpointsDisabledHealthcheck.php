@@ -94,7 +94,7 @@ class SsoEditEndpointsDisabledHealthcheck implements HealthcheckServiceInterface
             __(
                 'Or set {0} to true in {1}.',
                 SsoEndpointsSecurityMiddleware::SECURITY_CONFIG_KEY,
-                CONFIG . 'passbolt.php'
+                CONFIG . 'passbolt.php',
             ),
         ];
     }

@@ -70,7 +70,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
         $this->assertSame($defaultUserPassphraseSettings['source'], $response->user_passphrase_policy->source);
         $this->assertObjectNotHasAttributes(
             ['id', 'created', 'created_by', 'modified', 'modified_by'],
-            $response->user_passphrase_policy
+            $response->user_passphrase_policy,
         );
     }
 
@@ -108,7 +108,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
         $this->assertSame(UserPassphrasePoliciesSettingsDto::SOURCE_DATABASE, $response->user_passphrase_policy->source);
         $this->assertObjectHasAttributes(
             ['id', 'created', 'created_by', 'modified', 'modified_by'],
-            $response->user_passphrase_policy
+            $response->user_passphrase_policy,
         );
     }
 
@@ -145,7 +145,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
         $this->assertSame($defaultUserPassphraseSettings['source'], $response->user_passphrase_policy->source);
         $this->assertObjectNotHasAttributes(
             ['id', 'created', 'created_by', 'modified', 'modified_by'],
-            $response->user_passphrase_policy
+            $response->user_passphrase_policy,
         );
     }
 
@@ -185,7 +185,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
         $this->assertSame(UserPassphrasePoliciesSettingsDto::SOURCE_DATABASE, $response->user_passphrase_policy->source);
         $this->assertObjectHasAttributes(
             ['id', 'created', 'created_by', 'modified', 'modified_by'],
-            $response->user_passphrase_policy
+            $response->user_passphrase_policy,
         );
     }
 }

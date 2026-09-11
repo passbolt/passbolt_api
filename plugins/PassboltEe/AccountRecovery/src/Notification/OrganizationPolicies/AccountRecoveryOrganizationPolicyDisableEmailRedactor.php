@@ -58,7 +58,7 @@ class AccountRecoveryOrganizationPolicyDisableEmailRedactor extends AbstractAcco
                 }
 
                 return __('{0} has disabled the account recovery.', $user->profile->first_name);
-            }
+            },
         );
 
         $data = [

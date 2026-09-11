@@ -53,7 +53,7 @@ class SsoGoogleStage1DryRunController extends AbstractSsoController
         $url = $this->getSsoUrlWithCookie(
             new SsoGoogleService($cookieService, $settingsDto),
             $uac,
-            SsoState::TYPE_SSO_SET_SETTINGS
+            SsoState::TYPE_SSO_SET_SETTINGS,
         );
         $this->success(__('The operation was successful.'), $url->jsonSerialize());
     }

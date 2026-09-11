@@ -90,11 +90,11 @@ class ServerMetadataKeyAccessInZeroKnowledgeModeHealthcheckTest extends AppTestC
         $this->assertSame('isServerMetadataKeyAccessInZeroKnowledgeMode', $this->sut->getLegacyArrayKey());
         $this->assertStringContainsString(
             'The server has access to the server metadata private key while in Zero-knowledge mode',
-            $this->sut->getFailureMessage()
+            $this->sut->getFailureMessage(),
         );
         $this->assertStringContainsString(
             'When Zero-knowledge mode is enabled, the server should not have access to the server metadata private key',
-            $this->sut->getHelpMessage()
+            $this->sut->getHelpMessage(),
         );
     }
 

@@ -66,7 +66,7 @@ class YubikeySetupForm extends YubikeyVerifyForm
             throw new InternalErrorException(
                 'Could not save the Yubikey OTP settings. Please try again later.',
                 500,
-                $e
+                $e,
             );
         }
 

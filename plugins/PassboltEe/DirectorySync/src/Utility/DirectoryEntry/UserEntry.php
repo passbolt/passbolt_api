@@ -82,7 +82,7 @@ class UserEntry extends DirectoryEntry
     public static function fromLdapObject(
         Entry $ldapObject,
         array $mappingRules,
-        ?array $fallbackFields = null
+        ?array $fallbackFields = null,
     ): UserEntry {
         $userEntry = new UserEntry([]);
         $userEntry->buildFromLdapObject($ldapObject, $mappingRules, $fallbackFields);

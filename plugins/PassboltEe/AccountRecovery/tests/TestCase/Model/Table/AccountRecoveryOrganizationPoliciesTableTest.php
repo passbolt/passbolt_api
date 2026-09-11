@@ -81,7 +81,7 @@ class AccountRecoveryOrganizationPoliciesTableTest extends AccountRecoveryTestCa
             'id',
             AccountRecoveryOrganizationPolicyFactory::make()->getEntity()->toArray(),
             $this->getDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -100,7 +100,7 @@ class AccountRecoveryOrganizationPoliciesTableTest extends AccountRecoveryTestCa
             'policy',
             AccountRecoveryOrganizationPolicyFactory::make()->getEntity()->toArray(),
             $this->getDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 

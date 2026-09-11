@@ -99,7 +99,7 @@ class FilterQueryByResourcesAccessTest extends TestCase
         $result = $this->Users->filterQueryByResourcesAccess(
             $query,
             ResourceFactory::find()->select('id'),
-            $permissions
+            $permissions,
         );
 
         switch ($scenario) {

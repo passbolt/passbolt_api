@@ -93,8 +93,8 @@ class AccountSettingsTable extends Table
                 AccountSetting::SUPPORTED_PROPERTIES,
                 __(
                     'The setting type should be one of the following: {0}.',
-                    implode(', ', AccountSetting::SUPPORTED_PROPERTIES)
-                )
+                    implode(', ', AccountSetting::SUPPORTED_PROPERTIES),
+                ),
             )
             ->requirePresence('property', 'create', __('A setting type is required.'))
             ->notEmptyString('property', __('The setting type should not be empty'));

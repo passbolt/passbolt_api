@@ -76,7 +76,7 @@ class SelfRegistrationEmailDomainsDryRunServiceTest extends TestCase
         $email = 'johndoe@passbolt.com';
         $this->setSelfRegistrationSettingsData();
         $this->assertTrue(
-            $this->service->canGuestSelfRegister(compact('email'))
+            $this->service->canGuestSelfRegister(compact('email')),
         );
     }
 
@@ -86,7 +86,7 @@ class SelfRegistrationEmailDomainsDryRunServiceTest extends TestCase
         $this->setSelfRegistrationSettingsData();
         UserFactory::make()->setField('username', $email)->deleted()->persist();
         $this->assertTrue(
-            $this->service->canGuestSelfRegister(compact('email'))
+            $this->service->canGuestSelfRegister(compact('email')),
         );
     }
 

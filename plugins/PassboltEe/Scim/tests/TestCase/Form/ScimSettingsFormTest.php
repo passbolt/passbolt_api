@@ -71,7 +71,7 @@ class ScimSettingsFormTest extends AppTestCase
                 'activeAndEnabled' => 'The user is not active, disabled or does not exist.',
             ],
             ],
-            $this->form->getErrors()
+            $this->form->getErrors(),
         );
     }
 

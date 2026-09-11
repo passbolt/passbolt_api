@@ -62,13 +62,13 @@ class RbacsUpdateService
 
             throw new CustomValidationException(
                 __('The RBAC settings could not be updated.'),
-                $buildRulesErrors
+                $buildRulesErrors,
             );
         } catch (Exception $exception) {
             throw new InternalErrorException(
                 __('The RBAC settings could not be updated.'),
                 null,
-                $exception
+                $exception,
             );
         }
 
@@ -123,7 +123,7 @@ class RbacsUpdateService
     protected function patchEntities(
         UserAccessControl $uac,
         ResultSetInterface $rbacs,
-        RbacsUpdateDtoCollection $dtoCollection
+        RbacsUpdateDtoCollection $dtoCollection,
     ): iterable {
         $updateEntities = [];
 

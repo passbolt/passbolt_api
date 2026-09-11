@@ -70,7 +70,7 @@ class LogAuthenticationWithNonValidJwtAccessToken implements EventListenerInterf
             $event = new Event(
                 self::AUTHENTICATION_WITH_INVALID_ACCESS_TOKEN_EVENT,
                 $auth,
-                compact('message')
+                compact('message'),
             );
             EventManager::instance()->dispatch($event);
             Log::error($message);

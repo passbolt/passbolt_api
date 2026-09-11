@@ -112,7 +112,7 @@ class TestCommand extends DirectorySyncCommand
             $groupStr = __(
                 '{0} ({1} members)',
                 $group['group']['name'],
-                count($group['group']['users'])
+                count($group['group']['users']),
             );
         } else {
             $groupStr = __('<error>{0}</error>', $group->dn);
@@ -134,7 +134,7 @@ class TestCommand extends DirectorySyncCommand
                 '{0} {1} ({2})',
                 $user['user']['profile']['first_name'],
                 $user['user']['profile']['last_name'],
-                $user['user']['username']
+                $user['user']['username'],
             );
         } else {
             $userStr = __('<error>{0}</error>', $user->dn);
@@ -190,8 +190,8 @@ class TestCommand extends DirectorySyncCommand
             $io->err(
                 __(
                     '{0} users returned by your directory are invalid and will be ignored during synchronization',
-                    count($data['users'])
-                )
+                    count($data['users']),
+                ),
             );
             $io->err(__('bin/cake directory_sync test --verbose for more details'));
             $io->hr();
@@ -206,8 +206,8 @@ class TestCommand extends DirectorySyncCommand
             $io->err(
                 __(
                     '{0} group(s) returned by your directory are invalid and will be ignored during synchronization',
-                    count($data['groups'])
-                )
+                    count($data['groups']),
+                ),
             );
             $io->hr();
             foreach ($data['groups'] as $group) {

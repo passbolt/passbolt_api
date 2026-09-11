@@ -73,7 +73,7 @@ class JwtTokenCreateService extends JwtAbstractService
             throw new InternalErrorException(
                 __('The configuration {0} is not correctly set.', JwtTokenCreateService::JWT_EXPIRY_CONFIG_KEY),
                 500,
-                $e
+                $e,
             );
         }
     }

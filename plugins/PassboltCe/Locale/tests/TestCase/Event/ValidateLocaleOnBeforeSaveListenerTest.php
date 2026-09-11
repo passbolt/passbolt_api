@@ -73,7 +73,7 @@ class ValidateLocaleOnBeforeSaveListenerTest extends TestCase
         $setting = $accountSettingsTable->createOrUpdateSetting(
             UserFactory::make()->persist()->id,
             LocaleService::SETTING_PROPERTY,
-            $locale
+            $locale,
         );
 
         $this->assertSame('fr-FR', $setting->get('value'));

@@ -39,6 +39,6 @@ class SecretRevisionsSettingsAssertService
             throw new FormValidationException(__('Could not validate the settings.'), $form);
         }
 
-        return SecretRevisionsSettingsDto::fromArray($form->getData());
+        return SecretRevisionsSettingsDto::createFromArray($form->getData());
     }
 }

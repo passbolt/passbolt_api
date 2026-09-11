@@ -183,7 +183,7 @@ class UserFactory extends CakephpBaseFactory
     {
         return $this->with(
             'AccountSettings',
-            AccountSettingFactory::make()->locale($locale)
+            AccountSettingFactory::make()->locale($locale),
         );
     }
 
@@ -216,7 +216,7 @@ class UserFactory extends CakephpBaseFactory
         return new UserAccessControl(
             $user->role->name,
             $user->get('id') ?? UuidFactory::uuid(),
-            $user->get('username')
+            $user->get('username'),
         );
     }
 

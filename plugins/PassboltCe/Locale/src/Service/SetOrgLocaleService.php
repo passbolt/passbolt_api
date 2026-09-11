@@ -40,7 +40,7 @@ class SetOrgLocaleService extends LocaleService
         return $organizationSettingsTable->createOrUpdateSetting(
             static::SETTING_PROPERTY,
             $locale,
-            $admin
+            $admin,
         );
     }
 }

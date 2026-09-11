@@ -71,7 +71,7 @@ class UserRecoverService implements UserRecoverServiceInterface
      */
     public function __construct(
         ServerRequest $serverRequest,
-        SelfRegistrationDryRunServiceInterface $selfRegistrationDryRunService
+        SelfRegistrationDryRunServiceInterface $selfRegistrationDryRunService,
     ) {
         $this->request = $serverRequest;
         $this->selfRegistrationDryRunService = $selfRegistrationDryRunService;

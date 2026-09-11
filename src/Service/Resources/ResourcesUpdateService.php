@@ -93,7 +93,7 @@ class ResourcesUpdateService
                 $createdSecrets = $resource->secrets ?? [];
 
                 $this->postResourceUpdate($uac, $resource, $createdSecrets, $resourceDto);
-            }
+            },
         );
 
         return $resource;
@@ -185,7 +185,7 @@ class ResourcesUpdateService
         UserAccessControl $uac,
         Resource $resource,
         array $data,
-        MetadataResourceDto $resourceDto
+        MetadataResourceDto $resourceDto,
     ): void {
         $this->patchEntity($uac, $resource, $data, $resourceDto);
         $this->handleValidationErrors($resource);
@@ -206,7 +206,7 @@ class ResourcesUpdateService
         UserAccessControl $uac,
         Resource $resource,
         array $data,
-        MetadataResourceDto $resourceDto
+        MetadataResourceDto $resourceDto,
     ): Resource {
         $data['modified_by'] = $uac->getId();
         // Force the modified field to be updated to ensure the field is updated even if no meta are. It's the case
@@ -282,7 +282,7 @@ class ResourcesUpdateService
         UserAccessControl $uac,
         Resource $resource,
         array $secrets,
-        MetadataResourceDto $resourceDto
+        MetadataResourceDto $resourceDto,
     ): void {
         $eventData = [
             'resource' => $resource,

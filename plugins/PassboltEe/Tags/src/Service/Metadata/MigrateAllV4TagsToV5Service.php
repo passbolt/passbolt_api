@@ -93,7 +93,7 @@ class MigrateAllV4TagsToV5Service implements V4ToV5MigrationServiceInterface
 
         /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
         foreach ($tags as $tag) {
-            $dto = MetadataTagDto::fromArray($tag->toArray());
+            $dto = MetadataTagDto::createFromArray($tag->toArray());
 
             try {
                 if ($dto->isV5()) {

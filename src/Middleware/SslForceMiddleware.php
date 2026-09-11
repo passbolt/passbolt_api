@@ -34,7 +34,7 @@ class SslForceMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
         $isNotHttps = $request->getUri()->getScheme() !== 'https';

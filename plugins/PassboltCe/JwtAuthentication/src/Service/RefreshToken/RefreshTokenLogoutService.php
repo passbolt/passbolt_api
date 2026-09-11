@@ -39,7 +39,7 @@ class RefreshTokenLogoutService extends RefreshTokenAbstractService
                 [
                     $this->AuthenticationTokens->aliasField('user_id') => $userId,
                     $this->AuthenticationTokens->aliasField('type') => AuthenticationToken::TYPE_REFRESH_TOKEN,
-                ]
+                ],
             );
         }
 

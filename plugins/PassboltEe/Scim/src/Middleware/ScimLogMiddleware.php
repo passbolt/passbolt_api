@@ -41,7 +41,7 @@ class ScimLogMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
         $logScimRequest = (
@@ -57,16 +57,16 @@ class ScimLogMiddleware implements MiddlewareInterface
                     '`%s` Request uri (%s): %s',
                     $requestId,
                     $request->getEnv('REQUEST_METHOD'),
-                    $request->getUri()
-                )
+                    $request->getUri(),
+                ),
             );
             if ($request->is(['post', 'put', 'patch'])) {
                 ScimLog::info(
                     sprintf(
                         "`%s` Request body: \n%s",
                         $requestId,
-                        print_r($request->getParsedBody(), return: true)
-                    )
+                        print_r($request->getParsedBody(), return: true),
+                    ),
                 );
             }
         }

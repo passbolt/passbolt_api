@@ -87,7 +87,7 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(400);
         $this->assertStringContainsString(
             'transfer the ownership',
-            $this->_responseJsonHeader->message
+            $this->_responseJsonHeader->message,
         );
     }
 

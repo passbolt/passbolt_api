@@ -67,7 +67,7 @@ class LdapSasl extends Ldap
                 $this->saslOptions['realm'],
                 $this->saslOptions['authc_id'],
                 $this->saslOptions['authz_id'],
-                $this->saslOptions['props']
+                $this->saslOptions['props'],
             );
         });
     }

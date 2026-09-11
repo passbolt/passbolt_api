@@ -94,21 +94,21 @@ class AvatarsTable extends Table implements TableCleanupProviderInterface
                 'rule' => ['mimeType', self::ALLOWED_MIME_TYPES],
                 'message' => __(
                     'The file mime type should be one of the following: {0}.',
-                    implode(', ', self::ALLOWED_MIME_TYPES)
+                    implode(', ', self::ALLOWED_MIME_TYPES),
                 ),
             ])
             ->add('file', 'validExtension', [
                 'rule' => ['extension', self::ALLOWED_EXTENSIONS],
                 'message' => __(
                     'The file extension should be one of the following: {0}.',
-                    implode(', ', self::ALLOWED_EXTENSIONS)
+                    implode(', ', self::ALLOWED_EXTENSIONS),
                 ),
             ])
             ->add('file', 'validUploadedFile', [
                 'rule' => ['uploadedFile', ['maxSize' => self::MAX_SIZE]], // Max size in bytes
                 'message' => __(
                     'The file is not valid, or exceeds max size of {0} bytes.',
-                    self::MAX_SIZE
+                    self::MAX_SIZE,
                 ),
             ]);
 
@@ -296,7 +296,7 @@ class AvatarsTable extends Table implements TableCleanupProviderInterface
             $img = AvatarProcessing::resizeAndCrop(
                 $content,
                 Configure::readOrFail('FileStorage.imageSizes.Avatar.medium.thumbnail.width'),
-                Configure::readOrFail('FileStorage.imageSizes.Avatar.medium.thumbnail.height')
+                Configure::readOrFail('FileStorage.imageSizes.Avatar.medium.thumbnail.height'),
             );
             $avatar->set('data', $img);
         } catch (Throwable $e) {

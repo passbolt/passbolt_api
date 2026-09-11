@@ -189,17 +189,17 @@ class SecretsTable extends Table implements TableCleanupProviderInterface
                 [
                     'message' => __('A secret already exists for the given user and resource.'),
                     'allowMultipleNulls' => false,
-                ]
+                ],
             ),
-            'secret_unique'
+            'secret_unique',
         );
         // Only one secret for the combination (user_id, resource_id, secret_revision_id)
         $rules->addCreate(
             $rules->isUnique(
                 ['user_id', 'resource_id', 'secret_revision_id'],
-                __('A secret already exists for the given user, resource and secret revision.')
+                __('A secret already exists for the given user, resource and secret revision.'),
             ),
-            'secret_revision_unique'
+            'secret_revision_unique',
         );
         $rules->addCreate($rules->existsIn(['user_id'], 'Users'), 'user_exists', [
             'errorField' => 'user_id',

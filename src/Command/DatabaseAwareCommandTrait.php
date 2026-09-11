@@ -33,7 +33,7 @@ trait DatabaseAwareCommandTrait
      */
     protected function addDatasourceOption(
         ConsoleOptionParser $parser,
-        ?bool $isDefaultOrTest = true
+        ?bool $isDefaultOrTest = true,
     ): ConsoleOptionParser {
         $options = [
             'short' => 'd',

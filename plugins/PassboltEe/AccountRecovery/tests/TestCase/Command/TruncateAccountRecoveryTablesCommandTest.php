@@ -77,7 +77,7 @@ class TruncateAccountRecoveryTablesCommandTest extends TestCase
 
         $this->exec(
             "passbolt truncate_account_recovery_tables -u {$admin->username} -f {$orgPubKey->fingerprint}",
-            ['y',]
+            ['y',],
         );
 
         $this->assertExitSuccess();
@@ -105,7 +105,7 @@ class TruncateAccountRecoveryTablesCommandTest extends TestCase
 
         $this->exec(
             "passbolt truncate_account_recovery_tables -u {$admin->username} -f {$orgPubKey->fingerprint} --no-verify",
-            ['y',]
+            ['y',],
         );
 
         $this->assertExitSuccess();
@@ -135,7 +135,7 @@ class TruncateAccountRecoveryTablesCommandTest extends TestCase
 
         $this->exec(
             'passbolt truncate_account_recovery_tables -u foo@bar.com -f 8FF56AE5DFCEE142949B7826FD986838F4F9AB31',
-            ['y', 'y', 'y']
+            ['y', 'y', 'y'],
         );
 
         $this->assertExitSuccess();
@@ -159,7 +159,7 @@ class TruncateAccountRecoveryTablesCommandTest extends TestCase
 
         $this->exec(
             'passbolt truncate_account_recovery_tables --no-verify',
-            ['y',]
+            ['y',],
         );
 
         $this->assertExitSuccess();

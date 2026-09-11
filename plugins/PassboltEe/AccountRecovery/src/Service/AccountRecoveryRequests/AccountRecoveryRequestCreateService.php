@@ -91,7 +91,7 @@ class AccountRecoveryRequestCreateService
 
         PublicKeyValidationService::parseAndValidatePublicKey(
             $this->getData('armored_key'),
-            PublicKeyValidationService::getStrictRules()
+            PublicKeyValidationService::getStrictRules(),
         );
         try {
             $this->AccountRecoveryRequests->saveOrFail($request, compact('uac'));

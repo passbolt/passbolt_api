@@ -528,7 +528,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
 
         $result = $this->_responseJsonBody;
         /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
-        $folder = current(array_filter((array)$result, fn ($f) => $f->id === $folderA->id));
+        $folder = current(array_filter((array)$result, fn($f) => $f->id === $folderA->id));
 
         $this->assertFolderAttributes($folder);
         $this->assertNotEmpty($folder->children_folders);

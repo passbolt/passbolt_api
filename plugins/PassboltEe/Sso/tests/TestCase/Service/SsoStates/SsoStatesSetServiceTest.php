@@ -66,7 +66,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             '127.0.0.1',
-            'PHPUnit User Agent'
+            'PHPUnit User Agent',
         );
 
         $result = $this->service->create(
@@ -74,7 +74,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
             $state,
             SsoState::TYPE_SSO_SET_SETTINGS,
             $ssoSettingId,
-            $uac
+            $uac,
         );
 
         $this->assertInstanceOf(SsoState::class, $result);
@@ -98,7 +98,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             '127.0.0.1',
-            'PHPUnit User Agent'
+            'PHPUnit User Agent',
         );
 
         $result = $this->service->create(
@@ -106,7 +106,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
             $state,
             SsoState::TYPE_SSO_GET_KEY,
             $ssoSettingId,
-            $uac
+            $uac,
         );
 
         $this->assertInstanceOf(SsoState::class, $result);
@@ -130,7 +130,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             '127.0.0.1',
-            'PHPUnit User Agent'
+            'PHPUnit User Agent',
         );
 
         try {
@@ -152,7 +152,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             '127.0.0.1',
-            'PHPUnit User Agent'
+            'PHPUnit User Agent',
         );
 
         try {
@@ -173,7 +173,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             '127.0.0.1',
-            'PHPUnit User Agent'
+            'PHPUnit User Agent',
         );
 
         $this->service->create(
@@ -181,7 +181,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
             SsoState::generate(),
             SsoState::TYPE_SSO_SET_SETTINGS,
             $ssoSettingId,
-            $uac
+            $uac,
         );
 
         try {
@@ -191,7 +191,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
                 SsoState::generate(),
                 SsoState::TYPE_SSO_SET_SETTINGS,
                 $ssoSettingId,
-                $uac
+                $uac,
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(InternalErrorException::class, $e);
@@ -209,7 +209,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             '127.0.0.1',
-            'PHPUnit User Agent'
+            'PHPUnit User Agent',
         );
 
         $this->service->create(
@@ -217,7 +217,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
             $state,
             SsoState::TYPE_SSO_SET_SETTINGS,
             $ssoSettingId,
-            $uac
+            $uac,
         );
 
         try {
@@ -227,7 +227,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
                 $state,
                 SsoState::TYPE_SSO_SET_SETTINGS,
                 $ssoSettingId,
-                $uac
+                $uac,
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(InternalErrorException::class, $e);

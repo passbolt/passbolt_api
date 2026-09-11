@@ -50,7 +50,7 @@ class UserPassphrasePoliciesGetSettingsService
         if (!$form->execute($userPassphrasePoliciesSetting->value)) {
             throw new FormValidationException(
                 __('Could not validate the user passphrase policies settings.'),
-                $form
+                $form,
             );
         }
 

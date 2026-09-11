@@ -43,7 +43,7 @@ class MfaVerifiedToken
         UserAccessControl $uac,
         string $provider,
         string $sessionId,
-        ?bool $remember = false
+        ?bool $remember = false,
     ): string {
         /** @var \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens */
         $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
@@ -97,7 +97,7 @@ class MfaVerifiedToken
         string $tokenString,
         ?SessionIdentificationServiceInterface $sessionIdentificationService = null,
         ?ServerRequest $request = null,
-        ?RememberAMonthSettingInterface $rememberMeForAMonthSetting = null
+        ?RememberAMonthSettingInterface $rememberMeForAMonthSetting = null,
     ): bool {
         // Baseline validity check
         /** @var \App\Model\Table\AuthenticationTokensTable $auth */

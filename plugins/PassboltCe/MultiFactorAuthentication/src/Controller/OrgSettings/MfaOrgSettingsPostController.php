@@ -47,7 +47,7 @@ class MfaOrgSettingsPostController extends MfaController
         $config = (new MfaOrgSettingsSetService())->setOrgSettings(
             $data,
             $this->User->getAccessControl(),
-            $duoSdkClient
+            $duoSdkClient,
         );
         $this->success(__('The multi factor authentication settings for the organization were updated.'), $config);
     }

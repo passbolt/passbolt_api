@@ -96,7 +96,7 @@ class SendTestEmailCommandTest extends AppTestCase
     {
         $config = TransportFactory::getConfig('default');
         $base64encodedString = base64_encode(
-            chr(0) . $config['username'] . chr(0) . $config['password']
+            chr(0) . $config['username'] . chr(0) . $config['password'],
         );
         $trace = [['cmd' => 'Password: ' . $base64encodedString]];
         $recipient = 'test@passbolt.test';

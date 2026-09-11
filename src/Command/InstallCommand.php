@@ -65,7 +65,7 @@ class InstallCommand extends PassboltCommand
     public function __construct(
         ProcessUserService $processUserService,
         SubscriptionCheckInCommandServiceInterface $subscriptionCheckInCommandService,
-        HealthcheckServiceCollector $healthcheckServiceCollector
+        HealthcheckServiceCollector $healthcheckServiceCollector,
     ) {
         parent::__construct();
 
@@ -231,7 +231,7 @@ class InstallCommand extends PassboltCommand
             $result = $this->executeCommand(
                 $registerUserCommand,
                 $this->formatOptions($args, $options),
-                $io
+                $io,
             );
 
             return $result === self::CODE_SUCCESS;

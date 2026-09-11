@@ -258,7 +258,7 @@ class HealthcheckCommandTest extends AppTestCase
     {
         $this->mockClientGet(
             Router::url('/healthcheck/status.json', true),
-            $this->newClientResponse(200, [], json_encode(['body' => 'OK']))
+            $this->newClientResponse(200, [], json_encode(['body' => 'OK'])),
         );
 
         $this->exec('passbolt healthcheck --core');
@@ -278,7 +278,7 @@ class HealthcheckCommandTest extends AppTestCase
     {
         $this->mockClientGet(
             Router::url('/healthcheck/status.json', true),
-            $this->newClientResponse(404)
+            $this->newClientResponse(404),
         );
 
         $this->exec('passbolt healthcheck --core');

@@ -35,7 +35,7 @@ class EditionDowngradeDisabledMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         if (Configure::read(self::PASSBOLT_SECURITY_EDITION_DOWNGRADE_DISABLED)) {
             throw new ForbiddenException(__('Edition downgrade is disabled.'));

@@ -44,7 +44,7 @@ class PasswordExpiryPoliciesSettingFactory extends PasswordExpirySettingFactory
     {
         return $this->setField(
             'value.' . PasswordExpirySettingsDto::AUTOMATIC_EXPIRY,
-            false
+            false,
         );
     }
 }

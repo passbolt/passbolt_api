@@ -73,7 +73,7 @@ class MfaOrgSettingsMigrationToDbServiceTest extends TestCase
 
         $this->assertSame(
             UserFactory::find()->firstOrFail()->get('id'),
-            MfaOrganizationSettingFactory::find()->firstOrFail()->get('created_by')
+            MfaOrganizationSettingFactory::find()->firstOrFail()->get('created_by'),
         );
         $expectedConfig = ['providers' => ['totp']];
         $this->assertSame($expectedConfig, $this->getMfaOrganizationSettingValue());

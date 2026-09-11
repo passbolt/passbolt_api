@@ -107,33 +107,33 @@ class AccountRecoveryPrivateKeysTable extends Table implements TableCleanupProvi
         $validator
             ->uuid(
                 'created_by',
-                __('The identifier of the user who created the private key  should be a valid UUID.')
+                __('The identifier of the user who created the private key  should be a valid UUID.'),
             )
             ->requirePresence(
                 'created_by',
                 'create',
-                __('The identifier of the user who created the private key  is required.')
+                __('The identifier of the user who created the private key  is required.'),
             )
             ->notEmptyString(
                 'created_by',
                 __('The identifier of the user who created the private key  should not be empty.'),
-                false
+                false,
             );
 
         $validator
             ->uuid(
                 'modified_by',
-                __('The identifier of the user who modified the private key  should be a valid UUID.')
+                __('The identifier of the user who modified the private key  should be a valid UUID.'),
             )
             ->requirePresence(
                 'modified_by',
                 'create',
-                __('The identifier of the user who modified the private key is required.')
+                __('The identifier of the user who modified the private key is required.'),
             )
             ->notEmptyString(
                 'modified_by',
                 __('The identifier of the user who modified the private key  should not be empty.'),
-                false
+                false,
             );
 
         return $validator;

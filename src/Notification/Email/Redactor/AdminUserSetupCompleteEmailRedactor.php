@@ -109,7 +109,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
                         ],
                     ],
                 ],
-            ]
+            ],
         );
 
         if (!isset($userWhoCompletedSetup->entities_history) || !isset($userWhoCompletedSetup->entities_history[0])) {
@@ -135,7 +135,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
         // Create an email for every admin
         foreach ($admins as $admin) {
             $emailCollection->addEmail(
-                $this->createEmail($admin, $userWhoCompletedSetup, $invitedBy, $invitedWhen)
+                $this->createEmail($admin, $userWhoCompletedSetup, $invitedBy, $invitedWhen),
             );
         }
 
@@ -158,13 +158,13 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
             $admin->locale,
             function () use ($profile) {
                 return __('{0} just activated their account on passbolt', $profile->first_name);
-            }
+            },
         );
         $invitedWhen = (new LocaleService())->translateString(
             $admin->locale,
             function () use ($invitedWhen) {
                 return $invitedWhen->timeAgoInWords(['accuracy' => 'day']);
-            }
+            },
         );
 
         $body = [
@@ -184,7 +184,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
             $admin,
             $subject,
             ['title' => $subject, 'body' => $body],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 }

@@ -39,7 +39,7 @@ class JwtRouteFilterMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
         $this->throwExceptionIfRouteIsNotAllowedWithJwtAuth($request);
@@ -73,7 +73,7 @@ class JwtRouteFilterMiddleware implements MiddlewareInterface
             $route = $request->getAttribute('params')['_matchedRoute'] ?? null;
             if (in_array($route, $this->getBlockedRoutes())) {
                 throw new BadRequestException(
-                    __('The route {0} is not permitted with JWT authentication.', $route)
+                    __('The route {0} is not permitted with JWT authentication.', $route),
                 );
             }
         }

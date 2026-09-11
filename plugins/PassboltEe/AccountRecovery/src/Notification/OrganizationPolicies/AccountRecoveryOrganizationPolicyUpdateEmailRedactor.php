@@ -60,9 +60,9 @@ class AccountRecoveryOrganizationPolicyUpdateEmailRedactor extends AbstractAccou
                 return __(
                     '{0} has updated the account recovery organization policy to {1}.',
                     $user->profile->first_name,
-                    $policy->policy
+                    $policy->policy,
                 );
-            }
+            },
         );
 
         $data = [

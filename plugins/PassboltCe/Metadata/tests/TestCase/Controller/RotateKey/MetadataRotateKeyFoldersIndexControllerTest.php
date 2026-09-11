@@ -47,7 +47,7 @@ class MetadataRotateKeyFoldersIndexControllerTest extends AppIntegrationTestCase
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataFolderDto::createFromArray(['name' => 'marketing'])->getClearTextMetadata());
         FolderFactory::make(8)
             ->withPermissionsFor([$admin])
             ->withFoldersRelationsFor([$admin])
@@ -59,7 +59,7 @@ class MetadataRotateKeyFoldersIndexControllerTest extends AppIntegrationTestCase
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $activeMetadataKey */
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'active'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataFolderDto::createFromArray(['name' => 'active'])->getClearTextMetadata());
         FolderFactory::make(2)
             ->withPermissionsFor([$admin])
             ->withFoldersRelationsFor([$admin])
@@ -67,7 +67,7 @@ class MetadataRotateKeyFoldersIndexControllerTest extends AppIntegrationTestCase
             ->persist();
         // another user's folder
         $user = UserFactory::make()->user()->active()->persist();
-        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'betty folder'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataFolderDto::createFromArray(['name' => 'betty folder'])->getClearTextMetadata());
         FolderFactory::make(25)
             ->withPermissionsFor([$user])
             ->withFoldersRelationsFor([$user])
@@ -105,7 +105,7 @@ class MetadataRotateKeyFoldersIndexControllerTest extends AppIntegrationTestCase
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataFolderDto::createFromArray(['name' => 'marketing'])->getClearTextMetadata());
         FolderFactory::make(5)
             ->withPermissionsFor([$admin])
             ->withFoldersRelationsFor([$admin])
@@ -162,7 +162,7 @@ class MetadataRotateKeyFoldersIndexControllerTest extends AppIntegrationTestCase
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataFolderDto::createFromArray(['name' => 'marketing'])->getClearTextMetadata());
         FolderFactory::make($no)
             ->withPermissionsFor([$admin])
             ->withFoldersRelationsFor([$admin])

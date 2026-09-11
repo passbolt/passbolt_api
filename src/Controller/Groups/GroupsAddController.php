@@ -41,7 +41,7 @@ class GroupsAddController extends AppController
         $this->assertJson();
         $accessControlService->controlUserRoleActionAccess(
             $this->User->getRoleEntity(),
-            UserAction::getInstance()->getActionId()
+            UserAction::getInstance()->getActionId(),
         );
 
         $data = $this->_formatRequestData();

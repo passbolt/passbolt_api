@@ -60,7 +60,7 @@ class OAuth2RecoverLoginController extends AbstractSsoController
             null,
             null,
             $this->User->ip(),
-            $this->User->userAgent()
+            $this->User->userAgent(),
         );
 
         $url = $this->getSsoUrlWithCookie(new SsoOAuth2Service($cookieService), $uac, SsoState::TYPE_SSO_RECOVER);

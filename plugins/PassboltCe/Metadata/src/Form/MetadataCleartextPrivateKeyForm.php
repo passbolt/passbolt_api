@@ -87,7 +87,7 @@ class MetadataCleartextPrivateKeyForm extends Form
                 'last' => true,
                 'rule' => [$this, 'checkPrivateFingerprint'],
                 'message' => __(
-                    'The fingerprint does not match the OpenPGP private keys fingerprint.'
+                    'The fingerprint does not match the OpenPGP private keys fingerprint.',
                 ),
             ]);
 

@@ -167,7 +167,7 @@ class UserComponent extends Component
             $this->id(),
             $this->username(),
             $this->ip(),
-            $this->userAgent()
+            $this->userAgent(),
         );
     }
 

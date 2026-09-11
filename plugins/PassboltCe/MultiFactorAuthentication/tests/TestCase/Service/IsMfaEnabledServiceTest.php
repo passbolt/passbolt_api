@@ -57,7 +57,7 @@ class IsMfaEnabledServiceTest extends TestCase
 
         $this->sut = new IsMfaEnabledService(
             $this->mfaOrgSettingsGetServiceMock,
-            $this->getMfaAccountSettingsServiceMock
+            $this->getMfaAccountSettingsServiceMock,
         );
     }
 
@@ -100,7 +100,7 @@ class IsMfaEnabledServiceTest extends TestCase
      */
     public function testThatIsEnabledForUserReturnFalseWhenOrgAndUserHaveNoCommonEnabledProviders(
         array $orgEnabledProviders,
-        array $accountEnabledProviders
+        array $accountEnabledProviders,
     ) {
         $this->mfaOrgSettingsGetServiceMock->expects($this->once())
             ->method('get')
@@ -132,7 +132,7 @@ class IsMfaEnabledServiceTest extends TestCase
      */
     public function testThatIsEnabledForUserReturnTrueWhenOrgAndUserHaveCommonEnabledProviders(
         array $orgEnabledProviders,
-        array $accountEnabledProviders
+        array $accountEnabledProviders,
     ) {
         $this->mfaOrgSettingsGetServiceMock->expects($this->once())
             ->method('get')

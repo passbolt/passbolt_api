@@ -64,7 +64,7 @@ class AccountRecoveryContinueControllerTest extends AppIntegrationTestCase
         $this->assertArrayHasKey('user_passphrase_policy', $response);
         $this->assertEqualsCanonicalizing(
             UserPassphrasePoliciesSettingsDto::createFromDefault()->toFilteredArray(),
-            $response['user_passphrase_policy']
+            $response['user_passphrase_policy'],
         );
     }
 
@@ -92,7 +92,7 @@ class AccountRecoveryContinueControllerTest extends AppIntegrationTestCase
                 'entropy_minimum' => $response['user_passphrase_policy']['entropy_minimum'],
                 'external_dictionary_check' => $response['user_passphrase_policy']['external_dictionary_check'],
                 'source' => $response['user_passphrase_policy']['source'],
-            ]
+            ],
         );
     }
 

@@ -66,7 +66,7 @@ abstract class AbstractAccountRecoveryOrganizationPolicyEmailRedactor implements
     abstract protected function makeAdminEmail(
         User $admin,
         User $user,
-        AccountRecoveryOrganizationPolicy $policy
+        AccountRecoveryOrganizationPolicy $policy,
     ): Email;
 
     /**

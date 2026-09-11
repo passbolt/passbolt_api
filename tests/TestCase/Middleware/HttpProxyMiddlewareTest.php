@@ -99,7 +99,7 @@ class HttpProxyMiddlewareTest extends TestCase
 
         $this->assertEquals(
             HttpProxyMiddleware::HTTP_HEADERS_WHITELIST,
-            $response->getHeader(HttpProxyMiddleware::ACCESS_CONTROL_EXPOSE_HEADERS)
+            $response->getHeader(HttpProxyMiddleware::ACCESS_CONTROL_EXPOSE_HEADERS),
         );
         $this->assertEquals($request->clientIp(), $realClientIP);
         Configure::write(HttpProxyMiddleware::PASSBOLT_SECURITY_PROXIES_ACTIVE_CONFIG_NAME, false);
@@ -124,7 +124,7 @@ class HttpProxyMiddlewareTest extends TestCase
         $response = $middleware->process($request, $requestHandler);
 
         $this->assertEmpty(
-            $response->getHeader(HttpProxyMiddleware::ACCESS_CONTROL_EXPOSE_HEADERS)
+            $response->getHeader(HttpProxyMiddleware::ACCESS_CONTROL_EXPOSE_HEADERS),
         );
         $this->assertEquals($request->clientIp(), $proxyIP);
     }
@@ -204,7 +204,7 @@ class HttpProxyMiddlewareTest extends TestCase
 
         $this->assertEquals(
             HttpProxyMiddleware::HTTP_HEADERS_WHITELIST,
-            $response->getHeader(HttpProxyMiddleware::ACCESS_CONTROL_EXPOSE_HEADERS)
+            $response->getHeader(HttpProxyMiddleware::ACCESS_CONTROL_EXPOSE_HEADERS),
         );
         $this->assertSame($realClientIP, $request->clientIp());
     }
@@ -240,7 +240,7 @@ class HttpProxyMiddlewareTest extends TestCase
 
         $this->assertEquals(
             HttpProxyMiddleware::HTTP_HEADERS_WHITELIST,
-            $response->getHeader(HttpProxyMiddleware::ACCESS_CONTROL_EXPOSE_HEADERS)
+            $response->getHeader(HttpProxyMiddleware::ACCESS_CONTROL_EXPOSE_HEADERS),
         );
         $this->assertSame('192.168.1.3', $request->clientIp());
     }

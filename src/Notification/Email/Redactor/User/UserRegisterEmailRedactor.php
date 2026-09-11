@@ -76,7 +76,7 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
             $user->locale,
             function () use ($user) {
                 return __('Welcome to passbolt, {0}!', $user->profile->first_name);
-            }
+            },
         );
     }
 
@@ -106,7 +106,7 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
                 ],
                 'title' => $this->getSubject($user),
             ],
-            static::TEMPLATE_REGISTER_ADMIN
+            static::TEMPLATE_REGISTER_ADMIN,
         );
     }
 

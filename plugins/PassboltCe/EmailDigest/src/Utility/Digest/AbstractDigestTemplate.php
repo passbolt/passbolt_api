@@ -106,7 +106,7 @@ abstract class AbstractDigestTemplate
         } else {
             $operatorProfile = $digest->getOperator()->profile;
             $operatorFullName = Purifier::clean(
-                $operatorProfile['first_name'] . ' ' . $operatorProfile['last_name']
+                $operatorProfile['first_name'] . ' ' . $operatorProfile['last_name'],
             );
             $makeSubject = function () use ($operatorFullName): string {
                 return $this->getDigestSubjectIfRecipientIsNotTheOperator($operatorFullName);

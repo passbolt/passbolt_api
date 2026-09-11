@@ -29,11 +29,11 @@ class SsoSettingsDeleteControllerTest extends SsoIntegrationTestCase
     public static function ssoSettingsDeleteSuccessProvider(): array
     {
         return [
-            'Azure' => [fn () => SsoSettingsFactory::make()->azure()],
-            'Google' => [fn () => SsoSettingsFactory::make()->google()],
-            'OAuth2' => [fn () => SsoSettingsFactory::make()->oauth2()],
-            'ADFS' => [fn () => SsoSettingsFactory::make()->adfs()],
-            'PingOne' => [fn () => SsoSettingsFactory::make()->pingone()],
+            'Azure' => [fn() => SsoSettingsFactory::make()->azure()],
+            'Google' => [fn() => SsoSettingsFactory::make()->google()],
+            'OAuth2' => [fn() => SsoSettingsFactory::make()->oauth2()],
+            'ADFS' => [fn() => SsoSettingsFactory::make()->adfs()],
+            'PingOne' => [fn() => SsoSettingsFactory::make()->pingone()],
         ];
     }
 

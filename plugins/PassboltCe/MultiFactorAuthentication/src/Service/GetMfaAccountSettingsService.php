@@ -39,7 +39,7 @@ class GetMfaAccountSettingsService
 
         return new MfaAccountSettings(
             new UserAccessControl($user->role->name, $user->id),
-            json_decode($mfaSettings->value, true)
+            json_decode($mfaSettings->value, true),
         );
     }
 }

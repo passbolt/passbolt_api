@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
 <ruleset name="App">
-    <config name="installed_paths" value="../../cakephp/cakephp-codesniffer"/>
-
     <file>src/</file>
     <file>tests/</file>
     <file>plugins/</file>

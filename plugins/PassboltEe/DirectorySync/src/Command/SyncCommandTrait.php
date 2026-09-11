@@ -78,8 +78,8 @@ trait SyncCommandTrait
         $io->info(
             __(
                 'For more explanation on sync error messages, see: {0}',
-                ['https://help.passbolt.com/configure/ldap/ldap-common-sync-error-messages']
-            )
+                ['https://help.passbolt.com/configure/ldap/ldap-common-sync-error-messages'],
+            ),
         );
         $io->out();
     }

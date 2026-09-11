@@ -37,7 +37,7 @@ class ResourcesCleanDescriptionOnPasswordAndDescriptionTypeService
     {
         return TableRegistry::getTableLocator()->get('Resources')->updateAll(
             ['description' => null],
-            ['resource_type_id' => UuidFactory::uuid('resource-types.id.password-and-description')]
+            ['resource_type_id' => UuidFactory::uuid('resource-types.id.password-and-description')],
         );
     }
 }

@@ -145,7 +145,7 @@ class AvatarsCacheService
      */
     protected function readStreamInCache(
         Avatar $avatar,
-        string $format = AvatarsConfigurationService::FORMAT_SMALL
+        string $format = AvatarsConfigurationService::FORMAT_SMALL,
     ): Stream {
         $fileName = $this->getAvatarFileName($avatar, $format);
         try {

@@ -189,7 +189,7 @@ class RbacsTableTest extends RbacsTestCase
         $this->assertFalse($result);
         $this->assertSame(
             'The control function is not allowed for this Action.',
-            $rbac->getErrors()['control_function']['isControlFunctionAllowed']
+            $rbac->getErrors()['control_function']['isControlFunctionAllowed'],
         );
     }
 

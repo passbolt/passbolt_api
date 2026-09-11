@@ -83,7 +83,7 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
         /** @var \App\Model\Entity\Resource $resource */
         $resource = $event->getData('resource');
-        $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
+        $resourceDto = MetadataResourceDto::createFromArray($resource->toArray());
         /** @var string $deletedBy */
         $deletedBy = $event->getData('deletedBy');
         /** @var \Cake\ORM\ResultSet $users */
@@ -125,7 +125,7 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
                 }
 
                 return $sub;
-            }
+            },
         );
 
         $data = [

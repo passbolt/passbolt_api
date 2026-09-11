@@ -105,7 +105,7 @@ class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesSe
                         ['secret_accesses.user_id', 'secret_accesses.resource_id'],
                         $secretsTuplesDto,
                         [],
-                        'IN'
+                        'IN',
                     ),
                 ],
             ])
@@ -139,12 +139,12 @@ class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesSe
      * @return void
      */
     private function notifyResourcesOwners(
-        array $resourceIds
+        array $resourceIds,
     ): void {
         $this->dispatchEvent(
             self::PASSWORD_EXPIRY_RESOURCES_EXPIRED_EVENT_NAME,
             compact('resourceIds'),
-            $this
+            $this,
         );
     }
 }

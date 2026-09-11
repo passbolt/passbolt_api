@@ -310,7 +310,7 @@ class DirectoryOrgSettings
         return Hash::get(
             $this->settings,
             'ldap.default_domain',
-            collection(array_keys($this->settings['ldap']['domains']))->first()
+            collection(array_keys($this->settings['ldap']['domains']))->first(),
         );
     }
 

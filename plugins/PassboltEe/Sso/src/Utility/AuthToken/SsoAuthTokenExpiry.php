@@ -35,8 +35,8 @@ class SsoAuthTokenExpiry extends AuthTokenExpiry
                 sprintf(
                     'Invalid $tokenType `%s`. Must be one of `%s`.',
                     $tokenType,
-                    implode(',', SsoAuthenticationTokensTable::SSO_ALLOWED_TYPES)
-                )
+                    implode(',', SsoAuthenticationTokensTable::SSO_ALLOWED_TYPES),
+                ),
             );
         }
 

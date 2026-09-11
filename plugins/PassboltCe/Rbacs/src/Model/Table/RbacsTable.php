@@ -126,15 +126,15 @@ class RbacsTable extends Table
             ->ascii('foreign_model', __('The foreign model should be a valid ASCII string.'))
             ->inList('foreign_model', Rbac::ALLOWED_FOREIGN_MODELS, __(
                 'The foreign model should be one of the following: {0}.',
-                implode(', ', Rbac::ALLOWED_FOREIGN_MODELS)
+                implode(', ', Rbac::ALLOWED_FOREIGN_MODELS),
             ))
             ->maxLength(
                 'foreign_model',
                 Rbac::MAX_FOREIGN_MODEL_LENGTH,
                 __(
                     'The foreign model name used length should be maximum {0} characters.',
-                    Rbac::MAX_FOREIGN_MODEL_LENGTH
-                )
+                    Rbac::MAX_FOREIGN_MODEL_LENGTH,
+                ),
             )
             ->requirePresence('foreign_model', 'create', __('A foreign model is required.'))
             ->notEmptyString('foreign_model', __('The foreign model should not be empty.'));
@@ -146,8 +146,8 @@ class RbacsTable extends Table
                 Rbac::MAX_CONTROL_FUNCTION_NAME_LENGTH,
                 __(
                     'The control function name used length should be maximum {0} characters.',
-                    Rbac::MAX_CONTROL_FUNCTION_NAME_LENGTH
-                )
+                    Rbac::MAX_CONTROL_FUNCTION_NAME_LENGTH,
+                ),
             )
             ->inList('control_function', Rbac::ALLOWED_CONTROL_FUNCTIONS, __('The control function is not supported.'))
             ->requirePresence('control_function', true, __('A control function is required.'))
@@ -163,7 +163,7 @@ class RbacsTable extends Table
             ->notEmptyString(
                 'modified_by',
                 __('The identifier of the user who modified the Rbac should not be empty.'),
-                'update'
+                'update',
             );
 
         return $validator;
@@ -181,17 +181,17 @@ class RbacsTable extends Table
         $rules->add(
             $rules->isUnique(
                 ['id'],
-                __('An RBAC entry already exists for the given id.')
+                __('An RBAC entry already exists for the given id.'),
             ),
-            ['errorField' => 'id']
+            ['errorField' => 'id'],
         );
 
         $rules->add(
             $rules->isUnique(
                 ['role_id', 'foreign_id'],
-                __('An entry already exists for the given role and action ids.')
+                __('An entry already exists for the given role and action ids.'),
             ),
-            ['errorField' => 'role_id']
+            ['errorField' => 'role_id'],
         );
 
         $rules->add(new IsControlFunctionAllowedRule(), 'isControlFunctionAllowed', [

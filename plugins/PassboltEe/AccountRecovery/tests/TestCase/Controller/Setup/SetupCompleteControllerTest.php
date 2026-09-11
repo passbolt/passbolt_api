@@ -49,7 +49,7 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
             ->optin()
             ->with(
                 'AccountRecoveryOrganizationPublicKeys',
-                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key(),
             )
             ->persist();
 
@@ -136,7 +136,7 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
             ->optin()
             ->with(
                 'AccountRecoveryOrganizationPublicKeys',
-                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key(),
             )
             ->persist();
 

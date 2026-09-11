@@ -110,7 +110,7 @@ class DirectoryReportsTable extends Table
             [
                 'errorField' => 'parent_id',
                 'message' => __('The associated record could not be found.'),
-            ]
+            ],
         );
 
         return $rules;

@@ -84,7 +84,7 @@ class ResourcesViewController extends AppController
             throw new NotFoundException(__('The resource does not exist.'));
         }
         $resource = FolderizableBehavior::unsetPersonalPropertyIfNull($resource->toArray());
-        $resourceDto = MetadataResourceDto::fromArray($resource);
+        $resourceDto = MetadataResourceDto::createFromArray($resource);
         $resource = (new MetadataResourcesRenderService())->renderResource($resource, $resourceDto->isV5());
 
         // Log secret access.

@@ -134,7 +134,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(SessionAuthPreventDeletedOrDisabledUsersMiddleware::class)
             ->insertAfter(
                 SessionAuthPreventDeletedOrDisabledUsersMiddleware::class,
-                new AuthenticationMiddleware($this)
+                new AuthenticationMiddleware($this),
             )
             ->insertAfter(AuthenticationMiddleware::class, SetUserIdentityInRequestMiddleware::class)
             ->insertAfter(SetUserIdentityInRequestMiddleware::class, SessionPreventExtensionMiddleware::class)
@@ -297,7 +297,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         }
         $container->add(
             SubscriptionCheckInCommandServiceInterface::class,
-            DefaultSubscriptionCheckInCommandService::class
+            DefaultSubscriptionCheckInCommandService::class,
         );
         $container->addServiceProvider(new HealthcheckServiceProvider());
         $container->add(HealthcheckStatusServiceInterface::class, DefaultHealthcheckStatusService::class);

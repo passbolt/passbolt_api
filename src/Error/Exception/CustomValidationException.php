@@ -63,7 +63,7 @@ class CustomValidationException extends HttpException implements
         mixed $errors = null,
         ?Table $table = null,
         ?int $code = null,
-        ?Exception $previous = null
+        ?Exception $previous = null,
     ) {
         parent::__construct($message, $code, $previous);
         $this->_errors = $errors;

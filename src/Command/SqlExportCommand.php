@@ -150,7 +150,7 @@ class SqlExportCommand extends PassboltCommand
 
         $existingExcluded = array_values(array_intersect(
             self::EXCLUDED_DATA_TABLES,
-            $connection->getSchemaCollection()->listTables()
+            $connection->getSchemaCollection()->listTables(),
         ));
 
         $driver = $connection->getDriver();
@@ -229,7 +229,7 @@ class SqlExportCommand extends PassboltCommand
         array $config,
         string $dir,
         string $file,
-        array $existingExcluded
+        array $existingExcluded,
     ): int {
         $baseCmd = [$binary, '-h', $config['host'], '-u', $config['username']];
         if (!empty($config['password'])) {

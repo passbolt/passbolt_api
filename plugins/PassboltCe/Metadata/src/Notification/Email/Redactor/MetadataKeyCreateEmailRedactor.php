@@ -124,7 +124,7 @@ class MetadataKeyCreateEmailRedactor implements SubscribedEmailRedactorInterface
     private function createEmail(
         User $recipient,
         User $modifier,
-        MetadataKey $metadataKey
+        MetadataKey $metadataKey,
     ): Email {
         if ($recipient->id === $modifier->id) {
             $subject = $this->getSubjectForModifier($recipient);
@@ -140,7 +140,7 @@ class MetadataKeyCreateEmailRedactor implements SubscribedEmailRedactorInterface
                 'body' => compact('recipient', 'modifier', 'fingerprint', 'subject'),
                 'title' => $subject,
             ],
-            static::EMAIL_TEMPLATE
+            static::EMAIL_TEMPLATE,
         );
     }
 
@@ -157,7 +157,7 @@ class MetadataKeyCreateEmailRedactor implements SubscribedEmailRedactorInterface
             $recipient->locale,
             function () use ($modifierFirstName) {
                 return __('{0} created a new metadata key', $modifierFirstName);
-            }
+            },
         );
     }
 
@@ -171,7 +171,7 @@ class MetadataKeyCreateEmailRedactor implements SubscribedEmailRedactorInterface
             $recipient->locale,
             function () {
                 return __('You created a new metadata key');
-            }
+            },
         );
     }
 }

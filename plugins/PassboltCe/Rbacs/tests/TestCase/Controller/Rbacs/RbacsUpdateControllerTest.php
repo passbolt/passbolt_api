@@ -139,11 +139,11 @@ class RbacsUpdateControllerTest extends RbacsIntegrationTestCase
         $this->assertCount(1, $result);
         $this->assertSame(
             Rbac::CONTROL_FUNCTION_ALLOW_IF_GROUP_MANAGER_IN_ONE_GROUP,
-            $result[0]->control_function
+            $result[0]->control_function,
         );
         $this->assertSame(
             Rbac::FOREIGN_MODEL_UI_ACTION,
-            $result[0]->foreign_model
+            $result[0]->foreign_model,
         );
     }
 

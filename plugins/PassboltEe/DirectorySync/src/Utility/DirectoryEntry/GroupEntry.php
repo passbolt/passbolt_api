@@ -84,7 +84,7 @@ class GroupEntry extends DirectoryEntry
     public static function fromLdapObject(
         Entry $ldapObject,
         array $mappingRules,
-        ?array $fallbackFields = null
+        ?array $fallbackFields = null,
     ): GroupEntry {
         $groupEntry = new GroupEntry([]);
         $groupEntry->buildFromLdapObject($ldapObject, $mappingRules);

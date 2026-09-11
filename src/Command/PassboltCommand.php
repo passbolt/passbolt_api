@@ -232,8 +232,8 @@ class PassboltCommand extends Command implements PassboltCommandInterface
             $io->info(
                 __(
                     'where HTTP_USER match your web server user: {0}',
-                    implode(', ', self::KNOWN_WEBSERVER_USERS)
-                )
+                    implode(', ', self::KNOWN_WEBSERVER_USERS),
+                ),
             );
             $io->out();
         }
@@ -258,8 +258,8 @@ class PassboltCommand extends Command implements PassboltCommandInterface
             $io->out(
                 __(
                     'where HTTP_USER match your web server user: {0}',
-                    implode(', ', self::KNOWN_WEBSERVER_USERS)
-                )
+                    implode(', ', self::KNOWN_WEBSERVER_USERS),
+                ),
             );
             $io->out();
 

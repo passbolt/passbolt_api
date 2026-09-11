@@ -79,7 +79,7 @@ class SsoAuthenticationTokensTableTest extends SsoTestCase
                 'active' => true,
                 'type' => true,
                 'data' => true,
-            ]]
+            ]],
         );
 
         $this->assertEmpty($token->getErrors());

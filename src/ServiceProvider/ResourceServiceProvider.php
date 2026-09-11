@@ -46,11 +46,11 @@ class ResourceServiceProvider extends ServiceProvider
     {
         $container->add(
             PasswordExpiryValidationServiceInterface::class,
-            PasswordExpiryDefaultValidationService::class
+            PasswordExpiryDefaultValidationService::class,
         );
         $container->add(
             ResourcesExpireResourcesServiceInterface::class,
-            ResourcesExpireResourcesFallbackServiceService::class
+            ResourcesExpireResourcesFallbackServiceService::class,
         );
 
         $container->add(ResourcesAddService::class);

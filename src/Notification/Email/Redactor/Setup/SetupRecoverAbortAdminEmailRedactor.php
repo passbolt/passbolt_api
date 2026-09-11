@@ -100,7 +100,7 @@ class SetupRecoverAbortAdminEmailRedactor implements SubscribedEmailRedactorInte
             $locale,
             function () use ($user) {
                 return __('{0} cannot complete the account recovery process!', $user->profile->first_name);
-            }
+            },
         );
 
         $data = ['body' => ['user' => $user], 'title' => $subject];

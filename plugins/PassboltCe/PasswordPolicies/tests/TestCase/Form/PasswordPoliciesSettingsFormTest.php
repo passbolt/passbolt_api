@@ -96,7 +96,7 @@ class PasswordPoliciesSettingsFormTest extends AppTestCase
             PasswordPoliciesSettingsForm::class,
             'default_generator',
             $this->getDummyPasswordGeneratorSettings(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -111,7 +111,7 @@ class PasswordPoliciesSettingsFormTest extends AppTestCase
             PasswordPoliciesSettingsForm::class,
             'external_dictionary_check',
             $this->getDummyPasswordGeneratorSettings(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -123,7 +123,7 @@ class PasswordPoliciesSettingsFormTest extends AppTestCase
             PasswordPoliciesSettingsForm::class,
             'password_generator_settings',
             $this->getDummyPasswordGeneratorSettings(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -133,7 +133,7 @@ class PasswordPoliciesSettingsFormTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'range' => self::getRangeTestCases(
                 PasswordGeneratorSettingsValidator::PASSWORD_GENERATOR_SETTING_LENGTH_MIN,
-                PasswordGeneratorSettingsValidator::PASSWORD_GENERATOR_SETTING_LENGTH_MAX
+                PasswordGeneratorSettingsValidator::PASSWORD_GENERATOR_SETTING_LENGTH_MAX,
             ),
         ];
 
@@ -141,7 +141,7 @@ class PasswordPoliciesSettingsFormTest extends AppTestCase
             PasswordPoliciesSettingsForm::class,
             'password_generator_settings.length',
             $this->getDummyPasswordGeneratorSettings(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -159,7 +159,7 @@ class PasswordPoliciesSettingsFormTest extends AppTestCase
             PasswordPoliciesSettingsForm::class,
             "password_generator_settings.{$maskField}",
             $this->getDummyPasswordGeneratorSettings(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -174,7 +174,7 @@ class PasswordPoliciesSettingsFormTest extends AppTestCase
             PasswordPoliciesSettingsForm::class,
             'password_generator_settings.exclude_look_alike_chars',
             $this->getDummyPasswordGeneratorSettings(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -186,7 +186,7 @@ class PasswordPoliciesSettingsFormTest extends AppTestCase
             PasswordPoliciesSettingsForm::class,
             'passphrase_generator_settings',
             $this->getDummyPasswordGeneratorSettings(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -196,7 +196,7 @@ class PasswordPoliciesSettingsFormTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'range' => self::getRangeTestCases(
                 PassphraseGeneratorSettingsDto::PASSPHRASE_GENERATOR_WORDS_MIN,
-                PassphraseGeneratorSettingsDto::PASSPHRASE_GENERATOR_WORDS_MAX
+                PassphraseGeneratorSettingsDto::PASSPHRASE_GENERATOR_WORDS_MAX,
             ),
         ];
 
@@ -204,7 +204,7 @@ class PasswordPoliciesSettingsFormTest extends AppTestCase
             PasswordPoliciesSettingsForm::class,
             'passphrase_generator_settings.words',
             $this->getDummyPasswordGeneratorSettings(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -219,7 +219,7 @@ class PasswordPoliciesSettingsFormTest extends AppTestCase
             PasswordPoliciesSettingsForm::class,
             'passphrase_generator_settings.word_separator',
             $this->getDummyPasswordGeneratorSettings(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -234,7 +234,7 @@ class PasswordPoliciesSettingsFormTest extends AppTestCase
             PasswordPoliciesSettingsForm::class,
             'passphrase_generator_settings.word_case',
             $this->getDummyPasswordGeneratorSettings(),
-            $testCases
+            $testCases,
         );
     }
 

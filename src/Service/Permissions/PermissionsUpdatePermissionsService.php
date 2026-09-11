@@ -69,7 +69,7 @@ class PermissionsUpdatePermissionsService
         UserAccessControl $uac,
         string $aco,
         string $acoForeignkey,
-        ?array $data = []
+        ?array $data = [],
     ): EntitiesChangesDto {
         $entitiesChanges = new EntitiesChangesDto();
 
@@ -122,7 +122,7 @@ class PermissionsUpdatePermissionsService
         int $rowIndexRef,
         string $aco,
         string $acoForeignkey,
-        array $data
+        array $data,
     ): ?Permission {
         $permissionData = [
             'aco' => $aco,
@@ -205,7 +205,7 @@ class PermissionsUpdatePermissionsService
         UserAccessControl $uac,
         int $rowIndexRef,
         Permission $permission,
-        array $data
+        array $data,
     ): Permission {
         // If the permission is similar to the original, nothing to do.
         $updatedPermissionType = Hash::get($data, 'type');

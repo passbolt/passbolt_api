@@ -65,8 +65,8 @@ class AzureSsoProviderErrorRedactorTest extends AppTestCase
         $this->assertTrue(
             in_array(
                 AbstractSso2Stage2Controller::EVENT_PROVIDER_ERROR_RESOURCE_OWNER,
-                $this->sut->getSubscribedEvents()
-            )
+                $this->sut->getSubscribedEvents(),
+            ),
         );
     }
 
@@ -164,7 +164,7 @@ class AzureSsoProviderErrorRedactorTest extends AppTestCase
     {
         $exception = new AzureException(
             'invalid_client',
-            'AADSTS7000222: The provided client secret keys for app \'foo-bar\' are expired.'
+            'AADSTS7000222: The provided client secret keys for app \'foo-bar\' are expired.',
         );
         $event = new Event(AbstractSso2Stage2Controller::EVENT_PROVIDER_ERROR_RESOURCE_OWNER);
         $event->setData(['exception' => $exception]);

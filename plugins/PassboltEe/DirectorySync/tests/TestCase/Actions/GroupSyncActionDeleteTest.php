@@ -36,7 +36,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncDeprecatedIntegrationTestCa
     private function initAction()
     {
         $this->action = new GroupSyncAction(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
         $this->action->getDirectory()->setGroups([]);
     }

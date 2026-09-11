@@ -58,7 +58,7 @@ class MetadataKeyCreateService
         $this->dispatchEvent(
             static::AFTER_METADATA_KEY_CREATE_SUCCESS_EVENT_NAME,
             compact('metadataKey', 'uac'),
-            $this
+            $this,
         );
 
         return $metadataKey;
@@ -102,7 +102,7 @@ class MetadataKeyCreateService
 
             throw new CustomValidationException(
                 __('The metadata key could not be saved.'),
-                $errors
+                $errors,
             );
         } catch (CustomValidationException $e) { // @phpstan-ignore-line
             $msg = __('The metadata key could not be saved.');

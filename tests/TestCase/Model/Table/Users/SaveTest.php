@@ -141,7 +141,7 @@ class SaveTest extends AppTestCase
             'id',
             self::getDummyUser(),
             self::getEntityDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -163,7 +163,7 @@ class SaveTest extends AppTestCase
             'username',
             self::getDummyUser(),
             self::getEntityDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -193,7 +193,7 @@ class SaveTest extends AppTestCase
             'active',
             self::getDummyUser(),
             self::getEntityDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -209,7 +209,7 @@ class SaveTest extends AppTestCase
             'role_id',
             self::getDummyUser(),
             self::getEntityDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -224,7 +224,7 @@ class SaveTest extends AppTestCase
             'deleted',
             self::getDummyUser(),
             self::getEntityDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -239,7 +239,7 @@ class SaveTest extends AppTestCase
             'profile',
             self::getDummyUser(),
             self::getEntityDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 

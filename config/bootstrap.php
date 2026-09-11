@@ -30,6 +30,7 @@ require __DIR__ . DIRECTORY_SEPARATOR . 'paths.php';
  */
 require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
+use App\Database\Migration\PassboltPostgresAdapter;
 use App\Mailer\Transport\DebugTransport;
 use App\Mailer\Transport\SmtpTransport;
 use Cake\Cache\Cache;
@@ -47,6 +48,7 @@ use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Routing\Router;
 use Cake\Utility\Security;
+use Migrations\Db\Adapter\AdapterFactory;
 
 /**
  * Load global functions.
@@ -235,6 +237,12 @@ DateTime::setJsonEncodeFormat("yyyy-MM-dd'T'HH':'mm':'ssxxx");
 TypeFactory::map('json', JsonType::class);
 // There is no time-specific type in Cake
 TypeFactory::map('time', StringType::class);
+
+/**
+ * Register the PostgreSQL migration adapter dropping MySQL collation options.
+ * Registered here, and not in the application bootstrap, because make the test suite happy.
+ */
+AdapterFactory::instance()->registerAdapter('postgres', PassboltPostgresAdapter::class);
 
 /*
  * Set process user constant

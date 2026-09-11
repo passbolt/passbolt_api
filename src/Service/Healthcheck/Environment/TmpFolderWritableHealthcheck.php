@@ -45,7 +45,7 @@ class TmpFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
         /** @var array<\SplFileInfo> $iterator */
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator(TMP),
-            RecursiveIteratorIterator::SELF_FIRST
+            RecursiveIteratorIterator::SELF_FIRST,
         );
         foreach ($iterator as $name => $fileInfo) {
             if (in_array($fileInfo->getFilename(), ['.', '..', 'empty'])) {

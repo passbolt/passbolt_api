@@ -80,7 +80,7 @@ class UsersEditForm extends Form
             if (array_is_list($allowed)) {
                 $sanitizedData[$key] = array_intersect_key(
                     $data[$key],
-                    array_flip($allowed)
+                    array_flip($allowed),
                 );
             } else {
                 $sanitizedData[$key] = $this->sanitizeData($data[$key], $allowed);

@@ -77,7 +77,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
             ->optin()
             ->with(
                 'AccountRecoveryOrganizationPublicKeys',
-                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key(),
             )
             ->persist();
         $orkArmored = $policy->account_recovery_organization_public_key->armored_key;
@@ -108,7 +108,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
             ->optin()
             ->with(
                 'AccountRecoveryOrganizationPublicKeys',
-                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key(),
             )
             ->persist();
         $dummyKey = $this->getUserKeyInfo();
@@ -162,7 +162,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
                     'modified_by' => true,
                     'expired' => true,
                 ],
-            ], $option)
+            ], $option),
         );
     }
 }

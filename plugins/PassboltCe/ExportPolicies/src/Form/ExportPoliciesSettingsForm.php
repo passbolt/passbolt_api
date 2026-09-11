@@ -39,11 +39,11 @@ class ExportPoliciesSettingsForm extends Form
             ->requirePresence(
                 'allow_csv_format',
                 true,
-                __('The allow CSV format setting is required.')
+                __('The allow CSV format setting is required.'),
             )
             ->boolean(
                 'allow_csv_format',
-                __('The allow CSV format setting should be a boolean.')
+                __('The allow CSV format setting should be a boolean.'),
             );
 
         return $validator;

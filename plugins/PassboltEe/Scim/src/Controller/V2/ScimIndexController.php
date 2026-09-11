@@ -51,7 +51,7 @@ class ScimIndexController extends AbstractScimController
                     $resourceType,
                     $startIndex,
                     $count,
-                    $filter
+                    $filter,
                 );
             $this->processResponse($settingId, $listResponse);
         } catch (Exception $e) {

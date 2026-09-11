@@ -105,7 +105,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
             'foreign_model',
             self::getDummyFolderRelation(),
             self::getDummyFolderRelationsEntityDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -121,7 +121,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
             'foreign_id',
             self::getDummyFolderRelation(),
             self::getDummyFolderRelationsEntityDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -137,7 +137,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
             'user_id',
             self::getDummyFolderRelation(),
             self::getDummyFolderRelationsEntityDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -152,7 +152,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
             'folder_parent_id',
             self::getDummyFolderRelation(),
             self::getDummyFolderRelationsEntityDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 

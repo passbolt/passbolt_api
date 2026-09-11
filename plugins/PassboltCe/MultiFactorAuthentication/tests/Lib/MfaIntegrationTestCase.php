@@ -57,7 +57,7 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
         UserAccessControl $uac,
         ?string $provider = null,
         ?bool $remember = false,
-        ?string $sessionId = ''
+        ?string $sessionId = '',
     ): string {
         if (!isset($provider)) {
             throw new InternalErrorException('Cannot mock mfa verification without provider.');

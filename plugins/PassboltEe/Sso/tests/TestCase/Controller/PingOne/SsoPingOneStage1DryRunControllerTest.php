@@ -65,11 +65,11 @@ class SsoPingOneStage1DryRunControllerTest extends SsoIntegrationTestCase
         $this->assertStringContainsString("client_id={$clientId}", $url);
         $this->assertStringContainsString(
             'scope=' . rawurlencode(implode(' ', ['openid', 'email', 'profile'])),
-            $url
+            $url,
         );
         $this->assertStringContainsString(
             'redirect_uri=' . rawurlencode(Router::url('/sso/pingone/redirect', true)),
-            $url
+            $url,
         );
     }
 

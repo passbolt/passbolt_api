@@ -141,7 +141,7 @@ class EditionGetServiceTest extends AppTestCaseV5
      */
     public function testEditionGetService_RowWithUnknownValue_FallbacksToCe(
         string $storedValue,
-        string $expectedEdition
+        string $expectedEdition,
     ): void {
         EditionOrganizationSettingFactory::make()->setField('value', $storedValue)->persist();
         $result = $this->sut->get()->getEdition();

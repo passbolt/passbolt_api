@@ -39,7 +39,7 @@ class UserPassphrasePoliciesGetSettingsController extends AppController
 
             $this->success(
                 __('The operation was successful.'),
-                $userPassphrasePoliciesSettingsDto->toFilteredArray()
+                $userPassphrasePoliciesSettingsDto->toFilteredArray(),
             );
         } catch (Throwable $error) {
             Log::error($error->getMessage());

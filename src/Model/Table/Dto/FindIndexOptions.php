@@ -86,7 +86,7 @@ class FindIndexOptions
         return new static(
             $findIndexOptions[self::FILTER_OPTION] ?? [],
             $findIndexOptions[self::ORDER_OPTION] ?? [],
-            $findIndexOptions[self::CONTAIN_OPTION] ?? []
+            $findIndexOptions[self::CONTAIN_OPTION] ?? [],
         );
     }
 

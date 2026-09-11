@@ -70,7 +70,7 @@ class TransferFactory extends CakephpBaseFactory
             AuthenticationTokenFactory::make()
                 ->userId($userId)
                 ->type(AuthenticationToken::TYPE_MOBILE_TRANSFER)
-                ->active()
+                ->active(),
         );
     }
 

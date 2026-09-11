@@ -152,7 +152,7 @@ class FoldersTable extends Table
             ->maxLength(
                 'name',
                 Folder::MAX_NAME_LENGTH,
-                __('The name length should be maximum {0} characters.', Folder::MAX_NAME_LENGTH)
+                __('The name length should be maximum {0} characters.', Folder::MAX_NAME_LENGTH),
             )
             ->requirePresence('name', 'create', __('A name is required.'))
             ->allowEmptyString('name', __('The name should not be empty.'), false)
@@ -163,12 +163,12 @@ class FoldersTable extends Table
             ->requirePresence(
                 'created_by',
                 'create',
-                __('The identifier of the user who created the folder is required.')
+                __('The identifier of the user who created the folder is required.'),
             )
             ->notEmptyString(
                 'created_by',
                 __('The identifier of the user who created the folder should not be empty.'),
-                false
+                false,
             );
 
         $validator
@@ -176,12 +176,12 @@ class FoldersTable extends Table
             ->requirePresence(
                 'modified_by',
                 'create',
-                __('The identifier of the user who modified the folder is required.')
+                __('The identifier of the user who modified the folder is required.'),
             )
             ->notEmptyString(
                 'modified_by',
                 __('The identifier of the user who modified the folder should not be empty.'),
-                false
+                false,
             );
 
         return $validator;
@@ -223,7 +223,7 @@ class FoldersTable extends Table
             ->notEmptyString('metadata_key_type', __('The metadata key type should not be empty.'))
             ->inList('metadata_key_type', $allowedMetadataKeyTypes, __(
                 'The metadata key type should be one of the following: {0}.',
-                implode(', ', $allowedMetadataKeyTypes)
+                implode(', ', $allowedMetadataKeyTypes),
             ));
 
         return $validator;
@@ -284,7 +284,7 @@ class FoldersTable extends Table
             [
                 'errorField' => 'metadata_key_type',
                 'message' => __('A folder of type personal cannot be shared with other users or a group.'),
-            ]
+            ],
         );
 
         $rules->addUpdate(new IsV4ToV5UpgradeAllowedRule(), 'v4_to_v5_upgrade_allowed', [

@@ -56,7 +56,7 @@ class UsersRegisterController extends AppController
      */
     public function registerGet(
         UserRegisterServiceInterface $userRegisterService,
-        SelfRegistrationDryRunServiceInterface $dryRunService
+        SelfRegistrationDryRunServiceInterface $dryRunService,
     ): void {
         $this->assertIsSelfRegistrationOpen($dryRunService);
         // Do not allow logged in user to register
@@ -78,7 +78,7 @@ class UsersRegisterController extends AppController
      */
     public function registerPost(
         UserRegisterServiceInterface $userRegisterService,
-        SelfRegistrationDryRunServiceInterface $dryRunService
+        SelfRegistrationDryRunServiceInterface $dryRunService,
     ): void {
         $this->assertJson();
 

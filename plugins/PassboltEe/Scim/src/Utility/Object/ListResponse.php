@@ -44,7 +44,7 @@ class ListResponse implements ScimObjectInterface
         protected array $resources = [],
         protected int $startIndex = 1,
         protected int $itemsPerPage = 25,
-        protected int $totalResults = 0
+        protected int $totalResults = 0,
     ) {
     }
 
@@ -88,7 +88,7 @@ class ListResponse implements ScimObjectInterface
         }
         if (!isset(ScimEntry::MODEL_MAP[$resourceType])) {
             throw new BadRequestException(
-                sprintf('The resource type `%s` has not map for scim entry model', $resourceType)
+                sprintf('The resource type `%s` has not map for scim entry model', $resourceType),
             );
         }
 
@@ -120,7 +120,7 @@ class ListResponse implements ScimObjectInterface
                             break;
                         default:
                             throw new ScimException(
-                                sprintf('The filter for attribute `%s` is not supported yet', $attribute)
+                                sprintf('The filter for attribute `%s` is not supported yet', $attribute),
                             );
                     }
                     break;

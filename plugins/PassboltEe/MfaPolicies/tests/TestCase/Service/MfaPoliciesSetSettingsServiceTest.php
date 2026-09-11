@@ -107,7 +107,7 @@ class MfaPoliciesSetSettingsServiceTest extends AppTestCase
         $this->assertEventFiredWith(
             MfaPoliciesSetSettingsService::EVENT_SETTINGS_UPDATED,
             'mfaPoliciesSetting',
-            $result
+            $result,
         );
         $this->assertEventFiredWith(MfaPoliciesSetSettingsService::EVENT_SETTINGS_UPDATED, 'uac', $uac);
     }
@@ -142,7 +142,7 @@ class MfaPoliciesSetSettingsServiceTest extends AppTestCase
         $this->assertEventFiredWith(
             MfaPoliciesSetSettingsService::EVENT_SETTINGS_UPDATED,
             'mfaPoliciesSetting',
-            $result
+            $result,
         );
         $this->assertEventFiredWith(MfaPoliciesSetSettingsService::EVENT_SETTINGS_UPDATED, 'uac', $uac);
     }
@@ -180,7 +180,7 @@ class MfaPoliciesSetSettingsServiceTest extends AppTestCase
         $this->assertEventFiredWith(
             MfaPoliciesSetSettingsService::EVENT_SETTINGS_UPDATED,
             'mfaPoliciesSetting',
-            $result
+            $result,
         );
         $this->assertEventFiredWith(MfaPoliciesSetSettingsService::EVENT_SETTINGS_UPDATED, 'uac', $uac);
     }
@@ -218,7 +218,7 @@ class MfaPoliciesSetSettingsServiceTest extends AppTestCase
         $this->assertEventFiredWith(
             MfaPoliciesSetSettingsService::EVENT_SETTINGS_UPDATED,
             'mfaPoliciesSetting',
-            $result
+            $result,
         );
         $this->assertEventFiredWith(MfaPoliciesSetSettingsService::EVENT_SETTINGS_UPDATED, 'uac', $uac);
     }

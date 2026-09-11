@@ -40,7 +40,7 @@ class AccountRecoveryResponsesCreateController extends AppController
     {
         $accessControlService->controlUserRoleActionAccess(
             $this->User->getRoleEntity(),
-            UserAction::getInstance()->getActionId()
+            UserAction::getInstance()->getActionId(),
         );
 
         $data = $this->getRequest()->getData();

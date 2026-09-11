@@ -64,19 +64,19 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
         $operatorFullName = $operator->profile->full_name;
         $this->assertEmailInBatchContains(
             "You deleted administrator {$adminFullName}",
-            $operator->username
+            $operator->username,
         );
         $this->assertEmailInBatchContains(
             "The administrator {$adminFullName} ({$adminDeleted->username}) is now deleted from the passbolt organisation.",
-            $operator->username
+            $operator->username,
         );
         $this->assertEmailInBatchContains(
             "{$operatorFullName} deleted administrator {$adminFullName}",
-            $otherAdmin->username
+            $otherAdmin->username,
         );
         $this->assertEmailInBatchContains(
             "The administrator {$adminFullName} ({$adminDeleted->username}) is now deleted from the passbolt organisation.",
-            $otherAdmin->username
+            $otherAdmin->username,
         );
     }
 
@@ -100,19 +100,19 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
         $operatorFullName = $operator->profile->full_name;
         $this->assertEmailInBatchContains(
             "You deleted user {$userFullName}",
-            $operator->username
+            $operator->username,
         );
         $this->assertEmailInBatchContains(
             "The user {$userFullName} ({$userDeleted->username}) is now deleted from the passbolt organisation.",
-            $operator->username
+            $operator->username,
         );
         $this->assertEmailInBatchContains(
             "{$operatorFullName} deleted user {$userFullName}",
-            $otherAdmin->username
+            $otherAdmin->username,
         );
         $this->assertEmailInBatchContains(
             "The user {$userFullName} ({$userDeleted->username}) is now deleted from the passbolt organisation.",
-            $otherAdmin->username
+            $otherAdmin->username,
         );
     }
 
@@ -159,20 +159,20 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
         $adminFullName = $admin->profile->full_name;
         $this->assertEmailInBatchContains(
             "You deleted administrator {$adminFullName}",
-            $operator->username
+            $operator->username,
         );
         $this->assertEmailInBatchContains(
             "The administrator {$adminFullName} ({$admin->username}) is now deleted from the passbolt organisation.",
-            $operator->username
+            $operator->username,
         );
         // Group manager is notified
         $this->assertEmailInBatchContains(
             "{$operator->profile->first_name} deleted user {$admin->profile->first_name}",
-            $johnAdmin->username
+            $johnAdmin->username,
         );
         $this->assertEmailInBatchContains(
             'This user was a member of the following group(s) you manage',
-            $johnAdmin->username
+            $johnAdmin->username,
         );
         $this->assertEmailInBatchContains($group->name, $johnAdmin->username);
     }
@@ -211,20 +211,20 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
         // Admin #1
         $this->assertEmailInBatchContains(
             "You deleted administrator {$adminFullName}",
-            $operator->username
+            $operator->username,
         );
         $this->assertEmailInBatchContains(
             "The administrator {$adminFullName} ({$admin->username}) is now deleted from the passbolt organisation.",
-            $operator->username
+            $operator->username,
         );
         // Admin #2
         $this->assertEmailInBatchContains(
             "{$operatorFullName} deleted administrator {$adminFullName}",
-            $johnAdmin->username
+            $johnAdmin->username,
         );
         $this->assertEmailInBatchContains(
             "The administrator {$adminFullName} ({$admin->username}) is now deleted from the passbolt organisation.",
-            $operator->username
+            $operator->username,
         );
     }
 
@@ -261,20 +261,20 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
         // Admin is notified
         $this->assertEmailInBatchContains(
             "You deleted administrator {$adminFullName}",
-            $operator->username
+            $operator->username,
         );
         $this->assertEmailInBatchContains(
             "The administrator {$adminFullName} ({$admin->username}) is now deleted from the passbolt organisation.",
-            $operator->username
+            $operator->username,
         );
         // Group manager is notified
         $this->assertEmailInBatchContains(
             "{$operator->profile->first_name} deleted user {$admin->profile->first_name}",
-            $johnAdmin->username
+            $johnAdmin->username,
         );
         $this->assertEmailInBatchContains(
             'This user was a member of the following group(s) you manage',
-            $johnAdmin->username
+            $johnAdmin->username,
         );
         $this->assertEmailInBatchContains($group->name, $johnAdmin->username);
     }

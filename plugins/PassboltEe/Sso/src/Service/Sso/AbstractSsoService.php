@@ -150,7 +150,7 @@ abstract class AbstractSsoService
         return $this->cookieService->createExpired(
             self::SSO_STATE_COOKIE,
             'deleted',
-            '/sso'
+            '/sso',
         );
     }
 
@@ -164,7 +164,7 @@ abstract class AbstractSsoService
             self::SSO_STATE_COOKIE,
             $ssoState->state,
             '/sso',
-            $ssoState->getExpiryTime()
+            $ssoState->getExpiryTime(),
         );
     }
 
@@ -184,7 +184,7 @@ abstract class AbstractSsoService
         SsoState $ssoState,
         string $code,
         string $ip,
-        string $userAgent
+        string $userAgent,
     ): ExtendedUserAccessControl {
         if ($ssoState->user_id === null) {
             throw new BadRequestException(__('The user is missing for the SSO state.'));
@@ -298,7 +298,7 @@ abstract class AbstractSsoService
      */
     public function assertResourceOwnerAgainstSsoState(
         SsoResourceOwnerInterface $resourceOwner,
-        SsoState $ssoState
+        SsoState $ssoState,
     ): void {
         if ($ssoState->nonce !== $resourceOwner->getNonce()) {
             $msg = __('Single sign-on failed.') . ' ' . __('Invalid nonce.');
@@ -317,14 +317,14 @@ abstract class AbstractSsoService
         string $state,
         ExtendedUserAccessControl $uac,
         string $settingsId,
-        string $type
+        string $type,
     ): SsoState {
         return (new SsoStatesSetService())->create(
             $this->nonce,
             $state,
             $type,
             $settingsId,
-            $uac
+            $uac,
         );
     }
 
@@ -338,7 +338,7 @@ abstract class AbstractSsoService
         return (new SsoAuthenticationTokenSetService())->createOrFail(
             $uac,
             SsoState::TYPE_SSO_GET_KEY,
-            $settingsId
+            $settingsId,
         );
     }
 
@@ -349,12 +349,12 @@ abstract class AbstractSsoService
      */
     public function createAuthTokenToActiveSettings(
         ExtendedUserAccessControl $uac,
-        string $settingsId
+        string $settingsId,
     ): SsoAuthenticationToken {
         return (new SsoAuthenticationTokenSetService())->createOrFail(
             $uac,
             SsoState::TYPE_SSO_SET_SETTINGS,
-            $settingsId
+            $settingsId,
         );
     }
 

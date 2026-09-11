@@ -119,7 +119,7 @@ class MfaUserSettingsDisableCommandTest extends AppTestCase
                         $user->get('role')->get('name'),
                         $user->get('id'),
                         $user->get('username'),
-                    )
+                    ),
                 ),
             ],
         ];
@@ -169,7 +169,7 @@ class MfaUserSettingsDisableCommandTest extends AppTestCase
                         $userUpper->get('role')->get('name'),
                         $userUpper->get('id'),
                         $userUpper->get('username'),
-                    )
+                    ),
                 ),
             ],
         ];
@@ -184,7 +184,7 @@ class MfaUserSettingsDisableCommandTest extends AppTestCase
                         $userLower->get('role')->get('name'),
                         $userLower->get('id'),
                         $userLower->get('username'),
-                    )
+                    ),
                 ),
             ],
         ];

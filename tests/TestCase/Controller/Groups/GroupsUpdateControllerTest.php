@@ -442,7 +442,7 @@ hcciUFw5
             ->with(
                 'Permissions',
                 PermissionFactory::make()
-                    ->with('Resources', ResourceFactory::make())
+                    ->with('Resources', ResourceFactory::make()),
             )
             ->persist();
         $groupId = $group->id;
@@ -491,8 +491,8 @@ hcciUFw5
             'GroupsUsers',
             GroupsUserFactory::make(2)->with(
                 'Users',
-                UserFactory::make()
-            )
+                UserFactory::make(),
+            ),
         )->persist();
         $groupId = $group->id;
         $groupUserK = $group->groups_users[0];

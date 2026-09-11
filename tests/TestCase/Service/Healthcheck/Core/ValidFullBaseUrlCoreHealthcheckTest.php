@@ -113,7 +113,7 @@ class ValidFullBaseUrlCoreHealthcheckTest extends TestCase
         $this->assertFalse($result);
         $this->assertStringContainsString(
             'IMPORTANT: Using an empty App.fullBaseUrl can lead to host header injection attack: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection',
-            $healthcheck->getHelpMessage()[2]
+            $healthcheck->getHelpMessage()[2],
         );
     }
 
@@ -125,7 +125,7 @@ class ValidFullBaseUrlCoreHealthcheckTest extends TestCase
         $this->assertFalse($result);
         $this->assertStringContainsString(
             'App.fullBaseUrl does not validate. A valid URL/IP is accepted, but found "object".',
-            $healthcheck->getFailureMessage()
+            $healthcheck->getFailureMessage(),
         );
     }
 }

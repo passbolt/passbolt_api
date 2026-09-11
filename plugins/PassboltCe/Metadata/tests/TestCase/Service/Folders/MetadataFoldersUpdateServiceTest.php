@@ -90,7 +90,7 @@ class MetadataFoldersUpdateServiceTest extends AppTestCaseV5
             null,
             $updatedMetadata,
             $user->gpgkey->id,
-            MetadataKey::TYPE_USER_KEY
+            MetadataKey::TYPE_USER_KEY,
         );
 
         $result = $this->service->update($this->makeUac($user), $folder->get('id'), $folderDto);

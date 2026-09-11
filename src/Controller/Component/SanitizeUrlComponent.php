@@ -34,7 +34,7 @@ class SanitizeUrlComponent extends Component
         string $redirectLoopStop = '',
         bool $allowEmpty = false,
         bool $ensureStartsWithSlash = true,
-        bool $escapeSpecialChars = true
+        bool $escapeSpecialChars = true,
     ): string {
         $redirectUrl = $this->_extractFirstParameter('redirect');
         $loopStop = empty($redirectLoopStop) ? $this->getController()->getRequest()->getPath() : $redirectLoopStop;
@@ -43,7 +43,7 @@ class SanitizeUrlComponent extends Component
             [$loopStop],
             $allowEmpty,
             $ensureStartsWithSlash,
-            $escapeSpecialChars
+            $escapeSpecialChars,
         );
 
         return $sanitizedRedirectUrl;
@@ -64,7 +64,7 @@ class SanitizeUrlComponent extends Component
         array $blacklist = [],
         bool $allowEmpty = false,
         bool $ensureStartsWithSlash = true,
-        bool $escapeSpecialChars = true
+        bool $escapeSpecialChars = true,
     ): string {
         if (empty($url)) {
             return $allowEmpty ? '' : '/';

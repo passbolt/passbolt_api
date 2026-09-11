@@ -59,7 +59,7 @@ class SsoKeysGetController extends AbstractSsoController
                 $userId,
                 $user->username,
                 $this->User->ip(),
-                $this->User->userAgent()
+                $this->User->userAgent(),
             );
             $key = (new SsoKeysGetService())->get($uac, $token, $keyId);
         } catch (BadRequestException $exception) {

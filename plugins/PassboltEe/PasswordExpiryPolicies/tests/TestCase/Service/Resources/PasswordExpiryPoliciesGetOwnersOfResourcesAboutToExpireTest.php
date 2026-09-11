@@ -41,7 +41,7 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireTest extends AppTes
     {
         parent::setUp();
         $this->service = new PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService(
-            new PasswordExpiryPoliciesGetSettingsService()
+            new PasswordExpiryPoliciesGetSettingsService(),
         );
         $this->loadPlugins([
             PasswordExpiryPlugin::class => [],
@@ -72,7 +72,7 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireTest extends AppTes
     public function testPasswordExpiryPoliciesNotifyAboutExpiredResourcesService_Email_Notification(
         bool $notifyIfAboutToExpire,
         bool $notifyIfExpiresToday,
-        $expectedResult
+        $expectedResult,
     ) {
         $this->markTestSkipped('This feature is not implemented yet');
         $notifyInDays = rand(1, 100);

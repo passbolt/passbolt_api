@@ -145,6 +145,7 @@ class EditionManager
         $this->disableFeaturePlugin('DirectorySync');
         $this->disableFeaturePlugin('Ee');
         $this->disableFeaturePlugin('MfaPolicies');
+        $this->disableFeaturePlugin('OfflineModePolicies');
         $this->disableFeaturePlugin('PasswordExpiryPolicies');
         $this->disableFeaturePlugin('PasswordPoliciesUpdate');
         $this->disableFeaturePlugin('Scim');

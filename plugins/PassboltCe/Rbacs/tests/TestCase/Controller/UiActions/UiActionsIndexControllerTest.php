@@ -45,7 +45,7 @@ class UiActionsIndexControllerTest extends RbacsIntegrationTestCase
         $this->assertArrayHasAttributes(['id', 'name', 'allowed_control_functions'], $uiAction);
         $this->assertEqualsCanonicalizing(
             UiAction::CONTROL_FUNCTION_MAPPING[$uiAction['name']],
-            $uiAction['allowed_control_functions']
+            $uiAction['allowed_control_functions'],
         );
     }
 

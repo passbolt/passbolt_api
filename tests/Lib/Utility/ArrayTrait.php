@@ -29,7 +29,7 @@ trait ArrayTrait
         foreach ($attributesNames as $attributeName) {
             $this->assertTrue(
                 array_key_exists($attributeName, $check),
-                'The following attribute is missing in array: ' . $attributeName
+                'The following attribute is missing in array: ' . $attributeName,
             );
         }
     }

@@ -77,7 +77,7 @@ class SystemCheckController extends WebInstallerController
             'isNextMinPhpVersionPassed',
             'isSystemOk',
             'isRequestHttps',
-            'nextStepUrl'
+            'nextStepUrl',
         ));
         $this->render('Pages/system_check');
     }

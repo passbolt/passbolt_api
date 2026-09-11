@@ -34,7 +34,7 @@ class PasswordExpiryPoliciesNotificationSettingsDefinition implements EmailNotif
         return $schema
             ->addField(
                 'send_password_aboutToExpire',
-                ['type' => 'boolean', 'default' => true]
+                ['type' => 'boolean', 'default' => true],
             );
     }
 
@@ -46,7 +46,7 @@ class PasswordExpiryPoliciesNotificationSettingsDefinition implements EmailNotif
         return $validator
             ->boolean(
                 'send_password_aboutToExpire',
-                __('The send password about to expire setting should be a boolean.')
+                __('The send password about to expire setting should be a boolean.'),
             );
     }
 }

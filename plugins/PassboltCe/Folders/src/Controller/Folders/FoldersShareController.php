@@ -50,7 +50,7 @@ class FoldersShareController extends AppController
 
         /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
         $folder = $foldersUpdatePermissionsService->share($uac, $id, $data);
-        $folderDto = MetadataFolderDto::fromArray($folder->toArray());
+        $folderDto = MetadataFolderDto::createFromArray($folder->toArray());
         $folder = (new MetadataFoldersRenderService())->renderFolder($folder->toArray(), $folderDto->isV5());
 
         $this->success(__('The operation was successful.'), $folder);

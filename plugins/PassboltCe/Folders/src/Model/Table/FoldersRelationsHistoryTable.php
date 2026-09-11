@@ -106,7 +106,7 @@ class FoldersRelationsHistoryTable extends Table
         $validator
             ->inList('foreign_model', self::ALLOWED_FOREIGN_MODELS, __(
                 'The child object type should be one of the following: {0}.',
-                implode(', ', self::ALLOWED_FOREIGN_MODELS)
+                implode(', ', self::ALLOWED_FOREIGN_MODELS),
             ))
             ->requirePresence('foreign_model', 'create', __('A child object type is required.'))
             ->notEmptyString('foreign_model', __('The child object type cannot be empty.'));

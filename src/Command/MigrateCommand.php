@@ -40,7 +40,7 @@ class MigrateCommand extends PassboltCommand
      */
     public function __construct(
         ProcessUserService $processUserService,
-        SubscriptionCheckInCommandServiceInterface $subscriptionCheckInCommandService
+        SubscriptionCheckInCommandServiceInterface $subscriptionCheckInCommandService,
     ) {
         parent::__construct();
 
@@ -115,7 +115,7 @@ class MigrateCommand extends PassboltCommand
             $result = $this->executeCommand(
                 CacheClearallCommand::class,
                 $this->formatOptions($args),
-                $io
+                $io,
             );
         }
 

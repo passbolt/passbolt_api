@@ -51,7 +51,7 @@ class SelfRegistrationSetSettingsService extends SelfRegistrationBaseSettingsSer
         if (!$form->execute($data)) {
             throw new FormValidationException(
                 __('Could not validate the self registration settings.'),
-                $form
+                $form,
             );
         }
 
@@ -64,7 +64,7 @@ class SelfRegistrationSetSettingsService extends SelfRegistrationBaseSettingsSer
         $setting = $OrganizationSettings->createOrUpdateSetting(
             self::USER_SELF_REGISTRATION_SETTINGS_PROPERTY_NAME,
             $value,
-            $this->uac
+            $this->uac,
         );
         $renderedSettings = $this->getRenderedValue($setting, $form);
 

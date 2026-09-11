@@ -35,7 +35,7 @@ class SmtpSettingsSecurityMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         if (Configure::read(self::PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED)) {
             throw new ForbiddenException(__('SMTP settings endpoints disabled.'));

@@ -46,7 +46,7 @@ class SubscriptionValidationException extends SubscriptionException
         string $message,
         ?SubscriptionKeyDto $dto = null,
         ?int $code = null,
-        ?Exception $previous = null
+        ?Exception $previous = null,
     ) {
         $code = $code ?? 402;
         $data = isset($dto) ? $dto->toArray() : '';

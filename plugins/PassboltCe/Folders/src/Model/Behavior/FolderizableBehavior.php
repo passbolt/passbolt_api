@@ -211,7 +211,7 @@ class FolderizableBehavior extends Behavior
      */
     private function addFolderParentIdProperty(
         array|EntityInterface $entity,
-        ?string $folderParentId = null
+        ?string $folderParentId = null,
     ): array|EntityInterface {
         if ($entity instanceof EntityInterface) {
             $entity->setVirtual([self::FOLDER_PARENT_ID_PROPERTY], true);

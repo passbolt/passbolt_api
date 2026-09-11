@@ -202,7 +202,7 @@ class SsoAzureStage1DryRunControllerTest extends SsoIntegrationTestCase
         // Mock provider
         $mockAzureProvider = $this->getProviderMockForStage1(AzureProvider::class);
         $mockAzureProvider->method('getAuthorizationUrl')->willThrowException(
-            new AzureException('invalid_tenant', 'Tenant ID xyz not found')
+            new AzureException('invalid_tenant', 'Tenant ID xyz not found'),
         );
         // Swap actual implementation
         SsoProviderFactory::set($mockAzureProvider);

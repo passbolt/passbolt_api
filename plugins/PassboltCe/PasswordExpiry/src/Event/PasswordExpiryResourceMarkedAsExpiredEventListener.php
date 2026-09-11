@@ -63,7 +63,7 @@ class PasswordExpiryResourceMarkedAsExpiredEventListener implements EventListene
             $this->dispatchEvent(
                 self::EVENT_RESOURCE_MARKED_AS_EXPIRED,
                 compact('resource'),
-                $this
+                $this,
             );
         }
     }

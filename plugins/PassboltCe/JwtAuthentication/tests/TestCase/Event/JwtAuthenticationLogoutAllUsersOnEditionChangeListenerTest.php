@@ -61,7 +61,7 @@ class JwtAuthenticationLogoutAllUsersOnEditionChangeListenerTest extends TestCas
         $this->seedRefreshTokensForUsers(3, 2);
 
         $this->listener->invalidateRefreshTokens(
-            new Event(EditionDowngradeService::EVENT_EDITION_DOWNGRADED)
+            new Event(EditionDowngradeService::EVENT_EDITION_DOWNGRADED),
         );
 
         $this->assertActiveRefreshTokenCount(0);
@@ -89,7 +89,7 @@ class JwtAuthenticationLogoutAllUsersOnEditionChangeListenerTest extends TestCas
             ->persist();
 
         $this->listener->invalidateRefreshTokens(
-            new Event(EditionDowngradeService::EVENT_EDITION_DOWNGRADED)
+            new Event(EditionDowngradeService::EVENT_EDITION_DOWNGRADED),
         );
 
         $activeLoginTokens = AuthenticationTokenFactory::find()
@@ -103,7 +103,7 @@ class JwtAuthenticationLogoutAllUsersOnEditionChangeListenerTest extends TestCas
     public function testJwtAuthenticationLogoutAllUsersOnEditionChangeListener_OnDowngrade_NoOpWhenNoActiveRefreshTokens(): void
     {
         $this->listener->invalidateRefreshTokens(
-            new Event(EditionDowngradeService::EVENT_EDITION_DOWNGRADED)
+            new Event(EditionDowngradeService::EVENT_EDITION_DOWNGRADED),
         );
 
         $this->assertActiveRefreshTokenCount(0);
@@ -114,7 +114,7 @@ class JwtAuthenticationLogoutAllUsersOnEditionChangeListenerTest extends TestCas
         $this->seedRefreshTokensForUsers(3, 2);
 
         $this->listener->invalidateRefreshTokens(
-            new Event(EditionUpgradeService::EVENT_NAME)
+            new Event(EditionUpgradeService::EVENT_NAME),
         );
 
         $this->assertActiveRefreshTokenCount(0);
@@ -154,7 +154,7 @@ class JwtAuthenticationLogoutAllUsersOnEditionChangeListenerTest extends TestCas
             $expected,
             AuthenticationTokenFactory::find()
                 ->where(['type' => AuthenticationToken::TYPE_REFRESH_TOKEN, 'active' => true])
-                ->count()
+                ->count(),
         );
     }
 
@@ -164,7 +164,7 @@ class JwtAuthenticationLogoutAllUsersOnEditionChangeListenerTest extends TestCas
             $expected,
             AuthenticationTokenFactory::find()
                 ->where(['type' => AuthenticationToken::TYPE_REFRESH_TOKEN, 'active' => false])
-                ->count()
+                ->count(),
         );
     }
 }

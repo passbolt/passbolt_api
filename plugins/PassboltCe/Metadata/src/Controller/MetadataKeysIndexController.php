@@ -38,7 +38,7 @@ class MetadataKeysIndexController extends AppController
         $metadataKeys = (new MetadataKeysIndexService())->get(
             $this->User->id(),
             $options['contain'] ?? null,
-            $options['filter'] ?? null
+            $options['filter'] ?? null,
         );
         $this->success(__('The operation was successful.'), $metadataKeys->toArray());
     }

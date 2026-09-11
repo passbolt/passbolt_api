@@ -140,11 +140,11 @@ class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
         $this->assertTrue(isset($body->data->prompt));
         $this->assertEquals(
             'The prompt should be one of the following: login, none.',
-            $body->data->prompt->inList
+            $body->data->prompt->inList,
         );
         $this->assertEquals(
             'The email claim should be one of the following: email, preferred_username, upn.',
-            $body->data->email_claim->inList
+            $body->data->email_claim->inList,
         );
     }
 
@@ -300,7 +300,7 @@ class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
         $this->assertObjectHasAttribute('url', $body->data);
         $this->assertEquals(
             'The URL must be a valid PingOne authentication domain.',
-            $body->data->url->isPingOneUrl
+            $body->data->url->isPingOneUrl,
         );
     }
 }

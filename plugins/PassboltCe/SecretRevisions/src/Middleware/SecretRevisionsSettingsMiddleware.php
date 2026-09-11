@@ -35,7 +35,7 @@ class SecretRevisionsSettingsMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         if (Configure::read(self::PASSBOLT_SECURITY_SECRET_REVISIONS_SETTINGS_EDITION_DISABLED)) {
             throw new ForbiddenException(__('Secret revisions settings endpoints are disabled.'));

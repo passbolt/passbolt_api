@@ -44,7 +44,7 @@ class WebInstallerChangeConfigFolderPermissionService
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($this->configPath),
             RecursiveIteratorIterator::SELF_FIRST,
-            RecursiveIteratorIterator::CATCH_GET_CHILD // Don't throw an error if one child cannot be opened
+            RecursiveIteratorIterator::CATCH_GET_CHILD, // Don't throw an error if one child cannot be opened
         );
         foreach ($iterator as $name => $fileInfo) {
             if ($fileInfo->getFilename() == '..') {

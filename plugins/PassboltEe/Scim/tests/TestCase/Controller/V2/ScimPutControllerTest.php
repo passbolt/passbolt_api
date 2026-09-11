@@ -122,7 +122,7 @@ class ScimPutControllerTest extends ScimApiIntegrationTestCase
         $this->configScimAuth();
         $this->put(
             $this->getScimEndpoint('InvalidResourceType' . DS . 'e5bb8c65-2dab-51c3-b82b-438c77a8c2e8'),
-            $this->getUserPostData()
+            $this->getUserPostData(),
         );
 
         $this->assertResponseCode(400);

@@ -87,7 +87,7 @@ class FavoritesAddService
                     'foreign_key' => true,
                     'foreign_model' => true,
                 ],
-            ]
+            ],
         );
 
         // Handle validation errors if any at this stage.

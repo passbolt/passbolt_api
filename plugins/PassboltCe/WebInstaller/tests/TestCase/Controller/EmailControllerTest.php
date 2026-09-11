@@ -87,7 +87,7 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         $this->assertMailContainsAt(0, 'Congratulations!');
         $this->assertMailContainsAt(
             0,
-            'If you receive this email, it means that your passbolt smtp configuration is working fine.'
+            'If you receive this email, it means that your passbolt smtp configuration is working fine.',
         );
     }
 

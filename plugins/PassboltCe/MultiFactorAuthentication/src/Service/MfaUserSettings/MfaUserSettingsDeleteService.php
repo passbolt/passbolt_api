@@ -35,7 +35,7 @@ class MfaUserSettingsDeleteService
      */
     public function disableUserSettings(
         User $user,
-        UserAccessControl $uac
+        UserAccessControl $uac,
     ): bool {
         $mfaSettings = MfaAccountSettings::get(new UserAccessControl($user->role->name, $user->id));
 

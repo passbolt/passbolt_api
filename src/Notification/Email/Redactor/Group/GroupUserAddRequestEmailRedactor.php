@@ -95,7 +95,7 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
         // Send to all group managers.
         foreach ($groupManagers as $groupManager) {
             $emailCollection->addEmail(
-                $this->createGroupUserAddEmail($groupManager, $admin, $group, $requestedGroupUsers)
+                $this->createGroupUserAddEmail($groupManager, $admin, $group, $requestedGroupUsers),
             );
         }
 
@@ -121,7 +121,7 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
                 }
 
                 return $text;
-            }
+            },
         );
 
         $data = ['body' => [

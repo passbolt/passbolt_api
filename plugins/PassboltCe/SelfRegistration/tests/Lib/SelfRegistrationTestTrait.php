@@ -47,7 +47,7 @@ trait SelfRegistrationTestTrait
         $setting = OrganizationSettingFactory::make()
             ->setPropertyAndValue(
                 SelfRegistrationBaseSettingsService::USER_SELF_REGISTRATION_SETTINGS_PROPERTY_NAME,
-                $data
+                $data,
             )->persist();
 
         return $setting;

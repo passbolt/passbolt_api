@@ -56,7 +56,7 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
     public function __construct(
         ?array $config = [],
         ?UsersTable $usersTable = null,
-        ?ResourcesTable $resourcesTable = null
+        ?ResourcesTable $resourcesTable = null,
     ) {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
         $this->resourcesTable = $resourcesTable ?? TableRegistry::getTableLocator()->get('Resources');
@@ -123,7 +123,7 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
             $recipient->locale,
             function () use ($creator, $resource) {
                 return __('{0} commented on {1}', $creator->profile->first_name, $resource->name);
-            }
+            },
         );
         $body = [
             'creator' => $creator,

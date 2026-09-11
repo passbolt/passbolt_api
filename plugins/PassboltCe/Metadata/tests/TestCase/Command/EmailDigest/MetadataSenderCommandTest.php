@@ -81,7 +81,7 @@ class MetadataSenderCommandTest extends AppIntegrationTestCaseV5
         $priorityResourceChange = rand();
         DigestTemplateRegistry::getInstance()->addTemplate(new ResourceChangesDigestTemplate($priorityResourceChange));
         DigestTemplateRegistry::getInstance()->addTemplate(
-            new GroupMembershipDigestTemplate($priorityResourceChange + 1)
+            new GroupMembershipDigestTemplate($priorityResourceChange + 1),
         );
 
         $this->exec('passbolt email_digest send');

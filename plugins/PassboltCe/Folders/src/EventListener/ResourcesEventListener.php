@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Folders\EventListener;
 
 use App\Model\Entity\Resource;
+use App\Model\Table\ResourcesTable;
 use App\Service\Resources\ResourcesAddService;
 use App\Service\Resources\ResourcesShareService;
 use Cake\Event\Event;
@@ -45,7 +46,7 @@ class ResourcesEventListener implements EventListenerInterface
                 'callable' => 'handleResourceAfterCreateEvent',
                 'priority' => 1,
             ],
-            'Model.Resource.afterSoftDelete' => 'handleResourceAfterSoftDeleteEvent',
+            ResourcesTable::EVENT_MODEL_RESOURCE_AFTER_SOFT_DELETE => 'handleResourceAfterSoftDeleteEvent',
             'Service.ResourcesShare.afterAccessGranted' => 'handleResourceAfterAccessGrantedEvent',
             ResourcesShareService::AFTER_ACCESS_REVOKED_EVENT_NAME => 'handleResourceAfterAccessRevokedEvent',
         ];

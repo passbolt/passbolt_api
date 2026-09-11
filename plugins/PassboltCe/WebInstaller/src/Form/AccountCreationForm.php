@@ -52,7 +52,7 @@ class AccountCreationForm extends Form
             ->maxLength(
                 'first_name',
                 255,
-                __('The first name length should be maximum {0} characters.', 255)
+                __('The first name length should be maximum {0} characters.', 255),
             );
 
         $validator
@@ -62,7 +62,7 @@ class AccountCreationForm extends Form
             ->maxLength(
                 'last_name',
                 255,
-                __('The last name length should be maximum {0} characters.', 255)
+                __('The last name length should be maximum {0} characters.', 255),
             );
 
         $validator
@@ -71,7 +71,7 @@ class AccountCreationForm extends Form
             ->maxLength(
                 'username',
                 255,
-                __('The username length should be maximum 255 characters.')
+                __('The username length should be maximum 255 characters.'),
             )
             ->add('username', 'email', new EmailValidationRule([
                 'message' => __('The username should be a valid email address.'),

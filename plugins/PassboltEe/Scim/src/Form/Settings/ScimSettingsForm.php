@@ -141,7 +141,7 @@ class ScimSettingsForm extends Form
             $this->_data['secret_token'] = password_hash(
                 $data['secret_token'],
                 PASSWORD_BCRYPT,
-                ['cost' => $cost]
+                ['cost' => $cost],
             );
         }
 

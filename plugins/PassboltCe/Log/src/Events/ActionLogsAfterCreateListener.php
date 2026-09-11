@@ -82,7 +82,7 @@ class ActionLogsAfterCreateListener implements EventListenerInterface
         $engine->log(
             $level,
             $msg,
-            ['actionLogs']
+            ['actionLogs'],
         );
     }
 
@@ -114,13 +114,13 @@ class ActionLogsAfterCreateListener implements EventListenerInterface
             $strategy = new $strategy(
                 $controller->getRequest(),
                 $controller->getResponse(),
-                UserAction::getInstance()->getUserAccessControl()
+                UserAction::getInstance()->getUserAccessControl(),
             );
         } catch (Throwable $e) {
             throw new InternalErrorException(
                 __('The strategy should extend the class: {0}', ActionLogsAbstractQueryStrategy::class),
                 500,
-                $e
+                $e,
             );
         }
 

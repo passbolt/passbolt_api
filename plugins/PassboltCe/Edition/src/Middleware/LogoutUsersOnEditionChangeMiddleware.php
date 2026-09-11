@@ -74,7 +74,7 @@ final class LogoutUsersOnEditionChangeMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         if (Configure::read(self::CONFIGURE_KEY_DISABLED) === true) {
             return $handler->handle($request);

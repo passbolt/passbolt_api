@@ -59,12 +59,12 @@ class SsoErrorControllerPresenceTest extends TestCase
             $this->assertTrue(
                 class_exists($fqcn),
                 "Missing ErrorController for prefix '{$prefix}': {$fqcn} does not exist. "
-                . 'CakePHP requires an ErrorController in each prefix folder for proper error template rendering.'
+                . 'CakePHP requires an ErrorController in each prefix folder for proper error template rendering.',
             );
 
             $this->assertTrue(
                 is_subclass_of($fqcn, SsoErrorController::class),
-                "ErrorController for prefix '{$prefix}' must extend SsoErrorController."
+                "ErrorController for prefix '{$prefix}' must extend SsoErrorController.",
             );
         }
     }

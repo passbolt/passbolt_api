@@ -34,8 +34,8 @@ class AuthTokenExpiry
                 sprintf(
                     'Invalid $tokenType `%s`. Must be one of `%s`.',
                     $tokenType,
-                    implode(',', AuthenticationTokensTable::ALLOWED_TYPES)
-                )
+                    implode(',', AuthenticationTokensTable::ALLOWED_TYPES),
+                ),
             );
         }
 

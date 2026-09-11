@@ -75,7 +75,7 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesEmailRedactor implements 
                 $this->createEmail(
                     $user,
                     $expiryNotificationInDays,
-                    $notifyIfExpiresToday
+                    $notifyIfExpiresToday,
                 ),
             );
         }
@@ -92,14 +92,14 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesEmailRedactor implements 
     private function createEmail(
         User $recipient,
         ?int $expiryNotificationInDays,
-        bool $notifyIfExpiresToday
+        bool $notifyIfExpiresToday,
     ): Email {
         $localeService = new LocaleService();
         $subject = $localeService->translateString(
             $recipient->locale,
             function () {
                 return __('You have passwords requiring your attention');
-            }
+            },
         );
         $message = $localeService->translateString(
             $recipient->locale,
@@ -111,7 +111,7 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesEmailRedactor implements 
                 } else {
                     return __('Some of your passwords are expired or expiring in {0} days.', $expiryNotificationInDays);
                 }
-            }
+            },
         );
 
         return new Email(
@@ -121,7 +121,7 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesEmailRedactor implements 
                 'body' => compact('message'),
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 }

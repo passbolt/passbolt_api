@@ -88,7 +88,7 @@ class MetadataUpdatePersonalTagServiceTest extends AppTestCaseV5
         $newData = ['slug' => 'tag updated'];
 
         $uac = $this->makeUac($user);
-        $tagDto = MetadataTagDto::fromArray($newData);
+        $tagDto = MetadataTagDto::createFromArray($newData);
         try {
             $this->service->update($uac, $tagDto, $tag);
         } catch (Exception $e) {

@@ -22,7 +22,7 @@ $routes->plugin('Passbolt/Edition', ['path' => '/edition'], function (RouteBuild
     $routes->setExtensions(['json']);
     $routes->registerMiddleware(
         EditionDowngradeDisabledMiddleware::class,
-        new EditionDowngradeDisabledMiddleware()
+        new EditionDowngradeDisabledMiddleware(),
     );
 
     /**

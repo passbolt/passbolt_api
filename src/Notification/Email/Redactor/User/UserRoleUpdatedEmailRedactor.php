@@ -100,7 +100,7 @@ class UserRoleUpdatedEmailRedactor implements SubscribedEmailRedactorInterface
         $operator = $usersTable->findFirstForEmail($uac->getId());
 
         $emailCollection->addEmail(
-            $this->createEmail($operator, $recipient, $clientIp, $userAgent, $isAdminRoleRevoked)
+            $this->createEmail($operator, $recipient, $clientIp, $userAgent, $isAdminRoleRevoked),
         );
 
         return $emailCollection;
@@ -119,13 +119,13 @@ class UserRoleUpdatedEmailRedactor implements SubscribedEmailRedactorInterface
         User $recipient,
         string $clientIp,
         string $userAgent,
-        bool $isAdminRoleRevoked = false
+        bool $isAdminRoleRevoked = false,
     ): Email {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () {
                 return __('Your role has been updated');
-            }
+            },
         );
 
         return new Email(
@@ -141,7 +141,7 @@ class UserRoleUpdatedEmailRedactor implements SubscribedEmailRedactorInterface
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 

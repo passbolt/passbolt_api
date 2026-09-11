@@ -40,6 +40,25 @@ class HealthcheckStatusControllerTest extends AppIntegrationTestCase
         $this->assertSame('OK', $this->_responseJson->body);
     }
 
+    public function testHealthcheckStatusController_Success_JsonWithXmlHttpRequestHeader(): void
+    {
+        $this->configRequest(['headers' => ['X-Requested-With' => 'XMLHttpRequest']]);
+        $this->getJson('/healthcheck/status.json');
+        $this->assertResponseSuccess();
+        $this->assertContentType('application/json');
+        $this->assertSame('OK', $this->_responseJson->header->message);
+        $this->assertSame('OK', $this->_responseJson->body);
+    }
+
+    public function testHealthcheckStatusController_Success_NoJsonWithXmlHttpRequestHeader(): void
+    {
+        $this->configRequest(['headers' => ['X-Requested-With' => 'XMLHttpRequest']]);
+        $this->get('/healthcheck/status');
+        $this->assertResponseOk();
+        $this->assertContentType('text/html');
+        $this->assertSame('OK', $this->_getBodyAsString());
+    }
+
     public function testHealthcheckStatusHeadOk(): void
     {
         $this->head('/healthcheck/status.json');

@@ -50,7 +50,7 @@ class EmailPreviewFactory
      */
     public function renderEmailPreviewFromDigest(
         EmailDigestInterface $emailDigest,
-        ?string $layout = null
+        ?string $layout = null,
     ): EmailPreview {
         $email = $this->mapEmailDigestToMailerEmail(new Mailer('default'), $emailDigest);
 
@@ -197,7 +197,7 @@ class EmailPreviewFactory
         Mailer $email,
         string $template,
         ?string $layout = null,
-        ?string $theme = null
+        ?string $theme = null,
     ): void {
         $email->viewBuilder()
             ->setVar('title', 'Email digest preview')

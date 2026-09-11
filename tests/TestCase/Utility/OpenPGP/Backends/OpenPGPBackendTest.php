@@ -318,6 +318,45 @@ p7hokpGnpTQXl9C5Oi/+uQ==
         }
     }
 
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendIsParsableArmoredPublicKeySuccess(OpenPGPBackend $gnupg): void
+    {
+        $keys = $this->getDummyGpgkey();
+        $result = $gnupg->isParsableArmoredPublicKey($keys['public_key_armored']);
+        $this->assertTrue($result);
+    }
+
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendIsParsableArmoredPublicKeyError_ShorterThanHeader(OpenPGPBackend $gnupg): void
+    {
+        // The text is shorter than the "-----BEGIN PGP PUBLIC KEY BLOCK-----" header
+        $result = $gnupg->isParsableArmoredPublicKey('-PGP PUBLIC KEY BLOCK-');
+
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendIsParsableArmoredPublicKeyError_LookAlikeHeader(OpenPGPBackend $gnupg): void
+    {
+        $keys = $this->getDummyGpgkey();
+        // The key is valid, but its header is replaced by a look alike one.
+        $armoredKey = str_replace(
+            '-----BEGIN PGP PUBLIC KEY BLOCK-----',
+            "-PGP PUBLIC KEY BLOCK-\nComment: this line makes the key longer than the header",
+            $keys['public_key_armored'],
+        );
+
+        $result = $gnupg->isParsableArmoredPublicKey($armoredKey);
+
+        $this->assertFalse($result);
+    }
+
     protected function getDummySignedMessage($userAlias = '')
     {
         return '-----BEGIN PGP SIGNED MESSAGE-----

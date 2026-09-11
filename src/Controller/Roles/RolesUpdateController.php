@@ -40,7 +40,7 @@ class RolesUpdateController extends AppController
         $result = (new RolesUpdateService())->update(
             $this->User->getAccessControl(),
             $roleId,
-            $this->getRequest()->getData()
+            $this->getRequest()->getData(),
         );
 
         $this->success(__('The role was successfully updated.'), $result);

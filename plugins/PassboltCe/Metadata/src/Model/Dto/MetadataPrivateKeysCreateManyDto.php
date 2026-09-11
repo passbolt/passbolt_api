@@ -16,9 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Model\Dto;
 
+use App\Model\Dto\RequestDtoInterface;
 use Cake\Http\Exception\BadRequestException;
 
-class MetadataPrivateKeysCreateManyDto
+class MetadataPrivateKeysCreateManyDto implements RequestDtoInterface
 {
     /**
      * @var array
@@ -29,7 +30,7 @@ class MetadataPrivateKeysCreateManyDto
      * @param array $requestData Request data to convert into DTO.
      * @return void
      */
-    public function __construct(array $requestData)
+    final public function __construct(array $requestData)
     {
         foreach ($requestData as $data) {
             if (!is_array($data)) {
@@ -42,6 +43,16 @@ class MetadataPrivateKeysCreateManyDto
                 'data' => $data['data'] ?? null,
             ];
         }
+    }
+
+    /**
+     * @param array $data Request data to convert into DTO.
+     * @return static
+     * @throws \Cake\Http\Exception\BadRequestException If a metadata private key is not an array.
+     */
+    public static function createFromArray(array $data): static
+    {
+        return new static($data);
     }
 
     /**

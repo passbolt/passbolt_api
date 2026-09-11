@@ -150,7 +150,7 @@ class SsoEgressGuardTest extends TestCase
     public function testSsoEgressGuard_GetBlockReason_Success_AllowListParsesCommaSeparatedString(
         string $allowList,
         string $ip,
-        bool $expectedAllowed
+        bool $expectedAllowed,
     ): void {
         $this->configureEgress(['privateRangeAllowedIps' => $allowList]);
         $reason = (new SsoEgressGuard())->getBlockReason($ip);

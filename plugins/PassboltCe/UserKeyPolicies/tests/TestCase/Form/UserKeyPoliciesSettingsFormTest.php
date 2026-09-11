@@ -67,7 +67,7 @@ class UserKeyPoliciesSettingsFormTest extends AppTestCase
             UserKeyPoliciesSettingsForm::class,
             'preferred_key_type',
             $this->getDummyUserKeyPoliciesSettings(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -87,7 +87,7 @@ class UserKeyPoliciesSettingsFormTest extends AppTestCase
             UserKeyPoliciesSettingsForm::class,
             'preferred_key_size',
             $settings,
-            $testCases
+            $testCases,
         );
     }
 
@@ -108,7 +108,7 @@ class UserKeyPoliciesSettingsFormTest extends AppTestCase
             UserKeyPoliciesSettingsForm::class,
             'preferred_key_curve',
             $data,
-            $testCases
+            $testCases,
         );
     }
 

@@ -106,7 +106,7 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
             $this->makeUac($user),
             MfaSettings::PROVIDER_YUBIKEY,
             false,
-            $accessToken
+            $accessToken,
         );
 
         /** @see JwtTokenCreateServiceTest::testJwtTokenCreateService_Multiple_Token_Within_One_Same_Second_Should_Be_Identical */
@@ -155,7 +155,7 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
             $this->makeUac($user),
             MfaSettings::PROVIDER_TOTP,
             true,
-            'FooSession' // is not relevant because of remember me
+            'FooSession', // is not relevant because of remember me
         );
 
         $this->postJson('/auth/jwt/login.json', [

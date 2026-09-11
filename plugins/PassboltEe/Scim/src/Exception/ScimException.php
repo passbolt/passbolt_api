@@ -50,7 +50,7 @@ class ScimException extends HttpException
         string $message = '',
         ?int $code = null,
         ?Throwable $previous = null,
-        ?string $scimType = null
+        ?string $scimType = null,
     ) {
         $this->scimType = $scimType;
 

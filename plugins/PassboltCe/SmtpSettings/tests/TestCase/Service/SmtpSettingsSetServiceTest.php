@@ -45,7 +45,7 @@ class SmtpSettingsSetServiceTest extends TestCase
     {
         parent::setUp();
         $this->service = new SmtpSettingsSetService(
-            UserFactory::make()->admin()->nonPersistedUAC()
+            UserFactory::make()->admin()->nonPersistedUAC(),
         );
     }
 

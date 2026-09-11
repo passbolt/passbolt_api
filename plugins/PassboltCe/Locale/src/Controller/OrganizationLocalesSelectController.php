@@ -41,7 +41,7 @@ class OrganizationLocalesSelectController extends AppController
         try {
             $setting = $service->save(
                 $this->User->getAccessControl(),
-                $this->getRequest()->getData($service::REQUEST_DATA_KEY)
+                $this->getRequest()->getData($service::REQUEST_DATA_KEY),
             );
         } catch (ValidationException $e) {
             throw new BadRequestException(__('This is not a valid locale.'));

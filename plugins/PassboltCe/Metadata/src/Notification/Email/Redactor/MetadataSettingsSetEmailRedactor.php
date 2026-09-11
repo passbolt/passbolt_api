@@ -124,7 +124,7 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
     private function createEmail(
         User $recipient,
         User $modifier,
-        MetadataSettingsDto $dto
+        MetadataSettingsDto $dto,
     ): Email {
         if ($recipient->id === $modifier->id) {
             $subject = $this->getSubjectForModifier($recipient);
@@ -140,7 +140,7 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
                 'body' => compact('recipient', 'modifier', 'settings', 'subject'),
                 'title' => $subject,
             ],
-            static::EMAIL_TEMPLATE
+            static::EMAIL_TEMPLATE,
         );
     }
 
@@ -157,7 +157,7 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
             $recipient->locale,
             function () use ($modifierFirstName) {
                 return __('{0} edited the metadata settings', $modifierFirstName);
-            }
+            },
         );
     }
 
@@ -171,7 +171,7 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
             $recipient->locale,
             function () {
                 return __('You edited the metadata settings');
-            }
+            },
         );
     }
 }

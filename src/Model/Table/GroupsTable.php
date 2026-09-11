@@ -66,6 +66,7 @@ class GroupsTable extends Table implements TableCleanupProviderInterface
     use TableCleanupTrait;
 
     public const GROUP_CREATE_SUCCESS_EVENT_NAME = 'Model.Groups.create.success';
+    public const EVENT_MODEL_GROUP_AFTER_SOFT_DELETE = 'Model.Group.afterSoftDelete';
 
     /**
      * Initialize method
@@ -130,12 +131,12 @@ class GroupsTable extends Table implements TableCleanupProviderInterface
             ->requirePresence(
                 'created_by',
                 'create',
-                __('The identifier of the user who created the group is required.')
+                __('The identifier of the user who created the group is required.'),
             )
             ->allowEmptyString(
                 'created_by',
                 __('The identifier of the user who created the group should not be empty.'),
-                false
+                false,
             );
 
         $validator
@@ -143,12 +144,12 @@ class GroupsTable extends Table implements TableCleanupProviderInterface
             ->requirePresence(
                 'modified_by',
                 true,
-                __('The identifier of the user who modified the group is required.')
+                __('The identifier of the user who modified the group is required.'),
             )
             ->allowEmptyString(
                 'modified_by',
                 __('The identifier of the user who modified the group should not be empty.'),
-                false
+                false,
             );
 
         return $validator;
@@ -167,9 +168,9 @@ class GroupsTable extends Table implements TableCleanupProviderInterface
         $rules->addCreate(
             $rules->isUnique(
                 ['name', 'deleted'],
-                __('The name is already used by another group.')
+                __('The name is already used by another group.'),
             ),
-            'group_unique'
+            'group_unique',
         );
         $rules->addCreate([$this, 'atLeastOneAdminRule'], 'at_least_one_group_manager', [
             'errorField' => 'groups_users',
@@ -180,9 +181,9 @@ class GroupsTable extends Table implements TableCleanupProviderInterface
         $rules->addUpdate(
             $rules->isUnique(
                 ['name', 'deleted'],
-                __('The name is already used by another group.')
+                __('The name is already used by another group.'),
             ),
-            'group_unique'
+            'group_unique',
         );
         $rules->addUpdate(new IsNotSoftDeletedRule(), 'group_is_not_soft_deleted', [
             'table' => 'Groups',
@@ -328,7 +329,7 @@ class GroupsTable extends Table implements TableCleanupProviderInterface
         $secretsToDelete = $secretsFindSecretsAccessibleViaGroupOnlyService->find(
             $group->id,
             $groupUsersIds,
-            PermissionsTable::RESOURCE_ACO
+            PermissionsTable::RESOURCE_ACO,
         )->select(['id', 'resource_id', 'user_id'])->all()->toArray();
 
         $this->Permissions->Resources->Secrets->deleteMany($secretsToDelete);
@@ -377,6 +378,11 @@ class GroupsTable extends Table implements TableCleanupProviderInterface
             $msg = __('Could not delete the group {0}, please try again later.', $group->name);
             throw new InternalErrorException($msg);
         }
+
+        $event = new Event(self::EVENT_MODEL_GROUP_AFTER_SOFT_DELETE, $group, [
+            'entitiesChanges' => $entitiesChanges,
+        ]);
+        $this->getEventManager()->dispatch($event);
 
         return $entitiesChanges;
     }

@@ -90,7 +90,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $userA = UserFactory::make()->persist();
         $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
 
-        $this->service->update($this->makeUac($userA), $folderA->get('id'), MetadataFolderDto::fromArray(['name' => 'new name']));
+        $this->service->update($this->makeUac($userA), $folderA->get('id'), MetadataFolderDto::createFromArray(['name' => 'new name']));
 
         $folderBUpdated = $this->foldersTable->findById($folderA->get('id'))->first();
         $this->assertEquals('new name', $folderBUpdated->get('name'));
@@ -109,7 +109,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
             ->persist();
 
         $name = 'new name';
-        $dto = MetadataFolderDto::fromArray(['name' => $name]);
+        $dto = MetadataFolderDto::createFromArray(['name' => $name]);
         $this->service->update($this->makeUac($userA), $folderA->get('id'), $dto);
 
         $this->assertEmailQueueCount(2);
@@ -130,7 +130,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $folderData = ['name' => ''];
 
         try {
-            $this->service->update($this->makeUac($userA), $folderA->get('id'), MetadataFolderDto::fromArray($folderData));
+            $this->service->update($this->makeUac($userA), $folderA->get('id'), MetadataFolderDto::createFromArray($folderData));
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate folder data.', $e->getMessage());
@@ -152,7 +152,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
             ->persist();
 
         $this->expectException(ForbiddenException::class);
-        $this->service->update($this->makeUac($userB), $folderA->get('id'), MetadataFolderDto::fromArray(['name' => 'new name']));
+        $this->service->update($this->makeUac($userB), $folderA->get('id'), MetadataFolderDto::createFromArray(['name' => 'new name']));
     }
 
     public function testUpdateFolderError_DoesNotExist()
@@ -161,7 +161,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $notExistFolderId = UuidFactory::uuid();
 
         $this->expectException(NotFoundException::class);
-        $this->service->update($this->makeUac($userA), $notExistFolderId, MetadataFolderDto::fromArray(['name' => 'new name']));
+        $this->service->update($this->makeUac($userA), $notExistFolderId, MetadataFolderDto::createFromArray(['name' => 'new name']));
     }
 
     public function testUpdateFolderError_NoAccessToFolder()
@@ -174,6 +174,6 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $folderA = FolderFactory::make()->withPermissionsFor([$userA])->persist();
 
         $this->expectException(NotFoundException::class);
-        $this->service->update($this->makeUac($userB), $folderA->get('id'), MetadataFolderDto::fromArray(['name' => 'new name']));
+        $this->service->update($this->makeUac($userB), $folderA->get('id'), MetadataFolderDto::createFromArray(['name' => 'new name']));
     }
 }
