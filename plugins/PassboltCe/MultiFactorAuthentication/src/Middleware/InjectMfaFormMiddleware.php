@@ -28,8 +28,10 @@ use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Form\Totp\TotpSetupForm;
 use Passbolt\MultiFactorAuthentication\Form\Totp\TotpVerifyForm;
 use Passbolt\MultiFactorAuthentication\Form\Webauthn\WebauthnSetupForm;
+use Passbolt\MultiFactorAuthentication\Form\Webauthn\WebauthnVerifyForm;
 use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeySetupForm;
 use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeyVerifyForm;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAssertionService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAttestationService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Psr\Http\Message\ResponseInterface;
@@ -117,6 +119,10 @@ class InjectMfaFormMiddleware implements MiddlewareInterface
             case 'setup/webauthn/finish':
                 $concrete = WebauthnSetupForm::class;
                 $args = [$uac, $container->get(MfaWebauthnVerifyAttestationService::class)];
+                break;
+            case 'verify/webauthn/finish':
+                $concrete = WebauthnVerifyForm::class;
+                $args = [$uac, $container->get(MfaWebauthnVerifyAssertionService::class)];
                 break;
             default:
                 $concrete = null;
