@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-09-11 06:26+0000\n"
-"PO-Revision-Date: 2026-09-11 07:39\n"
+"PO-Revision-Date: 2026-09-11 08:37\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -1796,55 +1796,55 @@ msgid "Please contact your administrator if you didn't request this action."
 msgstr "이 작업을 요청하지 않은 경우 관리자에게 문의하세요."
 
 msgid "The setting should be a valid integer."
-msgstr ""
+msgstr "설정은 유효한 정수이어야 합니다."
 
 msgid "This setting is not customizable on this edition, it should be {0}."
-msgstr ""
+msgstr "이 설정은 이 에디션에서 사용자 지정할 수 없으며, {0} 이어야 합니다."
 
 msgid "You have reached the maximum number of offline items ({0})."
-msgstr ""
+msgstr "오프라인 항목의 최대 개수 ({0}) 에 도달했습니다."
 
 msgid "The offline item object type should be one of the following: {0}."
-msgstr ""
+msgstr "오프라인 항목 객체 유형은 다음 중 하나여야 합니다: {0}."
 
 msgid "The offline item object type is required."
-msgstr ""
+msgstr "오프라인 항목 객체 유형이 필요합니다."
 
 msgid "The offline item object type should not be empty."
-msgstr ""
+msgstr "오프라인 항목 객체 유형은 비워 둘 수 없습니다."
 
 msgid "The offline item object identifier should be a valid UUID."
-msgstr ""
+msgstr "오프라인 항목 객체 식별자는 유효한 UUID여야 합니다."
 
 msgid "The offline item object identifier is required."
-msgstr ""
+msgstr "오프라인 항목 객체 식별자가 필요합니다."
 
 msgid "The offline item object identifier should not be empty."
-msgstr ""
+msgstr "오프라인 항목 객체 식별자는 비워 둘 수 없습니다."
 
 msgid "The created date should be a valid date."
-msgstr ""
+msgstr "생성 날짜는 유효한 날짜이어야 합니다."
 
 msgid "The creator identifier should be a valid UUID."
-msgstr ""
+msgstr "생성자 식별자는 유효한 UUID여야 합니다."
 
 msgid "A creator identifier is required."
-msgstr ""
+msgstr "생성자 식별자가 필요합니다."
 
 msgid "The creator identifier should not be empty."
-msgstr ""
+msgstr "생성자 식별자는 비워둘 수 없습니다."
 
 msgid "Access denied."
 msgstr "접근 거부."
 
 msgid "Offline mode is only available for v5 items."
-msgstr ""
+msgstr "오프라인 모드는 v5 항목에서만 사용할 수 있습니다."
 
 msgid "You have reached the maximum number of offline items."
-msgstr ""
+msgstr "오프라인 항목의 최대 개수에 도달했습니다."
 
 msgid "This item is already available offline for this user."
-msgstr ""
+msgstr "이 항목은 이미 이 사용자에 대해 오프라인에서 사용 가능합니다."
 
 msgid "A value is required."
 msgstr "값이 필요합니다."
@@ -1853,49 +1853,49 @@ msgid "The value should be an array."
 msgstr "값은 배열이어야 합니다."
 
 msgid "You disabled Offline Mode"
-msgstr ""
+msgstr "오프라인 모드가 비활성화됨"
 
 msgid "{0} disabled Offline Mode"
-msgstr ""
+msgstr "{0}에 의해 오프라인 모드가 비활성화됨"
 
 msgid "You edited the Offline Mode settings"
-msgstr ""
+msgstr "오프라인 모드 설정이 편집됨"
 
 msgid "{0} edited the Offline Mode settings"
-msgstr ""
+msgstr "{0}에 의해 오프라인 모드 설정이 편집됨"
 
 msgid "Could not validate offline item data."
-msgstr ""
+msgstr "오프라인 항목 데이터를 검사할 수 없습니다."
 
 msgid "The offline item identifier should be a valid UUID."
-msgstr ""
+msgstr "오프라인 항목 식별자는 유효한 UUID여야 합니다."
 
 msgid "The offline item does not exist."
-msgstr ""
+msgstr "오프라인 항목이 존재하지 않습니다."
 
 msgid "Could not validate offline settings data."
-msgstr ""
+msgstr "오프라인 설정 데이터를 검사할 수 없습니다."
 
 msgid "The stored offline settings are not valid."
-msgstr ""
+msgstr "저장된 오프라인 설정이 유효하지 않습니다."
 
 msgid "Offline Mode is not enabled at the org level."
-msgstr ""
+msgstr "오프라인 모드가 조직 수준에서 활성화되어 있지 않습니다."
 
 msgid "Offline Mode has been disabled organisation-wide. Existing offline selections have been purged."
-msgstr ""
+msgstr "오프라인 모드가 조직 전체에서 비활성화되었습니다. 기존 오프라인 선택 항목이 삭제되었습니다."
 
 msgid "The Offline Mode settings have been updated, the new configuration is as follows:"
-msgstr ""
+msgstr "오프라인 모드 설정이 업데이트되었습니다. 새 구성은 다음과 같습니다:"
 
 msgid "Maximum session duration: {0} seconds"
-msgstr ""
+msgstr "최대 세션 지속 시간: {0} 초"
 
 msgid "Data retention period: {0} days"
-msgstr ""
+msgstr "데이터 보존 기간: {0} 일"
 
 msgid "Maximum number of offline items (per user): {0}"
-msgstr ""
+msgstr "최대 오프라인 항목 개수(사용자당): {0}"
 
 msgid "The automatic_expiry field must be true."
 msgstr "Automatic_expiry 필드가 true 여야 합니다."
@@ -2192,7 +2192,7 @@ msgid "You are not authorized to access that location."
 msgstr "해당 위치에 접근할 수 있는 권한이 없습니다."
 
 msgid "Invalid RBAC control function."
-msgstr ""
+msgstr "유효하지 않은 RBAC 제어 함수입니다."
 
 msgid "The RBAC settings could not be updated."
 msgstr "역할 기반 접근 제어 설정을 업데이트할 수 없습니다."
@@ -4283,7 +4283,7 @@ msgid "Remember me for a month: {0}"
 msgstr "한달간 기억하기: {0}"
 
 msgid "The setting should be between {0} and {1}."
-msgstr ""
+msgstr "설정은 {0} 부터 {1} 사이여야 합니다."
 
 msgid "Some of your passwords are expired."
 msgstr "비밀번호 중 일부가 만료되었습니다."
@@ -4427,7 +4427,7 @@ msgid "An administrator user cannot be suspended via SCIM."
 msgstr "관리자 사용자는 SCIM을 통해 정지할 수 없습니다."
 
 msgid "An administrator user cannot be deleted via SCIM."
-msgstr ""
+msgstr "관리자 사용자는 SCIM을 통해 삭제할 수 없습니다."
 
 msgid "Email"
 msgstr "이메일"
@@ -4718,7 +4718,7 @@ msgid "The provided nonce is invalid."
 msgstr "제공된 임시값이 올바르지 않습니다."
 
 msgid "The URL should start with https:// and must not point to an internal address."
-msgstr ""
+msgstr "URL은 https://로 시작해야 하며 내부 주소를 가리켜서는 안 됩니다."
 
 msgid "The provided state is invalid."
 msgstr "제공된 상태가 올바르지 않습니다."
@@ -4769,22 +4769,22 @@ msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment varia
 msgstr "PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED 환경 변수를 true로 설정합니다."
 
 msgid "The SSO provider URL egress guard is enabled."
-msgstr ""
+msgstr "SSO 공급자 URL 이그레스 가드가 활성화되어 있습니다."
 
 msgid "The SSO provider URL egress guard is disabled and will be enabled by default in a future version."
-msgstr ""
+msgstr "SSO 공급자 URL 이그레스 가드가 비활성화되어 있으며, 향후 버전에서 기본적으로 활성화될 예정입니다."
 
 msgid "The egress guard prevents the server from connecting to internal addresses through SSO provider URLs."
-msgstr ""
+msgstr "이그레스 가드는 서버가 SSO 공급자 URL을 통해 내부 주소에 연결하는 것을 방지합니다."
 
 msgid "It is disabled by default in this version but will be enabled by default in a future version."
-msgstr ""
+msgstr "이 버전에서는 기본적으로 비활성화되어 있지만, 향후 버전에서는 기본적으로 활성화될 예정입니다."
 
 msgid "Enable it now to verify your SSO configuration works with the guard before it becomes the default."
-msgstr ""
+msgstr "가드가 기본값이 되기 전에, 지금 활성화하여 SSO 구성이 가드와 함께 작동하는지 확인하세요."
 
 msgid "Set the PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED environment variable to true."
-msgstr ""
+msgstr "PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED 환경 변수를 true로 설정하세요."
 
 msgid "The user is missing for the SSO state."
 msgstr "SSO 상태에 대한 사용자가 없습니다."
@@ -4940,13 +4940,13 @@ msgid "Failed to public key properties from certificate: {0}"
 msgstr "인증서에서 키 속성 공개 실패: {0}"
 
 msgid "The provider address resolves to a blocked link-local or metadata range ({0})."
-msgstr ""
+msgstr "공급자 주소가 차단된 링크 로컬 또는 메타데이터 범위 ({0})로 확인됩니다."
 
 msgid "The provider address resolves to a blocked private range ({0})."
-msgstr ""
+msgstr "공급자 주소가 차단된 사설 대역 ({0})으로 확인됩니다."
 
 msgid "The provider address is not allowed."
-msgstr ""
+msgstr "공급자 주소는 허용되지 않습니다."
 
 msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
 msgstr "`passbolt.security.sso.sslCafile` 구성에서 제공된 값이 잘못되었습니다."
@@ -5321,7 +5321,7 @@ msgid "The user token result could not be found "
 msgstr "사용자 토큰 결과를 찾을 수 없습니다. "
 
 msgid "The user token result has already been used."
-msgstr ""
+msgstr "사용자 토큰 결과가 이미 사용되었습니다."
 
 msgid "Invalid verify token type."
 msgstr "확인 토큰 유형이 잘못되었습니다."
@@ -6122,7 +6122,7 @@ msgid "The delete status should be a valid boolean."
 msgstr "삭제된 상태는 유효한 부울이어야 합니다."
 
 msgid "The string should not contain invisible characters."
-msgstr ""
+msgstr "문자열에는 보이지 않는 문자를 포함해서는 안 됩니다."
 
 msgid "The field must be null when creating a new record."
 msgstr "새 레코드를 만들 때 필드는 null이어야 합니다."
@@ -6236,7 +6236,7 @@ msgid "You deleted administrator {0}"
 msgstr "관리자 {0} 이(가) 삭제됨"
 
 msgid "You deleted user {0}"
-msgstr ""
+msgstr "{0} 사용자가 삭제됨"
 
 msgid "{0} deleted your account"
 msgstr "{0} 이(가) 사용자 계정을 삭제함"
@@ -6512,16 +6512,16 @@ msgid "You may remove the \"passbolt.registration.public\" setting."
 msgstr "\"passbolt.registration.public\" 설정을 제거할 수 있습니다."
 
 msgid "The session provider is {0}."
-msgstr ""
+msgstr "세션 공급자는 {0}입니다."
 
 msgid "The session provider {0} is not supported."
-msgstr ""
+msgstr "{0} 세션 공급자는 지원되지 않습니다."
 
 msgid "The session providers supported are: {0}."
-msgstr ""
+msgstr "지원되는 세션 공급자: {0}."
 
 msgid "Define it using the SESSION_DEFAULTS environment variable or under {0} in {1}."
-msgstr ""
+msgstr "SESSION_DEFAULTS 환경 변수를 사용하거나 {1}의 {0}에서 정의하세요."
 
 msgid "Passbolt is configured to force SSL use."
 msgstr "Passbolt가 SSL을 강제로 사용하도록 구성되어 있습니다."
@@ -7436,7 +7436,7 @@ msgid "Please check with them first to confirm."
 msgstr "확인을 위해 먼저 그들에게 확인하세요."
 
 msgid "The user {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "{0}({1}) 사용자가 이제 Passbolt 조직에서 삭제되었습니다."
 
 msgid "User suspended"
 msgstr "사용자 중지됨"
