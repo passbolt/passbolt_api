@@ -79,4 +79,17 @@ class WebauthnVerifyGetControllerTest extends MfaIntegrationTestCase
         $this->get('/mfa/verify/webauthn');
         $this->assertRedirect('/');
     }
+
+    public function testWebauthnVerifyGetController_Html_RendersVerifyLandingPage(): void
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaWebauthnScenario::class, $user);
+
+        $this->get('/mfa/verify/webauthn');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Additional Authentication with Passkey');
+        $this->assertResponseContains('id="webauthn-verify-form"');
+        $this->assertResponseContains('/js/mfa/webauthn-verify-fallback.js');
+        $this->assertResponseContains('Verify with Passkey');
+    }
 }
