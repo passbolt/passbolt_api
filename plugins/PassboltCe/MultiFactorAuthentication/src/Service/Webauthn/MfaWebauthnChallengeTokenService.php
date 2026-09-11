@@ -33,11 +33,9 @@ class MfaWebauthnChallengeTokenService
     ];
 
     /**
-     * Persist the ceremony options against a one-shot AuthenticationToken.
-     *
-     * @param \App\Utility\UserAccessControl $uac User access control.
+     * @param \App\Utility\UserAccessControl $uac UAC.
      * @param string $tokenType TYPE_MFA_SETUP or TYPE_MFA_VERIFY.
-     * @param string $optionsJson JSON-encoded ceremony options.
+     * @param string $optionsJson JSON-encoded options.
      * @return \App\Model\Entity\AuthenticationToken
      */
     public function create(
@@ -58,11 +56,9 @@ class MfaWebauthnChallengeTokenService
     }
 
     /**
-     * Atomically consume the ceremony handle and return the stored options JSON.
-     *
-     * @param \App\Utility\UserAccessControl $uac User access control.
+     * @param \App\Utility\UserAccessControl $uac UAC.
      * @param string $tokenType TYPE_MFA_SETUP or TYPE_MFA_VERIFY.
-     * @param string $handle Ceremony handle (token value).
+     * @param string $handle Ceremony handle.
      * @return string Stored options JSON.
      */
     public function consume(
@@ -83,7 +79,7 @@ class MfaWebauthnChallengeTokenService
     }
 
     /**
-     * @param string $tokenType Type.
+     * @param string $tokenType Token type.
      * @return void
      */
     private function assertType(string $tokenType): void
