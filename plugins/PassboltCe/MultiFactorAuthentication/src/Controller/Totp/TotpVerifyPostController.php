@@ -94,7 +94,6 @@ class TotpVerifyPostController extends MfaVerifyController
 
         $isFailedAttemptExceeded = (new MfaRateLimiterService())->isFailedAttemptsExceeded(
             $this->User->id(),
-            $isJwtAuth,
             true, // Consider this as a failed attempt too.
         );
 

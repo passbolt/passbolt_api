@@ -19,6 +19,9 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
+use App\Utility\UserAction;
+use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\I18n\DateTime;
 use OTPHP\Factory;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
@@ -291,5 +294,35 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
 
         $this->assertBadRequestError('No valid multi-factor authentication settings found for this provider.');
         $this->assertCookieNotSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerify
+     * @group mfaVerifyPost
+     * @group mfaVerifyPostTotp
+     */
+    public function testTotpVerifyPostController_Error_SessionAuthJsonFailedAttemptsAreRateLimited(): void
+    {
+        Configure::write('passbolt.plugins.log.enabled', true);
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        ActionLogFactory::make(['created' => DateTime::now()->subMinutes(2)])
+            ->userId($user->id)
+            ->loginAction()
+            ->persist();
+
+        // Default maxAttempts is 4, so the 5th failure must lock the user out
+        for ($i = 0; $i < 5; $i++) {
+            UserAction::destroy();
+            $this->postJson('/mfa/verify/totp.json?api-version=v2', ['totp' => '123456']);
+        }
+
+        $this->assertSame(5, ActionLogFactory::find()->where([
+            'user_id' => $user->id,
+            'action_id' => UuidFactory::uuid('TotpVerifyPost.post'),
+            'status' => 0,
+        ])->all()->count());
+        $this->assertBadRequestError('You have been logged out due to too many failed attempts');
     }
 }
