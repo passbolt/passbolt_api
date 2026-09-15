@@ -26,7 +26,7 @@ use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultMfaWebauthnPolicyService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnChallengeTokenService;
-use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnEnableService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnEnrollCredentialService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnRelyingPartyService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAttestationService;
 
@@ -46,7 +46,7 @@ class MfaWebauthnVerifyAttestationServiceTest extends TestCase
         $policy = new DefaultMfaWebauthnPolicyService();
         $this->service = new MfaWebauthnVerifyAttestationService(
             new MfaWebauthnRelyingPartyService($policy),
-            new MfaWebauthnEnableService($policy),
+            new MfaWebauthnEnrollCredentialService($policy),
         );
     }
 

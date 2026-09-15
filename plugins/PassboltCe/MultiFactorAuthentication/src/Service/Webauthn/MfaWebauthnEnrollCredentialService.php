@@ -16,10 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Service\Webauthn;
 
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\WebauthnCredential;
 use App\Utility\UserAccessControl;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
+use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Passbolt\MultiFactorAuthentication\Model\Table\MfaWebauthnCredentialsTable;
@@ -28,12 +31,12 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Webauthn\CredentialRecord;
 
-class MfaWebauthnEnableService
+class MfaWebauthnEnrollCredentialService
 {
     use EventDispatcherTrait;
     use LocatorAwareTrait;
 
-    public const MFA_WEBAUTHN_CREDENTIAL_ENABLED_EVENT = 'mfa.webauthn.credential.enabled';
+    public const MFA_WEBAUTHN_CREDENTIAL_ENROLLED_EVENT = 'mfa.webauthn.credential.enrolled';
 
     /**
      * @param \Passbolt\MultiFactorAuthentication\Service\MfaPolicies\MfaWebauthnPolicyInterface $policy WebAuthn policy.
@@ -50,7 +53,7 @@ class MfaWebauthnEnableService
      * @param string|null $name Friendly name.
      * @return \App\Model\Entity\WebauthnCredential
      */
-    public function enable(
+    public function enroll(
         UserAccessControl $uac,
         CredentialRecord $source,
         ?string $name = null,
@@ -78,7 +81,6 @@ class MfaWebauthnEnableService
         $credentials = $this->fetchTable('Passbolt/MultiFactorAuthentication.MfaWebauthnCredentials');
 
         $existingCount = $credentials->countForUser($uac->getId());
-        $isFirstCredential = $existingCount === 0;
         if ($existingCount >= $this->policy->getMaxCredentialsPerUser()) {
             throw new BadRequestException(__(
                 'You have reached the maximum number of WebAuthn credentials ({0}) allowed.',
@@ -105,10 +107,20 @@ class MfaWebauthnEnableService
             ]],
         );
 
-        /** @var \App\Model\Entity\WebauthnCredential $saved */
-        $saved = $credentials->saveOrFail($entity);
+        try {
+            /** @var \App\Model\Entity\WebauthnCredential $saved */
+            $saved = $credentials->saveOrFail($entity);
+        } catch (PersistenceFailedException $e) {
+            throw new CustomValidationException(
+                __('The WebAuthn credential could not be saved.'),
+                $e->getEntity()->getErrors(),
+                $credentials,
+                null,
+                $e,
+            );
+        }
 
-        if ($isFirstCredential) {
+        if (!$this->isProviderAlreadyEnabled($uac)) {
             MfaAccountSettings::enableProvider(
                 $uac,
                 MfaSettings::PROVIDER_WEBAUTHN,
@@ -116,11 +128,24 @@ class MfaWebauthnEnableService
             );
         }
 
-        $this->dispatchEvent(self::MFA_WEBAUTHN_CREDENTIAL_ENABLED_EVENT, [
+        $this->dispatchEvent(self::MFA_WEBAUTHN_CREDENTIAL_ENROLLED_EVENT, [
             'uac' => $uac,
             'credential' => $saved,
         ]);
 
         return $saved;
+    }
+
+    /**
+     * @param \App\Utility\UserAccessControl $uac User access control.
+     * @return bool
+     */
+    private function isProviderAlreadyEnabled(UserAccessControl $uac): bool
+    {
+        try {
+            return MfaAccountSettings::get($uac)->isProviderReady(MfaSettings::PROVIDER_WEBAUTHN);
+        } catch (RecordNotFoundException) {
+            return false;
+        }
     }
 }
