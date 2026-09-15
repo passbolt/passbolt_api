@@ -16,12 +16,15 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Form\Webauthn;
 
+use App\Error\Exception\CustomValidationException;
 use App\Test\Factory\UserFactory;
+use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\MultiFactorAuthentication\Form\Webauthn\WebauthnSetupForm;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAttestationService;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @covers \Passbolt\MultiFactorAuthentication\Form\Webauthn\WebauthnSetupForm
@@ -31,19 +34,20 @@ class WebauthnSetupFormTest extends TestCase
     use TruncateDirtyTables;
 
     private WebauthnSetupForm $form;
-    private MfaWebauthnVerifyAttestationService $service;
+    private MfaWebauthnVerifyAttestationService&MockObject $service;
+    private UserAccessControl $uac;
 
     public function setUp(): void
     {
         parent::setUp();
-        $uac = UserFactory::make()->user()->persistedUAC();
+        $this->uac = UserFactory::make()->user()->persistedUAC();
         $this->service = $this->createMock(MfaWebauthnVerifyAttestationService::class);
-        $this->form = new WebauthnSetupForm($uac, $this->service);
+        $this->form = new WebauthnSetupForm($this->uac, $this->service);
     }
 
     public function tearDown(): void
     {
-        unset($this->form, $this->service);
+        unset($this->form, $this->service, $this->uac);
         parent::tearDown();
     }
 
@@ -67,6 +71,15 @@ class WebauthnSetupFormTest extends TestCase
     public function testWebauthnSetupForm_RejectsMissingHandle(): void
     {
         $this->assertFalse($this->form->validate([
+            'credential' => ['id' => 'abc'],
+        ]));
+        $this->assertArrayHasKey('handle', $this->form->getErrors());
+    }
+
+    public function testWebauthnSetupForm_RejectsEmptyHandle(): void
+    {
+        $this->assertFalse($this->form->validate([
+            'handle' => '',
             'credential' => ['id' => 'abc'],
         ]));
         $this->assertArrayHasKey('handle', $this->form->getErrors());
@@ -98,6 +111,15 @@ class WebauthnSetupFormTest extends TestCase
         $this->assertArrayHasKey('credential', $this->form->getErrors());
     }
 
+    public function testWebauthnSetupForm_RejectsEmptyCredentialArray(): void
+    {
+        $this->assertFalse($this->form->validate([
+            'handle' => UuidFactory::uuid(),
+            'credential' => [],
+        ]));
+        $this->assertArrayHasKey('credential', $this->form->getErrors());
+    }
+
     public function testWebauthnSetupForm_RejectsNameOver255Chars(): void
     {
         $this->assertFalse($this->form->validate([
@@ -106,5 +128,71 @@ class WebauthnSetupFormTest extends TestCase
             'name' => str_repeat('a', 256),
         ]));
         $this->assertArrayHasKey('name', $this->form->getErrors());
+    }
+
+    public function testWebauthnSetupForm_RejectsNonUtf8Name(): void
+    {
+        $this->assertFalse($this->form->validate([
+            'handle' => UuidFactory::uuid(),
+            'credential' => ['id' => 'abc'],
+            'name' => "\xC3\x28",
+        ]));
+        $this->assertArrayHasKey('name', $this->form->getErrors());
+    }
+
+    public function testWebauthnSetupForm_Execute_ThrowsWebauthnSpecificMessageOnValidationFailure(): void
+    {
+        $this->service->expects($this->never())->method('verify');
+
+        $this->expectException(CustomValidationException::class);
+        $this->expectExceptionMessage('The WebAuthn setup payload is not valid.');
+        $this->form->execute(['credential' => ['id' => 'abc']]);
+    }
+
+    public function testWebauthnSetupForm_Execute_PassesDataToServiceWithoutCasts(): void
+    {
+        $handle = UuidFactory::uuid();
+        $credential = ['id' => 'abc', 'rawId' => 'zzz'];
+
+        $this->service->expects($this->once())
+            ->method('verify')
+            ->with($this->uac, $handle, $credential, 'My Key');
+
+        $this->assertTrue($this->form->execute([
+            'handle' => $handle,
+            'credential' => $credential,
+            'name' => 'My Key',
+        ]));
+    }
+
+    public function testWebauthnSetupForm_Execute_PassesNullNameWhenAbsent(): void
+    {
+        $handle = UuidFactory::uuid();
+        $credential = ['id' => 'abc'];
+
+        $this->service->expects($this->once())
+            ->method('verify')
+            ->with($this->uac, $handle, $credential, null);
+
+        $this->assertTrue($this->form->execute([
+            'handle' => $handle,
+            'credential' => $credential,
+        ]));
+    }
+
+    public function testWebauthnSetupForm_Execute_PassesNullNameWhenEmptyString(): void
+    {
+        $handle = UuidFactory::uuid();
+        $credential = ['id' => 'abc'];
+
+        $this->service->expects($this->once())
+            ->method('verify')
+            ->with($this->uac, $handle, $credential, null);
+
+        $this->assertTrue($this->form->execute([
+            'handle' => $handle,
+            'credential' => $credential,
+            'name' => '',
+        ]));
     }
 }

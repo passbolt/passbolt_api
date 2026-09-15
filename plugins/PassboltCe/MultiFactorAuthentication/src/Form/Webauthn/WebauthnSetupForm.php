@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Form\Webauthn;
 
+use App\Error\Exception\CustomValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
@@ -58,10 +59,12 @@ class WebauthnSetupForm extends MfaForm
 
         $validator
             ->array('credential', __('The credential payload should be a valid WebAuthn response.'))
-            ->requirePresence('credential', true, __('A credential payload is required.'));
+            ->requirePresence('credential', true, __('A credential payload is required.'))
+            ->notEmptyArray('credential', __('The credential payload should not be empty.'));
 
         $validator
             ->scalar('name')
+            ->utf8('name', __('The name should be a valid UTF-8 string.'))
             ->maxLength('name', 255, __('The name length should be maximum {0} characters.', 255))
             ->allowEmptyString('name');
 
@@ -71,14 +74,29 @@ class WebauthnSetupForm extends MfaForm
     /**
      * @inheritDoc
      */
+    public function execute(array $data, array $options = []): bool
+    {
+        if (!$this->validate($data)) {
+            throw new CustomValidationException(
+                __('The WebAuthn setup payload is not valid.'),
+                $this->getErrors(),
+            );
+        }
+
+        return $this->process($data);
+    }
+
+    /**
+     * @inheritDoc
+     */
     protected function process(array $data): bool
     {
-        $name = !empty($data['name']) ? (string)$data['name'] : null;
+        $name = !empty($data['name']) ? $data['name'] : null;
 
         $this->service->verify(
             $this->uac,
-            (string)$data['handle'],
-            (array)$data['credential'],
+            $data['handle'],
+            $data['credential'],
             $name,
         );
 
