@@ -170,6 +170,13 @@ return [
                     'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_DELETE', true), FILTER_VALIDATE_BOOLEAN),
                     'share' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_SHARE', true), FILTER_VALIDATE_BOOLEAN),
                 ],
+                'mfa' => [
+                    // Notify when an account is suspended after too many failed MFA attempts
+                    'disable' => [
+                        'user' => filter_var(env('PASSBOLT_EMAIL_SEND_MFA_DISABLE_USER', true), FILTER_VALIDATE_BOOLEAN),
+                        'admin' => filter_var(env('PASSBOLT_EMAIL_SEND_MFA_DISABLE_ADMIN', true), FILTER_VALIDATE_BOOLEAN),
+                    ],
+                ],
             ],
         ],
 

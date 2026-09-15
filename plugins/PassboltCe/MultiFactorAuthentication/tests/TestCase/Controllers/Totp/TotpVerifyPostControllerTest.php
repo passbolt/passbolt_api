@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UserAction;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
@@ -41,6 +42,8 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
  */
 class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
 {
+    use EmailQueueTrait;
+
     /**
      * @group mfa
      * @group mfaVerify
@@ -378,5 +381,44 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
 
         $this->assertBadRequestError('You have been logged out due to too many failed attempts');
         $this->assertNull(UserFactory::get($user->id)->get('disabled'));
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerify
+     * @group mfaVerifyPost
+     * @group mfaVerifyPostTotp
+     */
+    public function testTotpVerifyPostController_Error_SendsEmailsWhenUserIsDisabled(): void
+    {
+        Configure::write(MfaRateLimitDisableUserService::CONFIG_KEY, true);
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->persist();
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        ActionLogFactory::make(['created' => DateTime::now()->subMinutes(2)])
+            ->userId($user->id)
+            ->loginAction()
+            ->persist();
+        ActionLogFactory::make(['created' => DateTime::now()], 4)
+            ->setActionId('TotpVerifyPost.post')
+            ->userId($user->id)
+            ->persist();
+
+        $this->postJson('/mfa/verify/totp.json?api-version=v2', ['totp' => 'blah']);
+
+        $this->assertBadRequestError('You have been logged out due to too many failed attempts');
+        $this->assertEmailQueueCount(2);
+        $this->assertEmailWithRecipientIsInQueue($user->username);
+        $this->assertEmailWithRecipientIsInQueue($admin->username);
+        // Assert email content
+        $this->assertStringContainsString(
+            'Your account has been suspended after too many failed multi-factor authentication attempts.',
+            $this->renderEmail($user->username),
+        );
+        $this->assertStringContainsString(
+            'has been suspended after too many failed multi-factor authentication attempts.',
+            $this->renderEmail($admin->username),
+        );
     }
 }
