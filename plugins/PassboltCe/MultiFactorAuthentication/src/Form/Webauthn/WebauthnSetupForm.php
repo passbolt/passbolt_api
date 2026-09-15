@@ -42,7 +42,7 @@ class WebauthnSetupForm extends MfaForm
     {
         return $schema
             ->addField('handle', ['type' => 'string'])
-            ->addField('credential', ['type' => 'text'])
+            ->addField('credential', ['type' => 'array'])
             ->addField('name', ['type' => 'string']);
     }
 
@@ -73,7 +73,7 @@ class WebauthnSetupForm extends MfaForm
      */
     protected function process(array $data): bool
     {
-        $name = isset($data['name']) && $data['name'] !== '' ? (string)$data['name'] : null;
+        $name = !empty($data['name']) ? (string)$data['name'] : null;
 
         $this->service->verify(
             $this->uac,
