@@ -104,4 +104,12 @@ class ModelCacheDatabaseHealthcheck extends AbstractDatabaseHealthcheck
         // error: it can be safely rebuilt by clearing the _cake_model_ cache (see the help message).
         return HealthcheckServiceCollector::LEVEL_WARNING;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'model-cache-database';
+    }
 }

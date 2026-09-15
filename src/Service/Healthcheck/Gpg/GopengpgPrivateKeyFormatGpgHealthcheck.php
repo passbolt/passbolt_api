@@ -103,4 +103,12 @@ class GopengpgPrivateKeyFormatGpgHealthcheck extends AbstractGpgHealthcheck impl
     {
         return 'isPrivateServerKeyGopengpgCompatible';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'gopengpg-private-key-format-gpg';
+    }
 }

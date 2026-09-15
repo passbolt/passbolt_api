@@ -124,4 +124,12 @@ class DistributionHealthcheck implements HealthcheckServiceInterface, Healthchec
 
         return trim($process->getOutput()) ?: null;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'distribution';
+    }
 }

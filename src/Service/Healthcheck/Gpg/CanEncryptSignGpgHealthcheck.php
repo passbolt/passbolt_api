@@ -110,4 +110,12 @@ class CanEncryptSignGpgHealthcheck extends AbstractGpgHealthcheck implements Ski
     {
         return 'canEncryptSign';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'can-encrypt-sign-gpg';
+    }
 }

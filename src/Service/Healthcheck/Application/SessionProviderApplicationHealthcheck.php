@@ -143,4 +143,12 @@ class SessionProviderApplicationHealthcheck implements HealthcheckServiceInterfa
     {
         return 'sessionProvider';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'session-provider-application';
+    }
 }

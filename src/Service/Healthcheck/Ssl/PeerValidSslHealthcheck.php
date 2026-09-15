@@ -54,4 +54,12 @@ class PeerValidSslHealthcheck extends AbstractBaseSslHealthcheck
     {
         return 'peerValid';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'peer-valid-ssl';
+    }
 }

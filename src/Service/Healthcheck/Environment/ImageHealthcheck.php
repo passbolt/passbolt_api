@@ -108,4 +108,12 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
     {
         return 'image';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'image';
+    }
 }

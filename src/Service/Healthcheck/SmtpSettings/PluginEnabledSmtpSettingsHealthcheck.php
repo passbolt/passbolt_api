@@ -108,4 +108,12 @@ class PluginEnabledSmtpSettingsHealthcheck implements HealthcheckServiceInterfac
     {
         return 'isEnabled';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'plugin-enabled-smtp-settings';
+    }
 }

@@ -112,4 +112,12 @@ class EmailNotificationEnabledApplicationHealthcheck implements HealthcheckServi
     {
         return 'emailNotificationEnabled';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'email-notification-enabled-application';
+    }
 }

@@ -106,4 +106,12 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
     {
         return 'salt';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'salt-core';
+    }
 }

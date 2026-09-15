@@ -106,4 +106,12 @@ class PcreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
     {
         return 'pcre';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'pcre';
+    }
 }

@@ -85,4 +85,12 @@ class TablesCountDatabaseHealthcheck extends AbstractDatabaseHealthcheck
     {
         return $this->tableCount;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'tables-count-database';
+    }
 }

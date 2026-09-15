@@ -101,4 +101,12 @@ class HomeVariableWritableGpgHealthcheck extends HomeVariableDefinedGpgHealthche
     {
         return 'gpgHomeWritable';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'home-variable-writable-gpg';
+    }
 }

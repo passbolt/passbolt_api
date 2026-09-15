@@ -139,4 +139,12 @@ class SettingsValidationSmtpSettingsHealthcheck implements HealthcheckServiceInt
     {
         return 'errorMessage';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'settings-validation-smtp-settings';
+    }
 }

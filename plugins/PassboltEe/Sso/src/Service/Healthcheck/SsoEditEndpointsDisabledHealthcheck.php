@@ -116,4 +116,12 @@ class SsoEditEndpointsDisabledHealthcheck implements HealthcheckServiceInterface
     {
         return 'settingsEditEndpointsDisabled';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'sso-edit-endpoints-disabled';
+    }
 }

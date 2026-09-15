@@ -105,4 +105,12 @@ class IntlHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
     {
         return 'intl';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'intl';
+    }
 }

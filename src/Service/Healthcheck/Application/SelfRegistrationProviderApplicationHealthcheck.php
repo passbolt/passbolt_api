@@ -134,4 +134,12 @@ class SelfRegistrationProviderApplicationHealthcheck implements HealthcheckServi
     {
         return $this->selfRegistrationProvider;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'self-registration-provider-application';
+    }
 }

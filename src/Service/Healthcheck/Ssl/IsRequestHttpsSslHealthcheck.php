@@ -146,4 +146,12 @@ class IsRequestHttpsSslHealthcheck implements HealthcheckServiceInterface, SkipH
     {
         return 'is';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'is-request-https-ssl';
+    }
 }

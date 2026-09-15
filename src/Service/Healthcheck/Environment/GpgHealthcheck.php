@@ -129,4 +129,12 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
 
         return trim($process->getOutput()) ?: null;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'gpg';
+    }
 }

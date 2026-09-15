@@ -113,4 +113,12 @@ class SsoEgressGuardDisabledHealthcheck implements HealthcheckServiceInterface, 
     {
         return 'egressGuardEnabled';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'sso-egress-guard-disabled';
+    }
 }

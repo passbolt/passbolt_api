@@ -117,4 +117,12 @@ class FingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
     {
         return $this->getGpgHome();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'fingerprint-match-gpg';
+    }
 }

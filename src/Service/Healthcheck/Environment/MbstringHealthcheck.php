@@ -105,4 +105,12 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
     {
         return 'mbstring';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'mbstring';
+    }
 }

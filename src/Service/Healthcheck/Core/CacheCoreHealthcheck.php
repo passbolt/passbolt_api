@@ -124,4 +124,12 @@ class CacheCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCl
     {
         return 'cache';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'cache-core';
+    }
 }

@@ -120,4 +120,12 @@ class SelfRegistrationPublicRemovedApplicationHealthcheck implements Healthcheck
     {
         return 'registrationClosed.isRegistrationPublicRemovedFromPassbolt';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'self-registration-public-removed-application';
+    }
 }

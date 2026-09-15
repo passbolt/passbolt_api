@@ -122,4 +122,12 @@ class EditionPresentInDatabaseApplicationHealthcheck implements HealthcheckServi
     {
         return 'editionFlag';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'edition-present-in-database-application';
+    }
 }

@@ -122,4 +122,12 @@ class FullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, Healthc
     {
         return 'fullBaseUrl';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'full-base-url-core';
+    }
 }

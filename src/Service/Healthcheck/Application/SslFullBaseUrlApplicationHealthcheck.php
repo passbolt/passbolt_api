@@ -107,4 +107,12 @@ class SslFullBaseUrlApplicationHealthcheck implements HealthcheckServiceInterfac
     {
         return 'sslFullBaseUrl';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'ssl-full-base-url-application';
+    }
 }
