@@ -38,8 +38,9 @@ use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultMfaWebauthnPol
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultRememberAMonthSettingService;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\MfaWebauthnPolicyInterface;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
-use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnEnableService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnEnrollCredentialService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnRelyingPartyService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnStartRegistrationService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAttestationService;
 
 class MultiFactorAuthenticationPlugin extends BasePlugin
@@ -110,14 +111,21 @@ class MultiFactorAuthenticationPlugin extends BasePlugin
             ->addArgument(MfaWebauthnPolicyInterface::class);
 
         $container
-            ->add(MfaWebauthnEnableService::class)
+            ->add(MfaWebauthnStartRegistrationService::class)
+            ->addArguments([
+                MfaWebauthnRelyingPartyService::class,
+                MfaWebauthnPolicyInterface::class,
+            ]);
+
+        $container
+            ->add(MfaWebauthnEnrollCredentialService::class)
             ->addArgument(MfaWebauthnPolicyInterface::class);
 
         $container
             ->add(MfaWebauthnVerifyAttestationService::class)
             ->addArguments([
                 MfaWebauthnRelyingPartyService::class,
-                MfaWebauthnEnableService::class,
+                MfaWebauthnEnrollCredentialService::class,
             ]);
 
         if ($this->isFeaturePluginEnabled('JwtAuthentication')) {

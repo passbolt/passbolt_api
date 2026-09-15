@@ -29,11 +29,11 @@ readonly class MfaWebauthnVerifyAttestationService
 {
     /**
      * @param \Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnRelyingPartyService $rp Relying party service.
-     * @param \Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnEnableService $enable Credential-enable service.
+     * @param \Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnEnrollCredentialService $enrollService Credential enroll service.
      */
     public function __construct(
         private MfaWebauthnRelyingPartyService $rp,
-        private MfaWebauthnEnableService $enable,
+        private MfaWebauthnEnrollCredentialService $enrollService,
     ) {
     }
 
@@ -84,6 +84,6 @@ readonly class MfaWebauthnVerifyAttestationService
             throw new BadRequestException(__('The WebAuthn attestation failed to validate.'));
         }
 
-        return $this->enable->enable($uac, $source, $name);
+        return $this->enrollService->enroll($uac, $source, $name);
     }
 }
