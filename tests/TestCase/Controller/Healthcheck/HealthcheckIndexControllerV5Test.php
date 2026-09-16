@@ -162,4 +162,29 @@ class HealthcheckIndexControllerV5Test extends AppIntegrationTestCase
             $this->assertContains($domain, $domains, "Domain {$domain} is missing from the response.");
         }
     }
+
+    public function testHealthcheckIndexControllerV5_KeysAreDefinedAndUnique(): void
+    {
+        $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
+        $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
+        RoleFactory::make(3)->persist();
+        $this->logInAsAdmin();
+        $this->getJson('/healthcheck.json?api-version=v5');
+        $this->assertResponseSuccess();
+
+        $this->assertResponseSuccess();
+        $result = $this->getResponseBodyAsArray();
+
+        $this->assertNotEmpty($result);
+
+        foreach ($result as $index => $entry) {
+            $this->assertIsString($entry['key'], "Entry {$index} has a non-string key.");
+            $this->assertNotEmpty($entry['key'], "Entry {$index} has an empty key.");
+        }
+
+        $keys = array_column($result, 'key');
+        $duplicates = array_keys(array_filter(array_count_values($keys), fn($count) => $count > 1));
+
+        $this->assertEmpty($duplicates, 'Duplicate healthcheck keys: ' . implode(', ', $duplicates));
+    }
 }
