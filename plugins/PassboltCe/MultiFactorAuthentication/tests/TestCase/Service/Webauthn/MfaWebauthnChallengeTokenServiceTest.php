@@ -113,11 +113,6 @@ class MfaWebauthnChallengeTokenServiceTest extends TestCase
         $this->assertFalse($reloaded->active);
     }
 
-    /**
-     * A setup handle must not be consumable via the verify type — closes the
-     * cross-wire attack where an attacker uses a legitimate setup handle to
-     * bypass signature validation on the verify path.
-     */
     public function testMfaWebauthnChallengeTokenService_Consume_SetupHandleRejectedAsVerify(): void
     {
         /** @var \App\Model\Entity\User $user */
