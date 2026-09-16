@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Healthcheck;
 
 use App\Controller\Healthcheck\HealthcheckIndexController;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
@@ -120,8 +121,16 @@ class HealthcheckIndexControllerV5Test extends AppIntegrationTestCase
         $this->assertResponseSuccess();
         $result = $this->getResponseBodyAsArray();
 
-        $this->assertArrayHasKey('Environment', $result);
+        $this->assertNotEmpty($result);
+        $this->assertArrayNotHasKey('Environment', $result);
         $this->assertArrayNotHasKey('environment', $result);
+        foreach ($result as $entry) {
+            $this->assertSame(
+                ['key', 'domain_key', 'domain', 'status', 'message', 'help'],
+                array_keys($entry),
+            );
+            $this->assertSame(['key', 'title'], array_keys($entry['domain']));
+        }
     }
 
     public function testHealthcheckIndexControllerV5_Success_Json(): void
@@ -135,21 +144,22 @@ class HealthcheckIndexControllerV5Test extends AppIntegrationTestCase
 
         $result = $this->getResponseBodyAsArray();
 
+        $domains = array_column($result, 'domain_key');
+
         $expectedDomains = [
-            'Environment',
-            'Config files',
-            'Core config',
-            'SSL Certificate',
-            'SMTP settings',
-            'JWT Authentication',
-            'GPG Configuration',
-            'Application configuration',
-            'Database',
-            'Metadata',
+            HealthcheckServiceCollector::DOMAIN_ENVIRONMENT,
+            HealthcheckServiceCollector::DOMAIN_CONFIG_FILES,
+            HealthcheckServiceCollector::DOMAIN_CORE,
+            HealthcheckServiceCollector::DOMAIN_SSL,
+            HealthcheckServiceCollector::DOMAIN_SMTP_SETTINGS,
+            HealthcheckServiceCollector::DOMAIN_JWT,
+            HealthcheckServiceCollector::DOMAIN_GPG,
+            HealthcheckServiceCollector::DOMAIN_APPLICATION,
+            HealthcheckServiceCollector::DOMAIN_DATABASE,
+            HealthcheckServiceCollector::DOMAIN_METADATA,
         ];
         foreach ($expectedDomains as $domain) {
-            $this->assertArrayHasKey($domain, $result);
-            $this->assertNotEmpty($result[$domain], "Domain {$domain} was returned with no checks.");
+            $this->assertContains($domain, $domains, "Domain {$domain} is missing from the response.");
         }
     }
 }

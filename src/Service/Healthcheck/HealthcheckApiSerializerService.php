@@ -16,8 +16,6 @@ declare(strict_types=1);
  */
 namespace App\Service\Healthcheck;
 
-use Cake\Collection\Collection;
-
 class HealthcheckApiSerializerService
 {
     public const STATUS_PASS = 'pass';
@@ -39,35 +37,35 @@ class HealthcheckApiSerializerService
     }
 
     /**
-     * Serializes executed healthcheck results, grouped by domain, in input order.
+     * Runs every registered healthcheck, excludes skipped checks and serializes the results as a flat list,
+     * in registration order.
      *
      * @return array
      */
     public function serialize(): array
     {
-        $healthcheckServices = new Collection($this->collector->getServices());
-        $grouped = $healthcheckServices
-            ->map(function (HealthcheckServiceInterface $healthcheckService) {
-                return $healthcheckService->check();
-            })
-            ->reject(function (HealthcheckServiceInterface $healthcheck) {
-                return $healthcheck instanceof SkipHealthcheckInterface && $healthcheck->isSkipped();
-            })
-            ->groupBy(function (HealthcheckServiceInterface $healthcheck) {
-                return $healthcheck->domain();
-            });
-
         $body = [];
-        foreach ($grouped as $domain => $domainHealthcheckServices) {
-            $title = $this->collector->getTitleFromDomain($domain);
 
-            $body[$title] = array_map(function (HealthcheckServiceInterface $healthcheck) {
-                return [
-                    'status' => $this->status($healthcheck),
-                    'message' => $this->message($healthcheck),
-                    'help' => $this->help($healthcheck),
-                ];
-            }, $domainHealthcheckServices);
+        foreach ($this->collector->getServices() as $healthcheckService) {
+            $healthcheck = $healthcheckService->check();
+
+            if ($healthcheck instanceof SkipHealthcheckInterface && $healthcheck->isSkipped()) {
+                continue;
+            }
+
+            $domain = $healthcheck->domain();
+
+            $body[] = [
+                'key' => $healthcheck->getKey(),
+                'domain_key' => $domain,
+                'domain' => [
+                    'key' => $domain,
+                    'title' => $this->collector->getTitleFromDomain($domain),
+                ],
+                'status' => $this->status($healthcheck),
+                'message' => $this->message($healthcheck),
+                'help' => $this->help($healthcheck),
+            ];
         }
 
         return $body;

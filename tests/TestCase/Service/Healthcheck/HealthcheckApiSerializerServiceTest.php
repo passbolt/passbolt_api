@@ -17,10 +17,8 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Service\Healthcheck;
 
 use App\Service\Healthcheck\Application\SeleniumDisabledApplicationHealthcheck;
-use App\Service\Healthcheck\ConfigFiles\AppConfigFileHealthcheck;
 use App\Service\Healthcheck\Environment\NextMinPhpVersionHealthcheck;
 use App\Service\Healthcheck\Environment\PhpVersionHealthcheck;
-use App\Service\Healthcheck\Environment\TimeSyncHealthcheck;
 use App\Service\Healthcheck\HealthcheckApiSerializerService;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\Jwt\PluginEnabledJwtHealthcheck;
@@ -62,8 +60,9 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
 
         $result = $this->service->serialize();
 
-        $this->assertSame(HealthcheckApiSerializerService::STATUS_PASS, $result['Environment'][0]['status']);
-        $this->assertSame([], $result['Environment'][0]['help']);
+        $this->assertSame('php-version', $result[0]['key']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_PASS, $result[0]['status']);
+        $this->assertSame([], $result[0]['help']);
     }
 
     public function testHealthcheckApiSerializerServiceTest_ErrorLevelFailing(): void
@@ -75,12 +74,14 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
 
         $result = $this->service->serialize();
 
-        $this->assertSame(HealthcheckApiSerializerService::STATUS_ERROR, $result['Environment'][0]['status']);
-        $this->assertSame(HealthcheckApiSerializerService::STATUS_ERROR, $result['Application configuration'][0]['status']);
-        $this->assertSame([], $result['Environment'][0]['help']);
+        $this->assertSame('php-version', $result[0]['key']);
+        $this->assertSame('selenium-disabled-application', $result[1]['key']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_ERROR, $result[0]['status']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_ERROR, $result[1]['status']);
+        $this->assertSame([], $result[0]['help']);
         $this->assertSame(
             ['Set passbolt.selenium.active to false in ' . CONFIG . 'passbolt.php.'],
-            $result['Application configuration'][0]['help'],
+            $result[1]['help'],
         );
     }
 
@@ -92,8 +93,9 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
 
         $result = $this->service->serialize();
 
-        $this->assertSame(HealthcheckApiSerializerService::STATUS_PASS, $result['Environment'][0]['status']);
-        $this->assertSame([], $result['Environment'][0]['help']);
+        $this->assertSame('next-min-php-version', $result[0]['key']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_PASS, $result[0]['status']);
+        $this->assertSame([], $result[0]['help']);
     }
 
     public function testHealthcheckApiSerializerServiceTest_WarningLevelFailing(): void
@@ -105,12 +107,14 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
 
         $result = $this->service->serialize();
 
-        $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $result['Environment'][0]['status']);
-        $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $result['JWT Authentication'][0]['status']);
-        $this->assertSame([], $result['Environment'][0]['help']);
+        $this->assertSame('next-min-php-version', $result[0]['key']);
+        $this->assertSame('plugin-enabled-jwt', $result[1]['key']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $result[0]['status']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $result[1]['status']);
+        $this->assertSame([], $result[0]['help']);
         $this->assertSame(
             ['Set the environment variable PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED to true'],
-            $result['JWT Authentication'][0]['help'],
+            $result[1]['help'],
         );
     }
 
@@ -122,8 +126,9 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
 
         $result = $this->service->serialize();
 
-        $this->assertSame(HealthcheckApiSerializerService::STATUS_INFO, $result['Scim'][0]['status']);
-        $this->assertSame('SCIM plugin is enabled.', $result['Scim'][0]['message']);
+        $this->assertSame('scim', $result[0]['key']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_INFO, $result[0]['status']);
+        $this->assertSame('SCIM plugin is enabled.', $result[0]['message']);
     }
 
     public function testHealthcheckApiSerializerServiceTest_InfoLevelFailing(): void
@@ -134,33 +139,53 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
 
         $result = $this->service->serialize();
 
-        $this->assertSame(HealthcheckApiSerializerService::STATUS_INFO, $result['Scim'][0]['status']);
-        $this->assertSame('SCIM plugin is disabled.', $result['Scim'][0]['message']);
-        $this->assertSame([], $result['Scim'][0]['help']);
+        $this->assertSame('scim', $result[0]['key']);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_INFO, $result[0]['status']);
+        $this->assertSame('SCIM plugin is disabled.', $result[0]['message']);
+        $this->assertSame([], $result[0]['help']);
     }
 
-    public function testHealthcheckApiSerializerServiceTest_DomainGrouping(): void
+    public function testHealthcheckApiSerializerServiceTest_ReturnsTheAgreedFormat(): void
     {
+        Configure::write(PhpVersionHealthcheck::PHP_MIN_VERSION_CONFIG, PHP_VERSION);
+
         $this->collector->addService(new PhpVersionHealthcheck());
-        $this->collector->addService(new AppConfigFileHealthcheck());
-        $this->collector->addService(new NextMinPhpVersionHealthcheck());
-        $this->collector->addService(new TimeSyncHealthcheck());
 
         $result = $this->service->serialize();
 
-        $this->assertCount(3, $result['Environment']);
-        $this->assertCount(1, $result['Config files']);
+        $this->assertSame([
+            'key' => 'php-version',
+            'domain_key' => HealthcheckServiceCollector::DOMAIN_ENVIRONMENT,
+            'domain' => [
+                'key' => HealthcheckServiceCollector::DOMAIN_ENVIRONMENT,
+                'title' => 'Environment',
+            ],
+            'status' => HealthcheckApiSerializerService::STATUS_PASS,
+            'message' => 'PHP version ' . PHP_VERSION . '.',
+            'help' => [],
+        ], $result[0]);
+    }
+
+    public function testHealthcheckApiSerializerServiceTest_ReturnsFlatListNotGroupedByDomain(): void
+    {
+        $this->collector->addService(new PhpVersionHealthcheck());
+        $this->collector->addService(new NextMinPhpVersionHealthcheck());
+
+        $result = $this->service->serialize();
+
+        $this->assertCount(2, $result);
+        $this->assertArrayHasKey('key', $result[0]);
+        $this->assertArrayHasKey('key', $result[1]);
     }
 
     public function testHealthcheckApiSerializerServiceTest_ExcludesSkippedHealthcheck(): void
     {
         $this->collector->addService(new PhpVersionHealthcheck());
-        $this->collector->addService(new NextMinPhpVersionHealthcheck());
         $this->collector->addService(new ServerMetadataKeyAccessInZeroKnowledgeModeHealthcheck());
 
         $result = $this->service->serialize();
 
-        $this->assertArrayHasKey('Environment', $result);
-        $this->assertArrayNotHasKey('Metadata', $result);
+        $this->assertCount(1, $result);
+        $this->assertNotSame('server-metadata-key-access-in-zero-knowledge-mode', $result[0]['key']);
     }
 }
