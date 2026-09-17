@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Model\Dto;
 
 use App\Model\Entity\WebauthnCredential;
+use App\Test\Factory\WebauthnCredentialFactory;
 use Cake\I18n\DateTime;
 use Cake\TestSuite\TestCase;
 use Passbolt\MultiFactorAuthentication\Model\Dto\MfaWebauthnCredentialDto;
@@ -37,6 +38,7 @@ class MfaWebauthnCredentialDtoTest extends TestCase
         $entity->set('credential_id', 'rNBHwaMQLa7ghkiTu-LpV-HGmvY');
         $entity->set('name', 'UAT Yubikey');
         $entity->set('sign_count', 7);
+        $entity->set('data', WebauthnCredentialFactory::makeCredentialRecord('rNBHwaMQLa7ghkiTu-LpV-HGmvY'));
         $entity->set('last_used', $lastUsed);
         $entity->set('created', $created);
         $entity->set('modified', $modified);
@@ -46,6 +48,7 @@ class MfaWebauthnCredentialDtoTest extends TestCase
             'credential_id' => 'rNBHwaMQLa7ghkiTu-LpV-HGmvY',
             'name' => 'UAT Yubikey',
             'sign_count' => 7,
+            'aaguid' => '00000000-0000-0000-0000-000000000000',
             'last_used' => $lastUsed,
             'created' => $created,
             'modified' => $modified,
@@ -61,6 +64,7 @@ class MfaWebauthnCredentialDtoTest extends TestCase
         $entity->set('credential_id', 'rNBHwaMQLa7ghkiTu-LpV-HGmvY');
         $entity->set('name', null);
         $entity->set('sign_count', 0);
+        $entity->set('data', WebauthnCredentialFactory::makeCredentialRecord('rNBHwaMQLa7ghkiTu-LpV-HGmvY'));
         $entity->set('last_used', null);
         $entity->set('created', null);
         $entity->set('modified', null);
@@ -79,6 +83,7 @@ class MfaWebauthnCredentialDtoTest extends TestCase
         $entity->set('credential_id', 'rNBHwaMQLa7ghkiTu-LpV-HGmvY');
         $entity->set('name', 'Yubikey');
         $entity->set('sign_count', 0);
+        $entity->set('data', WebauthnCredentialFactory::makeCredentialRecord('rNBHwaMQLa7ghkiTu-LpV-HGmvY'));
 
         $body = MfaWebauthnCredentialDto::fromEntity($entity)->toArray();
         $this->assertArrayNotHasKey('data', $body);

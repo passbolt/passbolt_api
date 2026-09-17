@@ -26,6 +26,7 @@ readonly class MfaWebauthnCredentialDto
      * @param string $credentialId Base64url WebAuthn credential id.
      * @param string|null $name User-provided friendly name.
      * @param int $signCount Persisted signature counter.
+     * @param string $aaguid Authenticator AAGUID as RFC 4122 uuid.
      * @param \Cake\I18n\DateTime|null $lastUsed Last successful assertion time.
      * @param \Cake\I18n\DateTime|null $created Row creation time.
      * @param \Cake\I18n\DateTime|null $modified Row modification time.
@@ -35,6 +36,7 @@ readonly class MfaWebauthnCredentialDto
         public string $credentialId,
         public ?string $name,
         public int $signCount,
+        public string $aaguid,
         public ?DateTime $lastUsed,
         public ?DateTime $created,
         public ?DateTime $modified,
@@ -52,6 +54,7 @@ readonly class MfaWebauthnCredentialDto
             $credential->credential_id,
             $credential->name,
             $credential->sign_count,
+            $credential->data->aaguid->toRfc4122(),
             $credential->last_used,
             $credential->created,
             $credential->modified,
@@ -68,6 +71,7 @@ readonly class MfaWebauthnCredentialDto
             'credential_id' => $this->credentialId,
             'name' => $this->name,
             'sign_count' => $this->signCount,
+            'aaguid' => $this->aaguid,
             'last_used' => $this->lastUsed,
             'created' => $this->created,
             'modified' => $this->modified,
