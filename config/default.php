@@ -170,6 +170,13 @@ return [
                     'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_DELETE', true), FILTER_VALIDATE_BOOLEAN),
                     'share' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_SHARE', true), FILTER_VALIDATE_BOOLEAN),
                 ],
+                'mfa' => [
+                    // Notify when an account is suspended after too many failed MFA attempts
+                    'disable' => [
+                        'user' => filter_var(env('PASSBOLT_EMAIL_SEND_MFA_DISABLE_USER', true), FILTER_VALIDATE_BOOLEAN),
+                        'admin' => filter_var(env('PASSBOLT_EMAIL_SEND_MFA_DISABLE_ADMIN', true), FILTER_VALIDATE_BOOLEAN),
+                    ],
+                ],
             ],
         ],
 
@@ -394,6 +401,7 @@ return [
             'mfa' => [
                 'duoVerifySubscriber' => filter_var(env('PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER', false), FILTER_VALIDATE_BOOLEAN),
                 'maxAttempts' => filter_var(env('PASSBOLT_SECURITY_MFA_MAX_ATTEMPTS', '4'), FILTER_VALIDATE_INT),
+                'disableUserOnRateLimit' => filter_var(env('PASSBOLT_SECURITY_MFA_DISABLE_USER_ON_RATE_LIMIT', true), FILTER_VALIDATE_BOOLEAN),
             ],
             // Disable GET /logout endpoint, closing potential CSRF issue and prevent logout usage via browser URL
             'getLogoutEndpointEnabled' => filter_var(env('PASSBOLT_SECURITY_GET_LOGOUT_ENDPOINT_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
