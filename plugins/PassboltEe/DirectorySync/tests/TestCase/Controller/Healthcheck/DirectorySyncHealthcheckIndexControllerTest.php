@@ -41,7 +41,7 @@ class DirectorySyncHealthcheckIndexControllerTest extends DirectorySyncDeprecate
         $this->mockService('fullBaseUrlReachableClient', function () {
             return $this->getMockedHealthcheckStatusRequest(
                 200,
-                json_encode(['body' => 'OK'])
+                json_encode(['body' => 'OK']),
             );
         });
         $this->mockService('sslHealthcheckClient', function () {
@@ -60,7 +60,7 @@ class DirectorySyncHealthcheckIndexControllerTest extends DirectorySyncDeprecate
         $this->assertArrayHasKey('directorySync', $result);
         $this->assertArrayEqualsCanonicalizing(
             ['endpointsDisabled' => false, 'sslVerifyPeer' => true],
-            $result['directorySync']
+            $result['directorySync'],
         );
     }
 
@@ -78,7 +78,7 @@ class DirectorySyncHealthcheckIndexControllerTest extends DirectorySyncDeprecate
         $this->assertArrayHasKey('directorySync', $result);
         $this->assertArrayEqualsCanonicalizing(
             ['endpointsDisabled' => true, 'sslVerifyPeer' => false],
-            $result['directorySync']
+            $result['directorySync'],
         );
     }
 }

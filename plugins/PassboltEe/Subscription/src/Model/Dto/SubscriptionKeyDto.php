@@ -73,7 +73,7 @@ class SubscriptionKeyDto
         int $users,
         string $email,
         Date $expiry,
-        Date $created
+        Date $created,
     ) {
         $this->data = $data;
         $this->customerId = $customerId;

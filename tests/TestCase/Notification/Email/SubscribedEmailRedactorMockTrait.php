@@ -28,7 +28,7 @@ trait SubscribedEmailRedactorMockTrait
     private function createSubscribedRedactor(
         array $subscribedEvents,
         Email $email,
-        ?string $notificationSettingPath = null
+        ?string $notificationSettingPath = null,
     ): SubscribedEmailRedactorInterface {
         return new class ($subscribedEvents, $email, $notificationSettingPath) implements SubscribedEmailRedactorInterface
         {

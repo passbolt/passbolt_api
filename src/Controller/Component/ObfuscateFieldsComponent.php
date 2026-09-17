@@ -49,7 +49,7 @@ class ObfuscateFieldsComponent extends Component
         if (empty($config['placeholder'])) {
             $this->setConfig(
                 'placeholder',
-                Configure::read('passbolt.obfuscateFields.placeholder', self::FIELD_PLACEHOLDER)
+                Configure::read('passbolt.obfuscateFields.placeholder', self::FIELD_PLACEHOLDER),
             );
         }
     }

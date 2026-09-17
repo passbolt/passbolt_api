@@ -38,7 +38,7 @@ class SelfRegistrationEmailDomainsDryRunService extends SelfRegistrationAbstract
         if (!$form->execute($data)) {
             throw new FormValidationException(
                 __('The self registration data could not be validated.'),
-                $form
+                $form,
             );
         }
 

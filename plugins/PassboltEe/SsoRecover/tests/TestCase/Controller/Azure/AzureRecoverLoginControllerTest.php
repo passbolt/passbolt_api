@@ -74,7 +74,7 @@ class AzureRecoverLoginControllerTest extends SsoRecoverIntegrationTestCase
         $gpg = OpenPGPBackendFactory::get();
         $gpg->setDecryptKeyFromFingerprint(
             Configure::read('passbolt.gpg.serverKey.fingerprint'),
-            Configure::read('passbolt.gpg.serverKey.passphrase')
+            Configure::read('passbolt.gpg.serverKey.passphrase'),
         );
         $settingsData = json_decode($gpg->decrypt($settings->get('data')), true);
         // Mock provider

@@ -77,7 +77,7 @@ class PopulateEditionServiceTest extends AppTestCaseV5
         $this->sut->populate();
 
         $editionRow = EditionOrganizationSettingFactory::firstOrFail(
-            ['property' => EditionOrganizationTable::PROPERTY_NAME]
+            ['property' => EditionOrganizationTable::PROPERTY_NAME],
         );
         $this->assertSame(EditionDto::EDITION_PRO, $editionRow->get('value'));
     }
@@ -94,7 +94,7 @@ class PopulateEditionServiceTest extends AppTestCaseV5
         $this->sut->populate();
 
         $editionRow = EditionOrganizationSettingFactory::firstOrFail(
-            ['property' => EditionOrganizationTable::PROPERTY_NAME]
+            ['property' => EditionOrganizationTable::PROPERTY_NAME],
         );
         $this->assertSame(EditionDto::EDITION_PRO, $editionRow->get('value'));
     }
@@ -106,7 +106,7 @@ class PopulateEditionServiceTest extends AppTestCaseV5
         $this->sut->populate();
 
         $editionRow = EditionOrganizationSettingFactory::firstOrFail(
-            ['property' => EditionOrganizationTable::PROPERTY_NAME]
+            ['property' => EditionOrganizationTable::PROPERTY_NAME],
         );
         $this->assertSame(EditionDto::EDITION_CE, $editionRow->get('value'));
     }

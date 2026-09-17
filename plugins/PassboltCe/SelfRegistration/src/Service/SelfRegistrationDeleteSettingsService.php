@@ -39,7 +39,7 @@ class SelfRegistrationDeleteSettingsService
         /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $settings = $OrganizationSettings->getByProperty(
-            SelfRegistrationBaseSettingsService::USER_SELF_REGISTRATION_SETTINGS_PROPERTY_NAME
+            SelfRegistrationBaseSettingsService::USER_SELF_REGISTRATION_SETTINGS_PROPERTY_NAME,
         );
         if (is_null($settings) || $settings->get('id') !== $id) {
             throw new NotFoundException('The self registration setting does not exist.');
@@ -54,7 +54,7 @@ class SelfRegistrationDeleteSettingsService
 
         $this->dispatchEvent(
             SelfRegistrationSetSettingsService::SELF_REGISTRATION_SETTINGS_UPDATE_EVENT_NAME,
-            $eventData
+            $eventData,
         );
 
         return $result;

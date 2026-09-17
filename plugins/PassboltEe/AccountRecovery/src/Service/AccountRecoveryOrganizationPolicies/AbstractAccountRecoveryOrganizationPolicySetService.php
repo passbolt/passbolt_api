@@ -259,7 +259,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
             // Check key can be parsed
             PublicKeyValidationService::parseAndValidatePublicKey(
                 $entity->armored_key,
-                PublicKeyValidationService::getStrictRules()
+                PublicKeyValidationService::getStrictRules(),
             );
 
             // Prevent key reuse
@@ -304,7 +304,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
             $oldEntity = $this->findActiveKeyByFingerprintOrFail($entity->fingerprint);
             PublicKeyValidationService::parseAndValidatePublicKey(
                 $entity->armored_key,
-                PublicKeyValidationService::getRevokedKeyRules()
+                PublicKeyValidationService::getRevokedKeyRules(),
             );
         } catch (ValidationException | CustomValidationException $exception) {
             throw new CustomValidationException(__('Could not validate key revocation.'), [

@@ -41,8 +41,8 @@ class SsoSettingsAdfsDataForm extends SsoSettingsOAuth2DataForm
                 self::SUPPORTED_EMAIL_CLAIM,
                 __(
                     'The email claim should be one of the following: {0}.',
-                    implode(', ', self::SUPPORTED_EMAIL_CLAIM)
-                )
+                    implode(', ', self::SUPPORTED_EMAIL_CLAIM),
+                ),
             );
 
         return $dataValidator;

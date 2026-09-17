@@ -43,7 +43,7 @@ class TestingEditionManager extends EditionManager
 
         return new EditionDto(
             $edition,
-            $timestamp instanceof DateTime ? $timestamp : null
+            $timestamp instanceof DateTime ? $timestamp : null,
         );
     }
 }

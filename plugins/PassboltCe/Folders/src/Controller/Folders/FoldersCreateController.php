@@ -40,7 +40,7 @@ class FoldersCreateController extends AppController
 
         $uac = $this->User->getAccessControl();
         $requestData = $this->populatedMetadataUserKeyId($uac->getId(), $this->getRequest()->getData());
-        $folderDto = MetadataFolderDto::fromArray($requestData);
+        $folderDto = MetadataFolderDto::createFromArray($requestData);
         $folderCreateService = new FoldersCreateService();
 
         /** @var \Passbolt\Folders\Model\Entity\Folder $folder */

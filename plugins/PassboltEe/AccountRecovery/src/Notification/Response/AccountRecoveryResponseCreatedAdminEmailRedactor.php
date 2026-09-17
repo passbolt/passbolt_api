@@ -113,7 +113,7 @@ class AccountRecoveryResponseCreatedAdminEmailRedactor implements SubscribedEmai
             $locale,
             function () use ($status) {
                 return __('Account recovery response set to {0}.', $status);
-            }
+            },
         );
 
         $data = [

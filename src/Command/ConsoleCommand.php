@@ -81,7 +81,7 @@ class ConsoleCommand extends Command
             'You can use it to run adhoc queries with your models, or ' .
             'explore the features of CakePHP and your application.' .
             "\n\n" .
-            'You will need to have psysh installed for this Shell to work.'
+            'You will need to have psysh installed for this Shell to work.',
         );
 
         return $parser;

@@ -55,7 +55,7 @@ class VerifyTokenCreateService
         return $this->AuthenticationTokens->generate(
             $userId,
             AuthenticationToken::TYPE_VERIFY_TOKEN,
-            $verifyToken
+            $verifyToken,
         );
     }
 

@@ -80,7 +80,7 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
     public function collectSubscribedEmailRedactors()
     {
         $this->getEventManager()->dispatch(
-            CollectSubscribedEmailRedactorEvent::create($this->emailSubscriptionManager)
+            CollectSubscribedEmailRedactorEvent::create($this->emailSubscriptionManager),
         );
         $this->getEventManager()->on($this);
 
@@ -132,7 +132,7 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
                             [
                                 'emailCollection' => $emailCollection,
                                 'exception' => $t,
-                            ]
+                            ],
                         );
                     }
                 }

@@ -230,7 +230,7 @@ class Gnupg extends OpenPGPBackend
      * @param string $passphrase passphrase
      * @return true if success
      */
-    public function setSignKeyFromFingerprint(string $fingerprint, string $passphrase): bool
+    public function setSignKeyFromFingerprint(string $fingerprint, string $passphrase): true
     {
         $this->_signKeyFingerprint = null;
 

@@ -173,14 +173,14 @@ class CleanupCommand extends PassboltCommand
                             '{0} issues found in table {1} ({2})',
                             $recordCount,
                             $cleanableTableName,
-                            $cleanupName
+                            $cleanupName,
                         ));
                     } else {
                         $io->out(__(
                             '{0} issues fixed in table {1} ({2})',
                             $recordCount,
                             $cleanableTableName,
-                            $cleanupName
+                            $cleanupName,
                         ));
                     }
                 }
@@ -219,7 +219,7 @@ class CleanupCommand extends PassboltCommand
         $listTables = $connection->getSchemaCollection()->listTables();
         if (!in_array('users', $listTables)) {
             throw new InternalErrorException(
-                __('Cleanup command cannot be executed on an instance having no users table.')
+                __('Cleanup command cannot be executed on an instance having no users table.'),
             );
         }
 
@@ -227,7 +227,7 @@ class CleanupCommand extends PassboltCommand
         $admin = $this->Users->findFirstAdmin();
         if (is_null($admin)) {
             throw new InternalErrorException(
-                __('Cleanup command cannot be executed on an instance having no active administrator.')
+                __('Cleanup command cannot be executed on an instance having no active administrator.'),
             );
         }
     }

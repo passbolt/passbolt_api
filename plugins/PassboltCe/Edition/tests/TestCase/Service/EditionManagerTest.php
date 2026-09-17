@@ -210,7 +210,7 @@ class EditionManagerTest extends AppTestCaseV5
                 Configure::read("passbolt.plugins.{$name}.enabled"),
                 "PRO plugin '{$name}' should be disabled on CE edition but is not. " .
                 "Did you forget to add \$this->disableFeaturePlugin('{$name}') " .
-                'in EditionManager::disableProPluginsIfNotPro()?'
+                'in EditionManager::disableProPluginsIfNotPro()?',
             );
         }
         $this->assertTrue($found, 'No PRO plugin .enabled keys found in pro.php — test wiring broken.');

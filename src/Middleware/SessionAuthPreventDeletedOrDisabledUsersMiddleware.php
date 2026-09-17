@@ -36,7 +36,7 @@ class SessionAuthPreventDeletedOrDisabledUsersMiddleware implements MiddlewareIn
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
         $userId = $request->getSession()->read('Auth.user.id');

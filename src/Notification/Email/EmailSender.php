@@ -58,7 +58,7 @@ class EmailSender
     public function __construct(
         ?EmailQueueTable $emailQueue = null,
         ?string $appFullBaseUrl = null,
-        ?bool $purifySubject = false
+        ?bool $purifySubject = false,
     ) {
         $this->emailQueue = $emailQueue ?? TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
         $this->appFullBaseUrl = $appFullBaseUrl ?? Configure::read('App.fullBaseUrl');

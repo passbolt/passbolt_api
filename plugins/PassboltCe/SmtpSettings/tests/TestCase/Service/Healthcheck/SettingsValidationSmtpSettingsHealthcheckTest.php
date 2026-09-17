@@ -64,7 +64,7 @@ class SettingsValidationSmtpSettingsHealthcheckTest extends TestCase
         $this->assertFalse($this->service->isPassed());
         $this->assertSame(
             '{"port":{"range":"The port number should be between 1 and 65535."}}',
-            $this->service->getValidationError()
+            $this->service->getValidationError(),
         );
     }
 
@@ -77,7 +77,7 @@ class SettingsValidationSmtpSettingsHealthcheckTest extends TestCase
         $this->assertFalse($this->service->isPassed());
         $this->assertSame(
             'The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database. To fix this problem, you need to configure the SMTP server again. Decryption failed. decrypt failed',
-            $this->service->getValidationError()
+            $this->service->getValidationError(),
         );
     }
 }

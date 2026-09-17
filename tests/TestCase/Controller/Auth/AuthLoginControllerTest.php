@@ -318,14 +318,14 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
                 $this->assertTrue(isset($headers['X-GPGAuth-Debug']), 'A debug message should be set in the headers');
                 $this->assertFalse(
                     strpos($headers['X-GPGAuth-Debug'], 'Invalid verify token format') === false,
-                    'The debug message should contain "Invalid verify token format" got: ' . $headers['X-GPGAuth-Debug']
+                    'The debug message should contain "Invalid verify token format" got: ' . $headers['X-GPGAuth-Debug'],
                 );
             } else {
                 $this->assertTrue(isset($headers['X-GPGAuth-Verify-Response']), 'The verify response header should be set for ' . $token);
                 $this->assertEquals(
                     $headers['X-GPGAuth-Verify-Response'],
                     $token,
-                    'The verify response header should match the original token. It is ' . $headers['X-GPGAuth-Verify-Response'] . ' instead of ' . $token
+                    'The verify response header should match the original token. It is ' . $headers['X-GPGAuth-Verify-Response'] . ' instead of ' . $token,
                 );
             }
         }
@@ -399,7 +399,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         // try to decrypt the message
         $this->assertTrue(
             $this->gpg->setDecryptKeyFromFingerprint($this->adaKeyId, ''),
-            'CONFIG - It is not possible to use the key provided in the fixtures to decrypt.'
+            'CONFIG - It is not possible to use the key provided in the fixtures to decrypt.',
         );
         $msg = stripslashes(urldecode($headers['X-GPGAuth-User-Auth-Token']));
         $this->gpg->setVerifyKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));

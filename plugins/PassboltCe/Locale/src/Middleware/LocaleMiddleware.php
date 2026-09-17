@@ -39,7 +39,7 @@ class LocaleMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         $service = new RequestLocaleParserService($request);
         $service->setLocale($service->getLocale());

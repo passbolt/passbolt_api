@@ -103,7 +103,7 @@ class SsoSettingsActivatedEmailRedactor implements SubscribedEmailRedactorInterf
 
         foreach ($recipients as $recipient) {
             $emailCollection->addEmail(
-                $this->createEmail($recipient, $operator, $ssoSetting, $clientIp, $userAgent)
+                $this->createEmail($recipient, $operator, $ssoSetting, $clientIp, $userAgent),
             );
         }
 
@@ -123,13 +123,13 @@ class SsoSettingsActivatedEmailRedactor implements SubscribedEmailRedactorInterf
         User $operator,
         SsoSetting $ssoSetting,
         string $clientIp,
-        string $userAgent
+        string $userAgent,
     ): Email {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($operator) {
                 return __('{0} activated the SSO setting', $operator->profile->first_name);
-            }
+            },
         );
 
         return new Email(
@@ -145,7 +145,7 @@ class SsoSettingsActivatedEmailRedactor implements SubscribedEmailRedactorInterf
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 

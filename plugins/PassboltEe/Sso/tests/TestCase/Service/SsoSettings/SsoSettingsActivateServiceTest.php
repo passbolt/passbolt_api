@@ -76,7 +76,7 @@ class SsoSettingsActivateServiceTest extends SsoTestCase
         $this->assertEventFiredWith(
             SsoSettingsActivateService::AFTER_ACTIVATE_SSO_SETTINGS_EVENT,
             'uac',
-            $uac
+            $uac,
         );
     }
 

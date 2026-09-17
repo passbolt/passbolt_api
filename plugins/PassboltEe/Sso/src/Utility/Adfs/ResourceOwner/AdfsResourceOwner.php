@@ -50,7 +50,7 @@ class AdfsResourceOwner extends OAuth2ResourceOwner
             $msg = __('Single sign-on failed.') . ' ';
             $msg .= __(
                 'The {0} claim is not present, please contact your administrator.',
-                $this->emailClaimField
+                $this->emailClaimField,
             );
             throw new BadRequestException($msg);
         }

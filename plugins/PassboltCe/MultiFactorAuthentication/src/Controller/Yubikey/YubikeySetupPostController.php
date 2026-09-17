@@ -32,7 +32,7 @@ class YubikeySetupPostController extends MfaSetupController
      */
     public function post(
         SessionIdentificationServiceInterface $sessionIdentificationService,
-        MfaFormInterface $setupForm
+        MfaFormInterface $setupForm,
     ) {
         $this->_assertRequestIsJson();
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_YUBIKEY);

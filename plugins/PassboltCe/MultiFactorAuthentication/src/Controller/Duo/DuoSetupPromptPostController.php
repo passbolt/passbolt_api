@@ -57,12 +57,12 @@ class DuoSetupPromptPostController extends MfaSetupController
         $redirect = $this->SanitizeUrl->sanitizeRedirect('/mfa/setup', true);
         $startAuthService = new MfaDuoStartDuoAuthenticationService(
             AuthenticationToken::TYPE_MFA_SETUP,
-            $duoSdkClient
+            $duoSdkClient,
         );
         try {
             $duoAuthenticationRequest = $startAuthService->start(
                 $this->User->getAccessControl(),
-                $redirect
+                $redirect,
             );
         } catch (ServiceUnavailableException $e) {
             $this->Flash->error($e->getMessage());
@@ -71,7 +71,7 @@ class DuoSetupPromptPostController extends MfaSetupController
         }
         $cookie = (new MfaDuoStateCookieService())->createDuoStateCookie(
             $duoAuthenticationRequest->authenticationToken->token,
-            AbstractSecureCookieService::isHttpsOrCookiesSecure($this->getRequest())
+            AbstractSecureCookieService::isHttpsOrCookiesSecure($this->getRequest()),
         );
 
         $this->setResponse($this->getResponse()->withCookie($cookie));

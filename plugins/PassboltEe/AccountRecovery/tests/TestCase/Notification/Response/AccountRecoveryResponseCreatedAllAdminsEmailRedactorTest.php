@@ -60,7 +60,7 @@ class AccountRecoveryResponseCreatedAllAdminsEmailRedactorTest extends TestCase
     private function makeResponse(
         string $requesterId,
         string $actingUserId,
-        string $status = AccountRecoveryResponse::STATUS_APPROVED
+        string $status = AccountRecoveryResponse::STATUS_APPROVED,
     ): AccountRecoveryResponse {
         /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $request */
         $request = AccountRecoveryRequestFactory::make()->withUser($requesterId)->persist();
@@ -183,6 +183,27 @@ class AccountRecoveryResponseCreatedAllAdminsEmailRedactorTest extends TestCase
         $this->assertContains($activeAdmin->username, $recipients);
         $this->assertNotContains($disabledAdmin->username, $recipients);
         $this->assertNotContains($disabledRbacViewer->username, $recipients);
+    }
+
+    public function testResponseCreatedAllAdmins_DeletedAndInactiveUsersExcluded(): void
+    {
+        /** @var \App\Model\Entity\User $requester */
+        $requester = UserFactory::make()->persist();
+        /** @var \App\Model\Entity\User[] $admins */
+        $admins = UserFactory::make(2)->admin()->persist();
+        [$actingAdmin, $activeAdmin] = $admins;
+        UserFactory::make()->admin()->deleted()->persist();
+        UserFactory::make()->admin()->inactive()->persist();
+        /** @var \App\Model\Entity\User $deletedRbacViewer */
+        $deletedRbacViewer = UserFactory::make()->deleted()->persist();
+        UserFactory::make()->inactive()->persist();
+        $action = ActionFactory::make()->name('AccountRecoveryRequestsView.view')->persist();
+        RbacFactory::make()->setAction($action)->setField('role_id', $deletedRbacViewer->role_id)->persist();
+
+        $response = $this->makeResponse($requester->id, $actingAdmin->id);
+        $recipients = $this->collectRecipients($response);
+
+        $this->assertSame([$activeAdmin->username], $recipients);
     }
 
     public function testResponseCreatedAllAdmins_RbacWithDenyControlFunctionExcluded(): void

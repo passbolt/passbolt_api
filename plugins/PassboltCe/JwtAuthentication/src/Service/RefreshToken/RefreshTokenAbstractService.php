@@ -64,7 +64,7 @@ abstract class RefreshTokenAbstractService
     {
         $cookie = new Cookie(self::REFRESH_TOKEN_COOKIE, $token->token);
         $expiry = new DateTime(
-            '+' . Configure::read(self::REFRESH_TOKEN_EXPIRY_CONFIG_KEY)
+            '+' . Configure::read(self::REFRESH_TOKEN_EXPIRY_CONFIG_KEY),
         );
 
         return $cookie
@@ -99,7 +99,7 @@ abstract class RefreshTokenAbstractService
             [
                 $this->AuthenticationTokens->aliasField('id') => $refreshToken->id,
                 $this->AuthenticationTokens->aliasField('active') => true,
-            ]
+            ],
         );
 
         if ($affected !== 1) {
@@ -212,13 +212,13 @@ abstract class RefreshTokenAbstractService
     {
         if ($refreshToken->isNotActive()) {
             throw new ConsumedRefreshTokenAccessException(
-                __('The refresh token provided was already used.')
+                __('The refresh token provided was already used.'),
             );
         }
 
         if ($refreshToken->isExpired()) {
             throw new ExpiredRefreshTokenAccessException(
-                __('Expired refresh token provided.')
+                __('Expired refresh token provided.'),
             );
         }
     }

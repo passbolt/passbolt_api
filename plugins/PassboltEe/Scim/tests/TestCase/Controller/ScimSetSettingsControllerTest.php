@@ -40,10 +40,14 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
 
     protected ScimSetting $current;
 
-    public function setupUpdate(): void
+    /**
+     * @param array $overrides Values to override.
+     * @return void
+     */
+    public function setupUpdate(array $overrides = []): void
     {
         /** @var \Passbolt\Scim\Model\Entity\ScimSetting $setting */
-        $setting = ScimSettingFactory::make()->default()->persist();
+        $setting = ScimSettingFactory::make()->default($overrides)->persist();
         $this->current = $setting;
     }
 
@@ -440,7 +444,8 @@ class ScimSetSettingsControllerTest extends ScimSettingsIntegrationTestCase
 
     public function testScimSetSettingsController_Update_TokenRotation_RecomputesExpired(): void
     {
-        $this->setupUpdate();
+        // To prevent conflicts with assertion below so dattes cannot equal to the recomputed +6 months date
+        $this->setupUpdate(['expired' => Date::now()->modify('+1 year')->format('Y-m-d')]);
         $this->logInAsAdmin();
 
         $gpg = OpenPGPBackendFactory::get();

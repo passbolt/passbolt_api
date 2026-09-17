@@ -82,7 +82,7 @@ class TransfersUpdateServiceTest extends AppTestCase
             $user->id,
             Transfer::TRANSFER_STATUS_START,
             1,
-            2
+            2,
         ));
 
         $service = new TransfersUpdateService();
@@ -124,7 +124,7 @@ class TransfersUpdateServiceTest extends AppTestCase
             $user->id,
             Transfer::TRANSFER_STATUS_START,
             0,
-            2
+            2,
         ), ['accessibleFields' => [
             'id' => false,
             'user_id' => true,
@@ -180,7 +180,7 @@ class TransfersUpdateServiceTest extends AppTestCase
             $user->id,
             Transfer::TRANSFER_STATUS_START,
             1,
-            2
+            2,
         ));
 
         $service = new TransfersUpdateService();
@@ -218,7 +218,7 @@ class TransfersUpdateServiceTest extends AppTestCase
                     ->type(AuthenticationToken::TYPE_MOBILE_TRANSFER)
                     ->userId($user->id)
                     ->active()
-                    ->expired()
+                    ->expired(),
             )
             ->persist();
 

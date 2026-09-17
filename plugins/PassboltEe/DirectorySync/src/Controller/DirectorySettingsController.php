@@ -87,7 +87,7 @@ class DirectorySettingsController extends DirectoryController
             throw new BadRequestException(
                 __('Could not save the settings. {0}', $e->getMessage()),
                 null,
-                $e
+                $e,
             );
         }
 
@@ -122,7 +122,7 @@ class DirectorySettingsController extends DirectoryController
             throw new BadRequestException(
                 'The settings provided are incorrect. ' . $e->getMessage(),
                 null,
-                $e
+                $e,
             );
         }
 

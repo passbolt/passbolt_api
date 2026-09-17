@@ -31,7 +31,7 @@ class GroupSyncActionAddTest extends DirectorySyncDeprecatedIntegrationTestCase
     {
         parent::setUp();
         $this->action = new GroupSyncAction(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
         $this->action->getDirectory()->setGroups([]);
     }

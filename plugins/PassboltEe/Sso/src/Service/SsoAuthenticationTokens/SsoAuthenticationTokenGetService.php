@@ -125,7 +125,7 @@ class SsoAuthenticationTokenGetService
     public function assertAndConsume(
         SsoAuthenticationToken $token,
         ExtendedUserAccessControl $uac,
-        string $settingsId
+        string $settingsId,
     ): void {
         try {
             $this->assert($token, $uac, $settingsId);

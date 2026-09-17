@@ -56,7 +56,7 @@ class UsersEditController extends AppController
     public function editPost(
         string $id,
         FilesystemAdapter $filesystemAdapter,
-        ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService
+        ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService,
     ) {
         $this->assertJson();
         $data = $this->request->getData();

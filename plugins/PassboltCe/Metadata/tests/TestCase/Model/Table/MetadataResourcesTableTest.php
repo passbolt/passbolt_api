@@ -61,11 +61,11 @@ class MetadataResourcesTableTest extends TestCase
     {
         // V4 resource shared with multiple users
         $resourceSharedWithMultipleUsersV4 = ResourceFactory::make()->withPermissionsFor(
-            UserFactory::make(2)->persist()
+            UserFactory::make(2)->persist(),
         )->persist();
         // V5 resource shared with multiple users
         ResourceFactory::make()->v5Fields()->withPermissionsFor(
-            UserFactory::make(2)->persist()
+            UserFactory::make(2)->persist(),
         )->persist();
 
         // V4 resource shared with one group
@@ -88,7 +88,7 @@ class MetadataResourcesTableTest extends TestCase
 
         // V4 resource deleted shared with multiple users
         ResourceFactory::make()->deleted()->withPermissionsFor(
-            UserFactory::make(2)->persist()
+            UserFactory::make(2)->persist(),
         )->persist();
 
         // V4 resource deleted shared with one user

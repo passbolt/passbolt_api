@@ -110,7 +110,7 @@ class DirectoryEntriesTable extends Table
             ->maxLength(
                 'directory_name',
                 self::DN_MAX_LENGTH,
-                __('The directory_name length should be maximum {0} characters.', self::DN_MAX_LENGTH)
+                __('The directory_name length should be maximum {0} characters.', self::DN_MAX_LENGTH),
             )
             ->requirePresence('directory_name', 'create', __('A directory name is required.'))
             ->notEmptyString('directory_name', __('The directory should not be empty.'));
@@ -268,7 +268,7 @@ class DirectoryEntriesTable extends Table
                                 $data['directory_name'],
                                 0,
                                 self::DN_MAX_LENGTH - 1,
-                                'UTF-8'
+                                'UTF-8',
                             );
                         }
                         $entry->directory_name = $data['directory_name'];
@@ -276,7 +276,7 @@ class DirectoryEntriesTable extends Table
                     }
 
                     return $entry;
-                }
+                },
             );
         } catch (RecordNotFoundException $exception) {
             $data['foreign_model'] = $model;

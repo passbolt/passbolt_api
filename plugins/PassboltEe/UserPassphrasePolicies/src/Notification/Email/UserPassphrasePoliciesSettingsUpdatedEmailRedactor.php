@@ -92,7 +92,7 @@ class UserPassphrasePoliciesSettingsUpdatedEmailRedactor implements SubscribedEm
         // Send emails to all the administrators
         foreach ($admins as $admin) {
             $emailCollection->addEmail(
-                $this->createEmail($admin, $operator, $userPassphrasePoliciesSettingsDto, $clientIp, $userAgent)
+                $this->createEmail($admin, $operator, $userPassphrasePoliciesSettingsDto, $clientIp, $userAgent),
             );
         }
 
@@ -112,7 +112,7 @@ class UserPassphrasePoliciesSettingsUpdatedEmailRedactor implements SubscribedEm
         User $operator,
         UserPassphrasePoliciesSettingsDto $userPassphrasePoliciesSettingsDto,
         string $clientIp,
-        string $userAgent
+        string $userAgent,
     ): Email {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
@@ -120,7 +120,7 @@ class UserPassphrasePoliciesSettingsUpdatedEmailRedactor implements SubscribedEm
                 return $operator->id === $recipient->id ?
                     __('You edited the user passphrase policy') :
                     __('{0} edited the user passphrase policy', $operator->profile->full_name);
-            }
+            },
         );
 
         return new Email(
@@ -136,7 +136,7 @@ class UserPassphrasePoliciesSettingsUpdatedEmailRedactor implements SubscribedEm
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 }

@@ -60,7 +60,7 @@ class AccountRecoveryRequestsIndexController extends AppController
     {
         $accessControlService->controlUserRoleActionAccess(
             $this->User->getRoleEntity(),
-            UserAction::getInstance()->getActionId()
+            UserAction::getInstance()->getActionId(),
         );
 
         // Whitelisted filters and contain parameters

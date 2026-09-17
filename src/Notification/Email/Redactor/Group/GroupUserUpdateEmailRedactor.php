@@ -141,7 +141,7 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
         User $recipient,
         bool $isAdmin,
         User $modifiedBy,
-        Group $group
+        Group $group,
     ): Email {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
@@ -149,9 +149,9 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
                 return __(
                     '{0} updated your membership in the group {1}',
                     $modifiedBy->profile->first_name,
-                    $group->name
+                    $group->name,
                 );
-            }
+            },
         );
         $data = ['body' => ['admin' => $modifiedBy, 'group' => $group, 'isAdmin' => $isAdmin], 'title' => $subject];
 

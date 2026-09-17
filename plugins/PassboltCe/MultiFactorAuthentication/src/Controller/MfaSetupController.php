@@ -69,7 +69,7 @@ abstract class MfaSetupController extends MfaController
      */
     protected function _handlePostSuccess(
         string $provider,
-        SessionIdentificationServiceInterface $sessionIdentificationService
+        SessionIdentificationServiceInterface $sessionIdentificationService,
     ) {
         $sessionId = $sessionIdentificationService->getSessionIdentifier($this->getRequest());
         $token = MfaVerifiedToken::get($this->User->getAccessControl(), $provider, $sessionId);

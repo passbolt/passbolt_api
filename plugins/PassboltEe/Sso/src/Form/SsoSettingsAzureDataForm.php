@@ -106,7 +106,7 @@ class SsoSettingsAzureDataForm extends BaseSsoSettingsForm
             ->inList(
                 'prompt',
                 self::SUPPORTED_PROMPT_VALUES,
-                __('The prompt should be one of the following: {0}.', implode(', ', self::SUPPORTED_PROMPT_VALUES))
+                __('The prompt should be one of the following: {0}.', implode(', ', self::SUPPORTED_PROMPT_VALUES)),
             );
 
         $dataValidator
@@ -116,8 +116,8 @@ class SsoSettingsAzureDataForm extends BaseSsoSettingsForm
                 self::SUPPORTED_EMAIL_CLAIM_ALIASES,
                 __(
                     'The email claim should be one of the following: {0}.',
-                    implode(', ', self::SUPPORTED_EMAIL_CLAIM_ALIASES)
-                )
+                    implode(', ', self::SUPPORTED_EMAIL_CLAIM_ALIASES),
+                ),
             );
 
         $dataValidator

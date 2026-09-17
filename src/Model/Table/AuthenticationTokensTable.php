@@ -131,7 +131,7 @@ class AuthenticationTokensTable extends Table
                 'rule' => [$this, 'isValidAuthenticationTokenType'],
                 'message' => __(
                     'The type should be one of the following: {0}.',
-                    implode(', ', $this->getAllowedTypes())
+                    implode(', ', $this->getAllowedTypes()),
                 ),
             ]])
             ->requirePresence('type', 'create', __('A type is required.'))
@@ -208,7 +208,7 @@ class AuthenticationTokensTable extends Table
         string $userId,
         string $type,
         ?string $token = null,
-        ?array $data = []
+        ?array $data = [],
     ): AuthenticationToken {
         $token = $this->newEntity(
             [
@@ -224,7 +224,7 @@ class AuthenticationTokensTable extends Table
                 'active' => true,
                 'type' => true,
                 'data' => true,
-            ]]
+            ]],
         );
         $errors = $token->getErrors();
         $msg = __('It is not possible to create an authentication token for this user.');
@@ -320,7 +320,7 @@ class AuthenticationTokensTable extends Table
             [
                 'token' => $tokenValue,
                 'active' => true,
-            ]
+            ],
         );
 
         return $affected >= 1;

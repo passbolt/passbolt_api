@@ -92,7 +92,7 @@ class AdminDisableEmailRedactor implements SubscribedEmailRedactorInterface
             $user->locale,
             function () {
                 return __('Your account has been suspended');
-            }
+            },
         );
         $operatorUsername = $operator->getUsername();
 
@@ -100,7 +100,7 @@ class AdminDisableEmailRedactor implements SubscribedEmailRedactorInterface
             $user,
             $subject,
             ['body' => compact('user', 'operatorUsername'), 'title' => $subject],
-            'AD/admin_disable'
+            'AD/admin_disable',
         );
     }
 }

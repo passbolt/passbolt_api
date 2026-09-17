@@ -40,7 +40,7 @@ trait MigrateFoldersTestTrait
         Folder $updatedFolder,
         Folder $oldFolder,
         Gpgkey $userGpgkey,
-        array $userKeyInfo
+        array $userKeyInfo,
     ): void {
         $this->assertNull($updatedFolder->name);
         // Assertions for metadata

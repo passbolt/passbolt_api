@@ -31,7 +31,7 @@ class SsoAdfsStage2Controller extends AbstractSso2Stage2Controller
      */
     protected function ssoServiceFactory(
         AbstractSecureCookieService $cookieService,
-        SsoSettingsDto $settingsDto
+        SsoSettingsDto $settingsDto,
     ): AbstractSsoService {
         return new SsoAdfsService($cookieService, $settingsDto);
     }

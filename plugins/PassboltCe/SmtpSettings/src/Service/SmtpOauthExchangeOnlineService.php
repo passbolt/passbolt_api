@@ -127,7 +127,7 @@ class SmtpOauthExchangeOnlineService
         $body = $response->getJson();
         if (empty($body['access_token'])) {
             throw new InternalErrorException(
-                __('SMTP OAuth2 token response from Microsoft did not contain an access token.')
+                __('SMTP OAuth2 token response from Microsoft did not contain an access token.'),
             );
         }
 

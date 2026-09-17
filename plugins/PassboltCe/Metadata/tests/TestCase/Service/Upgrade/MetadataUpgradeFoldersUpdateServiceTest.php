@@ -276,7 +276,7 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
             $errors = $e->getErrors();
             $this->assertSame(
                 ['metadata_key_exists' => 'The metadata key does not exist.'],
-                $errors[0]['metadata_key_id']
+                $errors[0]['metadata_key_id'],
             );
         }
     }

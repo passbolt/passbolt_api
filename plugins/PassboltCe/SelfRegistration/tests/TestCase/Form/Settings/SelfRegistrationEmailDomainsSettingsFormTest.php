@@ -80,7 +80,7 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
         ]));
         $this->assertSame(
             'The list of allowed domains should not be empty.',
-            $this->form->getErrors()['data']['allowed_domains']['_empty']
+            $this->form->getErrors()['data']['allowed_domains']['_empty'],
         );
     }
 
@@ -98,7 +98,7 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
                     ],
                 ],
             ],
-            $this->form->getErrors()
+            $this->form->getErrors(),
         );
     }
 
@@ -116,7 +116,7 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
 
         $this->assertSame(
             'The domain #1 should be a valid domain.',
-            $this->form->getErrors()['data']['allowed_domains']['areEmailDomainsValid']
+            $this->form->getErrors()['data']['allowed_domains']['areEmailDomainsValid'],
         );
     }
 

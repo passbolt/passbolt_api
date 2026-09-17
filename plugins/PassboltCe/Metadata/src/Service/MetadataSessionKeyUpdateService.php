@@ -88,7 +88,7 @@ class MetadataSessionKeyUpdateService
         $metadataSessionKey = $metadataSessionKeysTable->patchEntity(
             $metadataSessionKey,
             ['data' => $data['data']],
-            ['accessibleFields' => ['data' => true]]
+            ['accessibleFields' => ['data' => true]],
         );
 
         try {
@@ -98,14 +98,14 @@ class MetadataSessionKeyUpdateService
             // 400 openpgp data does not validate, for example it's not for the current user
             throw new CustomValidationException(
                 __('The metadata session key could not be saved.'),
-                $exception->getEntity()->getErrors()
+                $exception->getEntity()->getErrors(),
             );
         } catch (Exception $exception) {
             // 500 entry could not be deleted because of some internal error
             throw new InternalErrorException(
                 __('Could not save the metadata session keys, please try again later.'),
                 null,
-                $exception
+                $exception,
             );
         }
 

@@ -39,7 +39,7 @@ class MfaVerifiedCookie
     public static function get(
         ServerRequest $request,
         string $token,
-        ?DateTime $expirationDate = null
+        ?DateTime $expirationDate = null,
     ): Cookie {
         /** @var \Cake\Http\Cookie\Cookie $mfaCookie */
         $mfaCookie = (new Cookie(self::MFA_COOKIE_ALIAS))

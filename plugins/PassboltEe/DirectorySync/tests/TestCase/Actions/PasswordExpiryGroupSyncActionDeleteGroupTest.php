@@ -39,9 +39,9 @@ class PasswordExpiryGroupSyncActionDeleteGroupTest extends DirectorySyncDeprecat
         $this->action = new GroupSyncAction(
             new PasswordExpiryExpireResourcesService(
                 new PasswordExpiryValidationService(
-                    new PasswordExpiryGetSettingsService()
-                )
-            )
+                    new PasswordExpiryGetSettingsService(),
+                ),
+            ),
         );
     }
 

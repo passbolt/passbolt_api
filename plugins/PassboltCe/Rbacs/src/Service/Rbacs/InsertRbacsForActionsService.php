@@ -20,6 +20,7 @@ namespace Passbolt\Rbacs\Service\Rbacs;
 use App\Model\Entity\Role;
 use App\Model\Table\RolesTable;
 use App\Utility\UuidFactory;
+use Cake\Http\Exception\BadRequestException;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Text;
@@ -44,8 +45,12 @@ class InsertRbacsForActionsService
      * @param array<string> $actionNames Actions to add.
      * @return int
      */
-    public function add(array $actionNames): int
+    public function add(array $actionNames, string $controlFunction = Rbac::CONTROL_FUNCTION_DENY): int
     {
+        if (!in_array($controlFunction, Rbac::ALLOWED_CONTROL_FUNCTIONS)) {
+            throw new BadRequestException(__('Invalid RBAC control function.'));
+        }
+
         // Find all roles apart from admin & guest (excluding soft deleted roles)
         /** @var array<\App\Model\Entity\Role> $roles */
         $roles = $this->Roles->find('notDeleted')
@@ -69,7 +74,7 @@ class InsertRbacsForActionsService
                 $insertQuery->values([
                     'id' => Text::uuid(),
                     'role_id' => $role->id,
-                    'control_function' => Rbac::CONTROL_FUNCTION_DENY,
+                    'control_function' => $controlFunction,
                     'foreign_model' => Rbac::FOREIGN_MODEL_ACTION,
                     'foreign_id' => UuidFactory::uuid($action->name),
                     'created' => DateTime::now()->format('Y-m-d H:i:s'),

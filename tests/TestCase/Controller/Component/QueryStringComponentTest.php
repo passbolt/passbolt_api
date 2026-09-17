@@ -67,7 +67,7 @@ class QueryStringComponentTest extends TestCase
             [$filterName => ''],
             [$filterName => function ($value) {
                 return false;
-            }]
+            }],
         );
     }
 
@@ -79,7 +79,7 @@ class QueryStringComponentTest extends TestCase
             [$filterName => ''],
             [$filterName => function ($value) {
                 return true;
-            }]
+            }],
         );
 
         $this->assertTrue($isValid);

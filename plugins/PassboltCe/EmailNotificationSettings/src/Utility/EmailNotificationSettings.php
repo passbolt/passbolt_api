@@ -185,7 +185,7 @@ class EmailNotificationSettings
     {
         if (!isset(static::$defaultSettingsSource)) {
             static::$defaultSettingsSource = DefaultEmailNotificationSettingsSource::fromCakeForm(
-                new EmailNotificationSettingsForm(EventManager::instance())
+                new EmailNotificationSettingsForm(EventManager::instance()),
             );
         }
 

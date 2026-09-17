@@ -150,7 +150,7 @@ class EmailConfigurationForm extends Form
             ->requirePresence('authentication_method', true, __('The authentication method is required.'))
             ->inList('authentication_method', self::ALLOWED_AUTH_METHODS, __(
                 'The authentication method should be one of the following: {0}.',
-                implode(', ', self::ALLOWED_AUTH_METHODS)
+                implode(', ', self::ALLOWED_AUTH_METHODS),
             ));
 
         return $validator;
@@ -191,7 +191,7 @@ class EmailConfigurationForm extends Form
         $validator->requirePresence(
             SmtpSettingsSendTestMailerService::EMAIL_TEST_TO,
             'create',
-            __('A test recipient is required.')
+            __('A test recipient is required.'),
         );
 
         return $validator;

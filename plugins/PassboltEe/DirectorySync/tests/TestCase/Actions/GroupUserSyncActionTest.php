@@ -78,7 +78,7 @@ class GroupUserSyncActionTest extends DirectorySyncDeprecatedIntegrationTestCase
     public function initAction()
     {
         $this->action = new GroupSyncAction(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
         $this->action->getDirectory()->setGroups([]);
     }
@@ -569,7 +569,7 @@ class GroupUserSyncActionTest extends DirectorySyncDeprecatedIntegrationTestCase
     {
         $this->disableSyncOperation('groups', 'update');
         $this->action = new GroupSyncAction(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
         $this->action->getDirectory()->setGroups([]);
 
@@ -965,7 +965,7 @@ class GroupUserSyncActionTest extends DirectorySyncDeprecatedIntegrationTestCase
             'betty@passbolt.com',
             null,
             null,
-            false
+            false,
         );
         $francesEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
         $bettyEntry = $this->mockDirectoryEntryUser(['fname' => 'betty', 'lname' => 'betty', 'foreign_key' => UuidFactory::uuid('user.id.betty')]);
@@ -1031,7 +1031,7 @@ class GroupUserSyncActionTest extends DirectorySyncDeprecatedIntegrationTestCase
         $this->assertReport($result, $expectedUserGroupReport);
         $this->assertStringContainsString(
             'The user frances@passbolt.com was successfully added to the group Marketing',
-            $result->getMessage()
+            $result->getMessage(),
         );
     }
 

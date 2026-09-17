@@ -40,7 +40,7 @@ class GroupSyncActionUpdateTest extends DirectorySyncDeprecatedIntegrationTestCa
     private function initAction(): void
     {
         $this->action = new GroupSyncAction(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
         $this->action->getDirectory()->setGroups([]);
     }

@@ -132,7 +132,7 @@ class AzureSsoSecretExpiryNotifyRedactor implements SubscribedEmailRedactorInter
             $recipient->locale,
             function () {
                 return __('Azure SSO secret expiry date is near');
-            }
+            },
         );
 
         return new Email(
@@ -145,7 +145,7 @@ class AzureSsoSecretExpiryNotifyRedactor implements SubscribedEmailRedactorInter
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 }

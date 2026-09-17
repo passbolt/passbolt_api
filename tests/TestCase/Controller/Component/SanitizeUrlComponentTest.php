@@ -112,7 +112,7 @@ class SanitizeUrlComponentTest extends TestCase
     public function testSanitizeUrlComponent_SanitizeRedirect_With_LoopStop(
         ?string $stopper,
         string $redirect,
-        string $expectedRedirect
+        string $expectedRedirect,
     ) {
         $url = "/foo?redirect=$redirect";
         $result = $this->getComponent($url)->sanitizeRedirect($stopper);

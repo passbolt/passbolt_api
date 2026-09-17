@@ -149,12 +149,12 @@ class UserSyncAction extends SyncAction
                     'The user {0} full name has been successfully updated to {1} {2}.',
                     $existingUser->username,
                     $user->profile->first_name,
-                    $user->profile->last_name
+                    $user->profile->last_name,
                 ),
                 Alias::MODEL_USERS,
                 Alias::ACTION_UPDATE,
                 Alias::STATUS_SUCCESS,
-                $user
+                $user,
             ));
         } catch (Exception $exception) {
             $error = new SyncError($existingUser, $exception);
@@ -163,12 +163,12 @@ class UserSyncAction extends SyncAction
                     'The user {0} full name could not be updated to {1} {2}.',
                     $existingUser->username,
                     $data['profile']['first_name'],
-                    $data['profile']['last_name']
+                    $data['profile']['last_name'],
                 ),
                 Alias::MODEL_USERS,
                 Alias::ACTION_UPDATE,
                 Alias::STATUS_ERROR,
-                $error
+                $error,
             ));
         }
     }

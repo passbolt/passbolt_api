@@ -34,7 +34,7 @@ class TagsReadOnlyModeMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         if (Configure::read(self::PASSBOLT_PLUGINS_TAGS_READ_ONLY_MODE)) {
             throw new ForbiddenException(__('The tags plugin is in read-only mode.'));

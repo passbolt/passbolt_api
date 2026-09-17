@@ -69,7 +69,7 @@ class Tarjan
         array &$cycles,
         array &$marked,
         array &$markedStack,
-        array &$pointStack
+        array &$pointStack,
     ): bool {
         $found = false;
         $pointStack[] = $node;
@@ -92,7 +92,7 @@ class Tarjan
                     $cycles,
                     $marked,
                     $markedStack,
-                    $pointStack
+                    $pointStack,
                 );
                 if ($found || $foundOnSuccessor) {
                     $found = true;

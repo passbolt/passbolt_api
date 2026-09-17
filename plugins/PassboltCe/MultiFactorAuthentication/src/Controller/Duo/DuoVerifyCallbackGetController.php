@@ -62,7 +62,7 @@ class DuoVerifyCallbackGetController extends MfaVerifyController
     public function get(
         SessionIdentificationServiceInterface $sessionIdentificationService,
         RememberAMonthSettingInterface $rememberMeForAMonthSetting,
-        ?Client $duoSdkClient = null
+        ?Client $duoSdkClient = null,
     ) {
         $this->_assertRequestNotJson();
         $this->_handleVerifiedNotRequired($sessionIdentificationService, $rememberMeForAMonthSetting);
@@ -81,7 +81,7 @@ class DuoVerifyCallbackGetController extends MfaVerifyController
             $authenticationToken = (new MfaDuoLoginService($duoSdkClient))->login(
                 $uac,
                 $mfaDuoCallbackDto,
-                $cookieToken
+                $cookieToken,
             );
             $this->addMfaVerifiedCookieToResponse($uac, $sessionIdentificationService);
         } catch (BadRequestException | FormValidationException $e) {
@@ -109,7 +109,7 @@ class DuoVerifyCallbackGetController extends MfaVerifyController
     private function handleErrorFeedback(
         Throwable $e,
         string $token,
-        UserAccessControl $uac
+        UserAccessControl $uac,
     ): ?Response {
         // Log the exception and all its backtrace of exception
         ExceptionLogger::error($e);
@@ -201,13 +201,13 @@ class DuoVerifyCallbackGetController extends MfaVerifyController
      */
     private function addMfaVerifiedCookieToResponse(
         UserAccessControl $uac,
-        SessionIdentificationServiceInterface $sessionIdentificationService
+        SessionIdentificationServiceInterface $sessionIdentificationService,
     ): void {
         try {
             $cookie = (new MfaVerifiedCookieService())->createDuoMfaVerifiedCookie(
                 $uac,
                 $sessionIdentificationService,
-                $this->getRequest()
+                $this->getRequest(),
             );
         } catch (Throwable $e) {
             throw new InternalErrorException('Could not create MFA verified cookie.', null, $e);

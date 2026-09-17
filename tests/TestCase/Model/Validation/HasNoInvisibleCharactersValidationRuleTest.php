@@ -120,7 +120,7 @@ class HasNoInvisibleCharactersValidationRuleTest extends TestCase
     {
         $this->assertSame(
             'The string should not contain invisible characters.',
-            $this->rule->defaultErrorMessage('any', null)
+            $this->rule->defaultErrorMessage('any', null),
         );
     }
 }

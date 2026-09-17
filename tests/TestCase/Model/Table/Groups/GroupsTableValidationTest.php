@@ -43,12 +43,12 @@ class GroupsTableValidationTest extends TestCase
     {
         $group = $this->Groups->newEntity(
             ['name' => "sales\u{200B}team"],
-            ['accessibleFields' => ['name' => true]]
+            ['accessibleFields' => ['name' => true]],
         );
         $this->assertArrayHasKey('name', $group->getErrors());
         $this->assertSame(
             'The string should not contain invisible characters.',
-            $group->getErrors()['name']['noInvisibleCharacters']
+            $group->getErrors()['name']['noInvisibleCharacters'],
         );
     }
 }

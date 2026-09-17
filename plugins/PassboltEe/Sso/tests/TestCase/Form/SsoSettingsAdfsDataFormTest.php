@@ -75,7 +75,7 @@ class SsoSettingsAdfsDataFormTest extends AppTestCase
             SsoSettingsAdfsDataForm::class,
             'data.url',
             $this->getAdfsDummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -93,7 +93,7 @@ class SsoSettingsAdfsDataFormTest extends AppTestCase
             SsoSettingsAdfsDataForm::class,
             'data.openid_configuration_path',
             $this->getAdfsDummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -110,7 +110,7 @@ class SsoSettingsAdfsDataFormTest extends AppTestCase
             SsoSettingsAdfsDataForm::class,
             'data.client_id',
             $this->getAdfsDummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -127,7 +127,7 @@ class SsoSettingsAdfsDataFormTest extends AppTestCase
             SsoSettingsAdfsDataForm::class,
             'data.client_secret',
             $this->getAdfsDummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -143,7 +143,7 @@ class SsoSettingsAdfsDataFormTest extends AppTestCase
             SsoSettingsAdfsDataForm::class,
             'data.scope',
             $this->getAdfsDummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -159,7 +159,7 @@ class SsoSettingsAdfsDataFormTest extends AppTestCase
             SsoSettingsAdfsDataForm::class,
             'data.email_claim',
             $this->getAdfsDummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 }

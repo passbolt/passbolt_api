@@ -90,7 +90,7 @@ class SsoAuthenticationTokensTable extends AuthenticationTokensTable
         string $userId,
         string $type,
         ?string $token = null,
-        ?array $data = []
+        ?array $data = [],
     ): AuthenticationToken {
         // TODO SsoAuthenticationTokenDataForm
         $msg = __('It is not possible to create an authentication token for this user.');

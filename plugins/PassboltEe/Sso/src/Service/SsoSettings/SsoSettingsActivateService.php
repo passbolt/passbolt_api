@@ -101,7 +101,7 @@ class SsoSettingsActivateService
         $event = new Event(
             self::AFTER_ACTIVATE_SSO_SETTINGS_EVENT,
             $this,
-            ['uac' => $uac, 'ssoSetting' => $ssoSettingEntity]
+            ['uac' => $uac, 'ssoSetting' => $ssoSettingEntity],
         );
         $this->SsoSettings->getEventManager()->dispatch($event);
 

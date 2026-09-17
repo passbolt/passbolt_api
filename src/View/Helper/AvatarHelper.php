@@ -19,7 +19,7 @@ class AvatarHelper extends Helper
      */
     public static function getAvatarUrl(
         ?array $avatar = null,
-        ?string $format = AvatarsConfigurationService::FORMAT_SMALL
+        ?string $format = AvatarsConfigurationService::FORMAT_SMALL,
     ): string {
         if (empty($avatar) || empty($avatar['id'])) {
             return self::getAvatarFallBackUrl($format);
@@ -44,7 +44,7 @@ class AvatarHelper extends Helper
     {
         return Router::url(
             '/' . Configure::readOrFail('FileStorage.imageDefaults.Avatar.' . $format),
-            true
+            true,
         );
     }
 

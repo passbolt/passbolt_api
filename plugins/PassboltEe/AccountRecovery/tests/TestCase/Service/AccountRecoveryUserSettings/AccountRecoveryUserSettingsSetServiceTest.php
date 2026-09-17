@@ -45,7 +45,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
     {
         parent::setUp();
         $this->service = new AccountRecoveryUserSettingsSetService(
-            UserFactory::make()->active()->user()->persistedUAC()
+            UserFactory::make()->active()->user()->persistedUAC(),
         );
     }
 
@@ -265,7 +265,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
             ->optin()
             ->with(
                 'AccountRecoveryOrganizationPublicKeys',
-                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key(),
             )
             ->persist();
 
@@ -297,7 +297,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
             ->optin()
             ->with(
                 'AccountRecoveryOrganizationPublicKeys',
-                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key(),
             )
             ->persist();
 
@@ -318,7 +318,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
             ->optin()
             ->with(
                 'AccountRecoveryOrganizationPublicKeys',
-                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key(),
             )
             ->persist();
 
@@ -349,7 +349,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
             ->optin()
             ->with(
                 'AccountRecoveryOrganizationPublicKeys',
-                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key(),
             )
             ->persist();
 

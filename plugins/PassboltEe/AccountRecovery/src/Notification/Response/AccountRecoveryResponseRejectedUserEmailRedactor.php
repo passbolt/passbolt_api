@@ -109,7 +109,7 @@ class AccountRecoveryResponseRejectedUserEmailRedactor implements SubscribedEmai
             $locale,
             function () {
                 return __('Recovery request denied!');
-            }
+            },
         );
 
         $data = [

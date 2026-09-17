@@ -77,7 +77,7 @@ trait MigrateResourcesTestTrait
         Resource $updatedResource,
         Resource $oldResource,
         Gpgkey $userGpgkey,
-        array $userKeyInfo
+        array $userKeyInfo,
     ): void {
         $this->assertUpdatedResource($updatedResource);
         $this->assertSame($userGpgkey->id, $updatedResource->get('metadata_key_id'));

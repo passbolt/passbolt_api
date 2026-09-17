@@ -71,11 +71,11 @@ class PasswordExpiryPoliciesGetSettingsServiceTest extends TestCase
         $result = $this->service->get()->toArray();
         $this->assertSame(
             $settingInDB->get('value')[PasswordExpirySettingsDto::POLICY_OVERRIDE],
-            $result[PasswordExpirySettingsDto::AUTOMATIC_EXPIRY]
+            $result[PasswordExpirySettingsDto::AUTOMATIC_EXPIRY],
         );
         $this->assertSame(
             $settingInDB->get('value')[PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD],
-            $result[PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD]
+            $result[PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD],
         );
 //        $this->assertSame(
 //            $settingInDB->get('value')[PasswordExpirySettingsDto::EXPIRY_NOTIFICATION],

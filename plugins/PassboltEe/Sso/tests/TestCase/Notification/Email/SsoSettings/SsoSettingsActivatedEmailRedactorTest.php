@@ -65,8 +65,8 @@ class SsoSettingsActivatedEmailRedactorTest extends AppTestCase
         $this->assertTrue(
             in_array(
                 SsoSettingsActivateService::AFTER_ACTIVATE_SSO_SETTINGS_EVENT,
-                $this->sut->getSubscribedEvents()
-            )
+                $this->sut->getSubscribedEvents(),
+            ),
         );
     }
 
@@ -88,7 +88,7 @@ class SsoSettingsActivatedEmailRedactorTest extends AppTestCase
             UuidFactory::uuid(),
             'foo@passbolt.test',
             '127.0.0.1',
-            'Phpunit tests'
+            'Phpunit tests',
         );
         $event = new Event(SsoSettingsActivateService::AFTER_ACTIVATE_SSO_SETTINGS_EVENT);
         $event->setData(['uac' => $uac]);
@@ -112,7 +112,7 @@ class SsoSettingsActivatedEmailRedactorTest extends AppTestCase
             $operator->id,
             $operator->username,
             '127.0.0.1',
-            'Phpunit tests'
+            'Phpunit tests',
         );
         // Prepare event
         $event = new Event(SsoSettingsActivateService::AFTER_ACTIVATE_SSO_SETTINGS_EVENT);

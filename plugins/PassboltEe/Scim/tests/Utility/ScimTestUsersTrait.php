@@ -124,7 +124,7 @@ trait ScimTestUsersTrait
                     'first_name' => 'Admin',
                     'last_name' => 'Scim',
                 ],
-            ])->admin()
+            ])->admin(),
         );
 
         /** @var \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry */

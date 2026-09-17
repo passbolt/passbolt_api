@@ -56,7 +56,7 @@ class MfaForm extends Form implements MfaFormInterface
         if (!$this->validate($data)) {
             throw new CustomValidationException(
                 __('Something went wrong when validating the one-time password.'),
-                $this->getErrors()
+                $this->getErrors(),
             );
         }
 

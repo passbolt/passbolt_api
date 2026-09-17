@@ -249,7 +249,7 @@ class ActionLogsTable extends Table
         }
         if (!is_null($from) && !is_null($to) && (new DateTime($from) > new DateTime($to))) {
             throw new BadRequestException(
-                __('The date {0} should be after the date {1}.', 'created-after', 'created-before')
+                __('The date {0} should be after the date {1}.', 'created-after', 'created-before'),
             );
         }
     }

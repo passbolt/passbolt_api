@@ -103,7 +103,7 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
                 }
 
                 return $subject;
-            }
+            },
         );
 
         $data = [

@@ -57,7 +57,7 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
         if ($this->isMfaCheckRequired($request)) {
@@ -111,7 +111,7 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
             MfaSettings::get($uac),
             $uac,
             $sessionService,
-            $rememberMeForAMonthSetting
+            $rememberMeForAMonthSetting,
         );
     }
 

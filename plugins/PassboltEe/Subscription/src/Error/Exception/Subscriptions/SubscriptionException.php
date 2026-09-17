@@ -39,7 +39,7 @@ class SubscriptionException extends CakeException implements ExceptionWithErrors
         string $message,
         mixed $data = null,
         ?int $code = null,
-        ?Exception $previous = null
+        ?Exception $previous = null,
     ) {
         parent::__construct($message, $code, $previous);
         $this->data = $data;

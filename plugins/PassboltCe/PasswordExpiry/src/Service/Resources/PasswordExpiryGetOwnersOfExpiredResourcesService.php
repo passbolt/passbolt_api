@@ -71,7 +71,7 @@ class PasswordExpiryGetOwnersOfExpiredResourcesService
             [
                 'users' => $owners,
             ],
-            $this
+            $this,
         );
 
         return $owners;

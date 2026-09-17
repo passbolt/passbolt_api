@@ -52,7 +52,7 @@ class MfaOrgSettingsDuoService
     {
         return $this->getSetting(
             MfaOrgSettings::DUO_CLIENT_ID,
-            __('No configuration set for Duo client ID.')
+            __('No configuration set for Duo client ID.'),
         );
     }
 
@@ -64,7 +64,7 @@ class MfaOrgSettingsDuoService
     {
         return $this->getSetting(
             MfaOrgSettings::DUO_API_HOSTNAME,
-            __('No configuration set for Duo API hostname.')
+            __('No configuration set for Duo API hostname.'),
         );
     }
 
@@ -76,7 +76,7 @@ class MfaOrgSettingsDuoService
     {
         return $this->getSetting(
             MfaOrgSettings::DUO_CLIENT_SECRET,
-            __('No configuration set for Duo client secret.')
+            __('No configuration set for Duo client secret.'),
         );
     }
 
@@ -127,7 +127,7 @@ class MfaOrgSettingsDuoService
             try {
                 $duoClient = $client ?? (new MfaDuoGetSdkClientService())->getOrFail(
                     $this,
-                    AuthenticationToken::TYPE_MFA_SETUP
+                    AuthenticationToken::TYPE_MFA_SETUP,
                 );
                 $duoClient->healthCheck();
             } catch (DuoException | InternalErrorException $e) {

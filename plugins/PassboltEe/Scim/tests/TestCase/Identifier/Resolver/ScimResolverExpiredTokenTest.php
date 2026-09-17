@@ -79,7 +79,7 @@ class ScimResolverExpiredTokenTest extends ScimApiIntegrationTestCase
             $this->assertStringNotContainsString(
                 'The SCIM secret token is expired',
                 $log,
-                'Unexpected warning log about expired SCIM token was found.'
+                'Unexpected warning log about expired SCIM token was found.',
             );
         }
     }

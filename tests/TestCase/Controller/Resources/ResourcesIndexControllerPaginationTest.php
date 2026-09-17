@@ -91,7 +91,7 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
         $user = UserFactory::make()->user()->persist();
         $data = Hash::merge(
             $this->getArrayOfDistinctUris($numberOfResources, 'uri'),
-            $this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified')
+            $this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified'),
         );
         ResourceFactory::make($data)
             ->withCreatorAndPermission($user)
@@ -128,7 +128,7 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
         $user = UserFactory::make()->user()->persist();
         $data = Hash::merge(
             $this->getArrayOfDistinctUris($numberOfResources, 'uri'),
-            $this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified')
+            $this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified'),
         );
         ResourceFactory::make($data)
             ->withCreatorAndPermission($user)
@@ -158,7 +158,7 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
         $user = UserFactory::make()->user()->persist();
         $data = Hash::merge(
             $this->getArrayOfDistinctUris($numberOfResources, 'uri'),
-            $this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified')
+            $this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified'),
         );
         ResourceFactory::make($data)
             ->withCreatorAndPermission($user)

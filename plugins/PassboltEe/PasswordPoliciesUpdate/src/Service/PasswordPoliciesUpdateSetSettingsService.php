@@ -48,7 +48,7 @@ class PasswordPoliciesUpdateSetSettingsService
     {
         if (!$uac->isAdmin()) {
             throw new ForbiddenException(
-                __('Only administrators are allowed to create/update password policies settings.')
+                __('Only administrators are allowed to create/update password policies settings.'),
             );
         }
 
@@ -67,7 +67,7 @@ class PasswordPoliciesUpdateSetSettingsService
         $passwordPoliciesSetting = $passwordPoliciesSettingsTable->createOrUpdateSetting(
             $passwordPoliciesSettingsTable->getProperty(),
             $settingsDto->toOrganizationSettingValueArray(),
-            $uac
+            $uac,
         );
 
         $createdUpdatedSettingsDto = PasswordPoliciesUpdateSettingsDto::createFromEntity($passwordPoliciesSetting);

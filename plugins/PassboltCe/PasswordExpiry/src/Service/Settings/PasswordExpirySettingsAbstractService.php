@@ -43,7 +43,7 @@ abstract class PasswordExpirySettingsAbstractService
      */
     protected function createDTOFromEntity(
         PasswordExpirySetting $passwordExpirySetting,
-        PasswordExpirySettingsForm $form
+        PasswordExpirySettingsForm $form,
     ): PasswordExpirySettingsDto {
         return PasswordExpirySettingsDto::createFromEntity($passwordExpirySetting, $form);
     }

@@ -110,40 +110,40 @@ class AccountRecoveryUserSettingsTable extends Table implements TableCleanupProv
                 AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_STATUSES,
                 __(
                     'The status should be one of the following: {0}.',
-                    implode(', ', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_STATUSES)
-                )
+                    implode(', ', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_STATUSES),
+                ),
             );
 
         $validator
             ->uuid(
                 'created_by',
-                __('The identifier of the user who created the user settings should be a valid UUID.')
+                __('The identifier of the user who created the user settings should be a valid UUID.'),
             )
             ->requirePresence(
                 'created_by',
                 'create',
-                __('The identifier of the user who created the user settings is required.')
+                __('The identifier of the user who created the user settings is required.'),
             )
             ->notEmptyString(
                 'created_by',
                 __('The identifier of the user who created the user settings should not be empty.'),
-                false
+                false,
             );
 
         $validator
             ->uuid(
                 'modified_by',
-                __('The identifier of the user who modified the user settings should be a valid UUID.')
+                __('The identifier of the user who modified the user settings should be a valid UUID.'),
             )
             ->requirePresence(
                 'modified_by',
                 'create',
-                __('The identifier of the user who modified the user settings is required.')
+                __('The identifier of the user who modified the user settings is required.'),
             )
             ->notEmptyString(
                 'modified_by',
                 __('The identifier of the user who modified the user settings should not be empty.'),
-                false
+                false,
             );
 
         return $validator;

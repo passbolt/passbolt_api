@@ -64,7 +64,7 @@ class ResourcesTagsAddServiceTest extends TagTestCase
         $resource = $this->Resources->findView(
             $user1->id,
             $resource->id,
-            ['contain' => ['all_tags' => 1, 'permission' => 1]]
+            ['contain' => ['all_tags' => 1, 'permission' => 1]],
         )->first();
         $modified = $resource->modified;
         $modifiedBy = $resource->modified_by;
@@ -109,7 +109,7 @@ class ResourcesTagsAddServiceTest extends TagTestCase
         $resource = $this->Resources->findView(
             $user2->id,
             $resource->id,
-            ['contain' => ['all_tags' => 1, 'permission' => 1]]
+            ['contain' => ['all_tags' => 1, 'permission' => 1]],
         )->first();
 
         $tag = $this->service->add($uac, $resource, [
@@ -142,7 +142,7 @@ class ResourcesTagsAddServiceTest extends TagTestCase
         $resource = $this->Resources->findView(
             $user2->id,
             $resource->id,
-            ['contain' => ['all_tags' => 1, 'permission' => 1]]
+            ['contain' => ['all_tags' => 1, 'permission' => 1]],
         )->first();
 
         $uac = $this->makeUac($user2);

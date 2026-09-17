@@ -46,7 +46,7 @@ abstract class AbstractSessionIdentificationService implements SessionIdentifica
     {
         return (new AuthenticationTokensSessionService())->checkSession(
             $tokenToValidate,
-            $this->getSessionIdentifier($request)
+            $this->getSessionIdentifier($request),
         );
     }
 }

@@ -63,7 +63,7 @@ class LogoutUsersOnEditionChangeMiddlewareTest extends AppIntegrationTestCase
     {
         Configure::write(
             EditionManager::CONFIGURE_KEY_LAST_CHANGE_DATETIME,
-            new DateTime('2024-06-01 10:00:00')
+            new DateTime('2024-06-01 10:00:00'),
         );
         $user = UserFactory::make()->user()->active()
             ->setField('last_logged_in', new DateTime('2024-06-15 12:00:00'))
@@ -81,7 +81,7 @@ class LogoutUsersOnEditionChangeMiddlewareTest extends AppIntegrationTestCase
         // treat null as no-op rather than mass-logout legacy users.
         Configure::write(
             EditionManager::CONFIGURE_KEY_LAST_CHANGE_DATETIME,
-            new DateTime('2024-06-01 10:00:00')
+            new DateTime('2024-06-01 10:00:00'),
         );
         $user = UserFactory::make()->user()->active()
             ->setField('last_logged_in', null)
@@ -97,7 +97,7 @@ class LogoutUsersOnEditionChangeMiddlewareTest extends AppIntegrationTestCase
     {
         Configure::write(
             EditionManager::CONFIGURE_KEY_LAST_CHANGE_DATETIME,
-            new DateTime('2024-06-01 10:00:00')
+            new DateTime('2024-06-01 10:00:00'),
         );
         // No logInAs — request is anonymous. The endpoint will return its own
         // 401/403, but the middleware must not interfere along the way.
@@ -114,7 +114,7 @@ class LogoutUsersOnEditionChangeMiddlewareTest extends AppIntegrationTestCase
     {
         Configure::write(
             EditionManager::CONFIGURE_KEY_LAST_CHANGE_DATETIME,
-            new DateTime('2024-06-15 12:00:00')
+            new DateTime('2024-06-15 12:00:00'),
         );
         $user = UserFactory::make()->user()->active()
             ->setField('last_logged_in', new DateTime('2024-06-01 10:00:00'))
@@ -149,7 +149,7 @@ class LogoutUsersOnEditionChangeMiddlewareTest extends AppIntegrationTestCase
         Configure::write('Session.cookiePath', '/passbolt/');
         Configure::write(
             EditionManager::CONFIGURE_KEY_LAST_CHANGE_DATETIME,
-            new DateTime('2024-06-15 12:00:00')
+            new DateTime('2024-06-15 12:00:00'),
         );
         $user = UserFactory::make()->user()->active()
             ->setField('last_logged_in', new DateTime('2024-06-01 10:00:00'))
@@ -173,7 +173,7 @@ class LogoutUsersOnEditionChangeMiddlewareTest extends AppIntegrationTestCase
     {
         Configure::write(
             EditionManager::CONFIGURE_KEY_LAST_CHANGE_DATETIME,
-            new DateTime('2024-06-15 12:00:00')
+            new DateTime('2024-06-15 12:00:00'),
         );
         $user = UserFactory::make()->user()->active()
             ->setField('last_logged_in', new DateTime('2024-06-01 10:00:00'))
@@ -194,7 +194,7 @@ class LogoutUsersOnEditionChangeMiddlewareTest extends AppIntegrationTestCase
         // comparison via getTimestamp(), matching the DTO rule).
         Configure::write(
             EditionManager::CONFIGURE_KEY_LAST_CHANGE_DATETIME,
-            new DateTime('2024-06-15 12:00:01')
+            new DateTime('2024-06-15 12:00:01'),
         );
         $user = UserFactory::make()->user()->active()
             ->setField('last_logged_in', new DateTime('2024-06-15 12:00:00'))
@@ -235,7 +235,7 @@ class LogoutUsersOnEditionChangeMiddlewareTest extends AppIntegrationTestCase
         // own 401 (auth required) does not.
         Configure::write(
             EditionManager::CONFIGURE_KEY_LAST_CHANGE_DATETIME,
-            new DateTime('2024-06-15 12:00:00')
+            new DateTime('2024-06-15 12:00:00'),
         );
 
         $this->getJson('/users/me.json');
@@ -243,7 +243,7 @@ class LogoutUsersOnEditionChangeMiddlewareTest extends AppIntegrationTestCase
         $this->assertStringNotContainsString(
             'edition change',
             (string)$this->_response->getBody(),
-            'Middleware must not return its own edition-change 401 on requests without an Auth session.'
+            'Middleware must not return its own edition-change 401 on requests without an Auth session.',
         );
     }
 
@@ -262,20 +262,20 @@ class LogoutUsersOnEditionChangeMiddlewareTest extends AppIntegrationTestCase
         // cookie-collection accessor.
         Configure::write(
             EditionManager::CONFIGURE_KEY_LAST_CHANGE_DATETIME,
-            new DateTime('2024-06-15 12:00:00')
+            new DateTime('2024-06-15 12:00:00'),
         );
 
         $this->get('/users/me');
 
         $cookies = CookieCollection::createFromHeader(
-            $this->_response->getHeader('Set-Cookie')
+            $this->_response->getHeader('Set-Cookie'),
         );
         $sessionName = (string)session_name();
         $expiredSessionCookieIssued = $cookies->has($sessionName)
             && $cookies->get($sessionName)->isExpired();
         $this->assertFalse(
             $expiredSessionCookieIssued,
-            'Middleware must not expire the session cookie on a request without an Auth session.'
+            'Middleware must not expire the session cookie on a request without an Auth session.',
         );
     }
 
@@ -291,7 +291,7 @@ class LogoutUsersOnEditionChangeMiddlewareTest extends AppIntegrationTestCase
         putenv('PASSBOLT_PLUGINS_EDITION_DISABLE_LOGOUT_USERS_ON_EDITION_CHANGE_MIDDLEWARE=true');
         Configure::write(
             EditionManager::CONFIGURE_KEY_LAST_CHANGE_DATETIME,
-            new DateTime('2024-06-15 12:00:00')
+            new DateTime('2024-06-15 12:00:00'),
         );
         $user = UserFactory::make()->user()->active()
             ->setField('last_logged_in', new DateTime('2024-06-01 10:00:00'))
@@ -312,7 +312,7 @@ class LogoutUsersOnEditionChangeMiddlewareTest extends AppIntegrationTestCase
         putenv('PASSBOLT_PLUGINS_EDITION_DISABLE_LOGOUT_USERS_ON_EDITION_CHANGE_MIDDLEWARE=false');
         Configure::write(
             EditionManager::CONFIGURE_KEY_LAST_CHANGE_DATETIME,
-            new DateTime('2024-06-15 12:00:00')
+            new DateTime('2024-06-15 12:00:00'),
         );
         $user = UserFactory::make()->user()->active()
             ->setField('last_logged_in', new DateTime('2024-06-01 10:00:00'))

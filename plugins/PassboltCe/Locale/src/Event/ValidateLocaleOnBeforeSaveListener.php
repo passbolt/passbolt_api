@@ -61,7 +61,7 @@ class ValidateLocaleOnBeforeSaveListener implements EventListenerInterface
         // Dasherize the value before save
         $entity->set(
             'value',
-            $localeService->dasherizeLocale($entity->get('value'))
+            $localeService->dasherizeLocale($entity->get('value')),
         );
     }
 

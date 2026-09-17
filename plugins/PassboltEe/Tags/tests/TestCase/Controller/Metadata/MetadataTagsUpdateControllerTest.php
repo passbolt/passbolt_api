@@ -551,7 +551,7 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
         $tag = TagFactory::make(['slug' => 'special'])->isPersonalFor($resource, $ada)->persist();
-        $dto = MetadataTagDto::fromArray($tag->toArray());
+        $dto = MetadataTagDto::createFromArray($tag->toArray());
         $clearTextMetadata = json_encode($dto->getClearTextMetadata());
         $metadata = $this->encryptForUser($clearTextMetadata, $ada, $this->getAdaNoPassphraseKeyInfo());
         // login
@@ -594,7 +594,7 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
         $tag = TagFactory::make(['slug' => 'special'])->isPersonalFor($resource, $ada)->persist();
-        $dto = MetadataTagDto::fromArray($tag->toArray());
+        $dto = MetadataTagDto::createFromArray($tag->toArray());
         $clearTextMetadata = json_encode($dto->getClearTextMetadata());
         $metadata = $this->encryptForUser($clearTextMetadata, $ada, $this->getAdaNoPassphraseKeyInfo());
         // login

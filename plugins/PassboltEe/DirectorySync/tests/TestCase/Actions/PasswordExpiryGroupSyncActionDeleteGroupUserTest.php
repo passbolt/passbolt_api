@@ -41,9 +41,9 @@ class PasswordExpiryGroupSyncActionDeleteGroupUserTest extends DirectorySyncDepr
         $this->action = new GroupSyncAction(
             new PasswordExpiryExpireResourcesService(
                 new PasswordExpiryValidationService(
-                    new PasswordExpiryGetSettingsService()
-                )
-            )
+                    new PasswordExpiryGetSettingsService(),
+                ),
+            ),
         );
     }
 

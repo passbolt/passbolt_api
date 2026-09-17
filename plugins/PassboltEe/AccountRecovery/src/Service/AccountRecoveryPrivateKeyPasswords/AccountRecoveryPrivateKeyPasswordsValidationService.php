@@ -58,7 +58,7 @@ class AccountRecoveryPrivateKeyPasswordsValidationService
         UserAccessControl $uac,
         array $passwordsData,
         string $armoredKey,
-        string $validationRules = 'default'
+        string $validationRules = 'default',
     ): array {
         // Validate entities or fail
         $passwordEntities = $this->AccountRecoveryPrivateKeyPasswords

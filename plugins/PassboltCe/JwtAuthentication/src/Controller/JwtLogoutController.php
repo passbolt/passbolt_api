@@ -43,7 +43,7 @@ class JwtLogoutController extends AppController
     protected function removeRefreshTokenFromCookies(): void
     {
         $cookiesCollection = $this->getResponse()->getCookieCollection()->remove(
-            RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE
+            RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE,
         );
         $this->setResponse($this->getResponse()->withCookieCollection($cookiesCollection));
     }

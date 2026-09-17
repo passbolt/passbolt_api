@@ -74,7 +74,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
         $uac = $this->makeUac($user);
         $dummyKey = $this->getMetadataKeyInfo();
 
-        $dto = MetadataKeyCreateDto::fromArray([
+        $dto = MetadataKeyCreateDto::createFromArray([
             'armored_key' => $dummyKey['public_key'],
             'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
@@ -245,7 +245,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
         $uac = $this->makeUac($user);
 
         try {
-            $this->service->create($uac, MetadataKeyCreateDto::fromArray($data));
+            $this->service->create($uac, MetadataKeyCreateDto::createFromArray($data));
         } catch (CustomValidationException $e) {
             // Use assertions (instead of expectException) in catch to assert errors thrown
             $this->assertStringContainsString('The metadata key could not be saved', $e->getMessage());
@@ -269,7 +269,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
         $uac = $this->makeUac($user);
         $dummyKey = $this->getMetadataKeyInfo();
 
-        $dto = MetadataKeyCreateDto::fromArray([
+        $dto = MetadataKeyCreateDto::createFromArray([
             'armored_key' => $dummyKey['public_key'],
             'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
@@ -301,7 +301,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
         $uac = $this->makeUac($user);
         $dummyKey = $this->getMetadataKeyInfo();
 
-        $dto = MetadataKeyCreateDto::fromArray([
+        $dto = MetadataKeyCreateDto::createFromArray([
             'armored_key' => $dummyKey['public_key'],
             'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
@@ -349,7 +349,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
         MetadataKeyFactory::make()->withCreatorAndModifier()->deleted()->persist();
         MetadataKeyFactory::make()->withCreatorAndModifier()->expired()->persist();
 
-        $dto = MetadataKeyCreateDto::fromArray([
+        $dto = MetadataKeyCreateDto::createFromArray([
             'armored_key' => $dummyKey['armored_key'],
             'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [

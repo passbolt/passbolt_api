@@ -31,7 +31,7 @@ class SubscriptionCheckCommand extends PassboltCommand
      * @param \App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface $subscriptionCheckInCommandService Service checking the subscription validity.
      */
     public function __construct(
-        SubscriptionCheckInCommandServiceInterface $subscriptionCheckInCommandService
+        SubscriptionCheckInCommandServiceInterface $subscriptionCheckInCommandService,
     ) {
         parent::__construct();
         $this->subscriptionCheckInCommandService = $subscriptionCheckInCommandService;

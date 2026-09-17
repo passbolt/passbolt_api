@@ -56,7 +56,7 @@ class JwtAuthenticationLogoutAllUsersOnEditionChangeListener implements EventLis
                 [
                     'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
                     'active' => true,
-                ]
+                ],
             );
         } catch (Throwable $e) {
             // Edition change already committed: swallow to avoid a misleading 500.

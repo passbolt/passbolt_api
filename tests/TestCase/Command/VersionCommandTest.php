@@ -60,7 +60,7 @@ class VersionCommandTest extends TestCase
             $this->assertSame(
                 $version,
                 $lastVersionInChangeLogs,
-                'The passbolt version in the CHANGELOG.md file and in config/version.php do not match'
+                'The passbolt version in the CHANGELOG.md file and in config/version.php do not match',
             );
         }
     }

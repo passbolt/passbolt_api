@@ -93,7 +93,7 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
             $this->makeUac($user),
             MfaSettings::PROVIDER_YUBIKEY,
             false, // Remember me is false, so sessionId is checked in the access token
-            $sessionId
+            $sessionId,
         );
 
         // This route, with cookie, should have CSRF protection
@@ -142,7 +142,7 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
             $this->makeUac($user),
             MfaSettings::PROVIDER_YUBIKEY,
             false,
-            $sessionId
+            $sessionId,
         );
 
         $this->post('/auth/jwt/refresh.json', [
@@ -173,7 +173,7 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
             $this->makeUac($user),
             MfaSettings::PROVIDER_YUBIKEY,
             false,
-            $sessionId
+            $sessionId,
         );
 
         $this->postJson('/auth/jwt/refresh.json', [
@@ -223,7 +223,7 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
             $this->makeUac($user),
             MfaSettings::PROVIDER_YUBIKEY,
             false,
-            $sessionId
+            $sessionId,
         );
 
         $this->postJson('/auth/jwt/refresh.json', [

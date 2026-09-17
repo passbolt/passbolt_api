@@ -59,7 +59,7 @@ abstract class AbstractSso2Stage2Controller extends AbstractSsoController
      */
     abstract protected function ssoServiceFactory(
         AbstractSecureCookieService $cookieService,
-        SsoSettingsDto $settingsDto
+        SsoSettingsDto $settingsDto,
     ): AbstractSsoService;
 
     /**
@@ -146,7 +146,7 @@ abstract class AbstractSso2Stage2Controller extends AbstractSsoController
                         $ssoState,
                         $code,
                         $this->User->ip(),
-                        $this->User->userAgent()
+                        $this->User->userAgent(),
                     );
                 } catch (Exception $e) {
                     $event = new Event(self::EVENT_PROVIDER_ERROR_RESOURCE_OWNER, $this, ['exception' => $e]);
@@ -181,7 +181,7 @@ abstract class AbstractSso2Stage2Controller extends AbstractSsoController
                         $code,
                         $this->User->ip(),
                         $this->User->userAgent(),
-                        $this->getProviderName()
+                        $this->getProviderName(),
                     );
                 } catch (Exception $e) {
                     $event = new Event(self::EVENT_PROVIDER_ERROR_RESOURCE_OWNER, $this, ['exception' => $e]);

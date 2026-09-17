@@ -40,7 +40,7 @@ class IsMfaEnabledService
      */
     public function __construct(
         ?MfaOrgSettingsGetService $getMfaOrgSettingsService = null,
-        ?GetMfaAccountSettingsService $getMfaAccountSettingsService = null
+        ?GetMfaAccountSettingsService $getMfaAccountSettingsService = null,
     ) {
         $this->getMfaAccountSettingsService = $getMfaAccountSettingsService ?? new GetMfaAccountSettingsService();
         $this->getMfaOrgSettingsService = $getMfaOrgSettingsService ?? new MfaOrgSettingsGetService();
@@ -62,7 +62,7 @@ class IsMfaEnabledService
         try {
             $providersEnabledForOrgAndUser = array_intersect(
                 $mfaOrgSettings->getEnabledProviders(),
-                $this->getMfaAccountSettings($user)->getEnabledProviders()
+                $this->getMfaAccountSettings($user)->getEnabledProviders(),
             );
         } catch (Throwable $t) {
             $providersEnabledForOrgAndUser = [];

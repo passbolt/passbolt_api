@@ -80,7 +80,7 @@ class SecretsViewController extends AppController
             PermissionsTable::RESOURCE_ACO,
             $resourceId,
             $uac->getId(),
-            Permission::READ
+            Permission::READ,
         );
         if (!$hasAccess) {
             throw new NotFoundException(__('The secret does not exist.'));

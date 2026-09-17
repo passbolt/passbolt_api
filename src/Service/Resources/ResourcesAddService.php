@@ -201,7 +201,7 @@ class ResourcesAddService
     public function afterSave(
         Resource $resource,
         UserAccessControl $uac,
-        MetadataResourceDto $resourceDto
+        MetadataResourceDto $resourceDto,
     ): void {
         $this->handleValidationError($resource);
         $user = $this->Users->findFirstForEmail($uac->getId());
@@ -229,9 +229,9 @@ class ResourcesAddService
                 $this->afterSave(
                     $resource,
                     $uac,
-                    $resourceDto
+                    $resourceDto,
                 );
-            }
+            },
         );
     }
 }

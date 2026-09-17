@@ -87,7 +87,7 @@ class EditionDowngradeServiceTest extends TestCase
         $this->assertTrue((new EditionGetService())->get()->isPro());
         // Post-commit step never ran.
         $this->assertFalse(
-            EventManager::instance()->getEventList()->hasEvent(EditionDowngradeService::EVENT_EDITION_DOWNGRADED)
+            EventManager::instance()->getEventList()->hasEvent(EditionDowngradeService::EVENT_EDITION_DOWNGRADED),
         );
     }
 
@@ -121,7 +121,7 @@ class EditionDowngradeServiceTest extends TestCase
             $this->assertSame(1, $this->mfaPoliciesRowCount());
             $this->assertFalse((new EditionGetService())->get()->isPro());
             $this->assertFalse(
-                EventManager::instance()->getEventList()->hasEvent(EditionDowngradeService::EVENT_EDITION_DOWNGRADED)
+                EventManager::instance()->getEventList()->hasEvent(EditionDowngradeService::EVENT_EDITION_DOWNGRADED),
             );
         }
     }
@@ -136,7 +136,7 @@ class EditionDowngradeServiceTest extends TestCase
         } finally {
             // Precondition failed before any work, so nothing was dispatched.
             $this->assertFalse(
-                EventManager::instance()->getEventList()->hasEvent(EditionDowngradeService::EVENT_EDITION_DOWNGRADED)
+                EventManager::instance()->getEventList()->hasEvent(EditionDowngradeService::EVENT_EDITION_DOWNGRADED),
             );
         }
     }

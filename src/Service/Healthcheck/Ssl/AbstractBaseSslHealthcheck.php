@@ -61,7 +61,7 @@ abstract class AbstractBaseSslHealthcheck implements HealthcheckServiceInterface
      */
     public function __construct(
         FullBaseUrlReachableCoreHealthcheck $fullBaseUrlReachableCoreHealthcheck,
-        Client $client
+        Client $client,
     ) {
         $this->fullBaseUrlReachableCoreHealthcheck = $fullBaseUrlReachableCoreHealthcheck;
         $this->client = $client;

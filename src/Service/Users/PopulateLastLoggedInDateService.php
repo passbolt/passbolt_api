@@ -83,7 +83,7 @@ class PopulateLastLoggedInDateService
 
             $result = $this->Users->updateAll(
                 ['last_logged_in' => $lastLoggedIn],
-                ['id' => $user->id]
+                ['id' => $user->id],
             );
             if ($result === 0) {
                 Log::error(sprintf('Could not update last_logged_in for the user ID: %s', $user->id));

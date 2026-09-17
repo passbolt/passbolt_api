@@ -38,9 +38,9 @@ class PasswordExpiryUserSyncActionDeleteTest extends DirectorySyncDeprecatedInte
         $this->action = new UserSyncAction(
             new PasswordExpiryExpireResourcesService(
                 new PasswordExpiryValidationService(
-                    new PasswordExpiryGetSettingsService()
-                )
-            )
+                    new PasswordExpiryGetSettingsService(),
+                ),
+            ),
         );
     }
 

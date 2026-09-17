@@ -111,7 +111,7 @@ class MetadataKeyExpireEmailRedactor implements SubscribedEmailRedactorInterface
     private function createEmail(
         User $recipient,
         User $modifier,
-        MetadataKey $metadataKey
+        MetadataKey $metadataKey,
     ): Email {
         if ($recipient->id === $modifier->id) {
             $subject = $this->getSubjectForModifier($recipient);
@@ -127,7 +127,7 @@ class MetadataKeyExpireEmailRedactor implements SubscribedEmailRedactorInterface
                 'body' => compact('recipient', 'modifier', 'fingerprint', 'subject'),
                 'title' => $subject,
             ],
-            static::EMAIL_TEMPLATE
+            static::EMAIL_TEMPLATE,
         );
     }
 
@@ -144,7 +144,7 @@ class MetadataKeyExpireEmailRedactor implements SubscribedEmailRedactorInterface
             $recipient->locale,
             function () use ($modifierFirstName) {
                 return __('{0} has expired a metadata key', $modifierFirstName);
-            }
+            },
         );
     }
 
@@ -158,7 +158,7 @@ class MetadataKeyExpireEmailRedactor implements SubscribedEmailRedactorInterface
             $recipient->locale,
             function () {
                 return __('You have expired a metadata key');
-            }
+            },
         );
     }
 }

@@ -98,7 +98,7 @@ class UsersIndexController extends AppController
         $this->getEventManager()->dispatch($event);
         $computedFindIndexOptions = $this->QueryString->get(
             $event->getOptions()->getAllowedOptions(),
-            $event->getOptions()->getFilterValidators()
+            $event->getOptions()->getFilterValidators(),
         );
 
         $this->assertHasAccess($computedFindIndexOptions);
@@ -113,7 +113,7 @@ class UsersIndexController extends AppController
             (new IsMfaEnabledQueryService())->decorateAndFilterForIndex(
                 $users,
                 $this->User->getAccessControl(),
-                $computedFindIndexOptions
+                $computedFindIndexOptions,
             );
         }
 

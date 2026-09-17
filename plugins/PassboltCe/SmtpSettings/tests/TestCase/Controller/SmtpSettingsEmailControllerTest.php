@@ -62,7 +62,7 @@ class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
         $this->assertMailContainsAt(0, 'Congratulations!');
         $this->assertMailContainsAt(
             0,
-            'If you receive this email, it means that your passbolt smtp configuration is working fine.'
+            'If you receive this email, it means that your passbolt smtp configuration is working fine.',
         );
         $debug = $trace;
         $response = $this->getResponseBodyAsArray();
@@ -91,7 +91,7 @@ class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
         $this->assertMailCount(0);
         $this->assertSame(
             'A test recipient is required.',
-            $this->_responseJsonBody->email_test_to->_required
+            $this->_responseJsonBody->email_test_to->_required,
         );
     }
 

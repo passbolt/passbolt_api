@@ -92,7 +92,7 @@ class AdfsRecoverLoginControllerTest extends SsoRecoverIntegrationTestCase
         $this->assertStringContainsString("client_id={$clientId}", $url);
         $this->assertStringContainsString(
             'redirect_uri=' . rawurlencode(Router::url('/sso/adfs/redirect', true)),
-            $url
+            $url,
         );
         $this->assertStringNotContainsString('login_hint', $url);
         // Assert SSO state

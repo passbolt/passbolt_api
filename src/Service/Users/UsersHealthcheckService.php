@@ -75,7 +75,7 @@ class UsersHealthcheckService extends AbstractHealthcheckService
             $msg = __('The username {0} is a duplicate.', $this->usernameDuplicates[$user->id]);
             $copy->setError(
                 'username',
-                ['uniqueUsername' => $msg]
+                ['uniqueUsername' => $msg],
             );
         }
 

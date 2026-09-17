@@ -133,7 +133,7 @@ class PermissionsTable extends Table implements TableCleanupProviderInterface
         $validator
             ->inList('aco', self::ALLOWED_ACOS, __(
                 'The type of the access control object should be one of the following: {0}.',
-                implode(', ', self::ALLOWED_ACOS)
+                implode(', ', self::ALLOWED_ACOS),
             ))
             ->requirePresence('aco', 'create', __('The type of the access control object is required.'))
             ->notEmptyString('aco', __('The type of the access control object should not be empty.'));
@@ -143,14 +143,14 @@ class PermissionsTable extends Table implements TableCleanupProviderInterface
             ->requirePresence(
                 'aco_foreign_key',
                 'create',
-                __('The identifier of the access control object is required.')
+                __('The identifier of the access control object is required.'),
             )
             ->notEmptyString('aco_foreign_key', __('The identifier of the access control object should not be empty.'));
 
         $validator
             ->inList('aro', self::ALLOWED_AROS, __(
                 'The access request object type should be one of the following: {0}.',
-                implode(', ', self::ALLOWED_AROS)
+                implode(', ', self::ALLOWED_AROS),
             ))
             ->requirePresence('aro', 'create', __('The type of the access request object is required.'))
             ->notEmptyString('aro', __('The access request object type should not be empty.'));
@@ -160,14 +160,14 @@ class PermissionsTable extends Table implements TableCleanupProviderInterface
             ->requirePresence(
                 'aro_foreign_key',
                 'create',
-                __('The identifier of the access request object is required.')
+                __('The identifier of the access request object is required.'),
             )
             ->notEmptyString('aro_foreign_key', __('The identifier of the access request object should not be empty.'));
 
         $validator
             ->inList('type', self::ALLOWED_TYPES, __(
                 'The type should be one of the following: {0}.',
-                implode(', ', self::ALLOWED_TYPES)
+                implode(', ', self::ALLOWED_TYPES),
             ))
             ->requirePresence('type', 'create', __('A type is required.'))
             ->notEmptyString('type', __('The type should not be empty.'));
@@ -214,9 +214,9 @@ class PermissionsTable extends Table implements TableCleanupProviderInterface
         $rules->addCreate(
             $rules->isUnique(
                 ['aco_foreign_key', 'aro_foreign_key'],
-                __('A permission already exists for the given access control object and access request object.')
+                __('A permission already exists for the given access control object and access request object.'),
             ),
-            'permission_unique'
+            'permission_unique',
         );
         $rules->addCreate([$this, 'acoExistsRule'], 'aco_exists', [
             'errorField' => 'aco_foreign_key',
@@ -496,7 +496,7 @@ class PermissionsTable extends Table implements TableCleanupProviderInterface
             if ($behavior instanceof TableCleanupProviderInterface) {
                 $callablesMethods = array_merge(
                     $callablesMethods,
-                    $behavior->getCleanupMethods()
+                    $behavior->getCleanupMethods(),
                 );
             }
         }

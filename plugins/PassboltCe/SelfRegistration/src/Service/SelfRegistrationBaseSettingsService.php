@@ -62,7 +62,7 @@ abstract class SelfRegistrationBaseSettingsService
                 'modified' => $setting->modified,
                 'created_by' => $setting->created_by,
                 'modified_by' => $setting->modified_by,
-            ]
+            ],
         );
     }
 }

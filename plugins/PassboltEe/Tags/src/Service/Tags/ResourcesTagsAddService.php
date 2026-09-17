@@ -81,7 +81,7 @@ class ResourcesTagsAddService
             throw new ValidationException(
                 __('Could not save the tags, try again later.'),
                 $resource,
-                $this->Resources
+                $this->Resources,
             );
         } catch (Exception $e) {
             $msg = __('Could not save the tags, try again later.');
@@ -156,7 +156,7 @@ class ResourcesTagsAddService
             /** @var array<\Passbolt\Tags\Model\Entity\Tag> $existingTags */
             $existingTags = $this->Tags->findAllBySlugsOrIds($uac, $clearTextTags, $encryptedTagsIds)->all()->toArray();
             foreach ($existingTags as $existingTag) {
-                $tagDto = MetadataTagDto::fromArray($existingTag->toArray());
+                $tagDto = MetadataTagDto::createFromArray($existingTag->toArray());
 
                 // To prevent duplication, unset from array so it don't get build as a new entity
                 if (!$tagDto->isV5()) {

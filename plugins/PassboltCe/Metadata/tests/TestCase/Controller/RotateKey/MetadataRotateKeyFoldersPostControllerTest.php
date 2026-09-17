@@ -50,7 +50,7 @@ class MetadataRotateKeyFoldersPostControllerTest extends AppIntegrationTestCaseV
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         // expired folder
-        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataFolderDto::createFromArray(['name' => 'marketing'])->getClearTextMetadata());
         $expiredFolder1 = FolderFactory::make()
             ->withPermissionsFor([$admin])
             ->withFoldersRelationsFor([$admin])
@@ -58,7 +58,7 @@ class MetadataRotateKeyFoldersPostControllerTest extends AppIntegrationTestCaseV
             ->persist();
         // another user's folder
         $user = UserFactory::make()->user()->active()->persist();
-        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'test folder'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataFolderDto::createFromArray(['name' => 'test folder'])->getClearTextMetadata());
         FolderFactory::make(5)
             ->withPermissionsFor([$user])
             ->withFoldersRelationsFor([$user])
@@ -66,7 +66,7 @@ class MetadataRotateKeyFoldersPostControllerTest extends AppIntegrationTestCaseV
             ->persist();
 
         $this->logInAs($admin);
-        $metadataToUpdate = $this->encryptForMetadataKey(json_encode(MetadataFolderDto::fromArray(['name' => 'marketing updated'])->getClearTextMetadata()));
+        $metadataToUpdate = $this->encryptForMetadataKey(json_encode(MetadataFolderDto::createFromArray(['name' => 'marketing updated'])->getClearTextMetadata()));
         $this->postJson('/metadata/rotate-key/folders.json', [
             [
                 'id' => $expiredFolder1->get('id'),

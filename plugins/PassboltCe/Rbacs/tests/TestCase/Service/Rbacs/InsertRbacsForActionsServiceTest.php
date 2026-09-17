@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Rbacs\Test\TestCase\Service\Rbacs;
 
 use App\Test\Factory\RoleFactory;
+use Cake\Http\Exception\BadRequestException;
 use Passbolt\Log\Test\Factory\ActionFactory;
 use Passbolt\Rbacs\Model\Entity\Rbac;
 use Passbolt\Rbacs\Service\Actions\RbacsControlledActionsInsertService;
@@ -77,25 +78,25 @@ class InsertRbacsForActionsServiceTest extends RbacsTestCase
             0,
             RbacFactory::find()
                 ->where(['role_id' => $guestRole->id, 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION])
-                ->count()
+                ->count(),
         );
         $this->assertSame(
             0,
             RbacFactory::find()
                 ->where(['role_id' => $adminRole->id, 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION])
-                ->count()
+                ->count(),
         );
         $this->assertSame(
             3,
             RbacFactory::find()
                 ->where(['role_id' => $userRole->id, 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION, 'control_function' => Rbac::CONTROL_FUNCTION_DENY])
-                ->count()
+                ->count(),
         );
         $this->assertSame(
             3,
             RbacFactory::find()
                 ->where(['role_id' => $customRole->get('id'), 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION, 'control_function' => Rbac::CONTROL_FUNCTION_DENY])
-                ->count()
+                ->count(),
         );
     }
 
@@ -132,25 +133,25 @@ class InsertRbacsForActionsServiceTest extends RbacsTestCase
             0,
             RbacFactory::find()
                 ->where(['role_id' => $guestRole->id, 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION])
-                ->count()
+                ->count(),
         );
         $this->assertSame(
             0,
             RbacFactory::find()
                 ->where(['role_id' => $adminRole->id, 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION])
-                ->count()
+                ->count(),
         );
         $this->assertSame(
             1,
             RbacFactory::find()
                 ->where(['role_id' => $userRole->id, 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION, 'control_function' => Rbac::CONTROL_FUNCTION_DENY])
-                ->count()
+                ->count(),
         );
         $this->assertSame(
             1,
             RbacFactory::find()
                 ->where(['role_id' => $customRole->get('id'), 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION, 'control_function' => Rbac::CONTROL_FUNCTION_DENY])
-                ->count()
+                ->count(),
         );
     }
 
@@ -181,19 +182,87 @@ class InsertRbacsForActionsServiceTest extends RbacsTestCase
             0,
             RbacFactory::find()
                 ->where(['role_id' => $deletedRole->get('id'), 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION])
-                ->count()
+                ->count(),
         );
         $this->assertSame(
             2,
             RbacFactory::find()
                 ->where(['role_id' => $userRole->id, 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION])
-                ->count()
+                ->count(),
         );
         $this->assertSame(
             2,
             RbacFactory::find()
                 ->where(['role_id' => $customRole->get('id'), 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION])
-                ->count()
+                ->count(),
         );
+    }
+
+    public function testInsertRbacsForActionsService_OfflineModeActionsDefaultAllow(): void
+    {
+        RoleFactory::make()->guest()->persist();
+        RoleFactory::make()->admin()->persist();
+        $userRole = RoleFactory::make()->user()->persist();
+        $customRole = RoleFactory::make(['name' => 'marketing'])->persist();
+        $deletedRole = RoleFactory::make(['name' => 'deleted-role'])->deleted()->persist();
+        // actions
+        $fixtureActions = [
+            RbacsControlledActionsInsertService::NAME_OFFLINE_ITEMS_ADD,
+            RbacsControlledActionsInsertService::NAME_OFFLINE_ITEMS_DELETE,
+            RbacsControlledActionsInsertService::NAME_OFFLINE_ITEMS_VIEW,
+        ];
+        foreach ($fixtureActions as $fixtureAction) {
+            ActionFactory::make()->name($fixtureAction)->persist();
+        }
+
+        $result = $this->service->add([
+            RbacsControlledActionsInsertService::NAME_OFFLINE_ITEMS_ADD,
+            RbacsControlledActionsInsertService::NAME_OFFLINE_ITEMS_DELETE,
+            RbacsControlledActionsInsertService::NAME_OFFLINE_ITEMS_VIEW,
+        ], Rbac::CONTROL_FUNCTION_ALLOW);
+
+        // 3 actions x 2 roles (user + custom) = 6 rbacs (deleted role should be skipped)
+        $this->assertSame(6, $result);
+        $this->assertSame(
+            0,
+            RbacFactory::find()
+                ->where(['role_id' => $deletedRole->get('id'), 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION])
+                ->count(),
+        );
+        $this->assertSame(
+            3,
+            RbacFactory::find()
+                ->where(['role_id' => $userRole->id, 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION, 'control_function' => Rbac::CONTROL_FUNCTION_ALLOW])
+                ->count(),
+        );
+        $this->assertSame(
+            3,
+            RbacFactory::find()
+                ->where(['role_id' => $customRole->get('id'), 'foreign_model' => Rbac::FOREIGN_MODEL_ACTION, 'control_function' => Rbac::CONTROL_FUNCTION_ALLOW])
+                ->count(),
+        );
+    }
+
+    public function testInsertRbacsForActionsService_Error_WrongControlFunction(): void
+    {
+        RoleFactory::make()->user()->persist();
+        // actions
+        $fixtureActions = [
+            RbacsControlledActionsInsertService::NAME_OFFLINE_ITEMS_ADD,
+            RbacsControlledActionsInsertService::NAME_OFFLINE_ITEMS_DELETE,
+            RbacsControlledActionsInsertService::NAME_OFFLINE_ITEMS_VIEW,
+        ];
+        foreach ($fixtureActions as $fixtureAction) {
+            ActionFactory::make()->name($fixtureAction)->persist();
+        }
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Invalid RBAC control function');
+
+        $this->service->add([
+            RbacsControlledActionsInsertService::NAME_OFFLINE_ITEMS_ADD,
+            RbacsControlledActionsInsertService::NAME_OFFLINE_ITEMS_DELETE,
+            RbacsControlledActionsInsertService::NAME_OFFLINE_ITEMS_VIEW,
+        ], 'wrong-control-function');
     }
 }

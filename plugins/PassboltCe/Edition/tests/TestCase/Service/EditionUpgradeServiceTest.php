@@ -64,7 +64,7 @@ class EditionUpgradeServiceTest extends AppTestCaseV5
 
         $this->assertInstanceOf(SubscriptionKeyDto::class, $result);
         $editionRow = EditionOrganizationSettingFactory::firstOrFail(
-            ['property' => EditionOrganizationTable::PROPERTY_NAME]
+            ['property' => EditionOrganizationTable::PROPERTY_NAME],
         );
         $this->assertSame(EditionDto::EDITION_PRO, $editionRow->get('value'));
         $this->assertSame(1, $this->countSubscriptionRows());

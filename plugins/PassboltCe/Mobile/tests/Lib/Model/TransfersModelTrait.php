@@ -45,7 +45,7 @@ trait TransfersModelTrait
         ?string $userId = null,
         ?string $status = Transfer::TRANSFER_STATUS_IN_PROGRESS,
         ?int $currentPage = 1,
-        ?int $totalPages = 2
+        ?int $totalPages = 2,
     ): array {
         $userId = $userId ?? UuidFactory::uuid('user.id.ada');
 

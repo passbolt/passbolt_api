@@ -115,8 +115,8 @@ class DirectoryIgnoreTable extends Table
                 self::$SUPPORTED_FOREIGN_MODEL,
                 __(
                     'The object type should be one of the following: {0}.',
-                    implode(', ', self::$SUPPORTED_FOREIGN_MODEL)
-                )
+                    implode(', ', self::$SUPPORTED_FOREIGN_MODEL),
+                ),
             )
             ->requirePresence('foreign_model', __('An object type is required.'));
 
@@ -149,7 +149,7 @@ class DirectoryIgnoreTable extends Table
             [
                 'errorField' => 'id',
                 'message' => __('The associated record could not be found.'),
-            ]
+            ],
         );
 
         return $rules;
@@ -204,7 +204,7 @@ class DirectoryIgnoreTable extends Table
                 'accessibleFields' => [
                     'id' => true,
                     'foreign_model' => true,
-                ]]
+                ]],
         );
         if ($ignore->getErrors()) {
             throw new ValidationException(__('This is not a valid record to ignore.'), $ignore, $this);

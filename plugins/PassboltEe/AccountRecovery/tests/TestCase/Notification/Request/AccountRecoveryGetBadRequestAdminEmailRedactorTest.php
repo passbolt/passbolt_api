@@ -121,4 +121,22 @@ class AccountRecoveryGetBadRequestAdminEmailRedactorTest extends TestCase
 
         $this->assertSame([$activeAdmin->username], $recipients);
     }
+
+    public function testAccountRecoveryGetBadRequestAdminEmailRedactor_DeletedAndInactiveUsersExcluded(): void
+    {
+        /** @var \App\Model\Entity\User $activeAdmin */
+        $activeAdmin = UserFactory::make()->admin()->persist();
+        UserFactory::make()->admin()->deleted()->persist();
+        UserFactory::make()->admin()->inactive()->persist();
+        /** @var \App\Model\Entity\User $deletedRbacViewer */
+        $deletedRbacViewer = UserFactory::make()->deleted()->persist();
+        $this->grantViewActionToRole($deletedRbacViewer->role_id);
+        UserFactory::make()->inactive()->persist();
+        /** @var \App\Model\Entity\User $targetedUser */
+        $targetedUser = UserFactory::make()->persist();
+
+        $recipients = $this->collectRecipients($targetedUser->id);
+
+        $this->assertSame([$activeAdmin->username], $recipients);
+    }
 }

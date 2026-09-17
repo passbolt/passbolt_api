@@ -59,7 +59,7 @@ class IsMfaAuthenticationRequiredServiceTest extends MfaIntegrationTestCase
             ],
             ['accessibleFields' => [
                 'user_id' => true, 'token' => true, 'active' => true, 'type' => true, 'data' => true,
-            ]]
+            ]],
         );
         $authTokens->saveOrFail($tokenRow);
         MfaAuthenticationTokenFactory::make()->active()->data(['remember' => true])->persist();
@@ -75,7 +75,7 @@ class IsMfaAuthenticationRequiredServiceTest extends MfaIntegrationTestCase
             MfaSettings::get($uac),
             $uac,
             null,
-            $policy
+            $policy,
         );
 
         $this->assertTrue($isRequired);

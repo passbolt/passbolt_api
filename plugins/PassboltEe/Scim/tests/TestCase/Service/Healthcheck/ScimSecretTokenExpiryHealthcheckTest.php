@@ -140,7 +140,7 @@ class ScimSecretTokenExpiryHealthcheckTest extends AppTestCase
     {
         $this->assertSame(
             __('The SCIM secret token is not expired.'),
-            $this->service->getSuccessMessage()
+            $this->service->getSuccessMessage(),
         );
     }
 
@@ -148,7 +148,7 @@ class ScimSecretTokenExpiryHealthcheckTest extends AppTestCase
     {
         $this->assertSame(
             __('The SCIM secret token is expired, you are requested to rotate it.'),
-            $this->service->getFailureMessage()
+            $this->service->getFailureMessage(),
         );
     }
 
@@ -156,7 +156,7 @@ class ScimSecretTokenExpiryHealthcheckTest extends AppTestCase
     {
         $this->assertSame(
             __('Rotate the SCIM secret token in the administration settings.'),
-            $this->service->getHelpMessage()
+            $this->service->getHelpMessage(),
         );
     }
 

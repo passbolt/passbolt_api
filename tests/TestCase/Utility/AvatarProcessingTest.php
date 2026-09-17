@@ -63,7 +63,7 @@ class AvatarProcessingTest extends TestCase
         $processedStream = AvatarProcessing::resizeAndCrop(
             $stream,
             $width,
-            $height
+            $height,
         );
         $ouputFilename = $this->testDirectory . $filename;
         file_put_contents($ouputFilename, $processedStream);

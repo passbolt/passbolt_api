@@ -145,7 +145,7 @@ class LdapDirectory implements DirectoryInterface
         $this->directoryResults = new DirectoryResults(
             $this->mappingRules,
             $this->directorySettings,
-            $this->fieldFallbacks
+            $this->fieldFallbacks,
         );
     }
 
@@ -209,12 +209,12 @@ class LdapDirectory implements DirectoryInterface
         if (!is_string($configSslCadir)) {
             throw new BadRequestException(__(
                 'The {0} configuration should be a valid string',
-                'passbolt.plugins.directorySync.security.sslCustomOptions.cadir'
+                'passbolt.plugins.directorySync.security.sslCustomOptions.cadir',
             ));
         } elseif (!is_string($configSslCafile)) {
             throw new BadRequestException(__(
                 'The {0} configuration should be a valid string',
-                'passbolt.plugins.directorySync.security.sslCustomOptions.cafile'
+                'passbolt.plugins.directorySync.security.sslCustomOptions.cafile',
             ));
         }
 
@@ -304,7 +304,7 @@ class LdapDirectory implements DirectoryInterface
         if (!in_array($type, LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE)) {
                 throw new Exception(__(
                     'The directory type should be one of the following: {0}.',
-                    implode(', ', LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE)
+                    implode(', ', LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE),
                 ));
         }
 
@@ -323,7 +323,7 @@ class LdapDirectory implements DirectoryInterface
         if (!in_array($type, LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE)) {
             throw new Exception(__(
                 'The directory type should be one of the following: {0}.',
-                implode(', ', LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE)
+                implode(', ', LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE),
             ));
         }
 
@@ -403,7 +403,7 @@ class LdapDirectory implements DirectoryInterface
                 throw new InvalidArgumentException(
                     'An error has occurred parsing enabledUsersOnly filter: ' . $pe->getMessage(),
                     $pe->getCode(),
-                    $pe
+                    $pe,
                 );
             }
         }
@@ -550,7 +550,7 @@ class LdapDirectory implements DirectoryInterface
         $userCustomFilter = $this->directorySettings->getUserCustomFilters();
         if (is_callable($userCustomFilter)) {
             throw new InvalidArgumentException(
-                'Using callbacks for userCustomFilter is not supported anymore. Please use LDAP search filter instead.'
+                'Using callbacks for userCustomFilter is not supported anymore. Please use LDAP search filter instead.',
             );
         } elseif (is_string($userCustomFilter)) {
             try {
@@ -558,7 +558,7 @@ class LdapDirectory implements DirectoryInterface
                 $query->rawFilter(Parser::assemble($filter));
             } catch (ParserException $pe) {
                 throw new InvalidArgumentException(
-                    'An error has occurred parsing userCustomFilter: ' . $pe->getMessage()
+                    'An error has occurred parsing userCustomFilter: ' . $pe->getMessage(),
                 );
             }
         }
@@ -579,7 +579,7 @@ class LdapDirectory implements DirectoryInterface
         $groupCustomFilter = $this->directorySettings->getGroupCustomFilters();
         if (is_callable($groupCustomFilter)) {
             throw new InvalidArgumentException(
-                'Using callbacks for groupCustomFilter is not supported anymore. Please use LDAP search filter instead.'
+                'Using callbacks for groupCustomFilter is not supported anymore. Please use LDAP search filter instead.', // phpcs:ignore
             );
         } elseif (is_string($groupCustomFilter)) {
             try {
@@ -587,7 +587,7 @@ class LdapDirectory implements DirectoryInterface
                 $query->rawFilter(Parser::assemble($filter));
             } catch (ParserException $pe) {
                 throw new InvalidArgumentException(
-                    'An error has occurred parsing groupCustomFilter: ' . $pe->getMessage()
+                    'An error has occurred parsing groupCustomFilter: ' . $pe->getMessage(),
                 );
             }
         }
@@ -655,14 +655,14 @@ class LdapDirectory implements DirectoryInterface
         if (isset($settings['servers'])) {
             deprecationWarning(
                 'v3.12.0',
-                'LDAP: `servers` key has been deprecated and it will be removed. Use `hosts` instead.'
+                'LDAP: `servers` key has been deprecated and it will be removed. Use `hosts` instead.',
             );
             $settings['hosts'] = $settings['servers'];
         }
         if (isset($settings['connect_timeout'])) {
             deprecationWarning(
                 'v3.12.0',
-                'LDAP: `connect_timeout` key has been deprecated and it will be removed. Use `timeout` instead.'
+                'LDAP: `connect_timeout` key has been deprecated and it will be removed. Use `timeout` instead.',
             );
             $settings['timeout'] = $settings['connect_timeout'];
         }
@@ -677,7 +677,7 @@ class LdapDirectory implements DirectoryInterface
             $settings['username'] = DirectoryOrgSettings::formatUsername(
                 $settings['username'],
                 $settings['domain_name'],
-                $settings['bind_format']
+                $settings['bind_format'],
             );
         }
 

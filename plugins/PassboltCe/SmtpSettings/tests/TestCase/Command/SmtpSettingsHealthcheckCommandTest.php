@@ -56,7 +56,7 @@ class SmtpSettingsHealthcheckCommandTest extends AppIntegrationTestCase
     {
         Configure::write(
             SmtpSettingsSecurityMiddleware::PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED,
-            true
+            true,
         );
         $this->setTransportConfig();
         $data = $this->getSmtpSettingsData();

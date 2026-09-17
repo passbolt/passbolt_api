@@ -59,7 +59,7 @@ class GroupsUpdateServiceTest extends AppTestCase
         parent::setUp();
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->service = new GroupsUpdateService(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
     }
 

@@ -39,7 +39,7 @@ class CommentsAddController extends AppController
         $comment = (new CommentsAddService())->add(
             $this->User->getAccessControl(),
             $foreignKey,
-            $this->getRequest()->getData()
+            $this->getRequest()->getData(),
         );
         $this->success(__('The comment was successfully added.'), $comment);
     }

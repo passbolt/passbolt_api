@@ -63,7 +63,7 @@ class AccountLocalesSelectControllerTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
         $this->assertSame(
             $value,
-            $this->AccountSettings->getByProperty($user->id, LocaleService::SETTING_PROPERTY)->get('value')
+            $this->AccountSettings->getByProperty($user->id, LocaleService::SETTING_PROPERTY)->get('value'),
         );
     }
 

@@ -93,7 +93,7 @@ class GpgKeyForm extends Form
                 'last' => true,
                 'rule' => [$this, 'checkPublicPrivateFingerprints'],
                 'message' => __(
-                    'The fingerprint does not match the OpenPGP public and the OpenPGP private keys fingerprints.'
+                    'The fingerprint does not match the OpenPGP public and the OpenPGP private keys fingerprints.',
                 ),
             ]);
 

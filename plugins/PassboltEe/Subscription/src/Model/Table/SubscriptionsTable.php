@@ -212,7 +212,7 @@ class SubscriptionsTable extends OrganizationSettingsTable
         if ($formatError) {
             throw new SubscriptionFormatException(
                 __('The subscription key format is not valid.'),
-                $formatError
+                $formatError,
             );
         }
     }

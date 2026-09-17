@@ -80,7 +80,7 @@ class UiActionsTable extends Table
             ->maxLength(
                 'property',
                 UiAction::NAME_MAX_LENGTH,
-                __('The name length should be maximum {0} characters.', UiAction::NAME_MAX_LENGTH)
+                __('The name length should be maximum {0} characters.', UiAction::NAME_MAX_LENGTH),
             )
             ->requirePresence('name', __('A name is required.'));
 

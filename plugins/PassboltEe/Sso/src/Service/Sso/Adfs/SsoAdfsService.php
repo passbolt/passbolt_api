@@ -50,7 +50,7 @@ class SsoAdfsService extends SsoOAuth2Service
                 'openIdConfigurationPath' => $data->openid_configuration_path,
                 'emailClaim' => $data->email_claim,
             ],
-            ['httpClient' => $this->getCustomHttpClient()]
+            ['httpClient' => $this->getCustomHttpClient()],
         );
     }
 

@@ -43,7 +43,7 @@ class EmailNotificationSettingsDefinitionRegisterEvent extends Event
     final public function __construct(
         string $name,
         ?EmailNotificationSettingsForm $subject = null,
-        ArrayAccess|array $data = []
+        ArrayAccess|array $data = [],
     ) {
         if (!$subject instanceof EmailNotificationSettingsForm) {
             $msg = '`subject` must be an instance of ' . EmailNotificationSettingsForm::class;

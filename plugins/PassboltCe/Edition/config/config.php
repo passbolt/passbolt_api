@@ -22,7 +22,7 @@ return [
                 'version' => '1.0.0',
                 'disableLogoutUsersOnEditionChangeMiddleware' => filter_var(
                     env('PASSBOLT_PLUGINS_EDITION_DISABLE_LOGOUT_USERS_ON_EDITION_CHANGE_MIDDLEWARE', false),
-                    FILTER_VALIDATE_BOOLEAN
+                    FILTER_VALIDATE_BOOLEAN,
                 ),
                 'subscriptionKey' => [
                     'public' => Configure::read(

@@ -19,6 +19,7 @@ namespace Passbolt\Edition\Service\Cleanup;
 use Passbolt\AccountRecovery\Service\Edition\AccountRecoveryDowngradeCleanupService;
 use Passbolt\DirectorySync\Service\Edition\DirectorySyncDowngradeCleanupService;
 use Passbolt\MfaPolicies\Service\Edition\MfaPoliciesDowngradeCleanupService;
+use Passbolt\OfflineModePolicies\Service\Edition\OfflineModePoliciesDowngradeCleanupService;
 use Passbolt\PasswordExpiryPolicies\Service\Edition\PasswordExpiryPoliciesDowngradeCleanupService;
 use Passbolt\PasswordPoliciesUpdate\Service\Edition\PasswordPoliciesUpdateDowngradeCleanupService;
 use Passbolt\Scim\Service\Edition\ScimDowngradeCleanupService;
@@ -57,6 +58,7 @@ class EditionDowngradeCleanupRunner
             SsoDowngradeCleanupService::class,
             TagsDowngradeCleanupService::class,
             UserPassphrasePoliciesDowngradeCleanupService::class,
+            OfflineModePoliciesDowngradeCleanupService::class,
         ];
     }
 
@@ -77,7 +79,7 @@ class EditionDowngradeCleanupRunner
                 throw new RuntimeException(sprintf(
                     '%s must implement %s.',
                     $fqcn,
-                    EditionDowngradeCleanupServiceInterface::class
+                    EditionDowngradeCleanupServiceInterface::class,
                 ));
             }
 

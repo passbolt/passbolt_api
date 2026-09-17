@@ -61,7 +61,7 @@ class OrganizationLocalesSelectControllerTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
         $this->assertSame(
             $value,
-            $this->OrganizationSettings->getByProperty(LocaleService::SETTING_PROPERTY)->get('value')
+            $this->OrganizationSettings->getByProperty(LocaleService::SETTING_PROPERTY)->get('value'),
         );
     }
 

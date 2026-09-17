@@ -159,7 +159,7 @@ class SsoSettingsSetServiceTest extends SsoTestCase
         $gpg = OpenPGPBackendFactory::get();
         $gpg->setDecryptKeyFromFingerprint(
             Configure::read('passbolt.gpg.serverKey.fingerprint'),
-            Configure::read('passbolt.gpg.serverKey.passphrase')
+            Configure::read('passbolt.gpg.serverKey.passphrase'),
         );
         $decryptedData = json_decode($gpg->decrypt($ssoSettingEntity->data), true);
         $this->assertEquals(json_decode(json_encode($expectedData), true), $decryptedData);

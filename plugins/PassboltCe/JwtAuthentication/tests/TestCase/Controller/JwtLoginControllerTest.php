@@ -120,7 +120,7 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
             ->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())
             ->with(
                 'AuthenticationTokens',
-                AuthenticationTokenFactory::make()->type(AuthenticationToken::TYPE_VERIFY_TOKEN)
+                AuthenticationTokenFactory::make()->type(AuthenticationToken::TYPE_VERIFY_TOKEN),
             )
             ->persist();
 

@@ -27,7 +27,7 @@ $routes->plugin('Passbolt/EmailDigest', ['path' => '/seleniumtests'], function (
      */
     $routes->connect(
         '/showLastBatch',
-        ['prefix' => 'EmailDigest', 'controller' => 'PreviewNextEmailsBatch', 'action' => 'preview']
+        ['prefix' => 'EmailDigest', 'controller' => 'PreviewNextEmailsBatch', 'action' => 'preview'],
     )
     ->setMethods(['GET']);
 });

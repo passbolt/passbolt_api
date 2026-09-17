@@ -62,7 +62,7 @@ class MfaDuoStartDuoAuthenticationService
         try {
             $this->duoClient = $client ?? (new MfaDuoGetSdkClientService())->getOrFail(
                 new MfaOrgSettingsDuoService(MfaOrgSettings::get()->getSettings()),
-                $authenticationTokenType
+                $authenticationTokenType,
             );
         } catch (Throwable $th) {
             throw new ServiceUnavailableException(__('Could not enable Duo MFA provider.'), null, $th);
@@ -84,14 +84,14 @@ class MfaDuoStartDuoAuthenticationService
      */
     public function start(
         UserAccessControl $uac,
-        ?string $redirect = '/'
+        ?string $redirect = '/',
     ): MfaDuoAuthenticationRequestDto {
         $this->assertDuoHealthcheck();
         $this->assertDuoCallbackAuthenticationTokenType();
 
         $duoCallbackAuthenticationToken = $this->createDuoCallbackAuthenticationToken(
             $uac,
-            $redirect
+            $redirect,
         );
         $duoAuthenticationUrl = $this->createDuoAuthenticationUrl($uac, $duoCallbackAuthenticationToken);
 
@@ -123,7 +123,7 @@ class MfaDuoStartDuoAuthenticationService
     {
         $isValid = Validation::inList(
             $this->authTokenType,
-            MfaDuoCallbackAuthenticationTokenService::$ALLOWED_TOKEN_TYPES
+            MfaDuoCallbackAuthenticationTokenService::$ALLOWED_TOKEN_TYPES,
         );
         if (!$isValid) {
             $readableAllowedTokenTypes = implode(', ', MfaDuoCallbackAuthenticationTokenService::$ALLOWED_TOKEN_TYPES);
@@ -144,7 +144,7 @@ class MfaDuoStartDuoAuthenticationService
      */
     private function createDuoCallbackAuthenticationToken(
         UserAccessControl $uac,
-        ?string $redirect
+        ?string $redirect,
     ): AuthenticationToken {
         /** @var \App\Model\Table\AuthenticationTokensTable $authenticationTable */
         $authenticationTable = $this->fetchTable('AuthenticationTokens');
@@ -175,12 +175,12 @@ class MfaDuoStartDuoAuthenticationService
      */
     private function createDuoAuthenticationUrl(
         UserAccessControl $uac,
-        AuthenticationToken $authenticationToken
+        AuthenticationToken $authenticationToken,
     ): string {
         try {
             return $this->duoClient->createAuthUrl(
                 $uac->getUsername(),
-                $authenticationToken->getDataValue('state')
+                $authenticationToken->getDataValue('state'),
             );
         } catch (Throwable $th) {
             throw new InternalErrorException('Unable to create the Duo authentication URL.', null, $th);

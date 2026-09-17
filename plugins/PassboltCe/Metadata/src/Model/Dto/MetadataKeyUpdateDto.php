@@ -16,9 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Model\Dto;
 
+use App\Model\Dto\RequestDtoInterface;
 use Cake\I18n\DateTime;
 
-class MetadataKeyUpdateDto
+class MetadataKeyUpdateDto implements RequestDtoInterface
 {
     public string $fingerprint;
 
@@ -33,7 +34,7 @@ class MetadataKeyUpdateDto
      * @param string $armoredKey Armored key.
      * @param \Cake\I18n\DateTime $expired Expired time
      */
-    public function __construct(string $fingerprint, string $armoredKey, DateTime $expired)
+    final public function __construct(string $fingerprint, string $armoredKey, DateTime $expired)
     {
         $this->fingerprint = $fingerprint;
         $this->armoredKey = $armoredKey;
@@ -54,15 +55,15 @@ class MetadataKeyUpdateDto
 
     /**
      * @param array $data Data to transform into DTO.
-     * @return self
+     * @return static
      */
-    public static function fromArray(array $data): self
+    public static function createFromArray(array $data): static
     {
         if (is_string($data['expired'])) {
             // Try to parse about any English textual datetime description into a Unix timestamp to convert it into a DateTime object
             $data['expired'] = DateTime::createFromTimestamp(strtotime($data['expired']));
         }
 
-        return new self($data['fingerprint'], $data['armored_key'], $data['expired']);
+        return new static($data['fingerprint'], $data['armored_key'], $data['expired']);
     }
 }

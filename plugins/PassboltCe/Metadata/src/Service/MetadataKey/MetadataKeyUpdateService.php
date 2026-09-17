@@ -107,7 +107,7 @@ class MetadataKeyUpdateService
         $this->dispatchEvent(
             static::AFTER_METADATA_KEY_UPDATE_SUCCESS_EVENT_NAME,
             compact('metadataKey', 'uac'),
-            $this
+            $this,
         );
     }
 }

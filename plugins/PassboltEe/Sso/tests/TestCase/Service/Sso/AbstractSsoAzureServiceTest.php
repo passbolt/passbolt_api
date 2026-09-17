@@ -35,7 +35,7 @@ class AbstractSsoAzureServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             '127.0.0.1',
-            'phpunit'
+            'phpunit',
         );
         $sut = new TestableSsoService();
         $cookie = $sut->createStateCookie($uac, SsoState::TYPE_SSO_SET_SETTINGS);

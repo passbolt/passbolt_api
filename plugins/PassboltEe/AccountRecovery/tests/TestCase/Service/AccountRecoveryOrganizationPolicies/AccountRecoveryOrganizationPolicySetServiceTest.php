@@ -717,7 +717,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
         $this->assertActorNameMarkupIsEscaped(
             '<a href="https://evil.example.com">' . 'Click here</a>' . " has set the account recovery organization policy to $policyValue.",
-            $recipient->username
+            $recipient->username,
         );
     }
 
@@ -809,7 +809,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
         $this->assertActorNameMarkupIsEscaped(
             '<a href="https://evil.example.com">' . 'Click here</a>' . ' has disabled the account recovery.',
-            $recipient->username
+            $recipient->username,
         );
     }
 
@@ -888,7 +888,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
         $this->assertActorNameMarkupIsEscaped(
             '<a href="https://evil.example.com">' . 'Click here</a>' . " has updated the account recovery organization policy to $policyValue.",
-            $recipient->username
+            $recipient->username,
         );
     }
 

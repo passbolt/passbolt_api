@@ -154,7 +154,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         $expiredResourceWithDeletedResourceType = ResourceFactory::make()
             ->with(
                 'ResourceTypes',
-                ResourceTypeFactory::make()->deleted()
+                ResourceTypeFactory::make()->deleted(),
             )
             ->patchData([
                 'metadata_key_id' => $expiredMetadataKey->get('id'),

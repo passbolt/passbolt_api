@@ -69,11 +69,11 @@ class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
         $this->assertStringContainsString("client_id={$clientId}", $url);
         $this->assertStringContainsString(
             'scope=' . rawurlencode(implode(' ', ['openid', 'profile', 'email'])),
-            $url
+            $url,
         );
         $this->assertStringContainsString(
             'redirect_uri=' . rawurlencode(Router::url('/sso/google/redirect', true)),
-            $url
+            $url,
         );
         // assert sso state cookie
         $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
@@ -110,11 +110,11 @@ class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
         $this->assertStringContainsString("client_id={$clientId}", $url);
         $this->assertStringContainsString(
             'scope=' . rawurlencode(implode(' ', ['openid', 'profile', 'email'])),
-            $url
+            $url,
         );
         $this->assertStringContainsString(
             'redirect_uri=' . rawurlencode(Router::url('/sso/google/redirect', true)),
-            $url
+            $url,
         );
         // assert sso state cookie
         $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
@@ -149,7 +149,7 @@ class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
         $this->assertStringContainsString("client_id={$clientId}", $url);
         $this->assertStringContainsString(
             'scope=' . rawurlencode(implode(' ', ['openid', 'profile', 'email'])),
-            $url
+            $url,
         );
         $this->assertStringContainsString('redirect_uri=' . rawurlencode($redirectUrl), $url);
         // assert sso state cookie

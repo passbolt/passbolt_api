@@ -63,7 +63,7 @@ class PasswordExpirySettingsDto
         ?DateTime $created = null,
         ?string $createdBy = null,
         ?DateTime $modified = null,
-        ?string $modifiedBy = null
+        ?string $modifiedBy = null,
     ) {
         $this->automatic_expiry = $automaticExpiry;
         $this->automatic_update = $automaticUpdate;
@@ -95,7 +95,7 @@ class PasswordExpirySettingsDto
             null,
             null,
             null,
-            null
+            null,
         );
     }
 
@@ -108,7 +108,7 @@ class PasswordExpirySettingsDto
      */
     public static function createFromEntity(
         PasswordExpirySetting $passwordExpirySetting,
-        PasswordExpirySettingsForm $form
+        PasswordExpirySettingsForm $form,
     ): self {
         $value = $form->getData();
 

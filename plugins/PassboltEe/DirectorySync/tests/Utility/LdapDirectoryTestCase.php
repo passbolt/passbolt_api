@@ -274,7 +274,7 @@ class LdapDirectoryTestCase extends AppTestCase
             ->method('select')
             ->with(...$this->withConsecutive(
                 [array_values($mappingRules[DirectoryInterface::ENTRY_TYPE_GROUP])],
-                [array_values($mappingRules[DirectoryInterface::ENTRY_TYPE_USER])]
+                [array_values($mappingRules[DirectoryInterface::ENTRY_TYPE_USER])],
             ))
             ->willReturnSelf();
         $builder->expects($this->exactly($expectationCount))

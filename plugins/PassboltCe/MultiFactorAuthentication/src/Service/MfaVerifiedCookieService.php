@@ -41,7 +41,7 @@ class MfaVerifiedCookieService
     public function createDuoMfaVerifiedCookie(
         UserAccessControl $uac,
         SessionIdentificationServiceInterface $sessionIdentificationService,
-        ServerRequest $request
+        ServerRequest $request,
     ): Cookie {
         $sessionId = $sessionIdentificationService->getSessionIdentifier($request);
         $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_DUO, $sessionId);

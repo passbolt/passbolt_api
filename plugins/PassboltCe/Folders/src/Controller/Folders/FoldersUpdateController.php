@@ -48,7 +48,7 @@ class FoldersUpdateController extends AppController
         $uac = $this->User->getAccessControl();
         $foldersUpdateService = new FoldersUpdateService();
         $requestData = $this->populatedMetadataUserKeyId($uac->getId(), $this->getRequest()->getData());
-        $folderDto = MetadataFolderDto::fromArray($requestData);
+        $folderDto = MetadataFolderDto::createFromArray($requestData);
 
         /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
         $folder = $foldersUpdateService->update($uac, $id, $folderDto);

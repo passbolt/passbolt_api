@@ -39,7 +39,7 @@ class SetUserLocaleService extends LocaleService
         return $accountSettingsTable->createOrUpdateSetting(
             $userId,
             static::SETTING_PROPERTY,
-            $locale
+            $locale,
         );
     }
 }

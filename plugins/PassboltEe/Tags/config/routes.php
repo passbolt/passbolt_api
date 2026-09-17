@@ -54,14 +54,14 @@ $routes->plugin('Passbolt/Tags', ['path' => '/metadata'], function (RouteBuilder
         $routes
             ->connect(
                 '/tags',
-                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeTagsIndex', 'action' => 'index']
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeTagsIndex', 'action' => 'index'],
             )
             ->setMethods(['GET']);
 
         $routes
             ->connect(
                 '/tags',
-                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeTagsPost', 'action' => 'post']
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeTagsPost', 'action' => 'post'],
             )
             ->setMethods(['POST']);
     });
@@ -75,14 +75,14 @@ $routes->plugin('Passbolt/Tags', ['path' => '/metadata'], function (RouteBuilder
         $routes
             ->connect(
                 '/tags',
-                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyTagsIndex', 'action' => 'index']
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyTagsIndex', 'action' => 'index'],
             )
             ->setMethods(['GET']);
 
         $routes
             ->connect(
                 '/tags',
-                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyTagsPost', 'action' => 'post']
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyTagsPost', 'action' => 'post'],
             )
             ->setMethods(['POST']);
     });

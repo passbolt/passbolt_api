@@ -33,7 +33,7 @@ class RolesAddController extends AppController
 
         $result = (new RolesAddService())->add(
             $this->User->getAccessControl(),
-            $this->getRequest()->getData()
+            $this->getRequest()->getData(),
         );
 
         $this->success(__('The operation was successful.'), $result);

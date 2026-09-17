@@ -59,7 +59,7 @@ class FoldersRelationsFinderTraitTest extends FoldersTestCase
         foreach ($expectedMissingFoldersRelations as $expectedMissingFoldersRelation) {
             $this->assertContains(
                 ['foreign_id' => $expectedMissingFoldersRelation[0]->id, 'user_id' => $expectedMissingFoldersRelation[1]->id],
-                $missingFoldersRelations
+                $missingFoldersRelations,
             );
         }
     }
@@ -172,7 +172,7 @@ class FoldersRelationsFinderTraitTest extends FoldersTestCase
         $resourceA = ResourceFactory::make()->withPermissionsFor([$userAda])->persist();
         $this->findAndAssertMissingFoldersRelations(
             FoldersRelation::FOREIGN_MODEL_RESOURCE,
-            [[$resourceA, $userAda]]
+            [[$resourceA, $userAda]],
         );
     }
 
@@ -185,7 +185,7 @@ class FoldersRelationsFinderTraitTest extends FoldersTestCase
         $resourceA = ResourceFactory::make()->withFoldersRelationsFor([$userBetty, $userCarol])->withPermissionsFor([$userAda, $userBetty, $groupC])->persist();
         $this->findAndAssertMissingFoldersRelations(
             FoldersRelation::FOREIGN_MODEL_RESOURCE,
-            [[$resourceA, $userAda]]
+            [[$resourceA, $userAda]],
         );
     }
 
@@ -198,7 +198,7 @@ class FoldersRelationsFinderTraitTest extends FoldersTestCase
         $resourceA = ResourceFactory::make()->withPermissionsFor([$groupA])->persist();
         $this->findAndAssertMissingFoldersRelations(
             FoldersRelation::FOREIGN_MODEL_RESOURCE,
-            [[$resourceA, $userAda]]
+            [[$resourceA, $userAda]],
         );
     }
 
@@ -212,7 +212,7 @@ class FoldersRelationsFinderTraitTest extends FoldersTestCase
         $resourceA = ResourceFactory::make()->withFoldersRelationsFor([$userBetty, $userCarol])->withPermissionsFor([$groupA, $userBetty, $groupC])->persist();
         $this->findAndAssertMissingFoldersRelations(
             FoldersRelation::FOREIGN_MODEL_RESOURCE,
-            [[$resourceA, $userAda]]
+            [[$resourceA, $userAda]],
         );
     }
 
@@ -322,7 +322,7 @@ class FoldersRelationsFinderTraitTest extends FoldersTestCase
         $folderA = FolderFactory::make()->withPermissionsFor([$userAda])->persist();
         $this->findAndAssertMissingFoldersRelations(
             FoldersRelation::FOREIGN_MODEL_FOLDER,
-            [[$folderA, $userAda]]
+            [[$folderA, $userAda]],
         );
     }
 
@@ -335,7 +335,7 @@ class FoldersRelationsFinderTraitTest extends FoldersTestCase
         $folderA = FolderFactory::make()->withFoldersRelationsFor([$userBetty, $userCarol])->withPermissionsFor([$userAda, $userBetty, $groupC])->persist();
         $this->findAndAssertMissingFoldersRelations(
             FoldersRelation::FOREIGN_MODEL_FOLDER,
-            [[$folderA, $userAda]]
+            [[$folderA, $userAda]],
         );
     }
 
@@ -348,7 +348,7 @@ class FoldersRelationsFinderTraitTest extends FoldersTestCase
         $folderA = FolderFactory::make()->withPermissionsFor([$groupA])->persist();
         $this->findAndAssertMissingFoldersRelations(
             FoldersRelation::FOREIGN_MODEL_FOLDER,
-            [[$folderA, $userAda]]
+            [[$folderA, $userAda]],
         );
     }
 
@@ -361,7 +361,7 @@ class FoldersRelationsFinderTraitTest extends FoldersTestCase
         $folderA = FolderFactory::make()->withFoldersRelationsFor([$userBetty, $userCarol])->withPermissionsFor([$groupA, $userBetty, $groupC])->persist();
         $this->findAndAssertMissingFoldersRelations(
             FoldersRelation::FOREIGN_MODEL_FOLDER,
-            [[$folderA, $userAda]]
+            [[$folderA, $userAda]],
         );
     }
 }

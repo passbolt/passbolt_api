@@ -102,12 +102,12 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
         // Assess mail sent to the user
         $this->assertEmailInBatchContains(
             '/account-recovery/continue/' . $request['user_id'] . '/' . $authenticationToken['token'],
-            $user->username
+            $user->username,
         );
         $name = $admin->profile->first_name . ' ' . $admin->profile->last_name;
         $this->assertEmailInBatchContains(
             "$name ($admin->username) has approved your recovery request.",
-            $user->username
+            $user->username,
         );
 
         $this->assertAdminEmails($status, $user, $admin, $admins);
@@ -169,11 +169,11 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
         $userName = $user->profile->first_name . ' ' . $user->profile->last_name;
         $this->assertEmailInBatchContains(
             "$adminName ({$admin->username}) has updated a recovery request to {$status}.",
-            $rbacViewer->username
+            $rbacViewer->username,
         );
         $this->assertEmailInBatchContains(
             "$adminName ({$admin->username}) has set the status of the request initiated by $userName ({$user->username}) to {$status}.",
-            $rbacViewer->username
+            $rbacViewer->username,
         );
     }
 
@@ -202,12 +202,12 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
         // Assess mail sent to the user
         $this->assertEmailInBatchNotContains(
             '/account-recovery/continue/',
-            $user->username
+            $user->username,
         );
         $name = $admin->profile->first_name . ' ' . $admin->profile->last_name;
         $this->assertEmailInBatchContains(
             "$name ($admin->username) has denied your recovery request.",
-            $user->username
+            $user->username,
         );
 
         $this->assertAdminEmails($status, $user, $admin, $admins);
@@ -218,12 +218,12 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
         // Assess mail sent to the acting admin
         $this->assertEmailInBatchContains(
             "You have updated a recovery request to {$status}.",
-            $admin->username
+            $admin->username,
         );
         $userName = $user->profile->first_name . ' ' . $user->profile->last_name;
         $this->assertEmailInBatchContains(
             "You have set the status of the account recovery request initiated by $userName ({$user->username}) to {$status}.",
-            $admin->username
+            $admin->username,
         );
 
         // Assess the mail sent to the other admins
@@ -231,11 +231,11 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
             $adminName = $admin->profile->first_name . ' ' . $admin->profile->last_name;
             $this->assertEmailInBatchContains(
                 "$adminName ({$admin->username}) has updated a recovery request to {$status}.",
-                $adm->username
+                $adm->username,
             );
             $this->assertEmailInBatchContains(
                 "$adminName ({$admin->username}) has set the status of the request initiated by $userName ({$user->username}) to {$status}.",
-                $adm->username
+                $adm->username,
             );
         }
     }

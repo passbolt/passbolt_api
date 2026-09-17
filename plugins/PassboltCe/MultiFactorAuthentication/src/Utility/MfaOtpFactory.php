@@ -70,13 +70,13 @@ class MfaOtpFactory
             throw new InternalErrorException(
                 'Could not generate TOTP secret, please try again later.',
                 500,
-                $exception
+                $exception,
             );
         } catch (Exception $exception) {
             throw new InternalErrorException(
                 'Could not generate enough random bytes, please try again later.',
                 500,
-                $exception
+                $exception,
             );
         }
 
@@ -121,11 +121,11 @@ class MfaOtpFactory
     public static function getQrCodeInlineSvg(
         string $provisioningUri,
         ?int $width = 256,
-        ?string $encoding = Encoder::DEFAULT_BYTE_MODE_ECODING
+        ?string $encoding = Encoder::DEFAULT_BYTE_MODE_ECODING,
     ): string {
         $renderer = new ImageRenderer(
             new RendererStyle($width),
-            new SvgImageBackEnd()
+            new SvgImageBackEnd(),
         );
         $writer = new Writer($renderer);
         $inlineSvg = $writer->writeString($provisioningUri, $encoding);

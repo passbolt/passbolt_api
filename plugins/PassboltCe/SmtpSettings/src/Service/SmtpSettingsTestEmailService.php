@@ -120,7 +120,7 @@ class SmtpSettingsTestEmailService
         }
         if (!empty($this->smtpSettings['username']) && !empty($this->smtpSettings['password'])) {
             $encodedCreds = base64_encode(
-                chr(0) . $this->smtpSettings['username'] . chr(0) . $this->smtpSettings['password']
+                chr(0) . $this->smtpSettings['username'] . chr(0) . $this->smtpSettings['password'],
             );
             $toReplace[] = $encodedCreds;
             $replaceWith[] = $replaceMask;

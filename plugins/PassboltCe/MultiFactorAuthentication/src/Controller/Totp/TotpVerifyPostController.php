@@ -43,7 +43,7 @@ class TotpVerifyPostController extends MfaVerifyController
     public function post(
         SessionIdentificationServiceInterface $sessionIdentificationService,
         MfaFormInterface $verifyForm,
-        RememberAMonthSettingInterface $rememberMeForAMonthSetting
+        RememberAMonthSettingInterface $rememberMeForAMonthSetting,
     ) {
         $this->_handleVerifiedNotRequired($sessionIdentificationService, $rememberMeForAMonthSetting);
         $redirect = $this->_handleInvalidSettings(MfaSettings::PROVIDER_TOTP);
@@ -76,7 +76,7 @@ class TotpVerifyPostController extends MfaVerifyController
         $this->_generateMfaToken(
             MfaSettings::PROVIDER_TOTP,
             $sessionIdentificationService,
-            $rememberMeForAMonthSetting
+            $rememberMeForAMonthSetting,
         );
         $this->_handleVerifySuccess();
     }
@@ -95,7 +95,7 @@ class TotpVerifyPostController extends MfaVerifyController
         $isFailedAttemptExceeded = (new MfaRateLimiterService())->isFailedAttemptsExceeded(
             $this->User->id(),
             $isJwtAuth,
-            true // Consider this as a failed attempt too.
+            true, // Consider this as a failed attempt too.
         );
 
         if (!$isFailedAttemptExceeded) {
@@ -110,7 +110,7 @@ class TotpVerifyPostController extends MfaVerifyController
         if ($isJwtAuth) {
             (new RefreshTokenLogoutService())->logout($this->User->id(), $this->getRequest());
             $cookiesCollection = $this->getResponse()->getCookieCollection()->remove(
-                RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE
+                RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE,
             );
             $this->setResponse($this->getResponse()->withCookieCollection($cookiesCollection));
         }

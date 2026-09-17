@@ -51,7 +51,7 @@ class InjectMfaFormMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
         $uac = $this->getUacInRequest($request);
@@ -82,7 +82,7 @@ class InjectMfaFormMiddleware implements MiddlewareInterface
         ContainerInterface $container,
         string $path,
         UserAccessControl $uac,
-        MfaSettings $mfaSettings
+        MfaSettings $mfaSettings,
     ): void {
         switch ($path) {
             case 'setup/totp/start':

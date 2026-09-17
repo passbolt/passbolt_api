@@ -145,7 +145,7 @@ class ShareController extends AppController
             throw new ForbiddenException(__('You are not authorized to share this resource.'));
         }
         // V5 validations
-        $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
+        $resourceDto = MetadataResourceDto::createFromArray($resource->toArray());
         if ($resourceDto->isV5() && $resource->get('metadata_key_type') === 'user_key') {
             throw new BadRequestException(__('Resource metadata key type is invalid.'));
         }

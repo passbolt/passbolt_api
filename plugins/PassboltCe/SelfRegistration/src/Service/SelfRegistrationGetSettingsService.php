@@ -42,14 +42,14 @@ class SelfRegistrationGetSettingsService extends SelfRegistrationBaseSettingsSer
         $value = json_decode($settings->get('value'), true);
         if (is_null($value)) {
             throw new InternalErrorException(
-                __('Could not parse the self registration settings found in database.')
+                __('Could not parse the self registration settings found in database.'),
             );
         }
         $form = $this->getFormFromData($value);
         if (!$form->execute($value)) {
             $validationException = new FormValidationException(
                 __('Could not validate the self registration settings found in database.'),
-                $form
+                $form,
             );
 
             throw new InternalErrorException($validationException->getMessage(), 500, $validationException);

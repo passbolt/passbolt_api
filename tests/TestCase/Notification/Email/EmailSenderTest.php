@@ -60,7 +60,7 @@ class EmailSenderTest extends AppTestCase
                     'subject' => $exceptionOptions['subject'],
                     'format' => $exceptionOptions['format'],
                     'config' => $exceptionOptions['config'],
-                ]
+                ],
             );
             $this->assertEquals('auto-generated', $exceptionOptions['headers']['Auto-Submitted']);
             $this->assertStringMatchesFormat('<%s@%s>', $exceptionOptions['headers']['Message-ID']);

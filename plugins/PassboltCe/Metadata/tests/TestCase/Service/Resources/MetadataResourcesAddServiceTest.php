@@ -93,7 +93,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         $dummyResourceData = $this->getDummyResourcesPostData([
             'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
         ]);
-        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $resourceDto = MetadataResourceDto::createFromArray($dummyResourceData);
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
         $metadataKeyType = 'shared_key';
@@ -108,7 +108,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
             ],
         ];
         $uac = UserFactory::make()->persistedUAC();
-        $resource = $this->service->add($uac, MetadataResourceDto::fromArray($payload));
+        $resource = $this->service->add($uac, MetadataResourceDto::createFromArray($payload));
 
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertInstanceOf(Secret::class, $resource->secrets[0]);
@@ -141,7 +141,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
             ],
         ];
         $uac = UserFactory::make()->persistedUAC();
-        $resource = $this->service->add($uac, MetadataResourceDto::fromArray($payload));
+        $resource = $this->service->add($uac, MetadataResourceDto::createFromArray($payload));
 
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertInstanceOf(Secret::class, $resource->secrets[0]);
@@ -169,7 +169,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         } catch (ValidationException $exception) {
             $this->assertSame(
                 'The resource type does not exist.',
-                $exception->getErrors()['resource_type_id']['resource_type_exists']
+                $exception->getErrors()['resource_type_id']['resource_type_exists'],
             );
         }
     }
@@ -193,7 +193,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         } catch (ValidationException $exception) {
             $this->assertSame(
                 'The resource type should not be deleted.',
-                $exception->getErrors()['resource_type_id']['resource_type_is_not_soft_deleted']
+                $exception->getErrors()['resource_type_id']['resource_type_is_not_soft_deleted'],
             );
         }
     }
@@ -216,7 +216,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         } catch (ValidationException $exception) {
             $this->assertSame(
                 'The resource type should be one of the following: v5-password-string, v5-default, v5-totp-standalone, v5-default-with-totp, v5-custom-fields, v5-note, v5-pin-code.',
-                $exception->getErrors()['resource_type_id']['inList']
+                $exception->getErrors()['resource_type_id']['inList'],
             );
         }
     }
@@ -257,7 +257,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         } catch (ValidationException $exception) {
             $this->assertSame(
                 'The message should be a valid ASCII-armored OpenPGP message.',
-                $exception->getErrors()['metadata']['isMetadataParsable']
+                $exception->getErrors()['metadata']['isMetadataParsable'],
             );
         }
     }
@@ -333,7 +333,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         ];
         $uac = UserFactory::make()->persistedUAC();
         try {
-            $this->service->add($uac, MetadataResourceDto::fromArray($payload));
+            $this->service->add($uac, MetadataResourceDto::createFromArray($payload));
             $this->fail();
         } catch (ValidationException $exception) {
             $errors = $exception->getErrors();
@@ -353,7 +353,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         $dummyResourceData = $this->getDummyResourcesPostData([
             'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
         ]);
-        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $resourceDto = MetadataResourceDto::createFromArray($dummyResourceData);
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
 
@@ -369,7 +369,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         $uac = UserFactory::make()->persistedUAC();
 
         try {
-            $this->service->add($uac, MetadataResourceDto::fromArray($payload));
+            $this->service->add($uac, MetadataResourceDto::createFromArray($payload));
             $this->fail();
         } catch (ValidationException $exception) {
             $errors = $exception->getErrors();
@@ -388,7 +388,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         $dummyResourceData = $this->getDummyResourcesPostData([
             'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
         ]);
-        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $resourceDto = MetadataResourceDto::createFromArray($dummyResourceData);
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
 
@@ -404,7 +404,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         $uac = UserFactory::make()->persistedUAC();
 
         try {
-            $this->service->add($uac, MetadataResourceDto::fromArray($payload));
+            $this->service->add($uac, MetadataResourceDto::createFromArray($payload));
             $this->fail();
         } catch (ValidationException $exception) {
             $errors = $exception->getErrors();
@@ -423,7 +423,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         $dummyResourceData = $this->getDummyResourcesPostData([
             'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
         ]);
-        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $resourceDto = MetadataResourceDto::createFromArray($dummyResourceData);
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
         $metadataKeyType = 'shared_key';
@@ -449,7 +449,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
             }
         });
 
-        $this->service->add($uac, MetadataResourceDto::fromArray($payload));
+        $this->service->add($uac, MetadataResourceDto::createFromArray($payload));
 
         $this->assertSame(2, $this->numberOfAttemptsAtPersistingEntity);
         $this->assertSame(1, ResourceFactory::count());
@@ -467,7 +467,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         $dummyResourceData = $this->getDummyResourcesPostData([
             'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
         ]);
-        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $resourceDto = MetadataResourceDto::createFromArray($dummyResourceData);
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
         $metadataKeyType = 'shared_key';
@@ -493,7 +493,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
             }
         });
 
-        $this->service->add($uac, MetadataResourceDto::fromArray($payload));
+        $this->service->add($uac, MetadataResourceDto::createFromArray($payload));
         $this->assertSame(2, $this->numberOfAttemptsAtPersistingEntity);
         $this->assertSame(1, ResourceFactory::count());
         $this->assertSame(1, SecretFactory::count());

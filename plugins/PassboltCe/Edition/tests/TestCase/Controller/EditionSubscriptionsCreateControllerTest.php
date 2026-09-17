@@ -73,11 +73,11 @@ class EditionSubscriptionsCreateControllerTest extends AppIntegrationTestCase
         $this->assertResponseContains('The subscription was created.');
         $this->assertSame(1, $this->subscriptionRowCount());
         $editionRow = EditionOrganizationSettingFactory::firstOrFail(
-            ['property' => EditionOrganizationTable::PROPERTY_NAME]
+            ['property' => EditionOrganizationTable::PROPERTY_NAME],
         );
         $this->assertSame(EditionDto::EDITION_PRO, $editionRow->get('value'));
         $this->assertTrue(
-            EventManager::instance()->getEventList()->hasEvent(EditionUpgradeService::EVENT_NAME)
+            EventManager::instance()->getEventList()->hasEvent(EditionUpgradeService::EVENT_NAME),
         );
         $this->assertEmailQueueCount(1);
         $this->assertEmailIsInQueue([
@@ -87,7 +87,7 @@ class EditionSubscriptionsCreateControllerTest extends AppIntegrationTestCase
         $this->assertEmailWithRecipientIsInNotQueue($operator->username);
         $this->assertEmailSubject(
             $otherAdmin->username,
-            $operator->profile->full_name . ' upgraded this Passbolt instance to Pro Edition'
+            $operator->profile->full_name . ' upgraded this Passbolt instance to Pro Edition',
         );
     }
 
@@ -122,7 +122,7 @@ class EditionSubscriptionsCreateControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(409);
         $this->assertResponseContains('The instance is already on PRO.');
         $this->assertFalse(
-            EventManager::instance()->getEventList()->hasEvent(EditionUpgradeService::EVENT_NAME)
+            EventManager::instance()->getEventList()->hasEvent(EditionUpgradeService::EVENT_NAME),
         );
     }
 

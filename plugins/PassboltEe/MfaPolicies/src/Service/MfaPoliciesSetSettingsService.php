@@ -45,11 +45,11 @@ class MfaPoliciesSetSettingsService
      */
     public function createOrUpdate(
         ExtendedUserAccessControl $uac,
-        MfaPolicySettings $mfaPolicySettingsDto
+        MfaPolicySettings $mfaPolicySettingsDto,
     ): MfaPolicySettings {
         if (!$uac->isAdmin()) {
             throw new ForbiddenException(
-                __('Only administrators are allowed to create/update MFA policies settings.')
+                __('Only administrators are allowed to create/update MFA policies settings.'),
             );
         }
 
@@ -65,7 +65,7 @@ class MfaPoliciesSetSettingsService
                 'policy' => $mfaPolicySettingsDto->policy,
                 'remember_me_for_a_month' => $mfaPolicySettingsDto->remember_me_for_a_month,
             ],
-            $uac
+            $uac,
         );
 
         $mfaPolicySettingsDto = MfaPolicySettings::createFromEntity($mfaPoliciesSetting);

@@ -55,7 +55,7 @@ class MetadataUpgradeFoldersPostController extends AppController
 
         (new MetadataUpgradeFoldersUpdateService())->updateMany(
             $this->User->getAccessControl(),
-            $this->getRequest()->getData()
+            $this->getRequest()->getData(),
         );
 
         // Retrieve and sanity the query options.

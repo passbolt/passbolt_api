@@ -130,7 +130,7 @@ class SsoAzureService extends AbstractSsoService
      */
     public function assertResourceOwnerAgainstSsoState(
         SsoResourceOwnerInterface $resourceOwner,
-        SsoState $ssoState
+        SsoState $ssoState,
     ): void {
         parent::assertResourceOwnerAgainstSsoState($resourceOwner, $ssoState);
 

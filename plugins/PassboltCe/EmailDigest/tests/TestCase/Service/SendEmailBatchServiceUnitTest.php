@@ -123,7 +123,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
      * @dataProvider withAndWithoutDigestTemplate
      */
     public function testSendEmailBatchServiceUnitTest_On_Multiple_Emails_Same_Recipient_Below_Threshold(
-        bool $withDigestTemplate
+        bool $withDigestTemplate,
     ) {
         if (!$withDigestTemplate) {
             DigestTemplateRegistry::clearInstance();
@@ -168,7 +168,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
      * @dataProvider withAndWithoutDigestTemplate
      */
     public function testSendEmailBatchServiceUnitTest_On_Same_Digest_Template_Various_Recipients(
-        bool $withDigestTemplate
+        bool $withDigestTemplate,
     ) {
         if (!$withDigestTemplate) {
             DigestTemplateRegistry::clearInstance();
@@ -233,7 +233,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
      * @dataProvider withAndWithoutDigestTemplate
      */
     public function testSendEmailBatchServiceUnitTest_On_Multiple_Emails_Multiple_Operators_Below_Threshold(
-        bool $withDigestTemplate
+        bool $withDigestTemplate,
     ) {
         if (!$withDigestTemplate) {
             DigestTemplateRegistry::clearInstance();
@@ -300,7 +300,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
      * @dataProvider withAndWithoutDigestTemplate
      */
     public function testSendEmailBatchServiceUnitTest_On_Multiple_Emails_Multiple_Operators_Below_And_Above_Threshold(
-        bool $withDigestTemplate
+        bool $withDigestTemplate,
     ) {
         if (!$withDigestTemplate) {
             DigestTemplateRegistry::clearInstance();
@@ -414,7 +414,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
             $emailsResourceDeleted1,
             $emailsResourceDeleted2,
             $emailsGroupDeleted1,
-            $emailsGroupDeleted2
+            $emailsGroupDeleted2,
         );
 
         $this->service->sendNextEmailsBatch($allEmails);

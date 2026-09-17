@@ -96,7 +96,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData(
                 'account_recovery_user_setting.status',
-                AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_REJECTED
+                AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_REJECTED,
             );
 
         $failingService = new class ($request) extends AccountRecoverySetupCompleteService {
@@ -126,7 +126,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->optin()
             ->with(
                 'AccountRecoveryOrganizationPublicKeys',
-                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key(),
             )
             ->persist();
 
@@ -452,7 +452,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
         AccountRecoveryOrganizationPolicyFactory::make()
             ->optin()
             ->withAccountRecoveryOrganizationPublicKey(
-                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key(),
             )
             ->persist();
 

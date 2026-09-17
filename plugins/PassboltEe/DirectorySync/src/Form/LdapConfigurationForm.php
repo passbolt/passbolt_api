@@ -170,15 +170,15 @@ class LdapConfigurationForm extends Form
             ->requirePresence(
                 'default_group_admin_user',
                 'create',
-                __('The identifier of the default group admin user is required.')
+                __('The identifier of the default group admin user is required.'),
             )
             ->notEmptyString(
                 'default_group_admin_user',
-                __('The identifier of the default group admin user should not be empty.')
+                __('The identifier of the default group admin user should not be empty.'),
             )
             ->uuid(
                 'default_group_admin_user',
-                __('The identifier of the default group admin user should be a valid UUID.')
+                __('The identifier of the default group admin user should be a valid UUID.'),
             )
             ->add('default_group_admin_user', ['isValidUser' => [
                 'rule' => [$this, 'isValidUser'],
@@ -296,8 +296,8 @@ class LdapConfigurationForm extends Form
                 self::SUPPORTED_DIRECTORY_TYPE,
                 __(
                     'The directory type should be one of the following: {0}.',
-                    implode(', ', self::SUPPORTED_DIRECTORY_TYPE)
-                )
+                    implode(', ', self::SUPPORTED_DIRECTORY_TYPE),
+                ),
             );
 
         $validator
@@ -336,8 +336,8 @@ class LdapConfigurationForm extends Form
                 self::$connectionTypes,
                 __(
                     'The connection type should be one of the following: {0}.',
-                    implode(', ', self::$connectionTypes)
-                )
+                    implode(', ', self::$connectionTypes),
+                ),
             );
         $validator
             ->requirePresence('authentication_type', 'create', __('An authentication type is required.'))
@@ -347,8 +347,8 @@ class LdapConfigurationForm extends Form
                 self::$authenticationTypes,
                 __(
                     'The authentication type should be one of the following: {0}.',
-                    implode(', ', self::$authenticationTypes)
-                )
+                    implode(', ', self::$authenticationTypes),
+                ),
             );
 
         return $validator;
@@ -407,7 +407,7 @@ class LdapConfigurationForm extends Form
             ->maxLength(
                 'group_object_class',
                 128,
-                __('The group object class length should be maximum {0} characters.', 128)
+                __('The group object class length should be maximum {0} characters.', 128),
             )
             ->add('group_object_class', ['forbiddenField' => [
                 'rule' => [$this, 'isFieldNameAllowed'],
@@ -418,7 +418,7 @@ class LdapConfigurationForm extends Form
             ->maxLength(
                 'user_object_class',
                 128,
-                __('The user object class length should be maximum {0} characters.', 128)
+                __('The user object class length should be maximum {0} characters.', 128),
             )
             ->add('user_object_class', ['forbiddenField' => [
                 'rule' => [$this, 'isFieldNameAllowed'],
@@ -429,7 +429,7 @@ class LdapConfigurationForm extends Form
             ->maxLength(
                 'user_custom_filters',
                 10000,
-                __('The user custom filter length should be maximum {0} characters.', 10000) // 10k limit
+                __('The user custom filter length should be maximum {0} characters.', 10000), // 10k limit
             )
             ->add('user_custom_filters', ['containsForbiddenField' => [
                 'rule' => [$this, 'isFilterValueAllowed'],
@@ -440,7 +440,7 @@ class LdapConfigurationForm extends Form
             ->maxLength(
                 'group_custom_filters',
                 10000,
-                __('The group custom filter length should be maximum {0} characters.', 10000) // 10k limit
+                __('The group custom filter length should be maximum {0} characters.', 10000), // 10k limit
             )
             ->add('group_custom_filters', ['containsForbiddenField' => [
                 'rule' => [$this, 'isFilterValueAllowed'],
@@ -479,7 +479,7 @@ class LdapConfigurationForm extends Form
                 },
                 'message' => __(
                     'The field fallbacks keys should be one of the following: {0}.',
-                    implode(', ', static::SUPPORTED_DIRECTORY_TYPE)
+                    implode(', ', static::SUPPORTED_DIRECTORY_TYPE),
                 ),
             ]);
 

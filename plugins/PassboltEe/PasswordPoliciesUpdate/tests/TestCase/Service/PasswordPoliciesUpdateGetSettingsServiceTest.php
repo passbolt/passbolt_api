@@ -108,7 +108,7 @@ class PasswordPoliciesUpdateGetSettingsServiceTest extends AppTestCase
             $passwordPolicyArray['created'],
             $passwordPolicyArray['modified'],
             $resultArray['created'],
-            $resultArray['modified']
+            $resultArray['modified'],
         );
         $this->assertArrayEqualsCanonicalizing(
             [
@@ -121,7 +121,7 @@ class PasswordPoliciesUpdateGetSettingsServiceTest extends AppTestCase
                 'created_by' => $passwordPolicyArray['created_by'],
                 'modified_by' => $passwordPolicyArray['modified_by'],
             ],
-            $resultArray
+            $resultArray,
         );
     }
 

@@ -132,7 +132,7 @@ trait FormatValidationTrait
                     $this->assertNotEmpty($errors, __('The test {0}:{1} = {2} should have returned an error.', $fieldName, $testCaseName, $testCaseData));
                     $this->assertNotEmpty(
                         Hash::extract($errors, "$fieldName.{$testCase['rule_name']}"),
-                        __('The test {0}:{1} = {2} should have returned an error on the rule {3} but did not.', $fieldName, $testCaseName, $testCaseData, $testCase['rule_name'])
+                        __('The test {0}:{1} = {2} should have returned an error on the rule {3} but did not.', $fieldName, $testCaseName, $testCaseData, $testCase['rule_name']),
                     );
                 }
             }
@@ -184,7 +184,7 @@ trait FormatValidationTrait
                     $this->assertNotEmpty($errors, __('The test {0}:{1} = {2} should have returned an error.', $fieldName, $testCaseName, $testCaseData));
                     $this->assertNotEmpty(
                         Hash::extract($errors, "$fieldName.{$testCase['rule_name']}"),
-                        __('The test {0}:{1} = {2} should have returned an error on the rule {3} but did not.', $fieldName, $testCaseName, $testCaseData, $testCase['rule_name'])
+                        __('The test {0}:{1} = {2} should have returned an error on the rule {3} but did not.', $fieldName, $testCaseName, $testCaseData, $testCase['rule_name']),
                     );
                 }
             }
@@ -210,7 +210,7 @@ trait FormatValidationTrait
                     $this->assertNotEmpty($errors, __('The test {0}:{1} = {2} should have returned an error.', $fieldName, $testCaseName, $testCaseData));
                     $this->assertNotEmpty(
                         Hash::extract($errors, "$fieldName.{$testCase['rule_name']}"),
-                        __('The test {0}:{1} = {2} should have returned an error on the rule {3} but did not.', $fieldName, $testCaseName, $testCaseData, $testCase['rule_name'])
+                        __('The test {0}:{1} = {2} should have returned an error on the rule {3} but did not.', $fieldName, $testCaseName, $testCaseData, $testCase['rule_name']),
                     );
                 }
             }

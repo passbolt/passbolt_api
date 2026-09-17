@@ -45,8 +45,8 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
         $this->assertTrue(
             in_array(
                 MfaUserSettingsDeleteService::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT,
-                $this->sut->getSubscribedEvents()
-            )
+                $this->sut->getSubscribedEvents(),
+            ),
         );
     }
 

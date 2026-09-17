@@ -61,7 +61,7 @@ class HomeVariableWritableGpgHealthcheck extends HomeVariableDefinedGpgHealthche
     {
         return __(
             'The directory {0} containing the keyring is not writable by the webserver user.',
-            $this->gpgHome
+            $this->gpgHome,
         );
     }
 

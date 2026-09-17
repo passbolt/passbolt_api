@@ -58,17 +58,17 @@ class AvatarHelperTest extends TestCase
 
         $this->assertSame(
             $this->fullBaseUrl . '/img/avatar/user.png',
-            AvatarHelper::getAvatarUrl()
+            AvatarHelper::getAvatarUrl(),
         );
 
         $this->assertSame(
             $this->fullBaseUrl . '/img/avatar/user.png',
-            AvatarHelper::getAvatarUrl(null, AvatarsConfigurationService::FORMAT_SMALL)
+            AvatarHelper::getAvatarUrl(null, AvatarsConfigurationService::FORMAT_SMALL),
         );
 
         $this->assertSame(
             $this->fullBaseUrl . '/img/avatar/user_medium.png',
-            AvatarHelper::getAvatarUrl(null, AvatarsConfigurationService::FORMAT_MEDIUM)
+            AvatarHelper::getAvatarUrl(null, AvatarsConfigurationService::FORMAT_MEDIUM),
         );
 
         $this->expectException(RuntimeException::class);
@@ -90,7 +90,7 @@ class AvatarHelperTest extends TestCase
             AvatarHelper::getAvatarUrl([
                 'id' => $avatar['id'],
                 'data' => $avatar['data'],
-            ])
+            ]),
         );
     }
 
@@ -125,9 +125,9 @@ class AvatarHelperTest extends TestCase
                 $this->fullBaseUrl,
                 $avatar->id,
                 AvatarsConfigurationService::FORMAT_SMALL,
-                AvatarHelper::IMAGE_EXTENSION
+                AvatarHelper::IMAGE_EXTENSION,
             ),
-            $result
+            $result,
         );
     }
 }

@@ -94,8 +94,8 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
                 AccountRecoveryOrganizationPolicy::SUPPORTED_POLICIES,
                 __(
                     'The policy should be one of the following: {0}.',
-                    implode(', ', AccountRecoveryOrganizationPolicy::SUPPORTED_POLICIES)
-                )
+                    implode(', ', AccountRecoveryOrganizationPolicy::SUPPORTED_POLICIES),
+                ),
             );
 
         $validator
@@ -105,33 +105,33 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
         $validator
             ->uuid(
                 'created_by',
-                __('The identifier of the user who created the organization policy should be a valid UUID.')
+                __('The identifier of the user who created the organization policy should be a valid UUID.'),
             )
             ->requirePresence(
                 'created_by',
                 'create',
-                __('The identifier of the user who created the organization policy is required.')
+                __('The identifier of the user who created the organization policy is required.'),
             )
             ->notEmptyString(
                 'created_by',
                 __('The identifier of the user who created the organization policy should not be empty.'),
-                false
+                false,
             );
 
         $validator
             ->uuid(
                 'modified_by',
-                __('The identifier of the user who modified the organization policy should be a valid UUID.')
+                __('The identifier of the user who modified the organization policy should be a valid UUID.'),
             )
             ->requirePresence(
                 'modified_by',
                 'create',
-                __('The identifier of the user who modified the organization policy is required.')
+                __('The identifier of the user who modified the organization policy is required.'),
             )
             ->notEmptyString(
                 'modified_by',
                 __('The identifier of the user who modified the organization policy should not be empty.'),
-                false
+                false,
             );
 
         return $validator;
@@ -214,7 +214,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
      */
     public function replace(
         UserAccessControl $uac,
-        AccountRecoveryOrganizationPolicy $newPolicy
+        AccountRecoveryOrganizationPolicy $newPolicy,
     ): AccountRecoveryOrganizationPolicy {
         $this->getConnection()->transactional(function () use (&$newPolicy, $uac): void {
             $saveOptions = ['atomic' => false];
@@ -234,7 +234,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
      */
     protected function softDeleteCurrentPolicy(
         UserAccessControl $uac,
-        ?array $saveOptions = null
+        ?array $saveOptions = null,
     ): ?AccountRecoveryOrganizationPolicy {
         try {
             $oldPolicy = $this->getCurrentPolicyOrFail($this->find());
@@ -260,7 +260,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
     public function createOrFail(
         UserAccessControl $uac,
         AccountRecoveryOrganizationPolicy $newPolicy,
-        ?array $saveOptions = null
+        ?array $saveOptions = null,
     ): AccountRecoveryOrganizationPolicy {
         if (isset($newPolicy->account_recovery_organization_public_key)) {
             $saveOptions['associated'] = [
@@ -283,7 +283,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
      */
     protected function patchForSoftDelete(
         UserAccessControl $uac,
-        AccountRecoveryOrganizationPolicy $policy
+        AccountRecoveryOrganizationPolicy $policy,
     ): AccountRecoveryOrganizationPolicy {
         return $this->patchEntity($policy, [
             'policy' => $policy->policy,
@@ -306,7 +306,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
     public function buildAndValidateEntity(
         UserAccessControl $uac,
         string $policy,
-        ?string $publicKeyId = null
+        ?string $publicKeyId = null,
     ): AccountRecoveryOrganizationPolicy {
         $data = [
             'policy' => $policy,

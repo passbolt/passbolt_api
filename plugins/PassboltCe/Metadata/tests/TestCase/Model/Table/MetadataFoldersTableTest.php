@@ -58,11 +58,11 @@ class MetadataFoldersTableTest extends TestCase
     {
         // V4 folder shared with multiple users
         $folderSharedWithMultipleUsersV4 = FolderFactory::make()->withPermissionsFor(
-            UserFactory::make(2)->persist()
+            UserFactory::make(2)->persist(),
         )->persist();
         // V5 folder shared with multiple users
         FolderFactory::make()->v5Fields(['metadata' => 'foo'])->withPermissionsFor(
-            UserFactory::make(2)->persist()
+            UserFactory::make(2)->persist(),
         )->persist();
 
         // V4 folder shared with one group

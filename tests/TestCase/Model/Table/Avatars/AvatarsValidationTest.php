@@ -92,7 +92,7 @@ class AvatarsValidationTest extends TestCase
             170049,
             UPLOAD_ERR_OK,
             'ada.' . $extension,
-            'image/' . $extension
+            'image/' . $extension,
         );
 
         $file = $this->Avatars->newEntity(compact('file'));
@@ -112,7 +112,7 @@ class AvatarsValidationTest extends TestCase
                 170049,
                 $errorStatus,
                 'ada.png',
-                'image/png'
+                'image/png',
             );
         }
 

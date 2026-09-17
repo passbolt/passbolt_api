@@ -112,9 +112,9 @@ class EditionDowngradeEmailRedactor implements SubscribedEmailRedactorInterface
             function () use ($operator): string {
                 return __(
                     '{0} downgraded this Passbolt instance to Community Edition',
-                    $operator->profile->full_name
+                    $operator->profile->full_name,
                 );
-            }
+            },
         );
 
         $operator->profile->setVirtual(['full_name']);
@@ -130,7 +130,7 @@ class EditionDowngradeEmailRedactor implements SubscribedEmailRedactorInterface
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 

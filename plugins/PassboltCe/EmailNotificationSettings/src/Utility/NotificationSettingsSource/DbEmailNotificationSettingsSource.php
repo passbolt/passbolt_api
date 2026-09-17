@@ -58,7 +58,7 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
         $this->organizationSettingsTable->createOrUpdateSetting(
             EmailNotificationSettings::NAMESPACE,
             $data,
-            $userAccessControl
+            $userAccessControl,
         );
     }
 

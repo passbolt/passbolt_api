@@ -60,7 +60,7 @@ class PingOneRecoverLoginController extends AbstractSsoController
             null,
             null,
             $this->User->ip(),
-            $this->User->userAgent()
+            $this->User->userAgent(),
         );
 
         $url = $this->getSsoUrlWithCookie(new SsoPingOneService($cookieService), $uac, SsoState::TYPE_SSO_RECOVER);

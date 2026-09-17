@@ -77,7 +77,7 @@ class ExportPoliciesSettingsFormTest extends AppTestCase
             ExportPoliciesSettingsForm::class,
             'allow_csv_format',
             $this->getDummyExportPoliciesSettings(),
-            $testCases
+            $testCases,
         );
     }
 

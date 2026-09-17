@@ -93,7 +93,7 @@ class FullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, Healthc
     {
         return __(
             'Full base url is not set. The application is using: {0}.',
-            Configure::read('App.fullBaseUrl')
+            Configure::read('App.fullBaseUrl'),
         );
     }
 

@@ -38,7 +38,7 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
         ResourceFactory::make()
             ->with(
                 'ResourceTypes',
-                ResourceTypeFactory::make()->deleted()
+                ResourceTypeFactory::make()->deleted(),
             )->persist();
 
         // V5 resource

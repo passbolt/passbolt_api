@@ -93,6 +93,7 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
         $recipients = $this->Users
             ->find('adminsOrRbacActionGrantees', rbacActionName: RbacsControlledActionsInsertService::NAME_ACCOUNT_RECOVERY_REQUESTS_VIEW) // phpcs:ignore
             ->find('notDisabled')
+            ->find('activeNotDeleted')
             ->where(['Users.id <>' => $user->id])
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()]);
         /** @var \App\Model\Entity\User $recipient */
@@ -114,7 +115,7 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
         User $admin,
         User $user,
         string $requestId,
-        string $clientIp
+        string $clientIp,
     ): Email {
         $locale = (new GetUserLocaleService())->getLocale($admin->username);
         $subject = (new LocaleService())->translateString(
@@ -123,9 +124,9 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
                 return __(
                     'Suspicious account recovery request issued from IP {0} for {1}',
                     $clientIp,
-                    $user->profile->first_name
+                    $user->profile->first_name,
                 );
-            }
+            },
         );
 
         $data = [

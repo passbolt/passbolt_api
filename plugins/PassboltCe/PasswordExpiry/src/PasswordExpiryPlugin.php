@@ -99,7 +99,7 @@ class PasswordExpiryPlugin extends BasePlugin
     {
         return $commands->add(
             'passbolt notify_about_expired_resources',
-            PasswordExpiryNotifyAboutExpiredResourcesCommand::class
+            PasswordExpiryNotifyAboutExpiredResourcesCommand::class,
         );
     }
 }

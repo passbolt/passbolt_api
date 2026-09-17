@@ -99,13 +99,13 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         // Demoted from group
         $this->assertEmailInBatchContains(
             'You are no longer a group manager of this group.',
-            $demote->username
+            $demote->username,
         );
 
         // Promoted as group manager
         $this->assertEmailInBatchContains(
             'You are now a group manager of this group.',
-            $promote->username
+            $promote->username,
         );
 
         // Admin summary

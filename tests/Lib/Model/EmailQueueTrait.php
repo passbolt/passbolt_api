@@ -92,7 +92,7 @@ trait EmailQueueTrait
         EmailNotificationSettings::flushCache();
         $this->backupEmailNotificationSettings = array_merge_recursive(
             Configure::read('passbolt.email.send'),
-            $this->backupEmailNotificationSettings
+            $this->backupEmailNotificationSettings,
         );
         Configure::write('passbolt.email.send.' . $notificationSettingPath, $value);
     }
@@ -151,7 +151,7 @@ trait EmailQueueTrait
         $i = 0,
         string $message = '',
         bool $htmlSpecialChar = true,
-        ?string $template = null
+        ?string $template = null,
     ): void {
         $strings = (array)$string;
         $renderedEmail = $this->renderEmail($i, $template);
@@ -175,7 +175,7 @@ trait EmailQueueTrait
         $string,
         $i = 0,
         string $message = '',
-        bool $htmlSpecialChar = true
+        bool $htmlSpecialChar = true,
     ): void {
         $strings = (array)$string;
         $renderedEmail = $this->renderEmail($i);

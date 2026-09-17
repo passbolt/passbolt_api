@@ -69,7 +69,7 @@ class SsoDowngradeCleanupServiceTest extends TestCase
                 AuthenticationToken::TYPE_REFRESH_TOKEN,
                 AuthenticationToken::TYPE_REGISTER,
             ],
-            $remainingTypes
+            $remainingTypes,
         );
     }
 

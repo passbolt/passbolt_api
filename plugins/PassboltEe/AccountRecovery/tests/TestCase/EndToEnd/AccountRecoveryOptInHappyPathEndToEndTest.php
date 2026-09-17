@@ -227,7 +227,7 @@ class AccountRecoveryOptInHappyPathEndToEndTest extends AccountRecoveryIntegrati
         $this->assertEmailQueueCount(self::$nAdmins + 1);
         $this->assertEmailInBatchContains(
             Router::url('/app/account-recovery/requests/review/' . $request->get('id'), true),
-            self::$admin->username
+            self::$admin->username,
         );
     }
 
@@ -273,7 +273,7 @@ class AccountRecoveryOptInHappyPathEndToEndTest extends AccountRecoveryIntegrati
         $this->assertEmailQueueCount(self::$nAdmins + 1);
         $this->assertEmailInBatchContains(
             Router::url('/account-recovery/continue/' . self::$user->id . '/' . $request->authentication_token->token, true),
-            self::$user->username
+            self::$user->username,
         );
     }
 

@@ -67,7 +67,7 @@ class EditionDtoTest extends TestCase
         $this->assertNotNull($dto->getLastEditionChangeDateTime());
         $this->assertSame(
             $modified->getTimestamp(),
-            $dto->getLastEditionChangeDateTime()->getTimestamp()
+            $dto->getLastEditionChangeDateTime()->getTimestamp(),
         );
     }
 
@@ -89,7 +89,7 @@ class EditionDtoTest extends TestCase
         $this->assertNotNull($dto->getLastEditionChangeDateTime());
         $this->assertSame(
             $modified->getTimestamp(),
-            $dto->getLastEditionChangeDateTime()->getTimestamp()
+            $dto->getLastEditionChangeDateTime()->getTimestamp(),
         );
     }
 

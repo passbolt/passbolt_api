@@ -50,7 +50,7 @@ class AuthIsAuthenticatedControllerTest extends JwtAuthenticationIntegrationTest
         $this->assertEventFiredWith(
             LogAuthenticationWithNonValidJwtAccessToken::AUTHENTICATION_WITH_INVALID_ACCESS_TOKEN_EVENT,
             'message',
-            $expectedLogMessage
+            $expectedLogMessage,
         );
     }
 

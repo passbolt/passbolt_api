@@ -67,7 +67,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
     public function testCreateFolder_CommonError1_ValidationError()
     {
         $userA = UserFactory::make()->persist();
-        $folderData = MetadataFolderDto::fromArray(['name' => '']);
+        $folderData = MetadataFolderDto::createFromArray(['name' => '']);
 
         try {
             $this->service->create($this->makeUac($userA), $folderData);
@@ -81,7 +81,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
     public function testCreateFolder_CommonError2_ParentFolderNotExist()
     {
         $userA = UserFactory::make()->persist();
-        $folderData = MetadataFolderDto::fromArray([
+        $folderData = MetadataFolderDto::createFromArray([
             'name' => 'B',
             'folder_parent_id' => UuidFactory::uuid('folder.id.not-exist'),
         ]);
@@ -103,7 +103,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
         /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
         $folderA = FolderFactory::make()->withPermissionsFor([$userB])->withFoldersRelationsFor([$userB])->persist();
 
-        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $folderA->id]);
+        $folderData = MetadataFolderDto::createFromArray(['name' => 'B', 'folder_parent_id' => $folderA->id]);
 
         try {
             $this->service->create($this->makeUac($userA), $folderData);
@@ -122,7 +122,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
         /** @var \App\Model\Entity\User $userA */
         $userA = UserFactory::make()->persist();
-        $folderData = MetadataFolderDto::fromArray(['name' => 'A']);
+        $folderData = MetadataFolderDto::createFromArray(['name' => 'A']);
         $this->service->create($this->makeUac($userA), $folderData);
 
         $this->assertEmailIsInQueue([
@@ -140,7 +140,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
     {
         /** @var \App\Model\Entity\User $userA */
         $userA = UserFactory::make()->persist();
-        $folderData = MetadataFolderDto::fromArray(['name' => 'A']);
+        $folderData = MetadataFolderDto::createFromArray(['name' => 'A']);
         $folder = $this->service->create($this->makeUac($userA), $folderData);
 
         $this->assertEquals('A', $folder->name);
@@ -160,7 +160,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
         /** @var \Passbolt\Folders\Model\Entity\Folder $folderA */
         $folderA = FolderFactory::make()->withPermissionsFor([$userA])->withFoldersRelationsFor([$userA])->persist();
 
-        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $folderA->id]);
+        $folderData = MetadataFolderDto::createFromArray(['name' => 'B', 'folder_parent_id' => $folderA->id]);
         $folder = $this->service->create($this->makeUac($userA), $folderData);
 
         $this->assertEquals('B', $folder->name);
@@ -186,7 +186,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
             ->withFoldersRelationsFor([$userA, $userB])
             ->persist();
 
-        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $folderA->id]);
+        $folderData = MetadataFolderDto::createFromArray(['name' => 'B', 'folder_parent_id' => $folderA->id]);
 
         try {
             $this->service->create($this->makeUac($userA), $folderData);
@@ -210,7 +210,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
             ->withFoldersRelationsFor([$userA, $userB])
             ->persist();
 
-        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $folderA->id]);
+        $folderData = MetadataFolderDto::createFromArray(['name' => 'B', 'folder_parent_id' => $folderA->id]);
         $folderB = $this->service->create($this->makeUac($userA), $folderData);
 
         $this->assertEquals('B', $folderB->name);

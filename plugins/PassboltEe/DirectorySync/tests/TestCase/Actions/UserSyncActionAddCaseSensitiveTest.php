@@ -37,7 +37,7 @@ class UserSyncActionAddCaseSensitiveTest extends DirectorySyncDeprecatedIntegrat
         parent::setUp();
         UserFactory::make()->admin()->persist();
         $this->action = new UserSyncAction(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
         $this->action->getDirectory()->setUsers([]);
     }
