@@ -338,4 +338,31 @@ class HealthcheckIndexControllerV5Test extends TestCase
         );
         $this->assertContains(HealthcheckServiceCollector::DOMAIN_ENVIRONMENT, array_column($result, 'domain_key'));
     }
+
+    public function testHealthcheckIndexControllerV5_ExcludesHealthchecksByKeysAndDomainsTogether(): void
+    {
+        $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
+        $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
+        RoleFactory::make(3)->persist();
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, 'php-version next-min-php-version');
+        Configure::write(
+            HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS,
+            HealthcheckServiceCollector::DOMAIN_APPLICATION,
+        );
+        $this->logInAsAdmin();
+
+        $this->getJson('/healthcheck.json?api-version=v5');
+
+        $this->assertResponseSuccess();
+        $result = $this->getResponseBodyAsArray();
+
+        $this->assertNotEmpty($result);
+        $this->assertNotContains('php-version', array_column($result, 'key'));
+        $this->assertNotContains('next-min-php-version', array_column($result, 'key'));
+        $this->assertNotContains(
+            HealthcheckServiceCollector::DOMAIN_APPLICATION,
+            array_column($result, 'domain_key'),
+        );
+        $this->assertContains(HealthcheckServiceCollector::DOMAIN_ENVIRONMENT, array_column($result, 'domain_key'));
+    }
 }
