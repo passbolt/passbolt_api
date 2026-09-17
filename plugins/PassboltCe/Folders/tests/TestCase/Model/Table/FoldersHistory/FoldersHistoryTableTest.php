@@ -75,6 +75,33 @@ class FoldersHistoryTableTest extends TestCase
         $this->assertInstanceOf(FolderHistory::class, $entity);
     }
 
+    public function testCreateFoldersHistory_V5WithoutPlaintextName(): void
+    {
+        $folderId = UuidFactory::uuid();
+        $data = [
+            'id' => $folderId,
+            'name' => null,
+            'metadata' => 'encrypted-metadata',
+        ];
+
+        $entity = $this->FoldersHistory->create($data);
+
+        $this->assertInstanceOf(FolderHistory::class, $entity);
+        $this->assertSame($folderId, $entity->folder_id);
+        $this->assertNull($entity->name);
+    }
+
+    public function testCreateFoldersHistory_V4NameIsStillRequired(): void
+    {
+        $data = [
+            'id' => UuidFactory::uuid(),
+        ];
+
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('Could not validate folder history data.');
+        $this->FoldersHistory->create($data);
+    }
+
     public function testCreateFoldersHistory_Name_Too_long(): void
     {
         $data = [
