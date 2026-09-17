@@ -188,4 +188,54 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
         $this->assertCount(1, $result);
         $this->assertNotSame('server-metadata-key-access-in-zero-knowledge-mode', $result[0]['key']);
     }
+
+    public function testHealthcheckApiSerializerServiceTest_ExcludesHealthcheckByKey(): void
+    {
+        Configure::write(
+            HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS,
+            'php-version selenium-disabled-application',
+        );
+        $this->collector->addService(new PhpVersionHealthcheck());
+        $this->collector->addService(new NextMinPhpVersionHealthcheck());
+        $this->collector->addService(new PluginEnabledJwtHealthcheck());
+        $this->collector->addService(new SeleniumDisabledApplicationHealthcheck());
+        $result = $this->service->serialize();
+
+        $this->assertCount(2, $result);
+        $this->assertSame(['next-min-php-version', 'plugin-enabled-jwt'], array_column($result, 'key'));
+    }
+
+    public function testHealthcheckApiSerializerServiceTest_ExcludesHealthchecksByDomain(): void
+    {
+        Configure::write(
+            HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS,
+            HealthcheckServiceCollector::DOMAIN_ENVIRONMENT . ' ' . HealthcheckServiceCollector::DOMAIN_JWT,
+        );
+        $this->collector->addService(new PhpVersionHealthcheck());
+        $this->collector->addService(new NextMinPhpVersionHealthcheck());
+        $this->collector->addService(new PluginEnabledJwtHealthcheck());
+        $this->collector->addService(new SeleniumDisabledApplicationHealthcheck());
+        $result = $this->service->serialize();
+
+        $this->assertCount(1, $result);
+        $this->assertSame(['selenium-disabled-application'], array_column($result, 'key'));
+    }
+
+    public function testHealthcheckApiSerializerServiceTest_ExcludesHealthchecksByKeysAndDomainsTogether(): void
+    {
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, 'php-version');
+        Configure::write(
+            HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS,
+            HealthcheckServiceCollector::DOMAIN_JWT,
+        );
+        $this->collector->addService(new PhpVersionHealthcheck());
+        $this->collector->addService(new NextMinPhpVersionHealthcheck());
+        $this->collector->addService(new PluginEnabledJwtHealthcheck());
+        $this->collector->addService(new SeleniumDisabledApplicationHealthcheck());
+
+        $result = $this->service->serialize();
+
+        $this->assertCount(2, $result);
+        $this->assertSame(['next-min-php-version', 'selenium-disabled-application'], array_column($result, 'key'));
+    }
 }

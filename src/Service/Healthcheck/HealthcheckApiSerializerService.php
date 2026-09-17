@@ -16,12 +16,17 @@ declare(strict_types=1);
  */
 namespace App\Service\Healthcheck;
 
+use Cake\Core\Configure;
+
 class HealthcheckApiSerializerService
 {
     public const STATUS_PASS = 'pass';
     public const STATUS_ERROR = 'error';
     public const STATUS_WARNING = 'warning';
     public const STATUS_INFO = 'info';
+
+    public const CONFIG_EXCLUDED_KEYS = 'passbolt.plugins.healthcheck.excludedKeys';
+    public const CONFIG_EXCLUDED_DOMAINS = 'passbolt.plugins.healthcheck.excludedDomains';
 
     /**
      * @var \App\Service\Healthcheck\HealthcheckServiceCollector
@@ -37,16 +42,25 @@ class HealthcheckApiSerializerService
     }
 
     /**
-     * Runs every registered healthcheck, excludes skipped checks and serializes the results as a flat list,
-     * in registration order.
+     * Runs every registered healthcheck, excludes the checks excluded by configuration and the skipped ones,
+     * and serializes the results as a flat list, in registration order.
      *
      * @return array
      */
     public function serialize(): array
     {
         $body = [];
+        $excludedKeys = $this->getExcludedConfig(self::CONFIG_EXCLUDED_KEYS);
+        $excludedDomains = $this->getExcludedConfig(self::CONFIG_EXCLUDED_DOMAINS);
 
         foreach ($this->collector->getServices() as $healthcheckService) {
+            if (
+                in_array($healthcheckService->getKey(), $excludedKeys, true)
+                || in_array($healthcheckService->domain(), $excludedDomains, true)
+            ) {
+                continue;
+            }
+
             $healthcheck = $healthcheckService->check();
 
             if ($healthcheck instanceof SkipHealthcheckInterface && $healthcheck->isSkipped()) {
@@ -69,6 +83,25 @@ class HealthcheckApiSerializerService
         }
 
         return $body;
+    }
+
+    /**
+     * Reads a space separated exclusion list from the configuration.
+     *
+     * An unset or empty value excludes nothing. Unrecognised entries are ignored.
+     *
+     * @param string $configKey The configuration key holding the list.
+     * @return array<string>
+     */
+    private function getExcludedConfig(string $configKey): array
+    {
+        $value = Configure::read($configKey);
+
+        if (!is_string($value) || trim($value) === '') {
+            return [];
+        }
+
+        return preg_split('/\s+/', trim($value)) ?: [];
     }
 
     /**
