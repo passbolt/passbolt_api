@@ -23,6 +23,7 @@ use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Service\Healthcheck\SkipHealthcheckInterface;
 use Cake\Core\Configure;
+use Closure;
 
 class ExcludedHealthchecksConfigurationHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface, SkipHealthcheckInterface // phpcs:ignore
 {
@@ -41,24 +42,24 @@ class ExcludedHealthchecksConfigurationHealthcheck implements HealthcheckService
     /**
      * @var array<string>
      */
-    private array $unmatchedValues = [];
+    private array $unmatchedConfigurationValues = [];
 
     /**
      * @var array<string>
      */
-    private array $invalidFormatSettings = [];
+    private array $invalidFormattedSettings = [];
 
     /**
-     * @var \App\Service\Healthcheck\HealthcheckServiceCollector
+     * @var \Closure(): \App\Service\Healthcheck\HealthcheckServiceCollector
      */
-    private HealthcheckServiceCollector $collector;
+    private Closure $collectorProvider;
 
     /**
-     * @param \App\Service\Healthcheck\HealthcheckServiceCollector $collector The collector this check reads.
+     * @param \Closure(): \App\Service\Healthcheck\HealthcheckServiceCollector $collectorProvider Lazily resolves the collector this check reads.
      */
-    public function __construct(HealthcheckServiceCollector $collector)
+    public function __construct(Closure $collectorProvider)
     {
-        $this->collector = $collector;
+        $this->collectorProvider = $collectorProvider;
     }
 
     /**
@@ -66,8 +67,10 @@ class ExcludedHealthchecksConfigurationHealthcheck implements HealthcheckService
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->unmatchedValues = [];
-        $this->invalidFormatSettings = $this->getInvalidFormatSettings();
+        $this->invalidFormattedSettings = $this->getInvalidFormatSettings();
+        if (!empty($this->invalidFormattedSettings)) {
+            return $this;
+        }
 
         $excludedKeys = HealthcheckApiSerializerService::readExcludedConfig(
             HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS,
@@ -76,18 +79,18 @@ class ExcludedHealthchecksConfigurationHealthcheck implements HealthcheckService
             HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS,
         );
 
-        if (empty($this->invalidFormatSettings) && empty($excludedKeys) && empty($excludedDomains)) {
+        if (empty($excludedKeys) && empty($excludedDomains)) {
             $this->markAsSkipped();
 
             return $this;
         }
 
-        $this->unmatchedValues = array_values(array_unique(array_merge(
-            array_diff($excludedKeys, $this->collector->getKeysInCollectedServices()),
-            array_diff($excludedDomains, $this->collector->getDomainsInCollectedServices()),
-        )));
+        $collector = ($this->collectorProvider)();
+        $unknownKeys = array_diff($excludedKeys, $collector->getKeysInCollectedServices());
+        $unknownDomains = array_diff($excludedDomains, $collector->getDomainsInCollectedServices());
+        $this->unmatchedConfigurationValues = array_values(array_unique(array_merge($unknownKeys, $unknownDomains)));
 
-        $this->status = empty($this->invalidFormatSettings) && empty($this->unmatchedValues);
+        $this->status = empty($this->unmatchedConfigurationValues);
 
         return $this;
     }
@@ -155,14 +158,14 @@ class ExcludedHealthchecksConfigurationHealthcheck implements HealthcheckService
     {
         $messages = [];
 
-        foreach ($this->invalidFormatSettings as $setting) {
+        foreach ($this->invalidFormattedSettings as $setting) {
             $messages[] = __('The healthcheck exclusion setting {0} is not a space separated list of names.', $setting);
         }
 
-        if (!empty($this->unmatchedValues)) {
+        if (!empty($this->unmatchedConfigurationValues)) {
             $messages[] = __(
                 'The healthcheck exclusion configuration contains values matching no healthcheck on this instance: {0}.', // phpcs:ignore
-                implode(', ', $this->unmatchedValues),
+                implode(', ', $this->unmatchedConfigurationValues),
             );
         }
 
@@ -183,7 +186,7 @@ class ExcludedHealthchecksConfigurationHealthcheck implements HealthcheckService
             ),
         ];
 
-        if (!empty($this->invalidFormatSettings)) {
+        if (!empty($this->invalidFormattedSettings)) {
             $help[] = __(
                 'An exclusion setting must be a single string holding the names separated by spaces, for example "{0}".', // phpcs:ignore
                 'php-version distribution',
@@ -191,7 +194,7 @@ class ExcludedHealthchecksConfigurationHealthcheck implements HealthcheckService
             $help[] = __('An array, a boolean or a integer is not a supported value for these settings.');
         }
 
-        if (!empty($this->unmatchedValues)) {
+        if (!empty($this->unmatchedConfigurationValues)) {
             $help[] = __('Value must be a healthcheck key, as returned by getKey(), or a healthcheck domain.');
         }
 

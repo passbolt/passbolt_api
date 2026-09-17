@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\Command\ProcessUserService;
-use App\Service\Healthcheck\ConfigFiles\ExcludedHealthchecksConfigurationHealthcheck;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
@@ -163,11 +162,6 @@ class HealthcheckCommand extends PassboltCommand
         }
 
         $this->posixModeIsEnabled = $args->getOption('posix');
-
-        // Reads the collector it belongs to, so it cannot be registered in it.
-        $this->healthcheckServiceCollector->addService(
-            new ExcludedHealthchecksConfigurationHealthcheck($this->healthcheckServiceCollector),
-        );
 
         // If user only want to run one check
         $paramChecks = [];

@@ -30,6 +30,7 @@ use App\Service\Healthcheck\Application\SessionProviderApplicationHealthcheck;
 use App\Service\Healthcheck\Application\SslForceApplicationHealthcheck;
 use App\Service\Healthcheck\Application\SslFullBaseUrlApplicationHealthcheck;
 use App\Service\Healthcheck\ConfigFiles\AppConfigFileHealthcheck;
+use App\Service\Healthcheck\ConfigFiles\ExcludedHealthchecksConfigurationHealthcheck;
 use App\Service\Healthcheck\ConfigFiles\PassboltConfigFileHealthcheck;
 use App\Service\Healthcheck\Core\CacheCoreHealthcheck;
 use App\Service\Healthcheck\Core\DebugDisabledCoreHealthcheck;
@@ -148,6 +149,8 @@ class HealthcheckServiceProvider extends ServiceProvider
         // Config files health checks
         $container->add(AppConfigFileHealthcheck::class);
         $container->add(PassboltConfigFileHealthcheck::class);
+        $container->add(ExcludedHealthchecksConfigurationHealthcheck::class)
+            ->addArgument(fn() => $container->get(HealthcheckServiceCollector::class));
         // Core health checks
         $container->add(CacheCoreHealthcheck::class);
         $container->add(DebugDisabledCoreHealthcheck::class);
@@ -241,6 +244,7 @@ class HealthcheckServiceProvider extends ServiceProvider
             ->addMethodCall('addService', [TimeSyncHealthcheck::class])
             ->addMethodCall('addService', [AppConfigFileHealthcheck::class])
             ->addMethodCall('addService', [PassboltConfigFileHealthcheck::class])
+            ->addMethodCall('addService', [ExcludedHealthchecksConfigurationHealthcheck::class])
             ->addMethodCall('addService', [CacheCoreHealthcheck::class])
             ->addMethodCall('addService', [DebugDisabledCoreHealthcheck::class])
             ->addMethodCall('addService', [SaltCoreHealthcheck::class])
