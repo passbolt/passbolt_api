@@ -19,6 +19,7 @@ namespace App\Controller\Healthcheck;
 use App\Controller\AppController;
 use App\Service\Healthcheck\Application\LatestVersionApplicationHealthcheck;
 use App\Service\Healthcheck\Application\SelfRegistrationProviderApplicationHealthcheck;
+use App\Service\Healthcheck\ConfigFiles\ExcludedHealthchecksConfigurationHealthcheck;
 use App\Service\Healthcheck\Core\FullBaseUrlCoreHealthcheck;
 use App\Service\Healthcheck\Database\ConnectDatabaseHealthcheck;
 use App\Service\Healthcheck\Database\TablesCountDatabaseHealthcheck;
@@ -90,6 +91,9 @@ class HealthcheckIndexController extends AppController
         IsRequestHttpsSslHealthcheck $isRequestHttpsSslHealthcheck,
     ): void {
         $healthcheckServiceCollector->addService($isRequestHttpsSslHealthcheck);
+        $healthcheckServiceCollector->addService(
+            new ExcludedHealthchecksConfigurationHealthcheck($healthcheckServiceCollector),
+        );
 
         $serializer = new HealthcheckApiSerializerService($healthcheckServiceCollector);
 

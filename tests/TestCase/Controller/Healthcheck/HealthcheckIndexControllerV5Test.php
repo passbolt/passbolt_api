@@ -365,4 +365,72 @@ class HealthcheckIndexControllerV5Test extends TestCase
         );
         $this->assertContains(HealthcheckServiceCollector::DOMAIN_ENVIRONMENT, array_column($result, 'domain_key'));
     }
+
+    public function testHealthcheckIndexControllerV5_NoExclusionConfiguredHidesTheExclusionHealthcheck(): void
+    {
+        RoleFactory::make(3)->persist();
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, null);
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, null);
+        $this->logInAsAdmin();
+
+        $this->getJson('/healthcheck.json?api-version=v5');
+
+        $this->assertResponseSuccess();
+        $result = $this->getResponseBodyAsArray();
+
+        $this->assertNotEmpty($result);
+        $this->assertNotContains('excluded-healthchecks-configuration', array_column($result, 'key'));
+    }
+
+    public function testHealthcheckIndexControllerV5_MisspeltExcludedDomainIsReported(): void
+    {
+        RoleFactory::make(3)->persist();
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, 'environments');
+        $this->logInAsAdmin();
+
+        $this->getJson('/healthcheck.json?api-version=v5');
+
+        $this->assertResponseSuccess();
+        $result = $this->getResponseBodyAsArray();
+
+        $entries = array_values(array_filter(
+            $result,
+            fn(array $entry) => $entry['key'] === 'excluded-healthchecks-configuration',
+        ));
+        $this->assertCount(1, $entries);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $entries[0]['status']);
+        $this->assertSame(HealthcheckServiceCollector::DOMAIN_CONFIG_FILES, $entries[0]['domain_key']);
+        $this->assertStringContainsString('environments', $entries[0]['message']);
+        $this->assertNotEmpty($entries[0]['help']);
+        $this->assertContains(HealthcheckServiceCollector::DOMAIN_ENVIRONMENT, array_column($result, 'domain_key'));
+    }
+
+    public function testHealthcheckIndexControllerV5_NonStringExcludedSettingIsReported(): void
+    {
+        RoleFactory::make(3)->persist();
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, ['php-version']);
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, true);
+        $this->logInAsAdmin();
+
+        $this->getJson('/healthcheck.json?api-version=v5');
+
+        $this->assertResponseSuccess();
+        $result = $this->getResponseBodyAsArray();
+
+        $entries = array_values(array_filter(
+            $result,
+            fn(array $entry) => $entry['key'] === 'excluded-healthchecks-configuration',
+        ));
+        $this->assertCount(1, $entries);
+        $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $entries[0]['status']);
+        $this->assertStringContainsString(
+            'passbolt.plugins.healthcheck.excludedKeys is not a space separated list of names.',
+            $entries[0]['message'],
+        );
+        $this->assertStringContainsString(
+            'passbolt.plugins.healthcheck.excludedDomains is not a space separated list of names.',
+            $entries[0]['message'],
+        );
+        $this->assertContains('php-version', array_column($result, 'key'));
+    }
 }

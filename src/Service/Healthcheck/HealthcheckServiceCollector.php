@@ -158,4 +158,19 @@ class HealthcheckServiceCollector
 
         return $domains;
     }
+
+    /**
+     * @return array
+     */
+    public function getKeysInCollectedServices(): array
+    {
+        $keys = [];
+        foreach ($this->services as $service) {
+            if (!in_array($service->getKey(), $keys)) {
+                $keys[] = $service->getKey();
+            }
+        }
+
+        return $keys;
+    }
 }

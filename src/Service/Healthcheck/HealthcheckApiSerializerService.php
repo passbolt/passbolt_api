@@ -50,8 +50,8 @@ class HealthcheckApiSerializerService
     public function serialize(): array
     {
         $body = [];
-        $excludedKeys = $this->getExcludedConfig(self::CONFIG_EXCLUDED_KEYS);
-        $excludedDomains = $this->getExcludedConfig(self::CONFIG_EXCLUDED_DOMAINS);
+        $excludedKeys = self::readExcludedConfig(self::CONFIG_EXCLUDED_KEYS);
+        $excludedDomains = self::readExcludedConfig(self::CONFIG_EXCLUDED_DOMAINS);
 
         foreach ($this->collector->getServices() as $healthcheckService) {
             if (
@@ -88,12 +88,12 @@ class HealthcheckApiSerializerService
     /**
      * Reads a space separated exclusion list from the configuration.
      *
-     * An unset or empty value excludes nothing. Unrecognised entries are ignored.
+     * An unset, empty or non-string value excludes nothing. Unrecognised entries are ignored.
      *
      * @param string $configKey The configuration key holding the list.
      * @return array<string>
      */
-    private function getExcludedConfig(string $configKey): array
+    public static function readExcludedConfig(string $configKey): array
     {
         $value = Configure::read($configKey);
 
