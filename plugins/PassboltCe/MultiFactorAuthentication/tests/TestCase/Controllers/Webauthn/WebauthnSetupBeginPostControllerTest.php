@@ -18,6 +18,8 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Webauthn;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaWebauthnCredentialFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Webauthn\MfaWebauthnOrganizationOnlyScenario;
 
@@ -56,15 +58,45 @@ class WebauthnSetupBeginPostControllerTest extends MfaIntegrationTestCase
 
         $this->postJson('/mfa/setup/webauthn/begin.json?api-version=v2', []);
         $this->assertResponseOk();
-        $this->assertNotEmpty($this->_responseJsonBody->handle);
-        $this->assertNotEmpty($this->_responseJsonBody->credentialCreationOptions);
 
-        $handle = $this->_responseJsonBody->handle;
+        $body = $this->getResponseBodyAsArray();
+        $this->assertNotEmpty($body['handle']);
+        $options = $body['credentialCreationOptions'];
+        $this->assertNotEmpty($options['challenge']);
+        $this->assertSame([], $options['excludeCredentials']);
+        $this->assertSame('preferred', $options['authenticatorSelection']['userVerification']);
+        $this->assertSame('discouraged', $options['authenticatorSelection']['residentKey']);
+        $this->assertArrayNotHasKey('authenticatorAttachment', $options['authenticatorSelection']);
+        $this->assertSame('none', $options['attestation']);
+        $this->assertSame(60_000, $options['timeout']);
+        $this->assertSame([], $options['hints']);
+        /** @var array $pubKeyCredParams */
+        $pubKeyCredParams = $options['pubKeyCredParams'];
+        $this->assertSame([-7, -257], array_column($pubKeyCredParams, 'alg'));
+
         /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = AuthenticationTokenFactory::find()
-            ->where(['token' => $handle, 'user_id' => $user->id])
+            ->where(['token' => $body['handle'], 'user_id' => $user->id])
             ->firstOrFail();
         $this->assertSame(AuthenticationToken::TYPE_MFA_SETUP, $token->type);
         $this->assertTrue($token->active);
+    }
+
+    public function testWebauthnSetupBeginPostController_Success_ExcludesAlreadyEnrolledCredentials(): void
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaWebauthnOrganizationOnlyScenario::class);
+        MfaWebauthnCredentialFactory::make()->withUser($user)->credentialId('existing-a')->persist();
+        MfaWebauthnCredentialFactory::make()->withUser($user)->credentialId('existing-b')->persist();
+
+        $this->postJson('/mfa/setup/webauthn/begin.json?api-version=v2', []);
+        $this->assertResponseOk();
+
+        /** @var array $exclude */
+        $exclude = $this->getResponseBodyAsArray()['credentialCreationOptions']['excludeCredentials'];
+        $this->assertCount(2, $exclude);
+        $ids = array_column($exclude, 'id');
+        $this->assertContains(Base64UrlSafe::encodeUnpadded('existing-a'), $ids);
+        $this->assertContains(Base64UrlSafe::encodeUnpadded('existing-b'), $ids);
     }
 }
