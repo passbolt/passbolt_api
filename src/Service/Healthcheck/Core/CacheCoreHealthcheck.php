@@ -130,6 +130,6 @@ class CacheCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCl
      */
     public function getKey(): string
     {
-        return 'cache-core';
+        return 'cache';
     }
 }

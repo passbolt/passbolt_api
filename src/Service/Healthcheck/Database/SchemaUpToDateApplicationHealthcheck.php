@@ -151,6 +151,6 @@ class SchemaUpToDateApplicationHealthcheck implements HealthcheckServiceInterfac
      */
     public function getKey(): string
     {
-        return 'schema-up-to-date-application';
+        return 'schema-up-to-date';
     }
 }

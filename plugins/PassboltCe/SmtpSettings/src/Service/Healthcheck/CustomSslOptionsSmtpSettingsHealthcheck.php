@@ -158,6 +158,6 @@ class CustomSslOptionsSmtpSettingsHealthcheck implements HealthcheckServiceInter
      */
     public function getKey(): string
     {
-        return 'custom-ssl-options-smtp-settings';
+        return 'custom-ssl-options';
     }
 }

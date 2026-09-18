@@ -117,6 +117,6 @@ class CanVerifyGpgHealthcheck extends AbstractGpgHealthcheck implements SkipHeal
      */
     public function getKey(): string
     {
-        return 'can-verify-gpg';
+        return 'can-verify';
     }
 }

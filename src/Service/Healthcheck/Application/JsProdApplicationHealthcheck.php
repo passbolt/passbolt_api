@@ -113,6 +113,6 @@ class JsProdApplicationHealthcheck implements HealthcheckServiceInterface, Healt
      */
     public function getKey(): string
     {
-        return 'js-prod-application';
+        return 'js-prod';
     }
 }

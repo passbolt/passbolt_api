@@ -123,6 +123,6 @@ class FingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getKey(): string
     {
-        return 'fingerprint-match-gpg';
+        return 'fingerprint-match';
     }
 }

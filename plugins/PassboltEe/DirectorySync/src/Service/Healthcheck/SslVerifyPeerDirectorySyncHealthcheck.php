@@ -124,6 +124,6 @@ class SslVerifyPeerDirectorySyncHealthcheck implements HealthcheckServiceInterfa
      */
     public function getKey(): string
     {
-        return 'ssl-verify-peer-directory-sync';
+        return 'ssl-verify-peer';
     }
 }

@@ -82,6 +82,6 @@ class PublicKeyInKeyringGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getKey(): string
     {
-        return 'public-key-in-keyring-gpg';
+        return 'public-key-in-keyring';
     }
 }

@@ -120,6 +120,6 @@ class CanSignGpgHealthcheck extends AbstractGpgHealthcheck implements SkipHealth
      */
     public function getKey(): string
     {
-        return 'can-sign-gpg';
+        return 'can-sign';
     }
 }

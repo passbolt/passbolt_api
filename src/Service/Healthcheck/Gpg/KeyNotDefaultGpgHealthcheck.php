@@ -84,6 +84,6 @@ class KeyNotDefaultGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getKey(): string
     {
-        return 'key-not-default-gpg';
+        return 'key-not-default';
     }
 }

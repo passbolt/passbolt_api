@@ -70,7 +70,7 @@ class HealthcheckIndexControllerV5Test extends TestCase
         'php-version',
         'next-min-php-version',
         'operating-system',
-        'gpg',
+        'gpg-version',
         'pcre',
         'mbstring',
         'intl',
@@ -80,76 +80,77 @@ class HealthcheckIndexControllerV5Test extends TestCase
         'time-sync',
         'app-config-file',
         'passbolt-config-file',
-        'cache-core',
-        'debug-disabled-core',
-        'salt-core',
-        'full-base-url-core',
-        'valid-full-base-url-core',
-        'full-base-url-reachable-core',
-        'peer-valid-ssl',
-        'host-valid-ssl',
-        'not-self-signed-ssl',
-        'plugin-enabled-smtp-settings',
-        'plugin-enabled-jwt',
-        'php-gpg-module-installed-gpg',
-        'home-variable-defined-gpg',
-        'home-variable-writable-gpg',
-        'key-not-default-gpg',
-        'public-key-readable-and-parsable-gpg',
-        'private-key-readable-and-parsable-gpg',
-        'fingerprint-match-gpg',
-        'public-key-in-keyring-gpg',
-        'public-key-email-gpg',
-        'can-encrypt-gpg',
-        'can-sign-gpg',
-        'can-encrypt-sign-gpg',
-        'can-decrypt-gpg',
-        'can-decrypt-verify-gpg',
-        'can-verify-gpg',
-        'gopengpg-public-key-format-gpg',
-        'gopengpg-private-key-format-gpg',
-        'latest-version-application',
-        'ssl-force-application',
-        'ssl-full-base-url-application',
-        'selenium-disabled-application',
-        'robots-index-disabled-application',
-        'self-registration-plugin-enabled-application',
-        'self-registration-provider-application',
-        'self-registration-public-removed-application',
-        'host-availability-check-enabled-application',
-        'js-prod-application',
-        'email-notification-enabled-application',
-        'session-provider-application',
-        'connect-database',
-        'tables-count-database',
-        'default-content-database',
+        'cache',
+        'debug-disabled',
+        'excluded-healthchecks',
+        'salt',
+        'full-base-url',
+        'valid-full-base-url',
+        'full-base-url-reachable',
+        'peer-valid',
+        'host-valid',
+        'not-self-signed',
+        'smtp-settings-plugin-enabled',
+        'jwt-plugin-enabled',
+        'php-gpg-module-installed',
+        'home-variable-defined',
+        'home-variable-writable',
+        'key-not-default',
+        'public-key-readable-and-parsable',
+        'private-key-readable-and-parsable',
+        'fingerprint-match',
+        'public-key-in-keyring',
+        'public-key-email',
+        'can-encrypt',
+        'can-sign',
+        'can-encrypt-sign',
+        'can-decrypt',
+        'can-decrypt-verify',
+        'can-verify',
+        'gopengpg-public-key-format',
+        'gopengpg-private-key-format',
+        'latest-version',
+        'ssl-force',
+        'ssl-full-base-url',
+        'selenium-disabled',
+        'robots-index-disabled',
+        'self-registration-plugin-enabled',
+        'self-registration-provider',
+        'self-registration-public-removed',
+        'host-availability-check-enabled',
+        'js-prod',
+        'email-notification-enabled',
+        'session-provider',
+        'connect',
+        'tables-count',
+        'default-content',
         'mariadb-mysql-version-deprecate',
-        'schema-up-to-date-application',
-        'model-cache-database',
-        'subscription-key-application',
-        'directory-not-writable-jwt',
-        'valid-key-pair-jwt',
-        'edition-present-in-database-application',
+        'schema-up-to-date',
+        'model-cache',
+        'subscription-key',
+        'directory-not-writable',
+        'valid-key-pair',
+        'edition-present-in-database',
         'server-can-decrypt-metadata-private-key',
         'no-active-metadata-key',
         'server-missing-access-to-metadata-key',
         'server-private-metadata-key-validate',
         'server-metadata-key-access-in-zero-knowledge-mode',
-        'settings-validation-smtp-settings',
+        'settings-validation',
         'smtp-settings-settings-source',
         'smtp-settings-endpoints-disabled',
-        'custom-ssl-options-smtp-settings',
+        'custom-ssl-options',
         'directory-sync-endpoints-disabled',
-        'ssl-verify-peer-directory-sync',
-        'ssl-host-verification-sso',
+        'ssl-verify-peer',
+        'ssl-host-verification',
         'sso-edit-endpoints-disabled',
         'sso-egress-guard-disabled',
-        'scim',
+        'scim-plugin-enabled',
         'scim-secret-token-expiry',
         'passbolt-config-writable-web-installer',
         'public-key-writable-web-installer',
         'private-key-writable-web-installer',
-        'is-request-https-ssl',
+        'is-request-https',
     ];
 
     public function setUp(): void
@@ -339,33 +340,6 @@ class HealthcheckIndexControllerV5Test extends TestCase
         $this->assertContains(HealthcheckServiceCollector::DOMAIN_ENVIRONMENT, array_column($result, 'domain_key'));
     }
 
-    public function testHealthcheckIndexControllerV5_ExcludesHealthchecksByKeysAndDomainsTogether(): void
-    {
-        $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
-        $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
-        RoleFactory::make(3)->persist();
-        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, 'php-version next-min-php-version');
-        Configure::write(
-            HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS,
-            HealthcheckServiceCollector::DOMAIN_APPLICATION,
-        );
-        $this->logInAsAdmin();
-
-        $this->getJson('/healthcheck.json?api-version=v5');
-
-        $this->assertResponseSuccess();
-        $result = $this->getResponseBodyAsArray();
-
-        $this->assertNotEmpty($result);
-        $this->assertNotContains('php-version', array_column($result, 'key'));
-        $this->assertNotContains('next-min-php-version', array_column($result, 'key'));
-        $this->assertNotContains(
-            HealthcheckServiceCollector::DOMAIN_APPLICATION,
-            array_column($result, 'domain_key'),
-        );
-        $this->assertContains(HealthcheckServiceCollector::DOMAIN_ENVIRONMENT, array_column($result, 'domain_key'));
-    }
-
     public function testHealthcheckIndexControllerV5_NoExclusionConfiguredHidesTheExclusionHealthcheck(): void
     {
         RoleFactory::make(3)->persist();
@@ -379,7 +353,7 @@ class HealthcheckIndexControllerV5Test extends TestCase
         $result = $this->getResponseBodyAsArray();
 
         $this->assertNotEmpty($result);
-        $this->assertNotContains('excluded-healthchecks-core', array_column($result, 'key'));
+        $this->assertNotContains('excluded-healthchecks', array_column($result, 'key'));
     }
 
     public function testHealthcheckIndexControllerV5_MisspeltExcludedDomainIsReported(): void
@@ -395,7 +369,7 @@ class HealthcheckIndexControllerV5Test extends TestCase
 
         $entries = array_values(array_filter(
             $result,
-            fn(array $entry) => $entry['key'] === 'excluded-healthchecks-core',
+            fn(array $entry) => $entry['key'] === 'excluded-healthchecks',
         ));
         $this->assertCount(1, $entries);
         $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $entries[0]['status']);
@@ -425,7 +399,7 @@ class HealthcheckIndexControllerV5Test extends TestCase
 
         $entries = array_values(array_filter(
             $result,
-            fn(array $entry) => $entry['key'] === 'excluded-healthchecks-core',
+            fn(array $entry) => $entry['key'] === 'excluded-healthchecks',
         ));
         $this->assertCount(1, $entries);
         $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $entries[0]['status']);

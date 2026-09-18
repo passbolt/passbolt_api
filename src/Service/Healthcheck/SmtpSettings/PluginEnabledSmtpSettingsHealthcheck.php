@@ -114,6 +114,6 @@ class PluginEnabledSmtpSettingsHealthcheck implements HealthcheckServiceInterfac
      */
     public function getKey(): string
     {
-        return 'plugin-enabled-smtp-settings';
+        return 'smtp-settings-plugin-enabled';
     }
 }

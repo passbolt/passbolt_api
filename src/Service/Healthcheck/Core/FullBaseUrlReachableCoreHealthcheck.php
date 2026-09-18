@@ -168,6 +168,6 @@ class FullBaseUrlReachableCoreHealthcheck implements HealthcheckServiceInterface
      */
     public function getKey(): string
     {
-        return 'full-base-url-reachable-core';
+        return 'full-base-url-reachable';
     }
 }

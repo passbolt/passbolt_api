@@ -96,6 +96,6 @@ class HomeVariableDefinedGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getKey(): string
     {
-        return 'home-variable-defined-gpg';
+        return 'home-variable-defined';
     }
 }

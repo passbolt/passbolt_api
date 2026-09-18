@@ -113,6 +113,6 @@ class RobotsIndexDisabledApplicationHealthcheck implements HealthcheckServiceInt
      */
     public function getKey(): string
     {
-        return 'robots-index-disabled-application';
+        return 'robots-index-disabled';
     }
 }

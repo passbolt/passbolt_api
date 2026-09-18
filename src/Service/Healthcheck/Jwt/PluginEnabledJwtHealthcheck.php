@@ -114,6 +114,6 @@ class PluginEnabledJwtHealthcheck implements HealthcheckServiceInterface, Health
      */
     public function getKey(): string
     {
-        return 'plugin-enabled-jwt';
+        return 'jwt-plugin-enabled';
     }
 }

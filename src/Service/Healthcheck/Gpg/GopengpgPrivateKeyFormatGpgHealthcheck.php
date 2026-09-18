@@ -109,6 +109,6 @@ class GopengpgPrivateKeyFormatGpgHealthcheck extends AbstractGpgHealthcheck impl
      */
     public function getKey(): string
     {
-        return 'gopengpg-private-key-format-gpg';
+        return 'gopengpg-private-key-format';
     }
 }

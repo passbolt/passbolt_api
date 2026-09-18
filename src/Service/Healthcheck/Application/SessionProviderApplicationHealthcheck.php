@@ -149,6 +149,6 @@ class SessionProviderApplicationHealthcheck implements HealthcheckServiceInterfa
      */
     public function getKey(): string
     {
-        return 'session-provider-application';
+        return 'session-provider';
     }
 }

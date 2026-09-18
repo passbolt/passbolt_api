@@ -91,6 +91,6 @@ class TablesCountDatabaseHealthcheck extends AbstractDatabaseHealthcheck
      */
     public function getKey(): string
     {
-        return 'tables-count-database';
+        return 'tables-count';
     }
 }

@@ -60,6 +60,6 @@ class HostValidSslHealthcheck extends AbstractBaseSslHealthcheck
      */
     public function getKey(): string
     {
-        return 'host-valid-ssl';
+        return 'host-valid';
     }
 }

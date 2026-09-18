@@ -112,6 +112,6 @@ class SslForceApplicationHealthcheck implements HealthcheckServiceInterface, Hea
      */
     public function getKey(): string
     {
-        return 'ssl-force-application';
+        return 'ssl-force';
     }
 }

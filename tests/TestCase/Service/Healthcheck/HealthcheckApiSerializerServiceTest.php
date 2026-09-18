@@ -75,7 +75,7 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
         $result = $this->service->serialize();
 
         $this->assertSame('php-version', $result[0]['key']);
-        $this->assertSame('selenium-disabled-application', $result[1]['key']);
+        $this->assertSame('selenium-disabled', $result[1]['key']);
         $this->assertSame(HealthcheckApiSerializerService::STATUS_ERROR, $result[0]['status']);
         $this->assertSame(HealthcheckApiSerializerService::STATUS_ERROR, $result[1]['status']);
         $this->assertSame([], $result[0]['help']);
@@ -108,7 +108,7 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
         $result = $this->service->serialize();
 
         $this->assertSame('next-min-php-version', $result[0]['key']);
-        $this->assertSame('plugin-enabled-jwt', $result[1]['key']);
+        $this->assertSame('jwt-plugin-enabled', $result[1]['key']);
         $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $result[0]['status']);
         $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $result[1]['status']);
         $this->assertSame([], $result[0]['help']);
@@ -126,7 +126,7 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
 
         $result = $this->service->serialize();
 
-        $this->assertSame('scim', $result[0]['key']);
+        $this->assertSame('scim-plugin-enabled', $result[0]['key']);
         $this->assertSame(HealthcheckApiSerializerService::STATUS_INFO, $result[0]['status']);
         $this->assertSame('SCIM plugin is enabled.', $result[0]['message']);
     }
@@ -139,7 +139,7 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
 
         $result = $this->service->serialize();
 
-        $this->assertSame('scim', $result[0]['key']);
+        $this->assertSame('scim-plugin-enabled', $result[0]['key']);
         $this->assertSame(HealthcheckApiSerializerService::STATUS_INFO, $result[0]['status']);
         $this->assertSame('SCIM plugin is disabled.', $result[0]['message']);
         $this->assertSame([], $result[0]['help']);
@@ -193,7 +193,7 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
     {
         Configure::write(
             HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS,
-            'php-version selenium-disabled-application',
+            'php-version selenium-disabled',
         );
         $this->collector->addService(new PhpVersionHealthcheck());
         $this->collector->addService(new NextMinPhpVersionHealthcheck());
@@ -202,7 +202,7 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
         $result = $this->service->serialize();
 
         $this->assertCount(2, $result);
-        $this->assertSame(['next-min-php-version', 'plugin-enabled-jwt'], array_column($result, 'key'));
+        $this->assertSame(['next-min-php-version', 'jwt-plugin-enabled'], array_column($result, 'key'));
     }
 
     public function testHealthcheckApiSerializerServiceTest_ExcludesHealthchecksByDomain(): void
@@ -218,7 +218,7 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
         $result = $this->service->serialize();
 
         $this->assertCount(1, $result);
-        $this->assertSame(['selenium-disabled-application'], array_column($result, 'key'));
+        $this->assertSame(['selenium-disabled'], array_column($result, 'key'));
     }
 
     public function testHealthcheckApiSerializerServiceTest_ExcludesHealthchecksByKeysAndDomainsTogether(): void
@@ -239,6 +239,6 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
         $result = $this->service->serialize();
 
         $this->assertCount(1, $result);
-        $this->assertSame(['selenium-disabled-application'], array_column($result, 'key'));
+        $this->assertSame(['selenium-disabled'], array_column($result, 'key'));
     }
 }

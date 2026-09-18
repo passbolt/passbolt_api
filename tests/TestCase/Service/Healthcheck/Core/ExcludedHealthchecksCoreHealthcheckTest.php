@@ -71,7 +71,7 @@ class ExcludedHealthchecksCoreHealthcheckTest extends AppTestCase
     {
         Configure::write(
             HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS,
-            'php-version excluded-healthchecks-core',
+            'php-version excluded-healthchecks',
         );
         Configure::write(
             HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS,
@@ -146,7 +146,7 @@ class ExcludedHealthchecksCoreHealthcheckTest extends AppTestCase
     {
         Configure::write(
             HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS,
-            ['php-version', 'excluded-healthchecks-core'],
+            ['php-version', 'excluded-healthchecks'],
         );
         Configure::write(
             HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS,

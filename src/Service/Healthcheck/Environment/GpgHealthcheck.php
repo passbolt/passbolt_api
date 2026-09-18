@@ -135,6 +135,6 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     public function getKey(): string
     {
-        return 'gpg';
+        return 'gpg-version';
     }
 }

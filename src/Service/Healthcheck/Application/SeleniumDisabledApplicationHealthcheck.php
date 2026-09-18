@@ -112,6 +112,6 @@ class SeleniumDisabledApplicationHealthcheck implements HealthcheckServiceInterf
      */
     public function getKey(): string
     {
-        return 'selenium-disabled-application';
+        return 'selenium-disabled';
     }
 }

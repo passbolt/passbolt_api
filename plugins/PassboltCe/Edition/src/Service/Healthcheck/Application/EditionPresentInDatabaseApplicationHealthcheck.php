@@ -128,6 +128,6 @@ class EditionPresentInDatabaseApplicationHealthcheck implements HealthcheckServi
      */
     public function getKey(): string
     {
-        return 'edition-present-in-database-application';
+        return 'edition-present-in-database';
     }
 }

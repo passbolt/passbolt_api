@@ -118,6 +118,6 @@ class CanDecryptVerifyGpgHealthcheck extends AbstractGpgHealthcheck implements S
      */
     public function getKey(): string
     {
-        return 'can-decrypt-verify-gpg';
+        return 'can-decrypt-verify';
     }
 }

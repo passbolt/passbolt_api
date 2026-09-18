@@ -118,6 +118,6 @@ class EmailNotificationEnabledApplicationHealthcheck implements HealthcheckServi
      */
     public function getKey(): string
     {
-        return 'email-notification-enabled-application';
+        return 'email-notification-enabled';
     }
 }

@@ -117,6 +117,6 @@ class HostAvailabilityCheckEnabledApplicationHealthcheck implements HealthcheckS
      */
     public function getKey(): string
     {
-        return 'host-availability-check-enabled-application';
+        return 'host-availability-check-enabled';
     }
 }

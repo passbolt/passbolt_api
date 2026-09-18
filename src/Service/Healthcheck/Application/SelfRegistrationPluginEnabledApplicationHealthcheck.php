@@ -126,6 +126,6 @@ class SelfRegistrationPluginEnabledApplicationHealthcheck implements Healthcheck
      */
     public function getKey(): string
     {
-        return 'self-registration-plugin-enabled-application';
+        return 'self-registration-plugin-enabled';
     }
 }

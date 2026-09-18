@@ -225,6 +225,6 @@ class LatestVersionApplicationHealthcheck implements HealthcheckServiceInterface
      */
     public function getKey(): string
     {
-        return 'latest-version-application';
+        return 'latest-version';
     }
 }

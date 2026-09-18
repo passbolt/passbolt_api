@@ -110,6 +110,6 @@ class ModelCacheDatabaseHealthcheck extends AbstractDatabaseHealthcheck
      */
     public function getKey(): string
     {
-        return 'model-cache-database';
+        return 'model-cache';
     }
 }

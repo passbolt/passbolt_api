@@ -128,6 +128,6 @@ class FullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, Healthc
      */
     public function getKey(): string
     {
-        return 'full-base-url-core';
+        return 'full-base-url';
     }
 }

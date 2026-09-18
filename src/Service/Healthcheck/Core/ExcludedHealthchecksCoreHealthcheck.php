@@ -302,6 +302,6 @@ class ExcludedHealthchecksCoreHealthcheck implements HealthcheckServiceInterface
      */
     public function getKey(): string
     {
-        return 'excluded-healthchecks-core';
+        return 'excluded-healthchecks';
     }
 }

@@ -126,6 +126,6 @@ class SelfRegistrationPublicRemovedApplicationHealthcheck implements Healthcheck
      */
     public function getKey(): string
     {
-        return 'self-registration-public-removed-application';
+        return 'self-registration-public-removed';
     }
 }

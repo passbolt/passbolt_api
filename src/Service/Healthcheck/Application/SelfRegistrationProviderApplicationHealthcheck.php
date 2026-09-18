@@ -140,6 +140,6 @@ class SelfRegistrationProviderApplicationHealthcheck implements HealthcheckServi
      */
     public function getKey(): string
     {
-        return 'self-registration-provider-application';
+        return 'self-registration-provider';
     }
 }

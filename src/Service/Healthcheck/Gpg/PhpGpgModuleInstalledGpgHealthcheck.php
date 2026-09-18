@@ -76,6 +76,6 @@ class PhpGpgModuleInstalledGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getKey(): string
     {
-        return 'php-gpg-module-installed-gpg';
+        return 'php-gpg-module-installed';
     }
 }

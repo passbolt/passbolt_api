@@ -272,6 +272,6 @@ class SubscriptionKeyApplicationHealthcheck implements HealthcheckServiceInterfa
      */
     public function getKey(): string
     {
-        return 'subscription-key-application';
+        return 'subscription-key';
     }
 }

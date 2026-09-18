@@ -113,6 +113,6 @@ class SslFullBaseUrlApplicationHealthcheck implements HealthcheckServiceInterfac
      */
     public function getKey(): string
     {
-        return 'ssl-full-base-url-application';
+        return 'ssl-full-base-url';
     }
 }

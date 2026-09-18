@@ -116,6 +116,6 @@ class CanDecryptGpgHealthcheck extends AbstractGpgHealthcheck implements SkipHea
      */
     public function getKey(): string
     {
-        return 'can-decrypt-gpg';
+        return 'can-decrypt';
     }
 }

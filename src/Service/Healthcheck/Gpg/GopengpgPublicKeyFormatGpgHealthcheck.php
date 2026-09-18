@@ -109,6 +109,6 @@ class GopengpgPublicKeyFormatGpgHealthcheck extends AbstractGpgHealthcheck imple
      */
     public function getKey(): string
     {
-        return 'gopengpg-public-key-format-gpg';
+        return 'gopengpg-public-key-format';
     }
 }

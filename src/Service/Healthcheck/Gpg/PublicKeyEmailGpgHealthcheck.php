@@ -77,6 +77,6 @@ class PublicKeyEmailGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getKey(): string
     {
-        return 'public-key-email-gpg';
+        return 'public-key-email';
     }
 }

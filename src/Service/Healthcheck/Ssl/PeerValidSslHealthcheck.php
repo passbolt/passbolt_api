@@ -60,6 +60,6 @@ class PeerValidSslHealthcheck extends AbstractBaseSslHealthcheck
      */
     public function getKey(): string
     {
-        return 'peer-valid-ssl';
+        return 'peer-valid';
     }
 }

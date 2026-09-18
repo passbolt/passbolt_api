@@ -137,6 +137,6 @@ class ValidFullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, He
      */
     public function getKey(): string
     {
-        return 'valid-full-base-url-core';
+        return 'valid-full-base-url';
     }
 }

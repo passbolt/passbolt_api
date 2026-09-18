@@ -82,6 +82,6 @@ class DefaultContentDatabaseHealthcheck extends AbstractDatabaseHealthcheck
      */
     public function getKey(): string
     {
-        return 'default-content-database';
+        return 'default-content';
     }
 }

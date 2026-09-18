@@ -67,6 +67,6 @@ class NotSelfSignedSslHealthcheck extends AbstractBaseSslHealthcheck
      */
     public function getKey(): string
     {
-        return 'not-self-signed-ssl';
+        return 'not-self-signed';
     }
 }
