@@ -379,7 +379,7 @@ class HealthcheckIndexControllerV5Test extends TestCase
         $result = $this->getResponseBodyAsArray();
 
         $this->assertNotEmpty($result);
-        $this->assertNotContains('excluded-healthchecks-configuration', array_column($result, 'key'));
+        $this->assertNotContains('excluded-healthchecks-core', array_column($result, 'key'));
     }
 
     public function testHealthcheckIndexControllerV5_MisspeltExcludedDomainIsReported(): void
@@ -395,13 +395,19 @@ class HealthcheckIndexControllerV5Test extends TestCase
 
         $entries = array_values(array_filter(
             $result,
-            fn(array $entry) => $entry['key'] === 'excluded-healthchecks-configuration',
+            fn(array $entry) => $entry['key'] === 'excluded-healthchecks-core',
         ));
         $this->assertCount(1, $entries);
         $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $entries[0]['status']);
-        $this->assertSame(HealthcheckServiceCollector::DOMAIN_CONFIG_FILES, $entries[0]['domain_key']);
-        $this->assertStringContainsString('environments', $entries[0]['message']);
-        $this->assertNotEmpty($entries[0]['help']);
+        $this->assertSame(HealthcheckServiceCollector::DOMAIN_CORE, $entries[0]['domain_key']);
+        $this->assertStringContainsString(
+            'The healthcheck exclusion configuration contains values matching no healthcheck on this instance.',
+            $entries[0]['message'],
+        );
+        $this->assertContains(
+            'The value must be a valid domain. environments not valid.',
+            $entries[0]['help'],
+        );
         $this->assertContains(HealthcheckServiceCollector::DOMAIN_ENVIRONMENT, array_column($result, 'domain_key'));
     }
 
@@ -419,7 +425,7 @@ class HealthcheckIndexControllerV5Test extends TestCase
 
         $entries = array_values(array_filter(
             $result,
-            fn(array $entry) => $entry['key'] === 'excluded-healthchecks-configuration',
+            fn(array $entry) => $entry['key'] === 'excluded-healthchecks-core',
         ));
         $this->assertCount(1, $entries);
         $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $entries[0]['status']);

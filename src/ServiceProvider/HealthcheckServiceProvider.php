@@ -30,10 +30,10 @@ use App\Service\Healthcheck\Application\SessionProviderApplicationHealthcheck;
 use App\Service\Healthcheck\Application\SslForceApplicationHealthcheck;
 use App\Service\Healthcheck\Application\SslFullBaseUrlApplicationHealthcheck;
 use App\Service\Healthcheck\ConfigFiles\AppConfigFileHealthcheck;
-use App\Service\Healthcheck\ConfigFiles\ExcludedHealthchecksConfigurationHealthcheck;
 use App\Service\Healthcheck\ConfigFiles\PassboltConfigFileHealthcheck;
 use App\Service\Healthcheck\Core\CacheCoreHealthcheck;
 use App\Service\Healthcheck\Core\DebugDisabledCoreHealthcheck;
+use App\Service\Healthcheck\Core\ExcludedHealthchecksCoreHealthcheck;
 use App\Service\Healthcheck\Core\FullBaseUrlCoreHealthcheck;
 use App\Service\Healthcheck\Core\FullBaseUrlReachableCoreHealthcheck;
 use App\Service\Healthcheck\Core\SaltCoreHealthcheck;
@@ -149,11 +149,11 @@ class HealthcheckServiceProvider extends ServiceProvider
         // Config files health checks
         $container->add(AppConfigFileHealthcheck::class);
         $container->add(PassboltConfigFileHealthcheck::class);
-        $container->add(ExcludedHealthchecksConfigurationHealthcheck::class)
-            ->addArgument(fn() => $container->get(HealthcheckServiceCollector::class));
         // Core health checks
         $container->add(CacheCoreHealthcheck::class);
         $container->add(DebugDisabledCoreHealthcheck::class);
+        $container->add(ExcludedHealthchecksCoreHealthcheck::class)
+            ->addArgument(fn() => $container->get(HealthcheckServiceCollector::class));
         $container->add(SaltCoreHealthcheck::class);
         $container->add(FullBaseUrlCoreHealthcheck::class);
         $container->add(ValidFullBaseUrlCoreHealthcheck::class);
@@ -244,9 +244,9 @@ class HealthcheckServiceProvider extends ServiceProvider
             ->addMethodCall('addService', [TimeSyncHealthcheck::class])
             ->addMethodCall('addService', [AppConfigFileHealthcheck::class])
             ->addMethodCall('addService', [PassboltConfigFileHealthcheck::class])
-            ->addMethodCall('addService', [ExcludedHealthchecksConfigurationHealthcheck::class])
             ->addMethodCall('addService', [CacheCoreHealthcheck::class])
             ->addMethodCall('addService', [DebugDisabledCoreHealthcheck::class])
+            ->addMethodCall('addService', [ExcludedHealthchecksCoreHealthcheck::class])
             ->addMethodCall('addService', [SaltCoreHealthcheck::class])
             ->addMethodCall('addService', [FullBaseUrlCoreHealthcheck::class])
             ->addMethodCall('addService', [ValidFullBaseUrlCoreHealthcheck::class])

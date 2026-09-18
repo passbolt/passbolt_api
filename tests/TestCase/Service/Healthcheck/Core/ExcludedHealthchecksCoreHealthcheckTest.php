@@ -14,10 +14,10 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         5.16.0
  */
-namespace App\Test\TestCase\Service\Healthcheck\ConfigFiles;
+namespace App\Test\TestCase\Service\Healthcheck\Core;
 
 use App\Service\Healthcheck\Application\SeleniumDisabledApplicationHealthcheck;
-use App\Service\Healthcheck\ConfigFiles\ExcludedHealthchecksConfigurationHealthcheck;
+use App\Service\Healthcheck\Core\ExcludedHealthchecksCoreHealthcheck;
 use App\Service\Healthcheck\Environment\PhpVersionHealthcheck;
 use App\Service\Healthcheck\HealthcheckApiSerializerService;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
@@ -25,13 +25,13 @@ use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
 
 /**
- * @covers \App\Service\Healthcheck\ConfigFiles\ExcludedHealthchecksConfigurationHealthcheck
+ * @covers \App\Service\Healthcheck\Core\ExcludedHealthchecksCoreHealthcheck
  */
-class ExcludedHealthchecksConfigurationHealthcheckTest extends AppTestCase
+class ExcludedHealthchecksCoreHealthcheckTest extends AppTestCase
 {
     private ?HealthcheckServiceCollector $collector = null;
 
-    private ?ExcludedHealthchecksConfigurationHealthcheck $healthcheck = null;
+    private ?ExcludedHealthchecksCoreHealthcheck $healthcheck = null;
 
     /**
      * @inheritDoc
@@ -43,7 +43,7 @@ class ExcludedHealthchecksConfigurationHealthcheckTest extends AppTestCase
         $this->collector = new HealthcheckServiceCollector();
         $this->collector->addService(new PhpVersionHealthcheck());
         $this->collector->addService(new SeleniumDisabledApplicationHealthcheck());
-        $this->healthcheck = new ExcludedHealthchecksConfigurationHealthcheck($this->collector);
+        $this->healthcheck = new ExcludedHealthchecksCoreHealthcheck(fn() => $this->collector);
         $this->collector->addService($this->healthcheck);
     }
 
@@ -57,7 +57,7 @@ class ExcludedHealthchecksConfigurationHealthcheckTest extends AppTestCase
         parent::tearDown();
     }
 
-    public function testExcludedHealthchecksConfigurationHealthcheck_IsSkippedWhenNothingIsExcluded(): void
+    public function testExcludedHealthchecksCoreHealthcheck_IsSkippedWhenNothingIsExcluded(): void
     {
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, null);
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, null);
@@ -67,11 +67,11 @@ class ExcludedHealthchecksConfigurationHealthcheckTest extends AppTestCase
         $this->assertTrue($this->healthcheck->isSkipped());
     }
 
-    public function testExcludedHealthchecksConfigurationHealthcheck_PassesWhenEveryValueMatches(): void
+    public function testExcludedHealthchecksCoreHealthcheck_PassesWhenEveryValueMatches(): void
     {
         Configure::write(
             HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS,
-            'php-version excluded-healthchecks-configuration',
+            'php-version excluded-healthchecks-core',
         );
         Configure::write(
             HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS,
@@ -85,7 +85,7 @@ class ExcludedHealthchecksConfigurationHealthcheckTest extends AppTestCase
         $this->assertSame('The healthcheck exclusion configuration is valid.', $this->healthcheck->getSuccessMessage());
     }
 
-    public function testExcludedHealthchecksConfigurationHealthcheck_FailsOnUnknownKeyAndDomain(): void
+    public function testExcludedHealthchecksCoreHealthcheck_FailsOnUnknownKeyAndDomain(): void
     {
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, 'php-versions');
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, 'environments');
@@ -94,11 +94,21 @@ class ExcludedHealthchecksConfigurationHealthcheckTest extends AppTestCase
 
         $this->assertFalse($this->healthcheck->isSkipped());
         $this->assertFalse($this->healthcheck->isPassed());
-        $this->assertStringContainsString('php-versions', $this->healthcheck->getFailureMessage());
-        $this->assertStringContainsString('environments', $this->healthcheck->getFailureMessage());
+        $this->assertSame(
+            'The healthcheck exclusion configuration contains values matching no healthcheck on this instance.',
+            $this->healthcheck->getFailureMessage(),
+        );
+        $this->assertContains(
+            'The value must be a valid key. php-versions not valid.',
+            $this->healthcheck->getHelpMessage(),
+        );
+        $this->assertContains(
+            'The value must be a valid domain. environments not valid.',
+            $this->healthcheck->getHelpMessage(),
+        );
     }
 
-    public function testExcludedHealthchecksConfigurationHealthcheck_FailsOnNonStringValue(): void
+    public function testExcludedHealthchecksCoreHealthcheck_FailsOnNonStringValue(): void
     {
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, true);
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, null);
@@ -112,16 +122,12 @@ class ExcludedHealthchecksConfigurationHealthcheckTest extends AppTestCase
             $this->healthcheck->getFailureMessage(),
         );
         $this->assertContains(
-            'An exclusion setting must be a single string holding the names separated by spaces, for example "php-version distribution".', // phpcs:ignore
-            $this->healthcheck->getHelpMessage(),
-        );
-        $this->assertContains(
-            'An array, a boolean or a integer is not a supported value for these settings.',
+            'The value must be a list of names separated by spaces. passbolt.plugins.healthcheck.excludedKeys is not valid.', // phpcs:ignore
             $this->healthcheck->getHelpMessage(),
         );
     }
 
-    public function testExcludedHealthchecksConfigurationHealthcheck_ReportsBothSettingsWhenBothAreNotStrings(): void
+    public function testExcludedHealthchecksCoreHealthcheck_ReportsBothSettingsWhenBothAreNotStrings(): void
     {
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, ['php-version']);
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, false);

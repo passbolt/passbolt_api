@@ -327,7 +327,7 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('<error>[FAIL] The server key fingerprint doesn\'t match the one defined in ');
     }
 
-    public function testHealthcheckCommand_ConfigFiles_Happy_Path()
+    public function testHealthcheckCommand_Core_ExcludedHealthchecks_Happy_Path()
     {
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, 'php-version');
         Configure::write(
@@ -335,32 +335,33 @@ class HealthcheckCommandTest extends AppTestCase
             HealthcheckServiceCollector::DOMAIN_JWT,
         );
 
-        $this->exec('passbolt healthcheck -d test --configFiles');
+        $this->exec('passbolt healthcheck -d test --core');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('<success>[PASS]</success> The healthcheck exclusion configuration is valid.');
     }
 
-    public function testHealthcheckCommand_ConfigFiles_Unhappy_Path()
+    public function testHealthcheckCommand_Core_ExcludedHealthchecks_Unhappy_Path()
     {
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, 'php-versions');
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, 'environments');
 
-        $this->exec('passbolt healthcheck -d test --configFiles');
+        $this->exec('passbolt healthcheck -d test --core');
 
         $this->assertExitSuccess();
         $this->assertOutputContains(
-            '[WARN] The healthcheck exclusion configuration contains values matching no healthcheck on this instance: php-versions, environments.',
+            '[WARN] The healthcheck exclusion configuration contains values matching no healthcheck on this instance.',
         );
-        $this->assertOutputContains('<info>[HELP]</info> Value must be a healthcheck key, as returned by getKey(), or a healthcheck domain.');
+        $this->assertOutputContains('<info>[HELP]</info> The value must be a valid key. php-versions not valid.');
+        $this->assertOutputContains('<info>[HELP]</info> The value must be a valid domain. environments not valid.');
     }
 
-    public function testHealthcheckCommand_ConfigFiles_NoExclusionConfigured()
+    public function testHealthcheckCommand_Core_ExcludedHealthchecks_NoExclusionConfigured()
     {
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, null);
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, null);
 
-        $this->exec('passbolt healthcheck -d test --configFiles');
+        $this->exec('passbolt healthcheck -d test --core');
 
         $this->assertExitSuccess();
         $this->assertOutputNotContains('The healthcheck exclusion configuration');
