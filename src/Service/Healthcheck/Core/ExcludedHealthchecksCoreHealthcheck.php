@@ -134,7 +134,7 @@ class ExcludedHealthchecksCoreHealthcheck implements HealthcheckServiceInterface
     }
 
     /**
-     * Returns whether the given exclusion setting is set to something else than a string.
+     * Returns whether the given exclusion setting is set to something else than a list of names.
      * An unset setting is null and is not one of them.
      *
      * @param string $setting The configuration path of the exclusion setting to read.
@@ -144,7 +144,15 @@ class ExcludedHealthchecksCoreHealthcheck implements HealthcheckServiceInterface
     {
         $value = Configure::read($setting);
 
-        return $value !== null && !is_string($value);
+        if ($value === null || is_string($value)) {
+            return false;
+        }
+
+        if (!is_array($value)) {
+            return true;
+        }
+
+        return $value !== array_filter($value, 'is_string');
     }
 
     /**
@@ -188,14 +196,14 @@ class ExcludedHealthchecksCoreHealthcheck implements HealthcheckServiceInterface
 
         if ($this->isInvalidKeySettings) {
             $messages[] = __(
-                'The healthcheck exclusion setting {0} is not a space separated list of names.',
+                'The healthcheck exclusion setting {0} is not a valid list of healthcheck names.',
                 HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS,
             );
         }
 
         if ($this->isInvalidDomainSettings) {
             $messages[] = __(
-                'The healthcheck exclusion setting {0} is not a space separated list of names.',
+                'The healthcheck exclusion setting {0} is not a valid list of healthcheck names.',
                 HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS,
             );
         }
@@ -233,7 +241,7 @@ class ExcludedHealthchecksCoreHealthcheck implements HealthcheckServiceInterface
 
         if (!empty($invalidSettings)) {
             $help[] = __(
-                'The value must be a list of names separated by spaces. {0} is not valid.',
+                'The value must be a string of names separated by spaces, or an array of names. {0} is not valid.', // phpcs:ignore
                 implode(', ', $invalidSettings),
             );
         }

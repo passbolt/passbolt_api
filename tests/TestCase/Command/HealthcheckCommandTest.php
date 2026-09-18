@@ -344,7 +344,7 @@ class HealthcheckCommandTest extends AppTestCase
     public function testHealthcheckCommand_Core_ExcludedHealthchecks_Unhappy_Path()
     {
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, 'php-versions');
-        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, 'environments');
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, ['environments']);
 
         $this->exec('passbolt healthcheck -d test --core');
 

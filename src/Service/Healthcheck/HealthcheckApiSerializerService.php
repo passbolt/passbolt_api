@@ -86,9 +86,9 @@ class HealthcheckApiSerializerService
     }
 
     /**
-     * Reads a space separated exclusion list from the configuration.
+     * Reads an exclusion list from the configuration.
      *
-     * An unset, empty or non-string value excludes nothing. Unrecognised entries are ignored.
+     * An unset, empty or non-string and non-array value excludes nothing. Unrecognised entries are ignored.
      *
      * @param string $configKey The configuration key holding the list.
      * @return array<string>
@@ -97,11 +97,29 @@ class HealthcheckApiSerializerService
     {
         $value = Configure::read($configKey);
 
-        if (!is_string($value) || trim($value) === '') {
+        if (!is_string($value) && !is_array($value)) {
             return [];
         }
 
-        return preg_split('/\s+/', trim($value)) ?: [];
+        $names = [];
+        foreach ((array)$value as $entry) {
+            if (!is_string($entry)) {
+                return [];
+            }
+
+            $entry = trim($entry);
+            if ($entry === '') {
+                continue;
+            }
+
+            foreach (preg_split('/\s+/', $entry) ?: [] as $name) {
+                if (!in_array($name, $names, true)) {
+                    $names[] = $name;
+                }
+            }
+        }
+
+        return $names;
     }
 
     /**

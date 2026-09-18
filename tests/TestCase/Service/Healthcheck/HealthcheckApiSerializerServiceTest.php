@@ -223,7 +223,10 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
 
     public function testHealthcheckApiSerializerServiceTest_ExcludesHealthchecksByKeysAndDomainsTogether(): void
     {
-        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, 'php-version');
+        Configure::write(
+            HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS,
+            ['php-version next-min-php-version', 'php-version', '', '  '],
+        );
         Configure::write(
             HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS,
             HealthcheckServiceCollector::DOMAIN_JWT,
@@ -236,6 +239,6 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
         $result = $this->service->serialize();
 
         $this->assertCount(2, $result);
-        $this->assertSame(['next-min-php-version', 'selenium-disabled-application'], array_column($result, 'key'));
+        $this->assertSame(['selenium-disabled-application'], array_column($result, 'key'));
     }
 }

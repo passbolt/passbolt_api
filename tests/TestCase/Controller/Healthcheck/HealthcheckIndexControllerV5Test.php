@@ -411,10 +411,10 @@ class HealthcheckIndexControllerV5Test extends TestCase
         $this->assertContains(HealthcheckServiceCollector::DOMAIN_ENVIRONMENT, array_column($result, 'domain_key'));
     }
 
-    public function testHealthcheckIndexControllerV5_NonStringExcludedSettingIsReported(): void
+    public function testHealthcheckIndexControllerV5_InvalidExcludedSettingIsReported(): void
     {
         RoleFactory::make(3)->persist();
-        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, ['php-version']);
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, ['php-version', 42]);
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, true);
         $this->logInAsAdmin();
 
@@ -430,11 +430,11 @@ class HealthcheckIndexControllerV5Test extends TestCase
         $this->assertCount(1, $entries);
         $this->assertSame(HealthcheckApiSerializerService::STATUS_WARNING, $entries[0]['status']);
         $this->assertStringContainsString(
-            'passbolt.plugins.healthcheck.excludedKeys is not a space separated list of names.',
+            'passbolt.plugins.healthcheck.excludedKeys is not a valid list of healthcheck names.',
             $entries[0]['message'],
         );
         $this->assertStringContainsString(
-            'passbolt.plugins.healthcheck.excludedDomains is not a space separated list of names.',
+            'passbolt.plugins.healthcheck.excludedDomains is not a valid list of healthcheck names.',
             $entries[0]['message'],
         );
         $this->assertContains('php-version', array_column($result, 'key'));

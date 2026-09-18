@@ -108,7 +108,7 @@ class ExcludedHealthchecksCoreHealthcheckTest extends AppTestCase
         );
     }
 
-    public function testExcludedHealthchecksCoreHealthcheck_FailsOnNonStringValue(): void
+    public function testExcludedHealthchecksCoreHealthcheck_FailsOnValueThatIsNeitherStringNorArray(): void
     {
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, true);
         Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, null);
@@ -118,27 +118,62 @@ class ExcludedHealthchecksCoreHealthcheckTest extends AppTestCase
         $this->assertFalse($this->healthcheck->isSkipped());
         $this->assertFalse($this->healthcheck->isPassed());
         $this->assertSame(
-            'The healthcheck exclusion setting passbolt.plugins.healthcheck.excludedKeys is not a space separated list of names.', // phpcs:ignore
+            'The healthcheck exclusion setting passbolt.plugins.healthcheck.excludedKeys is not a valid list of healthcheck names.', // phpcs:ignore
             $this->healthcheck->getFailureMessage(),
         );
         $this->assertContains(
-            'The value must be a list of names separated by spaces. passbolt.plugins.healthcheck.excludedKeys is not valid.', // phpcs:ignore
+            'The value must be a string of names separated by spaces, or an array of names. passbolt.plugins.healthcheck.excludedKeys is not valid.', // phpcs:ignore
             $this->healthcheck->getHelpMessage(),
         );
     }
 
-    public function testExcludedHealthchecksCoreHealthcheck_ReportsBothSettingsWhenBothAreNotStrings(): void
+    public function testExcludedHealthchecksCoreHealthcheck_FailsOnArrayHoldingANonString(): void
     {
-        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, ['php-version']);
-        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, false);
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, ['php-version', 42]);
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, null);
+
+        $this->healthcheck->check();
+
+        $this->assertFalse($this->healthcheck->isSkipped());
+        $this->assertFalse($this->healthcheck->isPassed());
+        $this->assertSame(
+            'The healthcheck exclusion setting passbolt.plugins.healthcheck.excludedKeys is not a valid list of healthcheck names.', // phpcs:ignore
+            $this->healthcheck->getFailureMessage(),
+        );
+    }
+
+    public function testExcludedHealthchecksCoreHealthcheck_PassesWhenEveryValueMatchesGivenArrays(): void
+    {
+        Configure::write(
+            HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS,
+            ['php-version', 'excluded-healthchecks-core'],
+        );
+        Configure::write(
+            HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS,
+            [HealthcheckServiceCollector::DOMAIN_APPLICATION],
+        );
+
+        $this->healthcheck->check();
+
+        $this->assertFalse($this->healthcheck->isSkipped());
+        $this->assertTrue($this->healthcheck->isPassed());
+    }
+
+    public function testExcludedHealthchecksCoreHealthcheck_FailsOnUnknownValuesGivenArrays(): void
+    {
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, ['php-versions']);
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, ['environments']);
 
         $this->healthcheck->check();
 
         $this->assertFalse($this->healthcheck->isPassed());
-        $this->assertSame(
-            'The healthcheck exclusion setting passbolt.plugins.healthcheck.excludedKeys is not a space separated list of names. ' // phpcs:ignore
-            . 'The healthcheck exclusion setting passbolt.plugins.healthcheck.excludedDomains is not a space separated list of names.', // phpcs:ignore
-            $this->healthcheck->getFailureMessage(),
+        $this->assertContains(
+            'The value must be a valid key. php-versions not valid.',
+            $this->healthcheck->getHelpMessage(),
+        );
+        $this->assertContains(
+            'The value must be a valid domain. environments not valid.',
+            $this->healthcheck->getHelpMessage(),
         );
     }
 }
