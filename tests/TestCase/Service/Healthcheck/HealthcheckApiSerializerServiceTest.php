@@ -238,7 +238,7 @@ class HealthcheckApiSerializerServiceTest extends AppTestCase
 
         $result = $this->service->serialize();
 
-        $this->assertCount(2, $result);
+        $this->assertCount(1, $result);
         $this->assertSame(['selenium-disabled-application'], array_column($result, 'key'));
     }
 }
