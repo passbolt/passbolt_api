@@ -17,15 +17,30 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Healthcheck;
 
 use App\Controller\Healthcheck\HealthcheckIndexController;
+use App\Middleware\CsrfProtectionMiddleware;
+use App\Middleware\SslForceMiddleware;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Test\Factory\RoleFactory;
-use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Utility\ErrorIntegrationTestTrait;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
+use App\Test\Lib\Utility\JsonRequestTrait;
+use App\Test\Lib\Utility\LoginTestTrait;
+use App\Test\Lib\Utility\ObjectTrait;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
 use Cake\Http\Client;
 use Cake\Http\TestSuite\HttpClientTrait;
+use Cake\TestSuite\IntegrationTestTrait;
+use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\DirectorySync\DirectorySyncPlugin;
+use Passbolt\Ee\Service\Healthcheck\EeHealthcheckServiceCollector;
 use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
+use Passbolt\MultiFactorAuthentication\MultiFactorAuthenticationPlugin;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Passbolt\Scim\ScimPlugin;
 use Passbolt\SmtpSettings\SmtpSettingsPlugin;
+use Passbolt\Sso\SsoPlugin;
 
 /**
  * Covers the generic response format, requested via api-version=v5.
@@ -35,14 +50,37 @@ use Passbolt\SmtpSettings\SmtpSettingsPlugin;
  *
  * @covers \App\Controller\Healthcheck\HealthcheckIndexController
  */
-class HealthcheckIndexControllerV5Test extends AppIntegrationTestCase
+class HealthcheckIndexControllerV5Test extends TestCase
 {
+    use ErrorIntegrationTestTrait;
+    use FeaturePluginAwareTrait;
     use HealthcheckRequestTestTrait;
     use HttpClientTrait;
+    use IntegrationTestTrait;
+    use JsonRequestTrait;
+    use LoginTestTrait;
+    use ObjectTrait;
+    use TruncateDirtyTables;
 
     public function setUp(): void
     {
         parent::setUp();
+        $this->enableCsrfToken();
+        $this->loadRoutes();
+
+        // Disable feature plugins listed in default.php
+        $plugins = array_keys(Configure::read('passbolt.plugins'));
+        foreach ($plugins as $plugin) {
+            $this->disableFeaturePlugin(ucfirst($plugin));
+        }
+        $this->disableFeaturePlugin('Log');
+        $this->disableFeaturePlugin('Tags');
+        $this->disableFeaturePlugin('Folders');
+        $this->disableFeaturePlugin(MultiFactorAuthenticationPlugin::class);
+
+        Configure::write(CsrfProtectionMiddleware::PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG, true);
+        // Disable SSL Force since all requests in tests are made on http
+        Configure::write(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME, false);
 
         $this->mockService(Client::class, function () {
             return $this->getMockedHealthcheckStatusRequest();
@@ -56,6 +94,13 @@ class HealthcheckIndexControllerV5Test extends AppIntegrationTestCase
         $this->mockService('sslHealthcheckClient', function () {
             return $this->getMockedHealthcheckStatusRequest();
         });
+    }
+
+    public function tearDown(): void
+    {
+        $this->clearPlugins();
+        MfaSettings::clear();
+        parent::tearDown();
     }
 
     public function testHealthcheckIndexControllerV5_No_Admin_Should_Throw_Exception(): void
@@ -137,11 +182,15 @@ class HealthcheckIndexControllerV5Test extends AppIntegrationTestCase
     {
         $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
         $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
+        $this->enableFeaturePlugin(DirectorySyncPlugin::class);
+        $this->enableFeaturePlugin(SsoPlugin::class);
+        $this->enableFeaturePlugin(ScimPlugin::class);
         RoleFactory::make(3)->persist();
         $this->logInAsAdmin();
-        $this->getJson('/healthcheck.json?api-version=v5');
-        $this->assertResponseSuccess();
 
+        $this->getJson('/healthcheck.json?api-version=v5');
+
+        $this->assertResponseSuccess();
         $result = $this->getResponseBodyAsArray();
 
         $domains = array_column($result, 'domain_key');
@@ -157,6 +206,9 @@ class HealthcheckIndexControllerV5Test extends AppIntegrationTestCase
             HealthcheckServiceCollector::DOMAIN_APPLICATION,
             HealthcheckServiceCollector::DOMAIN_DATABASE,
             HealthcheckServiceCollector::DOMAIN_METADATA,
+            EeHealthcheckServiceCollector::DOMAIN_DIRECTORY_SYNC,
+            EeHealthcheckServiceCollector::DOMAIN_SSO,
+            EeHealthcheckServiceCollector::DOMAIN_SCIM,
         ];
         foreach ($expectedDomains as $domain) {
             $this->assertContains($domain, $domains, "Domain {$domain} is missing from the response.");
@@ -167,10 +219,13 @@ class HealthcheckIndexControllerV5Test extends AppIntegrationTestCase
     {
         $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
         $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
+        $this->enableFeaturePlugin(DirectorySyncPlugin::class);
+        $this->enableFeaturePlugin(SsoPlugin::class);
+        $this->enableFeaturePlugin(ScimPlugin::class);
         RoleFactory::make(3)->persist();
         $this->logInAsAdmin();
+
         $this->getJson('/healthcheck.json?api-version=v5');
-        $this->assertResponseSuccess();
 
         $this->assertResponseSuccess();
         $result = $this->getResponseBodyAsArray();
