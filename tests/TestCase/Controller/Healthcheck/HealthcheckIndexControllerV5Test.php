@@ -33,10 +33,6 @@ use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\DirectorySync\DirectorySyncPlugin;
 use Passbolt\Ee\Service\Healthcheck\EeHealthcheckServiceCollector;
-use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
-use Passbolt\Scim\ScimPlugin;
-use Passbolt\SmtpSettings\SmtpSettingsPlugin;
-use Passbolt\Sso\SsoPlugin;
 
 /**
  * Covers the generic response format, requested via api-version=v5.
@@ -186,11 +182,7 @@ class HealthcheckIndexControllerV5Test extends TestCase
 
     public function testHealthcheckIndexControllerV5_KeysAreDefinedAndUnique(): void
     {
-        $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
-        $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
         $this->enableFeaturePlugin(DirectorySyncPlugin::class);
-        $this->enableFeaturePlugin(SsoPlugin::class);
-        $this->enableFeaturePlugin(ScimPlugin::class);
         RoleFactory::make(3)->persist();
         $this->logInAsAdmin();
 
