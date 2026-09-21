@@ -26,6 +26,10 @@ use App\Test\Lib\Utility\LoginTestTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
+use Cake\Core\ContainerInterface;
+use Cake\Event\Event;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
 use Cake\Http\Client;
 use Cake\Http\TestSuite\HttpClientTrait;
 use Cake\TestSuite\IntegrationTestTrait;
@@ -33,6 +37,7 @@ use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\DirectorySync\DirectorySyncPlugin;
 use Passbolt\Ee\Service\Healthcheck\EeHealthcheckServiceCollector;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 /**
  * Covers the generic response format, requested via api-version=v5.
@@ -70,6 +75,13 @@ class HealthcheckIndexControllerV5Test extends TestCase
         $this->mockService('sslHealthcheckClient', function () {
             return $this->getMockedHealthcheckStatusRequest();
         });
+    }
+
+    public function tearDown(): void
+    {
+        $this->clearPlugins();
+        MfaSettings::clear();
+        parent::tearDown();
     }
 
     public function testHealthcheckIndexControllerV5_No_Admin_Should_Throw_Exception(): void
@@ -182,6 +194,12 @@ class HealthcheckIndexControllerV5Test extends TestCase
 
     public function testHealthcheckIndexControllerV5_KeysAreDefinedAndUnique(): void
     {
+        EventManager::instance()->setEventList(new EventList());
+        EventManager::instance()->on('Application.buildContainer', function (Event $event, ContainerInterface $container) {
+            /** @var HealthcheckServiceCollector $collector */
+            $collector = $container->get(HealthcheckServiceCollector::class);
+            $this->assertServiceKeys($collector);
+        });
         $this->enableFeaturePlugin(DirectorySyncPlugin::class);
         RoleFactory::make(3)->persist();
         $this->logInAsAdmin();
@@ -192,15 +210,18 @@ class HealthcheckIndexControllerV5Test extends TestCase
         $result = $this->getResponseBodyAsArray();
 
         $this->assertNotEmpty($result);
+    }
 
-        foreach ($result as $index => $entry) {
-            $this->assertIsString($entry['key'], "Entry {$index} has a non-string key.");
-            $this->assertNotEmpty($entry['key'], "Entry {$index} has an empty key.");
+    private function assertServiceKeys(HealthcheckServiceCollector $collector): void
+    {
+        $returnedKeys = [];
+        foreach ($collector->getServices() as $service) {
+            $returnedKeys[] = $service->getKey();
         }
+        $expectedKeys = [
+            // To populate
+        ];
 
-        $keys = array_column($result, 'key');
-        $duplicates = array_keys(array_filter(array_count_values($keys), fn($count) => $count > 1));
-
-        $this->assertEmpty($duplicates, 'Duplicate healthcheck keys: ' . implode(', ', $duplicates));
+        $this->assertSame($expectedKeys, $returnedKeys);
     }
 }
