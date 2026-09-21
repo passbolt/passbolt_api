@@ -66,6 +66,8 @@ class WebauthnSetupGetControllerTest extends MfaIntegrationTestCase
             $this->assertArrayNotHasKey('data', $credential);
             $this->assertArrayHasKey('credential_id', $credential);
             $this->assertArrayHasKey('name', $credential);
+            $this->assertArrayHasKey('aaguid', $credential);
+            $this->assertSame('00000000-0000-0000-0000-000000000000', $credential['aaguid']);
         }
     }
 
