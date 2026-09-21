@@ -7606,16 +7606,16 @@
         },
         {
             "name": "psalm/phar",
-            "version": "6.16.1",
+            "version": "6.17.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/phar.git",
-                "reference": "11c6b55449667837fc07bb2a456c45a137c05ecd"
+                "reference": "fa2a6ff9c8831dcb783b87e163e81c0b5605b5ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/phar/zipball/11c6b55449667837fc07bb2a456c45a137c05ecd",
-                "reference": "11c6b55449667837fc07bb2a456c45a137c05ecd",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/fa2a6ff9c8831dcb783b87e163e81c0b5605b5ab",
+                "reference": "fa2a6ff9c8831dcb783b87e163e81c0b5605b5ab",
                 "shasum": ""
             },
             "require": {
@@ -7635,9 +7635,9 @@
             "description": "Composer-based Psalm Phar",
             "support": {
                 "issues": "https://github.com/psalm/phar/issues",
-                "source": "https://github.com/psalm/phar/tree/6.16.1"
+                "source": "https://github.com/psalm/phar/tree/6.17.1"
             },
-            "time": "2026-03-19T11:11:23+00:00"
+            "time": "2026-09-12T13:55:13+00:00"
         },
         {
             "name": "psy/psysh",
