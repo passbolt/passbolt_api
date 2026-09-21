@@ -28,7 +28,6 @@ use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Event\Event;
-use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\Http\Client;
 use Cake\Http\TestSuite\HttpClientTrait;
@@ -38,6 +37,7 @@ use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\DirectorySync\DirectorySyncPlugin;
 use Passbolt\Ee\Service\Healthcheck\EeHealthcheckServiceCollector;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Passbolt\WebInstaller\WebInstallerPlugin;
 
 /**
  * Covers the generic response format, requested via api-version=v5.
@@ -58,6 +58,98 @@ class HealthcheckIndexControllerV5Test extends TestCase
     use LoginTestTrait;
     use ObjectTrait;
     use TruncateDirtyTables;
+
+    /**
+     * Renaming a key silently breaks the excludedKeys configuration of an existing instance.
+     *
+     * @var array<string>
+     */
+    private const COLLECTED_HEALTHCHECK_KEYS = [
+        'distribution',
+        'php-version',
+        'next-min-php-version',
+        'operating-system',
+        'gpg',
+        'pcre',
+        'mbstring',
+        'intl',
+        'image',
+        'tmp-folder-writable',
+        'log-folder-writable',
+        'time-sync',
+        'app-config-file',
+        'passbolt-config-file',
+        'cache-core',
+        'debug-disabled-core',
+        'salt-core',
+        'full-base-url-core',
+        'valid-full-base-url-core',
+        'full-base-url-reachable-core',
+        'peer-valid-ssl',
+        'host-valid-ssl',
+        'not-self-signed-ssl',
+        'plugin-enabled-smtp-settings',
+        'plugin-enabled-jwt',
+        'php-gpg-module-installed-gpg',
+        'home-variable-defined-gpg',
+        'home-variable-writable-gpg',
+        'key-not-default-gpg',
+        'public-key-readable-and-parsable-gpg',
+        'private-key-readable-and-parsable-gpg',
+        'fingerprint-match-gpg',
+        'public-key-in-keyring-gpg',
+        'public-key-email-gpg',
+        'can-encrypt-gpg',
+        'can-sign-gpg',
+        'can-encrypt-sign-gpg',
+        'can-decrypt-gpg',
+        'can-decrypt-verify-gpg',
+        'can-verify-gpg',
+        'gopengpg-public-key-format-gpg',
+        'gopengpg-private-key-format-gpg',
+        'latest-version-application',
+        'ssl-force-application',
+        'ssl-full-base-url-application',
+        'selenium-disabled-application',
+        'robots-index-disabled-application',
+        'self-registration-plugin-enabled-application',
+        'self-registration-provider-application',
+        'self-registration-public-removed-application',
+        'host-availability-check-enabled-application',
+        'js-prod-application',
+        'email-notification-enabled-application',
+        'session-provider-application',
+        'connect-database',
+        'tables-count-database',
+        'default-content-database',
+        'mariadb-mysql-version-deprecate',
+        'schema-up-to-date-application',
+        'model-cache-database',
+        'subscription-key-application',
+        'directory-not-writable-jwt',
+        'valid-key-pair-jwt',
+        'edition-present-in-database-application',
+        'server-can-decrypt-metadata-private-key',
+        'no-active-metadata-key',
+        'server-missing-access-to-metadata-key',
+        'server-private-metadata-key-validate',
+        'server-metadata-key-access-in-zero-knowledge-mode',
+        'settings-validation-smtp-settings',
+        'smtp-settings-settings-source',
+        'smtp-settings-endpoints-disabled',
+        'custom-ssl-options-smtp-settings',
+        'directory-sync-endpoints-disabled',
+        'ssl-verify-peer-directory-sync',
+        'ssl-host-verification-sso',
+        'sso-edit-endpoints-disabled',
+        'sso-egress-guard-disabled',
+        'scim',
+        'scim-secret-token-expiry',
+        'passbolt-config-writable-web-installer',
+        'public-key-writable-web-installer',
+        'private-key-writable-web-installer',
+        'is-request-https-ssl',
+    ];
 
     public function setUp(): void
     {
@@ -194,22 +286,19 @@ class HealthcheckIndexControllerV5Test extends TestCase
 
     public function testHealthcheckIndexControllerV5_KeysAreDefinedAndUnique(): void
     {
-        EventManager::instance()->setEventList(new EventList());
+        $this->enableFeaturePlugin(DirectorySyncPlugin::class);
         EventManager::instance()->on('Application.buildContainer', function (Event $event, ContainerInterface $container) {
+            (new WebInstallerPlugin())->services($container);
             /** @var HealthcheckServiceCollector $collector */
             $collector = $container->get(HealthcheckServiceCollector::class);
             $this->assertServiceKeys($collector);
         });
-        $this->enableFeaturePlugin(DirectorySyncPlugin::class);
         RoleFactory::make(3)->persist();
         $this->logInAsAdmin();
 
         $this->getJson('/healthcheck.json?api-version=v5');
 
         $this->assertResponseSuccess();
-        $result = $this->getResponseBodyAsArray();
-
-        $this->assertNotEmpty($result);
     }
 
     private function assertServiceKeys(HealthcheckServiceCollector $collector): void
@@ -218,10 +307,7 @@ class HealthcheckIndexControllerV5Test extends TestCase
         foreach ($collector->getServices() as $service) {
             $returnedKeys[] = $service->getKey();
         }
-        $expectedKeys = [
-            // To populate
-        ];
 
-        $this->assertSame($expectedKeys, $returnedKeys);
+        $this->assertSame(self::COLLECTED_HEALTHCHECK_KEYS, $returnedKeys);
     }
 }
