@@ -100,12 +100,13 @@ class WebauthnVerifyFormTest extends TestCase
         $this->assertArrayHasKey('credential', $this->form->getErrors());
     }
 
-    public function testWebauthnVerifyForm_AcceptsEmptyCredentialArray_ServiceLayerRejects(): void
+    public function testWebauthnVerifyForm_RejectsEmptyCredentialArray(): void
     {
-        $this->assertTrue($this->form->validate([
+        $this->assertFalse($this->form->validate([
             'handle' => UuidFactory::uuid(),
             'credential' => [],
         ]));
+        $this->assertArrayHasKey('credential', $this->form->getErrors());
     }
 
     public function testWebauthnVerifyForm_Execute_DispatchesToServiceWithArgs(): void
