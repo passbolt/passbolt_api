@@ -46,7 +46,7 @@ class EditionManager
      */
     public const CONFIGURE_KEY_LAST_CHANGE_DATETIME = 'passbolt.editionLastChangeDateTime';
 
-    private bool $booted = false;
+    protected bool $booted = false;
 
     private static ?EditionManager $instance = null;
 
