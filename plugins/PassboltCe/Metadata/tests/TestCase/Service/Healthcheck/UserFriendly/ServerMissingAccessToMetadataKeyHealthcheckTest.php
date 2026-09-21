@@ -144,7 +144,7 @@ class ServerMissingAccessToMetadataKeyHealthcheckTest extends AppTestCaseV5
             ->onlyMethods(['find'])
             ->getMock();
         $mockTable->method('find')->willThrowException(
-            new MissingConnectionException(['driver' => 'Mysql', 'reason' => 'unreachable'])
+            new MissingConnectionException(['driver' => 'Mysql', 'reason' => 'unreachable']),
         );
         $tableLocator->set($alias, $mockTable);
 

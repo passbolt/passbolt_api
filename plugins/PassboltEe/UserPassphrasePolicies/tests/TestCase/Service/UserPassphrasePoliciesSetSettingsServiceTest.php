@@ -124,7 +124,7 @@ class UserPassphrasePoliciesSetSettingsServiceTest extends AppTestCase
         $this->assertEventFiredWith(
             UserPassphrasePoliciesSetSettingsService::EVENT_SETTINGS_UPDATED,
             'userPassphrasePoliciesSetting',
-            $result
+            $result,
         );
         $this->assertEventFiredWith(UserPassphrasePoliciesSetSettingsService::EVENT_SETTINGS_UPDATED, 'uac', $uac);
     }
@@ -150,7 +150,7 @@ class UserPassphrasePoliciesSetSettingsServiceTest extends AppTestCase
         $this->assertEventFiredWith(
             UserPassphrasePoliciesSetSettingsService::EVENT_SETTINGS_UPDATED,
             'userPassphrasePoliciesSetting',
-            $result
+            $result,
         );
         $this->assertEventFiredWith(UserPassphrasePoliciesSetSettingsService::EVENT_SETTINGS_UPDATED, 'uac', $uac);
     }
@@ -176,7 +176,7 @@ class UserPassphrasePoliciesSetSettingsServiceTest extends AppTestCase
         $this->assertEventFiredWith(
             UserPassphrasePoliciesSetSettingsService::EVENT_SETTINGS_UPDATED,
             'userPassphrasePoliciesSetting',
-            $result
+            $result,
         );
         $this->assertEventFiredWith(UserPassphrasePoliciesSetSettingsService::EVENT_SETTINGS_UPDATED, 'uac', $uac);
     }

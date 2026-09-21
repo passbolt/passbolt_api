@@ -74,7 +74,7 @@ class MetadataKeysSettingsFormTest extends AppTestCaseV5
                 'metadata_key_id' => UuidFactory::uuid(),
                 'user_id' => null,
                 'data' => $this->getEncryptedMetadataPrivateKeyForServerKey(),
-            ]]
+            ]],
         );
         $this->assertTrue($this->form->execute($data));
     }
@@ -187,7 +187,7 @@ class MetadataKeysSettingsFormTest extends AppTestCaseV5
             $form,
             'metadata_private_keys.0.data',
             $data,
-            $testCases
+            $testCases,
         );
     }
 }

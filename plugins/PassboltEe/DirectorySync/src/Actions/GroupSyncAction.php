@@ -327,7 +327,7 @@ class GroupSyncAction extends SyncAction
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_IGNORE,
-                    [$userDn]
+                    [$userDn],
                 ));
                 continue;
             }
@@ -354,7 +354,7 @@ class GroupSyncAction extends SyncAction
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_IGNORE,
-                    $directoryGroupUserEntry
+                    $directoryGroupUserEntry,
                 ));
                 continue;
             }
@@ -438,7 +438,7 @@ class GroupSyncAction extends SyncAction
                         Alias::MODEL_GROUPS_USERS,
                         Alias::ACTION_CREATE,
                         Alias::STATUS_IGNORE,
-                        $directoryGroupUserEntry
+                        $directoryGroupUserEntry,
                     ));
                 }
             }
@@ -479,7 +479,7 @@ class GroupSyncAction extends SyncAction
                         $this->DirectoryRelations->createFromGroupUser($groupUser);
 
                         return $entitiesChangesDto;
-                    }
+                    },
                 );
                 $this->entitiesChangesDto->merge($entitiesChangesDto);
                 $this->addReportItem(new ActionReport(
@@ -487,7 +487,7 @@ class GroupSyncAction extends SyncAction
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_SUCCESS,
-                    $group
+                    $group,
                 ));
             } catch (ValidationException $exception) {
                 $errors = $exception->getErrors();
@@ -505,7 +505,7 @@ class GroupSyncAction extends SyncAction
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_IGNORE,
-                    $group
+                    $group,
                 ));
             } catch (Exception $exception) {
                 $error = new SyncError($group, $exception);
@@ -514,7 +514,7 @@ class GroupSyncAction extends SyncAction
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_ERROR,
-                    $error
+                    $error,
                 ));
 
                 continue;
@@ -543,7 +543,7 @@ class GroupSyncAction extends SyncAction
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_IGNORE,
-                    $group
+                    $group,
                 ));
 
                 continue;
@@ -554,7 +554,7 @@ class GroupSyncAction extends SyncAction
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_IGNORE,
-                    $group
+                    $group,
                 ));
 
                 continue;
@@ -565,7 +565,7 @@ class GroupSyncAction extends SyncAction
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_WARNING,
-                    $u
+                    $u,
                 ));
             }
         }
@@ -612,7 +612,7 @@ class GroupSyncAction extends SyncAction
                         $this->DirectoryRelations->delete($directoryRelation);
 
                         return $entitiesChanges;
-                    }
+                    },
                 );
                 $this->entitiesChangesDto->merge($entitiesChanges);
                 // Send report.
@@ -621,7 +621,7 @@ class GroupSyncAction extends SyncAction
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_DELETE,
                     Alias::STATUS_SUCCESS,
-                    $group
+                    $group,
                 ));
                 // Notify users
                 $event = new Event(GroupsUpdateService::UPDATE_SUCCESS_EVENT_NAME, $this, [
@@ -646,7 +646,7 @@ class GroupSyncAction extends SyncAction
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_DELETE,
                     Alias::STATUS_ERROR,
-                    $error
+                    $error,
                 ));
             }
         }
@@ -668,7 +668,7 @@ class GroupSyncAction extends SyncAction
                 Alias::MODEL_GROUPS_USERS,
                 Alias::ACTION_CREATE,
                 Alias::STATUS_SYNC,
-                $directoryRelation
+                $directoryRelation,
             ));
         }
     }
@@ -797,7 +797,7 @@ class GroupSyncAction extends SyncAction
                 Alias::MODEL_GROUPS,
                 Alias::ACTION_UPDATE,
                 Alias::STATUS_SUCCESS,
-                $group
+                $group,
             ));
         } catch (Exception $exception) {
             $error = new SyncError($existingGroup, $exception);
@@ -806,7 +806,7 @@ class GroupSyncAction extends SyncAction
                 Alias::MODEL_GROUPS,
                 Alias::ACTION_UPDATE,
                 Alias::STATUS_ERROR,
-                $error
+                $error,
             ));
         }
     }

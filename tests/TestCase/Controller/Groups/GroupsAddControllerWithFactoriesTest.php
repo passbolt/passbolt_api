@@ -228,7 +228,7 @@ class GroupsAddControllerWithFactoriesTest extends AppIntegrationTestCase
                         'GroupsUsers',
                         GroupsUserFactory::make()
                             ->with('Users', UserFactory::make())
-                            ->admin()
+                            ->admin(),
                     )->persist();
 
                     return self::getDummyPostData([

@@ -104,7 +104,7 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table implements TableClea
             ->notEmptyString('recipient_foreign_model', __('The recipient_foreign_model should not be empty.'))
             ->inList('recipient_foreign_model', AccountRecoveryPrivateKeyPassword::ALLOWED_RECIPIENT_FOREIGN_MODELS, __(
                 'The recipient_foreign_model must be one of the following: {0}.',
-                implode(', ', AccountRecoveryPrivateKeyPassword::ALLOWED_RECIPIENT_FOREIGN_MODELS)
+                implode(', ', AccountRecoveryPrivateKeyPassword::ALLOWED_RECIPIENT_FOREIGN_MODELS),
             ));
 
         $validator
@@ -117,33 +117,33 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table implements TableClea
         $validator
             ->uuid(
                 'created_by',
-                __('The identifier of the user who created the private key passwords should be a valid UUID.')
+                __('The identifier of the user who created the private key passwords should be a valid UUID.'),
             )
             ->requirePresence(
                 'created_by',
                 'create',
-                __('The identifier of the user who created the private key passwords is required.')
+                __('The identifier of the user who created the private key passwords is required.'),
             )
             ->notEmptyString(
                 'created_by',
                 __('The identifier of the user who created the private key passwords should not be empty.'),
-                false
+                false,
             );
 
         $validator
             ->uuid(
                 'modified_by',
-                __('The identifier of the user who modified the private key passwords should be a valid UUID.')
+                __('The identifier of the user who modified the private key passwords should be a valid UUID.'),
             )
             ->requirePresence(
                 'modified_by',
                 'create',
-                __('The identifier of the user who modified the private key passwords is required.')
+                __('The identifier of the user who modified the private key passwords is required.'),
             )
             ->notEmptyString(
                 'modified_by',
                 __('The identifier of the user who modified the private key passwords should not be empty.'),
-                false
+                false,
             );
 
         return $validator;
@@ -180,7 +180,7 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table implements TableClea
 
         $rules->add(
             $rules->existsIn(['private_key_id'], 'AccountRecoveryPrivateKeys'),
-            ['errorField' => 'private_key_id']
+            ['errorField' => 'private_key_id'],
         );
 
         return $rules;
@@ -212,7 +212,7 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table implements TableClea
     public function buildAndValidateEntities(
         UserAccessControl $uac,
         array $passwords,
-        string $validationRules = 'default'
+        string $validationRules = 'default',
     ): array {
         if (!in_array($validationRules, ['default', 'rotateKeys'])) {
             throw new InternalErrorException('Invalid validation ruleset.');

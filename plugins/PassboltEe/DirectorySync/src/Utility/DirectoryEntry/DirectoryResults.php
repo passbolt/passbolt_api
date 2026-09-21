@@ -104,7 +104,7 @@ class DirectoryResults
     public function __construct(
         array $mappingRules,
         ?DirectoryOrgSettings $settings = null,
-        ?array $fieldFallbacks = null
+        ?array $fieldFallbacks = null,
     ) {
         $this->mappingRules = $mappingRules;
         $this->directorySettings = $settings ?? DirectoryOrgSettings::get();
@@ -239,7 +239,7 @@ class DirectoryResults
         $emailAttribute = $mappingRules[DirectoryInterface::ENTRY_TYPE_USER]['username'] ?? null;
         if (!$emailAttribute) {
             throw new RuntimeException(
-                __('A mapping rule for username attribute could not be found for directory type: {0}', $directoryType)
+                __('A mapping rule for username attribute could not be found for directory type: {0}', $directoryType),
             );
         }
         $useEmailPrefixSuffix = $this->directorySettings->getUseEmailPrefixSuffix();
@@ -270,7 +270,7 @@ class DirectoryResults
         $idAttribute = $this->mappingRules[$directoryType][$type]['id'] ?? null;
         if (!$idAttribute) {
             throw new RuntimeException(
-                __('A mapping rule for ID attribute could not be found for directory type: {0}', $directoryType)
+                __('A mapping rule for ID attribute could not be found for directory type: {0}', $directoryType),
             );
         }
         $dn = $ldapObject->getDn();
@@ -300,7 +300,7 @@ class DirectoryResults
                 $mappingRules = $this->mappingRules[$ldapGroup->getFirstAttribute('directoryType')] ?? null;
                 if (!$mappingRules) {
                     throw new RuntimeException(
-                        __('Mapping rules could not be found for directory type: {0}', $directoryType)
+                        __('Mapping rules could not be found for directory type: {0}', $directoryType),
                     );
                 }
                 $groupEntry = GroupEntry::fromLdapObject($ldapGroup, $mappingRules);
@@ -368,7 +368,7 @@ class DirectoryResults
                 }
                 if (!$mappingRules) {
                     throw new RuntimeException(
-                        __('Mapping rules could not be found for directory type: {0}', $directoryType)
+                        __('Mapping rules could not be found for directory type: {0}', $directoryType),
                     );
                 }
                 $userEntry = UserEntry::fromLdapObject($ldapUser, $mappingRules, $fallbackFields);

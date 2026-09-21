@@ -60,7 +60,7 @@ abstract class AbstractSsoController extends AppController
         $stateCookie = $this->getStateFromCookie();
         if ($state !== $stateCookie) {
             throw new BadRequestException(
-                __('CSRF issue. The state in request data does not match with cookie value.')
+                __('CSRF issue. The state in request data does not match with cookie value.'),
             );
         }
 
@@ -219,7 +219,7 @@ abstract class AbstractSsoController extends AppController
             $user->id,
             $user->username,
             $this->User->ip(),
-            $this->User->userAgent()
+            $this->User->userAgent(),
         );
     }
 
@@ -232,7 +232,7 @@ abstract class AbstractSsoController extends AppController
     protected function getSsoUrlWithCookie(
         AbstractSsoService $ssoService,
         ExtendedUserAccessControl $uac,
-        string $type
+        string $type,
     ): SsoUrlResponseDto {
         $url = $ssoService->getAuthorizationUrl($uac); // generates state
         $cookie = $ssoService->createStateCookie($uac, $type);

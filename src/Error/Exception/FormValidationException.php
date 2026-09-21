@@ -50,7 +50,7 @@ class FormValidationException extends HttpException implements
         string $message,
         Form $form,
         ?int $code = null,
-        ?Throwable $previous = null
+        ?Throwable $previous = null,
     ) {
         $this->form = $form;
         parent::__construct($message, $code, $previous);

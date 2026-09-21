@@ -80,7 +80,7 @@ class SelfRegistrationUserEmailRedactor implements SubscribedEmailRedactorInterf
             $user->locale,
             function () use ($userFirstName) {
                 return __('Welcome to passbolt, {0}!', $userFirstName);
-            }
+            },
         );
     }
 
@@ -104,7 +104,7 @@ class SelfRegistrationUserEmailRedactor implements SubscribedEmailRedactorInterf
                 ],
                 'title' => $this->getSubject($user),
             ],
-            static::EMAIL_TEMPLATE
+            static::EMAIL_TEMPLATE,
         );
     }
 

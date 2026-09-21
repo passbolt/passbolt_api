@@ -71,7 +71,7 @@ class SsoStatesAssertServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             $ssoState->ip,
-            $ssoState->user_agent
+            $ssoState->user_agent,
         );
 
         try {
@@ -96,7 +96,7 @@ class SsoStatesAssertServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             $ssoState->ip,
-            $ssoState->user_agent
+            $ssoState->user_agent,
         );
 
         try {
@@ -121,7 +121,7 @@ class SsoStatesAssertServiceTest extends SsoTestCase
             UuidFactory::uuid(),
             'foo@test.test',
             '127.0.0.1',
-            'Foo user agent'
+            'Foo user agent',
         );
 
         try {
@@ -145,7 +145,7 @@ class SsoStatesAssertServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             '127.0.0.1', // Different IP
-            $ssoState->user_agent
+            $ssoState->user_agent,
         );
 
         try {
@@ -169,7 +169,7 @@ class SsoStatesAssertServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             $ssoState->ip,
-            'foo agent' // Different User Agent
+            'foo agent', // Different User Agent
         );
 
         try {
@@ -193,7 +193,7 @@ class SsoStatesAssertServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             $ssoState->ip,
-            $ssoState->user_agent
+            $ssoState->user_agent,
         );
 
         try {
@@ -218,7 +218,7 @@ class SsoStatesAssertServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             $ssoState->ip,
-            $ssoState->user_agent
+            $ssoState->user_agent,
         );
         // Make sure state is active
         $this->assertTrue($ssoState->deleted->isFuture());

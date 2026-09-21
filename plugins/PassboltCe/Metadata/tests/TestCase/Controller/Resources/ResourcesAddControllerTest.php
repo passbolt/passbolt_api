@@ -84,7 +84,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         $dummyResourceData = $this->getDummyResourcesPostData([
             'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
         ]);
-        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $resourceDto = MetadataResourceDto::createFromArray($dummyResourceData);
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
         $metadataKeyType = 'shared_key';
@@ -113,7 +113,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         $this->assertEventFiredWith(
             ResourcesAddService::ADD_SUCCESS_EVENT_NAME,
             'isV5',
-            true
+            true,
         );
     }
 
@@ -133,7 +133,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         $dummyResourceData = $this->getDummyResourcesPostData([
             'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
         ]);
-        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $resourceDto = MetadataResourceDto::createFromArray($dummyResourceData);
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $metadataKeyType = 'user_key';
@@ -175,7 +175,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         $dummyResourceData = $this->getDummyResourcesPostData([
             'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
         ]);
-        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $resourceDto = MetadataResourceDto::createFromArray($dummyResourceData);
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $metadataKeyType = 'user_key';
@@ -222,7 +222,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         $dummyResourceData = $this->getDummyResourcesPostData([
             'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
         ]);
-        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $resourceDto = MetadataResourceDto::createFromArray($dummyResourceData);
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $metadataKeyType = 'user_key';
@@ -256,7 +256,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         $dummyResourceData = $this->getDummyResourcesPostData([
             'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
         ]);
-        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $resourceDto = MetadataResourceDto::createFromArray($dummyResourceData);
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
         $metadataKeyType = 'shared_key';
@@ -316,7 +316,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         $dummyResourceData = $this->getDummyResourcesPostData([
             'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
         ]);
-        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $resourceDto = MetadataResourceDto::createFromArray($dummyResourceData);
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
         $metadataKeyType = 'shared_key';
@@ -405,7 +405,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         $dummyResourceData = $this->getDummyResourcesPostData([
             'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
         ]);
-        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $resourceDto = MetadataResourceDto::createFromArray($dummyResourceData);
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
         $metadataKeyType = 'shared_key';
@@ -424,5 +424,21 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
 
         $this->postJson('/resources.json', $data);
         $this->assertError(400);
+    }
+
+    /**
+     * The JSON assertion runs before the request is mapped to the DTO.
+     *
+     * @retrun void
+     */
+    public function testResourcesAddController_Error_NotJsonWithIncompleteV5Payload(): void
+    {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
+
+        $this->post('/resources', ['metadata' => '-----BEGIN PGP MESSAGE-----']);
+
+        $this->assertResponseCode(404);
     }
 }

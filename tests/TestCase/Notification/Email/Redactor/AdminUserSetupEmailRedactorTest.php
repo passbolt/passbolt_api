@@ -37,7 +37,7 @@ class AdminUserSetupEmailRedactorTest extends TestCase
             [
                 SetupCompleteController::COMPLETE_SUCCESS_EVENT_NAME,
             ],
-            (new AdminUserSetupCompleteEmailRedactor())->getSubscribedEvents()
+            (new AdminUserSetupCompleteEmailRedactor())->getSubscribedEvents(),
         );
     }
 }

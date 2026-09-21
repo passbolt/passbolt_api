@@ -59,7 +59,7 @@ class FoldersRelationsRepairStronglyConnectedComponentsService
             $this->foldersRelationsTable->moveItemFrom(
                 $folderRelationToBreak->foreign_id,
                 [$folderRelationToBreak->folder_parent_id],
-                FoldersRelation::ROOT
+                FoldersRelation::ROOT,
             );
         }
 
@@ -85,7 +85,7 @@ class FoldersRelationsRepairStronglyConnectedComponentsService
     private function identifyFolderRelationToBreak(
         UserAccessControl $uac,
         string $userId,
-        array $foldersRelations
+        array $foldersRelations,
     ): ?FoldersRelation {
         if (empty($foldersRelations)) {
             return null;
@@ -110,7 +110,7 @@ class FoldersRelationsRepairStronglyConnectedComponentsService
             $this->foldersRelationsTable->moveItemFrom(
                 $folderRelationToBreak->foreign_id,
                 [$folderRelationToBreak->folder_parent_id],
-                FoldersRelation::ROOT
+                FoldersRelation::ROOT,
             );
         }
 

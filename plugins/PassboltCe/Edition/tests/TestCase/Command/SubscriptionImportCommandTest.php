@@ -142,7 +142,7 @@ class SubscriptionImportCommandTest extends AppTestCase
         Configure::write('passbolt.edition', EditionDto::EDITION_CE);
         Configure::write(
             EditionManager::CONFIGURE_KEY_LAST_CHANGE_DATETIME,
-            new DateTime('2024-06-15 12:34:56')
+            new DateTime('2024-06-15 12:34:56'),
         );
         UserFactory::make()->admin()->persist();
         EditionOrganizationSettingFactory::make()

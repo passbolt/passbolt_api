@@ -19,14 +19,15 @@ Key constraints:
 - Refresh application state (run composer, migration, and clear cache): `ddev refresh`
 
 ### Tests (run before proposing a final change)
-- Unit: `ddev exec -d /var/www/html "vendor/bin/phpunit --filter <files-changed>"`
-- Core domain tests: `ddev exec -d /var/www/html "vendor/bin/phpunit tests/TestCase"`
-- CE domain tests: `ddev exec -d /var/www/html "vendor/bin/phpunit plugins/PassboltCe"`
-- Full testsuite(all tests): `ddev composer test`
+- Unit: `vendor/bin/phpunit --filter <files-changed>`
+- Core domain tests: `vendor/bin/phpunit tests/TestCase`
+- CE domain tests: `vendor/bin/phpunit plugins/PassboltCe`
+- EE domain tests: `vendor/bin/phpunit plugins/PassboltEe`
+- Full testsuite (all tests): `composer test`
 
 ### Quality gates
-- Auto-fix coding standard errors: `ddev composer cs-fix`
-- Static analysis: `ddev analyze`
+- Auto-fix coding standard errors: `composer cs-fix`
+- Static analysis: `composer stan && composer psalm && composer cs-check`
 
 ## Architecture map
 Classic CakePHP architecture with feature plugin based approach.

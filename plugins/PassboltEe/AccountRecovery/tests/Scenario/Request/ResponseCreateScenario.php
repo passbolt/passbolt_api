@@ -54,7 +54,7 @@ class ResponseCreateScenario implements FixtureScenarioInterface
             ->optin()
             ->with(
                 'AccountRecoveryOrganizationPublicKeys',
-                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key(),
             )
             ->persist();
 

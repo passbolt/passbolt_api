@@ -137,8 +137,8 @@ class CommentsTable extends Table implements TableCleanupProviderInterface
                 self::ALLOWED_FOREIGN_MODELS,
                 __(
                     'The commented object type should be one of the following: {0}.',
-                    implode(', ', self::ALLOWED_FOREIGN_MODELS)
-                )
+                    implode(', ', self::ALLOWED_FOREIGN_MODELS),
+                ),
             )
             ->requirePresence('foreign_model', 'create', __('The commented object type is required.'))
             ->allowEmptyString('foreign_model', __('The commented object type should not be empty.'), false);
@@ -155,7 +155,7 @@ class CommentsTable extends Table implements TableCleanupProviderInterface
             ->lengthBetween(
                 'content',
                 [1, 255],
-                __('The content length should be between {0} and {1} characters.', 1, 255)
+                __('The content length should be between {0} and {1} characters.', 1, 255),
             );
 
         $validator
@@ -163,12 +163,12 @@ class CommentsTable extends Table implements TableCleanupProviderInterface
             ->requirePresence(
                 'created_by',
                 'create',
-                __('The identifier of the user who created the comment is required.')
+                __('The identifier of the user who created the comment is required.'),
             )
             ->allowEmptyString(
                 'created_by',
                 __('The identifier of the user who created the comment should not be empty.'),
-                false
+                false,
             );
 
         $validator
@@ -176,12 +176,12 @@ class CommentsTable extends Table implements TableCleanupProviderInterface
             ->requirePresence(
                 'modified_by',
                 true,
-                __('The identifier of the user who modified the comment required.')
+                __('The identifier of the user who modified the comment required.'),
             )
             ->allowEmptyString(
                 'modified_by',
                 __('The identifier of the user who modified the comment should not be empty.'),
-                false
+                false,
             );
 
         return $validator;
@@ -253,7 +253,7 @@ class CommentsTable extends Table implements TableCleanupProviderInterface
         string $userId,
         string $foreignModelName,
         string $foreignKey,
-        ?array $options = []
+        ?array $options = [],
     ): SelectQuery {
         // Check model sanity.
         if (!in_array($foreignModelName, self::ALLOWED_FOREIGN_MODELS)) {

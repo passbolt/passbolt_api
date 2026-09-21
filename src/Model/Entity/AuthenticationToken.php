@@ -182,7 +182,7 @@ class AuthenticationToken extends Entity
         $hashedSessionId = (new AuthenticationTokensSessionService())->hash($sessionId);
         $data = array_merge(
             $this->getJsonDecodedData(),
-            [self::SESSION_ID_KEY => $hashedSessionId]
+            [self::SESSION_ID_KEY => $hashedSessionId],
         );
 
         $this->set('data', json_encode($data));

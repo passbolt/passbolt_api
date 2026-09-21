@@ -248,7 +248,7 @@ class FoldersDeleteService
                 [
                     'foreign_id IN' => $nonDeletableItemIds,
                     'folder_parent_id IN' => $allDeletedFolderIds,
-                ]
+                ],
             );
         }
 

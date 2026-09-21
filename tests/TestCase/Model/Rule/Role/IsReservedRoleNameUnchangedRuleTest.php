@@ -71,7 +71,7 @@ class IsReservedRoleNameUnchangedRuleTest extends TestCase
 
     public static function reservedRoleNamesProvider(): array
     {
-        return array_map(fn (string $name) => [$name], RolesTable::RESERVED_ROLE_NAMES);
+        return array_map(fn(string $name) => [$name], RolesTable::RESERVED_ROLE_NAMES);
     }
 
     private function makeRoleEntity(string $name): Role

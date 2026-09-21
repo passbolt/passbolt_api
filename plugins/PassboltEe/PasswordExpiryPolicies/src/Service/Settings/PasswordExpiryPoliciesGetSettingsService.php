@@ -39,7 +39,7 @@ class PasswordExpiryPoliciesGetSettingsService extends PasswordExpiryGetSettings
      */
     protected function createDTOFromEntity(
         PasswordExpirySetting $passwordExpirySetting,
-        PasswordExpirySettingsForm $form
+        PasswordExpirySettingsForm $form,
     ): PasswordExpirySettingsDto {
         return PasswordExpiryPoliciesSettingsDto::createFromEntity($passwordExpirySetting, $form);
     }

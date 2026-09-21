@@ -54,7 +54,7 @@ class MetadataRotateKeyTagsIndexControllerTest extends AppIntegrationTestCaseV5
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataTagDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataTagDto::createFromArray(['name' => 'marketing'])->getClearTextMetadata());
         TagFactory::make(8)
             ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
             ->persist();
@@ -64,12 +64,12 @@ class MetadataRotateKeyTagsIndexControllerTest extends AppIntegrationTestCaseV5
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $activeMetadataKey */
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataTagDto::fromArray(['name' => 'active'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataTagDto::createFromArray(['name' => 'active'])->getClearTextMetadata());
         TagFactory::make(2)
             ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $activeMetadataKey->id], true)
             ->persist();
         // another user's tag
-        $metadata = json_encode(MetadataTagDto::fromArray(['name' => 'betty Tag'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataTagDto::createFromArray(['name' => 'betty Tag'])->getClearTextMetadata());
         TagFactory::make(25)
             ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
             ->persist();
@@ -105,7 +105,7 @@ class MetadataRotateKeyTagsIndexControllerTest extends AppIntegrationTestCaseV5
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataTagDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataTagDto::createFromArray(['name' => 'marketing'])->getClearTextMetadata());
         TagFactory::make(5)
             ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
             ->persist();
@@ -160,7 +160,7 @@ class MetadataRotateKeyTagsIndexControllerTest extends AppIntegrationTestCaseV5
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataTagDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataTagDto::createFromArray(['name' => 'marketing'])->getClearTextMetadata());
         TagFactory::make($no)
             ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
             ->persist();

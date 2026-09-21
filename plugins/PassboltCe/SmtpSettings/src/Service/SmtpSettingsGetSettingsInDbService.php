@@ -88,7 +88,7 @@ class SmtpSettingsGetSettingsInDbService
                 'modified' => $settings['modified'],
                 'created_by' => $settings['created_by'],
                 'modified_by' => $settings['modified_by'],
-            ]
+            ],
         );
     }
 

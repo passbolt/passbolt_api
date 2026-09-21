@@ -85,7 +85,7 @@ class ContainPendingAccountRecoveryRequest implements EventListenerInterface
         try {
             (new RbacsRoleActionAccessControlService())->controlUserRoleActionAccess(
                 $identity->role,
-                UuidFactory::uuid('AccountRecoveryRequestsView.view')
+                UuidFactory::uuid('AccountRecoveryRequestsView.view'),
             );
             $this->isContained = true;
         } catch (ForbiddenException) {

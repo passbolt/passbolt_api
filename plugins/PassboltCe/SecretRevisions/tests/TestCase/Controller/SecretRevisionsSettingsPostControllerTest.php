@@ -142,7 +142,7 @@ class SecretRevisionsSettingsPostControllerTest extends AppIntegrationTestCase
     {
         Configure::write(
             SecretRevisionsSettingsMiddleware::PASSBOLT_SECURITY_SECRET_REVISIONS_SETTINGS_EDITION_DISABLED,
-            true
+            true,
         );
         $this->logInAsAdmin();
         $this->postJson('/secret-revisions/settings.json', [

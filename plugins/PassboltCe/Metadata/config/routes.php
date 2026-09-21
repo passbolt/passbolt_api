@@ -94,28 +94,28 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
         $routes
             ->connect(
                 '/resources',
-                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeResourcesIndex', 'action' => 'index']
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeResourcesIndex', 'action' => 'index'],
             )
             ->setMethods(['GET']);
 
         $routes
             ->connect(
                 '/resources',
-                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeResourcesPost', 'action' => 'post']
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeResourcesPost', 'action' => 'post'],
             )
             ->setMethods(['POST']);
 
         $routes
             ->connect(
                 '/folders',
-                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeFoldersIndex', 'action' => 'index']
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeFoldersIndex', 'action' => 'index'],
             )
             ->setMethods(['GET']);
 
         $routes
             ->connect(
                 '/folders',
-                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeFoldersPost', 'action' => 'post']
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeFoldersPost', 'action' => 'post'],
             )
             ->setMethods(['POST']);
     });
@@ -129,28 +129,28 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
         $routes
             ->connect(
                 '/resources',
-                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyResourcesIndex', 'action' => 'index']
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyResourcesIndex', 'action' => 'index'],
             )
             ->setMethods(['GET']);
 
         $routes
             ->connect(
                 '/resources',
-                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyResourcesPost', 'action' => 'post']
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyResourcesPost', 'action' => 'post'],
             )
             ->setMethods(['POST']);
 
         $routes
             ->connect(
                 '/folders',
-                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyFoldersIndex', 'action' => 'index']
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyFoldersIndex', 'action' => 'index'],
             )
             ->setMethods(['GET']);
 
         $routes
             ->connect(
                 '/folders',
-                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyFoldersPost', 'action' => 'post']
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyFoldersPost', 'action' => 'post'],
             )
             ->setMethods(['POST']);
     });

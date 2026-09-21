@@ -163,7 +163,7 @@ class SqlExportCommandTest extends AppTestCase
         $this->exec("passbolt sql_export --dir {$testDir} --file {$testFile} --force");
         $this->assertExitSuccess();
         $this->assertOutputContains(
-            'Excluding data of table(s): ' . implode(', ', SqlExportCommand::EXCLUDED_DATA_TABLES)
+            'Excluding data of table(s): ' . implode(', ', SqlExportCommand::EXCLUDED_DATA_TABLES),
         );
 
         $dump = file_get_contents($testDir . DS . $testFile);

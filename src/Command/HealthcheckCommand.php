@@ -74,7 +74,7 @@ class HealthcheckCommand extends PassboltCommand
      */
     public function __construct(
         ProcessUserService $processUserService,
-        HealthcheckServiceCollector $healthcheckServiceCollector
+        HealthcheckServiceCollector $healthcheckServiceCollector,
     ) {
         parent::__construct();
 
@@ -122,7 +122,7 @@ class HealthcheckCommand extends PassboltCommand
             ->addOption('posix', [
                 'help' => __d(
                     'cake_console',
-                    'Set the exit status to 1 when errors or warnings are detected, and print them to STDERR.'
+                    'Set the exit status to 1 when errors or warnings are detected, and print them to STDERR.',
                 ),
                 'boolean' => true,
             ]);
@@ -248,7 +248,7 @@ class HealthcheckCommand extends PassboltCommand
                     $healthcheckService->isPassed(),
                     $healthcheckService->getSuccessMessage(),
                     $healthcheckService->getFailureMessage(),
-                    $healthcheckService->getHelpMessage()
+                    $healthcheckService->getHelpMessage(),
                 );
                 break;
             case HealthcheckServiceCollector::LEVEL_WARNING:
@@ -256,7 +256,7 @@ class HealthcheckCommand extends PassboltCommand
                     $healthcheckService->isPassed(),
                     $healthcheckService->getSuccessMessage(),
                     $healthcheckService->getFailureMessage(),
-                    $healthcheckService->getHelpMessage()
+                    $healthcheckService->getHelpMessage(),
                 );
                 break;
             case HealthcheckServiceCollector::LEVEL_NOTICE:
@@ -264,7 +264,7 @@ class HealthcheckCommand extends PassboltCommand
                     $healthcheckService->isPassed(),
                     $healthcheckService->getSuccessMessage(),
                     $healthcheckService->getFailureMessage(),
-                    $healthcheckService->getHelpMessage()
+                    $healthcheckService->getHelpMessage(),
                 );
                 break;
         }

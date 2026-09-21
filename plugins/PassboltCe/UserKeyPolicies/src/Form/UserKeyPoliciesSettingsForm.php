@@ -79,15 +79,15 @@ class UserKeyPoliciesSettingsForm extends Form
             ->requirePresence(
                 'preferred_key_type',
                 true,
-                __('The preferred key type is required.')
+                __('The preferred key type is required.'),
             )
             ->notEmptyString(
                 'preferred_key_type',
-                __('The preferred key type should not be empty.')
+                __('The preferred key type should not be empty.'),
             )
             ->inList('preferred_key_type', self::ALLOWED_KEY_TYPES, __(
                 'The preferred key type should be one of the following: {0}.',
-                implode(', ', self::ALLOWED_KEY_TYPES)
+                implode(', ', self::ALLOWED_KEY_TYPES),
             ))
             // Note: Putting these validation in nullable fields doesn't work when value of that field is passed as `null`, hence rule is applied here.
             ->add('preferred_key_type', 'invalid_key_type_size_combination', [
@@ -104,7 +104,7 @@ class UserKeyPoliciesSettingsForm extends Form
             ->requirePresence(
                 'preferred_key_size',
                 true,
-                __('The preferred key size is required.')
+                __('The preferred key size is required.'),
             )
             ->allowEmptyFor('preferred_key_size', Validator::EMPTY_ALL)
             ->inList(
@@ -112,11 +112,11 @@ class UserKeyPoliciesSettingsForm extends Form
                 self::ALLOWED_KEY_SIZES,
                 __(
                     'The preferred key size should be one of the following: {0}.',
-                    implode(', ', self::ALLOWED_KEY_SIZES)
+                    implode(', ', self::ALLOWED_KEY_SIZES),
                 ),
                 function ($context) {
                     return $context['data']['preferred_key_size'] !== null;
-                }
+                },
             );
 
         $validator
@@ -124,7 +124,7 @@ class UserKeyPoliciesSettingsForm extends Form
             ->requirePresence(
                 'preferred_key_curve',
                 true,
-                __('The preferred key curve is required.')
+                __('The preferred key curve is required.'),
             )
             ->allowEmptyFor('preferred_key_curve', Validator::EMPTY_STRING)
             ->inList(
@@ -132,11 +132,11 @@ class UserKeyPoliciesSettingsForm extends Form
                 self::ALLOWED_KEY_CURVES,
                 __(
                     'The preferred key curve should be one of the following: {0}.',
-                    implode(', ', self::ALLOWED_KEY_CURVES)
+                    implode(', ', self::ALLOWED_KEY_CURVES),
                 ),
                 function ($context) {
                     return $context['data']['preferred_key_curve'] !== null;
-                }
+                },
             );
 
         return $validator;

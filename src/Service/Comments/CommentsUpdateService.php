@@ -121,7 +121,7 @@ class CommentsUpdateService
                     'content' => true,
                     'modified_by' => true,
                 ],
-            ]
+            ],
         );
         $this->_handleValidationErrors($comment);
 

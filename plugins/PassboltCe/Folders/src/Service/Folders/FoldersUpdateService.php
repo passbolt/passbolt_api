@@ -121,7 +121,7 @@ class FoldersUpdateService
     private function updateFolderMeta(
         UserAccessControl $uac,
         Folder $folder,
-        MetadataFolderDto $folderDto
+        MetadataFolderDto $folderDto,
     ): EntityInterface|Folder {
         $this->patchEntity($uac, $folder, $folderDto);
         $this->handleValidationErrors($folder);
@@ -142,7 +142,7 @@ class FoldersUpdateService
     private function patchEntity(
         UserAccessControl $uac,
         Folder $folder,
-        MetadataFolderDto $folderDto
+        MetadataFolderDto $folderDto,
     ): EntityInterface|Folder {
         $data = $folderDto->toArray();
         $data = array_merge($data, ['modified_by' => $uac->getId()]);

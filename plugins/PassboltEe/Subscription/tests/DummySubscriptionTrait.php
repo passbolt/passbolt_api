@@ -191,7 +191,7 @@ trait DummySubscriptionTrait
             ],
             [
                 'validate' => 'parent',
-            ]
+            ],
         );
 
         return $SubscriptionsTable->saveOrFail($entity, compact('uac'));

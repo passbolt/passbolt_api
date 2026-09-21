@@ -57,7 +57,7 @@ trait UsersFindersTrait
     private function _filterQueryByGroupsUsers(
         SelectQuery $query,
         array $groupsIds,
-        bool $areManager = false
+        bool $areManager = false,
     ): SelectQuery {
         // If there is only one group use a left join
         if (count($groupsIds) == 1) {
@@ -126,7 +126,7 @@ trait UsersFindersTrait
     public function filterQueryByResourcesAccess(
         SelectQuery $query,
         array|Query $resourceIds,
-        array $permissionTypes = []
+        array $permissionTypes = [],
     ): SelectQuery {
         if (is_array($resourceIds) && empty($resourceIds)) {
             return $query;
@@ -161,7 +161,7 @@ trait UsersFindersTrait
                 ['OR' => [
                     ['PermissionsFilterAccess.aro_foreign_key' => new IdentifierExpression('Users.id')],
                     ['PermissionsFilterAccess.aro_foreign_key IN' => $groupIdsSubquery],
-                ]]
+                ]],
             );
     }
 
@@ -590,7 +590,7 @@ trait UsersFindersTrait
                     'Users.deleted' => false,
                     'Users.active' => true,
                     'Roles.name' => Role::ADMIN,
-                ]
+                ],
             )
             ->orderBy(['Users.created' => 'ASC'])
             ->contain(['Roles']);
@@ -599,6 +599,8 @@ trait UsersFindersTrait
     /**
      * Filter users to those allowed to perform an RBAC-controlled action:
      * admins by role, plus non-admins whose role has the given RBAC action granted with control_function=Allow.
+     *
+     * Selects on role / RBAC grant only: callers must chain 'activeNotDeleted' and 'notDisabled' as needed.
      *
      * Only returns admins-only when the Rbacs association is not registered (i.e. the Rbacs plugin is not loaded).
      *

@@ -63,7 +63,7 @@ class GpgAuthenticatorTraitTest extends TestCase
         $this->assertNull($this->assertGpgMessageIsValid(
             $this->gpg,
             GpgAuthenticatorTraitTest::VALID_GPG_MESSAGE,
-            'A valid GPG message should not throw an exception'
+            'A valid GPG message should not throw an exception',
         ));
     }
 
@@ -85,7 +85,7 @@ class GpgAuthenticatorTraitTest extends TestCase
         $this->assertGpgMessageIsValid(
             $this->gpg,
             GpgAuthenticatorTraitTest::INVALID_GPG_MESSAGE,
-            'Cannot be invalid GPG message'
+            'Cannot be invalid GPG message',
         );
     }
 }

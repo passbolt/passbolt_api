@@ -114,7 +114,7 @@ class ShareNotificationTest extends ShareControllerTest
             $resource->description,
             'URL: ' . $resource->uri,
             'BEGIN PGP MESSAGE'],
-            $userE->username
+            $userE->username,
         );
         $this->assertEmailInBatchContains('shared a password with you', $userMemberOfTheGroupToAddPermissionOn->username);
         $this->assertEmailInBatchContains('shared a password with you', $userMemberOfTheGroupToAddPermissionOn2->username);

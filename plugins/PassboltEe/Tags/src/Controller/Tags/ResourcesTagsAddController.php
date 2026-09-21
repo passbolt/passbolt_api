@@ -149,7 +149,7 @@ class ResourcesTagsAddController extends AppController
                 __('Could not validate request data.'),
                 $errors,
                 null,
-                400
+                400,
             );
         }
 

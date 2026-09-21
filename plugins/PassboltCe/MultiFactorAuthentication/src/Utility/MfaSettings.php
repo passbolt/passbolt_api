@@ -71,7 +71,7 @@ class MfaSettings
         MfaOrgSettings $orgSettings,
         ?MfaAccountSettings $accountSettings,
         UserAccessControl $uac,
-        MfaSortWithLastUsedProviderFirstService $sortProvidersService
+        MfaSortWithLastUsedProviderFirstService $sortProvidersService,
     ) {
         $this->accountSettings = $accountSettings;
         $this->orgSettings = $orgSettings;
@@ -112,7 +112,7 @@ class MfaSettings
             $orgSettings,
             $accountSettings,
             $uac,
-            new MfaSortWithLastUsedProviderFirstService()
+            new MfaSortWithLastUsedProviderFirstService(),
         );
 
         return self::$instance;

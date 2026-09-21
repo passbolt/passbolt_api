@@ -56,18 +56,18 @@ class MetadataRotateKeyTagsPostControllerTest extends AppIntegrationTestCaseV5
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         // expired tag
-        $metadata = json_encode(MetadataTagDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataTagDto::createFromArray(['name' => 'marketing'])->getClearTextMetadata());
         $expiredTag1 = TagFactory::make()
             ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
             ->persist();
         // another user's tag
-        $metadata = json_encode(MetadataTagDto::fromArray(['name' => 'test tag'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataTagDto::createFromArray(['name' => 'test tag'])->getClearTextMetadata());
         TagFactory::make(5)
             ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
             ->persist();
 
         $this->logInAs($admin);
-        $metadataToUpdate = $this->encryptForMetadataKey(json_encode(MetadataTagDto::fromArray(['slug' => 'my-tag'])->getClearTextMetadata()));
+        $metadataToUpdate = $this->encryptForMetadataKey(json_encode(MetadataTagDto::createFromArray(['slug' => 'my-tag'])->getClearTextMetadata()));
         $this->postJson('/metadata/rotate-key/tags.json', [
             [
                 'id' => $expiredTag1->get('id'),

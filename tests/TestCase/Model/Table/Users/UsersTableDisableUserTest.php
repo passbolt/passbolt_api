@@ -62,14 +62,14 @@ class UsersTableDisableUserTest extends TestCase
         $user = $this->Users->editEntity(
             $user,
             $data,
-            $admin
+            $admin,
         );
 
         $this->Users->save($user);
 
         $this->assertSame(
             ['dateTime' => 'The disabled date should be a valid date.'],
-            $user->getError('disabled')
+            $user->getError('disabled'),
         );
     }
 }

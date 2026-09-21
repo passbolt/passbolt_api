@@ -30,7 +30,7 @@ class UrlParser
             '%s://%s%s',
             parse_url($url, PHP_URL_SCHEME),
             parse_url($url, PHP_URL_HOST),
-            parse_url($url, PHP_URL_PATH)
+            parse_url($url, PHP_URL_PATH),
         );
 
         return trim($result, '/');

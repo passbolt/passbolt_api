@@ -56,13 +56,13 @@ class GoogleRecoverSuccessController extends AbstractSsoController
             throw new BadRequestException(
                 __('The authentication token does not exist or has been deleted.'),
                 null,
-                $e
+                $e,
             );
         } catch (CustomValidationException $e) {
             throw new BadRequestException(
                 __('The authentication token has been expired.'),
                 null,
-                $e
+                $e,
             );
         }
 

@@ -31,7 +31,7 @@ class AccountRecoveryContinueAggregatorService
      * @param \Passbolt\UserPassphrasePolicies\Service\AccountRecovery\AccountRecoveryContinueUserPassphrasePoliciesService|string $accountRecoveryContinuePassphraseService Gets the info related to the user passphrase policy.
      */
     public function __construct(
-        AccountRecoveryContinueUserPassphrasePoliciesService|string $accountRecoveryContinuePassphraseService
+        AccountRecoveryContinueUserPassphrasePoliciesService|string $accountRecoveryContinuePassphraseService,
     ) {
         $this->services[] = $accountRecoveryContinuePassphraseService;
     }

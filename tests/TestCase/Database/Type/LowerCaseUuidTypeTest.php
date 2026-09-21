@@ -49,7 +49,7 @@ class LowerCaseUuidTypeTest extends TestCase
     {
         (new UuidParserMiddleware())->process(
             new ServerRequest(),
-            new TestRequestHandler()
+            new TestRequestHandler(),
         );
         $uuid = UuidFactory::uuid();
         $UUID = strtoupper($uuid);

@@ -25,7 +25,7 @@ trait MockAzureResourceOwnerTrait
 {
     public function mockAzureResourceOwner(
         array $data = [],
-        $emailAliasField = SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL
+        $emailAliasField = SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL,
     ): AzureResourceOwner {
         if (empty($data)) {
             $data = [

@@ -150,7 +150,7 @@ trait TableCleanupTrait
             $innerJoinConditions[]['OR'] = [
                 new ComparisonExpression(
                     new IdentifierExpression($key),
-                    new IdentifierExpression("$duplicateTableName.{$targetTableName}__$key")
+                    new IdentifierExpression("$duplicateTableName.{$targetTableName}__$key"),
                 ),
                 [
                     /**
@@ -159,7 +159,7 @@ trait TableCleanupTrait
                     new UnaryExpression(
                         'IS NULL',
                         new IdentifierExpression("$duplicateTableName.{$targetTableName}__$key"),
-                        UnaryExpression::POSTFIX
+                        UnaryExpression::POSTFIX,
                     ),
                     new UnaryExpression('IS NULL', new IdentifierExpression($key), UnaryExpression::POSTFIX),
                 ],

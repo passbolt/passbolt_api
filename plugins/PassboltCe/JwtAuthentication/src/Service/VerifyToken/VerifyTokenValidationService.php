@@ -68,7 +68,7 @@ class VerifyTokenValidationService
         }
         if ($verifyTokenExpiry < time()) {
             throw new ExpiredVerifyTokenAccessException(
-                __('Attempt to access an expired verify token.')
+                __('Attempt to access an expired verify token.'),
             );
         }
     }

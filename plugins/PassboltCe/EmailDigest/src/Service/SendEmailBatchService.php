@@ -185,14 +185,14 @@ class SendEmailBatchService
                             $this->emailQueueTable->aliasField('send_tries') . ' <=' => 3,
                             $this->emailQueueTable->aliasField('send_at') . ' <=' => new FrozenTime('now'),
                         ])
-                        ->then($query->expr('TRUE'), 'boolean')
+                        ->then($query->expr('TRUE'), 'boolean'),
                 ),
                 'locked' => $query->func()->count(
                     $query
                         ->expr()
                         ->case()
                         ->when([$this->emailQueueTable->aliasField('locked') => true])
-                        ->then($query->expr('TRUE'), 'boolean')
+                        ->then($query->expr('TRUE'), 'boolean'),
                 ),
             ])
             ->firstOrFail();

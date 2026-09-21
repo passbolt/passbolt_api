@@ -57,7 +57,7 @@ class AccountRecoveryContinueController extends AppController
     public function get(
         ?string $userId,
         ?string $tokenId,
-        AccountRecoveryContinueAggregatorService $accountRecoveryContinueService
+        AccountRecoveryContinueAggregatorService $accountRecoveryContinueService,
     ): void {
         if (!isset($userId) || !Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id is invalid.'));

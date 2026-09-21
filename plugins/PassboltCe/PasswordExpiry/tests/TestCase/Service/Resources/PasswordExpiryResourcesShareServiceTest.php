@@ -42,9 +42,9 @@ class PasswordExpiryResourcesShareServiceTest extends AppTestCase
         $this->service = new ResourcesShareService(
             new PasswordExpiryExpireResourcesService(
                 new PasswordExpiryValidationService(
-                    new PasswordExpiryGetSettingsService()
-                )
-            )
+                    new PasswordExpiryGetSettingsService(),
+                ),
+            ),
         );
         $this->loadPlugins([PasswordExpiryPlugin::class => []]);
     }

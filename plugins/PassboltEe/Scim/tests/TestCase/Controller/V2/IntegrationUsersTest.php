@@ -305,7 +305,7 @@ class IntegrationUsersTest extends ScimApiIntegrationTestCase
     public function testEdit_UserExistAndEntryExistInPassbolt_UpdateActive(
         ?string $disabled,
         bool $patchActiveValue,
-        ?string $expectedDisabled
+        ?string $expectedDisabled,
     ) {
         $this->setTestNow();
         $scimName = self::USER_1_SCIM_NAME;

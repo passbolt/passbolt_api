@@ -69,11 +69,11 @@ class SsoPingOneStage1ControllerTest extends SsoIntegrationTestCase
         $this->assertStringContainsString("client_id={$clientId}", $url);
         $this->assertStringContainsString(
             'scope=' . rawurlencode(implode(' ', ['openid', 'email', 'profile'])),
-            $url
+            $url,
         );
         $this->assertStringContainsString(
             'redirect_uri=' . rawurlencode(Router::url('/sso/pingone/redirect', true)),
-            $url
+            $url,
         );
         // assert sso state cookie
         $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
@@ -113,11 +113,11 @@ class SsoPingOneStage1ControllerTest extends SsoIntegrationTestCase
         $this->assertStringContainsString("client_id={$clientId}", $url);
         $this->assertStringContainsString(
             'scope=' . rawurlencode(implode(' ', ['openid', 'email', 'profile'])),
-            $url
+            $url,
         );
         $this->assertStringContainsString(
             'redirect_uri=' . rawurlencode(Router::url('/sso/pingone/redirect', true)),
-            $url
+            $url,
         );
         // assert sso state cookie
         $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
@@ -160,7 +160,7 @@ class SsoPingOneStage1ControllerTest extends SsoIntegrationTestCase
         $this->assertStringContainsString("client_id={$clientId}", $url);
         $this->assertStringContainsString(
             'scope=' . rawurlencode(implode(' ', ['openid', 'email', 'profile'])),
-            $url
+            $url,
         );
         $this->assertStringContainsString('redirect_uri=' . rawurlencode($redirectUrl), $url);
         // assert sso state cookie path includes subdirectory

@@ -31,7 +31,7 @@ class EeSetupStartService extends DefaultSetupStartService
     public function __construct(
         SetupStartUserInfoService $recoverStartUserInfoService,
         SetupStartAccountRecoveryInfoService|string $setupStartAccountRecoveryInfoService,
-        SetupStartUserPassphrasePoliciesInfoService|string $setupStartUserPassphrasePoliciesInfoService
+        SetupStartUserPassphrasePoliciesInfoService|string $setupStartUserPassphrasePoliciesInfoService,
     ) {
         parent::__construct($recoverStartUserInfoService);
         $this->add($setupStartAccountRecoveryInfoService);

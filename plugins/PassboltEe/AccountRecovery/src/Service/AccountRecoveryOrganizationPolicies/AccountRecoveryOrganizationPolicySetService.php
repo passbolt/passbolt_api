@@ -148,7 +148,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         AccountRecoveryOrganizationPolicy $newPolicy,
         ?AccountRecoveryOrganizationPublicKey $oldKey = null,
         ?AccountRecoveryOrganizationPublicKey $newKey = null,
-        ?iterable $passwords = null
+        ?iterable $passwords = null,
     ): AccountRecoveryOrganizationPolicy {
         $oldPolicy = $this->getCurrentPolicyEntity();
         $this->AccountRecoveryOrganizationPolicies->getConnection()->transactional(
@@ -167,7 +167,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
                     $this->AccountRecoveryPrivateKeyPasswords->truncate();
                     $this->AccountRecoveryPrivateKeyPasswords->saveManyOrFail($passwords, $saveOptions);
                 }
-            }
+            },
         );
 
         // Cleanup user settings with rejected status since it's not a valid option anymore
@@ -227,7 +227,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
 
                 // Cancel pending or non completed requests
                 $this->AccountRecoveryRequests->rejectAllNonCompleted($uac);
-            }
+            },
         );
 
         // Trigger event for email notifications and co.
@@ -244,7 +244,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
      */
     public function buildPasswordEntitiesFromDataOrFail(
         UserAccessControl $uac,
-        AccountRecoveryOrganizationPublicKey $publicKey
+        AccountRecoveryOrganizationPublicKey $publicKey,
     ): iterable {
         $passwordsData = $this->getData('account_recovery_private_key_passwords') ?? [];
         $service = new AccountRecoveryPrivateKeyPasswordsValidationService();

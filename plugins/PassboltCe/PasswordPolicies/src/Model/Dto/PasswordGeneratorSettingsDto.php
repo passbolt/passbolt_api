@@ -104,7 +104,7 @@ class PasswordGeneratorSettingsDto
         bool|string|null $maskChar3,
         bool|string|null $maskChar4,
         bool|string|null $maskChar5,
-        bool|string|null $excludeLookAlikeChars
+        bool|string|null $excludeLookAlikeChars,
     ) {
         $this->length = (int)$length;
         $this->mask_upper = (bool)$maskUpper;

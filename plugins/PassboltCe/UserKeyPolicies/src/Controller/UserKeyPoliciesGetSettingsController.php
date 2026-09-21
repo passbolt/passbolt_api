@@ -94,7 +94,7 @@ class UserKeyPoliciesGetSettingsController extends AppController
         if (is_null($userId) || is_null($authToken)) {
             throw new UnauthorizedException(
                 __('You are not authorized to access this location.') . ' ' .
-                __('Sign-in to passbolt, or provide a valid user ID and authentication token.')
+                __('Sign-in to passbolt, or provide a valid user ID and authentication token.'),
             );
         }
 

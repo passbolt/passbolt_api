@@ -56,7 +56,7 @@ final class DirectorySyncDowngradeCleanupService implements EditionDowngradeClea
         // which namespaces the property when computing property_id.
         $this->fetchTable('OrganizationSettings')->deleteAll([
             'property_id' => UuidFactory::uuid(
-                OrganizationSetting::UUID_NAMESPACE . DirectoryOrgSettings::ORG_SETTINGS_PROPERTY
+                OrganizationSetting::UUID_NAMESPACE . DirectoryOrgSettings::ORG_SETTINGS_PROPERTY,
             ),
         ]);
     }

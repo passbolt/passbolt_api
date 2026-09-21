@@ -85,13 +85,13 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
             $user->locale,
             function () {
                 return __('Your multi-factor authentication settings were reset by you.');
-            }
+            },
         );
         $title = $localeService->translateString(
             $user->locale,
             function () {
                 return __('Multi-factor authentication settings were reset.');
-            }
+            },
         );
 
         return new Email(
@@ -101,7 +101,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
                 'title' => $title,
                 'body' => ['user' => $user],
             ],
-            self::TEMPLATE_SELF
+            self::TEMPLATE_SELF,
         );
     }
 
@@ -118,13 +118,13 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
             $user->locale,
             function () {
                 return __('Your multi-factor authentication settings were reset by an administrator.');
-            }
+            },
         );
         $title = $localeService->translateString(
             $user->locale,
             function () {
                 return __('Multi-factor authentication settings were reset.');
-            }
+            },
         );
 
         return new Email(
@@ -134,7 +134,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
                 'title' => $title,
                 'body' => ['user' => $admin],
             ],
-            self::TEMPLATE_ADMIN
+            self::TEMPLATE_ADMIN,
         );
     }
 

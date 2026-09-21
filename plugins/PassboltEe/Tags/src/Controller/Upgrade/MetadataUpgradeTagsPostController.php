@@ -55,7 +55,7 @@ class MetadataUpgradeTagsPostController extends AppController
 
         (new MetadataUpgradeTagsUpdateService())->updateMany(
             $this->User->getAccessControl(),
-            $this->getRequest()->getData()
+            $this->getRequest()->getData(),
         );
 
         // Retrieve and sanity the query options.

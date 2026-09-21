@@ -72,7 +72,7 @@ class SsoSettingsPingOneDataFormTest extends AppTestCase
             SsoSettingsPingOneDataForm::class,
             'data.url',
             $this->getPingOneDummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -118,7 +118,7 @@ class SsoSettingsPingOneDataFormTest extends AppTestCase
             SsoSettingsPingOneDataForm::class,
             'data.environment_id',
             $this->getPingOneDummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -135,7 +135,7 @@ class SsoSettingsPingOneDataFormTest extends AppTestCase
             SsoSettingsPingOneDataForm::class,
             'data.client_id',
             $this->getPingOneDummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -152,7 +152,7 @@ class SsoSettingsPingOneDataFormTest extends AppTestCase
             SsoSettingsPingOneDataForm::class,
             'data.client_secret',
             $this->getPingOneDummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -167,7 +167,7 @@ class SsoSettingsPingOneDataFormTest extends AppTestCase
             SsoSettingsPingOneDataForm::class,
             'data.email_claim',
             $this->getPingOneDummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 

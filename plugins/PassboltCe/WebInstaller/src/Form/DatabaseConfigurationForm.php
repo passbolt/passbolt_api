@@ -69,7 +69,7 @@ class DatabaseConfigurationForm extends Form
             ->notEmptyString('driver', __('The driver name should not be empty.'))
             ->inList('driver', self::ALLOWED_DRIVERS, __(
                 'The database driver should be one of the following: {0}.',
-                implode(', ', self::ALLOWED_DRIVERS)
+                implode(', ', self::ALLOWED_DRIVERS),
             ));
 
         $validator
@@ -118,7 +118,7 @@ class DatabaseConfigurationForm extends Form
                 function ($data) {
                     return $this->isDriverPostgres($data);
                 },
-                __('The schema is required on PostgreSQL')
+                __('The schema is required on PostgreSQL'),
             )
             ->utf8('schema', __('The schema should be a valid BMP-UTF8 string.'));
 

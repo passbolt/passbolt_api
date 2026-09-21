@@ -296,7 +296,7 @@ class LdapDirectoryTest extends LdapDirectoryTestCase
                 [DirectoryInterface::ENTRY_TYPE_USER, $this->settings->getUsersParentGroup()],
                 [DirectoryInterface::ENTRY_TYPE_GROUP, $this->settings->getGroupsParentGroup()],
             ],
-            [$filteredUsers, $filteredGroups]
+            [$filteredUsers, $filteredGroups],
         );
 
         $this->setFetchDirectoryDataExpectation($directoryResults);

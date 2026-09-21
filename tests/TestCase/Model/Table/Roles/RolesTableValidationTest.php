@@ -112,12 +112,12 @@ class RolesTableValidationTest extends TestCase
     {
         $role = $this->Roles->newEntity(
             ['name' => "sales\u{200B}team"],
-            ['accessibleFields' => ['name' => true]]
+            ['accessibleFields' => ['name' => true]],
         );
         $this->assertArrayHasKey('name', $role->getErrors());
         $this->assertSame(
             'The string should not contain invisible characters.',
-            $role->getErrors()['name']['noInvisibleCharacters']
+            $role->getErrors()['name']['noInvisibleCharacters'],
         );
     }
 }

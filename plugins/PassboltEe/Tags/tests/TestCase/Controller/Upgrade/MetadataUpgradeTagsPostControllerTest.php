@@ -96,7 +96,7 @@ class MetadataUpgradeTagsPostControllerTest extends AppIntegrationTestCaseV5
         $resourcesTags = ResourcesTagFactory::make(2)->with('Tags')->with('Users')->persist();
         $tag1 = $resourcesTags[0]->tag;
 
-        $tagDto = MetadataTagDto::fromArray($tag1->toArray());
+        $tagDto = MetadataTagDto::createFromArray($tag1->toArray());
         $clearTextMetadata = json_encode($tagDto->getClearTextMetadata());
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
 

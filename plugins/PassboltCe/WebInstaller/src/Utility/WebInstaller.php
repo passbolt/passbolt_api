@@ -126,8 +126,8 @@ class WebInstaller
                     'error',
                     sprintf(
                         'Could not delete temporary database configuration file %s',
-                        DatabaseConfigurationForm::CONFIG_FILE_PATH
-                    )
+                        DatabaseConfigurationForm::CONFIG_FILE_PATH,
+                    ),
                 );
 
                 return;

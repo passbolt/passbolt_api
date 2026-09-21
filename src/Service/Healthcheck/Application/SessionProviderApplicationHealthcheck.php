@@ -93,7 +93,7 @@ class SessionProviderApplicationHealthcheck implements HealthcheckServiceInterfa
     {
         return __(
             'The session provider is {0}.',
-            $this->provider
+            $this->provider,
         );
     }
 
@@ -116,12 +116,12 @@ class SessionProviderApplicationHealthcheck implements HealthcheckServiceInterfa
         return [
             __(
                 'The session providers supported are: {0}.',
-                implode(', ', self::SESSION_PROVIDERS_AVAILABLE)
+                implode(', ', self::SESSION_PROVIDERS_AVAILABLE),
             ),
             __(
                 'Define it using the SESSION_DEFAULTS environment variable or under {0} in {1}.',
                 self::SESSION_PROVIDER_CONFIG,
-                self::SESSION_PROVIDER_CONFIG_PATH
+                self::SESSION_PROVIDER_CONFIG_PATH,
             ),
         ];
     }

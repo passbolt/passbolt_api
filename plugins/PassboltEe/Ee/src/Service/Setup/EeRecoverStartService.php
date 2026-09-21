@@ -31,7 +31,7 @@ class EeRecoverStartService extends DefaultRecoverStartService
     public function __construct(
         RecoverStartUserInfoService $recoverStartUserInfoService,
         RecoverStartAccountRecoveryInfoService|string $recoverStartAccountRecoveryInfoService,
-        RecoverStartUserPassphrasePoliciesInfoService|string $recoverStartUserPassphrasePoliciesInfoService
+        RecoverStartUserPassphrasePoliciesInfoService|string $recoverStartUserPassphrasePoliciesInfoService,
     ) {
         parent::__construct($recoverStartUserInfoService);
         $this->add($recoverStartAccountRecoveryInfoService);

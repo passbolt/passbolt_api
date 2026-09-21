@@ -42,7 +42,7 @@ class RefreshTokenCreateService extends RefreshTokenAbstractService
             $userId,
             AuthenticationToken::TYPE_REFRESH_TOKEN,
             null,
-            $data
+            $data,
         );
         $this->dispatchRefreshTokenCreatedEvent($request, $refreshToken, $accessToken);
 
@@ -60,7 +60,7 @@ class RefreshTokenCreateService extends RefreshTokenAbstractService
     protected function dispatchRefreshTokenCreatedEvent(
         ServerRequest $request,
         AuthenticationToken $refreshToken,
-        string $accessToken
+        string $accessToken,
     ): void {
         $event = new Event(self::REFRESH_TOKEN_CREATED_EVENT, $refreshToken, [
             self::ACCESS_TOKEN_DATA_KEY => $accessToken,

@@ -46,7 +46,7 @@ class CommentsViewController extends AppController
             $this->User->id(),
             $foreignModelName,
             $foreignKey,
-            $options
+            $options,
         );
 
         $this->success(__('The operation was successful.'), $comments);

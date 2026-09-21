@@ -53,7 +53,7 @@ class SsoSettingsSetService
         if (!$form->execute($data)) {
             throw new CustomValidationException(
                 __('Something went wrong when validating the single-sign on settings.'),
-                $form->getErrors()
+                $form->getErrors(),
             );
         }
         $data = $form->getData();
@@ -81,7 +81,7 @@ class SsoSettingsSetService
                     'created_by' => true,
                     'modified_by' => true,
                 ],
-            ]
+            ],
         );
 
         // Check for validation or build rules errors

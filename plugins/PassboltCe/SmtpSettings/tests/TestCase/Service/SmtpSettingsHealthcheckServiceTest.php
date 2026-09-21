@@ -168,11 +168,11 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
         $this->assertSame('database', $checks['source']);
         $this->assertTextContains(
             'The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database.',
-            $checks['errorMessage']
+            $checks['errorMessage'],
         );
         $this->assertTextContains(
             'To fix this problem, you need to configure the SMTP server again.',
-            $checks['errorMessage']
+            $checks['errorMessage'],
         );
     }
 

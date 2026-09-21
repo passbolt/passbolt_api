@@ -72,7 +72,7 @@ class EditionSubscriptionsDeleteControllerTest extends AppIntegrationTestCase
                 $operator->profile->full_name . ' downgraded the instance to Community Edition',
                 'Your Passbolt instance was downgraded from Pro to Community Edition',
             ],
-            $otherAdmin->username
+            $otherAdmin->username,
         );
     }
 

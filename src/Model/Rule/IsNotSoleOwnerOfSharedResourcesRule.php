@@ -64,7 +64,7 @@ class IsNotSoleOwnerOfSharedResourcesRule
                 ->findSharedAcosByAroIsSoleOwner(
                     PermissionsTable::FOLDER_ACO,
                     $entity->get('id'),
-                    ['checkGroupsUsers' => $checkGroupsUsers]
+                    ['checkGroupsUsers' => $checkGroupsUsers],
                 )->limit(1)->all()->count();
         }
 

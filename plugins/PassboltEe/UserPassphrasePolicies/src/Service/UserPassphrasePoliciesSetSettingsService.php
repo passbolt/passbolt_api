@@ -49,7 +49,7 @@ class UserPassphrasePoliciesSetSettingsService
     {
         if (!$uac->isAdmin()) {
             throw new ForbiddenException(
-                __('Only administrators are allowed to create/update user passphrase policies settings.')
+                __('Only administrators are allowed to create/update user passphrase policies settings.'),
             );
         }
 
@@ -57,7 +57,7 @@ class UserPassphrasePoliciesSetSettingsService
         if (!$form->execute($requestData)) {
             throw new FormValidationException(
                 __('Could not validate the user passphrase policies settings.'),
-                $form
+                $form,
             );
         }
 
@@ -71,7 +71,7 @@ class UserPassphrasePoliciesSetSettingsService
         $userPassphrasePoliciesSetting = $userPassphrasePoliciesSettingsTable->createOrUpdateSetting(
             $userPassphrasePoliciesSettingsTable->getProperty(),
             $settingsDto->toOrganizationSettingValueArray(),
-            $uac
+            $uac,
         );
 
         $createdUpdatedSettingsDto = UserPassphrasePoliciesSettingsDto::createFromEntity($userPassphrasePoliciesSetting); // phpcs:ignore

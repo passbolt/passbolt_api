@@ -92,7 +92,7 @@ class AddMfaCookieOnSuccessfulRefreshTokenCreation implements EventListenerInter
         $request = $controller->getRequest();
 
         $isMfaTokenValid = $request->getAttribute(
-            MfaRequiredCheckMiddleware::IS_MFA_TOKEN_VALID_ATTRIBUTE
+            MfaRequiredCheckMiddleware::IS_MFA_TOKEN_VALID_ATTRIBUTE,
         );
 
         if (
@@ -103,7 +103,7 @@ class AddMfaCookieOnSuccessfulRefreshTokenCreation implements EventListenerInter
             $newMfaCookie = MfaVerifiedCookie::get($controller->getRequest(), (string)$mfaCookie->getValue());
 
             $controller->setResponse(
-                $controller->getResponse()->withCookie($newMfaCookie)
+                $controller->getResponse()->withCookie($newMfaCookie),
             );
         }
     }

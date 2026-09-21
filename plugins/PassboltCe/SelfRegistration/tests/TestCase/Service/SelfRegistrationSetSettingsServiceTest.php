@@ -43,7 +43,7 @@ class SelfRegistrationSetSettingsServiceTest extends TestCase
     {
         parent::setUp();
         $this->service = new SelfRegistrationSetSettingsService(
-            UserFactory::make()->admin()->nonPersistedUAC()
+            UserFactory::make()->admin()->nonPersistedUAC(),
         );
     }
 
@@ -76,7 +76,7 @@ class SelfRegistrationSetSettingsServiceTest extends TestCase
         $this->assertSame($data, json_decode($organizationSetting->get('value'), true));
         $this->assertSame(
             SelfRegistrationBaseSettingsService::USER_SELF_REGISTRATION_SETTINGS_PROPERTY_NAME,
-            $organizationSetting->get('property')
+            $organizationSetting->get('property'),
         );
     }
 

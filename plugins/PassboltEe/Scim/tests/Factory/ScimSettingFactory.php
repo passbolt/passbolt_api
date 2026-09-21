@@ -66,14 +66,16 @@ class ScimSettingFactory extends OrganizationSettingFactory
     }
 
     /**
+     * @param array $overrides Values overriding the defaults.
      * @return $this
      */
-    public function default()
+    public function default(array $overrides = [])
     {
         $gpg = OpenPGPBackendFactory::get();
         $gpg = $this->setEncryptKeyWithServerKey($gpg);
+        $value = array_merge($this->getDefaultValue(), $overrides);
 
-        return $this->setField('value', $gpg->encrypt(json_encode($this->getDefaultValue())));
+        return $this->setField('value', $gpg->encrypt(json_encode($value)));
     }
 
     public function getDefaultValue(): array

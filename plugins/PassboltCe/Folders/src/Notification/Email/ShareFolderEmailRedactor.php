@@ -136,7 +136,7 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
                 }
 
                 return $subject;
-            }
+            },
         );
 
         $data = [

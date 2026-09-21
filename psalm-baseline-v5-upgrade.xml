@@ -576,6 +576,17 @@
       <code><![CDATA[$transfer->user_id]]></code>
     </InvalidPropertyFetch>
   </file>
+  <file src="plugins/PassboltCe/OfflineMode/src/Model/Table/OfflineItemsTable.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[\Passbolt\OfflineMode\Model\Entity\OfflineItem]]></code>
+      <code><![CDATA[\Passbolt\OfflineMode\Model\Entity\OfflineItem]]></code>
+      <code><![CDATA[\Passbolt\OfflineMode\Model\Entity\OfflineItem|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\OfflineMode\Model\Entity\OfflineItem>]]></code>
+      <code><![CDATA[iterable<\Passbolt\OfflineMode\Model\Entity\OfflineItem>]]></code>
+      <code><![CDATA[iterable<\Passbolt\OfflineMode\Model\Entity\OfflineItem>|false]]></code>
+      <code><![CDATA[iterable<\Passbolt\OfflineMode\Model\Entity\OfflineItem>|false]]></code>
+    </ImplementedReturnTypeMismatch>
+  </file>
   <file src="plugins/PassboltCe/MultiFactorAuthentication/src/Controller/Duo/DuoSetupPostController.php">
     <InvalidReturnType>
       <code><![CDATA[\Cake\Http\Response]]></code>

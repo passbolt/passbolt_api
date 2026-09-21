@@ -65,10 +65,10 @@ class MfaPoliciesSettingsTableTest extends AppTestCase
     public function testBeforeFind_AddsFilterForMfaPoliciesProperty(): void
     {
         MfaPoliciesSettingFactory::make(
-            ['property' => 'Bar', 'property_id' => UuidFactory::uuid('Bar')]
+            ['property' => 'Bar', 'property_id' => UuidFactory::uuid('Bar')],
         )->persist();
         MfaPoliciesSettingFactory::make(
-            ['property' => 'Foo', 'property_id' => UuidFactory::uuid('Foo')]
+            ['property' => 'Foo', 'property_id' => UuidFactory::uuid('Foo')],
         )->persist();
         MfaPoliciesSettingFactory::make()
             ->setPolicy(MfaPoliciesSetting::POLICY_MANDATORY)
@@ -86,10 +86,10 @@ class MfaPoliciesSettingsTableTest extends AppTestCase
     public function testBeforeFind_NoPropertyInDbReturnsEmpty(): void
     {
         MfaPoliciesSettingFactory::make(
-            ['property' => 'Bar', 'property_id' => UuidFactory::uuid('Bar')]
+            ['property' => 'Bar', 'property_id' => UuidFactory::uuid('Bar')],
         )->persist();
         MfaPoliciesSettingFactory::make(
-            ['property' => 'Foo', 'property_id' => UuidFactory::uuid('Foo')]
+            ['property' => 'Foo', 'property_id' => UuidFactory::uuid('Foo')],
         )->persist();
 
         $mfaPoliciesSetting = $this->MfaPoliciesSettings->find()->toArray();

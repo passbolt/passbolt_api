@@ -50,7 +50,12 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateControllerTest extends AppInteg
     {
         RoleFactory::make()->guest()->persist();
         PasswordExpiryPoliciesSettingFactory::make()->persist();
-        $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->user()
+            ->withProfileName('Ada', 'Lovelace')
+            ->persist();
+        $this->logInAs($user);
         /** @var \App\Model\Entity\User $otherOwner */
         $otherOwner = UserFactory::make()->withAvatar()->persist();
 
@@ -105,7 +110,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateControllerTest extends AppInteg
         ]);
         $this->assertEmailIsInQueue([
             'email' => $otherOwner->username,
-            'subject' => h($user->profile->full_name) . ' marked the password ' . $resourceShared->name . ' as expired',
+            'subject' => $user->profile->full_name . ' marked the password ' . $resourceShared->name . ' as expired',
             'template' => PasswordExpiryPasswordMarkedExpiredEmailRedactor::TEMPLATE,
         ]);
         $this->assertEmailQueueCount(4);

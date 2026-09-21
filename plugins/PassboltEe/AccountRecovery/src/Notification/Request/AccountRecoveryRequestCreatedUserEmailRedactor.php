@@ -105,7 +105,7 @@ class AccountRecoveryRequestCreatedUserEmailRedactor implements SubscribedEmailR
             $locale,
             function () {
                 return __('You have initiated a recovery request');
-            }
+            },
         );
 
         $data = ['body' => ['user' => $user, 'created' => $request->created], 'title' => $subject];

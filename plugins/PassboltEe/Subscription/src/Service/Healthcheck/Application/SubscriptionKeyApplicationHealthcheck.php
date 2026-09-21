@@ -144,7 +144,7 @@ class SubscriptionKeyApplicationHealthcheck implements HealthcheckServiceInterfa
             return __(
                 'Subscription user count has been exceeded ({0}/{1}).',
                 $this->result['currentUsers'],
-                $this->result['allowedUsers']
+                $this->result['allowedUsers'],
             );
         }
 
@@ -156,7 +156,7 @@ class SubscriptionKeyApplicationHealthcheck implements HealthcheckServiceInterfa
             return __(
                 'Subscription soon exceeds user count ({0}/{1}).',
                 $this->result['currentUsers'],
-                $this->result['allowedUsers']
+                $this->result['allowedUsers'],
             );
         }
 

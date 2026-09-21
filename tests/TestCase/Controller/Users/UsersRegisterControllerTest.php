@@ -142,7 +142,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         // Check timezone displaying alongside the datetime
         $this->assertEmailInBatchContains(
             sprintf('%s (%s)', DateTime::parse($user->get('created'))->nice(), $data['timezone']),
-            $data['username']
+            $data['username'],
         );
     }
 

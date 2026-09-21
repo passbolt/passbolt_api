@@ -45,7 +45,7 @@ class IsMfaEnabledQueryService
 
         if ($queryContainsIsMfaEnabled && !$uac->isAdmin()) {
             throw new BadRequestException(
-                __('The property {0} is visible by administrators only.', self::IS_MFA_ENABLED_PROPERTY)
+                __('The property {0} is visible by administrators only.', self::IS_MFA_ENABLED_PROPERTY),
             );
         }
 

@@ -52,7 +52,7 @@ class ScimDeleteSettingsService
 
         $this->dispatchEvent(
             ScimSetSettingsService::SCIM_SETTINGS_UPDATE_EVENT_NAME,
-            $eventData
+            $eventData,
         );
 
         return $result;

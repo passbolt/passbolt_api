@@ -636,8 +636,9 @@ class ScimSetSettingsServiceTest extends AppTestCase
 
     public function testScimSetSettingsService_SaveSettingsUpdate_TokenRotation_RecomputesExpired()
     {
+        // To prevent conflicts with assertion below so dattes cannot equal to the recomputed +6 months date
         /** @var \Passbolt\Scim\Model\Entity\ScimSetting $existingSettings */
-        $existingSettings = ScimSettingFactory::make()->default()->persist();
+        $existingSettings = ScimSettingFactory::make()->default(['expired' => Date::now()->modify('+1 year')->format('Y-m-d')])->persist();
         $gpg = OpenPGPBackendFactory::get();
         $gpg = $this->setDecryptKeyWithServerKey($gpg);
         $existingData = json_decode($gpg->decrypt($existingSettings->value), associative: true);

@@ -186,7 +186,7 @@ class MetadataPrivateKeysCreateService
             throw new InternalErrorException(
                 __('The metadata private keys could not be created.'),
                 null,
-                $exception
+                $exception,
             );
         }
     }
@@ -224,7 +224,7 @@ class MetadataPrivateKeysCreateService
                         'created_by' => true,
                         'modified_by' => true,
                     ],
-                ]
+                ],
             );
 
             if ($entity->getErrors()) {

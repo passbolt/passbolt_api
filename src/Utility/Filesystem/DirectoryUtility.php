@@ -54,6 +54,7 @@ class DirectoryUtility
             return false;
         }
 
+        // phpcs:ignore
         if (!@rmdir($directoryName)) { // @codingStandardsIgnoreLine
             if (is_array(error_get_last())) {
                 $error = json_encode(error_get_last());

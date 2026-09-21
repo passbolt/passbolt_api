@@ -49,7 +49,7 @@ class UpdateDirectorySettingsService
         $value = json_decode($directorySyncSettings['value'], true);
         if (!$value || !is_array($value)) {
             throw new UnexpectedValueException(
-                __('Directory Settings are invalid. Please check your config and try again.')
+                __('Directory Settings are invalid. Please check your config and try again.'),
             );
         }
         // set the new key for list of servers/hosts in the new library

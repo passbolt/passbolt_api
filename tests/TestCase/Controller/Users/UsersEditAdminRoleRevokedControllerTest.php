@@ -81,7 +81,7 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
             $this->assertEmailInBatchContains($emailText, $admin->username, '', false);
             $this->assertEmailInBatchContains(
                 Router::url('/app/users/view/' . $jane->id, true),
-                $admin->username
+                $admin->username,
             );
         }
         // Make sure role changed email sent to the user whose role got changed
@@ -149,7 +149,7 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
                     "{$john->profile->full_name} changed the role of {$userFullName} to custom role.",
                     Router::url('/app/users/view/' . $jane->id, true),
                 ],
-                $admin->username
+                $admin->username,
             );
         }
         // Role changed notification sent to the user

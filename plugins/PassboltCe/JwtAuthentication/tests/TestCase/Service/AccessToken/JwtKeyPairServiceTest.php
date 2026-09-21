@@ -120,7 +120,7 @@ class JwtKeyPairServiceTest extends TestCase
 
         $this->expectException(InvalidJwtKeyPairException::class);
         $this->expectExceptionMessage(
-            'The JWT private key should be at least ' . JwtTokenCreateService::JWT_KEY_LENGTH . ' bytes long.'
+            'The JWT private key should be at least ' . JwtTokenCreateService::JWT_KEY_LENGTH . ' bytes long.',
         );
         $this->service->validateKeyPair();
     }
@@ -129,7 +129,7 @@ class JwtKeyPairServiceTest extends TestCase
     {
         $this->assertSame(
             ROOT . DS . 'bin/cake passbolt create_jwt_keys',
-            $this->service->getCreateJwtKeysCommand()
+            $this->service->getCreateJwtKeysCommand(),
         );
     }
 

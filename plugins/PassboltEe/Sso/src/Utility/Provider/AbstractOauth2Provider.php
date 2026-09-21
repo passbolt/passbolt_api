@@ -136,7 +136,7 @@ abstract class AbstractOauth2Provider extends AbstractProvider
         $request = $factory->getRequestWithOptions(
             'get',
             $this->getOpenIdConfigurationUri(),
-            []
+            [],
         );
 
         try {
@@ -311,7 +311,7 @@ abstract class AbstractOauth2Provider extends AbstractProvider
         if (!is_null($defaultAlg) && !is_string($defaultAlg)) {
             throw new InternalErrorException(__(
                 'The {0} configuration value should be a string or NULL.',
-                'passbolt.plugins.sso.security.jwks.defaultAlg'
+                'passbolt.plugins.sso.security.jwks.defaultAlg',
             ));
         }
 
@@ -325,7 +325,7 @@ abstract class AbstractOauth2Provider extends AbstractProvider
             throw new InternalErrorException(__(
                 'The {0} configuration value should be one of the following: {1}.',
                 'passbolt.plugins.sso.security.jwks.defaultAlg',
-                implode(', ', $allowedAlgValues)
+                implode(', ', $allowedAlgValues),
             ));
         }
     }

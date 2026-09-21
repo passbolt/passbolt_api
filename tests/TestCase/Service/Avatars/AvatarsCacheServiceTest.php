@@ -101,7 +101,7 @@ class AvatarsCacheServiceTest extends TestCase
 
         $this->assertSame(
             file_get_contents(FIXTURES . 'Avatar' . DS . 'ada.png'),
-            file_get_contents($this->cachedFileLocation . $id . DS . 'medium.jpg')
+            file_get_contents($this->cachedFileLocation . $id . DS . 'medium.jpg'),
         );
     }
 

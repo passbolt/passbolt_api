@@ -90,7 +90,7 @@ class ResourceTypesTable extends Table
             ->maxLength(
                 'name',
                 self::NAME_MAX_LENGTH,
-                __('The name length should be maximum {0} characters.', self::NAME_MAX_LENGTH)
+                __('The name length should be maximum {0} characters.', self::NAME_MAX_LENGTH),
             )
             ->notEmptyString('name', __('The name should not be empty.'));
 
@@ -100,7 +100,7 @@ class ResourceTypesTable extends Table
             ->maxLength(
                 'slug',
                 self::SLUG_MAX_LENGTH,
-                __('The slug length should be maximum {0} characters.', self::SLUG_MAX_LENGTH)
+                __('The slug length should be maximum {0} characters.', self::SLUG_MAX_LENGTH),
             )
             ->notEmptyString('slug', __('The slug should not be empty'));
 
@@ -109,7 +109,7 @@ class ResourceTypesTable extends Table
             ->maxLength(
                 'name',
                 self::DESCRIPTION_MAX_LENGTH,
-                __('The description length should be maximum {0} characters.', self::DESCRIPTION_MAX_LENGTH)
+                __('The description length should be maximum {0} characters.', self::DESCRIPTION_MAX_LENGTH),
             )
             ->allowEmptyString('description');
 
@@ -155,16 +155,16 @@ class ResourceTypesTable extends Table
         $rules->addCreate(
             $rules->isUnique(
                 ['slug'],
-                __('A resource type already exists with this slug.')
+                __('A resource type already exists with this slug.'),
             ),
-            'slug_unique'
+            'slug_unique',
         );
         $rules->addCreate(
             $rules->isUnique(
                 ['definition'],
-                __('A resource type already exists with this definition.')
+                __('A resource type already exists with this definition.'),
             ),
-            'definition_unique'
+            'definition_unique',
         );
 
         return $rules;

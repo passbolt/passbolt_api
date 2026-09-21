@@ -79,11 +79,11 @@ class CoreNotificationSettingsDefinition implements EmailNotificationSettingsDef
             // Send controls
             ->boolean(
                 'send_admin_user_setup_completed',
-                __('The send on user setup completed setting should be a boolean.')
+                __('The send on user setup completed setting should be a boolean.'),
             )
             ->boolean(
                 'send_admin_user_recover_abort',
-                __('The send on user recover abort setting should be a boolean.')
+                __('The send on user recover abort setting should be a boolean.'),
             )
             ->boolean('send_admin_user_disable_user', __('The send on user disabled setting should be a boolean.'))
             ->boolean('send_admin_user_disable_admin', __('The send on admin disabled setting should be a boolean.'))
@@ -95,7 +95,7 @@ class CoreNotificationSettingsDefinition implements EmailNotificationSettingsDef
             ->boolean('send_group_manager_update', __('The send on group manager updated setting should be a boolean.'))
             ->boolean(
                 'send_group_manager_requestAddUser',
-                __('The send on group manager request add user should be a boolean.')
+                __('The send on group manager request add user should be a boolean.'),
             )
             ->boolean('send_password_create', __('The send on password created setting should be a boolean.'))
             ->boolean('send_password_share', __('The send on password shared setting should be a boolean.'))

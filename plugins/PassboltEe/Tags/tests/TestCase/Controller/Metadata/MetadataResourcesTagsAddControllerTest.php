@@ -779,7 +779,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $this->assertSuccess();
         $this->assertSame(
             0,
-            ResourcesTagFactory::find()->where(['tag_id' => $personalTag->id])->count()
+            ResourcesTagFactory::find()->where(['tag_id' => $personalTag->id])->count(),
         );
     }
 }

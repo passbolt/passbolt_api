@@ -163,7 +163,7 @@ class TagsTable extends Table
             ->allowEmptyString('metadata_key_type')
             ->inList('metadata_key_type', ['user_key', 'shared_key'], __(
                 'The metadata key type should be one of the following: {0}.',
-                implode(', ', ['user_key', 'shared_key'])
+                implode(', ', ['user_key', 'shared_key']),
             ));
 
         return $validator;
@@ -221,9 +221,9 @@ class TagsTable extends Table
         EventInterface $event,
         EntityInterface $entity,
         ArrayObject $options,
-        string $operation
+        string $operation,
     ): void {
-        $dto = MetadataTagDto::fromArray($entity->toArray());
+        $dto = MetadataTagDto::createFromArray($entity->toArray());
 
         if (!$dto->isV5()) {
             // This is little hack to not call `buildRulesV5` rules,
@@ -339,7 +339,7 @@ class TagsTable extends Table
                                 $tag = is_object($tag) ? $tag->toArray() : $tag;
 
                                 try {
-                                    $tagDto = MetadataTagDto::fromArray($tag);
+                                    $tagDto = MetadataTagDto::createFromArray($tag);
                                     $isV5 = $tagDto->isV5();
                                 } catch (Exception $e) {
                                     if (Configure::read('debug')) {
@@ -415,7 +415,7 @@ class TagsTable extends Table
                 $tag = ['slug' => $tag];
             }
 
-            $dto = MetadataTagDto::fromArray($tag);
+            $dto = MetadataTagDto::createFromArray($tag);
 
             try {
                 $collection[$i] = $this->buildEntityOrFail($dto);
@@ -427,7 +427,7 @@ class TagsTable extends Table
                 }
                 $collection[$i]['_joinData'] = $this->ResourcesTags->newEntity(
                     ['user_id' => $resourceTagUserId],
-                    ['accessibleFields' => ['user_id' => true]]
+                    ['accessibleFields' => ['user_id' => true]],
                 );
             } catch (CustomValidationException $e) {
                 $errors[$i] = $e->getErrors();

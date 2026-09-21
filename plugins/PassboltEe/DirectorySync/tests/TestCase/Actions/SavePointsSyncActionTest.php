@@ -64,7 +64,7 @@ class SavePointsSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertSame(
             $directoryEntryCountBefore,
             DirectoryEntryFactory::count(),
-            'Dry-run should not change directory entry count.'
+            'Dry-run should not change directory entry count.',
         );
     }
 
@@ -78,7 +78,7 @@ class SavePointsSyncActionTest extends DirectorySyncIntegrationTestCase
         // Arrange: a directory entry linked to a user, but the user is NOT in the directory data.
         // This means the sync should try to delete/soft-delete the user.
         $directoryEntry = DirectoryEntryFactory::make()->withUser(
-            UserFactory::make()->active()
+            UserFactory::make()->active(),
         )->persist();
         $userId = $directoryEntry->get('user')->id;
 

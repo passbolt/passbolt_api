@@ -174,7 +174,7 @@ abstract class SyncAction
      */
     public function __construct(
         ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService,
-        ?string $parentId = null
+        ?string $parentId = null,
     ) {
         $this->directoryOrgSettings = DirectoryOrgSettings::get();
         $this->directory = DirectoryFactory::get($this->directoryOrgSettings);
@@ -370,12 +370,12 @@ abstract class SyncAction
                 __(
                     'The passbolt {0} {1} was not deleted because it is marked as to be ignored.',
                     $this->getSingularLoweredEntityType(),
-                    $this->getEntityName($entity)
+                    $this->getEntityName($entity),
                 ),
                 $this->getEntityType(),
                 Alias::ACTION_DELETE,
                 Alias::STATUS_IGNORE,
-                $reportData
+                $reportData,
             ));
         }
     }
@@ -395,12 +395,12 @@ abstract class SyncAction
                 __(
                     'The directory {0} {1} was not deleted because it is ignored.',
                     $this->getSingularLoweredEntityType(),
-                    $this->getEntityName($entity)
+                    $this->getEntityName($entity),
                 ),
                 $this->getEntityType(),
                 Alias::ACTION_DELETE,
                 Alias::STATUS_IGNORE,
-                $entry
+                $entry,
             ));
         }
     }
@@ -421,13 +421,13 @@ abstract class SyncAction
         if ($entity instanceof User && $this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
             $msg = __(
                 'The directory user {0} was already suspended in passbolt.',
-                $this->getEntityName($entity)
+                $this->getEntityName($entity),
             );
         } else {
             $msg = __(
                 'The directory {0} {1} was already deleted in passbolt.',
                 $this->getSingularLoweredEntityType(),
-                $this->getEntityName($entity)
+                $this->getEntityName($entity),
             );
         }
         if ($this->isDeletedOrDisabled($entity)) {
@@ -436,7 +436,7 @@ abstract class SyncAction
                 $this->getEntityType(),
                 Alias::ACTION_DELETE,
                 Alias::STATUS_SYNC,
-                $entity
+                $entity,
             ));
         }
     }
@@ -454,13 +454,13 @@ abstract class SyncAction
         if (isset($errors['id']['soleOwnerOfSharedResource'])) {
             $msg = __(
                 'The user {0} could not be deleted because they are the only owner of one or more passwords.',
-                $this->getEntityName($entity)
+                $this->getEntityName($entity),
             );
         } else {
             $msg = __(
                 'The {0} {1} could not be deleted because they are the only manager of one or more groups.',
                 $this->getSingularLoweredEntityType(),
-                $this->getEntityName($entity)
+                $this->getEntityName($entity),
             );
         }
         $data = new SyncError($entry, new ValidationException($msg, $entity));
@@ -481,13 +481,13 @@ abstract class SyncAction
         if ($entity instanceof User && $this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
             $msg = __(
                 'The user {0} was successfully suspended.',
-                $this->getEntityName($entity)
+                $this->getEntityName($entity),
             );
         } else {
             $msg = __(
                 'The {0} {1} was successfully deleted.',
                 $this->getSingularLoweredEntityType(),
-                $this->getEntityName($entity)
+                $this->getEntityName($entity),
             );
         }
         $this->DirectoryEntries->delete($entry);
@@ -496,7 +496,7 @@ abstract class SyncAction
             $this->getEntityType(),
             Alias::ACTION_DELETE,
             Alias::STATUS_SUCCESS,
-            $entity
+            $entity,
         ));
         $this->entitiesChangesDto->merge($entitiesChangesDto);
     }
@@ -515,13 +515,13 @@ abstract class SyncAction
             $msg = __(
                 'The {0} {1} could not be suspended because of an internal error. Please try again later.',
                 $this->getSingularLoweredEntityType(),
-                $this->getEntityName($entity)
+                $this->getEntityName($entity),
             );
         } else {
             $msg = __(
                 'The {0} {1} could not be deleted because of an internal error. Please try again later.',
                 $this->getSingularLoweredEntityType(),
-                $this->getEntityName($entity)
+                $this->getEntityName($entity),
             );
         }
         $data = new SyncError($entry, $exception);
@@ -530,7 +530,7 @@ abstract class SyncAction
             $this->getEntityType(),
             Alias::ACTION_DELETE,
             Alias::STATUS_ERROR,
-            $data
+            $data,
         ));
     }
 
@@ -602,7 +602,7 @@ abstract class SyncAction
         array $data,
         ?DirectoryEntry $entry,
         ?Entity $existingEntity,
-        bool $ignoreEntity
+        bool $ignoreEntity,
     ): void {
         $associatedEntity = $entry->getAssociatedEntity();
         // do not overly report ignored record when there is nothing to do
@@ -613,14 +613,14 @@ abstract class SyncAction
             $msg = __(
                 'The {0} {1} was not synced because the passbolt {0} is marked as to be ignored.',
                 $this->getSingularLoweredEntityType(),
-                $this->getEntityName($existingEntity)
+                $this->getEntityName($existingEntity),
             );
             $reportData = $this->DirectoryIgnore->get($existingEntity->get('id'));
         } else {
             $msg = __(
                 'The {0} {1} was not synced because the directory {0} is marked as to be ignored.',
                 $this->getSingularLoweredEntityType(),
-                $this->getNameFromData($data)
+                $this->getNameFromData($data),
             );
             $reportData = $this->DirectoryIgnore->get($entry->id);
         }
@@ -646,7 +646,7 @@ abstract class SyncAction
             $msg = __(
                 'The {0} {1} was successfully added to passbolt.',
                 $this->getSingularLoweredEntityType(),
-                $this->getNameFromData($data)
+                $this->getNameFromData($data),
             );
         } catch (ValidationException $exception) {
             $this->DirectoryEntries->updateForeignKey($entry, null);
@@ -654,7 +654,7 @@ abstract class SyncAction
             $msg = __(
                 'The {0} {1} could not be added because of data validation issues.',
                 $this->getSingularLoweredEntityType(),
-                $this->getNameFromData($data)
+                $this->getNameFromData($data),
             );
         } catch (InternalErrorException $exception) {
             $this->DirectoryEntries->updateForeignKey($entry, null);
@@ -662,11 +662,11 @@ abstract class SyncAction
             $msg = __(
                 'The {0} {1} could not be added because of an internal error. Please try again later.',
                 $this->getSingularLoweredEntityType(),
-                $this->getNameFromData($data)
+                $this->getNameFromData($data),
             );
         }
         $this->addReportItem(
-            new ActionReport($msg, $this->getEntityType(), Alias::ACTION_CREATE, $status, $reportData)
+            new ActionReport($msg, $this->getEntityType(), Alias::ACTION_CREATE, $status, $reportData),
         );
 
         return $entity;
@@ -695,13 +695,13 @@ abstract class SyncAction
                 $msg = __(
                     'The previously suspended {0} {1} was not unsuspended.',
                     $this->getSingularLoweredEntityType(),
-                    $this->getEntityName($existingEntity)
+                    $this->getEntityName($existingEntity),
                 );
             } else {
                 $msg = __(
                     'The previously deleted {0} {1} was not re-added to passbolt.',
                     $this->getSingularLoweredEntityType(),
-                    $this->getEntityName($existingEntity)
+                    $this->getEntityName($existingEntity),
                 );
             }
         } elseif ($existingEntityIsDisabledAndNotDeleted) {
@@ -716,7 +716,7 @@ abstract class SyncAction
             $msg = __(
                 'The previously suspended {0} {1} was unsuspended.',
                 $this->getSingularLoweredEntityType(),
-                $this->getEntityName($existingEntity)
+                $this->getEntityName($existingEntity),
             );
         } else {
             // if the entity was deleted in passbolt and then created in ldap
@@ -727,26 +727,26 @@ abstract class SyncAction
                 $msg = __(
                     'The previously deleted {0} {1} was re-added to passbolt.',
                     $this->getSingularLoweredEntityType(),
-                    $this->getEntityName($existingEntity)
+                    $this->getEntityName($existingEntity),
                 );
             } catch (ValidationException $exception) {
                 $reportData = new SyncError($entry, $exception);
                 $msg = __(
                     'The deleted {0} {1} could not be re-added to passbolt because of validation errors.',
                     $this->getSingularLoweredEntityType(),
-                    $this->getEntityName($existingEntity)
+                    $this->getEntityName($existingEntity),
                 );
             } catch (InternalErrorException $exception) {
                 $reportData = new SyncError($entry, $exception);
                 $msg = __(
                     'The deleted {0} {1} could not be re-added to passbolt because of an internal error.',
                     $this->getSingularLoweredEntityType(),
-                    $this->getEntityName($existingEntity)
+                    $this->getEntityName($existingEntity),
                 );
             }
         }
         $this->addReportItem(
-            new ActionReport($msg, $this->getEntityType(), Alias::ACTION_CREATE, $status, $reportData)
+            new ActionReport($msg, $this->getEntityType(), Alias::ACTION_CREATE, $status, $reportData),
         );
 
         return $entity;
@@ -802,12 +802,12 @@ abstract class SyncAction
                     __(
                         'The {0} {1} was mapped with an existing {0} in passbolt.',
                         $this->getSingularLoweredEntityType(),
-                        $this->getEntityName($existingEntity)
+                        $this->getEntityName($existingEntity),
                     ),
                     $this->getEntityType(),
                     Alias::ACTION_CREATE,
                     Alias::STATUS_SYNC,
-                    $existingEntity
+                    $existingEntity,
                 ));
             } else {
                 // Else, if entity in directory was created after entity in db. We don't sync. There is an overlap.
@@ -815,7 +815,7 @@ abstract class SyncAction
                 $msg = __(
                     'The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after.',
                     $this->getSingularLoweredEntityType(),
-                    $this->getEntityName($existingEntity)
+                    $this->getEntityName($existingEntity),
                 );
                 $reportData = new SyncError($entry, new Exception($msg));
                 $this->addReportItem(new ActionReport(
@@ -823,7 +823,7 @@ abstract class SyncAction
                     $this->getEntityType(),
                     Alias::ACTION_CREATE,
                     Alias::STATUS_ERROR,
-                    $reportData
+                    $reportData,
                 ));
 
                 return;

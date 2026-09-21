@@ -43,12 +43,12 @@ class ResourcesTableValidationTest extends TestCase
     {
         $resource = $this->Resources->newEntity(
             ['name' => "AWS\u{200B}root"],
-            ['accessibleFields' => ['name' => true]]
+            ['accessibleFields' => ['name' => true]],
         );
         $this->assertArrayHasKey('name', $resource->getErrors());
         $this->assertSame(
             'The string should not contain invisible characters.',
-            $resource->getErrors()['name']['noInvisibleCharacters']
+            $resource->getErrors()['name']['noInvisibleCharacters'],
         );
     }
 }

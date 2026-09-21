@@ -45,7 +45,7 @@ class LocalePlugin extends BasePlugin
     {
         return $middlewareQueue->insertAfter(
             AuthenticationMiddleware::class,
-            LocaleMiddleware::class
+            LocaleMiddleware::class,
         );
     }
 

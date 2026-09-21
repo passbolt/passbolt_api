@@ -97,12 +97,12 @@ class SsoStatesTable extends Table
             ->minLength(
                 'nonce',
                 SsoState::DEFAULT_LENGTH_NONCE,
-                __('The nonce length should be minimum {0} characters.', SsoState::DEFAULT_LENGTH_NONCE)
+                __('The nonce length should be minimum {0} characters.', SsoState::DEFAULT_LENGTH_NONCE),
             )
             ->maxLength(
                 'nonce',
                 SsoState::DEFAULT_LENGTH_NONCE,
-                __('The nonce length should be maximum {0} characters.', SsoState::DEFAULT_LENGTH_NONCE)
+                __('The nonce length should be maximum {0} characters.', SsoState::DEFAULT_LENGTH_NONCE),
             )
             ->requirePresence('nonce', 'create', __('A nonce is required.'))
             ->notEmptyString('nonce', __('The nonce should not be empty.'))
@@ -120,12 +120,12 @@ class SsoStatesTable extends Table
             ->minLength(
                 'state',
                 SsoState::DEFAULT_LENGTH_STATE,
-                __('The state length should be minimum {0} characters.', SsoState::DEFAULT_LENGTH_STATE)
+                __('The state length should be minimum {0} characters.', SsoState::DEFAULT_LENGTH_STATE),
             )
             ->maxLength(
                 'state',
                 SsoState::DEFAULT_LENGTH_STATE,
-                __('The state length should be maximum {0} characters.', SsoState::DEFAULT_LENGTH_STATE)
+                __('The state length should be maximum {0} characters.', SsoState::DEFAULT_LENGTH_STATE),
             )
             ->requirePresence('state', 'create', __('A state is required.'))
             ->notEmptyString('state', __('The state should not be empty.'))
@@ -168,20 +168,20 @@ class SsoStatesTable extends Table
     {
         $rules->add(
             $rules->isUnique(['nonce'], __('This nonce is already in use.')),
-            ['errorField' => 'nonce']
+            ['errorField' => 'nonce'],
         );
         $rules->add(
             $rules->isUnique(['state'], __('This state is already in use.')),
-            ['errorField' => 'state']
+            ['errorField' => 'state'],
         );
 
         $rules->add(
             $rules->existsIn(
                 'sso_settings_id',
                 'SsoSettings',
-                __('The SSO setting identifier does not exist.')
+                __('The SSO setting identifier does not exist.'),
             ),
-            ['errorField' => 'sso_settings_id']
+            ['errorField' => 'sso_settings_id'],
         );
         $rules->add(
             /**
@@ -194,7 +194,7 @@ class SsoStatesTable extends Table
                     $rule = $rules->existsIn(
                         'user_id',
                         'Users',
-                        __('The user identifier does not exist.')
+                        __('The user identifier does not exist.'),
                     );
 
                     return $rule($entity, $options);
@@ -203,7 +203,7 @@ class SsoStatesTable extends Table
                 return true;
             },
             '_existsIn',
-            ['errorField' => 'user_id']
+            ['errorField' => 'user_id'],
         );
 
         $rules->addCreate(
@@ -222,7 +222,7 @@ class SsoStatesTable extends Table
                 'table' => 'Users',
                 'errorField' => 'user_id',
                 'message' => __('The user must be active.'),
-            ]
+            ],
         );
 
         return $rules;

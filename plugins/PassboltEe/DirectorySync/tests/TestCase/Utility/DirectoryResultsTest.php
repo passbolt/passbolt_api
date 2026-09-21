@@ -35,10 +35,10 @@ class DirectoryResultsTest extends DirectorySyncDeprecatedIntegrationTestCase
         parent::setUp();
         Configure::write('passbolt.plugins.directorySync.test', 'Nested');
         $this->userSyncAction = new UserSyncAction(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
         $this->groupSyncAction = new GroupSyncAction(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
 
         // Load directory results with data.

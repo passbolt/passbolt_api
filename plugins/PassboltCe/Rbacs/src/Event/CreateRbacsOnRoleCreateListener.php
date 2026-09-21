@@ -91,7 +91,7 @@ class CreateRbacsOnRoleCreateListener implements EventListenerInterface
                     'modified' => true,
                     'created_by' => true,
                     'modified_by' => true,
-                ]]
+                ]],
             );
         }
 
@@ -102,7 +102,7 @@ class CreateRbacsOnRoleCreateListener implements EventListenerInterface
 
             throw new CustomValidationException(
                 __('The rbacs could not be saved.'),
-                $errors
+                $errors,
             );
         } catch (Exception $e) {
             throw new InternalErrorException(__('Could not save the rbacs, please try again later.'), null, $e);

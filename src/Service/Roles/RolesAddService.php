@@ -63,7 +63,7 @@ class RolesAddService
 
             throw new CustomValidationException(
                 __('The role could not be saved.'),
-                $errors
+                $errors,
             );
         } catch (Exception $e) {
             throw new InternalErrorException(__('Could not save the role, please try again later.'), null, $e);

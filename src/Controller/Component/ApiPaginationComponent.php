@@ -157,7 +157,7 @@ class ApiPaginationComponent extends BaseApiComponent
         unset($queryParams['direction']);
 
         $this->getController()->setRequest(
-            $this->getController()->getRequest()->withQueryParams($queryParams)
+            $this->getController()->getRequest()->withQueryParams($queryParams),
         );
     }
 

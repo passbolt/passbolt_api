@@ -78,7 +78,7 @@ class TagsUpdateController extends AppController
 
         $uac = $this->User->getAccessControl();
         $data = $this->populatedMetadataUserKeyId($uac->getId(), $this->getRequest()->getData());
-        $tagDto = MetadataTagDto::fromArray($data);
+        $tagDto = MetadataTagDto::createFromArray($data);
         $updatedTag = (new UpdatePersonalTagService())->update($uac, $tagDto, $tag);
         $updatedTag = (new MetadataTagsRenderService())->renderTag($updatedTag->toArray(), $tagDto->isV5());
 

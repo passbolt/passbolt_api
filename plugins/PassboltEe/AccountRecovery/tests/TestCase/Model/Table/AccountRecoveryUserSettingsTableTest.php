@@ -59,7 +59,7 @@ class AccountRecoveryUserSettingsTableTest extends TestCase
         $this->assertTrue($entity->hasErrors());
         $this->assertSame(
             ['_empty' => 'The status should not be empty'],
-            $entity->getError('status')
+            $entity->getError('status'),
         );
     }
 
@@ -75,7 +75,7 @@ class AccountRecoveryUserSettingsTableTest extends TestCase
         $this->assertTrue($entity->hasErrors());
         $this->assertSame(
             ['inList' => 'The status should be one of the following: rejected, approved.'],
-            $entity->getError('status')
+            $entity->getError('status'),
         );
     }
 
@@ -110,15 +110,15 @@ class AccountRecoveryUserSettingsTableTest extends TestCase
         $this->AccountRecoveryUserSettings->save($entity);
         $this->assertSame(
             ['_existsIn' => 'This value does not exist'],
-            $entity->getError('user_id')
+            $entity->getError('user_id'),
         );
         $this->assertSame(
             ['_existsIn' => 'This value does not exist'],
-            $entity->getError('created_by')
+            $entity->getError('created_by'),
         );
         $this->assertSame(
             ['_existsIn' => 'This value does not exist'],
-            $entity->getError('modified_by')
+            $entity->getError('modified_by'),
         );
         $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
     }
@@ -179,7 +179,7 @@ class AccountRecoveryUserSettingsTableTest extends TestCase
         $this->AccountRecoveryUserSettings->save($entity);
         $this->assertSame(
             ['_isUnique' => 'This user already has an account recovery setting'],
-            $entity->getError('user_id')
+            $entity->getError('user_id'),
         );
         $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
     }

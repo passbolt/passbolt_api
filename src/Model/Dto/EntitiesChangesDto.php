@@ -52,7 +52,7 @@ class EntitiesChangesDto
     final public function __construct(
         ?array $added = [],
         ?array $updated = [],
-        ?array $deleted = []
+        ?array $deleted = [],
     ) {
         $this->pushAddedEntities($added);
         $this->pushUpdatedEntities($updated);

@@ -74,7 +74,7 @@ class CommentsViewService
                 $userId,
                 $foreignModelName,
                 $foreignKey,
-                $options
+                $options,
             );
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('Could not find comments for the requested model.'));

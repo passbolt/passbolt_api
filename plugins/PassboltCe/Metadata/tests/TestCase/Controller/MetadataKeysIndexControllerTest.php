@@ -109,7 +109,7 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
                 'disabled' => $creator['disabled'],
                 'created' => $creator['created'],
                 'modified' => $creator['modified'],
-            ]
+            ],
         );
         // assert profile data
         $this->assertArrayHasKey('profile', $creator);
@@ -131,7 +131,7 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
                 'last_name' => $profile['last_name'],
                 'created' => $profile['created'],
                 'modified' => $profile['modified'],
-            ]
+            ],
         );
         $this->assertArrayHasKey('avatar', $profile);
         $this->assertArrayHasKey('url', $profile['avatar']);

@@ -266,7 +266,7 @@ trait MockDirectoryTrait
         $created = null,
         $modified = null,
         $caseSensitive = true,
-        ?string $id = null
+        ?string $id = null,
     ) {
         $fname = $fname ?? '';
         $lname = $lname ?? '';

@@ -82,13 +82,13 @@ class PasswordExpiryNotifyAboutExpiredResourcesEmailRedactor implements Subscrib
             $user->locale,
             function () {
                 return __('You have passwords requiring your attention');
-            }
+            },
         );
         $message = $localeService->translateString(
             $user->locale,
             function () {
                 return __('Some of your passwords are expiring today.');
-            }
+            },
         );
 
         return new Email(
@@ -98,7 +98,7 @@ class PasswordExpiryNotifyAboutExpiredResourcesEmailRedactor implements Subscrib
                 'body' => compact('message', 'user'),
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 }

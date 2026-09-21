@@ -73,7 +73,7 @@ class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
         $this->gpg->importServerKeyInKeyring();
         $this->gpg->setDecryptKeyFromFingerprint(
             Configure::read('passbolt.gpg.serverKey.fingerprint'),
-            Configure::read('passbolt.gpg.serverKey.passphrase')
+            Configure::read('passbolt.gpg.serverKey.passphrase'),
         );
         /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $secret */
         $secret = MetadataPrivateKeyFactory::find()->where(['user_id IS' => null])->firstOrFail();

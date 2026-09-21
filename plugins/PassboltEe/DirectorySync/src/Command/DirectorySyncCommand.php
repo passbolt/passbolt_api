@@ -44,7 +44,7 @@ class DirectorySyncCommand extends PassboltCommand
     public function __construct(
         ProcessUserService $processUserService,
         ?CommandFactoryInterface $factory = null,
-        ?CommandCollection $passboltCommandCollection = null
+        ?CommandCollection $passboltCommandCollection = null,
     ) {
         parent::__construct($factory, $passboltCommandCollection);
         $this->processUserService = $processUserService;
@@ -86,8 +86,8 @@ class DirectorySyncCommand extends PassboltCommand
             $io->info(
                 __(
                     'To fix this problem, you need to configure ldap: {0}.',
-                    [Router::url('/app/administration/users-directory', true)]
-                )
+                    [Router::url('/app/administration/users-directory', true)],
+                ),
             );
             $this->error(__('aborting'), $io);
             $this->abort();
@@ -108,7 +108,7 @@ class DirectorySyncCommand extends PassboltCommand
     {
         if ($args->hasOption('persist') && !$args->getOption('persist') && !$args->getOption('dry-run')) {
             $io->error(__(
-                'Warning: check config and pass option --persist to actually modify data. Running in dry-run mode.'
+                'Warning: check config and pass option --persist to actually modify data. Running in dry-run mode.',
             ), 2);
         }
     }

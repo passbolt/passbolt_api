@@ -59,7 +59,7 @@ class MetadataRotateKeyResourcesPostController extends AppController
 
         (new MetadataRotateKeyResourcesUpdateService())->updateMany(
             $this->User->getAccessControl(),
-            $this->getRequest()->getData()
+            $this->getRequest()->getData(),
         );
 
         // Performance improvement: map query result datetime properties to string.

@@ -263,7 +263,7 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         // Set the refresh key in the cookies
         $this->cookie(
             RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE,
-            $oldRefreshToken
+            $oldRefreshToken,
         );
 
         $this->enableCsrfToken();

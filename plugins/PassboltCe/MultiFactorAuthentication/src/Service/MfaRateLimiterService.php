@@ -36,7 +36,7 @@ class MfaRateLimiterService
     public function isFailedAttemptsExceeded(
         string $userId,
         bool $isJwtAuth,
-        bool $incrementFailedAttempts = false
+        bool $incrementFailedAttempts = false,
     ): bool {
         // WARNING: Any value less than 1 means infinite number of attempts!
         if (Configure::read('passbolt.security.mfa.maxAttempts') < 1) {

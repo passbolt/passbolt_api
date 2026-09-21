@@ -134,8 +134,8 @@ class EntitiesHistoryTable extends Table
                 EntityHistory::CRUD,
                 __(
                     'The operation type should be one of the following: {0}.',
-                    implode(', ', EntityHistory::CRUD)
-                )
+                    implode(', ', EntityHistory::CRUD),
+                ),
             )
             ->requirePresence('crud', 'create', __('An operation type is required.'))
             ->notEmptyString('crud', __('The operation type should not be empty.'));

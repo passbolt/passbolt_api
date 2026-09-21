@@ -41,7 +41,7 @@ class LocaleService
     {
         return Hash::extract(
             Configure::readOrFail('passbolt.plugins.locale.options'),
-            '{n}.locale'
+            '{n}.locale',
         );
     }
 

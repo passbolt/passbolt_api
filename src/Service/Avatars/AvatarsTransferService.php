@@ -118,7 +118,7 @@ class AvatarsTransferService
                 if ($saveResult === false) {
                     if ($avatar->getError('profile_id')) {
                         $this->logError(
-                            'Profile with id ' . $avatar->profile_id . ' not found. The avatar could not be saved.'
+                            'Profile with id ' . $avatar->profile_id . ' not found. The avatar could not be saved.',
                         );
                     } else {
                         $this->logError("The avatar with file {$filePath} could not be saved.");
@@ -165,7 +165,7 @@ class AvatarsTransferService
             return new UploadedFile(
                 $stream,
                 $fileSize,
-                UPLOAD_ERR_OK
+                UPLOAD_ERR_OK,
             );
         } catch (Throwable $e) {
             $this->logError("The file {$path} could not be read.");

@@ -81,7 +81,7 @@ class MetadataUpgradeTagsUpdateServiceTest extends AppTestCaseV5
 
         $uac = $this->mockAdminAccessControl();
         $metadataForT1 = $this->encryptForUser($tagPersonal->slug, $user, $this->getAdaNoPassphraseKeyInfo());
-        $tagDto = MetadataTagDto::fromArray($tagShared->toArray());
+        $tagDto = MetadataTagDto::createFromArray($tagShared->toArray());
         $clearTextMetadata = json_encode($tagDto->getClearTextMetadata());
         $metadataForT2 = $this->encryptForMetadataKey($clearTextMetadata);
         $data = [
@@ -224,7 +224,7 @@ class MetadataUpgradeTagsUpdateServiceTest extends AppTestCaseV5
             $errors = $e->getErrors();
             $this->assertSame(
                 ['metadata_key_exists' => 'The metadata key does not exist.'],
-                $errors[0]['metadata_key_id']
+                $errors[0]['metadata_key_id'],
             );
         }
     }

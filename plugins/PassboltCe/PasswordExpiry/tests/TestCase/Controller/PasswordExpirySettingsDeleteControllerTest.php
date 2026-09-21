@@ -59,7 +59,7 @@ class PasswordExpirySettingsDeleteControllerTest extends AppIntegrationTestCase
         $this->assertEmailInBatchContains('You edited the password expiry settings', $activeAdmin->username);
         $this->assertEmailInBatchContains(
             $activeAdmin->profile->full_name . ' edited the password expiry settings',
-            $otherAdmin->username
+            $otherAdmin->username,
         );
     }
 

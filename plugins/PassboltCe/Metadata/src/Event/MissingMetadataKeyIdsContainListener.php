@@ -100,7 +100,7 @@ class MissingMetadataKeyIdsContainListener implements EventListenerInterface
         // information, only an administrator can use this contain.
         if (!$isUsersViewMeRequest && !$uac->isAdmin()) {
             throw new ForbiddenException(
-                __('The missing_metadata_key_ids contain is only allowed for administrators.')
+                __('The missing_metadata_key_ids contain is only allowed for administrators.'),
             );
         }
 

@@ -61,4 +61,14 @@ class ErrorControllerTest extends AppIntegrationTestCase
         $this->assertTextContains('<title>Passbolt | Error</title>', $resultHtml);
         $this->assertTextContains('<h2>An Internal Error Has Occurred</h2>', $resultHtml);
     }
+
+    public function testErrorController_Error_NotLoggedIn_WithXmlHttpRequestHeader(): void
+    {
+        $this->configRequest(['headers' => ['X-Requested-With' => 'XMLHttpRequest']]);
+        $this->getJson('/auth/is-authenticated.json');
+        $this->assertAuthenticationError();
+        $this->assertContentType('application/json');
+        $responseHeaders = $this->getHeadersAsArray();
+        $this->assertTextContains('error', $responseHeaders['status']);
+    }
 }

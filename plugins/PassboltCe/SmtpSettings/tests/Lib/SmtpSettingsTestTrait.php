@@ -155,7 +155,7 @@ trait SmtpSettingsTestTrait
         $keys = array_keys($settings);
         $allowedKeys = array_merge(
             SmtpSettingsSetService::SMTP_SETTINGS_ALLOWED_FIELDS,
-            ['id', 'created', 'modified', 'created_by', 'modified_by']
+            ['id', 'created', 'modified', 'created_by', 'modified_by'],
         );
 
         // All returned keys must be in the allowed list

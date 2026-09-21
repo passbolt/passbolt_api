@@ -116,16 +116,16 @@ class EditionUpgradeEmailRedactor implements SubscribedEmailRedactorInterface
         User $recipient,
         User $operator,
         SubscriptionKeyDto $key,
-        DateTime $upgradedAt
+        DateTime $upgradedAt,
     ): Email {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($operator): string {
                 return __(
                     '{0} upgraded this Passbolt instance to Pro Edition',
-                    $operator->profile->full_name
+                    $operator->profile->full_name,
                 );
-            }
+            },
         );
 
         $operator->profile->setVirtual(['full_name']);
@@ -143,7 +143,7 @@ class EditionUpgradeEmailRedactor implements SubscribedEmailRedactorInterface
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 

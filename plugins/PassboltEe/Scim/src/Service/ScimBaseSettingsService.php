@@ -59,7 +59,7 @@ abstract class ScimBaseSettingsService
                 'modified' => $setting->modified,
                 'created_by' => $setting->created_by,
                 'modified_by' => $setting->modified_by,
-            ]
+            ],
         );
 
         unset($renderedValue['secret_token']);

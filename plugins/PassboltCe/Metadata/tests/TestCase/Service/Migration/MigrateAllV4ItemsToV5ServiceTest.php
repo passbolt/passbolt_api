@@ -221,11 +221,11 @@ class MigrateAllV4ItemsToV5ServiceTest extends AppTestCaseV5
         $this->assertCount(2, $result['errors']);
         $this->assertStringContainsString(
             'Resource creation/modification with encrypted metadata not allowed',
-            $result['errors'][0]['error_message']
+            $result['errors'][0]['error_message'],
         );
         $this->assertStringContainsString(
             'Folder creation/modification with encrypted metadata not allowed',
-            $result['errors'][1]['error_message']
+            $result['errors'][1]['error_message'],
         );
     }
 }

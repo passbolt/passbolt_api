@@ -54,7 +54,7 @@ class SmtpSettingsHealthcheckService
         $check = [];
         $check['isEnabled'] = $this->isFeaturePluginEnabled('SmtpSettings');
         $check['areEndpointsDisabled'] = Configure::read(
-            SmtpSettingsSecurityMiddleware::PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED
+            SmtpSettingsSecurityMiddleware::PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED,
         );
         $getService = new SmtpSettingsGetService($this->passboltFileName);
         $check['errorMessage'] = false;

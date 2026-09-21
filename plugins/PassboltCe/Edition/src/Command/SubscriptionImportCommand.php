@@ -107,7 +107,7 @@ class SubscriptionImportCommand extends PassboltCommand
                 __('Ignoring the subscription key.'),
                 __(
                     'Remove the subscription file mount to silence this warning '
-                    . 'or re-upload the key from the admin UI.'
+                    . 'or re-upload the key from the admin UI.',
                 ),
             ]);
 
@@ -132,7 +132,7 @@ class SubscriptionImportCommand extends PassboltCommand
 
                     // Set edition to PRO in the DB
                     (new EditionSetService())->setToPro($uac);
-                }
+                },
             );
         } catch (SubscriptionException $e) {
             $this->error($e->getMessage(), $io);

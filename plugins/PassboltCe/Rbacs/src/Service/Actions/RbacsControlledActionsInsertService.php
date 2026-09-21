@@ -30,6 +30,9 @@ class RbacsControlledActionsInsertService
     public const NAME_ACCOUNT_RECOVERY_REQUESTS_INDEX = 'AccountRecoveryRequestsIndex.index';
     public const NAME_ACCOUNT_RECOVERY_REQUESTS_VIEW = 'AccountRecoveryRequestsView.view';
     public const NAME_ACCOUNT_RECOVERY_RESPONSES_CREATE = 'AccountRecoveryResponsesCreate.post';
+    public const NAME_OFFLINE_ITEMS_ADD = 'OfflineItemsAdd.add';
+    public const NAME_OFFLINE_ITEMS_DELETE = 'OfflineItemsDelete.delete';
+    public const NAME_OFFLINE_ITEMS_VIEW = 'OfflineItemsView.view';
     public const RBACS_CONTROLLED_ACTIONS = [
         self::NAME_GROUPS_ADD => [
             Rbac::CONTROL_FUNCTION_ALLOW,
@@ -44,6 +47,18 @@ class RbacsControlledActionsInsertService
             Rbac::CONTROL_FUNCTION_DENY,
         ],
         self::NAME_ACCOUNT_RECOVERY_RESPONSES_CREATE => [
+            Rbac::CONTROL_FUNCTION_ALLOW,
+            Rbac::CONTROL_FUNCTION_DENY,
+        ],
+        self::NAME_OFFLINE_ITEMS_ADD => [
+            Rbac::CONTROL_FUNCTION_ALLOW,
+            Rbac::CONTROL_FUNCTION_DENY,
+        ],
+        self::NAME_OFFLINE_ITEMS_DELETE => [
+            Rbac::CONTROL_FUNCTION_ALLOW,
+            Rbac::CONTROL_FUNCTION_DENY,
+        ],
+        self::NAME_OFFLINE_ITEMS_VIEW => [
             Rbac::CONTROL_FUNCTION_ALLOW,
             Rbac::CONTROL_FUNCTION_DENY,
         ],

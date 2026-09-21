@@ -97,14 +97,14 @@ class AccountRecoveryCompleteAdminEmailRedactor implements SubscribedEmailRedact
         User $admin,
         User $user,
         string $clientIp,
-        string $userAgent
+        string $userAgent,
     ): Email {
         $locale = (new GetUserLocaleService())->getLocale($admin->username);
         $subject = (new LocaleService())->translateString(
             $locale,
             function () use ($user) {
                 return __('{0} just completed the account recovery process', $user->profile->first_name);
-            }
+            },
         );
 
         $data = ['body' => compact('admin', 'user', 'clientIp', 'userAgent'), 'title' => $subject];

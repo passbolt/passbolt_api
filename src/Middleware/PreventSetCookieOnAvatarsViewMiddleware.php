@@ -44,7 +44,7 @@ class PreventSetCookieOnAvatarsViewMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         $response = $handler->handle($request);
 

@@ -109,7 +109,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
             'fingerprint',
             $this->getDummyMetadataKeysData(),
             $this->getEntityFieldOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -129,7 +129,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
             'armored_key',
             $this->getDummyMetadataKeysData(),
             $this->getEntityFieldOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -454,7 +454,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
                     'modified_by' => true,
                     'expired' => true,
                 ],
-            ], $option)
+            ], $option),
         );
     }
 }

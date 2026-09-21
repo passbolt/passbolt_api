@@ -91,7 +91,7 @@ class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailReda
             $user->locale,
             function () {
                 return __('Some of your passwords expired');
-            }
+            },
         );
 
         return new Email(
@@ -101,7 +101,7 @@ class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailReda
                 'body' => compact('user', 'subject'),
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 

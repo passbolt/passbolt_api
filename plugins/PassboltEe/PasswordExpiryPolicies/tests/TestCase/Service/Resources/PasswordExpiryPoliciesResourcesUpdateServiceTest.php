@@ -65,7 +65,7 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
             'name' => $newName,
             PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => null,
         ];
-        $dto = MetadataResourceDto::fromArray($payload);
+        $dto = MetadataResourceDto::createFromArray($payload);
         $this->service->update($this->makeUac($owner), $resource->id, $dto);
 
         // Assert
@@ -95,7 +95,7 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
             'name' => $newName,
             PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => DateTime::tomorrow()->toAtomString(),
         ];
-        $dto = MetadataResourceDto::fromArray($payload);
+        $dto = MetadataResourceDto::createFromArray($payload);
         $this->service->update($this->makeUac($owner), $resource->id, $dto);
 
         // Assert
@@ -126,7 +126,7 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
             'name' => $newName,
             PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => $expiryDate,
         ];
-        $dto = MetadataResourceDto::fromArray($payload);
+        $dto = MetadataResourceDto::createFromArray($payload);
         $this->service->update($this->makeUac($owner), $resource->id, $dto);
 
         // Assert
@@ -154,7 +154,7 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
         $payload = [
             PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => 'Foo',
         ];
-        $dto = MetadataResourceDto::fromArray($payload);
+        $dto = MetadataResourceDto::createFromArray($payload);
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('Could not validate resource data.');
@@ -176,7 +176,7 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
         $payload = [
             PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => null,
         ];
-        $dto = MetadataResourceDto::fromArray($payload);
+        $dto = MetadataResourceDto::createFromArray($payload);
         // Although the password expiry is deactivated, the password is now marked as not expired
         $resource = $this->service->update($this->makeUac($owner), $resource->id, $dto);
         $this->assertFalse($resource->isExpired());

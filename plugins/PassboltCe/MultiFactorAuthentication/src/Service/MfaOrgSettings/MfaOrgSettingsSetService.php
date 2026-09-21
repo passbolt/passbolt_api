@@ -37,7 +37,7 @@ class MfaOrgSettingsSetService
         array $data,
         UserAccessControl $uac,
         ?Client $duoClient = null,
-        array $options = []
+        array $options = [],
     ): array {
         $mfaSettings = MfaSettings::get($uac);
 

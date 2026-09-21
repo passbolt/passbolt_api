@@ -101,7 +101,7 @@ class PasswordPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRed
         // Send emails to all the administrators
         foreach ($admins as $admin) {
             $emailCollection->addEmail(
-                $this->createEmail($admin, $operator, $passwordPoliciesSettingsDto, $clientIp, $userAgent)
+                $this->createEmail($admin, $operator, $passwordPoliciesSettingsDto, $clientIp, $userAgent),
             );
         }
 
@@ -121,7 +121,7 @@ class PasswordPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRed
         User $operator,
         PasswordPoliciesSettingsDto $passwordPoliciesSettingsDto,
         string $clientIp,
-        string $userAgent
+        string $userAgent,
     ): Email {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
@@ -129,7 +129,7 @@ class PasswordPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRed
                 return $operator->id === $recipient->id ?
                     __('You edited the password policy') :
                     __('{0} edited the password policy', $operator->profile->first_name);
-            }
+            },
         );
 
         return new Email(
@@ -145,7 +145,7 @@ class PasswordPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRed
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 }

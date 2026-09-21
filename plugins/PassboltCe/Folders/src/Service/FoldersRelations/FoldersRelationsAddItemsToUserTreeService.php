@@ -122,7 +122,7 @@ class FoldersRelationsAddItemsToUserTreeService
         // If none of the folders is a parent and also a child in the user tree, the newly added folder cannot introduce a cycle.
         $shouldCheckSccInUserTree = $this->foldersRelationsHaveOrAreChildrenService->haveAndAreChildren(
             $foldersIds,
-            $userId
+            $userId,
         );
         if (!$shouldCheckSccInUserTree) {
             return;
@@ -148,13 +148,13 @@ class FoldersRelationsAddItemsToUserTreeService
     private function getFoldersRelationsChanges(
         UserAccessControl $uac,
         string $userId,
-        FolderRelationDtoCollection $items
+        FolderRelationDtoCollection $items,
     ): array {
         $parentFoldersRelationsChanges = $this->getParentFoldersRelationsChanges($userId, $items);
         $childrenFoldersRelationsChanges = $this->getChildrenFoldersRelationsChanges(
             $userId,
             $items,
-            $parentFoldersRelationsChanges
+            $parentFoldersRelationsChanges,
         );
         $foldersRelationChanges = array_merge($parentFoldersRelationsChanges, $childrenFoldersRelationsChanges);
         $this->foldersRelationsSortService->sort($foldersRelationChanges, $uac);
@@ -189,7 +189,7 @@ class FoldersRelationsAddItemsToUserTreeService
         $userFolders = $this->permissionsTables->findAllByAro(
             PermissionsTable::FOLDER_ACO,
             $userId,
-            ['checkGroupsUsers' => true]
+            ['checkGroupsUsers' => true],
         )
             ->select('aco_foreign_key');
 
@@ -221,7 +221,7 @@ class FoldersRelationsAddItemsToUserTreeService
     private function getChildrenFoldersRelationsChanges(
         string $userId,
         FolderRelationDtoCollection $items,
-        array $excludeFoldersRelations
+        array $excludeFoldersRelations,
     ): array {
         // R = The folders relations which could represent a potential child relationship for the list of folders added
         //     to the user tree.
@@ -280,7 +280,7 @@ class FoldersRelationsAddItemsToUserTreeService
      */
     private function buildFoldersRelationsTupleComparisonExpression(
         array $foldersRelations,
-        bool $isInOperator = true
+        bool $isInOperator = true,
     ): TupleComparison {
         $operator = $isInOperator ? 'IN' : 'NOT IN';
         $excludeFoldersRelationsArray = array_map(function (FoldersRelation $excludeFolderRelation) {
@@ -346,7 +346,7 @@ class FoldersRelationsAddItemsToUserTreeService
         foreach ($changesToApply as $folderParentId => $foreignIds) {
             $this->foldersRelationsTable->updateAll(
                 ['folder_parent_id' => $folderParentId],
-                ['user_id' => $userId, 'foreign_id IN' => $foreignIds]
+                ['user_id' => $userId, 'foreign_id IN' => $foreignIds],
             );
         }
     }
@@ -368,7 +368,7 @@ class FoldersRelationsAddItemsToUserTreeService
             $brokenFolderRelation = $this->foldersRelationsRepairSCCsService->repair(
                 $uac,
                 $userId,
-                $foldersRelationsScc
+                $foldersRelationsScc,
             );
 
             if (is_null($brokenFolderRelation)) {

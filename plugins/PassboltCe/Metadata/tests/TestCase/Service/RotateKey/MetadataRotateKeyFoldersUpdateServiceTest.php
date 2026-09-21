@@ -78,7 +78,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataFolderDto::createFromArray(['name' => 'marketing'])->getClearTextMetadata());
         $expiredFolder1 = FolderFactory::make()
             ->withPermissionsFor([$admin])
             ->withFoldersRelationsFor([$admin])
@@ -91,7 +91,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($user->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'customer support'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataFolderDto::createFromArray(['name' => 'customer support'])->getClearTextMetadata());
         $expiredFolder2 = FolderFactory::make()
             ->withPermissionsFor([$admin])
             ->withFoldersRelationsFor([$admin])
@@ -99,8 +99,8 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
             ->persist();
 
         $uac = $this->mockAdminAccessControl();
-        $metadataToUpdateForF1 = $this->encryptForMetadataKey(json_encode(MetadataFolderDto::fromArray(['name' => 'f1 marketing updated'])->getClearTextMetadata()));
-        $metadataToUpdateForF2 = $this->encryptForMetadataKey(json_encode(MetadataFolderDto::fromArray(['name' => 'f1 customer support updated'])->getClearTextMetadata()));
+        $metadataToUpdateForF1 = $this->encryptForMetadataKey(json_encode(MetadataFolderDto::createFromArray(['name' => 'f1 marketing updated'])->getClearTextMetadata()));
+        $metadataToUpdateForF2 = $this->encryptForMetadataKey(json_encode(MetadataFolderDto::createFromArray(['name' => 'f1 customer support updated'])->getClearTextMetadata()));
         $data = [
             [
                 'id' => $expiredFolder1->get('id'),
@@ -206,7 +206,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
             ->persist();
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $uac = $this->makeUac($admin);
-        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataFolderDto::createFromArray(['name' => 'marketing'])->getClearTextMetadata());
         $data = [
             [
                 'id' => UuidFactory::uuid(),
@@ -230,7 +230,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
-        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataFolderDto::createFromArray(['name' => 'marketing'])->getClearTextMetadata());
         $folder = FolderFactory::make()
             ->withPermissionsFor([$admin])
             ->withFoldersRelationsFor([$admin])
@@ -261,7 +261,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
-        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataFolderDto::createFromArray(['name' => 'marketing'])->getClearTextMetadata());
         $folder = FolderFactory::make()
             ->withPermissionsFor([$admin])
             ->withFoldersRelationsFor([$admin])
@@ -294,7 +294,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataFolderDto::createFromArray(['name' => 'marketing'])->getClearTextMetadata());
         $folder = FolderFactory::make()
             ->withPermissionsFor([$admin])
             ->withFoldersRelationsFor([$admin])
@@ -303,7 +303,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
 
         try {
             $uac = $this->mockAdminAccessControl();
-            $metadataToUpdate = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing - updated'])->getClearTextMetadata());
+            $metadataToUpdate = json_encode(MetadataFolderDto::createFromArray(['name' => 'marketing - updated'])->getClearTextMetadata());
             $data = [
                 [
                     'id' => $folder->get('id'),
@@ -333,7 +333,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
         [$activeMetadataKey] = MetadataKeyFactory::make(2)->withServerPrivateKey()->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataFolderDto::createFromArray(['name' => 'marketing'])->getClearTextMetadata());
         $folder = FolderFactory::make()
             ->withPermissionsFor([$admin])
             ->withFoldersRelationsFor([$admin])
@@ -341,7 +341,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
             ->persist();
 
         $uac = $this->mockAdminAccessControl();
-        $metadataToUpdateForF1 = $this->encryptForMetadataKey(json_encode(MetadataFolderDto::fromArray(['name' => 'f1 marketing updated'])->getClearTextMetadata()));
+        $metadataToUpdateForF1 = $this->encryptForMetadataKey(json_encode(MetadataFolderDto::createFromArray(['name' => 'f1 marketing updated'])->getClearTextMetadata()));
         $data = [
             [
                 'id' => $folder->get('id'),

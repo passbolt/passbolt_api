@@ -378,7 +378,7 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
             $gpg->setEncryptKey($publicKey);
             $gpg->setSignKeyFromFingerprint(
                 Configure::read('passbolt.gpg.serverKey.fingerprint'),
-                Configure::read('passbolt.gpg.serverKey.passphrase')
+                Configure::read('passbolt.gpg.serverKey.passphrase'),
             );
             static::$keycache[$fingerprint] = $gpg->encrypt($this->getValidPrivateKeyCleartextJson());
             $gpg->clearKeys();

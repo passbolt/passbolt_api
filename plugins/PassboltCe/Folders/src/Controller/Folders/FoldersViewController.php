@@ -73,7 +73,7 @@ class FoldersViewController extends AppController
         }
 
         $folder = FolderizableBehavior::unsetPersonalPropertyIfNull($folder->toArray());
-        $folderDto = MetadataFolderDto::fromArray($folder);
+        $folderDto = MetadataFolderDto::createFromArray($folder);
         $folder = (new MetadataFoldersRenderService())->renderFolder($folder, $folderDto->isV5());
 
         $this->success(__('The operation was successful.'), $folder);

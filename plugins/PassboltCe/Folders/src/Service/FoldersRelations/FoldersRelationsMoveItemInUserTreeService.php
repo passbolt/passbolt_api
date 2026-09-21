@@ -74,7 +74,7 @@ class FoldersRelationsMoveItemInUserTreeService
         UserAccessControl $uac,
         string $foreignModel,
         string $foreignId,
-        ?string $folderParentId = FoldersRelation::ROOT
+        ?string $folderParentId = FoldersRelation::ROOT,
     ): void {
         $this->assertForeignItem($uac, $foreignModel, $foreignId);
         $this->assertFolderParent($uac, $folderParentId);
@@ -86,7 +86,7 @@ class FoldersRelationsMoveItemInUserTreeService
         $this->foldersRelationsTable->getConnection()->transactional(
             function () use ($uac, $foreignModel, $foreignId, $originalFolderParentId, $folderParentId): void {
                 $this->performMove($uac, $foreignModel, $foreignId, $originalFolderParentId, $folderParentId);
-            }
+            },
         );
     }
 
@@ -158,7 +158,7 @@ class FoldersRelationsMoveItemInUserTreeService
         UserAccessControl $uac,
         string $foreignModel,
         string $foreignId,
-        ?string $originalFolderParentId = FoldersRelation::ROOT
+        ?string $originalFolderParentId = FoldersRelation::ROOT,
     ): void {
         // User can always move content from root.
         if ($originalFolderParentId === FoldersRelation::ROOT) {
@@ -178,7 +178,7 @@ class FoldersRelationsMoveItemInUserTreeService
             PermissionsTable::FOLDER_ACO,
             $originalFolderParentId,
             $userId,
-            Permission::UPDATE
+            Permission::UPDATE,
         );
         if (!$isAllowedToMoveOut) {
             $msg = __('You are not allowed to move this item out of its parent folder.');
@@ -190,7 +190,7 @@ class FoldersRelationsMoveItemInUserTreeService
             $foreignModel,
             $foreignId,
             $userId,
-            Permission::UPDATE
+            Permission::UPDATE,
         );
         if (!$isAllowedToMoveContent) {
             $msg = __('You are not allowed to move this item.');
@@ -215,7 +215,7 @@ class FoldersRelationsMoveItemInUserTreeService
         UserAccessControl $uac,
         string $foreignModel,
         string $foreignId,
-        ?string $folderParentId = FoldersRelation::ROOT
+        ?string $folderParentId = FoldersRelation::ROOT,
     ): void {
         if ($folderParentId === FoldersRelation::ROOT) {
             return;
@@ -258,7 +258,7 @@ class FoldersRelationsMoveItemInUserTreeService
         string $foreignModel,
         string $foreignId,
         ?string $originalFolderParentId = FoldersRelation::ROOT,
-        ?string $folderParentId = FoldersRelation::ROOT
+        ?string $folderParentId = FoldersRelation::ROOT,
     ): void {
         // If the folder is moved to the root, then only move it for all users having the same representation as the
         // operator.
@@ -312,7 +312,7 @@ class FoldersRelationsMoveItemInUserTreeService
      */
     private function detectAndRepairStronglyConnectedComponents(
         UserAccessControl $uac,
-        string $userId
+        string $userId,
     ): void {
         $scc = $this->folderRelationsDetectStronglyConnectedComponents->detectFirstInSharedFolders();
         if (empty($scc)) {

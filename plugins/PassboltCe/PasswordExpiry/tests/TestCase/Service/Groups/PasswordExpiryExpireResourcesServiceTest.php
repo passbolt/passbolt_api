@@ -40,8 +40,8 @@ class PasswordExpiryExpireResourcesServiceTest extends AppTestCase
         parent::setUp();
         $this->service = new PasswordExpiryExpireResourcesService(
             new PasswordExpiryValidationService(
-                new PasswordExpiryGetSettingsService()
-            )
+                new PasswordExpiryGetSettingsService(),
+            ),
         );
     }
 

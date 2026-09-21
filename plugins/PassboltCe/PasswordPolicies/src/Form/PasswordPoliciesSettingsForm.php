@@ -56,33 +56,33 @@ class PasswordPoliciesSettingsForm extends Form
             ->requirePresence(
                 'default_generator',
                 true,
-                __('The default generator is required.')
+                __('The default generator is required.'),
             )
             ->inList(
                 'default_generator',
                 self::PASSWORD_GENERATORS,
                 __(
                     'The default generator should be one of the following: {0}.',
-                    implode(', ', self::PASSWORD_GENERATORS)
-                )
+                    implode(', ', self::PASSWORD_GENERATORS),
+                ),
             );
 
         $validator
             ->requirePresence(
                 'external_dictionary_check',
                 true,
-                __('The external dictionary check is required.')
+                __('The external dictionary check is required.'),
             )
             ->boolean(
                 'external_dictionary_check',
-                __('The external dictionary check should be a boolean.')
+                __('The external dictionary check should be a boolean.'),
             );
 
         $validator
             ->requirePresence(
                 'password_generator_settings',
                 true,
-                __('The password generator settings is required.')
+                __('The password generator settings is required.'),
             )
             ->notEmptyArray('password_generator_settings', __('The password generator settings should not be empty.'))
             // Check at least one mask is selected.
@@ -96,11 +96,11 @@ class PasswordPoliciesSettingsForm extends Form
             ->requirePresence(
                 'passphrase_generator_settings',
                 true,
-                __('The passphrase generator settings is required.')
+                __('The passphrase generator settings is required.'),
             )
             ->notEmptyArray(
                 'passphrase_generator_settings',
-                __('The passphrase generator settings should not be empty.')
+                __('The passphrase generator settings should not be empty.'),
             )
             ->addNested('passphrase_generator_settings', new PassphraseGeneratorSettingsValidator());
 

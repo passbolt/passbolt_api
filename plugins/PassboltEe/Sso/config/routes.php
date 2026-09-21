@@ -25,7 +25,7 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
     $routes->setExtensions(['json']);
     $routes->registerMiddleware(
         SsoEndpointsSecurityMiddleware::class,
-        new SsoEndpointsSecurityMiddleware()
+        new SsoEndpointsSecurityMiddleware(),
     );
 
     /**

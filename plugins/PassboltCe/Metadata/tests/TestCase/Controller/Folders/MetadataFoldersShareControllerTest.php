@@ -107,7 +107,7 @@ class MetadataFoldersShareControllerTest extends AppIntegrationTestCaseV5
         $this->assertEventFiredWith(
             FoldersShareService::FOLDERS_SHARE_FOLDER_EVENT,
             'isV5',
-            true
+            true,
         );
     }
 

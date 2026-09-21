@@ -141,9 +141,9 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
                 return __(
                     '{0} removed you from the group {1}',
                     $admin['profile']['first_name'],
-                    $group['name']
+                    $group['name'],
                 );
-            }
+            },
         );
         $data = ['body' => ['admin' => $admin, 'group' => $group], 'title' => $subject];
 

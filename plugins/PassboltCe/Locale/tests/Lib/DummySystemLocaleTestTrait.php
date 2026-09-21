@@ -27,11 +27,11 @@ trait DummySystemLocaleTestTrait
     {
         $newOptions = array_merge(
             Configure::readOrFail('passbolt.plugins.locale.options'),
-            [['locale' => 'foo','label' => 'foo-FOO',]]
+            [['locale' => 'foo','label' => 'foo-FOO',]],
         );
         Configure::write(
             'passbolt.plugins.locale.options',
-            $newOptions
+            $newOptions,
         );
     }
 

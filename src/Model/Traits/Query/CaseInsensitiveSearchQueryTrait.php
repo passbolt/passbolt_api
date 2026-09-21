@@ -44,7 +44,7 @@ trait CaseInsensitiveSearchQueryTrait
     protected function searchCaseInsensitiveOnMultipleFields(
         SelectQuery $query,
         array $aliases,
-        string $string
+        string $string,
     ): SelectQuery {
         $or = [];
         $value = '%' . mb_strtolower($string) . '%';

@@ -87,7 +87,7 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
             $locale,
             function () use ($user) {
                 return __('Your account recovery, {0}!', $user->profile->first_name);
-            }
+            },
         );
 
         $data = ['body' => ['user' => $user, 'token' => $token, 'case' => $case], 'title' => $subject];

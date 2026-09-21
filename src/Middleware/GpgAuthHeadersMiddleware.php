@@ -34,7 +34,7 @@ class GpgAuthHeadersMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         /** @var \Cake\Http\Response $response */
         $response = $handler->handle($request);

@@ -41,7 +41,7 @@ class UserSyncActionDeleteTest extends DirectorySyncDeprecatedIntegrationTestCas
     protected function initAction()
     {
         $this->action = new UserSyncAction(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
         $this->action->getDirectory()->setGroups([]);
     }
@@ -691,7 +691,7 @@ class UserSyncActionDeleteTest extends DirectorySyncDeprecatedIntegrationTestCas
 
         // Use the FailingUserSyncAction which throws after the first successful deletion
         $this->action = new FailingUserSyncActionTestUtility(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
         $this->action->getDirectory()->setGroups([]);
 

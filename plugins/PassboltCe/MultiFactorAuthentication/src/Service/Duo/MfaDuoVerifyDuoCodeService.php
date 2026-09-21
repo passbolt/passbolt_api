@@ -52,7 +52,7 @@ class MfaDuoVerifyDuoCodeService
         try {
             $this->duoClient = $client ?? (new MfaDuoGetSdkClientService())->getOrFail(
                 new MfaOrgSettingsDuoService(MfaOrgSettings::get()->getSettings()),
-                $authTokenType
+                $authTokenType,
             );
         } catch (Throwable $th) {
             throw new InternalErrorException(__('Could not enable Duo MFA provider.'), null, $th);
@@ -98,7 +98,7 @@ class MfaDuoVerifyDuoCodeService
              */
             $duoAuthenticationData = $this->duoClient->exchangeAuthorizationCodeFor2FAResult(
                 $duoCode,
-                $operatorUsername
+                $operatorUsername,
             );
         } catch (DuoException $e) {
             throw new UnauthorizedException(__('Unable to verify Duo code against Duo service.'), null, $e);

@@ -74,7 +74,7 @@ class MfaPolicySettings
         ?DateTime $created,
         ?string $createdBy,
         ?DateTime $modified,
-        ?string $modifiedBy
+        ?string $modifiedBy,
     ) {
         $this->policy = $policy;
         $this->remember_me_for_a_month = $rememberMeForAMonth;

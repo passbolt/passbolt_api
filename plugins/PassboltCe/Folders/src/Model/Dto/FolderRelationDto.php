@@ -52,7 +52,7 @@ class FolderRelationDto
         ?string $foreignModel,
         ?string $foreignId,
         ?string $folderParentId = null,
-        ?string $userId = null
+        ?string $userId = null,
     ) {
         $this->foreignModel = $foreignModel;
         $this->foreignId = $foreignId;
@@ -82,7 +82,7 @@ class FolderRelationDto
             Hash::get($data, 'foreign_model'),
             Hash::get($data, 'foreign_id'),
             Hash::get($data, 'folder_parent_id'),
-            Hash::get($data, 'user_id')
+            Hash::get($data, 'user_id'),
         );
     }
 

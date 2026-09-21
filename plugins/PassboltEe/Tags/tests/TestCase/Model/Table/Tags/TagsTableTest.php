@@ -131,7 +131,7 @@ class TagsTableTest extends TagTestCase
         TagFactory::make(3)->isShared()->persist();
         TagFactory::make()->isPersonalFor(
             ResourceFactory::make()->persist(),
-            UserFactory::make()->persist()
+            UserFactory::make()->persist(),
         )->persist();
         TagFactory::make()->isSharedFor(ResourceFactory::make()->persist())->persist();
         // unused and #unused

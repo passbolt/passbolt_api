@@ -94,7 +94,7 @@ class SelfRegistrationAdminEmailRedactor implements SubscribedEmailRedactorInter
             $recipient->locale,
             function () use ($userFirstName) {
                 return __('{0} just created an account on passbolt!', $userFirstName);
-            }
+            },
         );
     }
 
@@ -116,7 +116,7 @@ class SelfRegistrationAdminEmailRedactor implements SubscribedEmailRedactorInter
                 'body' => compact('user', 'recipient'),
                 'title' => $this->getSubject($recipient, $user),
             ],
-            static::EMAIL_TEMPLATE
+            static::EMAIL_TEMPLATE,
         );
     }
 }

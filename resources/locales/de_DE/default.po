@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-07-10 05:55+0000\n"
-"PO-Revision-Date: 2026-07-10 09:22\n"
+"PO-Revision-Date: 2026-09-10 14:47\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -281,7 +281,7 @@ msgid "The role was deleted."
 msgstr "Die Rolle wurde gelöscht."
 
 msgid "The role identifier is not valid."
-msgstr ""
+msgstr "Der Rollenbezeichner ist ungültig."
 
 msgid "The role was successfully updated."
 msgstr "Die Rolle wurde erfolgreich aktualisiert."
@@ -410,7 +410,7 @@ msgid "Invalid expiry time {0}."
 msgstr "Ungültige Gültigkeitsdauer {0}."
 
 msgid "The user role ID must not be of the guest role."
-msgstr ""
+msgstr "Die Benutzer-Rollen-ID darf nicht die der Gast-Rolle sein."
 
 msgid "The identifier should not be empty."
 msgstr "Der Identifikator sollte nicht leer sein."
@@ -953,22 +953,22 @@ msgid "The name should not be greater than 50 characters."
 msgstr "Der Name darf nicht länger als 50 Zeichen sein."
 
 msgid "The name should not be reserved role."
-msgstr ""
+msgstr "Der Name sollte nicht eine reservierte Rolle sein."
 
 msgid "The description should be a valid BMP-UTF8 string."
 msgstr "Die Beschreibung sollte eine gültige BMP-UTF8-Zeichenkette sein."
 
 msgid "The role cannot be deleted as it is associated with another user."
-msgstr ""
+msgstr "Die Rolle kann nicht gelöscht werden, da sie einem anderen Benutzer zugeordnet ist."
 
 msgid "A reserved role cannot be deleted."
-msgstr ""
+msgstr "Eine reservierte Rolle kann nicht gelöscht werden."
 
 msgid "A role already exists for the given name."
 msgstr "Für diesen Namen existiert bereits eine Rolle."
 
 msgid "Only maximum of {0} active roles are allowed."
-msgstr ""
+msgstr "Nur maximal {0} aktive Rollen sind erlaubt."
 
 msgid "A reserved role cannot be renamed."
 msgstr "Eine reservierte Rolle kann nicht umbenannt werden."
@@ -980,13 +980,13 @@ msgid "The resource identifier should not be empty."
 msgstr "Der Ressourcenbezeichner darf nicht leer sein."
 
 msgid "The secret revision identifier should be a valid UUID."
-msgstr ""
+msgstr "Der Bezeichner der Geheimnis-Revision sollte eine gültige UUID sein."
 
 msgid "A secret revision identifier is required."
-msgstr ""
+msgstr "Ein Bezeichner der Geheimnis-Revision wird benötigt."
 
 msgid "The secret revision identifier should not be empty."
-msgstr ""
+msgstr "Der Bezeichner der Geheimnis-Revision sollte nicht leer sein."
 
 msgid "The message should be a valid ASCII string."
 msgstr "Die Nachricht muss eine gültige ASCII-Zeichenkette sein."
@@ -1001,10 +1001,10 @@ msgid "A secret already exists for the given user and resource."
 msgstr "Für den angegebenen Benutzer und die Ressource existiert bereits ein Geheimnis."
 
 msgid "A secret already exists for the given user, resource and secret revision."
-msgstr ""
+msgstr "Für den angegebenen Benutzer, die Ressource und die Geheimnis-Revision existiert bereits ein Geheimnis."
 
 msgid "The secret revision does not exist or is deleted."
-msgstr ""
+msgstr "Die Geheimnis-Revision existiert nicht oder wurde gelöscht."
 
 msgid "The user identifier by should be a valid UUID."
 msgstr "Die Benutzerkennung muss eine gültige UUID sein."
@@ -1382,7 +1382,7 @@ msgid "Could not validate group user data."
 msgstr "Konnte die Gruppenbenutzer-Daten nicht validieren."
 
 msgid "The resource with ID {0} does not have a secret revision."
-msgstr ""
+msgstr "Die Ressource mit der ID {0} hat keine Geheimnis-Revision."
 
 msgid "All email notifications will be sent."
 msgstr "Alle E-Mail-Benachrichtigungen werden gesendet."
@@ -1613,10 +1613,10 @@ msgid "Run the install script to install the database tables"
 msgstr "Führen Sie das Installationsskript aus, um die Datenbanktabellen zu installieren"
 
 msgid "The database version is supported."
-msgstr ""
+msgstr "Die Datenbankversion wird unterstützt."
 
 msgid "The database version is deprecated."
-msgstr ""
+msgstr "Die Datenbankversion ist veraltet."
 
 msgid "The model schema cache shows no discrepancies with the database schema."
 msgstr "Der Modell-Schema-Cache zeigt keine Abweichungen vom Datenbankschema."
@@ -2132,7 +2132,7 @@ msgid "The resource types associated to this resource does not exist."
 msgstr "Die Ressourcentypen, die dieser Ressource zugeordnet sind, existieren nicht."
 
 msgid "No secret revision were found for this resource."
-msgstr ""
+msgstr "Für diese Ressource wurde keine Geheimnis-Revision gefunden."
 
 msgid "You are not allowed to update this resource."
 msgstr "Sie sind nicht berechtigt diese Ressource zu aktualisieren."
@@ -2141,19 +2141,19 @@ msgid "Additional resource types are not enabled on this server."
 msgstr "Zusätzliche Ressourcentypen sind auf diesem Server nicht aktiviert."
 
 msgid "The role could not be saved."
-msgstr ""
+msgstr "Die Rolle konnte nicht gespeichert werden."
 
 msgid "Could not save the role, please try again later."
-msgstr ""
+msgstr "Rolle konnte nicht gespeichert werden, bitte versuchen Sie es später erneut."
 
 msgid "The role does not exist or deleted."
-msgstr ""
+msgstr "Die Rolle existiert nicht oder wurde gelöscht."
 
 msgid "The role could not be deleted."
-msgstr ""
+msgstr "Die Rolle konnte nicht gelöscht werden."
 
 msgid "Could not delete the role, please try again later."
-msgstr ""
+msgstr "Rolle konnte nicht gelöscht werden, bitte versuchen Sie es später erneut."
 
 msgid "There should be at least 4 roles"
 msgstr "Es sollte mindestens 4 Rollen geben"
@@ -2165,10 +2165,10 @@ msgid "Validation success for role {0}"
 msgstr "Validierung erfolgreich für Rolle {0}"
 
 msgid "The role could not be updated."
-msgstr ""
+msgstr "Die Rolle konnte nicht aktualisiert werden."
 
 msgid "Could not update the role, please try again later."
-msgstr ""
+msgstr "Rolle konnte nicht aktualisiert werden, bitte versuchen Sie es später erneut."
 
 msgid "Could not validate secrets data."
 msgstr "Secret Daten konnten nicht validiert werden."
@@ -2435,10 +2435,10 @@ msgid "The supplied email notification settings are not valid"
 msgstr "Die angegebenen E-Mail-Benachrichtigungseinstellungen sind ungültig"
 
 msgid "The allow CSV format setting is required."
-msgstr ""
+msgstr "Die Einstellung wird benötigt: CSV Format erlauben."
 
 msgid "The allow CSV format setting should be a boolean."
-msgstr ""
+msgstr "Die Einstellung sollte ein Boolean sein: CSV Format erlauben."
 
 msgid "The folder has been added successfully."
 msgstr "Der Ordner wurde erfolgreich hinzugefügt."
@@ -2549,10 +2549,10 @@ msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Ein Ordner vom Typ \"persönlich\" kann nicht mit anderen Benutzern oder einer Gruppe geteilt werden."
 
 msgid "You made changes on several folders"
-msgstr ""
+msgstr "Sie haben an mehreren Ordnern Änderungen vorgenommen"
 
 msgid "{0} has made changes on several folders"
-msgstr ""
+msgstr "{0} hat Änderungen an mehreren Ordnern vorgenommen"
 
 msgid "You added the folder {0}"
 msgstr "Sie haben den Ordner {0} hinzugefügt"
@@ -2651,7 +2651,7 @@ msgid "{0} edited a folder"
 msgstr "{0} hat einen Ordner bearbeitet"
 
 msgid "{0} folders were affected."
-msgstr ""
+msgstr "{0} Ordner waren betroffen."
 
 msgid "It would be too much to list them here, but you can go check them on passbolt."
 msgstr "Es wäre zu viel, sie hier aufzulisten, aber Sie können sie in Passbolt überprüfen."
@@ -3230,7 +3230,7 @@ msgid "The server does not have access to metadata key."
 msgstr "Der Server hat keinen Zugriff auf den Metadaten-Schlüssel."
 
 msgid "When zero-knowledge mode is off, the server must have access to the metadata key."
-msgstr "Wenn der Null-Wissens-Modus ausgeschaltet ist, muss der Server Zugriff auf die Metadatenschlüssel haben."
+msgstr "Wenn der Zero-Knowledge-Modus ausgeschaltet ist, muss der Server Zugriff auf die Metadaten-Schlüssel haben."
 
 msgid "Without having access, the server won't be able to share the metadata private key with the users."
 msgstr "Ohne Zugriff kann der Server den privaten Metadaten-Schlüssel nicht mit den Benutzern teilen."
@@ -3254,13 +3254,13 @@ msgid "The server metadata private key is not valid."
 msgstr "Der private Server-Metadaten-Schlüssel ist nicht gültig."
 
 msgid "The server does not have access to the server metadata private key in Zero-knowledge mode."
-msgstr ""
+msgstr "Der Server hat keinen Zugriff auf den Server-Metadaten privaten Schlüssel im Zero-Knowledge-Modus."
 
 msgid "The server has access to the server metadata private key while in Zero-knowledge mode."
-msgstr ""
+msgstr "Der Server hat Zugriff auf den Server-Metadaten privaten Schlüssel während des Zero-Knowledge-Modus."
 
 msgid "When Zero-knowledge mode is enabled, the server should not have access to the server metadata private key."
-msgstr ""
+msgstr "Wenn der Zero-Knowledge-Modus eingeschaltet ist, sollte der Server keinen Zugriff auf den Server-Metadaten privaten Schlüssel haben."
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "Der Metadaten-Schlüssel existiert nicht oder wurde gelöscht."
@@ -3701,7 +3701,7 @@ msgid "This functionality is not available using AJAX/JSON."
 msgstr "Diese Funktion ist unter AJAX/JSON nicht verfügbar."
 
 msgid "This functionality is only available using AJAX/JSON."
-msgstr ""
+msgstr "Diese Funktion ist nur unter AJAX/JSON verfügbar."
 
 msgid "This authentication provider is already setup. Disable it first"
 msgstr "Dieser Authentifizierungsanbieter ist bereits eingerichtet. Deaktivieren Sie ihn zuerst"
@@ -3710,7 +3710,7 @@ msgid "Multi Factor Authentication is configured!"
 msgstr "Multi-Faktor-Authentifizierung ist eingerichtet!"
 
 msgid "Unable to configure Multi Factor Authentication."
-msgstr ""
+msgstr "Multi-Faktor-Authentifizierung konnte nicht konfiguriert werden."
 
 msgid "MFA authentication is required."
 msgstr "MFA-Authentifizierung ist erforderlich."
@@ -4151,10 +4151,10 @@ msgid "The password generator exclude look alike chars should be a boolean type.
 msgstr "Der Kennwortgenerator, der ähnliche Zeichen ausschließt, sollte vom Typ boolean sein."
 
 msgid "The rbacs could not be saved."
-msgstr ""
+msgstr "Die rbacs konnten nicht gespeichert werden."
 
 msgid "Could not save the rbacs, please try again later."
-msgstr ""
+msgstr "Die rbacs konnten nicht gespeichert werden, bitte versuchen Sie es später erneut."
 
 msgid "Record not found"
 msgstr "Eintrag nicht gefunden"
@@ -4187,7 +4187,7 @@ msgid "The control function is not allowed for this UI Action."
 msgstr "Die Steuerfunktion ist für diese UI-Aktion nicht zulässig."
 
 msgid "The control function is not allowed for this Action."
-msgstr ""
+msgstr "Die Steuerfunktion ist für diese Aktion nicht zulässig."
 
 msgid "An action identifier should be a valid UUID."
 msgstr "Ein Aktionsbezeichner sollte eine gültige UUID sein."
@@ -4367,37 +4367,37 @@ msgid "The resource type is not deleted."
 msgstr "Der Ressourcentyp ist nicht gelöscht."
 
 msgid "The max revisions should be a valid integer."
-msgstr ""
+msgstr "Die maximale Anzahl an Revisionen sollte eine gültige Zahl sein."
 
 msgid "The max revisions is required."
-msgstr ""
+msgstr "Die maximale Anzahl an Revisionen ist erforderlich."
 
 msgid "The max revisions should be greater than 0."
-msgstr ""
+msgstr "Die maximale Anzahl an Revisionen sollte größer als 0 sein."
 
 msgid "The max revisions should not exceed the max revisions limit set by the administrator."
-msgstr ""
+msgstr "Die maximale Anzahl an Revisionen sollte die vom Administrator festgelegte Höchstgrenze für Revisionen nicht überschreiten."
 
 msgid "The allow sharing revisions should be a valid boolean."
-msgstr ""
+msgstr "Die Einstellung \"Teilen von Revisionen erlauben\" sollte ein gültiger Boolescher Wert sein."
 
 msgid "The allow sharing revisions is required."
-msgstr ""
+msgstr "Die Einstellung \"Teilen von Revisionen erlauben\" ist erforderlich."
 
 msgid "The allow sharing revisions is not enabled by the administrator."
-msgstr ""
+msgstr "Die Einstellung \"Teilen von Revisionen erlauben\" ist vom Administrator nicht aktiviert."
 
 msgid "Secret revisions settings endpoints are disabled."
-msgstr ""
+msgstr "Endpunkte für Einstellungen zu Secret-Revisions sind deaktiviert."
 
 msgid "The identifier of the user who created the secret revision should be a valid UUID."
-msgstr ""
+msgstr "Der Identifikator des Benutzers, der die Secret-Revision erstellt hat, sollte eine gültige UUID sein."
 
 msgid "The identifier of the user who modified the secret revision should be a valid UUID."
-msgstr ""
+msgstr "Der Identifikator des Benutzers, der die Secret-Revision geändert hat, sollte eine gültige UUID sein."
 
 msgid "Could not save secret revision"
-msgstr ""
+msgstr "Secret-Revision konnte nicht gespeichert werden"
 
 msgid "The self registration setting id should be a valid UUID."
 msgstr "Die Selbstregistrierungs-ID sollte eine gültige UUID sein."
@@ -4538,22 +4538,22 @@ msgid "The test email should be a valid email address."
 msgstr "Die Absender E-Mail sollte eine gültige E-Mail-Adresse sein."
 
 msgid "The tenant ID should be a valid UUID."
-msgstr ""
+msgstr "Die Tenant-ID sollte eine gültige UUID sein."
 
 msgid "The client ID should be a valid UUID."
-msgstr ""
+msgstr "Die Client-ID sollte eine gültige UUID sein."
 
 msgid "The client secret should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Das Client-Geheimnis sollte eine gültige BMP-UTF8-Zeichenkette sein."
 
 msgid "The client secret should not exceed 256 characters."
-msgstr ""
+msgstr "Das Client-Geheimnis sollte 256 Zeichen nicht überschreiten."
 
 msgid "The OAuth2 username should be a valid email address."
-msgstr ""
+msgstr "Der OAuth2-Benutzername muss eine gültige E-Mail-Adresse sein."
 
 msgid "The OAuth2 username should not exceed 256 characters."
-msgstr ""
+msgstr "Der OAuth2-Benutzername darf 256 Zeichen nicht überschreiten."
 
 msgid "The authentication method is required."
 msgstr "Die Authentifizierungsmethode ist erforderlich."
@@ -4568,28 +4568,28 @@ msgid "A test recipient is required."
 msgstr "Ein Test-Empfänger ist erforderlich."
 
 msgid "The tenant ID is required."
-msgstr ""
+msgstr "Die Tenant-ID ist erforderlich."
 
 msgid "The tenant ID should not be empty."
-msgstr ""
+msgstr "Die Tenant-ID sollte nicht leer sein."
 
 msgid "The client ID is required."
-msgstr ""
+msgstr "Die Client-ID ist erforderlich."
 
 msgid "The client ID should not be empty."
-msgstr ""
+msgstr "Die Client-ID sollte nicht leer sein."
 
 msgid "The client secret is required."
-msgstr ""
+msgstr "Das Client-Geheimnis ist erforderlich."
 
 msgid "The client secret should not be empty."
 msgstr "Das Client-Geheimnis darf nicht leer sein."
 
 msgid "The OAuth2 username is required."
-msgstr ""
+msgstr "Der OAuth2-Benutzername ist erforderlich."
 
 msgid "The OAuth2 username should not be empty."
-msgstr ""
+msgstr "Der OAuth2-Benutzername sollte nicht leer sein."
 
 msgid "SMTP settings endpoints disabled."
 msgstr "Endpunkte der SMTP-Einstellungen deaktiviert."
@@ -4646,16 +4646,16 @@ msgid "env variables"
 msgstr "Umgebungsvariablen"
 
 msgid "Tenant ID should be a valid UUID."
-msgstr ""
+msgstr "Die Tenant-ID sollte eine gültige UUID sein."
 
 msgid "Client ID should be a valid UUID."
-msgstr ""
+msgstr "Die Client-ID sollte eine gültige UUID sein."
 
 msgid "Failed to obtain SMTP OAuth2 access token."
-msgstr ""
+msgstr "SMTP-OAuth2-Zugriffs-token konnte nicht abgerufen werden."
 
 msgid "SMTP OAuth2 token response from Microsoft did not contain an access token."
-msgstr ""
+msgstr "Die SMTP-OAuth2-token-Antwort von Microsoft enthielt kein Zugriffs-token."
 
 msgid "Could not validate the smtp settings."
 msgstr "Die SMTP-Einstellungen konnten nicht validiert werden."
@@ -7259,7 +7259,7 @@ msgid "Contact your admin"
 msgstr "Administrator kontaktieren"
 
 msgid "{0} changed the role of {1} to {2}."
-msgstr ""
+msgstr "{0} hat die Rolle von {1} zu {2} geändert."
 
 msgid "{0} can no longer perform administration tasks."
 msgstr "{0} kann keine Administrationsaufgaben mehr durchführen."
@@ -7271,10 +7271,10 @@ msgid "View user in passbolt"
 msgstr "Benutzer in Passbolt anzeigen"
 
 msgid "A new role {0} has been created."
-msgstr ""
+msgstr "Eine neue Rolle {0} wurde erstellt."
 
 msgid "The role {0} has been renamed to {1}."
-msgstr ""
+msgstr "Die Rolle {0} wurde in {1} umbenannt."
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
 msgstr "Dieser Benutzer hat seinen privaten Schlüssel und/oder Passphrase verloren und kann den Wiederherstellungsprozess des Kontos nicht abschließen."
@@ -7475,16 +7475,16 @@ msgid "{0} resources were shared with you."
 msgstr "{0} Ressourcen wurden mit Ihnen geteilt."
 
 msgid "{0} changed your role to {1}."
-msgstr ""
+msgstr "{0} hat Ihre Rolle zu {1} geändert."
 
 msgid "You can no longer perform administration tasks."
-msgstr ""
+msgstr "Sie können keine Administrationsaufgaben mehr durchführen."
 
 msgid "This email is an automatic notification sent by"
 msgstr "Diese E-Mail ist eine automatische Benachrichtigung gesendet von"
 
 msgid "To disable these notifications, contact an administrator."
-msgstr ""
+msgstr "Um diese Benachrichtigungen zu deaktivieren, wenden Sie sich an einen Administrator."
 
 msgid "The locale {0} is not valid or not supported."
 msgstr "Das Gebietsschema {0} ist ungültig oder wird nicht unterstützt."

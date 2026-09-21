@@ -50,7 +50,7 @@ class PasswordExpirySetSettingsService extends PasswordExpirySettingsAbstractSer
         $passwordExpirySetting = $passwordExpirySettingsTable->createOrUpdateSetting(
             $passwordExpirySettingsTable->getProperty(),
             $this->createDTOFromArray($form->getData())->getValue(),
-            $uac
+            $uac,
         );
 
         /** Dispatch settings updated event. */

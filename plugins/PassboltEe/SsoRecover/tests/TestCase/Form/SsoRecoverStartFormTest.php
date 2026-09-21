@@ -70,7 +70,7 @@ class SsoRecoverStartFormTest extends AppTestCase
         $this->assertArrayHasAttributes(['case'], $formErrors);
         $this->assertEquals(
             'The case is not supported. Only "default" case is supported.',
-            $formErrors['case']['invalidCase']
+            $formErrors['case']['invalidCase'],
         );
     }
 }

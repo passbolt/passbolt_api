@@ -75,7 +75,7 @@ class MetadataRotateKeyTagsUpdateServiceTest extends AppTestCaseV5
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataTagDto::fromArray(['slug' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataTagDto::createFromArray(['slug' => 'marketing'])->getClearTextMetadata());
         $expiredTag1 = TagFactory::make()
             ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
             ->persist();
@@ -86,14 +86,14 @@ class MetadataRotateKeyTagsUpdateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($user->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataTagDto::fromArray(['slug' => 'customer support'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataTagDto::createFromArray(['slug' => 'customer support'])->getClearTextMetadata());
         $expiredTag2 = TagFactory::make()
             ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
             ->persist();
 
         $uac = $this->mockAdminAccessControl();
-        $metadataToUpdateForT1 = $this->encryptForMetadataKey(json_encode(MetadataTagDto::fromArray(['slug' => 'f1 marketing updated'])->getClearTextMetadata()));
-        $metadataToUpdateForT2 = $this->encryptForMetadataKey(json_encode(MetadataTagDto::fromArray(['slug' => 'f1 customer support updated'])->getClearTextMetadata()));
+        $metadataToUpdateForT1 = $this->encryptForMetadataKey(json_encode(MetadataTagDto::createFromArray(['slug' => 'f1 marketing updated'])->getClearTextMetadata()));
+        $metadataToUpdateForT2 = $this->encryptForMetadataKey(json_encode(MetadataTagDto::createFromArray(['slug' => 'f1 customer support updated'])->getClearTextMetadata()));
         $data = [
             [
                 'id' => $expiredTag1->get('id'),
@@ -187,7 +187,7 @@ class MetadataRotateKeyTagsUpdateServiceTest extends AppTestCaseV5
             ->persist();
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $uac = $this->makeUac($admin);
-        $metadata = json_encode(MetadataTagDto::fromArray(['slug' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataTagDto::createFromArray(['slug' => 'marketing'])->getClearTextMetadata());
         $data = [
             [
                 'id' => UuidFactory::uuid(),
@@ -211,14 +211,14 @@ class MetadataRotateKeyTagsUpdateServiceTest extends AppTestCaseV5
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $expiredMetadataKey */
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataTagDto::fromArray(['slug' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataTagDto::createFromArray(['slug' => 'marketing'])->getClearTextMetadata());
         $tag = TagFactory::make()
             ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
             ->persist();
 
         try {
             $uac = $this->mockAdminAccessControl();
-            $metadataToUpdate = json_encode(MetadataTagDto::fromArray(['slug' => 'marketing - updated'])->getClearTextMetadata());
+            $metadataToUpdate = json_encode(MetadataTagDto::createFromArray(['slug' => 'marketing - updated'])->getClearTextMetadata());
             $data = [
                 [
                     'id' => $tag->get('id'),
@@ -246,13 +246,13 @@ class MetadataRotateKeyTagsUpdateServiceTest extends AppTestCaseV5
         [$activeMetadataKey] = MetadataKeyFactory::make(2)->withServerPrivateKey()->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $metadata = json_encode(MetadataTagDto::fromArray(['slug' => 'marketing'])->getClearTextMetadata());
+        $metadata = json_encode(MetadataTagDto::createFromArray(['slug' => 'marketing'])->getClearTextMetadata());
         $tag = TagFactory::make()
             ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
             ->persist();
 
         $uac = $this->mockAdminAccessControl();
-        $metadataToUpdateForT1 = $this->encryptForMetadataKey(json_encode(MetadataTagDto::fromArray(['slug' => 'f1 marketing updated'])->getClearTextMetadata()));
+        $metadataToUpdateForT1 = $this->encryptForMetadataKey(json_encode(MetadataTagDto::createFromArray(['slug' => 'f1 marketing updated'])->getClearTextMetadata()));
         $data = [
             [
                 'id' => $tag->get('id'),

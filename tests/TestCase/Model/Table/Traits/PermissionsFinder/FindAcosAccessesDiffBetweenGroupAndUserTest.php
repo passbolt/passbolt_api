@@ -52,7 +52,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
             $g1->id,
-            $u1->id
+            $u1->id,
         );
         $result = $query->all()->count();
 
@@ -73,7 +73,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
             $g1->id,
-            $u1->id
+            $u1->id,
         );
         $diff = $query->all()->extract('aco_foreign_key')->toArray();
 
@@ -95,7 +95,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
             $g1->id,
-            $u1->id
+            $u1->id,
         );
         $diff = $query->all()->extract('aco_foreign_key')->toArray();
 
@@ -116,7 +116,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
             $g1->id,
-            $u1->id
+            $u1->id,
         );
         $diff = $query->all()->extract('aco_foreign_key')->toArray();
 
@@ -137,7 +137,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
             $g1->id,
-            $u1->id
+            $u1->id,
         );
         $diff = $query->all()->extract('aco_foreign_key')->toArray();
 
@@ -159,7 +159,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
             $g1->id,
-            $u1->id
+            $u1->id,
         );
         $diff = $query->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(2, ResourceFactory::count());
@@ -182,7 +182,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
             $g1->id,
-            $u1->id
+            $u1->id,
         );
         $diff = $query->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(3, ResourceFactory::count());
@@ -204,7 +204,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
             $g1->id,
-            $u1->id
+            $u1->id,
         );
         $diff = $query->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(2, ResourceFactory::count());
@@ -228,7 +228,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
             $g1->id,
-            $u1->id
+            $u1->id,
         );
         $diff = $query->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(3, ResourceFactory::count());

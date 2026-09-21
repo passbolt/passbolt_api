@@ -234,14 +234,14 @@ class DirectoryEntriesTableTest extends TestCase
         try {
             $this->DirectoryEntries->updateOrCreate(
                 ['id' => $entry->id, 'directory_name' => 'cn=New,dc=passbolt,dc=com'],
-                Alias::MODEL_USERS
+                Alias::MODEL_USERS,
             );
         } finally {
             // reset original logger
             $driver->setLogger($originalLogger ?? new NullLogger());
         }
 
-        $forUpdateQueries = array_filter($executedSql, fn (string $q) => str_contains($q, 'FOR UPDATE') !== false);
+        $forUpdateQueries = array_filter($executedSql, fn(string $q) => str_contains($q, 'FOR UPDATE') !== false);
         $this->assertNotEmpty($forUpdateQueries, 'Expected at least one SELECT ... FOR UPDATE query to be executed.');
     }
 

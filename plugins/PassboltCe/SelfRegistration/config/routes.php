@@ -31,12 +31,12 @@ $routes->plugin(
         $routes
             ->connect(
                 '/settings/{id}',
-                ['controller' => 'SelfRegistrationDeleteSettings', 'action' => 'deleteSettings']
+                ['controller' => 'SelfRegistrationDeleteSettings', 'action' => 'deleteSettings'],
             )
             ->setPass(['id'])
             ->setMethods(['DELETE']);
 
         $routes->connect('/dry-run', ['controller' => 'SelfRegistrationDryRun', 'action' => 'dryRun'])
             ->setMethods(['POST']);
-    }
+    },
 );

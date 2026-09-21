@@ -16,7 +16,9 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Model\Dto;
 
-class MetadataKeyCreateDto
+use App\Model\Dto\RequestDtoInterface;
+
+class MetadataKeyCreateDto implements RequestDtoInterface
 {
     private string $fingerprint;
 
@@ -34,7 +36,7 @@ class MetadataKeyCreateDto
      * @param string $armoredKey Armored key.
      * @param array $metadataPrivateKeys Metadata private keys data.
      */
-    public function __construct(string $fingerprint, string $armoredKey, array $metadataPrivateKeys)
+    final public function __construct(string $fingerprint, string $armoredKey, array $metadataPrivateKeys)
     {
         $this->fingerprint = $fingerprint;
         $this->armoredKey = $armoredKey;
@@ -55,10 +57,10 @@ class MetadataKeyCreateDto
 
     /**
      * @param array $data Data to transform into DTO.
-     * @return self
+     * @return static
      */
-    public static function fromArray(array $data): self
+    public static function createFromArray(array $data): static
     {
-        return new self($data['fingerprint'], $data['armored_key'], $data['metadata_private_keys']);
+        return new static($data['fingerprint'], $data['armored_key'], $data['metadata_private_keys']);
     }
 }

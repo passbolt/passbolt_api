@@ -54,7 +54,7 @@ class RecoverCompleteService extends AbstractCompleteService implements RecoverC
                 throw new ValidationException(
                     __('Could not update the authentication token data.'),
                     $token,
-                    $this->AuthenticationTokens
+                    $this->AuthenticationTokens,
                 );
             }
 

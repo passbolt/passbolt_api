@@ -87,7 +87,7 @@ class SsoSettingsOAuth2DataFormTest extends AppTestCase
             SsoSettingsOAuth2DataForm::class,
             'data.openid_configuration_path',
             $this->getOauth2DummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -104,7 +104,7 @@ class SsoSettingsOAuth2DataFormTest extends AppTestCase
             SsoSettingsOAuth2DataForm::class,
             'data.client_id',
             $this->getOauth2DummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -121,7 +121,7 @@ class SsoSettingsOAuth2DataFormTest extends AppTestCase
             SsoSettingsOAuth2DataForm::class,
             'data.client_secret',
             $this->getOauth2DummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -137,7 +137,7 @@ class SsoSettingsOAuth2DataFormTest extends AppTestCase
             SsoSettingsOAuth2DataForm::class,
             'data.scope',
             $this->getOauth2DummySettingsData(),
-            $testCases
+            $testCases,
         );
     }
 }

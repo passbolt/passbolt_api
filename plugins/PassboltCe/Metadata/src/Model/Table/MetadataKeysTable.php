@@ -193,7 +193,7 @@ class MetadataKeysTable extends Table
                 ['fingerprint'],
                 __('The fingerprint is already in use.'),
             ),
-            ['errorField' => 'fingerprint']
+            ['errorField' => 'fingerprint'],
         );
         $rules->addCreate(new MaxNoOfActiveMetadataKeysRule(), 'maxNoOfActiveKeys', [
             'errorField' => 'fingerprint',

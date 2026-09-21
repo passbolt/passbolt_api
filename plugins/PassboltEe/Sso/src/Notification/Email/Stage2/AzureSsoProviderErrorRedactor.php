@@ -123,7 +123,7 @@ class AzureSsoProviderErrorRedactor implements SubscribedEmailRedactorInterface
             $recipient->locale,
             function () {
                 return __('Users are unable to log in via Azure SSO');
-            }
+            },
         );
 
         return new Email(
@@ -137,7 +137,7 @@ class AzureSsoProviderErrorRedactor implements SubscribedEmailRedactorInterface
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 

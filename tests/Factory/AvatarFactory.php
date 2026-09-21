@@ -69,7 +69,7 @@ class AvatarFactory extends CakephpBaseFactory
         if (is_null($userFactory)) {
             $userFactory = UserFactory::make()->with(
                 'Profiles',
-                ProfileFactory::make()->without('Avatars')
+                ProfileFactory::make()->without('Avatars'),
             );
         }
 

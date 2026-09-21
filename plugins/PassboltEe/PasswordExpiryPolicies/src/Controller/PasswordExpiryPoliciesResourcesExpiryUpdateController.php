@@ -36,7 +36,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateController extends AppControlle
 
         $resources = $updateService->updateMany(
             $this->User->getAccessControl(),
-            $this->getRequest()->getData()
+            $this->getRequest()->getData(),
         );
 
         $this->success(__('The operation was successful.'), $resources);

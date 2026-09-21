@@ -66,7 +66,7 @@ class PasswordExpiryGetSettingsService extends PasswordExpirySettingsAbstractSer
         if (!$form->execute($data)) {
             throw new FormValidationException(
                 __('Could not validate the password expiry settings.'),
-                $form
+                $form,
             );
         }
         $this->dto = $this->createDTOFromEntity($passwordExpirySettings, $form);

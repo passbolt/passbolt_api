@@ -130,7 +130,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
             // Notify that the user does not have update rights for one of the resources
             throw new BadRequestException(__(
                 'You are not allowed to update this resource: {0}',
-                array_pop($resourceIdsWithNoPermissionForUac)
+                array_pop($resourceIdsWithNoPermissionForUac),
             ));
         }
     }

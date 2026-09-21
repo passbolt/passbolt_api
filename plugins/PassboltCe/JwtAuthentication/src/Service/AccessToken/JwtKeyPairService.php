@@ -40,7 +40,7 @@ class JwtKeyPairService
      */
     public function __construct(
         ?JwtTokenCreateService $secretService = null,
-        ?JwksGetService $publicService = null
+        ?JwksGetService $publicService = null,
     ) {
         $this->secretService = $secretService ?? new JwtTokenCreateService();
         $this->publicService = $publicService ?? new JwksGetService();
@@ -126,7 +126,7 @@ class JwtKeyPairService
             if ($secretKeySize < $minSecretKeySize) {
                 throw new Exception(__(
                     'The JWT private key should be at least {0} bytes long.',
-                    $this->secretService::JWT_KEY_LENGTH
+                    $this->secretService::JWT_KEY_LENGTH,
                 ));
             }
 

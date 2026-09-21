@@ -105,7 +105,7 @@ class MetadataSessionKeysTableTest extends AppTestCaseV5
             'id',
             $this->getDummyMetadataSessionKeysData(),
             $this->getEntityFieldOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -124,7 +124,7 @@ class MetadataSessionKeysTableTest extends AppTestCaseV5
             'user_id',
             $this->getDummyMetadataSessionKeysData(),
             $this->getEntityFieldOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -152,7 +152,7 @@ class MetadataSessionKeysTableTest extends AppTestCaseV5
             'data',
             $this->getDummyMetadataSessionKeysData(),
             $this->getEntityFieldOptions(),
-            $testCases
+            $testCases,
         );
     }
 

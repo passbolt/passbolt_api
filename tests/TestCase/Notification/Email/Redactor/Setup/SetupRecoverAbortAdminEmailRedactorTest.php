@@ -32,7 +32,7 @@ class SetupRecoverAbortAdminEmailRedactorTest extends AppIntegrationTestCase
             [
                 RecoverAbortService::RECOVER_ABORT_EVENT_NAME,
             ],
-            (new SetupRecoverAbortAdminEmailRedactor())->getSubscribedEvents()
+            (new SetupRecoverAbortAdminEmailRedactor())->getSubscribedEvents(),
         );
     }
 }

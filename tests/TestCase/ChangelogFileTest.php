@@ -128,7 +128,7 @@ class ChangelogFileTest extends TestCase
         $this->appendErrorIf(
             substr($line5, $closingBracketPosition + 1, 3) !== ' - ',
             'Tag and date should be separated by a -',
-            $pointer
+            $pointer,
         );
 
         // The date should be in Y-M-d format
@@ -156,7 +156,7 @@ class ChangelogFileTest extends TestCase
         $this->appendErrorIf($line[0] !== '###', 'The change section should start with ### ', $position);
         $this->appendErrorIf(!in_array(
             $line[1],
-            self::SECTION_NAME_ALLOWED
+            self::SECTION_NAME_ALLOWED,
         ), 'The sections allowed are: ' . implode(', ', self::SECTION_NAME_ALLOWED), $position);
 
         $position++;
@@ -166,7 +166,7 @@ class ChangelogFileTest extends TestCase
             $this->appendErrorIf(
                 substr($line, 2, 3) !== 'PB-' && substr($line, 2, 10) !== 'Renovate: ',
                 'Each line should start with a ticket number or "Renovate: "',
-                $position
+                $position,
             );
             $position++;
         }

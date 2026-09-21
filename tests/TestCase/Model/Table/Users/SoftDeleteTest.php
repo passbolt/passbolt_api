@@ -18,13 +18,16 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Users;
 
 use App\Model\Entity\Permission;
+use App\Model\Table\UsersTable;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
+use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
+use RuntimeException;
 
 class SoftDeleteTest extends AppTestCase
 {
@@ -493,5 +496,44 @@ class SoftDeleteTest extends AppTestCase
         $this->assertSame(0, SecretRevisionFactory::find()->where(['id' => $resourceToDelete->secret_revisions[0]->id])->count());
         $this->assertSame(1, SecretRevisionFactory::find()->where(['id' => $resourceToMaintain->secret_revisions[0]->id])->count());
         $this->assertSame(1, SecretFactory::find()->where(['resource_id' => $resourceToMaintain->id])->count());
+    }
+
+    public function testUsersSoftDelete_AfterSoftDeleteEvent_DispatchedWithUserAlreadyMarkedDeleted(): void
+    {
+        $user = UserFactory::make()->user()->persist();
+
+        $observed = null;
+        $this->Users->getEventManager()->on(
+            UsersTable::EVENT_MODEL_USERS_AFTER_SOFT_DELETE,
+            function (Event $event) use (&$observed): void {
+                /** @var \App\Model\Entity\User $subject */
+                $subject = $event->getSubject();
+                $observed = $subject->get('deleted');
+            },
+        );
+
+        $this->Users->softDelete($user);
+
+        $this->assertTrue($observed);
+    }
+
+    public function testUsersSoftDelete_AfterSoftDeleteEvent_ListenerFailure_UserRemainsMarkedDeleted(): void
+    {
+        $user = UserFactory::make()->user()->persist();
+
+        $this->Users->getEventManager()->on(
+            UsersTable::EVENT_MODEL_USERS_AFTER_SOFT_DELETE,
+            function (): void {
+                throw new RuntimeException('boom');
+            },
+        );
+
+        try {
+            $this->Users->softDelete($user);
+            $this->fail('Listener should have thrown.');
+        } catch (RuntimeException) {
+        }
+
+        $this->assertUserIsSoftDeleted($user->id);
     }
 }

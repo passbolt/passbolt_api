@@ -17,23 +17,45 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Controller;
 
 use App\Controller\AppController;
+use Cake\Controller\Attribute\RequestToDto;
 use Passbolt\Metadata\Model\Dto\MetadataPrivateKeysCreateManyDto;
 use Passbolt\Metadata\Service\MetadataPrivateKeysCreateService;
 
 class MetadataMissingPrivateKeysShareController extends AppController
 {
     /**
-     * Share/create given missing private key(s) for one or more users.
+     * @inheritDoc
+     */
+    public function implementedEvents(): array
+    {
+        return parent::implementedEvents() + ['Controller.startup' => 'startup'];
+    }
+
+    /**
+     * Asserts the request before it is mapped to the DTO.
      *
      * @return void
+     * @throws \Cake\Http\Exception\NotFoundException if request is not JSON
+     * @throws \Cake\Http\Exception\BadRequestException if request data is not an array or is empty
+     * @throws \Cake\Http\Exception\ForbiddenException if the user is not an administrator
      */
-    public function share()
+    public function startup(): void
     {
         $this->assertJson();
         $this->assertNotEmptyArrayData();
         $this->User->assertIsAdmin();
+    }
 
-        $dto = new MetadataPrivateKeysCreateManyDto($this->getRequest()->getData());
+    /**
+     * Share/create given missing private key(s) for one or more users.
+     *
+     * @param \Passbolt\Metadata\Model\Dto\MetadataPrivateKeysCreateManyDto $dto The private keys to create.
+     * @return void
+     */
+    public function share(
+        #[RequestToDto]
+        MetadataPrivateKeysCreateManyDto $dto,
+    ) {
         (new MetadataPrivateKeysCreateService())->createMany($this->User->getAccessControl(), $dto);
 
         $this->success(__('The operation was successful.'), []);

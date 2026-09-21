@@ -98,7 +98,7 @@ class FixDirectorySyncLegacyFieldsMappingServiceTest extends AppTestCase
         // Assert fields mapping is updated to v4 default settings
         /** @var \App\Model\Entity\OrganizationSetting $result */
         $result = OrganizationSettingFactory::find()->where(
-            ['property' => DirectoryOrgSettings::ORG_SETTINGS_PROPERTY]
+            ['property' => DirectoryOrgSettings::ORG_SETTINGS_PROPERTY],
         )->first();
         $expectedFieldsMapping = DirectoryOrgSettings::getDefaultSettings()['fieldsMapping'];
         $fieldsMapping = json_decode($result['value'], true)['fieldsMapping'];

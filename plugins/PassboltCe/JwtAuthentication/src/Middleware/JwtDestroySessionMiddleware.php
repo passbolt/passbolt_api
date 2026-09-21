@@ -33,7 +33,7 @@ class JwtDestroySessionMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
         if ((new JwtRequestDetectionService($request))->useJwtAuthentication()) {

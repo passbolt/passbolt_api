@@ -49,9 +49,9 @@ class AllSyncActionDisableUserTest extends DirectorySyncIntegrationTestCase
         $this->action = new AllSyncAction(
             new PasswordExpiryExpireResourcesService(
                 new PasswordExpiryValidationService(
-                    new PasswordExpiryGetSettingsService()
-                )
-            )
+                    new PasswordExpiryGetSettingsService(),
+                ),
+            ),
         );
     }
 

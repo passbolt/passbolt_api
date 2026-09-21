@@ -589,7 +589,7 @@ class QueryStringComponent extends Component
     {
         if (!Validation::uuid($groupId)) {
             throw new CakeException(
-                __('"{0}" is not a valid group id for filter {1}.', $groupId, $filterName)
+                __('"{0}" is not a valid group id for filter {1}.', $groupId, $filterName),
             );
         }
 
@@ -630,7 +630,7 @@ class QueryStringComponent extends Component
         $timestamp = $values;
         if (!self::isTimestamp($timestamp)) {
             throw new CakeException(
-                __('"{0}" is not a valid timestamp for filter {1}.', $timestamp, $filterName)
+                __('"{0}" is not a valid timestamp for filter {1}.', $timestamp, $filterName),
             );
         }
 

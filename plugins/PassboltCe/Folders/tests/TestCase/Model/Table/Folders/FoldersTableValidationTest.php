@@ -43,12 +43,12 @@ class FoldersTableValidationTest extends TestCase
     {
         $folder = $this->Folders->newEntity(
             ['name' => "shared\u{200B}folder"],
-            ['accessibleFields' => ['name' => true]]
+            ['accessibleFields' => ['name' => true]],
         );
         $this->assertArrayHasKey('name', $folder->getErrors());
         $this->assertSame(
             'The string should not contain invisible characters.',
-            $folder->getErrors()['name']['noInvisibleCharacters']
+            $folder->getErrors()['name']['noInvisibleCharacters'],
         );
     }
 }

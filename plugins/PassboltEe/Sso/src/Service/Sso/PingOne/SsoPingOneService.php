@@ -51,7 +51,7 @@ class SsoPingOneService extends SsoOAuth2Service
                 'environmentId' => $data->environment_id,
                 'emailClaim' => $data->email_claim,
             ],
-            ['httpClient' => $this->getCustomHttpClient()]
+            ['httpClient' => $this->getCustomHttpClient()],
         );
     }
 

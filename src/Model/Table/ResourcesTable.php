@@ -47,6 +47,7 @@ use Passbolt\Metadata\Model\Rule\IsV4ToV5UpgradeAllowedRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdNotExpiredRule;
+use Passbolt\OfflineMode\Model\Table\OfflineItemsTable;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 use Throwable;
@@ -89,6 +90,8 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
     public const URI_MAX_LENGTH = 1024;
     public const USERNAME_MAX_LENGTH = 255;
 
+    public const EVENT_MODEL_RESOURCE_AFTER_SOFT_DELETE = 'Model.Resource.afterSoftDelete';
+
     /**
      * Initialize method
      *
@@ -112,6 +115,11 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
         ]);
         $this->hasOne('Favorites', [
             'foreignKey' => 'foreign_key',
+        ]);
+        $this->hasOne('Offline', [
+            'className' => 'Passbolt/OfflineMode.OfflineItems',
+            'foreignKey' => 'foreign_key',
+            'conditions' => ['Offline.foreign_model' => OfflineItemsTable::FOREIGN_MODEL_RESOURCE],
         ]);
         $this->hasOne('Modifier', [
             'className' => 'Users',
@@ -162,7 +170,7 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
             ->maxLength(
                 'name',
                 self::NAME_MAX_LENGTH,
-                __('The name length should be maximum {0} characters.', self::NAME_MAX_LENGTH)
+                __('The name length should be maximum {0} characters.', self::NAME_MAX_LENGTH),
             )
             ->requirePresence('name', 'create', __('A name is required.'))
             ->allowEmptyString('name', __('The name should not be empty.'), false)
@@ -173,7 +181,7 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
             ->maxLength(
                 'username',
                 self::USERNAME_MAX_LENGTH,
-                __('The username length should be maximum {0} characters.', self::USERNAME_MAX_LENGTH)
+                __('The username length should be maximum {0} characters.', self::USERNAME_MAX_LENGTH),
             )
             ->allowEmptyString('username');
 
@@ -182,7 +190,7 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
             ->maxLength(
                 'uri',
                 self::URI_MAX_LENGTH,
-                __('The uri length should be maximum {0} characters.', self::URI_MAX_LENGTH)
+                __('The uri length should be maximum {0} characters.', self::URI_MAX_LENGTH),
             )
             ->allowEmptyString('uri');
 
@@ -191,7 +199,7 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
             ->maxLength(
                 'description',
                 self::DESCRIPTION_MAX_LENGTH,
-                __('The description length should be maximum {0} characters.', self::DESCRIPTION_MAX_LENGTH)
+                __('The description length should be maximum {0} characters.', self::DESCRIPTION_MAX_LENGTH),
             )
             ->allowEmptyString('description');
 
@@ -208,28 +216,28 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
             ->requirePresence(
                 'created_by',
                 'create',
-                __('The identifier of the user who created the resource is required.')
+                __('The identifier of the user who created the resource is required.'),
             )
             ->allowEmptyString(
                 'created_by',
                 __('The identifier of the user who created the resource should not be empty.'),
-                false
+                false,
             );
 
         $validator
             ->uuid(
                 'modified_by',
-                __('The identifier of the user who last modified the resource should be a valid UUID.')
+                __('The identifier of the user who last modified the resource should be a valid UUID.'),
             )
             ->requirePresence(
                 'modified_by',
                 'create',
-                __('The identifier of the user who last modified the resource required.')
+                __('The identifier of the user who last modified the resource required.'),
             )
             ->allowEmptyString(
                 'modified_by',
                 __('The identifier of the user who last modified the resource should not be empty.'),
-                false
+                false,
             );
 
         $validator
@@ -237,7 +245,7 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
             ->requirePresence('resource_type_id', 'create', __('A resource type identifier is required.'))
             ->inList('resource_type_id', ResourceType::getV4ResourceTypes(), __(
                 'The resource type should be one of the following: {0}.',
-                implode(', ', ResourceType::V4_RESOURCE_TYPE_SLUGS)
+                implode(', ', ResourceType::V4_RESOURCE_TYPE_SLUGS),
             ));
 
         // Associated fields
@@ -248,7 +256,7 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
                 'permissions',
                 1,
                 __('The permissions should contain only the permission of the owner.'),
-                'create'
+                'create',
             );
 
         $validator
@@ -290,14 +298,14 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
             ->allowEmptyString('metadata_key_type')
             ->inList('metadata_key_type', ['user_key', 'shared_key'], __(
                 'The metadata key type should be one of the following: {0}.',
-                implode(', ', ['user_key', 'shared_key'])
+                implode(', ', ['user_key', 'shared_key']),
             ));
 
         $validator
             ->remove('resource_type_id', 'inList') // clear v4 validation rules
             ->inList('resource_type_id', ResourceType::getV5ResourceTypes(), __(
                 'The resource type should be one of the following: {0}.',
-                implode(', ', ResourceType::V5_RESOURCE_TYPE_SLUGS)
+                implode(', ', ResourceType::V5_RESOURCE_TYPE_SLUGS),
             ));
 
         return $validator;
@@ -398,7 +406,7 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
             [
                 'errorField' => 'metadata_key_type',
                 'message' => __('A resource of type personal cannot be shared with other users or a group.'),
-            ]
+            ],
         );
 
         $rules->addUpdate(new IsV4ToV5UpgradeAllowedRule(), 'v4_to_v5_upgrade_allowed', [
@@ -623,7 +631,7 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
         }
 
         // Notify other components about the resource soft delete.
-        $event = new Event('Model.Resource.afterSoftDelete', $resource);
+        $event = new Event(self::EVENT_MODEL_RESOURCE_AFTER_SOFT_DELETE, $resource);
         $this->getEventManager()->dispatch($event);
 
         return true;

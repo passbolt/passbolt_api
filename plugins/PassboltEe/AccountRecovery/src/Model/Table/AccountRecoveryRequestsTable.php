@@ -127,7 +127,7 @@ class AccountRecoveryRequestsTable extends Table implements TableCleanupProvider
             ->inList(
                 'status',
                 AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_STATUSES,
-                __('This status is not supported.')
+                __('This status is not supported.'),
             )
             ->maxLength('status', 36, __('The status length should be maximum {0} characters.', 36))
             ->requirePresence('status', 'create', __('A status is required.'))
@@ -157,12 +157,12 @@ class AccountRecoveryRequestsTable extends Table implements TableCleanupProvider
             ->requirePresence(
                 'created_by',
                 'create',
-                __('The identifier of the user who created the request is required.')
+                __('The identifier of the user who created the request is required.'),
             )
             ->notEmptyString(
                 'created_by',
                 __('The identifier of the user who created the request should not be empty.'),
-                false
+                false,
             );
 
         $validator
@@ -170,12 +170,12 @@ class AccountRecoveryRequestsTable extends Table implements TableCleanupProvider
             ->requirePresence(
                 'modified_by',
                 'create',
-                __('The identifier of the user who modified the request is required.')
+                __('The identifier of the user who modified the request is required.'),
             )
             ->notEmptyString(
                 'modified_by',
                 __('The identifier of the user who modified the request should not be empty.'),
-                false
+                false,
             );
 
         return $validator;
@@ -442,7 +442,7 @@ class AccountRecoveryRequestsTable extends Table implements TableCleanupProvider
     public function updateStatusAndValidateEntity(
         UserAccessControl $uac,
         AccountRecoveryRequest $requestEntity,
-        string $responseStatus
+        string $responseStatus,
     ): AccountRecoveryRequest {
         /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $requestEntity */
         $requestEntity = $this->patchEntity($requestEntity, [

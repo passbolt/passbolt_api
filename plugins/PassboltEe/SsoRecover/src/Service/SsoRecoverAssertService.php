@@ -60,7 +60,7 @@ class SsoRecoverAssertService
         string $code,
         string $ip,
         string $userAgent,
-        string $provider
+        string $provider,
     ): string {
         try {
             $resourceOwner = $ssoService->getResourceOwner($code);
@@ -99,7 +99,7 @@ class SsoRecoverAssertService
         $ssoAuthToken = (new SsoAuthenticationTokenSetService())->createOrFail(
             $uac,
             SsoState::TYPE_SSO_RECOVER,
-            $ssoService->getSettings()->id
+            $ssoService->getSettings()->id,
         );
 
         return Router::url("/sso/recover/{$provider}/success?token={$ssoAuthToken->token}", true);

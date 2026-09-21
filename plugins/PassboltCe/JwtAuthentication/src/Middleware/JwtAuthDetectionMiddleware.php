@@ -41,7 +41,7 @@ class JwtAuthDetectionMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         $usesJWTAuthentication = (new JwtRequestDetectionService($request))->useJwtAuthentication();
 
@@ -52,7 +52,7 @@ class JwtAuthDetectionMiddleware implements MiddlewareInterface
         /** @var \Cake\Http\ServerRequest $request */
         $request = $request->withAttribute(
             JwtRequestDetectionService::IS_JWT_AUTH_REQUEST,
-            $usesJWTAuthentication
+            $usesJWTAuthentication,
         );
 
         return $handler->handle($request);

@@ -68,7 +68,7 @@ class ScimGetSettingsService extends ScimBaseSettingsService
         if (!$form->execute($value, ['newRecord' => false])) {
             $validationException = new FormValidationException(
                 __('Could not validate the SCIM settings found in database.'),
-                $form
+                $form,
             );
 
             throw new InternalErrorException($validationException->getMessage(), 500, $validationException);

@@ -135,7 +135,7 @@ class ScimUsersTableTest extends AppTestCase
         $result = $this->ScimUsers
             ->findForScim(
                 [$this->ScimUsers->aliasField('id') => $user->id],
-                findDeleted: true
+                findDeleted: true,
             )
             ->first();
 

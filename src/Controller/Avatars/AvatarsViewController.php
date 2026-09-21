@@ -41,7 +41,7 @@ class AvatarsViewController extends AppController
     public function view(
         string $id,
         string $format,
-        FilesystemAdapter $filesystemAdapter
+        FilesystemAdapter $filesystemAdapter,
     ): Response {
         $formatIsValid = $this->validateImageFormat($format);
         if ($formatIsValid === false) {

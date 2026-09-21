@@ -120,7 +120,7 @@ class FoldersRelationsTable extends Table implements TableCleanupProviderInterfa
         $validator
             ->inList('foreign_model', self::ALLOWED_FOREIGN_MODELS, __(
                 'The child object type should be one of the following: {0}.',
-                implode(', ', self::ALLOWED_FOREIGN_MODELS)
+                implode(', ', self::ALLOWED_FOREIGN_MODELS),
             ))
             ->requirePresence('foreign_model', 'create', __('The child object type is required.'))
             ->notEmptyString('foreign_model', __('The child object type should not be empty.'));
@@ -154,9 +154,9 @@ class FoldersRelationsTable extends Table implements TableCleanupProviderInterfa
         $rules->addCreate(
             $rules->isUnique(
                 ['foreign_id', 'user_id'],
-                __('A folder relation already exists for the given child object and user.')
+                __('A folder relation already exists for the given child object and user.'),
             ),
-            'folder_relation_unique'
+            'folder_relation_unique',
         );
         $rules->addCreate([$this, 'foreignIdExistsRule'], 'foreign_model_exists', [
             'errorField' => 'foreign_id',
@@ -453,7 +453,7 @@ class FoldersRelationsTable extends Table implements TableCleanupProviderInterfa
     public function getItemFoldersParentIdsInUsersTrees(
         array $usersIds,
         string $foreignId,
-        ?bool $excludeRoot = false
+        ?bool $excludeRoot = false,
     ): array {
         $conditions = [
             'user_id IN' => $usersIds,

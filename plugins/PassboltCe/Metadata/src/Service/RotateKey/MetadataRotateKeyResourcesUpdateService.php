@@ -95,13 +95,13 @@ class MetadataRotateKeyResourcesUpdateService extends AbstractMetadataRotateKeyU
             $this->handleSaveManyValidationException(
                 $exception,
                 $entities,
-                __('The resource metadata key data could not be updated.')
+                __('The resource metadata key data could not be updated.'),
             );
         } catch (Exception $exception) {
             throw new InternalErrorException(
                 __('The resource metadata key data could not be updated.'),
                 null,
-                $exception
+                $exception,
             );
         }
     }

@@ -155,7 +155,7 @@ class PasswordPoliciesSettingsDto
         ?string $createdBy,
         ?DateTime $modified,
         ?string $modifiedBy,
-        ?string $source
+        ?string $source,
     ) {
         $this->default_generator = $defaultGenerator;
         $this->external_dictionary_check = (bool)$externalDictionaryCheck;
@@ -188,7 +188,7 @@ class PasswordPoliciesSettingsDto
             $data['created_by'] ?? null,
             $data['modified'] ?? null,
             $data['modified_by'] ?? null,
-            $data['source'] ?? null
+            $data['source'] ?? null,
         );
     }
 

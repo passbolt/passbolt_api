@@ -82,7 +82,7 @@ abstract class AbstractScimController extends AppController
             'SCIM endpoint caught non-HTTP exception (%s, code=%s): %s',
             get_class($e),
             var_export($code, true),
-            $e->getMessage()
+            $e->getMessage(),
         ));
         ScimLog::error($e->getTraceAsString());
 

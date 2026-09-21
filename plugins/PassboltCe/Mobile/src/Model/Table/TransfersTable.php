@@ -87,7 +87,7 @@ class TransfersTable extends Table
             ->lengthBetween(
                 'hash',
                 [Transfer::TRANSFER_HASH_SIZE, Transfer::TRANSFER_HASH_SIZE],
-                __('The hash should be {0} characters in length.', Transfer::TRANSFER_HASH_SIZE)
+                __('The hash should be {0} characters in length.', Transfer::TRANSFER_HASH_SIZE),
             )
             ->requirePresence('hash', 'create', __('The data transfer hash is required.'));
 
@@ -107,7 +107,7 @@ class TransfersTable extends Table
             ->lessThan(
                 'current_page',
                 Transfer::TRANSFER_MAX_PAGES,
-                __('The current page cannot be greater than {0}', Transfer::TRANSFER_MAX_PAGES)
+                __('The current page cannot be greater than {0}', Transfer::TRANSFER_MAX_PAGES),
             );
 
         $validator
@@ -117,7 +117,7 @@ class TransfersTable extends Table
             ->lessThan(
                 'total_pages',
                 Transfer::TRANSFER_MAX_PAGES,
-                __('The total number of pages cannot be greater than {0}', Transfer::TRANSFER_MAX_PAGES)
+                __('The total number of pages cannot be greater than {0}', Transfer::TRANSFER_MAX_PAGES),
             );
 
         $validator
@@ -125,7 +125,7 @@ class TransfersTable extends Table
             ->requirePresence('status', true, __('The status is required.'))
             ->inList('status', Transfer::TRANSFER_STATUSES, __(
                 'The status must be one of the following: {0}.',
-                implode(', ', Transfer::TRANSFER_STATUSES)
+                implode(', ', Transfer::TRANSFER_STATUSES),
             ));
 
         return $validator;

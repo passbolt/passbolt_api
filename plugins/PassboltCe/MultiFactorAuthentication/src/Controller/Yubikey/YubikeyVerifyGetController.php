@@ -38,7 +38,7 @@ class YubikeyVerifyGetController extends MfaVerifyController
     public function get(
         SessionIdentificationServiceInterface $sessionIdentificationService,
         MfaFormInterface $verifyForm,
-        RememberAMonthSettingInterface $rememberMeForAMonthSetting
+        RememberAMonthSettingInterface $rememberMeForAMonthSetting,
     ) {
         $this->_handleVerifiedNotRequired($sessionIdentificationService, $rememberMeForAMonthSetting);
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_YUBIKEY);

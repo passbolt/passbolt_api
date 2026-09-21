@@ -48,7 +48,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'show_comment',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -62,7 +62,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'show_description',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -76,7 +76,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'show_secret',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -90,7 +90,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'show_uri',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -104,7 +104,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'show_username',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -118,7 +118,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'send_comment_add',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -132,7 +132,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'send_password_create',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -146,7 +146,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'send_password_share',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -160,7 +160,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'send_password_update',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -174,7 +174,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'send_password_delete',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -188,7 +188,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'send_user_create',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -202,7 +202,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'send_user_recover',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -216,7 +216,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'send_group_delete',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -230,7 +230,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'send_group_user_add',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -244,7 +244,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'send_group_user_delete',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -258,7 +258,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'send_group_user_update',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -272,7 +272,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'send_group_manager_update',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -286,7 +286,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'send_admin_user_setup_completed',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -300,7 +300,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             EmailNotificationSettingsForm::class,
             'send_admin_user_recover_abort',
             self::getDummyData(),
-            $testCases
+            $testCases,
         );
     }
 

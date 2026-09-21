@@ -44,7 +44,7 @@ class UserPassphrasePoliciesSettingsForm extends Form
             ->requirePresence(
                 'entropy_minimum',
                 true,
-                __('The entropy minimum is required.')
+                __('The entropy minimum is required.'),
             )
             ->range(
                 'entropy_minimum',
@@ -52,19 +52,19 @@ class UserPassphrasePoliciesSettingsForm extends Form
                 __(
                     'The entropy minimum should be between {0} and {1}.',
                     (string)self::ENTROPY_MINIMUM_VALUE_MIN,
-                    (string)self::ENTROPY_MINIMUM_VALUE_MAX
-                )
+                    (string)self::ENTROPY_MINIMUM_VALUE_MAX,
+                ),
             );
 
         $validator
             ->requirePresence(
                 'external_dictionary_check',
                 true,
-                __('The external dictionary check is required.')
+                __('The external dictionary check is required.'),
             )
             ->boolean(
                 'external_dictionary_check',
-                __('The external dictionary check should be a boolean.')
+                __('The external dictionary check should be a boolean.'),
             );
 
         return $validator;

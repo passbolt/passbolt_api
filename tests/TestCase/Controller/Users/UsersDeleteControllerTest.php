@@ -93,7 +93,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(400);
         $this->assertStringContainsString(
             'sole group manager',
-            $this->_responseJsonHeader->message
+            $this->_responseJsonHeader->message,
         );
     }
 
@@ -851,15 +851,15 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
         $operatorFullName = $operator->profile->full_name;
         $this->assertEmailInBatchContains(
             "You deleted administrator {$adminFullName}",
-            $operator->username
+            $operator->username,
         );
         $this->assertEmailInBatchContains(
             "The administrator {$adminFullName} ({$adminDeleted->username}) is now deleted from the passbolt organisation.",
-            $operator->username
+            $operator->username,
         );
         $this->assertEmailInBatchContains(
             "{$operatorFullName} deleted administrator {$adminFullName}",
-            $otherAdmin->username
+            $otherAdmin->username,
         );
     }
 
@@ -883,28 +883,28 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
         $operatorFullName = $operator->profile->full_name;
         $this->assertEmailInBatchContains(
             "You deleted user {$userFullName}",
-            $operator->username
+            $operator->username,
         );
         $this->assertEmailInBatchContains(
             "The user {$userFullName} ({$userDeleted->username}) is now deleted from the passbolt organisation.",
-            $operator->username
+            $operator->username,
         );
         $this->assertEmailInBatchContains(
             "{$operatorFullName} deleted user {$userFullName}",
-            $otherAdmin->username
+            $otherAdmin->username,
         );
         $this->assertEmailInBatchContains(
             "The user {$userFullName} ({$userDeleted->username}) is now deleted from the passbolt organisation.",
-            $otherAdmin->username
+            $otherAdmin->username,
         );
         // Operator (the one who did the delete) does not see the "get in touch" suspicion prompt.
         $this->assertEmailInBatchNotContains(
             'Feel free to get in touch with the administrator at the origin of the operation',
-            $operator->username
+            $operator->username,
         );
         $this->assertEmailInBatchContains(
             'Feel free to get in touch with the administrator at the origin of the operation',
-            $otherAdmin->username
+            $otherAdmin->username,
         );
     }
 }

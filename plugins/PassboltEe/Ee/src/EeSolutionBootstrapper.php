@@ -54,6 +54,7 @@ class EeSolutionBootstrapper extends BaseSolutionBootstrapper
         Configure::write('passbolt.plugins.metadata.enabled', Configure::read('passbolt.v5.enabled'));
         $this->addFeaturePluginIfEnabled($app, 'Metadata');
         $this->addFeaturePluginIfEnabled($app, 'Rbacs');
+        $this->addFeaturePluginIfEnabled($app, 'OfflineMode');
         $app->addPlugin('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
         $app->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
         $app->addPlugin('Passbolt/InFormIntegration', ['bootstrap' => true, 'routes' => false]);
@@ -108,5 +109,6 @@ class EeSolutionBootstrapper extends BaseSolutionBootstrapper
         $this->addFeaturePluginIfEnabled($app, 'ExportPolicies');
         $this->addFeaturePluginIfEnabled($app, 'Scim');
         $this->addFeaturePluginIfEnabled($app, 'SecretRevisions');
+        $this->addFeaturePluginIfEnabled($app, 'OfflineModePolicies');
     }
 }

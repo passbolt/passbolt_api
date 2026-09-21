@@ -55,7 +55,7 @@ class MfaDuoCallbackAuthenticationTokenService
         UserAccessControl $uac,
         string $tokenType,
         string $token,
-        string $duoState
+        string $duoState,
     ): AuthenticationToken {
         if (!Validation::uuid($token)) {
             throw new InvalidArgumentException('The authentication token should be a valid UUID.');
@@ -84,13 +84,13 @@ class MfaDuoCallbackAuthenticationTokenService
     private function consumeAuthenticationTokenOrFail(
         UserAccessControl $uac,
         string $tokenType,
-        string $token
+        string $token,
     ): AuthenticationToken {
         try {
             return (new AuthenticationTokenConsumeService())->consumeActiveNotExpiredOrFail(
                 $token,
                 $uac->getId(),
-                $tokenType
+                $tokenType,
             );
         } catch (Throwable $th) {
             $msg = __('The token should reference an active Duo callback authentication token.');
@@ -109,7 +109,7 @@ class MfaDuoCallbackAuthenticationTokenService
      */
     private function assertDuoStateMatchesAuthenticationTokenState(
         AuthenticationToken $authToken,
-        string $duoState
+        string $duoState,
     ): void {
         $authTokenState = $authToken->getDataValue('state');
         if (empty($authTokenState)) {

@@ -35,7 +35,7 @@ class MfaPoliciesSettingsSetController extends AppController
     {
         if (!$this->User->isAdmin()) {
             throw new ForbiddenException(
-                __('Only administrators are allowed to create/update MFA policies settings.')
+                __('Only administrators are allowed to create/update MFA policies settings.'),
             );
         }
 

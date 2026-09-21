@@ -35,7 +35,7 @@ class PasswordPoliciesUpdateSetSettingsController extends AppController
         $service = new PasswordPoliciesUpdateSetSettingsService();
         $settings = $service->createOrUpdate(
             $this->User->getExtendAccessControl(),
-            $this->getRequest()->getData()
+            $this->getRequest()->getData(),
         );
 
         $this->success(__('The operation was successful.'), $settings);

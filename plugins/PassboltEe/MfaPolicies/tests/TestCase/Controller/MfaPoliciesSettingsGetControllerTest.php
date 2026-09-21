@@ -101,7 +101,7 @@ class MfaPoliciesSettingsGetControllerTest extends AppIntegrationTestCase
         $this->assertSame(true, $response->remember_me_for_a_month);
         $this->assertObjectHasAttributes(
             ['id', 'created_by', 'modified_by', 'created', 'modified'],
-            $response
+            $response,
         );
     }
 
@@ -118,7 +118,7 @@ class MfaPoliciesSettingsGetControllerTest extends AppIntegrationTestCase
         $this->assertSame(true, $response->remember_me_for_a_month);
         $this->assertObjectHasAttributes(
             ['id', 'created_by', 'modified_by', 'created', 'modified'],
-            $response
+            $response,
         );
     }
 }

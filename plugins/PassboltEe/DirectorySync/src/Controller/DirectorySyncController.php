@@ -79,7 +79,7 @@ class DirectorySyncController extends DirectoryController
      */
     protected function _synchronize(
         ResourcesExpireResourcesServiceInterface $expireResourcesService,
-        bool $dryRun = true
+        bool $dryRun = true,
     ): array {
         $res = [];
         $allSyncAction = new AllSyncAction($expireResourcesService);

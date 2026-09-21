@@ -103,7 +103,7 @@ interface OpenPGPBackendInterface
      * @param string $passphrase passphrase
      * @return true if success
      */
-    public function setSignKeyFromFingerprint(string $fingerprint, string $passphrase): bool;
+    public function setSignKeyFromFingerprint(string $fingerprint, string $passphrase): true;
 
     /**
      * Import a key into the local keyring.

@@ -72,7 +72,7 @@ class GetUserLocaleServiceTest extends TestCase
 
         $this->assertSame(
             $expected,
-            $service->getLocale('hasLocaleSetting@test.test')
+            $service->getLocale('hasLocaleSetting@test.test'),
         );
     }
 }

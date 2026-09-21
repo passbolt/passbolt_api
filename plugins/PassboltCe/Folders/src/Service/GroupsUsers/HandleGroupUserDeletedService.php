@@ -27,6 +27,12 @@ use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 class HandleGroupUserDeletedService
 {
     /**
+     * Chunk size for `IN (...)` clauses on `folders_relations` writes. Keeps each statement in
+     * the range-scan regime so the optimiser can't degrade to a full table scan on a large id list.
+     */
+    private const DELETE_CHUNK_SIZE = 500;
+
+    /**
      * @var \App\Model\Table\PermissionsTable
      */
     private PermissionsTable $permissionsTable;
@@ -66,11 +72,22 @@ class HandleGroupUserDeletedService
      */
     private function removeLostAccessesResourcesFromUserTree(GroupsUser $groupUser): void
     {
-        $this->foldersRelationsTable->deleteAll([
-            'foreign_model' => FoldersRelation::FOREIGN_MODEL_RESOURCE,
-            'user_id' => $groupUser->user_id,
-            'foreign_id IN' => $this->findLostAccessResourcesIdsQuery($groupUser),
-        ]);
+        $ids = $this->findLostAccessResourcesIdsQuery($groupUser)
+            ->all()
+            ->extract('aco_foreign_key')
+            ->toArray();
+        if (empty($ids)) {
+            return;
+        }
+        // Sort so concurrent transactions acquire folders_relations row locks in the same order (deadlock defence).
+        sort($ids, SORT_STRING);
+        foreach (array_chunk($ids, self::DELETE_CHUNK_SIZE) as $chunk) {
+            $this->foldersRelationsTable->deleteAll([
+                'foreign_model' => FoldersRelation::FOREIGN_MODEL_RESOURCE,
+                'user_id' => $groupUser->user_id,
+                'foreign_id IN' => $chunk,
+            ]);
+        }
     }
 
     /**
@@ -81,26 +98,40 @@ class HandleGroupUserDeletedService
      */
     private function removeLostAccessesFoldersFromUserTree(GroupsUser $groupUser): void
     {
-        $this->foldersRelationsTable->deleteAll([
-            'foreign_model' => FoldersRelation::FOREIGN_MODEL_FOLDER,
-            'user_id' => $groupUser->user_id,
-            'foreign_id IN' => $this->findLostAccessFoldersIdsQuery($groupUser),
-        ]);
-        $this->moveToRootLostAccessFoldersContent($groupUser);
+        $ids = $this->findLostAccessFoldersIdsQuery($groupUser)
+            ->all()
+            ->extract('aco_foreign_key')
+            ->toArray();
+        if (empty($ids)) {
+            return;
+        }
+        // Sort so concurrent transactions acquire folders_relations row locks in the same order (deadlock defence).
+        sort($ids, SORT_STRING);
+        foreach (array_chunk($ids, self::DELETE_CHUNK_SIZE) as $chunk) {
+            $this->foldersRelationsTable->deleteAll([
+                'foreign_model' => FoldersRelation::FOREIGN_MODEL_FOLDER,
+                'user_id' => $groupUser->user_id,
+                'foreign_id IN' => $chunk,
+            ]);
+        }
+        $this->moveToRootLostAccessFoldersContent($groupUser->user_id, $ids);
     }
 
     /**
      * Move folders the user lost access content to the user tree root.
      *
-     * @param \App\Model\Entity\GroupsUser $groupUser $groupUser The deleted group user.
+     * @param string $userId The user losing access.
+     * @param array<string> $lostAccessFolderIds Folder ids the user lost access to.
      * @return void
      */
-    private function moveToRootLostAccessFoldersContent(GroupsUser $groupUser): void
+    private function moveToRootLostAccessFoldersContent(string $userId, array $lostAccessFolderIds): void
     {
-        $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], [
-            'user_id' => $groupUser->user_id,
-            'folder_parent_id IN' => $this->findLostAccessFoldersIdsQuery($groupUser),
-        ]);
+        foreach (array_chunk($lostAccessFolderIds, self::DELETE_CHUNK_SIZE) as $chunk) {
+            $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], [
+                'user_id' => $userId,
+                'folder_parent_id IN' => $chunk,
+            ]);
+        }
     }
 
     /**

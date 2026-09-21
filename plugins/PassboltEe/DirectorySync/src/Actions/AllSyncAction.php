@@ -35,7 +35,7 @@ class AllSyncAction
      * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $expireResourcesService expiry resource service
      */
     public function __construct(
-        ResourcesExpireResourcesServiceInterface $expireResourcesService
+        ResourcesExpireResourcesServiceInterface $expireResourcesService,
     ) {
         $this->resourcesExpireResourcesService = $expireResourcesService;
         $this->entitiesChangesDto = new EntitiesChangesDto();

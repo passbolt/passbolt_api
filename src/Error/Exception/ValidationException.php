@@ -66,7 +66,7 @@ class ValidationException extends HttpException implements
         ?Entity $entity = null,
         ?Table $table = null,
         ?int $code = null,
-        ?Exception $previous = null
+        ?Exception $previous = null,
     ) {
         parent::__construct($message, $code, $previous);
         $this->_entity = $entity;

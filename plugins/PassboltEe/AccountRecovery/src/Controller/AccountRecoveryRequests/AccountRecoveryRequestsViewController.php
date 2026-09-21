@@ -39,7 +39,7 @@ class AccountRecoveryRequestsViewController extends AppController
     {
         $accessControlService->controlUserRoleActionAccess(
             $this->User->getRoleEntity(),
-            UserAction::getInstance()->getActionId()
+            UserAction::getInstance()->getActionId(),
         );
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('Please provide a valid request id.'));

@@ -340,7 +340,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
             (new VerifyTokenValidationService())->validateToken(
                 $verifyTokenExpiry,
                 $verifyToken,
-                $this->request->getData('user_id')
+                $this->request->getData('user_id'),
             );
         } catch (Exception $exception) {
             Log::error($exception->getMessage() . "\n" . $clearTextChallenge);

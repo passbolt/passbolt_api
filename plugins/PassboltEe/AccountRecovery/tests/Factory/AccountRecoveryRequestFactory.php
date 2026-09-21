@@ -120,7 +120,7 @@ class AccountRecoveryRequestFactory extends CakephpBaseFactory
                 AuthenticationTokenFactory::make()
                     ->type(AuthenticationToken::TYPE_RECOVER)
                     ->active()
-                    ->userId($userId)
+                    ->userId($userId),
             );
     }
 

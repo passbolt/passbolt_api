@@ -63,7 +63,7 @@ class SsoEgressGuardMiddleware
         if ((bool)Configure::read(self::CONFIG_BLOCK, false)) {
             Log::error('SSO egress guard blocked a request. ' . $reason);
             throw new SsoEgressBlockedException(
-                __('Single sign-on failed.') . ' ' . __('The provider address is not allowed.')
+                __('Single sign-on failed.') . ' ' . __('The provider address is not allowed.'),
             );
         }
 

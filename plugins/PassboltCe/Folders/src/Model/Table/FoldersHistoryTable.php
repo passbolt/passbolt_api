@@ -122,7 +122,7 @@ class FoldersHistoryTable extends Table
             ->maxLength(
                 'name',
                 Folder::MAX_NAME_LENGTH,
-                __('The name length should be maximum {0} characters.', Folder::MAX_NAME_LENGTH)
+                __('The name length should be maximum {0} characters.', Folder::MAX_NAME_LENGTH),
             )
             ->requirePresence('name', 'create', __('A name is required.'))
             ->allowEmptyString('name', __('The name should not be empty.'), false);

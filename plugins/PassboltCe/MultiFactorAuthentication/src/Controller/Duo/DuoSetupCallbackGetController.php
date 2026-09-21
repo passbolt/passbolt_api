@@ -72,7 +72,7 @@ class DuoSetupCallbackGetController extends MfaSetupController
      */
     public function get(
         SessionIdentificationServiceInterface $sessionIdentificationService,
-        ?Client $duoSdkClient = null
+        ?Client $duoSdkClient = null,
     ) {
         $this->_assertRequestNotJson();
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_DUO);
@@ -88,7 +88,7 @@ class DuoSetupCallbackGetController extends MfaSetupController
             $authenticationToken = (new MfaDuoEnableService($duoSdkClient))->enable(
                 $uac,
                 $mfaDuoCallbackDto,
-                $cookieToken
+                $cookieToken,
             );
             $this->addMfaVerifiedCookieToResponse($uac, $sessionIdentificationService);
         } catch (BadRequestException | FormValidationException $e) {
@@ -116,7 +116,7 @@ class DuoSetupCallbackGetController extends MfaSetupController
     private function handleErrorFeedback(
         Throwable $e,
         string $token,
-        UserAccessControl $uac
+        UserAccessControl $uac,
     ): ?Response {
         // Log the exception and all its backtrace of exception
         ExceptionLogger::error($e);
@@ -209,13 +209,13 @@ class DuoSetupCallbackGetController extends MfaSetupController
      */
     private function addMfaVerifiedCookieToResponse(
         UserAccessControl $uac,
-        SessionIdentificationServiceInterface $sessionIdentificationService
+        SessionIdentificationServiceInterface $sessionIdentificationService,
     ): void {
         try {
             $cookie = (new MfaVerifiedCookieService())->createDuoMfaVerifiedCookie(
                 $uac,
                 $sessionIdentificationService,
-                $this->getRequest()
+                $this->getRequest(),
             );
         } catch (Throwable $e) {
             throw new InternalErrorException('Could not create MFA verified cookie.', null, $e);

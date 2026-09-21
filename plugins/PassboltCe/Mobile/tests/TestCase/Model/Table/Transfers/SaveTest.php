@@ -56,7 +56,7 @@ class SaveTest extends AppTestCase
             $fieldName,
             $this->getDummyTransfer(),
             $this->getEntityDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 

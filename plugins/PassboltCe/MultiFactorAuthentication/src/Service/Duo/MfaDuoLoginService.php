@@ -51,7 +51,7 @@ class MfaDuoLoginService
         try {
             $this->duoClient = $client ?? (new MfaDuoGetSdkClientService())->getOrFail(
                 new MfaOrgSettingsDuoService(MfaOrgSettings::get()->getSettings()),
-                AuthenticationToken::TYPE_MFA_VERIFY
+                AuthenticationToken::TYPE_MFA_VERIFY,
             );
         } catch (Throwable $th) {
             $msg = __('Could not login using Duo MFA provider.');
@@ -74,7 +74,7 @@ class MfaDuoLoginService
     public function login(
         UserAccessControl $uac,
         MfaDuoCallbackDto $duoCallbackDto,
-        string $token
+        string $token,
     ): AuthenticationToken {
         if (!Validation::uuid($token)) {
             throw new InvalidArgumentException('The authentication token should be a valid UUID.');
@@ -85,7 +85,7 @@ class MfaDuoLoginService
                 $uac,
                 $authenticationTokenType,
                 $token,
-                $duoCallbackDto->state
+                $duoCallbackDto->state,
             );
         try {
             (new MfaDuoVerifyDuoCodeService($authenticationTokenType, $this->duoClient))

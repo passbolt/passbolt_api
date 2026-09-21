@@ -99,7 +99,7 @@ class ResourcesAfterAccessGrantedService
             return $this->resourcesTable->get(
                 $resourceId,
                 finder: FolderizableBehavior::FINDER_NAME,
-                user_id: $uac->getId()
+                user_id: $uac->getId(),
             );
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The resource does not exist.'));
@@ -162,7 +162,7 @@ class ResourcesAfterAccessGrantedService
         $isResourceInUserTree = $this->foldersRelationsTable->isItemInUserTree(
             $userId,
             $resource->id,
-            FoldersRelation::FOREIGN_MODEL_RESOURCE
+            FoldersRelation::FOREIGN_MODEL_RESOURCE,
         );
 
         if ($isResourceInUserTree) {

@@ -110,7 +110,7 @@ class FoldersShareService
     {
         $folder = $this->getFolder($id, $uac);
         $this->assertUserCanShare($uac, $folder);
-        $folderDto = MetadataFolderDto::fromArray($folder->toArray());
+        $folderDto = MetadataFolderDto::createFromArray($folder->toArray());
         $folderDto->assertShareable();
 
         $permissionsData = Hash::get($data, 'permissions', []);
@@ -225,7 +225,7 @@ class FoldersShareService
      */
     private function moveSelfOrganizedContentWithInsufficientPermissionToRoot(
         UserAccessControl $uac,
-        Folder $folder
+        Folder $folder,
     ): void {
         /** @var array<\Passbolt\Folders\Model\Entity\FoldersRelation> $personalItems */
         $personalItems = $this->foldersRelationsTable
@@ -311,7 +311,7 @@ class FoldersShareService
         UserAccessControl $uac,
         Folder $folder,
         MetadataFolderDto $folderDto,
-        ?array $addedPermissions = []
+        ?array $addedPermissions = [],
     ): void {
         foreach ($addedPermissions as $permission) {
             if ($permission->aro === PermissionsTable::GROUP_ARO) {
@@ -336,7 +336,7 @@ class FoldersShareService
         UserAccessControl $uac,
         Folder $folder,
         string $groupId,
-        MetadataFolderDto $folderDto
+        MetadataFolderDto $folderDto,
     ): void {
         $groupsUsersIds = $this->groupsUsersTable->findByGroupId($groupId)->all()->extract('user_id')->toArray();
         foreach ($groupsUsersIds as $groupUserId) {
@@ -358,7 +358,7 @@ class FoldersShareService
         UserAccessControl $uac,
         Folder $folder,
         string $userId,
-        MetadataFolderDto $folderDto
+        MetadataFolderDto $folderDto,
     ): void {
         $exists = $this->foldersRelationsTable->isItemInUserTree($userId, $folder->id);
         if ($exists) {

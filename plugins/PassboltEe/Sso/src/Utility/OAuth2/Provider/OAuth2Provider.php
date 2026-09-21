@@ -59,7 +59,7 @@ class OAuth2Provider extends AbstractOauth2Provider
             throw new IdentityProviderException(
                 $response->getReasonPhrase(),
                 $response->getStatusCode(),
-                (string)$response->getBody()
+                (string)$response->getBody(),
             );
         }
     }

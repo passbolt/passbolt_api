@@ -48,7 +48,7 @@ class MetadataResourceUpdateListener implements EventListenerInterface
         $isMetadataTypeDirty = $entity->isDirty('resource_type_id');
         $isResourceTypeDowngrade = IsResourceV5ToV4DowngradeAllowedRule::isResourceTypeChangeToV4(
             $entity->getOriginal('resource_type_id'),
-            $entity->get('resource_type_id')
+            $entity->get('resource_type_id'),
         );
         if ($isMetadataTypeDirty && $isResourceTypeDowngrade) {
             // update entity to set metadata fields to null

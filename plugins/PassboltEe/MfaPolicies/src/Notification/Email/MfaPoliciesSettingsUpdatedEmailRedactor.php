@@ -101,7 +101,7 @@ class MfaPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRedactor
         // Send emails to all the administrators
         foreach ($admins as $admin) {
             $emailCollection->addEmail(
-                $this->createEmail($admin, $operator, $mfaPolicySettingsDto, $clientIp, $userAgent)
+                $this->createEmail($admin, $operator, $mfaPolicySettingsDto, $clientIp, $userAgent),
             );
         }
 
@@ -121,7 +121,7 @@ class MfaPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRedactor
         User $operator,
         MfaPolicySettings $mfaPolicySettingsDto,
         string $clientIp,
-        string $userAgent
+        string $userAgent,
     ): Email {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
@@ -129,7 +129,7 @@ class MfaPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRedactor
                 return $operator->id === $recipient->id ?
                     __('You edited the MFA policy') :
                     __('{0} edited the MFA policy', $operator->profile->first_name);
-            }
+            },
         );
 
         return new Email(
@@ -145,7 +145,7 @@ class MfaPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRedactor
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 }

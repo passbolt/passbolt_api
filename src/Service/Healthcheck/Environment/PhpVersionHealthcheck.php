@@ -42,7 +42,7 @@ class PhpVersionHealthcheck implements HealthcheckServiceInterface, HealthcheckC
         $this->status = version_compare(
             PHP_VERSION,
             Configure::read(self::PHP_MIN_VERSION_CONFIG),
-            '>='
+            '>=',
         );
 
         return $this;
@@ -87,7 +87,7 @@ class PhpVersionHealthcheck implements HealthcheckServiceInterface, HealthcheckC
     {
         return __(
             'PHP version is too low, passbolt need PHP {0} or higher.',
-            Configure::read(self::PHP_MIN_VERSION_CONFIG)
+            Configure::read(self::PHP_MIN_VERSION_CONFIG),
         );
     }
 

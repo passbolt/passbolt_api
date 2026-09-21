@@ -87,7 +87,7 @@ class SsoOAuth2Service extends AbstractSsoService
                 'openIdBaseUri' => $data->url,
                 'openIdConfigurationPath' => $data->openid_configuration_path,
             ],
-            ['httpClient' => $this->getCustomHttpClient()]
+            ['httpClient' => $this->getCustomHttpClient()],
         );
     }
 

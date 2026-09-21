@@ -81,7 +81,7 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
                 'notifyIfExpiresToday' => $notifyIfExpiresToday,
                 'expiryNotificationInDays' => $expiryNotificationInDays,
             ],
-            $this
+            $this,
         );
 
         return $users;
@@ -96,11 +96,11 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
      */
     public function getUsersToNotify(
         ?int $expiryNotificationInDays,
-        bool $notifyIfExpiresToday = true
+        bool $notifyIfExpiresToday = true,
     ): Query {
         $expiringResourceIds = $this->findResourcesExpiringTodayOrInNDays(
             $expiryNotificationInDays,
-            $notifyIfExpiresToday
+            $notifyIfExpiresToday,
         )->select('id');
 
         /** @var \App\Model\Table\UsersTable $UsersTable */
@@ -122,7 +122,7 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
      */
     public function findResourcesExpiringTodayOrInNDays(
         ?int $expiresInDays,
-        bool $notifyIfExpiresToday = true
+        bool $notifyIfExpiresToday = true,
     ): Query {
         $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $expiredResources = $ResourcesTable->find();

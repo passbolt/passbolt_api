@@ -107,8 +107,8 @@ class FavoritesTable extends Table implements TableCleanupProviderInterface
                 self::ALLOWED_FOREIGN_MODELS,
                 __(
                     'The favorite object type should be one of the following: {0}.',
-                    implode(', ', self::ALLOWED_FOREIGN_MODELS)
-                )
+                    implode(', ', self::ALLOWED_FOREIGN_MODELS),
+                ),
             )
             ->requirePresence('foreign_model', 'create', __('The favorite object type is required.'))
             ->notEmptyString('foreign_model', __('The favorite object type should not be empty'));
@@ -152,9 +152,9 @@ class FavoritesTable extends Table implements TableCleanupProviderInterface
         $rules->addCreate(
             $rules->isUnique(
                 ['user_id', 'foreign_key'],
-                __('The resource is already marked as favorite.')
+                __('The resource is already marked as favorite.'),
             ),
-            'favorite_unique'
+            'favorite_unique',
         );
 
         // Add delete rules.

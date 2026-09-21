@@ -31,7 +31,7 @@ $routes->scope('/setup/user-key-policies', function (RouteBuilder $routes): void
     $routes
         ->connect(
             '/settings',
-            ['controller' => 'UserKeyPoliciesGetSettings', 'action' => 'get', 'plugin' => 'Passbolt/UserKeyPolicies']
+            ['controller' => 'UserKeyPoliciesGetSettings', 'action' => 'get', 'plugin' => 'Passbolt/UserKeyPolicies'],
         )
         ->setMethods(['GET']);
 });

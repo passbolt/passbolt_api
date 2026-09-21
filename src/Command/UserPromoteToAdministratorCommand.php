@@ -130,7 +130,7 @@ class UserPromoteToAdministratorCommand extends PassboltCommand
         if ($adminUser->role->name !== ROLE::ADMIN) {
             $io->out(__(
                 'The user with username {0} doesn\'t have administrator priviledges',
-                $adminUser->username
+                $adminUser->username,
             ));
 
             return $this->errorCode();
@@ -172,7 +172,7 @@ class UserPromoteToAdministratorCommand extends PassboltCommand
 
         $io->out(__(
             'The user identified by "{0}" has been promoted to the administrator user role',
-            $providedUserUsername
+            $providedUserUsername,
         ));
 
         return $this->successCode();

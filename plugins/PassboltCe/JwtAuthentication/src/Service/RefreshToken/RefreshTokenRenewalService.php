@@ -39,7 +39,7 @@ class RefreshTokenRenewalService extends RefreshTokenAbstractService
     public function renewToken(
         ServerRequest $request,
         AuthenticationToken $oldRefreshToken,
-        string $accessToken
+        string $accessToken,
     ): AuthenticationToken {
         $this->consumeToken($oldRefreshToken);
 

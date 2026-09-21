@@ -34,7 +34,7 @@ class ListResponseTest extends AppTestCase
      * @dataProvider providerInvalidResourceTypes
      */
     public function testListResponse_FetchResources_InvalidResourceType_ThrowsBadRequest(
-        string $invalidType
+        string $invalidType,
     ): void {
         $this->expectException(BadRequestException::class);
         $this->expectExceptionCode(400);

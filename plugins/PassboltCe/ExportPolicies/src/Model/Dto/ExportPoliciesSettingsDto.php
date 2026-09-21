@@ -62,7 +62,7 @@ class ExportPoliciesSettingsDto
      */
     public function __construct(
         bool|string|null $allowCsvFormat,
-        ?string $source
+        ?string $source,
     ) {
         $this->allow_csv_format = self::marshalBoolean($allowCsvFormat);
         $this->source = $source ?? self::SOURCE_DEFAULT;

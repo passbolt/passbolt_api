@@ -52,7 +52,7 @@ class CanEncryptSignGpgHealthcheck extends AbstractGpgHealthcheck implements Ski
             $gpg->setEncryptKeyFromFingerprint($this->getServerKeyFingerprint());
             $gpg->setSignKeyFromFingerprint(
                 $this->getServerKeyFingerprint(),
-                $this->getServerKeyPassphrase()
+                $this->getServerKeyPassphrase(),
             );
             $gpg->encrypt('test message', true);
             $this->status = true;

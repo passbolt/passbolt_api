@@ -59,7 +59,7 @@ class GetByFingerprintAndUserIdTest extends AppTestCase
 
         $k = $this->Gpgkeys->getByFingerPrintAndUserId(
             $this->fingerprint,
-            $betty->id
+            $betty->id,
         );
         $this->assertEmpty($k);
     }
@@ -71,7 +71,7 @@ class GetByFingerprintAndUserIdTest extends AppTestCase
 
         $k = $this->Gpgkeys->getByFingerPrintAndUserId(
             '03F60E958F4CB29723ACDF761353B5B15D9B054C',
-            $ada->id
+            $ada->id,
         );
         $this->assertEmpty($k);
     }

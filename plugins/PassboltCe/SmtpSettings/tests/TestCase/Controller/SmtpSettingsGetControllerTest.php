@@ -51,7 +51,7 @@ class SmtpSettingsGetControllerTest extends AppIntegrationTestCase
                 'created_by' => $savedSettings->created_by,
                 'modified_by' => $savedSettings->modified_by,
             ],
-            ['source' => 'db']
+            ['source' => 'db'],
         );
 
         $this->assertSame($expectedData, $retrievedData);
@@ -144,7 +144,7 @@ class SmtpSettingsGetControllerTest extends AppIntegrationTestCase
         // OAuth2 fields should be null or absent
         $this->assertTrue(
             !isset($response['tenant_id']) || $response['tenant_id'] === null,
-            'tenant_id should be absent or null for legacy settings'
+            'tenant_id should be absent or null for legacy settings',
         );
     }
 }

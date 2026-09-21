@@ -88,7 +88,7 @@ class AccountRecoveryResponseApprovedUserEmailRedactor implements SubscribedEmai
         $user = $this->Users->findFirstForEmail($response->account_recovery_request->user_id);
         /** @var \App\Model\Entity\AuthenticationToken $authenticationToken */
         $authenticationToken = $this->Users->AuthenticationTokens->get(
-            $response->account_recovery_request->authentication_token_id
+            $response->account_recovery_request->authentication_token_id,
         );
         /** @var \App\Model\Entity\User $admin */
         $admin = $this->Users->find('notDisabled')
@@ -114,14 +114,14 @@ class AccountRecoveryResponseApprovedUserEmailRedactor implements SubscribedEmai
         User $user,
         User $admin,
         AccountRecoveryResponse $response,
-        AuthenticationToken $authenticationToken
+        AuthenticationToken $authenticationToken,
     ): Email {
         $locale = (new GetUserLocaleService())->getLocale($user->username);
         $subject = (new LocaleService())->translateString(
             $locale,
             function () {
                 return __('Recovery request approved!');
-            }
+            },
         );
 
         $data = [

@@ -52,13 +52,13 @@ class AccountRecoveryOrganizationPolicyServiceProvider extends ServiceProvider
         $container
             ->add(
                 AccountRecoveryOrganizationPolicySetServiceInterface::class,
-                AccountRecoveryOrganizationPolicySetService::class
+                AccountRecoveryOrganizationPolicySetService::class,
             );
 
         $container
             ->add(
                 AccountRecoveryOrganizationPolicyGetServiceInterface::class,
-                AccountRecoveryOrganizationPolicyGetService::class
+                AccountRecoveryOrganizationPolicyGetService::class,
             )
             ->addArgument(ServerRequest::class);
 

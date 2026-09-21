@@ -137,7 +137,7 @@ class CommentsAddService
                     'created_by' => true,
                     'modified_by' => true,
                 ],
-            ]
+            ],
         );
 
         $this->_handleValidationErrors($comment);

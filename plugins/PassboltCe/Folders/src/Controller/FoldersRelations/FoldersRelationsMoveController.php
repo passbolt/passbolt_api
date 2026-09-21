@@ -40,7 +40,7 @@ class FoldersRelationsMoveController extends AppController
         if (!in_array($foreignModel, FoldersRelationsTable::ALLOWED_FOREIGN_MODELS)) {
             $msg = __(
                 'The object type should be one of the following: {0}.',
-                implode(', ', FoldersRelationsTable::ALLOWED_FOREIGN_MODELS)
+                implode(', ', FoldersRelationsTable::ALLOWED_FOREIGN_MODELS),
             );
             throw new BadRequestException($msg);
         }

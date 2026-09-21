@@ -21,39 +21,53 @@ use App\Controller\AppController;
 use App\Service\Resources\ResourcesAddService;
 use Cake\Core\Configure;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
+use Passbolt\Metadata\Controller\Attribute\MetadataRequestToDto;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
-use Passbolt\Metadata\Utility\MetadataPopulateUserKeyIdTrait;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
  */
 class ResourcesAddController extends AppController
 {
-    use MetadataPopulateUserKeyIdTrait;
+    /**
+     * @inheritDoc
+     */
+    public function implementedEvents(): array
+    {
+        return parent::implementedEvents() + ['Controller.startup' => 'startup'];
+    }
+
+    /**
+     * Asserts the request before it is mapped to the DTO.
+     *
+     * @return void
+     * @throws \Cake\Http\Exception\NotFoundException if request is not JSON
+     */
+    public function startup(): void
+    {
+        $this->assertJson();
+    }
 
     /**
      * Resource Add action
      *
+     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto The resource to add.
      * @param \App\Service\Resources\ResourcesAddService $resourcesAddService Service adding the resource
      * @return void
      * @throws \Exception
      * @throws \App\Error\Exception\ValidationException if the resource is not valid.
      * @throws \Cake\Http\Exception\ServiceUnavailableException if parallel requests lead to a table lock albeit multiple attempts.
      */
-    public function add(ResourcesAddService $resourcesAddService)
-    {
-        $this->assertJson();
-
-        // Massage the user provided data
-        $data = $this->getRequest()->getData();
-        $data = $this->populatedMetadataUserKeyId($this->User->id(), $data);
-        $resourceDto = new MetadataResourceDto($data);
-
+    public function add(
+        #[MetadataRequestToDto]
+        MetadataResourceDto $resourceDto,
+        ResourcesAddService $resourcesAddService,
+    ) {
         // Add the new resource
         $resource = $resourcesAddService->add(
             $this->User->getAccessControl(),
-            $resourceDto
+            $resourceDto,
         );
 
         // Retrieve the saved resource.

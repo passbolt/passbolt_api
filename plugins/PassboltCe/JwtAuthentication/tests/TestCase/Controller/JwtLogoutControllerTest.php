@@ -110,7 +110,7 @@ class JwtLogoutControllerTest extends JwtAuthenticationIntegrationTestCase
 
         $this->cookie(
             RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE,
-            $tokenToDeactivate
+            $tokenToDeactivate,
         );
 
         $this->postJson('/auth/jwt/logout.json');

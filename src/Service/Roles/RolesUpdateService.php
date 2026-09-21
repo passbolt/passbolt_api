@@ -67,7 +67,7 @@ class RolesUpdateService
 
             throw new CustomValidationException(
                 __('The role could not be updated.'),
-                $errors
+                $errors,
             );
         } catch (Exception $e) {
             throw new InternalErrorException(__('Could not update the role, please try again later.'), null, $e);

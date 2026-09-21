@@ -34,10 +34,10 @@ class DirectoryResultsIgnoreInvalidTest extends DirectorySyncDeprecatedIntegrati
         parent::setUp();
         Configure::write('passbolt.plugins.directorySync.test', 'Nested');
         $this->userSyncAction = new UserSyncAction(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
         $this->groupSyncAction = new GroupSyncAction(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
     }
 

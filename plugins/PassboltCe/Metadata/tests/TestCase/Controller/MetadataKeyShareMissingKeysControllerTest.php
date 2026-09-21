@@ -243,4 +243,30 @@ class MetadataKeyShareMissingKeysControllerTest extends AppIntegrationTestCaseV5
         $this->assertArrayHasKey('data', $response[1]);
         $this->assertArrayHasKey('isValidEncryptedMetadataPrivateKey', $response[1]['data']);
     }
+
+    /**
+     * The administrator assertion runs before the request is mapped to the DTO.
+     *
+     * @dataProvider metadataKeyShareMissingKeysUrlProvider
+     * @param string $url URL to send request to.
+     * @return void
+     */
+    public function testMetadataMissingPrivateKeysShareController_ErrorNotAdministratorWithMalformedPayload(string $url): void // phpcs:ignore
+    {
+        $this->logInAsUser();
+        $this->postJson($url, ['not an array']);
+        $this->assertForbiddenError('Access restricted to administrators.');
+    }
+
+    /**
+     * @dataProvider metadataKeyShareMissingKeysUrlProvider
+     * @param string $url URL to send request to.
+     * @return void
+     */
+    public function testMetadataMissingPrivateKeysShareController_ErrorMetadataPrivateKeyNotAnArray(string $url): void
+    {
+        $this->logInAsAdmin();
+        $this->postJson($url, ['not an array']);
+        $this->assertBadRequestError('The metadata private key data must be an array.');
+    }
 }

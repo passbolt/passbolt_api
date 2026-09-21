@@ -64,7 +64,7 @@ class AuthenticationTokenGetService
         string $token,
         string $userId,
         string $type,
-        ?string $expiry = null
+        ?string $expiry = null,
     ): AuthenticationToken {
         $tokenEntity = $this->getActiveOrFail($token, $userId, $type);
 

@@ -54,7 +54,7 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
                 $user = $this->buildUserEntity($userId);
 
                 return $this->saveUserEntity($user, $saveOptions);
-            }
+            },
         );
     }
 
@@ -78,7 +78,7 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
         //  Will break compat on recover for non compliant keys
         PublicKeyValidationService::parseAndValidatePublicKey(
             $gpgkey->armored_key,
-            PublicKeyValidationService::getStrictRules()
+            PublicKeyValidationService::getStrictRules(),
         );
 
         // Check business rules before saving

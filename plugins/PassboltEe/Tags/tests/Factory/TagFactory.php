@@ -72,7 +72,7 @@ class TagFactory extends CakephpBaseFactory
             ResourcesTagFactory::make([
                 'resource_id' => $resource->id,
                 'user_id' => $user->id,
-            ])
+            ]),
         );
 
         return $this;
@@ -90,7 +90,7 @@ class TagFactory extends CakephpBaseFactory
             'ResourcesTags',
             ResourcesTagFactory::make([
                 'resource_id' => $resource->id,
-            ])
+            ]),
         )->isShared();
 
         return $this;

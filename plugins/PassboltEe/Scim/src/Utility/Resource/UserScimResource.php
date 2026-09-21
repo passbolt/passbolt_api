@@ -231,12 +231,12 @@ class UserScimResource implements ScimResourceInterface
         $this->userEntity = $userEntity;
         if (!$this->userEntity) {
             throw new ResourceNotFoundException(
-                sprintf('The %s resource with id `%s` was not found', $this->getType(), $internalId)
+                sprintf('The %s resource with id `%s` was not found', $this->getType(), $internalId),
             );
         }
         if ($this->userEntity->deleted) {
             throw new ResourceNotFoundException(
-                sprintf('The %s resource with id `%s` is already deleted', $this->getType(), $internalId)
+                sprintf('The %s resource with id `%s` is already deleted', $this->getType(), $internalId),
             );
         }
 
@@ -271,7 +271,7 @@ class UserScimResource implements ScimResourceInterface
                 $this->createScimEntry($user);
 
                 return $user;
-            }
+            },
         );
 
         $this->setFromDatabase($user->id);
@@ -298,7 +298,7 @@ class UserScimResource implements ScimResourceInterface
                 sprintf(
                     'The %s resource with id `%s` could not be created due to a uniqueness conflict',
                     $this->getType(),
-                    $this->id
+                    $this->id,
                 ),
                 scimType: ScimException::SCIM_TYPE_UNIQUENESS,
             );
@@ -340,7 +340,7 @@ class UserScimResource implements ScimResourceInterface
             throw new ConflictException(
                 sprintf(
                     'The %s resource could not be created due to a uniqueness conflict',
-                    $this->getType()
+                    $this->getType(),
                 ),
                 scimType: ScimException::SCIM_TYPE_UNIQUENESS,
             );
@@ -374,14 +374,14 @@ class UserScimResource implements ScimResourceInterface
         } catch (ValidationException $exception) {
             throw new ConflictException(
                 $this->getValidationErrorMessage($exception->getEntity()),
-                scimType: ScimException::SCIM_TYPE_INVALID_VALUE
+                scimType: ScimException::SCIM_TYPE_INVALID_VALUE,
             );
         } catch (InternalErrorException $exception) {
             ScimLog::error($exception->getMessage());
             ScimLog::error($exception->getTraceAsString());
             throw new ConflictException(
                 'Unexpected error',
-                scimType: ScimException::SCIM_TYPE_INVALID_VALUE
+                scimType: ScimException::SCIM_TYPE_INVALID_VALUE,
             );
         }
     }
@@ -410,7 +410,7 @@ class UserScimResource implements ScimResourceInterface
         if (!$this->Users->Profiles->save($profile)) {
             throw new ConflictException(
                 $this->getValidationErrorMessage($profile),
-                scimType: ScimException::SCIM_TYPE_INVALID_VALUE
+                scimType: ScimException::SCIM_TYPE_INVALID_VALUE,
             );
         }
 
@@ -605,7 +605,7 @@ class UserScimResource implements ScimResourceInterface
                             case 'emails':
                                 throw new BadRequestException(
                                     'The email can not be changed',
-                                    scimType: ScimException::SCIM_TYPE_MUTABILITY
+                                    scimType: ScimException::SCIM_TYPE_MUTABILITY,
                                 );
                             default:
                                 // ignore attributes not used in this application
@@ -636,7 +636,7 @@ class UserScimResource implements ScimResourceInterface
                             case 'emails':
                                 throw new BadRequestException(
                                     'The email can not be changed',
-                                    scimType: ScimException::SCIM_TYPE_MUTABILITY
+                                    scimType: ScimException::SCIM_TYPE_MUTABILITY,
                                 );
                             default:
                                 // ignore attributes not used in this application
@@ -662,7 +662,7 @@ class UserScimResource implements ScimResourceInterface
                             case 'emails':
                                 throw new BadRequestException(
                                     'The email can not be changed',
-                                    scimType: ScimException::SCIM_TYPE_MUTABILITY
+                                    scimType: ScimException::SCIM_TYPE_MUTABILITY,
                                 );
                             default:
                                 // ignore attributes not used in this application
@@ -670,7 +670,7 @@ class UserScimResource implements ScimResourceInterface
                         break;
                     default:
                         throw new NotSupportedException(
-                            sprintf('The operation type `%s` is not supported or invalid', $operation->getType())
+                            sprintf('The operation type `%s` is not supported or invalid', $operation->getType()),
                         );
                 }
             }
@@ -792,7 +792,7 @@ class UserScimResource implements ScimResourceInterface
 
                         throw new ConflictException(
                             $this->getValidationErrorMessage($this->userEntity),
-                            scimType: ScimException::SCIM_TYPE_INVALID_VALUE
+                            scimType: ScimException::SCIM_TYPE_INVALID_VALUE,
                         );
                     }
                 }
@@ -822,7 +822,7 @@ class UserScimResource implements ScimResourceInterface
 
                         throw new ConflictException(
                             $this->getValidationErrorMessage($scimEntry),
-                            scimType: ScimException::SCIM_TYPE_INVALID_VALUE
+                            scimType: ScimException::SCIM_TYPE_INVALID_VALUE,
                         );
                     }
                 }
@@ -939,8 +939,8 @@ class UserScimResource implements ScimResourceInterface
             throw new ScimException(
                 sprintf(
                     'The values of the %s resource has not been set for the `delete` operation',
-                    $this->getType()
-                )
+                    $this->getType(),
+                ),
             );
         }
 
@@ -953,7 +953,7 @@ class UserScimResource implements ScimResourceInterface
                 if (isset($errors['id']['soleOwnerOfSharedContent'])) {
                     // @todo: send email
                     throw new ConflictException(
-                        'The user cannot be deleted because its the sole owner of shared content'
+                        'The user cannot be deleted because its the sole owner of shared content',
                     );
                 }
                 throw new ConflictException('The User resource could not be deleted due to validation failure');
@@ -978,8 +978,8 @@ class UserScimResource implements ScimResourceInterface
             throw new ScimException(
                 sprintf(
                     'The values of the %s resource has not been set for the `toSCIM` operation',
-                    $this->getType()
-                )
+                    $this->getType(),
+                ),
             );
         }
         if (empty($this->userEntity->scim_entry)) {

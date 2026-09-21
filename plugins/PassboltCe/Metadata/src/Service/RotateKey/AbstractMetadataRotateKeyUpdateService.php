@@ -68,7 +68,7 @@ abstract class AbstractMetadataRotateKeyUpdateService
     protected function handleSaveManyValidationException(
         PersistenceFailedException $exception,
         array $entities,
-        string $errorMessage
+        string $errorMessage,
     ): void {
         $index = 0;
 

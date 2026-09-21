@@ -68,7 +68,7 @@ class MetadataTypesSettingsForm extends Form
             ->utf8('default_resource_types', __('The setting should be a valid BMP-UTF8 string.'))
             ->inList('default_resource_types', self::ALLOWED_VERSIONS, __(
                 'The setting should be one of the following: {0}.',
-                implode(', ', self::ALLOWED_VERSIONS)
+                implode(', ', self::ALLOWED_VERSIONS),
             ))
             ->add('default_resource_types', 'defaultTypeMustBeEnabled', [
                 'rule' => function ($value, $context) {
@@ -87,7 +87,7 @@ class MetadataTypesSettingsForm extends Form
             ->utf8('default_folder_type', __('The setting should be a valid BMP-UTF8 string.'))
             ->inList('default_folder_type', self::ALLOWED_VERSIONS, __(
                 'The setting should be one of the following: {0}.',
-                implode(', ', self::ALLOWED_VERSIONS)
+                implode(', ', self::ALLOWED_VERSIONS),
             ))
             ->add('default_folder_type', 'defaultTypeMustBeEnabled', [
                 'rule' => function ($value, $context) {
@@ -106,7 +106,7 @@ class MetadataTypesSettingsForm extends Form
             ->utf8('default_comment_type', __('The setting should be a valid BMP-UTF8 string.'))
             ->inList('default_comment_type', self::ALLOWED_VERSIONS, __(
                 'The setting should be one of the following: {0}.',
-                implode(', ', self::ALLOWED_VERSIONS)
+                implode(', ', self::ALLOWED_VERSIONS),
             ))
             ->add('default_comment_type', 'defaultTypeMustBeEnabled', [
                 'rule' => function ($value, $context) {
@@ -125,7 +125,7 @@ class MetadataTypesSettingsForm extends Form
             ->utf8('default_tag_type', __('The setting should be a valid BMP-UTF8 string.'))
             ->inList('default_tag_type', self::ALLOWED_VERSIONS, __(
                 'The setting should be one of the following: {0}.',
-                implode(', ', self::ALLOWED_VERSIONS)
+                implode(', ', self::ALLOWED_VERSIONS),
             ))
             ->add('default_tag_type', 'defaultTypeMustBeEnabled', [
                 'rule' => function ($value, $context) {

@@ -83,7 +83,7 @@ class LocaleServiceTest extends TestCase
         $service = new LocaleService();
         $this->assertSame(
             $expected,
-            $service->isValidLocale($locale)
+            $service->isValidLocale($locale),
         );
     }
 

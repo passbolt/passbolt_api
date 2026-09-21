@@ -98,7 +98,7 @@ class RoleCreatedAdminEmailRedactor implements SubscribedEmailRedactorInterface
 
         foreach ($recipients as $recipient) {
             $emailCollection->addEmail(
-                $this->createEmail($recipient, $role, $operator)
+                $this->createEmail($recipient, $role, $operator),
             );
         }
 
@@ -117,7 +117,7 @@ class RoleCreatedAdminEmailRedactor implements SubscribedEmailRedactorInterface
             $recipient->locale,
             function () use ($role, $operator) {
                 return __('{0} created a new role {1}', $operator->profile->full_name, $role->name);
-            }
+            },
         );
 
         $operator->profile->setVirtual(['full_name']);
@@ -133,7 +133,7 @@ class RoleCreatedAdminEmailRedactor implements SubscribedEmailRedactorInterface
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 

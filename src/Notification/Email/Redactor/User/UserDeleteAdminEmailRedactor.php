@@ -119,7 +119,7 @@ class UserDeleteAdminEmailRedactor implements SubscribedEmailRedactorInterface
 
         foreach ($recipients as $recipient) {
             $emailCollection->addEmail(
-                $this->createEmail($recipient, $deletedUser, $deletedBy)
+                $this->createEmail($recipient, $deletedUser, $deletedBy),
             );
         }
 
@@ -152,7 +152,7 @@ class UserDeleteAdminEmailRedactor implements SubscribedEmailRedactorInterface
                 return $isAdmin
                     ? __('{0} deleted administrator {1}', $operatorFullName, $userFullName)
                     : __('{0} deleted user {1}', $operatorFullName, $userFullName);
-            }
+            },
         );
 
         // Expose full name virtual field so it can be used in template file
@@ -171,7 +171,7 @@ class UserDeleteAdminEmailRedactor implements SubscribedEmailRedactorInterface
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 

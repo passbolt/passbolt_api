@@ -55,7 +55,7 @@ class DuoVerifyPromptPostController extends MfaVerifyController
     public function post(
         SessionIdentificationServiceInterface $sessionIdentificationService,
         RememberAMonthSettingInterface $rememberMeForAMonthSetting,
-        ?Client $duoSdkClient = null
+        ?Client $duoSdkClient = null,
     ): ?Response {
         $this->_assertRequestNotJson();
         $this->_handleVerifiedNotRequired($sessionIdentificationService, $rememberMeForAMonthSetting);
@@ -67,12 +67,12 @@ class DuoVerifyPromptPostController extends MfaVerifyController
         $redirectParam = $this->SanitizeUrl->sanitizeRedirect('/mfa/verify', true);
         $startAuthService = new MfaDuoStartDuoAuthenticationService(
             AuthenticationToken::TYPE_MFA_VERIFY,
-            $duoSdkClient
+            $duoSdkClient,
         );
         try {
             $duoAuthenticationRequest = $startAuthService->start(
                 $this->User->getAccessControl(),
-                $redirectParam
+                $redirectParam,
             );
         } catch (ServiceUnavailableException $e) {
             $this->Flash->error($e->getMessage());
@@ -81,7 +81,7 @@ class DuoVerifyPromptPostController extends MfaVerifyController
         }
         $cookie = (new MfaDuoStateCookieService())->createDuoStateCookie(
             $duoAuthenticationRequest->authenticationToken->token,
-            AbstractSecureCookieService::isHttpsOrCookiesSecure($this->getRequest())
+            AbstractSecureCookieService::isHttpsOrCookiesSecure($this->getRequest()),
         );
 
         $this->setResponse($this->getResponse()->withCookie($cookie));

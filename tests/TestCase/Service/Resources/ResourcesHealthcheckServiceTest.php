@@ -80,11 +80,11 @@ class ResourcesHealthcheckServiceTest extends TestCase
 
         // The check should not have any error details for the deleted resource
         $details = $metadataKeyCheck->getDetails();
-        $errorDetails = array_filter($details, fn ($d) => $d['status'] === Healthcheck::STATUS_ERROR);
+        $errorDetails = array_filter($details, fn($d) => $d['status'] === Healthcheck::STATUS_ERROR);
         $this->assertEmpty($errorDetails, 'Deleted resources should not trigger metadata key errors');
 
         // Should have only one success detail for the active resource
-        $successDetails = array_filter($details, fn ($d) => $d['status'] === Healthcheck::STATUS_SUCCESS);
+        $successDetails = array_filter($details, fn($d) => $d['status'] === Healthcheck::STATUS_SUCCESS);
         $this->assertCount(1, $successDetails, 'Only the active resource should have a success detail');
     }
 
@@ -109,7 +109,7 @@ class ResourcesHealthcheckServiceTest extends TestCase
 
         // The check should have an error detail for the active resource with deleted key
         $details = $metadataKeyCheck->getDetails();
-        $errorDetails = array_filter($details, fn ($d) => $d['status'] === Healthcheck::STATUS_ERROR);
+        $errorDetails = array_filter($details, fn($d) => $d['status'] === Healthcheck::STATUS_ERROR);
         $this->assertCount(1, $errorDetails, 'Active resource with deleted metadata key should trigger an error');
     }
 }

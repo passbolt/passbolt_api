@@ -199,7 +199,7 @@ class AzureProviderTest extends TestCase
     public function testSsoAzureProvider_validateOpenIdConfiguration_ThrowsOnNullResponse_MessageIncludesType(
         mixed $response,
         mixed $expectedType,
-        bool $shouldIncludeResponseText
+        bool $shouldIncludeResponseText,
     ): void {
         try {
             $this->azureProvider->validateOpenIdConfiguration($response);

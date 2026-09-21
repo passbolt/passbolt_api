@@ -83,7 +83,7 @@ class SmtpSettingsSetService
         return $OrganizationSettings->createOrUpdateSetting(
             SmtpSettingsGetSettingsInDbService::SMTP_SETTINGS_PROPERTY_NAME,
             $value,
-            $this->uac
+            $this->uac,
         );
     }
 

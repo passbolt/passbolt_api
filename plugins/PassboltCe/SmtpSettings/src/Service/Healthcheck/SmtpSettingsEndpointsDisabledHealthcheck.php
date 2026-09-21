@@ -38,7 +38,7 @@ class SmtpSettingsEndpointsDisabledHealthcheck implements HealthcheckServiceInte
     public function check(): HealthcheckServiceInterface
     {
         $this->status = Configure::read(
-            SmtpSettingsSecurityMiddleware::PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED
+            SmtpSettingsSecurityMiddleware::PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED,
         );
 
         return $this;

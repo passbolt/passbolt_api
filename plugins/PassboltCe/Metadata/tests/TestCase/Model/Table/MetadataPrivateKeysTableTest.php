@@ -109,7 +109,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
             'id',
             $this->getDummyMetadataPrivateKeysData(),
             $this->getEntityFieldOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -128,7 +128,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
             'metadata_key_id',
             $this->getDummyMetadataPrivateKeysData(),
             $this->getEntityFieldOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -146,7 +146,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
             'user_id',
             $this->getDummyMetadataPrivateKeysData(),
             $this->getEntityFieldOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -174,7 +174,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
             'data',
             $this->getDummyMetadataPrivateKeysData(),
             $this->getEntityFieldOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -470,7 +470,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
                     'created' => true,
                     'modified' => true,
                 ],
-            ]
+            ],
         );
     }
 

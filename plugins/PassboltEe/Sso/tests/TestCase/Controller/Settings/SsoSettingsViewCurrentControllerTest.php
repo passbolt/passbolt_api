@@ -161,7 +161,7 @@ class SsoSettingsViewCurrentControllerTest extends SsoIntegrationTestCase
                 SsoSetting::PROVIDER_AZURE => true,
                 SsoSetting::PROVIDER_GOOGLE => true,
                 SsoSetting::PROVIDER_OAUTH2 => false,
-            ]
+            ],
         );
         $this->getJson('/sso/settings/current.json');
 

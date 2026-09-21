@@ -66,11 +66,11 @@ class PasswordExpiryUsersDeleteControllerTest extends AppIntegrationTestCase
         $this->assertEmailQueueCount(2);
         $this->assertEmailInBatchContains(
             'Access for users to your shared passwords have been revoked.',
-            $owner->username
+            $owner->username,
         );
         $this->assertEmailInBatchContains(
             "You deleted user {$userToDelete->profile->full_name}",
-            $admin->username
+            $admin->username,
         );
     }
 }

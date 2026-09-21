@@ -44,7 +44,7 @@ class AuthenticationTokenConsumeService
         string $token,
         string $userId,
         string $type,
-        ?string $expiry = null
+        ?string $expiry = null,
     ): AuthenticationToken {
         $authenticationToken = (new AuthenticationTokenGetService())
             ->getActiveNotExpiredOrFail($token, $userId, $type, $expiry);

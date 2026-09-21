@@ -35,7 +35,7 @@ class ScimSettingsSecurityMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         if (Configure::read(self::PASSBOLT_SECURITY_SCIM_SETTINGS_ENDPOINTS_DISABLED)) {
             throw new ForbiddenException(__('SCIM settings endpoints are disabled.'));

@@ -86,7 +86,7 @@ class AccountRecoveryOrganizationPublicKeysTableTest extends AccountRecoveryTest
             'id',
             AccountRecoveryOrganizationPublicKeyFactory::make()->getEntity()->toArray(),
             $this->getDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -104,7 +104,7 @@ class AccountRecoveryOrganizationPublicKeysTableTest extends AccountRecoveryTest
             'armored_key',
             AccountRecoveryOrganizationPublicKeyFactory::make()->getEntity()->toArray(),
             $this->getDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -122,7 +122,7 @@ class AccountRecoveryOrganizationPublicKeysTableTest extends AccountRecoveryTest
             'fingerprint',
             AccountRecoveryOrganizationPublicKeyFactory::make()->getEntity()->toArray(),
             $this->getDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -140,7 +140,7 @@ class AccountRecoveryOrganizationPublicKeysTableTest extends AccountRecoveryTest
 
         $this->assertSame(
             'The fingerprint should be a string of 40 hexadecimal characters.',
-            $entity->getError('fingerprint')['invalidFingerprint']
+            $entity->getError('fingerprint')['invalidFingerprint'],
         );
         $this->assertTrue($entity->hasErrors());
         $this->assertSame(0, AccountRecoveryOrganizationPublicKeyFactory::count());
@@ -163,7 +163,7 @@ class AccountRecoveryOrganizationPublicKeysTableTest extends AccountRecoveryTest
         $this->assertCount(1, $entity->getErrors());
         $this->assertSame(
             'You cannot reuse the metadata keys.',
-            $entity->getError('fingerprint')['isNotMetadataKey']
+            $entity->getError('fingerprint')['isNotMetadataKey'],
         );
         $this->assertSame(0, AccountRecoveryOrganizationPublicKeyFactory::count());
     }

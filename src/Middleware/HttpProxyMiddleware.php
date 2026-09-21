@@ -42,7 +42,7 @@ class HttpProxyMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
         $this->setupServerRequestFromConfig($request);

@@ -63,11 +63,11 @@ class SsoGoogleStage1DryRunControllerTest extends SsoIntegrationTestCase
         $this->assertStringContainsString("client_id={$clientId}", $url);
         $this->assertStringContainsString(
             'scope=' . rawurlencode(implode(' ', ['openid', 'profile', 'email'])),
-            $url
+            $url,
         );
         $this->assertStringContainsString(
             'redirect_uri=' . rawurlencode(Router::url('/sso/google/redirect', true)),
-            $url
+            $url,
         );
     }
 

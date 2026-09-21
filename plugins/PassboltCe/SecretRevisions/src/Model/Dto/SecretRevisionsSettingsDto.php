@@ -16,9 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\SecretRevisions\Model\Dto;
 
+use App\Model\Dto\RequestDtoInterface;
 use Cake\Utility\Hash;
 
-class SecretRevisionsSettingsDto
+class SecretRevisionsSettingsDto implements RequestDtoInterface
 {
     private int $maxRevisions;
 
@@ -30,7 +31,7 @@ class SecretRevisionsSettingsDto
      * @param int $maxRevisions Max revision value.
      * @param bool $allowSharingRevisions Allow sharing revisions value.
      */
-    public function __construct(int $maxRevisions, bool $allowSharingRevisions)
+    final public function __construct(int $maxRevisions, bool $allowSharingRevisions)
     {
         $this->maxRevisions = $maxRevisions;
         $this->allowSharingRevisions = $allowSharingRevisions;
@@ -38,14 +39,14 @@ class SecretRevisionsSettingsDto
 
     /**
      * @param array $data Data to create DTO from.
-     * @return self
+     * @return static
      */
-    public static function fromArray(array $data): self
+    public static function createFromArray(array $data): static
     {
         $maxRevisions = (int)Hash::get($data, 'max_revisions');
         $allowSharingRevisions = (bool)Hash::get($data, 'allow_sharing_revisions');
 
-        return new self($maxRevisions, $allowSharingRevisions);
+        return new static($maxRevisions, $allowSharingRevisions);
     }
 
     /**

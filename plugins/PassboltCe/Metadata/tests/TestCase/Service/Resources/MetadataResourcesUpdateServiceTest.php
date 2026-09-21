@@ -82,7 +82,7 @@ class MetadataResourcesUpdateServiceTest extends AppTestCaseV5
         $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
         $metadataKeyId = $metadataKey->get('id');
         $resource = ResourceFactory::make(['resource_type_id' => $v4ResourceTypeId])->withPermissionsFor([$user])->persist();
-        $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
+        $resourceDto = MetadataResourceDto::createFromArray($resource->toArray());
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
         $metadataKeyType = 'shared_key';
@@ -96,7 +96,7 @@ class MetadataResourcesUpdateServiceTest extends AppTestCaseV5
         $resource = $this->service->update(
             $this->makeUac($user),
             $resource->get('id'),
-            new MetadataResourceDto($payload)
+            new MetadataResourceDto($payload),
         );
 
         $this->assertInstanceOf(Resource::class, $resource);
@@ -120,12 +120,12 @@ class MetadataResourcesUpdateServiceTest extends AppTestCaseV5
             $this->service->update(
                 $this->makeUac($users[0]),
                 $resource->get('id'),
-                new MetadataResourceDto($payload)
+                new MetadataResourceDto($payload),
             );
         } catch (ValidationException $exception) {
             $this->assertSame(
                 'A resource of type personal cannot be shared with other users or a group.',
-                $exception->getErrors()['metadata_key_type']['isMetadataKeyTypeSharedOnSharedItem']
+                $exception->getErrors()['metadata_key_type']['isMetadataKeyTypeSharedOnSharedItem'],
             );
         }
     }
@@ -147,12 +147,12 @@ class MetadataResourcesUpdateServiceTest extends AppTestCaseV5
             $this->service->update(
                 $this->makeUac($user),
                 $resource->get('id'),
-                new MetadataResourceDto($payload)
+                new MetadataResourceDto($payload),
             );
         } catch (ValidationException $exception) {
             $this->assertSame(
                 'A resource of type personal cannot be shared with other users or a group.',
-                $exception->getErrors()['metadata_key_type']['isMetadataKeyTypeSharedOnSharedItem']
+                $exception->getErrors()['metadata_key_type']['isMetadataKeyTypeSharedOnSharedItem'],
             );
         }
     }

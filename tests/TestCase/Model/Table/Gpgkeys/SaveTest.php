@@ -86,7 +86,7 @@ class SaveTest extends AppTestCase
 
             $this->assertSame(
                 'The fingerprint should be a string of 40 hexadecimal characters.',
-                $entity->getError('fingerprint')['custom']
+                $entity->getError('fingerprint')['custom'],
             );
             $this->assertTrue($entity->hasErrors(), 'Fingerprint validation should fail for case ' . $case);
         }
@@ -109,7 +109,7 @@ class SaveTest extends AppTestCase
             $this->Gpgkeys->save($entity);
             $this->assertSame(
                 'The key identifier should be a string of 8 hexadecimal characters.',
-                $entity->getError('key_id')['custom']
+                $entity->getError('key_id')['custom'],
             );
             $this->assertTrue($entity->hasErrors(), 'Key ID validation should fail for case ' . $case);
         }
@@ -132,7 +132,7 @@ class SaveTest extends AppTestCase
             $this->assertSame(
                 'The type should be one of the following: RSA, ECC, ECDSA, DH.',
                 $entity->getError('type')['custom'],
-                'Gpg Key validation should fail for case ' . $case
+                'Gpg Key validation should fail for case ' . $case,
             );
         }
 
@@ -157,11 +157,11 @@ class SaveTest extends AppTestCase
 
             $this->assertSame(
                 'The key should not already be expired.',
-                $entity->getError('expires')['custom']
+                $entity->getError('expires')['custom'],
             );
             $this->assertTrue(
                 $entity->hasErrors(),
-                'Gpgkeys expires date should not validate for case ' . $case
+                'Gpgkeys expires date should not validate for case ' . $case,
             );
         }
 
@@ -191,7 +191,7 @@ class SaveTest extends AppTestCase
 
             $this->assertSame(
                 'The creation date should be set in the past.',
-                $entity->getError('key_created')['custom']
+                $entity->getError('key_created')['custom'],
             );
             $this->assertTrue($entity->hasErrors(), 'Gpgkeys created date should not validate for case ' . $case);
         }

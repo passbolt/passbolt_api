@@ -53,13 +53,13 @@ class MetadataTypesSettingsSetService
         $orgSettingsTable->createOrUpdateSetting(
             MetadataTypesSettingsGetService::ORG_SETTING_PROPERTY,
             $dto->toJson(),
-            $uac
+            $uac,
         );
 
         $this->dispatchEvent(
             static::AFTER_METADATA_SETTINGS_SET_SUCCESS_EVENT_NAME,
             compact('dto', 'uac'),
-            $this
+            $this,
         );
 
         return $dto;

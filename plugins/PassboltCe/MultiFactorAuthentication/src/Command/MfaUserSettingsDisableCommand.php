@@ -135,7 +135,7 @@ class MfaUserSettingsDisableCommand extends PassboltCommand
             $io->out(__(
                 'The user "{0}" has MFA disabled already.
                 The MFA is disabled either at the user level or for the whole organization.',
-                $providedUsername
+                $providedUsername,
             ));
 
             return $this->errorCode();
@@ -146,7 +146,7 @@ class MfaUserSettingsDisableCommand extends PassboltCommand
         if (
             !$mfaUserSettingsDisableService->disableUserSettings(
                 $userToUpdate,
-                new UserAccessControl($userToUpdate->role->name, $userToUpdate->id, $userToUpdate->username)
+                new UserAccessControl($userToUpdate->role->name, $userToUpdate->id, $userToUpdate->username),
             )
         ) {
             $io->out(__('An error happened while disabling the MFA for user "{0}".', $providedUsername));
@@ -180,12 +180,12 @@ class MfaUserSettingsDisableCommand extends PassboltCommand
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
             ->find('locale');
 
-        $mfaQ = (new IsMfaEnabledQueryService());
+        $mfaQ = new IsMfaEnabledQueryService();
         $simulatedUuid = UuidFactory::uuid(); // need the uuid to be set because decorateForView will verify it
         $mfaQ->decorateForView(
             $findUserQuery,
             new UserAccessControl(ROLE::ADMIN, $simulatedUuid),
-            $simulatedUuid
+            $simulatedUuid,
         );
 
         /** @var \App\Model\Entity\User|null $user */

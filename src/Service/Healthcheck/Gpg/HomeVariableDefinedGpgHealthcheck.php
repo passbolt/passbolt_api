@@ -64,7 +64,7 @@ class HomeVariableDefinedGpgHealthcheck extends AbstractGpgHealthcheck
     {
         return __(
             'The environment variable GNUPGHOME is set to {0}, but the directory does not exist.',
-            $this->gpgHome
+            $this->gpgHome,
         );
     }
 

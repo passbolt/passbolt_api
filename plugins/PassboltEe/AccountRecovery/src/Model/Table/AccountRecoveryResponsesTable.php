@@ -120,7 +120,7 @@ class AccountRecoveryResponsesTable extends Table implements TableCleanupProvide
             ->notEmptyString('responder_foreign_model', __('The responder_foreign_model should not be empty.'))
             ->inList('responder_foreign_model', AccountRecoveryResponse::ALLOWED_RESPONDER_FOREIGN_MODELS, __(
                 'The responder_foreign_model must be one of the following: {0}.',
-                implode(', ', AccountRecoveryResponse::ALLOWED_RESPONDER_FOREIGN_MODELS)
+                implode(', ', AccountRecoveryResponse::ALLOWED_RESPONDER_FOREIGN_MODELS),
             ));
 
         $validator
@@ -133,12 +133,12 @@ class AccountRecoveryResponsesTable extends Table implements TableCleanupProvide
             ->requirePresence(
                 'created_by',
                 'create',
-                __('The identifier of the user who created the response is required.')
+                __('The identifier of the user who created the response is required.'),
             )
             ->notEmptyString(
                 'created_by',
                 __('The identifier of the user who created the response should not be empty.'),
-                false
+                false,
             );
 
         $validator
@@ -146,12 +146,12 @@ class AccountRecoveryResponsesTable extends Table implements TableCleanupProvide
             ->requirePresence(
                 'modified_by',
                 'create',
-                __('The identifier of the user who modified the response is required.')
+                __('The identifier of the user who modified the response is required.'),
             )
             ->notEmptyString(
                 'modified_by',
                 __('The identifier of the user who modified the response should not be empty.'),
-                false
+                false,
             );
 
         return $validator;

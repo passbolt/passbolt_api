@@ -229,7 +229,7 @@ trait GroupsFindersTrait
     private function _filterQueryByGroupsUsers(
         SelectQuery $query,
         array $usersIds,
-        ?bool $areManager = false
+        ?bool $areManager = false,
     ): SelectQuery {
         // If there is only one user use a left join
         if (count($usersIds) == 1) {

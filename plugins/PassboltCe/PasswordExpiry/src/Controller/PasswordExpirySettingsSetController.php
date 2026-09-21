@@ -35,7 +35,7 @@ class PasswordExpirySettingsSetController extends AppController
 
         $settings = $setSettingsService->createOrUpdate(
             $this->User->getExtendAccessControl(),
-            $this->getRequest()->getData()
+            $this->getRequest()->getData(),
         );
 
         $this->success(__('The operation was successful.'), $settings->toArray());

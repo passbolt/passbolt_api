@@ -60,7 +60,7 @@ class UsersCommand extends DirectorySyncCommand
      */
     public function __construct(
         ProcessUserService $processUserService,
-        ResourcesExpireResourcesServiceInterface $expireResourcesService
+        ResourcesExpireResourcesServiceInterface $expireResourcesService,
     ) {
         $this->expireResourcesService = $expireResourcesService;
 

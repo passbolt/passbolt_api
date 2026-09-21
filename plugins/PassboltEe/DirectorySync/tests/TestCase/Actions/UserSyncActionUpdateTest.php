@@ -41,7 +41,7 @@ class UserSyncActionUpdateTest extends DirectorySyncDeprecatedIntegrationTestCas
     private function initAction(): void
     {
         $this->action = new UserSyncAction(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
         $this->action->getDirectory()->setUsers([]);
     }

@@ -176,7 +176,7 @@ class RolesUpdateControllerTest extends RbacsIntegrationTestCase
         $response = $this->getResponseBodyAsArray();
         $this->assertSame(
             'The string should not contain invisible characters.',
-            $response['name']['noInvisibleCharacters']
+            $response['name']['noInvisibleCharacters'],
         );
         $this->assertSame('sales', RoleFactory::get($role->id)->name);
     }

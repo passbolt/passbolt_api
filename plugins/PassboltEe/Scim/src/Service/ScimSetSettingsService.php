@@ -70,7 +70,7 @@ class ScimSetSettingsService extends ScimBaseSettingsService
         if (!$form->execute($data, ['validate' => $validate])) {
             throw new FormValidationException(
                 __('Could not validate the SCIM settings.'),
-                $form
+                $form,
             );
         }
 
@@ -111,7 +111,7 @@ class ScimSetSettingsService extends ScimBaseSettingsService
         $setting = $scimSettingsTable->createOrUpdateSetting(
             $scimSettingsTable->getProperty(),
             $value,
-            $uac
+            $uac,
         );
 
         $renderedSettings = $this->getRenderedValue($setting, $form);

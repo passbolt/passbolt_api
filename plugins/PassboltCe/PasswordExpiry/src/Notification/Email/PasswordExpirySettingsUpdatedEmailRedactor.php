@@ -84,7 +84,7 @@ class PasswordExpirySettingsUpdatedEmailRedactor implements SubscribedEmailRedac
         // Send emails to all the administrators
         foreach ($admins as $admin) {
             $emailCollection->addEmail(
-                $this->createEmail($admin, $operator, $passwordExpirySetting, $clientIp, $userAgent)
+                $this->createEmail($admin, $operator, $passwordExpirySetting, $clientIp, $userAgent),
             );
         }
 
@@ -104,7 +104,7 @@ class PasswordExpirySettingsUpdatedEmailRedactor implements SubscribedEmailRedac
         User $operator,
         PasswordExpirySetting $passwordExpirySetting,
         string $clientIp,
-        string $userAgent
+        string $userAgent,
     ): Email {
         $operatorFullName = $operator->profile->full_name;
         $subject = (new LocaleService())->translateString(
@@ -113,7 +113,7 @@ class PasswordExpirySettingsUpdatedEmailRedactor implements SubscribedEmailRedac
                 return $operator->id === $recipient->id ?
                     __('You edited the password expiry settings') :
                     __('{0} edited the password expiry settings', $operatorFullName);
-            }
+            },
         );
 
         return new Email(
@@ -128,7 +128,7 @@ class PasswordExpirySettingsUpdatedEmailRedactor implements SubscribedEmailRedac
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 }

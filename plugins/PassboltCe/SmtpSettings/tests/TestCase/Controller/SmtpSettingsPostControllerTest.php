@@ -59,7 +59,7 @@ class SmtpSettingsPostControllerTest extends AppIntegrationTestCase
                 'created_by' => $savedSettings->created_by,
                 'modified_by' => $savedSettings->modified_by,
             ],
-            ['source' => 'db']
+            ['source' => 'db'],
         );
         $expectedData['tls'] = true;
 
@@ -76,7 +76,7 @@ class SmtpSettingsPostControllerTest extends AppIntegrationTestCase
         $this->assertBadRequestError('Could not validate the smtp settings.');
         $this->assertSame(
             'The sender email should be a valid email address.',
-            $this->_responseJsonBody->sender_email->email
+            $this->_responseJsonBody->sender_email->email,
         );
 
         $this->assertSame(0, SmtpSettingFactory::count());

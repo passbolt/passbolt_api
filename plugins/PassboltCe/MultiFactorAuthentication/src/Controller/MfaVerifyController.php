@@ -64,7 +64,7 @@ abstract class MfaVerifyController extends MfaController
      */
     protected function _handleVerifiedNotRequired(
         SessionIdentificationServiceInterface $sessionIdentificationService,
-        ?RememberAMonthSettingInterface $rememberMeForAMonthSetting = null
+        ?RememberAMonthSettingInterface $rememberMeForAMonthSetting = null,
     ) {
         // Mfa cookie is set and a valid token
         $uac = $this->User->getAccessControl();
@@ -75,7 +75,7 @@ abstract class MfaVerifyController extends MfaController
                 $mfaVerifiedToken,
                 $sessionIdentificationService,
                 $this->getRequest(),
-                $rememberMeForAMonthSetting
+                $rememberMeForAMonthSetting,
             );
             if ($isValid) {
                 throw new BadRequestException(__('The multi-factor authentication is not required.'));
@@ -106,7 +106,7 @@ abstract class MfaVerifyController extends MfaController
             // for example a user is trying to force a check on a provider that is not set for the org
             if ($this->getRequest()->is('json')) {
                 throw new BadRequestException(
-                    __('No valid multi-factor authentication settings found for this provider.')
+                    __('No valid multi-factor authentication settings found for this provider.'),
                 );
             } else {
                 return $this->redirect('/');
@@ -127,7 +127,7 @@ abstract class MfaVerifyController extends MfaController
     protected function _generateMFaToken(
         string $provider,
         SessionIdentificationServiceInterface $sessionIdentificationService,
-        RememberAMonthSettingInterface $rememberMeForAMonthSetting
+        RememberAMonthSettingInterface $rememberMeForAMonthSetting,
     ) {
         $uac = $this->User->getAccessControl();
         $sessionId = $sessionIdentificationService->getSessionIdentifier($this->getRequest());

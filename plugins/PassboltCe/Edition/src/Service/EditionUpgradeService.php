@@ -55,7 +55,7 @@ class EditionUpgradeService
                 (new EditionSetService())->setToPro($uac);
 
                 return $dto;
-            }
+            },
         );
 
         $this->dispatchEvent(self::EVENT_NAME, [

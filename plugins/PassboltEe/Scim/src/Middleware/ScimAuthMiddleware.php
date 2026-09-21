@@ -46,7 +46,7 @@ class ScimAuthMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
         if (!ScimTools::isScimApiRequest($request)) {

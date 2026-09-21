@@ -94,7 +94,7 @@ class DirectorySyncEndpointsDisabledHealthcheck implements HealthcheckServiceInt
             __(
                 'Or set {0} to true in {1}.',
                 DirectorySyncEndpointsSecurityMiddleware::SECURITY_CONFIG_KEY,
-                CONFIG . 'passbolt.php'
+                CONFIG . 'passbolt.php',
             ),
         ];
     }

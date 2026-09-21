@@ -45,7 +45,7 @@ class WebInstallerPlugin extends BasePlugin
         $container
             ->add(
                 WebInstallerChangeConfigFolderPermissionService::class,
-                WebInstallerChangeConfigFolderPermissionService::class
+                WebInstallerChangeConfigFolderPermissionService::class,
             )
             ->addArgument(CONFIG);
 

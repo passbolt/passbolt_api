@@ -104,7 +104,7 @@ class MfaPoliciesSettingsSetControllerTest extends AppIntegrationTestCase
         $this->assertStringContainsString('field is required', $response->policy->_required);
         $this->assertStringContainsString(
             'field is required',
-            $response->remember_me_for_a_month->_required
+            $response->remember_me_for_a_month->_required,
         );
     }
 
@@ -124,7 +124,7 @@ class MfaPoliciesSettingsSetControllerTest extends AppIntegrationTestCase
         $this->assertStringContainsString('should be one of the following: opt-in, mandatory', $response->policy->inList);
         $this->assertStringContainsString(
             'should be a boolean type',
-            $response->remember_me_for_a_month->boolean
+            $response->remember_me_for_a_month->boolean,
         );
     }
 
@@ -259,7 +259,7 @@ class MfaPoliciesSettingsSetControllerTest extends AppIntegrationTestCase
         $this->assertEmailSubject($admin->username, 'You edited the MFA policy');
         $this->assertEmailSubject(
             $john->username,
-            "{$admin->profile->first_name} edited the MFA policy"
+            "{$admin->profile->first_name} edited the MFA policy",
         );
         $this->assertEmailIsInQueue([
             'email' => $admin->username,

@@ -130,7 +130,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEventFiredWith(
             ResourcesUpdateService::UPDATE_SUCCESS_EVENT_NAME,
             'isV5',
-            false
+            false,
         );
     }
 

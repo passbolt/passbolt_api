@@ -17,6 +17,9 @@ declare(strict_types=1);
 namespace App\Utility\OpenPGP\Traits;
 
 use Cake\Core\Exception\CakeException;
+use OpenPGP;
+use OpenPGP_PublicKeyPacket;
+use OpenPGP_SecretKeyPacket;
 
 trait OpenPGPBackendArmoredParseTrait
 {
@@ -47,24 +50,30 @@ trait OpenPGPBackendArmoredParseTrait
      */
     private function unarmor(string $text, string $header = 'PGP PUBLIC KEY BLOCK'): false|string
     {
-        // @codingStandardsIgnoreStart
-        $header = \OpenPGP::header($header);
+        $header = OpenPGP::header($header);
         $text = str_replace(["\r\n", "\r"], ["\n", ''], $text);
-        if (
-            ($pos1 = strpos($text, $header)) !== false &&
-            ($pos1 = strpos($text, "\n\n", $pos1 += strlen($header))) !== false
-        ) {
-            $pos2 = strpos($text, "\n=", $pos1 += 2);
-            if ($pos2 === false) {
-                // no CRC, consider the key invalid
-                return false;
-            }
-            $text = substr($text, $pos1, $pos2 - $pos1);
-            return base64_decode($text, true);
+
+        // The armored text must start with the header, e.g. "-----BEGIN PGP PUBLIC KEY BLOCK-----"
+        $headerPos = strpos($text, $header);
+        if ($headerPos === false) {
+            return false;
         }
 
-        return false;
-        // @codingStandardsIgnoreEnd
+        // The base64 data starts after the empty line following the header.
+        $emptyLinePos = strpos($text, "\n\n", $headerPos + strlen($header));
+        if ($emptyLinePos === false) {
+            return false;
+        }
+        $dataPos = $emptyLinePos + 2;
+
+        // The base64 data ends where the CRC line starts, e.g. "=abcd".
+        $crcPos = strpos($text, "\n=", $dataPos);
+        if ($crcPos === false) {
+            // no CRC, consider the key invalid
+            return false;
+        }
+
+        return base64_decode(substr($text, $dataPos, $crcPos - $dataPos), true);
     }
 
     /**
@@ -91,9 +100,7 @@ trait OpenPGPBackendArmoredParseTrait
         }
 
         // Try to parse the key
-        // @codingStandardsIgnoreStart
-        $publicKey = @(\OpenPGP_PublicKeyPacket::parse($keyUnarmored));
-        // @codingStandardsIgnoreEnd
+        $publicKey = @OpenPGP_PublicKeyPacket::parse($keyUnarmored); // phpcs:ignore
         if (empty($publicKey) || empty($publicKey->fingerprint) || empty($publicKey->key)) {
             return false;
         }
@@ -125,9 +132,7 @@ trait OpenPGPBackendArmoredParseTrait
         }
 
         // Try to parse the key
-        // @codingStandardsIgnoreStart
-        $privateKey = @(\OpenPGP_SecretKeyPacket::parse($keyUnarmored));
-        // @codingStandardsIgnoreEnd
+        $privateKey = @OpenPGP_SecretKeyPacket::parse($keyUnarmored); // phpcs:ignore
         if (empty($privateKey) || empty($privateKey->fingerprint) || empty($privateKey->key)) {
             return false;
         }

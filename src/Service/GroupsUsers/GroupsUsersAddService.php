@@ -106,7 +106,7 @@ class GroupsUsersAddService
                 $this->dispatchGroupUserAddedEvent($uac, $groupUser);
 
                 return $entitiesChangesDto;
-            }
+            },
         );
     }
 
@@ -174,7 +174,7 @@ class GroupsUsersAddService
         UserAccessControl $uac,
         GroupsUser $groupUser,
         array $missingAccessResourcesIds,
-        array $secretsData = []
+        array $secretsData = [],
     ): array {
         $secrets = [];
         $secretsData = $this->setSecretRevisionInData($secretsData);
@@ -185,7 +185,7 @@ class GroupsUsersAddService
                 $secretRowRef,
                 $secretData,
                 $groupUser,
-                $missingAccessResourcesIds
+                $missingAccessResourcesIds,
             );
         }
 
@@ -231,7 +231,7 @@ class GroupsUsersAddService
             $revision = $secretRevisions->firstMatch(['resource_id' => $row['resource_id']]);
             if (is_null($revision)) {
                 throw new CustomValidationException(
-                    __('The resource with ID {0} does not have a secret revision.', $row['resource_id'])
+                    __('The resource with ID {0} does not have a secret revision.', $row['resource_id']),
                 );
             }
             $secretsData[$secretRowRef]['secret_revision_id'] = $revision['id'];
@@ -252,7 +252,7 @@ class GroupsUsersAddService
             ->findAcosAccessesDiffBetweenGroupAndUser(
                 PermissionsTable::RESOURCE_ACO,
                 $groupUser->group_id,
-                $groupUser->user_id
+                $groupUser->user_id,
             )
             ->all()
             ->extract('aco_foreign_key')
@@ -277,7 +277,7 @@ class GroupsUsersAddService
         int $secretRowRef,
         array $secretData,
         GroupsUser $groupUser,
-        array $missingSecretsResourcesIds = []
+        array $missingSecretsResourcesIds = [],
     ): Secret {
         $secretData = array_merge($secretData, [
             'created_by' => $uac->getId(),

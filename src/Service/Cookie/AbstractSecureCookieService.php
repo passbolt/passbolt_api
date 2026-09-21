@@ -60,7 +60,7 @@ abstract class AbstractSecureCookieService
         string $name,
         array|string $value = '',
         ?string $path = '',
-        ?DateTimeInterface $expiresAt = null
+        ?DateTimeInterface $expiresAt = null,
     ): Cookie {
         $cookie = (new Cookie($name))
             ->withPath($this->getPath($path))

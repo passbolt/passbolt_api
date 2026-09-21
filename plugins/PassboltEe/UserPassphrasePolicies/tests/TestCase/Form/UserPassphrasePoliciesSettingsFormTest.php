@@ -60,7 +60,7 @@ class UserPassphrasePoliciesSettingsFormTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'range' => self::getRangeTestCases(
                 UserPassphrasePoliciesSettingsForm::ENTROPY_MINIMUM_VALUE_MIN,
-                UserPassphrasePoliciesSettingsForm::ENTROPY_MINIMUM_VALUE_MAX
+                UserPassphrasePoliciesSettingsForm::ENTROPY_MINIMUM_VALUE_MAX,
             ),
         ];
 
@@ -68,7 +68,7 @@ class UserPassphrasePoliciesSettingsFormTest extends AppTestCase
             UserPassphrasePoliciesSettingsForm::class,
             'entropy_minimum',
             $this->getDummyUserPassphrasePoliciesSettings(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -83,7 +83,7 @@ class UserPassphrasePoliciesSettingsFormTest extends AppTestCase
             UserPassphrasePoliciesSettingsForm::class,
             'external_dictionary_check',
             $this->getDummyUserPassphrasePoliciesSettings(),
-            $testCases
+            $testCases,
         );
     }
 

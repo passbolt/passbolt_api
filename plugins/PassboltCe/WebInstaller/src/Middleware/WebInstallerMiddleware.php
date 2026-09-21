@@ -38,7 +38,7 @@ class WebInstallerMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         $uri = $request->getRequestTarget();
         $targetInstallPage = preg_match('/^\/install/', $uri);

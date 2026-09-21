@@ -195,7 +195,7 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
                 'The fingerprint could not be found in account_recovery_organization_public_keys table. '
                 . 'Continue anyway?',
                 ['y', 'n'],
-                'n'
+                'n',
             );
             $this->abortIfNoContinue($continue, $io);
         } else {

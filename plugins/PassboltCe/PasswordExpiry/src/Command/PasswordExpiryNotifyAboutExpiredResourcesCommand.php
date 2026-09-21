@@ -42,7 +42,7 @@ class PasswordExpiryNotifyAboutExpiredResourcesCommand extends PassboltCommand
      */
     public function __construct(
         ProcessUserService $processUserService,
-        PasswordExpiryGetOwnersOfExpiredResourcesService $service
+        PasswordExpiryGetOwnersOfExpiredResourcesService $service,
     ) {
         parent::__construct();
         $this->processUserService = $processUserService;

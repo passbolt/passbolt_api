@@ -54,21 +54,21 @@ class EmailSubscriptionDispatcherTest extends TestCase
         $userDisabled = UserFactory::make()->disabled()->getEntity();
         $redactorAlwaysActive = $this->createSubscribedRedactor(
             [$event],
-            new Email($userEnabled, 'redactorAlwaysActive', [], 'test')
+            new Email($userEnabled, 'redactorAlwaysActive', [], 'test'),
         );
         $redactorAlwaysRecipientDisabled = $this->createSubscribedRedactor(
             [$event],
-            new Email($userDisabled, 'redactorAlwaysRecipientDisabled', [], 'test')
+            new Email($userDisabled, 'redactorAlwaysRecipientDisabled', [], 'test'),
         );
         $redactorOnSettingActivated = $this->createSubscribedRedactor(
             [$event],
             new Email($userEnabled, 'redactorOnSettingActivated', [], 'test'),
-            $settingActivated
+            $settingActivated,
         );
         $redactorOnSettingDeactivated = $this->createSubscribedRedactor(
             [$event],
             new Email($userEnabled, 'redactorOnSettingDeactivated', [], 'test'),
-            $settingDeactivated
+            $settingDeactivated,
         );
 
         EventManager::instance()
@@ -101,21 +101,21 @@ class EmailSubscriptionDispatcherTest extends TestCase
         $userDisabled = UserFactory::make()->disabled()->getEntity();
         $redactorAlwaysActive = $this->createSubscribedRedactor(
             [$event],
-            new Email($userEnabled, 'redactorAlwaysActive', [], 'test')
+            new Email($userEnabled, 'redactorAlwaysActive', [], 'test'),
         );
         $redactorAlwaysRecipientDisabled = $this->createSubscribedRedactor(
             [$event],
-            new Email($userDisabled, 'redactorAlwaysRecipientDisabled', [], 'test')
+            new Email($userDisabled, 'redactorAlwaysRecipientDisabled', [], 'test'),
         );
         $redactorOnSettingActivated = $this->createSubscribedRedactor(
             [$event],
             new Email($userEnabled, 'redactorOnSettingActivated', [], 'test'),
-            $settingActivated
+            $settingActivated,
         );
         $redactorOnSettingDeactivated = $this->createSubscribedRedactor(
             [$event],
             new Email($userEnabled, 'redactorOnSettingDeactivated', [], 'test'),
-            $settingDeactivated
+            $settingDeactivated,
         );
 
         EventManager::instance()

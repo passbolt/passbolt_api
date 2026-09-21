@@ -68,13 +68,13 @@ class MetadataKeysSettingsSetService
         $updatedEntity = $orgSettingsTable->createOrUpdateSetting(
             MetadataKeysSettingsGetService::ORG_SETTING_PROPERTY,
             $dto->toJson(),
-            $uac
+            $uac,
         );
 
         $this->dispatchEvent(
             static::AFTER_METADATA_SETTINGS_SET_SUCCESS_EVENT_NAME,
             compact('dto', 'updatedEntity', 'uac'),
-            $this
+            $this,
         );
 
         return $dto;

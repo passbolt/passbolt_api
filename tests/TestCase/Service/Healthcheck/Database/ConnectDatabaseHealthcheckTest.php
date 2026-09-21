@@ -82,7 +82,7 @@ class ConnectDatabaseHealthcheckTest extends TestCase
         $this->assertFalse($dbHealthcheck->check()->isPassed());
         $this->assertSame(
             'The driver defined in the database configuration is not supported.',
-            $dbHealthcheck->getFailureMessage()
+            $dbHealthcheck->getFailureMessage(),
         );
     }
 

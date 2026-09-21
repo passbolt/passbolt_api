@@ -157,7 +157,7 @@ class ResourceFactory extends CakephpBaseFactory
             ->patchData(['created_by' => $creator->id])
             ->with(
                 'Permission',
-                PermissionFactory::make(compact('aco', 'aro', 'aro_foreign_key'))
+                PermissionFactory::make(compact('aco', 'aro', 'aro_foreign_key')),
             );
     }
 

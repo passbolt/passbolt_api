@@ -55,7 +55,7 @@ class RemoveCsrfCookieOnJwt implements EventListenerInterface
         $service = new JwtRequestDetectionService($request);
         if ($service->useJwtAuthentication() && $isCsrfRequired !== true) {
             $controller->setResponse(
-                $response->withExpiredCookie(new Cookie('csrfToken'))
+                $response->withExpiredCookie(new Cookie('csrfToken')),
             );
         }
     }

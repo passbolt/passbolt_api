@@ -24,6 +24,11 @@ class V202ForceColumnsCharset extends AbstractMigration
      */
     public function up()
     {
+        if ($this->getAdapter()->getAdapterType() !== 'mysql') {
+            // This migration enforces MySQL charset/collation; not meaningful on PostgreSQL
+            return;
+        }
+
         $this->table('authentication_tokens')
             ->changeColumn('id', 'char', [
                 'default' => null,

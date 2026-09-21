@@ -106,7 +106,7 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
             $recipient->locale,
             function () use ($modifierFirstName) {
                 return __('{0} edited the self registration settings.', $modifierFirstName);
-            }
+            },
         );
     }
 
@@ -120,7 +120,7 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
             $recipient->locale,
             function () {
                 return __('You edited the self registration settings.');
-            }
+            },
         );
     }
 
@@ -135,7 +135,7 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
         User $recipient,
         User $modifier,
         string $status,
-        ?string $info
+        ?string $info,
     ): Email {
         if ($recipient->id === $modifier->id) {
             $subject = $this->getSubjectForModifier($recipient);
@@ -150,7 +150,7 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
                 'body' => compact('recipient', 'modifier', 'info', 'status', 'subject'),
                 'title' => $subject,
             ],
-            static::EMAIL_TEMPLATE
+            static::EMAIL_TEMPLATE,
         );
     }
 }

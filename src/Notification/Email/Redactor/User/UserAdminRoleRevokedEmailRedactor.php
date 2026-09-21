@@ -123,13 +123,13 @@ class UserAdminRoleRevokedEmailRedactor implements SubscribedEmailRedactorInterf
         User $operator,
         User $user,
         string $clientIp,
-        string $userAgent
+        string $userAgent,
     ): Email {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($user) {
                 return __('{0}\'s admin role has been revoked', $user->profile->full_name);
-            }
+            },
         );
 
         return new Email(
@@ -145,7 +145,7 @@ class UserAdminRoleRevokedEmailRedactor implements SubscribedEmailRedactorInterf
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 

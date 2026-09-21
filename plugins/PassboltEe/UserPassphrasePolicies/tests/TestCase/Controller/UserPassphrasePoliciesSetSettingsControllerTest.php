@@ -131,11 +131,11 @@ class UserPassphrasePoliciesSetSettingsControllerTest extends AppIntegrationTest
         foreach ($admins as $admin) {
             $this->assertEmailInBatchContains(
                 sprintf('%s edited the user passphrase policy', $fullName),
-                $admin->username
+                $admin->username,
             );
             $this->assertEmailInBatchContains(
                 Router::url('/app/administration/user-passphrase-policies', true),
-                $admin->username
+                $admin->username,
             );
         }
     }
@@ -178,11 +178,11 @@ class UserPassphrasePoliciesSetSettingsControllerTest extends AppIntegrationTest
         foreach ($admins as $admin) {
             $this->assertEmailInBatchContains(
                 sprintf('%s edited the user passphrase policy', $fullName),
-                $admin->username
+                $admin->username,
             );
             $this->assertEmailInBatchContains(
                 Router::url('/app/administration/user-passphrase-policies', true),
-                $admin->username
+                $admin->username,
             );
         }
     }

@@ -98,7 +98,7 @@ class MetadataFoldersUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->assertEventFiredWith(
             FoldersUpdateService::FOLDERS_UPDATE_FOLDER_EVENT,
             'isV5',
-            true
+            true,
         );
     }
 
@@ -141,7 +141,7 @@ class MetadataFoldersUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->assertEventFiredWith(
             FoldersUpdateService::FOLDERS_UPDATE_FOLDER_EVENT,
             'isV5',
-            true
+            true,
         );
     }
 
@@ -590,7 +590,7 @@ class MetadataFoldersUpdateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
         $folder = FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
-        $dto = MetadataFolderDto::fromArray($folder->toArray());
+        $dto = MetadataFolderDto::createFromArray($folder->toArray());
         $metadataArray = $dto->getClearTextMetadata();
         $metadata = $this->encryptForUser(json_encode($metadataArray), $ada, $this->getAdaNoPassphraseKeyInfo());
         $this->logInAs($ada);
@@ -621,7 +621,7 @@ class MetadataFoldersUpdateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
         $folder = FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
-        $dto = MetadataFolderDto::fromArray($folder->toArray());
+        $dto = MetadataFolderDto::createFromArray($folder->toArray());
         $metadataArray = $dto->getClearTextMetadata();
         $metadata = $this->encryptForUser(json_encode($metadataArray), $ada, $this->getAdaNoPassphraseKeyInfo());
         $this->logInAs($ada);

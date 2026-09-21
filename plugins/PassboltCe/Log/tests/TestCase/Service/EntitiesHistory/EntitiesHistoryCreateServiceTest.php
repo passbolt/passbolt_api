@@ -83,7 +83,7 @@ class EntitiesHistoryCreateServiceTest extends AppTestCase
         UserAction::getInstance(
             new UserAccessControl(Role::USER, $owner->id),
             'Share.share',
-            'PUT /share/resource/*'
+            'PUT /share/resource/*',
         );
 
         $permission = $this->Permissions->newEntity([

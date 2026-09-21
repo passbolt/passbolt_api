@@ -39,7 +39,7 @@ class SsoHealthcheckIndexControllerTest extends SsoIntegrationTestCase
         $this->mockService('fullBaseUrlReachableClient', function () {
             return $this->getMockedHealthcheckStatusRequest(
                 200,
-                json_encode(['body' => 'OK'])
+                json_encode(['body' => 'OK']),
             );
         });
         $this->mockService('sslHealthcheckClient', function () {

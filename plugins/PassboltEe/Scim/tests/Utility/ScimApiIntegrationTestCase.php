@@ -195,7 +195,7 @@ abstract class ScimApiIntegrationTestCase extends AppIntegrationTestCase
         $text = str_replace(
             self::PLACEHOLDER_API_URL,
             str_replace('"', '', json_encode(Router::url('/', full: true))),
-            $text
+            $text,
         );
 
         return str_replace(self::PLACEHOLDER_SETTING_ID, $this->settingId, $text);

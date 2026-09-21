@@ -82,7 +82,7 @@ class PassphraseGeneratorSettingsValidator extends Validator
             ->requirePresence(
                 'words',
                 true,
-                __('The passphrase generator words is required.')
+                __('The passphrase generator words is required.'),
             )
             ->range(
                 'words',
@@ -93,43 +93,43 @@ class PassphraseGeneratorSettingsValidator extends Validator
                 __(
                     'The passphrase generator words should be between {0} and {1}.',
                     self::PASSPHRASE_GENERATOR_WORDS_MIN,
-                    self::PASSPHRASE_GENERATOR_WORDS_MAX
-                )
+                    self::PASSPHRASE_GENERATOR_WORDS_MAX,
+                ),
             );
 
         $this
             ->requirePresence(
                 'word_separator',
                 true,
-                __('The passphrase generator word separator is required.')
+                __('The passphrase generator word separator is required.'),
             )
             ->allowEmptyString('word_separator')
             ->utf8Extended(
                 'word_separator',
-                __('The passphrase generator word separator should be a valid UTF8 string.')
+                __('The passphrase generator word separator should be a valid UTF8 string.'),
             )
             ->maxLength(
                 'word_separator',
                 self::PASSPHRASE_GENERATOR_WORD_SEPARATOR_LENGTH_MAX,
                 __(
                     'The passphrase generator word separator should be maximum {0} characters.',
-                    self::PASSPHRASE_GENERATOR_WORD_SEPARATOR_LENGTH_MAX
-                )
+                    self::PASSPHRASE_GENERATOR_WORD_SEPARATOR_LENGTH_MAX,
+                ),
             );
 
         $this
             ->requirePresence(
                 'word_case',
                 true,
-                __('The passphrase generator word case is required.')
+                __('The passphrase generator word case is required.'),
             )
             ->inList(
                 'word_case',
                 self::PASSPHRASE_GENERATOR_WORDS_CASES,
                 __(
                     'The passphrase generator word case should be one of the following: {0}.',
-                    implode(', ', self::PASSPHRASE_GENERATOR_WORDS_CASES)
-                )
+                    implode(', ', self::PASSPHRASE_GENERATOR_WORDS_CASES),
+                ),
             );
     }
 }

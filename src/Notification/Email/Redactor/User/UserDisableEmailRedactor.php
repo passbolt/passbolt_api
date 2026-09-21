@@ -103,21 +103,21 @@ class UserDisableEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function createEmail(
         User $recipient,
-        User $user
+        User $user,
     ): Email {
         $userFullName = $user->profile->full_name;
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($userFullName) {
                 return __('{0} has been suspended', $userFullName);
-            }
+            },
         );
 
         return new Email(
             $recipient,
             $subject,
             ['body' => compact('userFullName', 'user', 'recipient'), 'title' => $subject],
-            'AD/user_disable'
+            'AD/user_disable',
         );
     }
 }

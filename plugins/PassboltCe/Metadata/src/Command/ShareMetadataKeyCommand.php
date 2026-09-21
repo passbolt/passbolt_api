@@ -155,7 +155,7 @@ class ShareMetadataKeyCommand extends PassboltCommand
         array $users,
         array $metadataKeys,
         ConsoleIo $io,
-        bool &$error
+        bool &$error,
     ): void {
         $metadataKeyShareService = new MetadataKeyShareDefaultService();
 
@@ -188,7 +188,7 @@ class ShareMetadataKeyCommand extends PassboltCommand
 
             $this->success(
                 __('The metadata key {0} was shared with user {1}.', $missingMetadataKeyId, $user->username),
-                $io
+                $io,
             );
         }
     }

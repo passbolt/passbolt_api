@@ -73,7 +73,7 @@ class SsoSettingsDeleteService
             $event = new Event(
                 self::AFTER_DELETE_ACTIVE_SSO_SETTINGS_EVENT,
                 $this,
-                ['uac' => $uac, 'ssoSetting' => $ssoSetting]
+                ['uac' => $uac, 'ssoSetting' => $ssoSetting],
             );
             $ssoSettingsTable->getEventManager()->dispatch($event);
         }

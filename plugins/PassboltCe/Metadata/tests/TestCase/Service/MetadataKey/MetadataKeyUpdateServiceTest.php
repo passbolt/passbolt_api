@@ -58,7 +58,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
         $key = MetadataKeyFactory::make()->patchData($this->getDefaultFixtureData())->persist();
         $user = UserFactory::make()->admin()->persist();
         $data = $this->getDefaultRequestData();
-        $dto = MetadataKeyUpdateDto::fromArray($data);
+        $dto = MetadataKeyUpdateDto::createFromArray($data);
         $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
 
         (new MetadataKeyUpdateService())->update($uac, $key->get('id'), $dto);
@@ -73,7 +73,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
         $key = MetadataKeyFactory::make()->patchData($this->getDefaultFixtureData())->persist();
         $user = UserFactory::make()->user()->persist();
         $data = $this->getDefaultRequestData();
-        $dto = MetadataKeyUpdateDto::fromArray($data);
+        $dto = MetadataKeyUpdateDto::createFromArray($data);
         $uac = new UserAccessControl(Role::USER, $user->get('id'));
 
         $this->expectException(ForbiddenException::class);
@@ -84,7 +84,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
     {
         $user = UserFactory::make()->admin()->persist();
         $data = $this->getDefaultRequestData();
-        $dto = MetadataKeyUpdateDto::fromArray($data);
+        $dto = MetadataKeyUpdateDto::createFromArray($data);
         $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
 
         $this->expectException(BadRequestException::class);
@@ -95,7 +95,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
     {
         $user = UserFactory::make()->admin()->persist();
         $data = $this->getDefaultRequestData();
-        $dto = MetadataKeyUpdateDto::fromArray($data);
+        $dto = MetadataKeyUpdateDto::createFromArray($data);
         $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
 
         $this->expectException(NotFoundException::class);
@@ -108,7 +108,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
         $user = UserFactory::make()->admin()->persist();
         $data = $this->getDefaultRequestData();
         $data['fingerprint'] = '67BFFCB7B74AF4C85E81AB26508850525CD78BAF';
-        $dto = MetadataKeyUpdateDto::fromArray($data);
+        $dto = MetadataKeyUpdateDto::createFromArray($data);
         $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
 
         $this->expectException(NotFoundException::class);
@@ -124,7 +124,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
         ])->persist();
         $user = UserFactory::make()->admin()->persist();
         $data = $this->getDefaultRequestData();
-        $dto = MetadataKeyUpdateDto::fromArray($data);
+        $dto = MetadataKeyUpdateDto::createFromArray($data);
         $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
 
         $this->expectException(BadRequestException::class);
@@ -142,7 +142,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
         ])->persist();
         $user = UserFactory::make()->admin()->persist();
         $data = $this->getDefaultRequestData();
-        $dto = MetadataKeyUpdateDto::fromArray($data);
+        $dto = MetadataKeyUpdateDto::createFromArray($data);
         $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
 
         $this->expectException(NotFoundException::class);
@@ -159,7 +159,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
             'expired' => DateTime::yesterday(),
         ];
-        $dto = MetadataKeyUpdateDto::fromArray($data);
+        $dto = MetadataKeyUpdateDto::createFromArray($data);
         $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
 
         $this->expectException(CustomValidationException::class);
@@ -180,7 +180,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
 
         $key = MetadataKeyFactory::make()->patchData($fixture)->persist();
         $user = UserFactory::make()->admin()->persist();
-        $dto = MetadataKeyUpdateDto::fromArray($data);
+        $dto = MetadataKeyUpdateDto::createFromArray($data);
         $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
 
         $this->expectException(CustomValidationException::class);

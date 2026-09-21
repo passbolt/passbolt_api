@@ -45,7 +45,7 @@ class CommandRunner
         ?array $env = null,
         mixed $input = null,
         ?float $timeout = 60,
-        ?callable $callback = null
+        ?callable $callback = null,
     ): Process|false {
         // Default to a known-safe CWD if none provided
         // This prevents proc_open permission errors from the web request where the CWD is unexpectedly inaccessible

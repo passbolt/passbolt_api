@@ -59,7 +59,7 @@ class SubscriptionKeyImportServiceTest extends TestCase
 
         $this->assertInstanceOf(
             Subscription::class,
-            $this->Subscriptions->getOrFail()
+            $this->Subscriptions->getOrFail(),
         );
     }
 
@@ -79,7 +79,7 @@ class SubscriptionKeyImportServiceTest extends TestCase
 
         $this->assertInstanceOf(
             Subscription::class,
-            $this->Subscriptions->getOrFail()
+            $this->Subscriptions->getOrFail(),
         );
     }
 
@@ -93,7 +93,7 @@ class SubscriptionKeyImportServiceTest extends TestCase
 
         $this->assertSame(
             0,
-            $this->Subscriptions->find()->all()->count()
+            $this->Subscriptions->find()->all()->count(),
         );
     }
 }

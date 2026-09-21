@@ -43,7 +43,7 @@ class MetadataSessionKeyCreateService
 
         $metadataSessionKey = $metadataSessionKeysTable->newEntity(
             ['user_id' => $uac->getId(), 'data' => $data],
-            ['accessibleFields' => ['user_id' => true, 'data' => true]]
+            ['accessibleFields' => ['user_id' => true, 'data' => true]],
         );
         try {
             /** @var \Passbolt\Metadata\Model\Entity\MetadataSessionKey $result */
@@ -53,13 +53,13 @@ class MetadataSessionKeyCreateService
 
             throw new CustomValidationException(
                 __('The metadata session key could not be saved.'),
-                $errors
+                $errors,
             );
         } catch (Exception $e) {
             throw new InternalErrorException(
                 __('Could not save the metadata session key, please try again later.'),
                 null,
-                $e
+                $e,
             );
         }
 

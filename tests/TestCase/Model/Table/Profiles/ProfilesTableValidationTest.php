@@ -46,16 +46,16 @@ class ProfilesTableValidationTest extends TestCase
                 'first_name' => "Ada\u{200B}",
                 'last_name' => "Love\u{200B}lace",
             ],
-            ['accessibleFields' => ['first_name' => true, 'last_name' => true]]
+            ['accessibleFields' => ['first_name' => true, 'last_name' => true]],
         );
         $errors = $profile->getErrors();
         $this->assertSame(
             'The string should not contain invisible characters.',
-            $errors['first_name']['noInvisibleCharacters']
+            $errors['first_name']['noInvisibleCharacters'],
         );
         $this->assertSame(
             'The string should not contain invisible characters.',
-            $errors['last_name']['noInvisibleCharacters']
+            $errors['last_name']['noInvisibleCharacters'],
         );
     }
 }

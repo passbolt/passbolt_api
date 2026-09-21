@@ -69,7 +69,7 @@ class PasswordExpiryEnableOnInstanceCreationService
         return $this->passwordExpirySettingsTable->createOrUpdateSetting(
             $this->passwordExpirySettingsTable->getProperty(),
             $this->getDTO()->getValue(),
-            $uac
+            $uac,
         );
     }
 

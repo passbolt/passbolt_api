@@ -58,7 +58,7 @@ class FoldersRelationsRemoveItemFromUserTreeService
                     $this->moveContentToRoot($foreignId, $userId);
                 }
                 $this->foldersRelationsDeleteService->delete($userId, $foreignId);
-            }
+            },
         );
     }
 

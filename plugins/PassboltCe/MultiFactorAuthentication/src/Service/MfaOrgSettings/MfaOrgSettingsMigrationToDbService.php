@@ -82,7 +82,7 @@ final class MfaOrgSettingsMigrationToDbService
      */
     protected function storeMfaSettingsInDb(
         UserAccessControl $uac,
-        array $mfaOrgSettings
+        array $mfaOrgSettings,
     ): void {
         (new MfaOrgSettingsSetService())->setOrgSettings($mfaOrgSettings, $uac, null, [
             'skipDuoHealtcheck' => true,

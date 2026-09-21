@@ -95,7 +95,7 @@ class SsoRecoverAssertServiceTest extends AppTestCase
                 '123456',
                 $ip,
                 $userAgent,
-                SsoSetting::PROVIDER_AZURE
+                SsoSetting::PROVIDER_AZURE,
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
@@ -130,7 +130,7 @@ class SsoRecoverAssertServiceTest extends AppTestCase
                 '123456',
                 $ip,
                 $userAgent,
-                SsoSetting::PROVIDER_AZURE
+                SsoSetting::PROVIDER_AZURE,
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
@@ -166,7 +166,7 @@ class SsoRecoverAssertServiceTest extends AppTestCase
                 '123456',
                 $ip,
                 $userAgent,
-                SsoSetting::PROVIDER_AZURE
+                SsoSetting::PROVIDER_AZURE,
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
@@ -203,7 +203,7 @@ class SsoRecoverAssertServiceTest extends AppTestCase
                 '123456',
                 $ip,
                 $userAgent,
-                SsoSetting::PROVIDER_AZURE
+                SsoSetting::PROVIDER_AZURE,
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
@@ -235,14 +235,14 @@ class SsoRecoverAssertServiceTest extends AppTestCase
             '123456',
             $ip,
             $userAgent,
-            SsoSetting::PROVIDER_AZURE
+            SsoSetting::PROVIDER_AZURE,
         );
 
         /** @var \Passbolt\Sso\Model\Entity\SsoAuthenticationToken $ssoAuthToken */
         $ssoAuthToken = SsoAuthenticationTokenFactory::find()->firstOrFail();
         $this->assertEquals(
             Router::url("/sso/recover/azure/success?token={$ssoAuthToken->token}", true),
-            $result
+            $result,
         );
     }
 
@@ -270,14 +270,14 @@ class SsoRecoverAssertServiceTest extends AppTestCase
             '123456',
             $ip,
             $userAgent,
-            SsoSetting::PROVIDER_GOOGLE
+            SsoSetting::PROVIDER_GOOGLE,
         );
 
         /** @var \Passbolt\Sso\Model\Entity\SsoAuthenticationToken $ssoAuthToken */
         $ssoAuthToken = SsoAuthenticationTokenFactory::find()->firstOrFail();
         $this->assertEquals(
             Router::url("/sso/recover/google/success?token={$ssoAuthToken->token}", true),
-            $result
+            $result,
         );
     }
 
@@ -307,7 +307,7 @@ class SsoRecoverAssertServiceTest extends AppTestCase
             '123456',
             $ip,
             $userAgent,
-            SsoSetting::PROVIDER_AZURE
+            SsoSetting::PROVIDER_AZURE,
         );
 
         $this->assertEquals(Router::url("/sso/recover/error?email={$userEmail}", true), $result);
@@ -340,7 +340,7 @@ class SsoRecoverAssertServiceTest extends AppTestCase
                 '123456',
                 $ip,
                 $userAgent,
-                SsoSetting::PROVIDER_AZURE
+                SsoSetting::PROVIDER_AZURE,
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
@@ -375,7 +375,7 @@ class SsoRecoverAssertServiceTest extends AppTestCase
                 '123456',
                 $ip,
                 $userAgent,
-                SsoSetting::PROVIDER_AZURE
+                SsoSetting::PROVIDER_AZURE,
             );
         } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);

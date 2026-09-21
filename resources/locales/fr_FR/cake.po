@@ -1,589 +1,279 @@
-# LANGUAGE translation of CakePHP Application
-# Copyright YEAR NAME <EMAIL@ADDRESS>
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2024-02-13 12:05+0100\n"
-"PO-Revision-Date: 2024-02-14 10:30+0100\n"
-"Last-Translator: Olivier Larose <olivier@infoliv.com>\n"
-"Language-Team: EMAIL@ADDRESS\n"
-"Language: fr_FR\n"
+"Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"POT-Creation-Date: 2020-11-11 13:56+0100\n"
+"PO-Revision-Date: 2026-09-10 14:47\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"X-Crowdin-Project-ID: 2\n"
+"X-Crowdin-Language: fr\n"
+"X-Crowdin-File: /[passbolt.passbolt-pro-api] release/resources/locales/en_UK/cake.po\n"
+"X-Crowdin-File-ID: 336\n"
+"Language: fr_FR\n"
 
-#: templates/Error/error400.php:41 templates/Error/error500.php:46
+#: Error/error400.php:36
+#: Error/error500.php:40
 msgid "Error"
 msgstr "Erreur"
 
-#: templates/Error/error400.php:42
+#: Error/error400.php:37
 msgid "The requested address {0} was not found on this server."
-msgstr "L'adresse demandée {0} n'a pas été trouvée sur ce serveur."
+msgstr "L'adresse demandée {0} est introuvable sur ce serveur."
 
-#: templates/Error/error500.php:44
-#: vendor/cakephp/cakephp/src/Error/Renderer/WebExceptionRenderer.php:359
-msgid "An Internal Error Has Occurred."
-msgstr "Une Erreur Interne s'est produite."
+#: Error/error500.php:38
+msgid "An Internal Error Has Occurred"
+msgstr "Une erreur interne est survenue"
 
-#: vendor/cakephp/cakephp/src/Error/Renderer/WebExceptionRenderer.php:357
+#: Controller/Component/AuthComponent.php:462
+msgid "You are not authorized to access that location."
+msgstr "Vous n'êtes pas autorisé à accéder à cet emplacement."
+
+#: Error/ExceptionRenderer.php:304
 msgid "Not Found"
-msgstr "Non trouvé"
+msgstr "Introuvable"
 
-#: vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php:354
+#: Error/ExceptionRenderer.php:306
+msgid "An Internal Error Has Occurred."
+msgstr "Une erreur interne est survenue."
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:286
 msgid "Missing or incorrect CSRF cookie type."
 msgstr "Type de cookie CSRF manquant ou incorrect."
 
-#: vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php:358
+#: Http/Middleware/CsrfProtectionMiddleware.php:290
 msgid "Missing or invalid CSRF cookie."
 msgstr "Le Cookie avec le token CSRF est manquant ou invalide."
 
-#: vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php:381
-#: vendor/cakephp/cakephp/src/Http/Middleware/SessionCsrfProtectionMiddleware.php:267
-msgid ""
-"CSRF token from either the request body or request headers did not match or "
-"is missing."
-msgstr ""
-"Le token CSRF du corps de la requête ou des en-têtes de la requête ne "
-"correspond pas ou est manquant."
+#: Http/Middleware/CsrfProtectionMiddleware.php:311
+msgid "CSRF token from either the request body or request headers did not match or is missing."
+msgstr "Le token CSRF du corps de la requête ou des en-têtes de la requête ne correspond pas ou est manquant."
 
-#: vendor/cakephp/cakephp/src/Http/Middleware/SessionCsrfProtectionMiddleware.php:249
-msgid "Missing or incorrect CSRF session key"
-msgstr "Clé de session CSRF manquante ou incorrecte"
-
-#: vendor/cakephp/cakephp/src/Http/Response.php:1429
+#: Http/Response.php:1490
 msgid "The requested file contains `..` and will not be read."
 msgstr "Le fichier demandé contient `..` et ne sera pas lu."
 
-#: vendor/cakephp/cakephp/src/Http/Response.php:1437
+#: Http/Response.php:1498
 msgid "The requested file was not found"
 msgstr "Le fichier demandé n'a pas été trouvé"
 
-#: vendor/cakephp/cakephp/src/I18n/Number.php:105
+#: I18n/Number.php:116
 msgid "{0,number,#,###.##} KB"
-msgstr "{0,number,#,###.##} KB"
+msgstr "{0,number,#,###.##} Ko"
 
-#: vendor/cakephp/cakephp/src/I18n/Number.php:106
+#: I18n/Number.php:118
 msgid "{0,number,#,###.##} MB"
-msgstr "{0,number,#,###.##} MB"
+msgstr "{0,number,#,###.##} Mo"
 
-#: vendor/cakephp/cakephp/src/I18n/Number.php:108
+#: I18n/Number.php:120
 msgid "{0,number,#,###.##} GB"
-msgstr "{0,number,#,###.##} GB"
+msgstr "{0,number,#,###.##} Go"
 
-#: vendor/cakephp/cakephp/src/I18n/Number.php:109
+#: I18n/Number.php:122
 msgid "{0,number,#,###.##} TB"
-msgstr "{0,number,#,###.##} TB"
+msgstr "{0,number,#,###.##} To"
 
-#: vendor/cakephp/cakephp/src/I18n/Number.php:104
+#: I18n/Number.php:114
 msgid "{0,number,integer} Byte"
 msgid_plural "{0,number,integer} Bytes"
 msgstr[0] "{0,number,integer} Octet"
 msgstr[1] "{0,number,integer} Octets"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:95
+#: I18n/RelativeTimeFormatter.php:86
 msgid "{0} from now"
 msgstr "{0} à partir de maintenant"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:95
+#: I18n/RelativeTimeFormatter.php:86
 msgid "{0} ago"
 msgstr "il y a {0}"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:98
+#: I18n/RelativeTimeFormatter.php:89
 msgid "{0} after"
 msgstr "{0} après"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:98
+#: I18n/RelativeTimeFormatter.php:89
 msgid "{0} before"
 msgstr "{0} avant"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:131
+#: I18n/RelativeTimeFormatter.php:120
 msgid "just now"
 msgstr "A l'instant"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:168
+#: I18n/RelativeTimeFormatter.php:157
 msgid "about a second ago"
 msgstr "il y a environ une seconde"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:169
+#: I18n/RelativeTimeFormatter.php:158
 msgid "about a minute ago"
 msgstr "il y a environ une minute"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:170
+#: I18n/RelativeTimeFormatter.php:159
 msgid "about an hour ago"
 msgstr "il y a environ une heure"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:171
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:383
+#: I18n/RelativeTimeFormatter.php:160
+#: I18n/RelativeTimeFormatter.php:370
 msgid "about a day ago"
 msgstr "il y a environ un jour"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:172
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:384
+#: I18n/RelativeTimeFormatter.php:161
+#: I18n/RelativeTimeFormatter.php:371
 msgid "about a week ago"
 msgstr "il y a environ une semaine"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:173
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:385
+#: I18n/RelativeTimeFormatter.php:162
+#: I18n/RelativeTimeFormatter.php:372
 msgid "about a month ago"
 msgstr "il y a environ un mois"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:174
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:386
+#: I18n/RelativeTimeFormatter.php:163
+#: I18n/RelativeTimeFormatter.php:373
 msgid "about a year ago"
 msgstr "il y a environ un an"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:185
+#: I18n/RelativeTimeFormatter.php:174
 msgid "in about a second"
 msgstr "dans environ une seconde"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:186
+#: I18n/RelativeTimeFormatter.php:175
 msgid "in about a minute"
 msgstr "dans environ une minute"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:187
+#: I18n/RelativeTimeFormatter.php:176
 msgid "in about an hour"
 msgstr "dans environ une heure"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:188
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:397
+#: I18n/RelativeTimeFormatter.php:177
+#: I18n/RelativeTimeFormatter.php:384
 msgid "in about a day"
 msgstr "dans environ un jour"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:189
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:398
+#: I18n/RelativeTimeFormatter.php:178
+#: I18n/RelativeTimeFormatter.php:385
 msgid "in about a week"
 msgstr "dans environ une semaine"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:190
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:399
+#: I18n/RelativeTimeFormatter.php:179
+#: I18n/RelativeTimeFormatter.php:386
 msgid "in about a month"
 msgstr "dans environ un mois"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:191
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:400
+#: I18n/RelativeTimeFormatter.php:180
+#: I18n/RelativeTimeFormatter.php:387
 msgid "in about a year"
 msgstr "dans environ un an"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:355
+#: I18n/RelativeTimeFormatter.php:342
 msgid "today"
 msgstr "aujourd'hui"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:422
+#: I18n/RelativeTimeFormatter.php:409
 msgid "%s ago"
 msgstr "il y a %s"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:423
+#: I18n/RelativeTimeFormatter.php:410
 msgid "on %s"
 msgstr "sur %s"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:62
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:143
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:367
+#: I18n/RelativeTimeFormatter.php:53
+#: I18n/RelativeTimeFormatter.php:132
+#: I18n/RelativeTimeFormatter.php:354
 msgid "{0} year"
 msgid_plural "{0} years"
 msgstr[0] "{0} année"
 msgstr[1] "{0} années"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:66
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:146
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:370
+#: I18n/RelativeTimeFormatter.php:57
+#: I18n/RelativeTimeFormatter.php:135
+#: I18n/RelativeTimeFormatter.php:357
 msgid "{0} month"
 msgid_plural "{0} months"
 msgstr[0] "{0} mois"
 msgstr[1] "{0} mois"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:72
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:149
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:373
+#: I18n/RelativeTimeFormatter.php:63
+#: I18n/RelativeTimeFormatter.php:138
+#: I18n/RelativeTimeFormatter.php:360
 msgid "{0} week"
 msgid_plural "{0} weeks"
 msgstr[0] "{0} semaine"
 msgstr[1] "{0} semaines"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:74
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:152
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:376
+#: I18n/RelativeTimeFormatter.php:65
+#: I18n/RelativeTimeFormatter.php:141
+#: I18n/RelativeTimeFormatter.php:363
 msgid "{0} day"
 msgid_plural "{0} days"
 msgstr[0] "{0} jour"
 msgstr[1] "{0} jours"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:79
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:155
+#: I18n/RelativeTimeFormatter.php:70
+#: I18n/RelativeTimeFormatter.php:144
 msgid "{0} hour"
 msgid_plural "{0} hours"
 msgstr[0] "{0} heure"
 msgstr[1] "{0} heures"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:83
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:158
+#: I18n/RelativeTimeFormatter.php:74
+#: I18n/RelativeTimeFormatter.php:147
 msgid "{0} minute"
 msgid_plural "{0} minutes"
 msgstr[0] "{0} minute"
 msgstr[1] "{0} minutes"
 
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:87
-#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:161
+#: I18n/RelativeTimeFormatter.php:78
+#: I18n/RelativeTimeFormatter.php:150
 msgid "{0} second"
 msgid_plural "{0} seconds"
 msgstr[0] "{0} seconde"
 msgstr[1] "{0} secondes"
 
-#: vendor/cakephp/cakephp/src/ORM/RulesChecker.php:64
+#: ORM/RulesChecker.php:55
 msgid "This value is already in use"
 msgstr "Cette valeur est déjà utilisée"
 
-#: vendor/cakephp/cakephp/src/ORM/RulesChecker.php:114
+#: ORM/RulesChecker.php:102
 msgid "This value does not exist"
 msgstr "Cette valeur n'existe pas"
 
-#: vendor/cakephp/cakephp/src/ORM/RulesChecker.php:234
+#: ORM/RulesChecker.php:224
 msgid "Cannot modify row: a constraint for the `{0}` association fails."
-msgstr ""
-"Impossible de modifier la ligne : une contrainte pour l'association `{0}` "
-"échoue."
+msgstr "Impossible de modifier la ligne : une contrainte pour l'association `{0}` échoue."
 
-#: vendor/cakephp/cakephp/src/ORM/RulesChecker.php:272
+#: ORM/RulesChecker.php:262
 msgid "The count does not match {0}{1}"
-msgstr "The count does not match {0}{1}"
+msgstr "Le nombre correspond pas à {0}{1}"
 
-#: vendor/cakephp/cakephp/src/Utility/Text.php:900
+#: Utility/Text.php:915
 msgid "and"
 msgstr "et"
 
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1079
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:3036
-#: vendor/cakephp/cakephp/src/View/Form/ArrayContext.php:232
-msgid "This field cannot be left empty"
-msgstr "Ce champ ne peut être laissé vide"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1106
-msgid "The provided value must be alphanumeric"
-msgstr "La valeur fournie doit être alphanumérique"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1133
-msgid "The provided value must not be alphanumeric"
-msgstr "La valeur fournie ne doit pas être alphanumérique"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1160
-msgid "The provided value must be ASCII-alphanumeric"
-msgstr "La valeur fournie doit être ASCII-alphanumérique"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1187
-msgid "The provided value must not be ASCII-alphanumeric"
-msgstr "La valeur fournie ne doit pas être ASCII-alphanumérique"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1230
-msgid ""
-"The length of the provided value must be between `{0}` and `{1}`, inclusively"
-msgstr ""
-"La longueur de la valeur fournie doit être comprise entre `{0}` et `{1}`, "
-"inclusivement."
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1282
-msgid "The provided value must be a valid credit card number of any type"
-msgstr ""
-"La valeur fournie doit être un numéro de carte de crédit valide de n'importe "
-"quel type."
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1287
-msgid ""
-"The provided value must be a valid credit card number of these types: `{0}`"
-msgstr ""
-"La valeur fournie doit être un numéro de carte de crédit valide de ces "
-"types : `{0}`"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1324
-msgid "The provided value must be greater than `{0}`"
-msgstr "La valeur fournie doit être supérieure à `{0}`"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1356
-msgid "The provided value must be greater than or equal to `{0}`"
-msgstr "La valeur fournie doit être supérieure ou égale à `{0}`"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1388
-msgid "The provided value must be less than `{0}`"
-msgstr "La valeur fournie doit être inférieure à `{0}`."
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1420
-msgid "The provided value must be less than or equal to `{0}`"
-msgstr "La valeur fournie doit être inférieure ou égale à `{0}`"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1452
-msgid "The provided value must be equal to `{0}`"
-msgstr "La valeur fournie doit être égale à `{0}`"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1484
-msgid "The provided value must not be equal to `{0}`"
-msgstr "La valeur fournie ne doit pas être égale à `{0}`"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1518
-msgid "The provided value must be same as `{0}`"
-msgstr "La valeur fournie doit être identique à `{0}`"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1551
-msgid "The provided value must not be same as `{0}`"
-msgstr "La valeur fournie ne doit pas être identique à `{0}`"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1584
-msgid "The provided value must be equal to the one of field `{0}`"
-msgstr "La valeur fournie doit être égale à celle du champ `{0}`."
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1621
-msgid "The provided value must not be equal to the one of field `{0}`"
-msgstr "La valeur fournie ne doit pas être égale à celle du champ `{0}`."
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1658
-msgid "The provided value must be greater than the one of field `{0}`"
-msgstr "La valeur fournie doit être supérieure à celle du champ `{0}`."
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1698
-msgid ""
-"The provided value must be greater than or equal to the one of field `{0}`"
-msgstr ""
-"La valeur fournie doit être supérieure ou égale à celle du champ `{0}`."
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1735
-msgid "The provided value must be less than the one of field `{0}`"
-msgstr "La valeur fournie doit être inférieure à celle du champ `{0}`."
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1775
-msgid "The provided value must be less than or equal to the one of field `{0}`"
-msgstr ""
-"La valeur fournie doit être inférieure ou égale à celle du champ `{0}`."
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1816
-msgid "The provided value must be a date of one of these formats: `{0}`"
-msgstr ""
-"La valeur fournie doit être une date de l'un des formats suivants : `{0}`"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1857
-msgid ""
-"The provided value must be a date and time of one of these formats: `{0}`"
-msgstr ""
-"La valeur fournie doit être une date et une heure de l'un des formats "
-"suivants : `{0}`"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1888
-msgid "The provided value must be a time"
-msgstr "La valeur fournie doit être une heure"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1920
-msgid "The provided value must be a localized time, date or date and time"
-msgstr ""
-"La valeur fournie doit être une heure, une date ou une date et une heure "
-"localisées."
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1947
-msgid "The provided value must be a boolean"
-msgstr "La valeur fournie doit être un booléen"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1984
-msgid ""
-"The provided value must be decimal with any number of decimal places, "
-"including none"
-msgstr ""
-"La valeur fournie doit être décimale avec n'importe quel nombre de "
-"décimales, y compris aucune"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:1989
-msgid "The provided value must be decimal with `{0}` decimal places"
-msgstr "La valeur fournie doit être décimale avec `{0}` décimales."
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2026
-msgid "The provided value must be an e-mail address"
-msgstr "La valeur fournie doit être une adresse email"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2067
-msgid "The provided value must be one of `{0}`"
-msgstr "La valeur fournie doit être l'une des valeurs suivantes : `{0}`"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2096
-msgid "The provided value must be an IP address"
-msgstr "La valeur fournie doit être une adresse IP"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2123
-msgid "The provided value must be an IPv4 address"
-msgstr "La valeur fournie doit être une adresse IPv4"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2150
-msgid "The provided value must be an IPv6 address"
-msgstr "La valeur fournie doit être une adresse IPv6"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2178
-msgid "The provided value must be at least `{0}` characters long"
-msgstr "La valeur fournie doit comporter au moins `{0}` caractères"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2206
-msgid "The provided value must be at least `{0}` bytes long"
-msgstr "La valeur fournie doit être longue d'au moins `{0}` octets"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2234
-msgid "The provided value must be at most `{0}` characters long"
-msgstr "La valeur fournie doit comporter au maximum `{0}` caractères"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2262
-msgid "The provided value must be at most `{0}` bytes long"
-msgstr "La valeur fournie doit être d'une longueur maximale de `{0}` octets"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2289
-msgid "The provided value must be numeric"
-msgstr "La valeur fournie doit être numérique"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2316
-msgid "The provided value must be a natural number"
-msgstr "La valeur fournie doit être un nombre naturel"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2343
-msgid "The provided value must be a non-negative integer"
-msgstr "La valeur fournie doit être un nombre entier non négatif"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2382
-msgid "The provided value must be between `{0}` and `{1}`, inclusively"
-msgstr ""
-"La valeur fournie doit être comprise entre `{0}` et `{1}`, inclusivement"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2416
-msgid "The provided value must be a URL"
-msgstr "La valeur fournie doit être une URL"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2445
-msgid "The provided value must be a URL with protocol"
-msgstr "La valeur fournie doit être une URL avec le protocole"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2475
-msgid "The provided value must be one of: `{0}`"
-msgstr "La valeur fournie doit être l'une des suivantes : `{0}`"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2506
-msgid "The provided value must be a UUID"
-msgstr "La valeur fournie doit être un UUID"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2538
-msgid "The provided value must be an uploaded file"
-msgstr "La valeur fournie doit être un fichier uploadé"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2567
-msgid "The provided value must be a latitude/longitude coordinate"
-msgstr "La valeur fournie doit être une coordonnée latitude/longitude."
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2594
-msgid "The provided value must be a latitude"
-msgstr "La valeur fournie doit être une latitude"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2621
-msgid "The provided value must be a longitude"
-msgstr "La valeur fournie doit être une longitude"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2648
-msgid "The provided value must be ASCII bytes only"
-msgstr "La valeur fournie doit être composée d'octets ASCII uniquement."
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2675
-msgid "The provided value must be UTF-8 bytes only"
-msgstr "La valeur fournie doit être composée d'octets UTF-8 uniquement"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2704
-msgid "The provided value must be 3 and 4 byte UTF-8 sequences only"
-msgstr ""
-"La valeur fournie doit être des séquences UTF-8 de 3 et 4 octets uniquement"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2731
-msgid "The provided value must be an integer"
-msgstr "La valeur fournie doit être un nombre entier"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2758
-msgid "The provided value must be an array"
-msgstr "La valeur fournie doit être un tableau"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2784
-msgid "The provided value must be scalar"
-msgstr "La valeur fournie doit être un scalaire"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2810
-msgid "The provided value must be a hex color"
-msgstr "La valeur fournie doit être une couleur hex"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2842
-msgid "The provided value must be a set of multiple options"
-msgstr "La valeur fournie doit être un ensemble d'options multiples"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2873
-msgid "The provided value must have at least `{0}` elements"
-msgstr "La valeur fournie doit comporter au moins `{0}` éléments"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2908
-msgid "The provided value must have at most `{0}` elements"
-msgstr "La valeur fournie doit avoir au plus `{0}` éléments"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:2975
-msgid "The provided value must match against the pattern `{0}`"
-msgstr "La valeur fournie doit correspondre au modèle `{0}`"
-
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:3005
+#: Validation/Validator.php:2500
 msgid "This field is required"
 msgstr "Ce champ est requis"
 
-#: vendor/cakephp/cakephp/src/Validation/Validator.php:3163
+#: Validation/Validator.php:2520
+#: View/Form/ArrayContext.php:249
+msgid "This field cannot be left empty"
+msgstr "Ce champ ne peut être laissé vide"
+
+#: Validation/Validator.php:2672
 msgid "The provided value is invalid"
 msgstr "La valeur fournie n'est pas correcte"
 
-#: vendor/cakephp/cakephp/src/View/Helper/FormHelper.php:997
+#: View/Helper/FormHelper.php:981
 msgid "Edit {0}"
 msgstr "Modifier {0}"
 
-#: vendor/cakephp/cakephp/src/View/Helper/FormHelper.php:999
+#: View/Helper/FormHelper.php:983
 msgid "New {0}"
 msgstr "Nouveau {0}"
 
-#: vendor/cakephp/cakephp/src/View/Helper/FormHelper.php:1964
+#: View/Helper/FormHelper.php:1890
 msgid "Submit"
 msgstr "Envoyer"
 
-#~ msgid "You are not authorized to access that location."
-#~ msgstr "Vous n'êtes pas autorisé à accéder à cet endroit."
-
-#~ msgid "CSRF token mismatch."
-#~ msgstr "Le token CRSF ne correspond pas."
-
-#~ msgid "Home"
-#~ msgstr "Accueil"
-
-#~ msgid "January"
-#~ msgstr "Janvier"
-
-#~ msgid "February"
-#~ msgstr "Février"
-
-#~ msgid "March"
-#~ msgstr "Mars"
-
-#~ msgid "April"
-#~ msgstr "Avril"
-
-#~ msgid "May"
-#~ msgstr "Mai"
-
-#~ msgid "June"
-#~ msgstr "Juin"
-
-#~ msgid "July"
-#~ msgstr "Juillet"
-
-#~ msgid "August"
-#~ msgstr "Août"
-
-#~ msgid "September"
-#~ msgstr "Septembre"
-
-#~ msgid "October"
-#~ msgstr "Octobre"
-
-#~ msgid "November"
-#~ msgstr "Novembre"
-
-#~ msgid "December"
-#~ msgstr "Décembre"

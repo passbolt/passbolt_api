@@ -48,7 +48,7 @@ class GetUserCommandService
             ->first();
         if ($user === null) {
             throw new StopException(
-                sprintf('The user with username `%s`does not exist, is not active or is disabled.', $username)
+                sprintf('The user with username `%s`does not exist, is not active or is disabled.', $username),
             );
         }
 

@@ -88,7 +88,7 @@ class UserAction
     public static function getInstance(
         ?UserAccessControl $accessControl = null,
         ?string $action = null,
-        ?string $context = null
+        ?string $context = null,
     ): UserAction {
         if (isset($accessControl) && isset($action) && isset($context)) {
             self::$instance = new UserAction($accessControl, $action, $context);

@@ -66,7 +66,7 @@ class HealthcheckIndexController extends AppController
      */
     public function index(
         HealthcheckServiceCollector $healthcheckServiceCollector,
-        IsRequestHttpsSslHealthcheck $isRequestHttpsSslHealthcheck
+        IsRequestHttpsSslHealthcheck $isRequestHttpsSslHealthcheck,
     ) {
         $this->User->assertIsAdmin();
 

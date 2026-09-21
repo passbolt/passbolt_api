@@ -47,7 +47,7 @@ class IsMfaAuthenticationRequiredService
         MfaSettings $mfaSettings,
         UserAccessControl $uac,
         ?SessionIdentificationServiceInterface $sessionIdentificationService = null,
-        ?RememberAMonthSettingInterface $rememberMeForAMonthSetting = null
+        ?RememberAMonthSettingInterface $rememberMeForAMonthSetting = null,
     ): bool {
         // Mfa not enabled for org or user
         if (!$mfaSettings->hasEnabledProviders()) {
@@ -62,7 +62,7 @@ class IsMfaAuthenticationRequiredService
                 $mfa,
                 $sessionIdentificationService,
                 $request,
-                $rememberMeForAMonthSetting
+                $rememberMeForAMonthSetting,
             );
 
             // If the MFA Cookie is invalid, clear that cookie in the response

@@ -162,7 +162,7 @@ class LatestVersionApplicationHealthcheck implements HealthcheckServiceInterface
         $msg = __(
             'This installation is not up to date. Currently using {0} and it should be {1}.',
             Configure::read('passbolt.version'),
-            $this->remoteVersion
+            $this->remoteVersion,
         );
         if ($this->exceptionThrown) {
             $msg = __('Could not connect to passbolt repository to check versions.');

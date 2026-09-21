@@ -191,7 +191,7 @@ class FoldersRelationsDetectStronglyConnectedComponentsService
      */
     private function buildFoldersRelationsTupleComparisonExpression(
         array $foldersRelations,
-        ?bool $isInOperator = true
+        ?bool $isInOperator = true,
     ): TupleComparison {
         $operator = $isInOperator ? 'IN' : 'NOT IN';
         $foldersRelationsTupleData = array_map(function (FoldersRelation $folderRelation) {
@@ -202,7 +202,7 @@ class FoldersRelationsDetectStronglyConnectedComponentsService
             ['FoldersRelations.foreign_id', 'FoldersRelations.folder_parent_id'],
             $foldersRelationsTupleData,
             [],
-            $operator
+            $operator,
         );
     }
 
@@ -232,7 +232,7 @@ class FoldersRelationsDetectStronglyConnectedComponentsService
             $result[] = $this->formatDetectInGraphResultInFoldersRelations(
                 $nodes,
                 $graphForeignIdsMap,
-                $foldersRelationsDtos
+                $foldersRelationsDtos,
             );
         }
 
@@ -258,7 +258,7 @@ class FoldersRelationsDetectStronglyConnectedComponentsService
     private function formatDetectInGraphResultInFoldersRelations(
         array $nodes,
         array $graphForeignIdsMap,
-        array $foldersRelationsDtos
+        array $foldersRelationsDtos,
     ): array {
         $result = [];
 
@@ -358,7 +358,7 @@ class FoldersRelationsDetectStronglyConnectedComponentsService
     private function searchFolderRelationInArray(
         array $foldersRelationsDtos,
         string $foreignId,
-        ?string $folderParentId = null
+        ?string $folderParentId = null,
     ): array {
         foreach ($foldersRelationsDtos as $folderRelationDto) {
             if (

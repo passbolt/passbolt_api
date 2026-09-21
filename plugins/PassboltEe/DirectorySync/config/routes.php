@@ -22,7 +22,7 @@ $routes->plugin('Passbolt/DirectorySync', ['path' => '/directorysync'], function
     $routes->setExtensions(['json']);
     $routes->registerMiddleware(
         DirectorySyncEndpointsSecurityMiddleware::class,
-        new DirectorySyncEndpointsSecurityMiddleware()
+        new DirectorySyncEndpointsSecurityMiddleware(),
     );
 
     $routes->connect('/ignore/toggle/{foreign_model}/{foreign_key}', [

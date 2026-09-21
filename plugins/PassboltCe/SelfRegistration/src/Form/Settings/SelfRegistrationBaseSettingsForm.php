@@ -42,7 +42,7 @@ class SelfRegistrationBaseSettingsForm extends Form
             ->inList(
                 'provider',
                 self::USER_SELF_REGISTRATION_PROVIDERS,
-                __('The provider should be part of the supported list: {0}.', $this->getReadableListOfProviders())
+                __('The provider should be part of the supported list: {0}.', $this->getReadableListOfProviders()),
             );
 
         $validator->notEmptyArray('data', __('The data should not be empty.'));

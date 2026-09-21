@@ -100,7 +100,7 @@ class MigrateAllV4ResourcesToV5Service implements V4ToV5MigrationServiceInterfac
         }
 
         foreach ($resources as $resource) {
-            $dto = MetadataResourceDto::fromArray($resource->toArray());
+            $dto = MetadataResourceDto::createFromArray($resource->toArray());
 
             try {
                 if ($dto->isV5()) {

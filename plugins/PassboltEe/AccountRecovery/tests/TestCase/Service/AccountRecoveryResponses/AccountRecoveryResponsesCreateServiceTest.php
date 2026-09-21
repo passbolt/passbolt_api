@@ -226,7 +226,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
     {
         [$request, $policy] = $this->loadFixtureScenario(
             ResponseCreateScenario::class,
-            AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_COMPLETED
+            AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_COMPLETED,
         );
         $uac = UserFactory::make()->admin()->active()->persistedUAC();
         $password = $this->encrypt($request->fingerprint, $request->armored_key);
@@ -251,7 +251,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
     {
         [$request, $policy] = $this->loadFixtureScenario(
             ResponseCreateScenario::class,
-            AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED
+            AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED,
         );
         $uac = UserFactory::make()->admin()->active()->persistedUAC();
         $password = $this->encrypt($request->fingerprint, $request->armored_key);
@@ -276,7 +276,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
     {
         [$request, $policy] = $this->loadFixtureScenario(
             ResponseCreateScenario::class,
-            AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_APPROVED
+            AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_APPROVED,
         );
         $uac = UserFactory::make()->admin()->active()->persistedUAC();
         $password = $this->encrypt($request->fingerprint, $request->armored_key);

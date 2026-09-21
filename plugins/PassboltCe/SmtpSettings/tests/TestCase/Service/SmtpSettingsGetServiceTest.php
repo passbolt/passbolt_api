@@ -142,7 +142,7 @@ class SmtpSettingsGetServiceTest extends TestCase
                 'created_by' => $savedSettings->created_by,
                 'modified_by' => $savedSettings->modified_by,
             ],
-            ['source' => 'db']
+            ['source' => 'db'],
         );
 
         $this->assertEquals($expectedSettings, $settings);

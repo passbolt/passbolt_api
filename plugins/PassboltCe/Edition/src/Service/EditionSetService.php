@@ -73,7 +73,7 @@ class EditionSetService
         return $table->createOrUpdateSetting(
             EditionOrganizationTable::PROPERTY_NAME,
             $edition,
-            $uac
+            $uac,
         );
     }
 }

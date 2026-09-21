@@ -72,7 +72,7 @@ class RecoverStartController extends AppController
         try {
             $ssoAuthToken = $ssoAuthService->getOrFail(
                 $form->getData('token'),
-                SsoState::TYPE_SSO_RECOVER
+                SsoState::TYPE_SSO_RECOVER,
             );
         } catch (RecordNotFoundException $e) {
             throw new BadRequestException($e->getMessage(), null, $e);
@@ -83,7 +83,7 @@ class RecoverStartController extends AppController
             $ssoAuthToken->user_id,
             null,
             $this->User->ip(),
-            $this->User->userAgent()
+            $this->User->userAgent(),
         );
         $ssoAuthService->assertAndConsume($ssoAuthToken, $uac, $settingsDto->id);
 

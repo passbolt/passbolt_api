@@ -59,7 +59,7 @@ class SsoStatesAssertService
     public function assertAndConsumeWithoutUser(
         SsoState $ssoState,
         string $ssoSettingsId,
-        ExtendedUserAccessControl $uac
+        ExtendedUserAccessControl $uac,
     ): void {
         try {
             $this->assertWithoutUser($ssoState, $ssoSettingsId, $uac);

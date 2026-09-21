@@ -92,13 +92,13 @@ class MetadataRotateKeyFoldersUpdateService extends AbstractMetadataRotateKeyUpd
             $this->handleSaveManyValidationException(
                 $exception,
                 $entities,
-                __('The folder metadata key data could not be updated.')
+                __('The folder metadata key data could not be updated.'),
             );
         } catch (Exception $exception) {
             throw new InternalErrorException(
                 __('The folder metadata key data could not be updated.'),
                 null,
-                $exception
+                $exception,
             );
         }
     }

@@ -45,12 +45,12 @@ class TagsTableValidationTest extends TestCase
     {
         $tag = $this->Tags->newEntity(
             ['slug' => "hidden\u{200B}tag"],
-            ['accessibleFields' => ['slug' => true]]
+            ['accessibleFields' => ['slug' => true]],
         );
         $this->assertArrayHasKey('slug', $tag->getErrors());
         $this->assertSame(
             'The string should not contain invisible characters.',
-            $tag->getErrors()['slug']['noInvisibleCharacters']
+            $tag->getErrors()['slug']['noInvisibleCharacters'],
         );
     }
 }

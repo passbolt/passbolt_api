@@ -51,7 +51,7 @@ class AccountRecoveryRecoverCompleteService extends RecoverCompleteService
      */
     protected function validateAccountRecoveryRequestId(
         AuthenticationToken $token,
-        string $requestId
+        string $requestId,
     ): AuthenticationToken {
         (new AccountRecoveryOrganizationPolicyGetService())->getOrFail();
 

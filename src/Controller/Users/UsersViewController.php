@@ -63,7 +63,7 @@ class UsersViewController extends AppController
         $event = TableFindIndexBefore::create(
             $query,
             FindIndexOptions::createFromArray(['query' => $query]),
-            $usersTable
+            $usersTable,
         );
         /** @var \App\Model\Event\TableFindIndexBefore $event */
         $this->getEventManager()->dispatch($event);

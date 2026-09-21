@@ -76,7 +76,7 @@ trait EmailNotificationSettingsTestTrait
         $configPath = CONFIG . 'default.php';
         if (!is_file($configPath) || !is_readable($configPath)) {
             throw new Exception(
-                __('The {0} data file can not be found/read: {1}', 'default.php', CONFIG)
+                __('The {0} data file can not be found/read: {1}', 'default.php', CONFIG),
             );
         }
 

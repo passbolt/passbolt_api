@@ -78,7 +78,7 @@ class Digest
         User $operator,
         string $fullBaseUrl,
         Entity $emailQueue,
-        AbstractDigestTemplate $template
+        AbstractDigestTemplate $template,
     ) {
         $this->recipient = $recipient;
         $this->operator = $operator;
@@ -203,7 +203,7 @@ class Digest
         }
         if ($renderFromEmailPreview) {
             $emailDigest->setContent(
-                $emailPreviewFactory->renderDigestContentFromEmailPreview($emailDigest)
+                $emailPreviewFactory->renderDigestContentFromEmailPreview($emailDigest),
             );
         }
 

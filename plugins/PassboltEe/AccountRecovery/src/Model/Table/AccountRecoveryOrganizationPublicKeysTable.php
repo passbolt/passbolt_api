@@ -106,33 +106,33 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
         $validator
             ->uuid(
                 'created_by',
-                __('The identifier of the user who created the organization public key should be a valid UUID.')
+                __('The identifier of the user who created the organization public key should be a valid UUID.'),
             )
             ->requirePresence(
                 'created_by',
                 'create',
-                __('The identifier of the user who created the organization public key is required.')
+                __('The identifier of the user who created the organization public key is required.'),
             )
             ->notEmptyString(
                 'created_by',
                 __('The identifier of the user who created the organization public key should not be empty.'),
-                false
+                false,
             );
 
         $validator
             ->uuid(
                 'modified_by',
-                __('The identifier of the user who modified the organization public key should be a valid UUID.')
+                __('The identifier of the user who modified the organization public key should be a valid UUID.'),
             )
             ->requirePresence(
                 'modified_by',
                 'create',
-                __('The identifier of the user who modified the organization public key is required.')
+                __('The identifier of the user who modified the organization public key is required.'),
             )
             ->notEmptyString(
                 'modified_by',
                 __('The identifier of the user who modified the organization public key should not be empty.'),
-                false
+                false,
             );
 
         return $validator;
@@ -165,7 +165,7 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
             [
             'errorField' => 'fingerprint',
             'message' => __('You cannot reuse account recovery organization public keys.'),
-            ]
+            ],
         );
 
         $rules->add(new IsNotMetadataKeyValidationRule(), 'isNotMetadataKey', [
@@ -229,7 +229,7 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
     public function patchAndValidateEntityForRevocation(
         UserAccessControl $uac,
         AccountRecoveryOrganizationPublicKey $oldEntity,
-        string $revokedArmored
+        string $revokedArmored,
     ): AccountRecoveryOrganizationPublicKey {
         /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey $patchedEntity */
         $patchedEntity = $this->patchEntity($oldEntity, [

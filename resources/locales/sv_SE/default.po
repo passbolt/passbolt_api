@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-07-10 05:55+0000\n"
-"PO-Revision-Date: 2026-07-10 09:22\n"
+"PO-Revision-Date: 2026-09-10 14:47\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +74,7 @@ msgid "The request data can not be empty."
 msgstr "Begärdedatan får inte vara tom."
 
 msgid "You are already logged in."
-msgstr ""
+msgstr "Du är redan inloggad."
 
 msgid "You are successfully logged in."
 msgstr "Du är inloggad."
@@ -278,13 +278,13 @@ msgid "The resource has been updated successfully."
 msgstr "Resursen har uppdaterats."
 
 msgid "The role was deleted."
-msgstr ""
+msgstr "Rollen har tagits bort."
 
 msgid "The role identifier is not valid."
-msgstr ""
+msgstr "Rollidentifieraren är inte giltig."
 
 msgid "The role was successfully updated."
-msgstr ""
+msgstr "Rollen har uppdaterats."
 
 msgid "The secret does not exist."
 msgstr "Hemligheten finns inte."
@@ -410,7 +410,7 @@ msgid "Invalid expiry time {0}."
 msgstr "Ogiltig utgångstid {0}."
 
 msgid "The user role ID must not be of the guest role."
-msgstr ""
+msgstr "Användarrollens ID får inte vara gästrollens."
 
 msgid "The identifier should not be empty."
 msgstr "Identifieraren får inte vara tom."
@@ -950,25 +950,25 @@ msgid "The name should be a valid BMP-UTF8 string."
 msgstr "Namnet bör vara en giltig BMP-UTF8-sträng."
 
 msgid "The name should not be greater than 50 characters."
-msgstr ""
+msgstr "Namnet får inte vara längre än 50 tecken."
 
 msgid "The name should not be reserved role."
-msgstr ""
+msgstr "Namnet får inte vara en reserverad roll."
 
 msgid "The description should be a valid BMP-UTF8 string."
 msgstr "Beskrivningen bör vara en giltig BMP-UTF8-sträng."
 
 msgid "The role cannot be deleted as it is associated with another user."
-msgstr ""
+msgstr "Rollen kan inte tas bort eftersom den är associerad med en annan användare."
 
 msgid "A reserved role cannot be deleted."
-msgstr ""
+msgstr "En reserverad roll kan inte tas bort."
 
 msgid "A role already exists for the given name."
 msgstr "Det finns redan en roll för det angivna namnet."
 
 msgid "Only maximum of {0} active roles are allowed."
-msgstr ""
+msgstr "Högst {0} aktiva roller är tillåtna."
 
 msgid "A reserved role cannot be renamed."
 msgstr "En reserverad roll kan inte byta namn."
@@ -980,13 +980,13 @@ msgid "The resource identifier should not be empty."
 msgstr "Resursidentifieraren får inte vara tom."
 
 msgid "The secret revision identifier should be a valid UUID."
-msgstr ""
+msgstr "Identifieraren för hemlighetsrevisionen bör vara ett giltigt UUID."
 
 msgid "A secret revision identifier is required."
-msgstr ""
+msgstr "En identifierare för hemlighetsrevision krävs."
 
 msgid "The secret revision identifier should not be empty."
-msgstr ""
+msgstr "Identifieraren för hemlighetsrevisionen får inte vara tom."
 
 msgid "The message should be a valid ASCII string."
 msgstr "Meddelandet ska vara en giltig ASCII-sträng."
@@ -1001,10 +1001,10 @@ msgid "A secret already exists for the given user and resource."
 msgstr "Det finns redan en hemlighet för den givna användaren och resursen."
 
 msgid "A secret already exists for the given user, resource and secret revision."
-msgstr ""
+msgstr "Det finns redan en hemlighet för den givna användaren, resursen och hemlighetsrevisionen."
 
 msgid "The secret revision does not exist or is deleted."
-msgstr ""
+msgstr "Hemlighetsrevisionen finns inte eller har tagits bort."
 
 msgid "The user identifier by should be a valid UUID."
 msgstr "Användaridentifieraren av bör vara ett giltigt UUID."
@@ -1037,7 +1037,7 @@ msgid "The username is already in use."
 msgstr "Användarnamnet används redan."
 
 msgid "The role does not exist."
-msgstr ""
+msgstr "Rollen finns inte."
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "Användaren bör inte vara ensam ägare av delat innehåll, överför ägandet till andra användare."
@@ -1175,10 +1175,10 @@ msgid "{0} edited the resource {1}"
 msgstr "\"{0} redigerade resursen {1}\""
 
 msgid "{0} created a new role {1}"
-msgstr ""
+msgstr "{0} skapade en ny roll {1}"
 
 msgid "{0} updated the role {1}"
-msgstr ""
+msgstr "{0} uppdaterade rollen {1}"
 
 msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} kan inte slutföra kontåterställningsprocessen!"
@@ -1214,7 +1214,7 @@ msgid "Welcome to passbolt, {0}!"
 msgstr "Välkommen till passbolt, {0}!"
 
 msgid "Your role has been updated"
-msgstr ""
+msgstr "Din roll har uppdaterats"
 
 msgid "The purify subject setting should be a boolean."
 msgstr "Den renade subjektinställningen bör vara en boolean."
@@ -1382,7 +1382,7 @@ msgid "Could not validate group user data."
 msgstr "Kunde inte validera användardata för grupp."
 
 msgid "The resource with ID {0} does not have a secret revision."
-msgstr ""
+msgstr "Resursen med ID {0} har ingen hemlighetsrevision."
 
 msgid "All email notifications will be sent."
 msgstr "Alla e-postaviseringar kommer att skickas."
@@ -1613,10 +1613,10 @@ msgid "Run the install script to install the database tables"
 msgstr "Kör installationsskriptet för att installera databastabellerna"
 
 msgid "The database version is supported."
-msgstr ""
+msgstr "Databasversionen stöds."
 
 msgid "The database version is deprecated."
-msgstr ""
+msgstr "Databasversionen är föråldrad."
 
 msgid "The model schema cache shows no discrepancies with the database schema."
 msgstr "Modellschemats cache visar inga avvikelser jämfört med databasschemat."
@@ -2132,7 +2132,7 @@ msgid "The resource types associated to this resource does not exist."
 msgstr "Resurstyperna som är kopplade till denna resurs finns inte."
 
 msgid "No secret revision were found for this resource."
-msgstr ""
+msgstr "Inga hemlighetsrevisioner hittades för denna resurs."
 
 msgid "You are not allowed to update this resource."
 msgstr "Du har inte behörighet att uppdatera denna resurs."
@@ -2141,19 +2141,19 @@ msgid "Additional resource types are not enabled on this server."
 msgstr "Ytterligare resurstyper är inte aktiverade på denna server."
 
 msgid "The role could not be saved."
-msgstr ""
+msgstr "Rollen kunde inte sparas."
 
 msgid "Could not save the role, please try again later."
-msgstr ""
+msgstr "Kunde inte spara rollen, vänligen försök igen senare."
 
 msgid "The role does not exist or deleted."
-msgstr ""
+msgstr "Rollen finns inte eller har tagits bort."
 
 msgid "The role could not be deleted."
-msgstr ""
+msgstr "Rollen kunde inte tas bort."
 
 msgid "Could not delete the role, please try again later."
-msgstr ""
+msgstr "Kunde inte ta bort rollen, vänligen försök igen senare."
 
 msgid "There should be at least 4 roles"
 msgstr "Det bör finnas minst 4 roller"
@@ -2165,10 +2165,10 @@ msgid "Validation success for role {0}"
 msgstr "Validering lyckades för rollen {0}"
 
 msgid "The role could not be updated."
-msgstr ""
+msgstr "Rollen kunde inte uppdateras."
 
 msgid "Could not update the role, please try again later."
-msgstr ""
+msgstr "Kunde inte uppdatera rollen, vänligen försök igen senare."
 
 msgid "Could not validate secrets data."
 msgstr "Kunde inte validera hemlighetsdata."
@@ -2435,10 +2435,10 @@ msgid "The supplied email notification settings are not valid"
 msgstr "Inställningarna för e-postaviseringar är inte giltiga"
 
 msgid "The allow CSV format setting is required."
-msgstr ""
+msgstr "Inställningen tillåt CSV-format måste anges."
 
 msgid "The allow CSV format setting should be a boolean."
-msgstr ""
+msgstr "Inställningen tillåt CSV-format bör vara en boolean."
 
 msgid "The folder has been added successfully."
 msgstr "Mappen har lagts till."
@@ -2549,10 +2549,10 @@ msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "\"En mapp av typen personlig kan inte delas med andra användare eller en grupp.\""
 
 msgid "You made changes on several folders"
-msgstr ""
+msgstr "Du gjorde ändringar i flera mappar"
 
 msgid "{0} has made changes on several folders"
-msgstr ""
+msgstr "{0} har gjort ändringar i flera mappar"
 
 msgid "You added the folder {0}"
 msgstr "Du lade till mappen {0}"
@@ -2651,7 +2651,7 @@ msgid "{0} edited a folder"
 msgstr "{0} redigerade en mapp"
 
 msgid "{0} folders were affected."
-msgstr ""
+msgstr "{0} mappar påverkades."
 
 msgid "It would be too much to list them here, but you can go check them on passbolt."
 msgstr "Det skulle vara för mycket att lista dem här men du kan gå och kontrollera dem på passbolt."
@@ -3254,13 +3254,13 @@ msgid "The server metadata private key is not valid."
 msgstr "Serverns privata metadatanyckel är inte giltig."
 
 msgid "The server does not have access to the server metadata private key in Zero-knowledge mode."
-msgstr ""
+msgstr "Servern har inte tillgång till servermetadata-privatnyckeln i Zero-knowledge-läge."
 
 msgid "The server has access to the server metadata private key while in Zero-knowledge mode."
-msgstr ""
+msgstr "Servern har tillgång till servermetadata-privatnyckeln i Zero-knowledge-läge."
 
 msgid "When Zero-knowledge mode is enabled, the server should not have access to the server metadata private key."
-msgstr ""
+msgstr "När Zero-knowledge-läge är aktiverat ska servern inte ha tillgång till servermetadata-privatnyckeln."
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "Metadata-nyckeln existerar inte eller har raderats."
@@ -3701,7 +3701,7 @@ msgid "This functionality is not available using AJAX/JSON."
 msgstr "Denna funktion är inte tillgänglig med AJAX/JSON."
 
 msgid "This functionality is only available using AJAX/JSON."
-msgstr ""
+msgstr "Denna funktion är endast tillgänglig med AJAX/JSON."
 
 msgid "This authentication provider is already setup. Disable it first"
 msgstr "Denna autentiseringsleverantör är redan inställd. Inaktivera den först"
@@ -3710,7 +3710,7 @@ msgid "Multi Factor Authentication is configured!"
 msgstr "Multifaktor-autentisering har konfigurerats!"
 
 msgid "Unable to configure Multi Factor Authentication."
-msgstr ""
+msgstr "Det gick inte att konfigurera multifaktorautentisering."
 
 msgid "MFA authentication is required."
 msgstr "MFA autentisering krävs."
@@ -4151,10 +4151,10 @@ msgid "The password generator exclude look alike chars should be a boolean type.
 msgstr "\"exclude look alike chars\" för lösenordsgeneratorn bör vara av typen boolean."
 
 msgid "The rbacs could not be saved."
-msgstr ""
+msgstr "RBAC:erna kunde inte sparas."
 
 msgid "Could not save the rbacs, please try again later."
-msgstr ""
+msgstr "Kunde inte spara RBAC:erna, vänligen försök igen senare."
 
 msgid "Record not found"
 msgstr "Posten hittades inte"
@@ -4187,7 +4187,7 @@ msgid "The control function is not allowed for this UI Action."
 msgstr "Control-funktionen är inte tillåten för denna UI-åtgärd."
 
 msgid "The control function is not allowed for this Action."
-msgstr ""
+msgstr "Kontrollfunktionen är inte tillåten för denna åtgärd."
 
 msgid "An action identifier should be a valid UUID."
 msgstr "En åtgärdsidentifierare bör vara ett giltigt UUID."
@@ -4367,37 +4367,37 @@ msgid "The resource type is not deleted."
 msgstr "Resurstypen är inte raderad."
 
 msgid "The max revisions should be a valid integer."
-msgstr ""
+msgstr "Maximalt antal revisioner bör vara ett giltigt heltal."
 
 msgid "The max revisions is required."
-msgstr ""
+msgstr "Maximalt antal revisioner måste anges."
 
 msgid "The max revisions should be greater than 0."
-msgstr ""
+msgstr "Maximalt antal revisioner bör vara större än 0."
 
 msgid "The max revisions should not exceed the max revisions limit set by the administrator."
-msgstr ""
+msgstr "Maximalt antal revisioner får inte överskrida gränsen för maximalt antal revisioner som administratören har angett."
 
 msgid "The allow sharing revisions should be a valid boolean."
-msgstr ""
+msgstr "Inställningen tillåt delning av revisioner bör vara en giltig boolean."
 
 msgid "The allow sharing revisions is required."
-msgstr ""
+msgstr "Inställningen tillåt delning av revisioner måste anges."
 
 msgid "The allow sharing revisions is not enabled by the administrator."
-msgstr ""
+msgstr "Inställningen tillåt delning av revisioner är inte aktiverad av administratören."
 
 msgid "Secret revisions settings endpoints are disabled."
-msgstr ""
+msgstr "Ändpunkter för inställningar för hemlighetsrevisioner är inaktiverade."
 
 msgid "The identifier of the user who created the secret revision should be a valid UUID."
-msgstr ""
+msgstr "Identifieraren för användaren som skapade hemlighetsrevisionen bör vara ett giltigt UUID."
 
 msgid "The identifier of the user who modified the secret revision should be a valid UUID."
-msgstr ""
+msgstr "Identifieraren för användaren som ändrade hemlighetsrevisionen bör vara ett giltigt UUID."
 
 msgid "Could not save secret revision"
-msgstr ""
+msgstr "Kunde inte spara hemlighetsrevision"
 
 msgid "The self registration setting id should be a valid UUID."
 msgstr "Självregistreringsinställningens id bör vara ett giltigt UUID."
@@ -4538,22 +4538,22 @@ msgid "The test email should be a valid email address."
 msgstr "Testmeddelandet bör vara en giltig e-postadress."
 
 msgid "The tenant ID should be a valid UUID."
-msgstr ""
+msgstr "Tenant-ID:t ska vara ett giltigt UUID."
 
 msgid "The client ID should be a valid UUID."
-msgstr ""
+msgstr "Klient-ID:t ska vara ett giltigt UUID."
 
 msgid "The client secret should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Klienthemligheten bör vara en giltig BMP-UTF8-sträng."
 
 msgid "The client secret should not exceed 256 characters."
-msgstr ""
+msgstr "Klienthemligheten får inte överskrida 256 tecken."
 
 msgid "The OAuth2 username should be a valid email address."
-msgstr ""
+msgstr "OAuth2-användarnamnet bör vara en giltig e-postadress."
 
 msgid "The OAuth2 username should not exceed 256 characters."
-msgstr ""
+msgstr "OAuth2-användarnamnet får inte överskrida 256 tecken."
 
 msgid "The authentication method is required."
 msgstr "\"Autentiseringsmetoden krävs.\""
@@ -4568,28 +4568,28 @@ msgid "A test recipient is required."
 msgstr "En testmottagare krävs."
 
 msgid "The tenant ID is required."
-msgstr ""
+msgstr "Tenant-ID:t måste anges."
 
 msgid "The tenant ID should not be empty."
-msgstr ""
+msgstr "Tenant-ID:t får inte vara tomt."
 
 msgid "The client ID is required."
-msgstr ""
+msgstr "Klient-ID:t måste anges."
 
 msgid "The client ID should not be empty."
-msgstr ""
+msgstr "Klient-ID:t får inte vara tomt."
 
 msgid "The client secret is required."
-msgstr ""
+msgstr "Klienthemligheten måste anges."
 
 msgid "The client secret should not be empty."
 msgstr "Klienthemligheten får inte vara tom."
 
 msgid "The OAuth2 username is required."
-msgstr ""
+msgstr "OAuth2-användarnamnet måste anges."
 
 msgid "The OAuth2 username should not be empty."
-msgstr ""
+msgstr "OAuth2-användarnamnet får inte vara tomt."
 
 msgid "SMTP settings endpoints disabled."
 msgstr "SMTP-inställningarnas slutpunkter är inaktiverade."
@@ -4646,16 +4646,16 @@ msgid "env variables"
 msgstr "miljövariabler"
 
 msgid "Tenant ID should be a valid UUID."
-msgstr ""
+msgstr "Tenant-ID bör vara ett giltigt UUID."
 
 msgid "Client ID should be a valid UUID."
-msgstr ""
+msgstr "Klient-ID bör vara ett giltigt UUID."
 
 msgid "Failed to obtain SMTP OAuth2 access token."
-msgstr ""
+msgstr "Det gick inte att hämta SMTP OAuth2-åtkomsttoken."
 
 msgid "SMTP OAuth2 token response from Microsoft did not contain an access token."
-msgstr ""
+msgstr "SMTP OAuth2-token-svaret från Microsoft innehöll ingen åtkomsttoken."
 
 msgid "Could not validate the smtp settings."
 msgstr "Kunde inte validera smtp-inställningarna."
@@ -5006,13 +5006,13 @@ msgid "Authentication method"
 msgstr "\"Autentiseringsmetod\""
 
 msgid "Directory (tenant) ID"
-msgstr ""
+msgstr "Katalog-ID (tenant)"
 
 msgid "Application (client) ID"
-msgstr ""
+msgstr "Program-ID (klient)"
 
 msgid "Client secret"
-msgstr ""
+msgstr "Klienthemlighet"
 
 msgid "Client"
 msgstr "Klient"
@@ -7259,7 +7259,7 @@ msgid "Contact your admin"
 msgstr "\"Kontakta din administratör\""
 
 msgid "{0} changed the role of {1} to {2}."
-msgstr ""
+msgstr "{0} ändrade rollen för {1} till {2}."
 
 msgid "{0} can no longer perform administration tasks."
 msgstr "{0} kan inte längre utföra administrationsuppgifter."
@@ -7271,10 +7271,10 @@ msgid "View user in passbolt"
 msgstr "Visa användare i Passbolt"
 
 msgid "A new role {0} has been created."
-msgstr ""
+msgstr "En ny roll {0} har skapats."
 
 msgid "The role {0} has been renamed to {1}."
-msgstr ""
+msgstr "Rollen {0} har bytt namn till {1}."
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
 msgstr "Den här användaren tappade sin privata nyckel och/eller lösenfras och kan inte slutföra kontåterställningen."
@@ -7475,16 +7475,16 @@ msgid "{0} resources were shared with you."
 msgstr "{0} resurser har delats med dig."
 
 msgid "{0} changed your role to {1}."
-msgstr ""
+msgstr "{0} ändrade din roll till {1}."
 
 msgid "You can no longer perform administration tasks."
-msgstr ""
+msgstr "Du kan inte längre utföra administrativa uppgifter."
 
 msgid "This email is an automatic notification sent by"
 msgstr "Detta e-postmeddelande är en automatisk notifiering som skickats av"
 
 msgid "To disable these notifications, contact an administrator."
-msgstr ""
+msgstr "Kontakta en administratör för att inaktivera dessa aviseringar."
 
 msgid "The locale {0} is not valid or not supported."
 msgstr "Språket {0} är inte giltigt eller stöds inte."

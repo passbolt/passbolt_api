@@ -66,10 +66,10 @@ class FoldersRelationsSortService
 
         usort($foldersRelations, function (
             FoldersRelation $relationA,
-            FoldersRelation $relationB
+            FoldersRelation $relationB,
         ) use (
             $changesDetails,
-            $userId
+            $userId,
         ) {
             $inOperatorTreePriority = $this->hasInOperatorTreePriority($relationA, $relationB, $changesDetails);
             if (!is_null($inOperatorTreePriority)) {
@@ -122,7 +122,7 @@ class FoldersRelationsSortService
     private function getFolderRelationsDetails(
         array $foldersRelations,
         UserAccessControl $uac,
-        ?string $userId = null
+        ?string $userId = null,
     ): array {
         $inOperatorTreeDetails = $this->getFoldersRelationsInOperatorTreeDetails($foldersRelations, $uac);
         $usageDetails = $this->getFoldersRelationsUsageDetails($foldersRelations);
@@ -265,7 +265,7 @@ class FoldersRelationsSortService
      */
     private function buildFoldersRelationsTupleComparisonExpression(
         array $foldersRelations,
-        bool $isInOperator = true
+        bool $isInOperator = true,
     ): TupleComparison {
         $operator = $isInOperator ? 'IN' : 'NOT IN';
         $excludeFoldersRelationsArray = array_map(function (FoldersRelation $excludeFolderRelation) {
@@ -299,7 +299,7 @@ class FoldersRelationsSortService
     private function hasInOperatorTreePriority(
         FoldersRelation $relationA,
         FoldersRelation $relationB,
-        array $changesDetails
+        array $changesDetails,
     ): ?bool {
         $inTreeA = Hash::get($changesDetails, "{$this->getRelationDetailsKey($relationA)}.in_operator_tree", false);
         $inTreeB = Hash::get($changesDetails, "{$this->getRelationDetailsKey($relationB)}.in_operator_tree", false);
@@ -324,7 +324,7 @@ class FoldersRelationsSortService
     private function hasUsagePriority(
         FoldersRelation $relationA,
         FoldersRelation $relationB,
-        array $changesDetails
+        array $changesDetails,
     ): ?bool {
         $usageCountA = Hash::get($changesDetails, "{$this->getRelationDetailsKey($relationA)}.usage_count", 0);
         $usageCountB = Hash::get($changesDetails, "{$this->getRelationDetailsKey($relationB)}.usage_count", 0);
@@ -351,7 +351,7 @@ class FoldersRelationsSortService
     private function hasInUserTreePriority(
         FoldersRelation $relationA,
         FoldersRelation $relationB,
-        array $changesDetails
+        array $changesDetails,
     ): ?bool {
         $inTreeA = Hash::get($changesDetails, "{$this->getRelationDetailsKey($relationA)}.in_user_tree", false);
         $inTreeB = Hash::get($changesDetails, "{$this->getRelationDetailsKey($relationB)}.in_user_tree", false);

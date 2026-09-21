@@ -1210,7 +1210,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $sccDetector = new FoldersRelationsDetectStronglyConnectedComponentsService();
         $this->assertEmpty(
             $sccDetector->detectInUserTree($userAdaId),
-            "Ada's tree still contains a cycle after the move; the repair service did not break it."
+            "Ada's tree still contains a cycle after the move; the repair service did not break it.",
         );
 
         // All three folders are still present in Ada's tree (none were deleted).

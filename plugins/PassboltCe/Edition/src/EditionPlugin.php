@@ -60,7 +60,7 @@ class EditionPlugin extends BasePlugin
         // entity (with last_logged_in) before we can compare timestamps.
         return $middlewareQueue->insertAfter(
             SetUserIdentityInRequestMiddleware::class,
-            LogoutUsersOnEditionChangeMiddleware::class
+            LogoutUsersOnEditionChangeMiddleware::class,
         );
     }
 

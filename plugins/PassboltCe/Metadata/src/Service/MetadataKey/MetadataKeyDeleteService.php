@@ -103,7 +103,7 @@ class MetadataKeyDeleteService
         $this->dispatchEvent(
             static::AFTER_METADATA_KEY_DELETE_SUCCESS_EVENT_NAME,
             compact('metadataKey', 'uac'),
-            $this
+            $this,
         );
     }
 }

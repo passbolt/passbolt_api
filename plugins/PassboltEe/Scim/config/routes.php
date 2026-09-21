@@ -33,7 +33,7 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
     $routes
         ->connect(
             '/settings/{id}',
-            ['controller' => 'ScimSetSettings', 'action' => 'setSettings']
+            ['controller' => 'ScimSetSettings', 'action' => 'setSettings'],
         )
         ->setPass(['id'])
         ->setMethods(['POST', 'PUT'])
@@ -42,7 +42,7 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
     $routes
         ->connect(
             '/settings/{id}',
-            ['controller' => 'ScimDeleteSettings', 'action' => 'deleteSettings']
+            ['controller' => 'ScimDeleteSettings', 'action' => 'deleteSettings'],
         )
         ->setPass(['id'])
         ->setMethods(['DELETE'])
@@ -67,7 +67,7 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
             [
                 'controller' => 'ScimResourceTypes',
                 'action' => 'resourceTypes',
-            ]
+            ],
         )
             ->setPass(['settingId', 'resourceType'])
             ->setMethods(['GET']);
@@ -76,7 +76,7 @@ $routes->plugin('Passbolt/Scim', ['path' => '/scim'], function (RouteBuilder $ro
             [
                 'controller' => 'ScimServiceProviderConfig',
                 'action' => 'serviceProviderConfig',
-            ]
+            ],
         )
             ->setPass(['settingId'])
             ->setMethods(['GET']);

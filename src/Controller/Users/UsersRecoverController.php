@@ -77,7 +77,7 @@ class UsersRecoverController extends AppController
      */
     public function recoverPost(
         UserRecoverServiceInterface $userRecoverService,
-        SelfRegistrationDryRunServiceInterface $dryRunService
+        SelfRegistrationDryRunServiceInterface $dryRunService,
     ) {
         $this->assertJson();
 
@@ -106,7 +106,7 @@ class UsersRecoverController extends AppController
     private function handleException(
         NotFoundException $exception,
         SelfRegistrationDryRunServiceInterface $dryRunService,
-        array $requestData
+        array $requestData,
     ): void {
         if (!$dryRunService->isSelfRegistrationOpen()) {
             return;

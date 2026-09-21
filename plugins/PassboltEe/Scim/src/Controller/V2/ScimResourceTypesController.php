@@ -36,7 +36,7 @@ class ScimResourceTypesController extends AbstractScimController
         try {
             if ($resourceType && !ScimResourceTypes::isValid($resourceType)) {
                 throw new NotFoundException(
-                    sprintf('The ResourceType `%s` is invalid or not supported', $resourceType)
+                    sprintf('The ResourceType `%s` is invalid or not supported', $resourceType),
                 );
             }
 

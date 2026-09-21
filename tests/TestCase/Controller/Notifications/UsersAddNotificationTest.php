@@ -89,7 +89,7 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
                 'Welcome ' . $firstName,
                 '/setup/start/' . $userId . '/' . AuthenticationTokenFactory::firstOrFail()->token,
             ],
-            $username
+            $username,
         );
     }
 }

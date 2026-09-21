@@ -217,7 +217,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
     public function testMfaRateLimiterService_WithSpecifiedValue_FailedAttemptsNotExceeded(
         $shouldIncrement,
         $isJwtAuth,
-        $expected
+        $expected,
     ) {
         $user = UserFactory::make()->user()->persist();
         // Set max attempts to 2

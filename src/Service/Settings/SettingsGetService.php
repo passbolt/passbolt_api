@@ -132,7 +132,7 @@ class SettingsGetService
         $this->appSettings['server_timezone'] = date_default_timezone_get();
         $this->appSettings['session_timeout'] = Configure::read(
             'Session.timeout',
-            (int)ini_get('session.gc_maxlifetime') / 60
+            (int)ini_get('session.gc_maxlifetime') / 60,
         );
         $this->appSettings['image_storage'] = [
             'public_path' => Configure::read(self::SETTINGS_PASSBOLT_IMAGE_STORAGE_PUBLIC_PATH),

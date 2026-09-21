@@ -111,7 +111,7 @@ class PasswordExpiryPasswordMarkedExpiredEmailRedactor implements SubscribedEmai
                 }
 
                 return $subject;
-            }
+            },
         );
 
         return new Email(
@@ -121,7 +121,7 @@ class PasswordExpiryPasswordMarkedExpiredEmailRedactor implements SubscribedEmai
                 'body' => compact('user', 'subject', 'operator', 'resourceId'),
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 
@@ -156,7 +156,7 @@ class PasswordExpiryPasswordMarkedExpiredEmailRedactor implements SubscribedEmai
     private function isResourceV5(Resource $resource): bool
     {
         try {
-            $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
+            $resourceDto = MetadataResourceDto::createFromArray($resource->toArray());
         } catch (Exception $e) {
             return false;
         }

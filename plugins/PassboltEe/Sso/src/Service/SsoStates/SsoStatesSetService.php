@@ -42,7 +42,7 @@ class SsoStatesSetService
         string $state,
         string $type,
         string $ssoSettingsId,
-        ExtendedUserAccessControl $uac
+        ExtendedUserAccessControl $uac,
     ): SsoState {
         /** @var \Passbolt\Sso\Model\Table\SsoStatesTable $ssoStatesTable */
         $ssoStatesTable = $this->fetchTable('Passbolt/Sso.SsoStates');
@@ -82,7 +82,7 @@ class SsoStatesSetService
             throw new InternalErrorException(
                 __('Could not save the SSO state, please try again later.'),
                 500,
-                $e
+                $e,
             );
         }
 

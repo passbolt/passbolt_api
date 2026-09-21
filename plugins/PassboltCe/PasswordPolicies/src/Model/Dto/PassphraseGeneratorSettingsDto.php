@@ -76,7 +76,7 @@ class PassphraseGeneratorSettingsDto
         return new self(
             $data['words'] ?? null,
             $data['word_separator'] ?? null,
-            $data['word_case'] ?? null
+            $data['word_case'] ?? null,
         );
     }
 

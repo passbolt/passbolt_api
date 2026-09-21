@@ -42,18 +42,18 @@ class MfaPoliciesSettingsForm extends Form
             ->requirePresence('policy', true, __('The policy field is required.'))
             ->inList('policy', MfaPoliciesSetting::ALLOWED_POLICIES, __(
                 'The type of the policy should be one of the following: {0}.',
-                implode(', ', MfaPoliciesSetting::ALLOWED_POLICIES)
+                implode(', ', MfaPoliciesSetting::ALLOWED_POLICIES),
             ));
 
         $validator
             ->requirePresence(
                 'remember_me_for_a_month',
                 true,
-                __('The remember me for a month field is required.')
+                __('The remember me for a month field is required.'),
             )
             ->boolean(
                 'remember_me_for_a_month',
-                __('The remember me for a month should be a boolean type.')
+                __('The remember me for a month should be a boolean type.'),
             );
 
         return $validator;

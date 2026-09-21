@@ -47,7 +47,7 @@ class SecretRevisionsSettingsSetService
         $organizationSetting = $orgSettingsTable->createOrUpdateSetting(
             SecretRevisionsSettingsGetService::ORG_SETTING_PROPERTY,
             $dto->toJson(),
-            $uac
+            $uac,
         );
 
         return $organizationSetting;

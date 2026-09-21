@@ -98,7 +98,7 @@ class SsoSettingsActiveDeletedEmailRedactor implements SubscribedEmailRedactorIn
 
         foreach ($recipients as $recipient) {
             $emailCollection->addEmail(
-                $this->createEmail($recipient, $operator, $ssoSetting, $clientIp, $userAgent)
+                $this->createEmail($recipient, $operator, $ssoSetting, $clientIp, $userAgent),
             );
         }
 
@@ -118,13 +118,13 @@ class SsoSettingsActiveDeletedEmailRedactor implements SubscribedEmailRedactorIn
         User $operator,
         SsoSetting $ssoSetting,
         string $clientIp,
-        string $userAgent
+        string $userAgent,
     ): Email {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($operator) {
                 return __('{0} deleted the SSO setting', $operator->profile->first_name);
-            }
+            },
         );
 
         return new Email(
@@ -140,7 +140,7 @@ class SsoSettingsActiveDeletedEmailRedactor implements SubscribedEmailRedactorIn
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            self::TEMPLATE,
         );
     }
 

@@ -138,7 +138,7 @@ class SsoStatesTableTest extends SsoTestCase
         $this->assertNotEmpty($errors);
         $this->assertArrayHasAttributes(
             ['nonce', 'state', 'sso_settings_id', 'user_id', 'type', 'ip', 'user_agent'],
-            $errors
+            $errors,
         );
         $this->assertArrayHasAttributes(['isValidNonce'], $errors['nonce']);
         $this->assertArrayHasAttributes(['isValidState'], $errors['state']);

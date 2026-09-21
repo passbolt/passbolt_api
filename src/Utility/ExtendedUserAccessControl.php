@@ -54,7 +54,7 @@ class ExtendedUserAccessControl extends UserAccessControl
         ?string $userId = null,
         ?string $username = null,
         ?string $userIp = null,
-        ?string $userAgent = null
+        ?string $userAgent = null,
     ) {
         parent::__construct($roleName, $userId, $username);
 

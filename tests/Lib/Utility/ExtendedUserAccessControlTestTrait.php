@@ -39,7 +39,7 @@ trait ExtendedUserAccessControlTestTrait
             UuidFactory::uuid(),
             'user@passbolt.test',
             '127.0.0.1',
-            'PHPUnit'
+            'PHPUnit',
         );
     }
 
@@ -58,7 +58,7 @@ trait ExtendedUserAccessControlTestTrait
             UuidFactory::uuid(),
             'user@passbolt.test',
             '127.0.0.1',
-            'PHPUnit'
+            'PHPUnit',
         );
     }
 

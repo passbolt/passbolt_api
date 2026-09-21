@@ -50,7 +50,7 @@ class SsoSettingsDeleteServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             SsoIntegrationTestCase::IP_ADDRESS,
-            SsoIntegrationTestCase::USER_AGENT
+            SsoIntegrationTestCase::USER_AGENT,
         );
         (new SsoSettingsDeleteService())->delete($uac, $setting->id);
 
@@ -60,7 +60,7 @@ class SsoSettingsDeleteServiceTest extends SsoTestCase
         $this->assertEventFiredWith(
             SsoSettingsDeleteService::AFTER_DELETE_ACTIVE_SSO_SETTINGS_EVENT,
             'uac',
-            $uac
+            $uac,
         );
     }
 
@@ -78,7 +78,7 @@ class SsoSettingsDeleteServiceTest extends SsoTestCase
             $user->id,
             $user->username,
             SsoIntegrationTestCase::IP_ADDRESS,
-            SsoIntegrationTestCase::USER_AGENT
+            SsoIntegrationTestCase::USER_AGENT,
         );
         (new SsoSettingsDeleteService())->delete($uac, $setting->id);
 

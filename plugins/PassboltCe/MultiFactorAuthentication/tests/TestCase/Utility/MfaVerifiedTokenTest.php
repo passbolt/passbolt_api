@@ -243,7 +243,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
             ->withAuthenticationTokens(
                 MfaAuthenticationTokenFactory::make()
                     ->active()
-                    ->setField('data', '{This is no valid JSON!{')
+                    ->setField('data', '{This is no valid JSON!{'),
             )
             ->persist();
         $token = $user->authentication_tokens[0];
@@ -263,7 +263,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
             ->withAuthenticationTokens(
                 MfaAuthenticationTokenFactory::make()
                     ->active()
-                    ->created((new DateTime())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS))
+                    ->created((new DateTime())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS)),
             )
             ->persist();
         $token = $user->authentication_tokens[0];

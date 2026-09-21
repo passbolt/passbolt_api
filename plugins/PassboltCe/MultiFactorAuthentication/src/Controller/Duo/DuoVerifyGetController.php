@@ -39,7 +39,7 @@ class DuoVerifyGetController extends MfaVerifyController
     public function get(
         SessionIdentificationServiceInterface $sessionIdentificationService,
         MfaFormInterface $verifyForm,
-        RememberAMonthSettingInterface $rememberMeForAMonthSetting
+        RememberAMonthSettingInterface $rememberMeForAMonthSetting,
     ) {
         $this->_assertRequestNotJson();
         $this->_handleVerifiedNotRequired($sessionIdentificationService, $rememberMeForAMonthSetting);

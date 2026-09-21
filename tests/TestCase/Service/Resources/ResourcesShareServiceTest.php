@@ -78,7 +78,7 @@ class ResourcesShareServiceTest extends AppTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Users = TableRegistry::getTableLocator()->get('Users');
         $this->service = new ResourcesShareService(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
         RoleFactory::make()->guest()->persist();
     }

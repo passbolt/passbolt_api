@@ -197,7 +197,7 @@ class ScimPatchControllerTest extends ScimApiIntegrationTestCase
                     'path' => 'name.givenName',
                     'value' => 'irrelevant',
                 ],
-            ])
+            ]),
         );
 
         $this->assertResponseCode(400);

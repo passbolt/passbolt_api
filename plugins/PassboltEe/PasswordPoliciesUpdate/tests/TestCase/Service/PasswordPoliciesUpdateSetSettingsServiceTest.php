@@ -131,13 +131,13 @@ class PasswordPoliciesUpdateSetSettingsServiceTest extends AppTestCase
                 ],
                 'external_dictionary_check' => true,
             ],
-            $result->toOrganizationSettingValueArray()
+            $result->toOrganizationSettingValueArray(),
         );
         // Assert event is dispatched & contains valid data
         $this->assertEventFiredWith(
             PasswordPoliciesUpdateSetSettingsService::EVENT_SETTINGS_UPDATED,
             'passwordPoliciesSetting',
-            $result
+            $result,
         );
         $this->assertEventFiredWith(PasswordPoliciesUpdateSetSettingsService::EVENT_SETTINGS_UPDATED, 'uac', $uac);
     }
@@ -202,13 +202,13 @@ class PasswordPoliciesUpdateSetSettingsServiceTest extends AppTestCase
                 ],
                 'external_dictionary_check' => false,
             ],
-            $result->toOrganizationSettingValueArray()
+            $result->toOrganizationSettingValueArray(),
         );
         // Assert event is dispatched & contains valid data
         $this->assertEventFiredWith(
             PasswordPoliciesUpdateSetSettingsService::EVENT_SETTINGS_UPDATED,
             'passwordPoliciesSetting',
-            $result
+            $result,
         );
         $this->assertEventFiredWith(PasswordPoliciesUpdateSetSettingsService::EVENT_SETTINGS_UPDATED, 'uac', $uac);
     }
@@ -250,13 +250,13 @@ class PasswordPoliciesUpdateSetSettingsServiceTest extends AppTestCase
                 'password_generator_settings' => $result->password_generator_settings,
                 'passphrase_generator_settings' => $result->passphrase_generator_settings,
                 'source' => $result->source,
-            ]
+            ],
         );
         // Assert event is dispatched & contains valid data
         $this->assertEventFiredWith(
             PasswordPoliciesUpdateSetSettingsService::EVENT_SETTINGS_UPDATED,
             'passwordPoliciesSetting',
-            $result
+            $result,
         );
         $this->assertEventFiredWith(PasswordPoliciesUpdateSetSettingsService::EVENT_SETTINGS_UPDATED, 'uac', $uac);
     }

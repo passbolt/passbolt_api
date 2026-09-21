@@ -48,7 +48,7 @@ class SsoAuthenticationTokenSetService
     public function createOrFail(
         ExtendedUserAccessControl $uac,
         string $type,
-        string $settingsId
+        string $settingsId,
     ): SsoAuthenticationToken {
         /** @var \Passbolt\Sso\Model\Entity\SsoAuthenticationToken $ssoAuthToken */
         $ssoAuthToken = $this->SsoAuthenticationTokens->generate(
@@ -59,7 +59,7 @@ class SsoAuthenticationTokenSetService
                 'ip' => $uac->getUserIp(),
                 'user_agent' => $uac->getUserAgent(),
                 'sso_setting_id' => $settingsId,
-            ]
+            ],
         );
 
         return $ssoAuthToken;

@@ -101,15 +101,15 @@ class PasswordPoliciesSettingsSetControllerTest extends AppIntegrationTestCase
         $this->assertBadRequestError('Could not validate the password policies settings');
         $this->assertStringContainsString(
             'password generator length is required',
-            $response['password_generator_settings']['length']['_required']
+            $response['password_generator_settings']['length']['_required'],
         );
         $this->assertStringContainsString(
             'passphrase generator words is required',
-            $response['passphrase_generator_settings']['words']['_required']
+            $response['passphrase_generator_settings']['words']['_required'],
         );
         $this->assertStringContainsString(
             'passphrase generator word case should be one of the following',
-            $response['passphrase_generator_settings']['word_case']['inList']
+            $response['passphrase_generator_settings']['word_case']['inList'],
         );
     }
 

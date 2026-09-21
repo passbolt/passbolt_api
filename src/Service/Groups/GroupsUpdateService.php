@@ -78,7 +78,7 @@ class GroupsUpdateService
      * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService expire resource service
      */
     public function __construct(
-        ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService
+        ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService,
     ) {
         $this->resourcesExpireResourcesService = $resourcesExpireResourcesService;
         $this->groupsTable = TableRegistry::getTableLocator()->get('Groups');
@@ -123,7 +123,7 @@ class GroupsUpdateService
         string $groupId,
         array $metaData,
         ?array $changes = [],
-        ?array $secrets = []
+        ?array $secrets = [],
     ): EntitiesChangesDto {
         $group = $this->groupGetService->getNotDeletedOrFail($groupId);
         $this->assertChanges($group, $changes);
@@ -136,10 +136,10 @@ class GroupsUpdateService
                 $entitiesChangesDto->merge($this->updateGroupsUsers($uac, $group, $changes));
                 $entitiesChangesDto->merge($this->deleteGroupsUsers($uac, $group, $changes));
                 $this->resourcesExpireResourcesService->expireResourcesForSecrets(
-                    $entitiesChangesDto->getDeletedEntities(Secret::class)
+                    $entitiesChangesDto->getDeletedEntities(Secret::class),
                 );
                 $this->notifyUsers($uac, $group, $entitiesChangesDto);
-            }
+            },
         );
 
         return $entitiesChangesDto;
@@ -219,7 +219,7 @@ class GroupsUpdateService
         UserAccessControl $uac,
         Group $group,
         array $changes,
-        array $secretsData
+        array $secretsData,
     ): EntitiesChangesDto {
         $entitiesChangesDto = new EntitiesChangesDto();
         $isUacManager = $this->groupsUsersTable->isManager($uac->getId(), $group->id);
@@ -235,7 +235,7 @@ class GroupsUpdateService
                     $group,
                     $groupUserData,
                     $secretsData,
-                    $rowIndexRef
+                    $rowIndexRef,
                 );
                 $entitiesChangesDto->merge($addedGroupsUserEntitiesChangesDto);
             }
@@ -261,7 +261,7 @@ class GroupsUpdateService
         Group $group,
         array $groupUserData,
         array $secretsData,
-        int $rowIndexRef
+        int $rowIndexRef,
     ): EntitiesChangesDto {
         $userId = Hash::get($groupUserData, 'user_id');
         $groupUserData['group_id'] = $group->id;
@@ -349,7 +349,7 @@ class GroupsUpdateService
         UserAccessControl $uac,
         Group $group,
         array $groupUserData,
-        int $rowIndexRef
+        int $rowIndexRef,
     ): ?GroupsUser {
         $groupUserToUpdate = $this->getAndAssertGroupUserFromData($group, $groupUserData, $rowIndexRef);
 
@@ -435,7 +435,7 @@ class GroupsUpdateService
         UserAccessControl $uac,
         Group $group,
         array $groupUserData,
-        int $rowIndexRef
+        int $rowIndexRef,
     ): EntitiesChangesDto {
         $groupUser = $this->getAndAssertGroupUserFromData($group, $groupUserData, $rowIndexRef);
         $dto = new EntitiesChangesDto();
@@ -464,7 +464,7 @@ class GroupsUpdateService
     private function notifyUsers(
         UserAccessControl $uac,
         Group $group,
-        EntitiesChangesDto $entitiesChanges
+        EntitiesChangesDto $entitiesChanges,
     ): void {
         $event = new Event(static::UPDATE_SUCCESS_EVENT_NAME, $this, [
             'group' => $group,

@@ -97,7 +97,7 @@ class AccountRecoveryResponsesCreateService
         $requestEntity = $this->AccountRecoveryRequests->updateStatusAndValidateEntity(
             $this->uac,
             $requestEntity,
-            $responseEntity->status
+            $responseEntity->status,
         );
         $responseEntity->account_recovery_request = $requestEntity;
         // Update original request with updated status
@@ -262,7 +262,7 @@ class AccountRecoveryResponsesCreateService
      * @return void
      */
     protected function deactivateTokenIfRequestIsRejectedOrExtendValidityIfApprovedAndExpired(
-        AccountRecoveryResponse $response
+        AccountRecoveryResponse $response,
     ): void {
         $tokenId = $response->account_recovery_request->authentication_token_id;
         /** @var \App\Model\Entity\AuthenticationToken $token */

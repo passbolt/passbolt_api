@@ -125,7 +125,7 @@ class UserKeyPoliciesSettingsDto
         ?string $keyType,
         int|string|null $keySize,
         ?string $keyCurve,
-        ?string $source
+        ?string $source,
     ) {
         $this->preferred_key_type = self::marshalKeyType($keyType);
         $this->preferred_key_size = self::marshalKeySize($keySize);

@@ -38,7 +38,7 @@ class YubikeyVerifyPostController extends MfaVerifyController
     public function post(
         SessionIdentificationServiceInterface $sessionIdentificationService,
         MfaFormInterface $verifyForm,
-        RememberAMonthSettingInterface $rememberMeForAMonthSetting
+        RememberAMonthSettingInterface $rememberMeForAMonthSetting,
     ) {
         $this->_handleVerifiedNotRequired($sessionIdentificationService, $rememberMeForAMonthSetting);
         $redirect = $this->_handleInvalidSettings(MfaSettings::PROVIDER_YUBIKEY);
@@ -72,7 +72,7 @@ class YubikeyVerifyPostController extends MfaVerifyController
         $this->_generateMfaToken(
             MfaSettings::PROVIDER_YUBIKEY,
             $sessionIdentificationService,
-            $rememberMeForAMonthSetting
+            $rememberMeForAMonthSetting,
         );
         $this->_handleVerifySuccess();
     }

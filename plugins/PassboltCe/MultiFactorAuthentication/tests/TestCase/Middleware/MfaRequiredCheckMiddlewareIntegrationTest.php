@@ -137,7 +137,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         $user = UserFactory::make()
             ->user()
             ->withAuthenticationTokens(
-                MfaAuthenticationTokenFactory::make()->expired()
+                MfaAuthenticationTokenFactory::make()->expired(),
             )
             ->persist();
         $mfaCookie = $user->authentication_tokens[0]->token;
@@ -156,7 +156,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
             ->user()
             ->with(
                 'AuthenticationTokens',
-                RefreshTokenAuthenticationTokenFactory::make()->active()->getEntity()
+                RefreshTokenAuthenticationTokenFactory::make()->active()->getEntity(),
             )
             ->persist();
 
@@ -202,7 +202,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         $mfaToken = $this->mockMfaCookieValid(
             $this->makeUac($user),
             MfaSettings::PROVIDER_YUBIKEY,
-            true
+            true,
         );
 
         $oldRefreshToken = $user->authentication_tokens[0];

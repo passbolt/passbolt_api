@@ -71,8 +71,8 @@ class EditionUpgradeEmailRedactorTest extends AppTestCase
 
         $this->assertCount(2, $emails);
         $recipientIds = array_map(
-            fn ($e) => $e->getData()['body']['recipient']->id,
-            $emails
+            fn($e) => $e->getData()['body']['recipient']->id,
+            $emails,
         );
         $this->assertContains($otherAdmin1->id, $recipientIds);
         $this->assertContains($otherAdmin2->id, $recipientIds);
@@ -91,7 +91,7 @@ class EditionUpgradeEmailRedactorTest extends AppTestCase
             $roundTripped = json_decode((string)json_encode($body['operator']), true);
             $this->assertSame(
                 $body['operator']->profile->avatar->id,
-                $roundTripped['profile']['avatar']['id'] ?? null
+                $roundTripped['profile']['avatar']['id'] ?? null,
             );
         }
     }

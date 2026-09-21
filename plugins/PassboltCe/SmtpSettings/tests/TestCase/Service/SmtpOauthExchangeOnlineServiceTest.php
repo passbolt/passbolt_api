@@ -56,7 +56,7 @@ class SmtpOauthExchangeOnlineServiceTest extends TestCase
             ->method('post')
             ->with(
                 $this->equalTo($expectedUrl),
-                $this->anything()
+                $this->anything(),
             )
             ->willReturn($this->createMockResponse(200, ['access_token' => 'token']));
 
@@ -78,7 +78,7 @@ class SmtpOauthExchangeOnlineServiceTest extends TestCase
                     'client_id' => $config['client_id'],
                     'client_secret' => $config['client_secret'],
                     'scope' => SmtpOauthExchangeOnlineService::SCOPE,
-                ])
+                ]),
             )
             ->willReturn($this->createMockResponse(200, ['access_token' => 'token']));
 

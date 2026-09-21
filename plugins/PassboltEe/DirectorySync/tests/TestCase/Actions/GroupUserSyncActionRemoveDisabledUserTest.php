@@ -42,7 +42,7 @@ class GroupUserSyncActionRemoveDisabledUserTest extends DirectorySyncIntegration
         DirectoryOrgSettingFactory::make()->deleteUserBehaviorDisable()->persist();
 
         $this->action = new GroupSyncAction(
-            new ResourcesExpireResourcesFallbackServiceService()
+            new ResourcesExpireResourcesFallbackServiceService(),
         );
     }
 

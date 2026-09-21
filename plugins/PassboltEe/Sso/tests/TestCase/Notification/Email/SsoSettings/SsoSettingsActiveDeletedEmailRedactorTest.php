@@ -65,8 +65,8 @@ class SsoSettingsActiveDeletedEmailRedactorTest extends AppTestCase
         $this->assertTrue(
             in_array(
                 SsoSettingsDeleteService::AFTER_DELETE_ACTIVE_SSO_SETTINGS_EVENT,
-                $this->sut->getSubscribedEvents()
-            )
+                $this->sut->getSubscribedEvents(),
+            ),
         );
     }
 
@@ -88,7 +88,7 @@ class SsoSettingsActiveDeletedEmailRedactorTest extends AppTestCase
             UuidFactory::uuid(),
             'foo@passbolt.test',
             '127.0.0.1',
-            'Phpunit tests'
+            'Phpunit tests',
         );
         $event = new Event(SsoSettingsDeleteService::AFTER_DELETE_ACTIVE_SSO_SETTINGS_EVENT);
         $event->setData(['uac' => $uac]);
@@ -112,7 +112,7 @@ class SsoSettingsActiveDeletedEmailRedactorTest extends AppTestCase
             $operator->id,
             $operator->username,
             '127.0.0.1',
-            'Phpunit tests'
+            'Phpunit tests',
         );
         // Prepare event
         $event = new Event(SsoSettingsDeleteService::AFTER_DELETE_ACTIVE_SSO_SETTINGS_EVENT);

@@ -502,7 +502,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $this->assertSame(1, TagFactory::find()->where(['slug' => 'foobar'])->count());
         $this->assertSame(
             1,
-            ResourcesTagFactory::find()->where(['tag_id' => $responseArray['id'], 'user_id' => $user->id])->count()
+            ResourcesTagFactory::find()->where(['tag_id' => $responseArray['id'], 'user_id' => $user->id])->count(),
         );
     }
 }

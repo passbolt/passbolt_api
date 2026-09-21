@@ -48,14 +48,14 @@ class SsoProvidersGetControllerTest extends SsoIntegrationTestCase
                 SsoSetting::PROVIDER_GOOGLE => true,
                 SsoSetting::PROVIDER_OAUTH2 => false,
                 SsoSetting::PROVIDER_PINGONE => false,
-            ]
+            ],
         );
         $this->getJson('/sso/providers.json');
 
         $this->assertSuccess();
         $this->assertEqualsCanonicalizing(
             [SsoSetting::PROVIDER_AZURE, SsoSetting::PROVIDER_GOOGLE],
-            $this->_responseJsonBody
+            $this->_responseJsonBody,
         );
     }
 
@@ -75,7 +75,7 @@ class SsoProvidersGetControllerTest extends SsoIntegrationTestCase
         $this->logInAsAdmin();
         Configure::write(
             'passbolt.plugins.sso.providers',
-            [SsoSetting::PROVIDER_AZURE => true, 'facebook' => true]
+            [SsoSetting::PROVIDER_AZURE => true, 'facebook' => true],
         );
 
         $this->getJson('/sso/providers.json');
@@ -93,7 +93,7 @@ class SsoProvidersGetControllerTest extends SsoIntegrationTestCase
                 SsoSetting::PROVIDER_AZURE => true,
                 SsoSetting::PROVIDER_PINGONE => true,
                 SsoSetting::PROVIDER_OAUTH2 => false,
-            ]
+            ],
         );
 
         $this->getJson('/sso/providers.json');
@@ -101,7 +101,7 @@ class SsoProvidersGetControllerTest extends SsoIntegrationTestCase
         $this->assertSuccess();
         $this->assertEqualsCanonicalizing(
             [SsoSetting::PROVIDER_AZURE, SsoSetting::PROVIDER_PINGONE],
-            $this->_responseJsonBody
+            $this->_responseJsonBody,
         );
     }
 }

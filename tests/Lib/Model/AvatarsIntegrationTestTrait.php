@@ -48,7 +48,7 @@ trait AvatarsIntegrationTestTrait
     {
         $this->cachedFileLocation = TMP . 'tests' . DS . 'avatars' . rand(0, 99999) . DS;
         $this->filesystemAdapter = new LocalFilesystemAdapter(
-            $this->cachedFileLocation
+            $this->cachedFileLocation,
         );
         $this->mockService(FilesystemAdapter::class, function () {
             return $this->filesystemAdapter;
@@ -92,7 +92,7 @@ trait AvatarsIntegrationTestTrait
 
         return $AvatarsTable->saveOrFail(
             $avatar,
-            [$AvatarsTable::FILESYSTEM_ADAPTER_OPTION => $this->filesystemAdapter]
+            [$AvatarsTable::FILESYSTEM_ADAPTER_OPTION => $this->filesystemAdapter],
         );
     }
 
@@ -111,7 +111,7 @@ trait AvatarsIntegrationTestTrait
             filesize($uploadFile),
             UPLOAD_ERR_OK,
             $uploadFile,
-            'image/' . $format
+            'image/' . $format,
         );
     }
 
@@ -121,13 +121,13 @@ trait AvatarsIntegrationTestTrait
             $exists,
             $this
                 ->filesystemAdapter
-                ->fileExists($avatar->id . DS . AvatarsConfigurationService::FORMAT_SMALL . '.jpg')
+                ->fileExists($avatar->id . DS . AvatarsConfigurationService::FORMAT_SMALL . '.jpg'),
         );
         $this->assertSame(
             $exists,
             $this
                 ->filesystemAdapter
-                ->fileExists($avatar->id . DS . AvatarsConfigurationService::FORMAT_MEDIUM . '.jpg')
+                ->fileExists($avatar->id . DS . AvatarsConfigurationService::FORMAT_MEDIUM . '.jpg'),
         );
     }
 }

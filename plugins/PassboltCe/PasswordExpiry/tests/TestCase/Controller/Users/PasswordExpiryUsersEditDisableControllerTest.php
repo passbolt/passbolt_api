@@ -96,13 +96,13 @@ class PasswordExpiryUsersEditDisableControllerTest extends AppIntegrationTestCas
             "The user {$userFullName} has been suspended.",
             $admin1->username,
             '',
-            false
+            false,
         );
         $this->assertEmailInBatchContains(
             "The user {$userFullName} has been suspended.",
             $admin2->username,
             '',
-            false
+            false,
         );
         $emailContent = [
             'Some of your passwords expired',

@@ -51,7 +51,7 @@ class JwtRefreshTokenAuthenticatorTest extends TestCase
     {
         parent::setUp();
         $this->authenticator = new JwtRefreshTokenAuthenticator(
-            $this->createMock(IdentifierInterface::class)
+            $this->createMock(IdentifierInterface::class),
         );
     }
 
@@ -69,7 +69,7 @@ class JwtRefreshTokenAuthenticatorTest extends TestCase
             ->persist();
 
         $cookies = (new CookieCollection())->add(
-            new Cookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE, $refreshToken->get('token'))
+            new Cookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE, $refreshToken->get('token')),
         );
         $container = new Container();
         $container->add(SessionIdentificationServiceInterface::class, SessionIdentificationService::class);
@@ -147,7 +147,7 @@ class JwtRefreshTokenAuthenticatorTest extends TestCase
     public function testJwtRefreshTokenAuthenticator_Non_Existing_Token_Should_Return_Security_Exception_Cookie_Variant()
     {
         $cookies = (new CookieCollection())->add(
-            new Cookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE, UuidFactory::uuid())
+            new Cookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE, UuidFactory::uuid()),
         );
         $request = (new ServerRequest())->withCookieCollection($cookies);
         $this->expectException(RefreshTokenNotFoundException::class);
@@ -170,7 +170,7 @@ class JwtRefreshTokenAuthenticatorTest extends TestCase
     {
         $token = RefreshTokenAuthenticationTokenFactory::make()->inactive()->persist();
         $cookies = (new CookieCollection())->add(
-            new Cookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE, $token->get('token'))
+            new Cookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE, $token->get('token')),
         );
         $request = (new ServerRequest())->withCookieCollection($cookies);
         $this->expectException(ConsumedRefreshTokenAccessException::class);
@@ -193,7 +193,7 @@ class JwtRefreshTokenAuthenticatorTest extends TestCase
     {
         $token = RefreshTokenAuthenticationTokenFactory::make()->active()->expired()->persist();
         $cookies = (new CookieCollection())->add(
-            new Cookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE, $token->get('token'))
+            new Cookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE, $token->get('token')),
         );
         $request = (new ServerRequest())->withCookieCollection($cookies);
         $this->expectException(ExpiredRefreshTokenAccessException::class);
@@ -243,7 +243,7 @@ class JwtRefreshTokenAuthenticatorTest extends TestCase
         ServerRequest $request,
         Container $container,
         AuthenticationToken $refreshToken,
-        Result $result
+        Result $result,
     ): void {
         $user = $refreshToken->user;
         $this->assertTrue($result->isValid());

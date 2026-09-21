@@ -97,7 +97,7 @@ class PingOneProviderTest extends TestCase
 
         $this->assertSame(
             'https://auth.pingone.com/d1b2c3a4-e5f6-7890-abcd-ef1234567890/as',
-            $url
+            $url,
         );
     }
 
@@ -107,7 +107,7 @@ class PingOneProviderTest extends TestCase
 
         $this->assertSame(
             'https://auth.pingone.com/d1b2c3a4-e5f6-7890-abcd-ef1234567890/as/.well-known/openid-configuration',
-            $url
+            $url,
         );
     }
 

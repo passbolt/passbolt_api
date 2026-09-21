@@ -99,7 +99,7 @@ class RolesDeleteService
 
             throw new CustomValidationException(
                 __('The role could not be deleted.'),
-                $errors
+                $errors,
             );
         } catch (Exception $e) {
             throw new InternalErrorException(__('Could not delete the role, please try again later.'), null, $e);

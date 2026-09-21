@@ -102,7 +102,7 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
 
             foreach ($users as $user) {
                 $emailCollection->addEmail(
-                    $this->createShareEmail($user, $owner, $resource, $secrets[$user->id])
+                    $this->createShareEmail($user, $owner, $resource, $secrets[$user->id]),
                 );
             }
         }
@@ -133,7 +133,7 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function createShareEmail(User $recipient, User $owner, Resource $resource, string $secret): Email
     {
-        $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
+        $resourceDto = MetadataResourceDto::createFromArray($resource->toArray());
         $isV5 = $resourceDto->isV5();
 
         $subject = (new LocaleService())->translateString(
@@ -145,7 +145,7 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
                 }
 
                 return $subject;
-            }
+            },
         );
 
         $data = [

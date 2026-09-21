@@ -144,8 +144,8 @@ class SsoEgressGuard
         }
 
         return array_map(
-            fn (string $ip): string => $this->normalizeIp($ip),
-            array_values(array_unique($ips))
+            fn(string $ip): string => $this->normalizeIp($ip),
+            array_values(array_unique($ips)),
         );
     }
 

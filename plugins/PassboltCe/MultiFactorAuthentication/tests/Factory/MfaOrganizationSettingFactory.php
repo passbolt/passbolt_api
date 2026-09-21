@@ -72,7 +72,7 @@ class MfaOrganizationSettingFactory extends OrganizationSettingFactory
     public function yubikey(
         bool $isActive = true,
         ?string $yubikeyClientId = null,
-        ?string $yubikeySecretKey = null
+        ?string $yubikeySecretKey = null,
     ) {
         $value = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_YUBIKEY => $isActive]];
         $value[MfaSettings::PROVIDER_YUBIKEY] = [
@@ -94,7 +94,7 @@ class MfaOrganizationSettingFactory extends OrganizationSettingFactory
         bool $isActive = true,
         ?string $apiHostName = null,
         ?string $clientId = null,
-        ?string $clientSecret = null
+        ?string $clientSecret = null,
     ) {
         $value = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO => $isActive]];
         $value[MfaSettings::PROVIDER_DUO] = $this->getDuoDefaultSettings($apiHostName, $clientId, $clientSecret);
@@ -122,7 +122,7 @@ class MfaOrganizationSettingFactory extends OrganizationSettingFactory
     protected function getDuoDefaultSettings(
         ?string $apiHostName = null,
         ?string $clientId = null,
-        ?string $clientSecret = null
+        ?string $clientSecret = null,
     ) {
         // SEC-5652 Note to security researchers: these are not leaked credentials
         // They look valid as they should pass validation, but are fake

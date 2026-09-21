@@ -31,7 +31,7 @@ class SetUserIdentityInRequestMiddlewareTest extends TestCase
 {
     public function testSetUserIdentityInRequestMiddleware_User_Not_Logged_In()
     {
-        $request = (new ServerRequest());
+        $request = new ServerRequest();
 
         $middleware = new SetUserIdentityInRequestMiddleware();
         $middleware->process($request, new TestRequestHandler());

@@ -93,12 +93,12 @@ class JwtRefreshTokenAuthenticator extends AbstractAuthenticator
         if ($this->isValidPayloadProvided($request, $service)) {
             $refreshToken = $service->getActiveRefreshToken(
                 $request->getData(RefreshTokenAbstractService::REFRESH_TOKEN_DATA_KEY),
-                $request->getData('user_id')
+                $request->getData('user_id'),
             );
         } else {
             /** @var \App\Model\Entity\AuthenticationToken $refreshToken */
             $refreshToken = $service->queryRefreshToken(
-                $request->getCookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE)
+                $request->getCookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE),
             )->firstOrFail();
         }
 
@@ -114,7 +114,7 @@ class JwtRefreshTokenAuthenticator extends AbstractAuthenticator
      */
     protected function extendSessionIdentificationServiceInterfaceInDIC(
         ServerRequest $request,
-        AuthenticationToken $refreshToken
+        AuthenticationToken $refreshToken,
     ): void {
         $this
             ->getContainer($request)

@@ -145,6 +145,12 @@ return [
             'scim' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_SCIM_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
             ],
+            'offlineModePolicies' => [
+                'enabled' => filter_var(
+                    env('PASSBOLT_PLUGINS_OFFLINE_MODE_POLICIES_ENABLED', true),
+                    FILTER_VALIDATE_BOOLEAN
+                ),
+            ],
         ],
 
         // Selenium

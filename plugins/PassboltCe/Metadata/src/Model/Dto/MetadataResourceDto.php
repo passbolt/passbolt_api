@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Model\Dto;
 
+use App\Model\Dto\RequestDtoInterface;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
@@ -24,7 +25,7 @@ use Cake\Log\Log;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
-class MetadataResourceDto extends MetadataDto
+class MetadataResourceDto extends MetadataDto implements RequestDtoInterface
 {
     use FeaturePluginAwareTrait;
 
@@ -84,7 +85,7 @@ class MetadataResourceDto extends MetadataDto
     /**
      * @param array $data data passed in the request
      */
-    public function __construct(array $data = [])
+    final public function __construct(array $data = [])
     {
         $this->validateRequestPayload($data);
         $isV5Enabled = $this->isFeaturePluginEnabled(MetadataPlugin::class);
@@ -100,12 +101,12 @@ class MetadataResourceDto extends MetadataDto
 
     /**
      * @param array $data Array data.
-     * @return self
+     * @return static
      * @throws \Cake\Http\Exception\BadRequestException If fields are not in valid form
      */
-    public static function fromArray(array $data): self
+    public static function createFromArray(array $data): static
     {
-        return new MetadataResourceDto($data);
+        return new static($data);
     }
 
     /**

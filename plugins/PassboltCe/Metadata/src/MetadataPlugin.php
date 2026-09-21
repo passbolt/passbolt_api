@@ -117,7 +117,7 @@ class MetadataPlugin extends BasePlugin
             $commands->add('passbolt metadata insert_dummy_data', InsertDummyDataCommand::class);
             $commands->add(
                 'passbolt metadata update_metadata_types_settings',
-                UpdateMetadataTypesSettingsCommand::class
+                UpdateMetadataTypesSettingsCommand::class,
             );
             $commands->add('passbolt metadata share_metadata_key', ShareMetadataKeyCommand::class);
             // Migration commands

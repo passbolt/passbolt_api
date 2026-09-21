@@ -97,11 +97,11 @@ class ConnectDatabaseHealthcheck extends AbstractDatabaseHealthcheck
             __(
                 'Ensure that the driver defined in {0} is one of the following: {1}.',
                 CONFIG . 'passbolt.php',
-                implode(', ', $this->supportedDrivers)
+                implode(', ', $this->supportedDrivers),
             ),
             __(
                 'Double check the host, database name, username and password in {0}.',
-                CONFIG . 'passbolt.php'
+                CONFIG . 'passbolt.php',
             ),
             __('Make sure the database exists and is accessible for the given database user.'),
         ];

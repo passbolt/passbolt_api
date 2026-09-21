@@ -86,7 +86,7 @@ class AccountRecoveryPrivateKeyPasswordsTableTest extends AccountRecoveryTestCas
             'id',
             AccountRecoveryPrivateKeyPasswordFactory::make()->getEntity()->toArray(),
             $this->getDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -113,7 +113,7 @@ class AccountRecoveryPrivateKeyPasswordsTableTest extends AccountRecoveryTestCas
             'recipient_fingerprint',
             AccountRecoveryPrivateKeyPasswordFactory::make()->getEntity()->toArray(),
             $this->getDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -132,7 +132,7 @@ class AccountRecoveryPrivateKeyPasswordsTableTest extends AccountRecoveryTestCas
             'recipient_foreign_model',
             AccountRecoveryPrivateKeyPasswordFactory::make()->getEntity()->toArray(),
             $this->getDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 
@@ -163,7 +163,7 @@ class AccountRecoveryPrivateKeyPasswordsTableTest extends AccountRecoveryTestCas
             'data',
             AccountRecoveryPrivateKeyPasswordFactory::make()->getEntity()->toArray(),
             $this->getDefaultOptions(),
-            $testCases
+            $testCases,
         );
     }
 

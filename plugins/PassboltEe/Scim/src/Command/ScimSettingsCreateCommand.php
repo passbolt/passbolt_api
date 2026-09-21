@@ -58,7 +58,7 @@ class ScimSettingsCreateCommand extends ScimSettingsCommand
                     'setting_id' => UuidFactory::uuid(),
                     'secret_token' => $secretToken,
                 ],
-                $id
+                $id,
             );
             $settings['secret_token'] = $secretToken;
             $io->success('Settings were successfully generated. Please check them');

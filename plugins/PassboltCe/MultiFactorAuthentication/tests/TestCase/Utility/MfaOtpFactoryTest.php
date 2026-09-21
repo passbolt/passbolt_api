@@ -137,7 +137,7 @@ class MfaOtpFactoryTest extends MfaIntegrationTestCase
      */
     public function testMfaOtpFactoryTest_getAndSanitizeSecretLengthFromConfig_Multiple_Cases(
         $secretLength,
-        $sanitizedLength
+        $sanitizedLength,
     ) {
         $originalSecretLength = Configure::read(MfaOtpFactory::PASSBOLT_PLUGINS_MFA_TOTP_SECRET_LENGTH);
         Configure::write(MfaOtpFactory::PASSBOLT_PLUGINS_MFA_TOTP_SECRET_LENGTH, $secretLength);

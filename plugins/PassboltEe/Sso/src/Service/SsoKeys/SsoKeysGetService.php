@@ -43,7 +43,7 @@ class SsoKeysGetService
             $ssoAuthTokenGetService = new SsoAuthenticationTokenGetService();
             $ssoAuthToken = $ssoAuthTokenGetService->getOrFail(
                 $token,
-                SsoState::TYPE_SSO_GET_KEY
+                SsoState::TYPE_SSO_GET_KEY,
             );
             $ssoAuthTokenGetService->assertAndConsume($ssoAuthToken, $uac, $ssoSettingEntity->id);
         } catch (RecordNotFoundException $exception) {

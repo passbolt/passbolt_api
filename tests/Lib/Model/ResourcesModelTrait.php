@@ -175,7 +175,7 @@ trait ResourcesModelTrait
     {
         $attributes = array_merge(
             ['id', 'deleted', 'created', 'modified', 'created_by', 'modified_by'],
-            MetadataResourceDto::V5_META_PROPS
+            MetadataResourceDto::V5_META_PROPS,
         );
         $this->assertObjectHasAttributes($attributes, $resource);
     }

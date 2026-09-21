@@ -119,7 +119,7 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
                 }
 
                 return $subject;
-            }
+            },
         );
 
         $template = self::TEMPLATE;
@@ -137,7 +137,7 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
                 ],
                 'title' => $subject,
             ],
-            $template
+            $template,
         );
     }
 }

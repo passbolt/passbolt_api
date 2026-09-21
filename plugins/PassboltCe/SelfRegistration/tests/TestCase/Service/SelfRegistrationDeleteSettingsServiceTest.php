@@ -55,7 +55,7 @@ class SelfRegistrationDeleteSettingsServiceTest extends TestCase
         $settingInDB = $this->setSelfRegistrationSettingsData();
         $result = $this->service->deleteSettings(
             UserFactory::make()->admin()->nonPersistedUAC(),
-            $settingInDB->get('id')
+            $settingInDB->get('id'),
         );
         $this->assertTrue($result);
         $this->assertSame(0, OrganizationSettingFactory::count());
@@ -68,7 +68,7 @@ class SelfRegistrationDeleteSettingsServiceTest extends TestCase
         $this->expectExceptionMessage('The self registration setting does not exist.');
         $this->service->deleteSettings(
             UserFactory::make()->admin()->nonPersistedUAC(),
-            'foo'
+            'foo',
         );
     }
 
@@ -79,7 +79,7 @@ class SelfRegistrationDeleteSettingsServiceTest extends TestCase
         $this->expectExceptionMessage('The self registration setting does not exist.');
         $this->service->deleteSettings(
             UserFactory::make()->admin()->nonPersistedUAC(),
-            ''
+            '',
         );
     }
 }

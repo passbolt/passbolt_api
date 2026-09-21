@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-07-10 05:55+0000\n"
-"PO-Revision-Date: 2026-07-10 09:22\n"
+"PO-Revision-Date: 2026-09-10 14:47\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Czech\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +74,7 @@ msgid "The request data can not be empty."
 msgstr "Data požadavku nemohou být prázdná."
 
 msgid "You are already logged in."
-msgstr ""
+msgstr "Již jste přihlášeni."
 
 msgid "You are successfully logged in."
 msgstr "Jste úspěšně přihlášeni."
@@ -278,13 +278,13 @@ msgid "The resource has been updated successfully."
 msgstr "Zdroj byl úspěšně aktualizován."
 
 msgid "The role was deleted."
-msgstr ""
+msgstr "Role byla odstraněna."
 
 msgid "The role identifier is not valid."
-msgstr ""
+msgstr "Identifikátor role není platný."
 
 msgid "The role was successfully updated."
-msgstr ""
+msgstr "Role byla úspěšně aktualizována."
 
 msgid "The secret does not exist."
 msgstr "Tajný klíč neexistuje."
@@ -410,7 +410,7 @@ msgid "Invalid expiry time {0}."
 msgstr "Neplatný čas expirace {0}."
 
 msgid "The user role ID must not be of the guest role."
-msgstr ""
+msgstr "ID uživatelské role nesmí patřit roli hosta."
 
 msgid "The identifier should not be empty."
 msgstr "Identifikátor by neměl být prázdný."
@@ -950,25 +950,25 @@ msgid "The name should be a valid BMP-UTF8 string."
 msgstr "Název by měl být platný BMP-UTF8 řetězec."
 
 msgid "The name should not be greater than 50 characters."
-msgstr ""
+msgstr "Název by neměl být delší než 50 znaků."
 
 msgid "The name should not be reserved role."
-msgstr ""
+msgstr "Název by neměl být vyhrazenou rolí."
 
 msgid "The description should be a valid BMP-UTF8 string."
 msgstr "Popis by měl být platný BMP-UTF8 řetězec."
 
 msgid "The role cannot be deleted as it is associated with another user."
-msgstr ""
+msgstr "Roli nelze odstranit, protože je přiřazena jinému uživateli."
 
 msgid "A reserved role cannot be deleted."
-msgstr ""
+msgstr "Vyhrazenou roli nelze odstranit."
 
 msgid "A role already exists for the given name."
 msgstr "Role s daným názvem již existuje."
 
 msgid "Only maximum of {0} active roles are allowed."
-msgstr ""
+msgstr "Je povoleno pouze maximálně {0} aktivních rolí."
 
 msgid "A reserved role cannot be renamed."
 msgstr "Vyhrazenou roli nelze přejmenovat."
@@ -980,13 +980,13 @@ msgid "The resource identifier should not be empty."
 msgstr "Identifikátor zdroje by neměl být prázdný."
 
 msgid "The secret revision identifier should be a valid UUID."
-msgstr ""
+msgstr "Identifikátor revize tajemství by měl být platný UUID."
 
 msgid "A secret revision identifier is required."
-msgstr ""
+msgstr "Identifikátor revize tajemství je povinný."
 
 msgid "The secret revision identifier should not be empty."
-msgstr ""
+msgstr "Identifikátor revize tajemství by neměl být prázdný."
 
 msgid "The message should be a valid ASCII string."
 msgstr "Zpráva by měla být platný ASCII řetězec."
@@ -1001,10 +1001,10 @@ msgid "A secret already exists for the given user and resource."
 msgstr "Tajný údaj již existuje pro daného uživatele a zdroj."
 
 msgid "A secret already exists for the given user, resource and secret revision."
-msgstr ""
+msgstr "Pro daného uživatele, zdroj a revizi tajemství již tajemství existuje."
 
 msgid "The secret revision does not exist or is deleted."
-msgstr ""
+msgstr "Revize tajemství neexistuje nebo byla odstraněna."
 
 msgid "The user identifier by should be a valid UUID."
 msgstr "Identifikátor uživatele by měl být platný UUID."
@@ -1037,7 +1037,7 @@ msgid "The username is already in use."
 msgstr "Uživatelské jméno je již používáno."
 
 msgid "The role does not exist."
-msgstr ""
+msgstr "Role neexistuje."
 
 msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
 msgstr "Uživatel by neměl být jediným vlastníkem sdíleného obsahu, převeďte vlastnictví na ostatní uživatele."
@@ -1175,10 +1175,10 @@ msgid "{0} edited the resource {1}"
 msgstr "{0} upravil(a) zdroj {1}"
 
 msgid "{0} created a new role {1}"
-msgstr ""
+msgstr "{0} vytvořil novou roli {1}"
 
 msgid "{0} updated the role {1}"
-msgstr ""
+msgstr "{0} aktualizoval roli {1}"
 
 msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} nemůže dokončit proces obnovení účtu!"
@@ -1214,7 +1214,7 @@ msgid "Welcome to passbolt, {0}!"
 msgstr "Vítejte v passboltu, {0}!"
 
 msgid "Your role has been updated"
-msgstr ""
+msgstr "Vaše role byla aktualizována"
 
 msgid "The purify subject setting should be a boolean."
 msgstr "Nastavení purify subject by mělo být platný boolean."
@@ -1382,7 +1382,7 @@ msgid "Could not validate group user data."
 msgstr "Nelze ověřit data uživatele skupiny."
 
 msgid "The resource with ID {0} does not have a secret revision."
-msgstr ""
+msgstr "Zdroj s ID {0} nemá revizi tajemství."
 
 msgid "All email notifications will be sent."
 msgstr "Všechna e-mailová upozornění budou odeslána."
@@ -1613,10 +1613,10 @@ msgid "Run the install script to install the database tables"
 msgstr "Pro instalaci databázových tabulek spusťte instalační skript"
 
 msgid "The database version is supported."
-msgstr ""
+msgstr "Verze databáze je podporována."
 
 msgid "The database version is deprecated."
-msgstr ""
+msgstr "Verze databáze je zastaralá."
 
 msgid "The model schema cache shows no discrepancies with the database schema."
 msgstr "Mezipaměť schématu modelu nevykazuje žádné nesrovnalosti se schématem databáze."
@@ -2132,7 +2132,7 @@ msgid "The resource types associated to this resource does not exist."
 msgstr "Typy zdrojů spojené s tímto prostředkem neexistují."
 
 msgid "No secret revision were found for this resource."
-msgstr ""
+msgstr "Pro tento zdroj nebyly nalezeny žádné revize tajemství."
 
 msgid "You are not allowed to update this resource."
 msgstr "Nemáte oprávnění aktualizovat tento zdroj."
@@ -2141,19 +2141,19 @@ msgid "Additional resource types are not enabled on this server."
 msgstr "Další typy zdrojů nejsou na tomto serveru povoleny."
 
 msgid "The role could not be saved."
-msgstr ""
+msgstr "Roli se nepodařilo uložit."
 
 msgid "Could not save the role, please try again later."
-msgstr ""
+msgstr "Roli nelze uložit, zkuste to prosím později."
 
 msgid "The role does not exist or deleted."
-msgstr ""
+msgstr "Role neexistuje nebo byla odstraněna."
 
 msgid "The role could not be deleted."
-msgstr ""
+msgstr "Roli se nepodařilo odstranit."
 
 msgid "Could not delete the role, please try again later."
-msgstr ""
+msgstr "Roli nelze odstranit, zkuste to prosím později."
 
 msgid "There should be at least 4 roles"
 msgstr "Měly by existovat alespoň 4 role"
@@ -2165,10 +2165,10 @@ msgid "Validation success for role {0}"
 msgstr "Ověření role {0} bylo úspěšné"
 
 msgid "The role could not be updated."
-msgstr ""
+msgstr "Roli se nepodařilo aktualizovat."
 
 msgid "Could not update the role, please try again later."
-msgstr ""
+msgstr "Roli nelze aktualizovat, zkuste to prosím později."
 
 msgid "Could not validate secrets data."
 msgstr "Nelze ověřit data tajných údajů."
@@ -2435,10 +2435,10 @@ msgid "The supplied email notification settings are not valid"
 msgstr "Zadaná nastavení e-mailových oznámení nejsou platná."
 
 msgid "The allow CSV format setting is required."
-msgstr ""
+msgstr "Nastavení povolení formátu CSV je povinné."
 
 msgid "The allow CSV format setting should be a boolean."
-msgstr ""
+msgstr "Nastavení povolení formátu CSV by mělo být boolean."
 
 msgid "The folder has been added successfully."
 msgstr "Složka byla úspěšně přidána."
@@ -2549,10 +2549,10 @@ msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Složku typu \"osobní\" nelze sdílet s jinými uživateli ani se skupinou."
 
 msgid "You made changes on several folders"
-msgstr ""
+msgstr "Provedli jste změny v několika složkách"
 
 msgid "{0} has made changes on several folders"
-msgstr ""
+msgstr "{0} provedl změny v několika složkách"
 
 msgid "You added the folder {0}"
 msgstr "Přidali jste složku {0}"
@@ -2651,7 +2651,7 @@ msgid "{0} edited a folder"
 msgstr "{0} upravil(a) složku"
 
 msgid "{0} folders were affected."
-msgstr ""
+msgstr "Bylo ovlivněno {0} složek."
 
 msgid "It would be too much to list them here, but you can go check them on passbolt."
 msgstr "Bylo by příliš dlouhé je zde vypisovat, ale můžete je zkontrolovat v passboltu."
@@ -3254,13 +3254,13 @@ msgid "The server metadata private key is not valid."
 msgstr "Soukromý klíč metadat serveru není platný."
 
 msgid "The server does not have access to the server metadata private key in Zero-knowledge mode."
-msgstr ""
+msgstr "Server nemá v režimu Zero-knowledge přístup k soukromému klíči metadat serveru."
 
 msgid "The server has access to the server metadata private key while in Zero-knowledge mode."
-msgstr ""
+msgstr "Server má v režimu Zero-knowledge přístup k soukromému klíči metadat serveru."
 
 msgid "When Zero-knowledge mode is enabled, the server should not have access to the server metadata private key."
-msgstr ""
+msgstr "Když je povolen režim Zero-knowledge, server by neměl mít přístup k soukromému klíči metadat serveru."
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "Klíč metadat neexistuje nebo byl odstraněn."
@@ -3701,7 +3701,7 @@ msgid "This functionality is not available using AJAX/JSON."
 msgstr "Tato funkce není dostupná při použití AJAX/JSON."
 
 msgid "This functionality is only available using AJAX/JSON."
-msgstr ""
+msgstr "Tato funkce je dostupná pouze prostřednictvím AJAX/JSON."
 
 msgid "This authentication provider is already setup. Disable it first"
 msgstr "Tento poskytovatel ověřování je již nastaven. Nejprve jej zakažte."
@@ -3710,7 +3710,7 @@ msgid "Multi Factor Authentication is configured!"
 msgstr "Vícefaktorové ověření je nakonfigurováno!"
 
 msgid "Unable to configure Multi Factor Authentication."
-msgstr ""
+msgstr "Vícefaktorové ověřování se nepodařilo nakonfigurovat."
 
 msgid "MFA authentication is required."
 msgstr "Je vyžadováno ověření pomocí MFA."
@@ -4151,10 +4151,10 @@ msgid "The password generator exclude look alike chars should be a boolean type.
 msgstr "Nastavení vyloučení podobných znaků generátoru hesel by mělo být typu boolean."
 
 msgid "The rbacs could not be saved."
-msgstr ""
+msgstr "Rbacy se nepodařilo uložit."
 
 msgid "Could not save the rbacs, please try again later."
-msgstr ""
+msgstr "Rbacy nelze uložit, zkuste to prosím později."
 
 msgid "Record not found"
 msgstr "Záznam nenalezen"
@@ -4187,7 +4187,7 @@ msgid "The control function is not allowed for this UI Action."
 msgstr "Řídicí funkce není pro tuto akci rozhraní povolena."
 
 msgid "The control function is not allowed for this Action."
-msgstr ""
+msgstr "Řídicí funkce není pro tuto akci povolena."
 
 msgid "An action identifier should be a valid UUID."
 msgstr "Identifikátor akce by měl být platný UUID."
@@ -4367,37 +4367,37 @@ msgid "The resource type is not deleted."
 msgstr "Typ zdroje není odstraněn."
 
 msgid "The max revisions should be a valid integer."
-msgstr ""
+msgstr "Maximální počet revizí by měl být platné celé číslo."
 
 msgid "The max revisions is required."
-msgstr ""
+msgstr "Maximální počet revizí je povinný."
 
 msgid "The max revisions should be greater than 0."
-msgstr ""
+msgstr "Maximální počet revizí by měl být větší než 0."
 
 msgid "The max revisions should not exceed the max revisions limit set by the administrator."
-msgstr ""
+msgstr "Maximální počet revizí by neměl překročit limit maximálního počtu revizí nastavený administrátorem."
 
 msgid "The allow sharing revisions should be a valid boolean."
-msgstr ""
+msgstr "Povolení sdílení revizí by mělo být platný boolean."
 
 msgid "The allow sharing revisions is required."
-msgstr ""
+msgstr "Povolení sdílení revizí je povinné."
 
 msgid "The allow sharing revisions is not enabled by the administrator."
-msgstr ""
+msgstr "Povolení sdílení revizí není administrátorem zapnuto."
 
 msgid "Secret revisions settings endpoints are disabled."
-msgstr ""
+msgstr "Koncové body nastavení revizí tajemství jsou zakázány."
 
 msgid "The identifier of the user who created the secret revision should be a valid UUID."
-msgstr ""
+msgstr "Identifikátor uživatele, který vytvořil revizi tajemství, by měl být platný UUID."
 
 msgid "The identifier of the user who modified the secret revision should be a valid UUID."
-msgstr ""
+msgstr "Identifikátor uživatele, který upravil revizi tajemství, by měl být platný UUID."
 
 msgid "Could not save secret revision"
-msgstr ""
+msgstr "Revizi tajemství se nepodařilo uložit"
 
 msgid "The self registration setting id should be a valid UUID."
 msgstr "Identifikátor nastavení samo-registrace by měl být platný UUID."
@@ -4538,22 +4538,22 @@ msgid "The test email should be a valid email address."
 msgstr "Testovací email by měl být platná e-mailová adresa."
 
 msgid "The tenant ID should be a valid UUID."
-msgstr ""
+msgstr "ID tenanta by mělo být platný UUID."
 
 msgid "The client ID should be a valid UUID."
-msgstr ""
+msgstr "ID klienta by mělo být platný UUID."
 
 msgid "The client secret should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Tajný klíč klienta by měl být platný BMP-UTF8 řetězec."
 
 msgid "The client secret should not exceed 256 characters."
-msgstr ""
+msgstr "Tajný klíč klienta by neměl přesáhnout 256 znaků."
 
 msgid "The OAuth2 username should be a valid email address."
-msgstr ""
+msgstr "Uživatelské jméno OAuth2 by mělo být platná e-mailová adresa."
 
 msgid "The OAuth2 username should not exceed 256 characters."
-msgstr ""
+msgstr "Uživatelské jméno OAuth2 by nemělo přesáhnout 256 znaků."
 
 msgid "The authentication method is required."
 msgstr "Metoda ověřování je povinná."
@@ -4568,28 +4568,28 @@ msgid "A test recipient is required."
 msgstr "Pro test je vyžadován příjemce."
 
 msgid "The tenant ID is required."
-msgstr ""
+msgstr "ID tenanta je povinné."
 
 msgid "The tenant ID should not be empty."
-msgstr ""
+msgstr "ID tenanta by nemělo být prázdné."
 
 msgid "The client ID is required."
-msgstr ""
+msgstr "ID klienta je povinné."
 
 msgid "The client ID should not be empty."
-msgstr ""
+msgstr "ID klienta by nemělo být prázdné."
 
 msgid "The client secret is required."
-msgstr ""
+msgstr "Tajný klíč klienta je povinný."
 
 msgid "The client secret should not be empty."
 msgstr "Klientské tajemství by nemělo být prázdné."
 
 msgid "The OAuth2 username is required."
-msgstr ""
+msgstr "Uživatelské jméno OAuth2 je povinné."
 
 msgid "The OAuth2 username should not be empty."
-msgstr ""
+msgstr "Uživatelské jméno OAuth2 by nemělo být prázdné."
 
 msgid "SMTP settings endpoints disabled."
 msgstr "Koncové body nastavení SMTP jsou deaktivovány."
@@ -4646,16 +4646,16 @@ msgid "env variables"
 msgstr "proměnné prostředí"
 
 msgid "Tenant ID should be a valid UUID."
-msgstr ""
+msgstr "ID tenanta by mělo být platný UUID."
 
 msgid "Client ID should be a valid UUID."
-msgstr ""
+msgstr "ID klienta by mělo být platný UUID."
 
 msgid "Failed to obtain SMTP OAuth2 access token."
-msgstr ""
+msgstr "Nepodařilo se získat přístupový token SMTP OAuth2."
 
 msgid "SMTP OAuth2 token response from Microsoft did not contain an access token."
-msgstr ""
+msgstr "Odpověď tokenu SMTP OAuth2 od společnosti Microsoft neobsahovala přístupový token."
 
 msgid "Could not validate the smtp settings."
 msgstr "Nebylo možné ověřit nastavení SMTP."
@@ -5006,7 +5006,7 @@ msgid "Authentication method"
 msgstr "Metoda ověřování"
 
 msgid "Directory (tenant) ID"
-msgstr ""
+msgstr "ID adresáře (tenanta)"
 
 msgid "Application (client) ID"
 msgstr "ID aplikace (klienta)"
@@ -7259,7 +7259,7 @@ msgid "Contact your admin"
 msgstr "Kontaktujte svého administrátora"
 
 msgid "{0} changed the role of {1} to {2}."
-msgstr ""
+msgstr "{0} změnil roli {1} na {2}."
 
 msgid "{0} can no longer perform administration tasks."
 msgstr "{0} již nemůže vykonávat administrátorské úkoly."
@@ -7271,10 +7271,10 @@ msgid "View user in passbolt"
 msgstr "Zobrazit uživatele v passbolt"
 
 msgid "A new role {0} has been created."
-msgstr ""
+msgstr "Byla vytvořena nová role {0}."
 
 msgid "The role {0} has been renamed to {1}."
-msgstr ""
+msgstr "Role {0} byla přejmenována na {1}."
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
 msgstr "Tento uživatel ztratil svůj soukromý klíč a/nebo přístupovou frázi a nemůže dokončit proces obnovení účtu."
@@ -7475,16 +7475,16 @@ msgid "{0} resources were shared with you."
 msgstr "{0} prostředky byly s vámi sdíleny."
 
 msgid "{0} changed your role to {1}."
-msgstr ""
+msgstr "{0} změnil vaši roli na {1}."
 
 msgid "You can no longer perform administration tasks."
-msgstr ""
+msgstr "Již nemůžete provádět úlohy správy."
 
 msgid "This email is an automatic notification sent by"
 msgstr "Tento e-mail je automatické oznámení odeslané službou"
 
 msgid "To disable these notifications, contact an administrator."
-msgstr ""
+msgstr "Chcete-li tato oznámení vypnout, kontaktujte administrátora."
 
 msgid "The locale {0} is not valid or not supported."
 msgstr "Locale {0} není platná nebo není podporována."

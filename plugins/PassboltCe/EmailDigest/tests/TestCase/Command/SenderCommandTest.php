@@ -205,7 +205,7 @@ class SenderCommandTest extends AppIntegrationTestCase
         $mockedEmailQueue = $this->getMockForModel(
             'EmailQueue.EmailQueue',
             ['success',],
-            ['table' => 'email_queue',]
+            ['table' => 'email_queue',],
         );
         $mockedEmailQueue
             ->expects($this->once())
@@ -250,7 +250,7 @@ class SenderCommandTest extends AppIntegrationTestCase
         $priorityResourceChange = rand();
         DigestTemplateRegistry::getInstance()->addTemplate(new ResourceChangesDigestTemplate($priorityResourceChange));
         DigestTemplateRegistry::getInstance()->addTemplate(
-            new GroupMembershipDigestTemplate($priorityResourceChange + 1)
+            new GroupMembershipDigestTemplate($priorityResourceChange + 1),
         );
 
         $this->exec('passbolt email_digest send');

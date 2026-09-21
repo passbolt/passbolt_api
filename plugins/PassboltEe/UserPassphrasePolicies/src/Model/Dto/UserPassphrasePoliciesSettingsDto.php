@@ -100,7 +100,7 @@ class UserPassphrasePoliciesSettingsDto
         ?string $createdBy,
         ?DateTime $modified,
         ?string $modifiedBy,
-        ?string $source
+        ?string $source,
     ) {
         $this->entropy_minimum = (int)$entropyMinimum;
         $this->external_dictionary_check = (bool)$externalDictionaryCheck;
@@ -148,7 +148,7 @@ class UserPassphrasePoliciesSettingsDto
          */
         $userPassphrasePoliciesSettingArray = array_merge(
             $userPassphrasePoliciesSettingArray,
-            $userPassphrasePoliciesSettingArray['value']
+            $userPassphrasePoliciesSettingArray['value'],
         );
         unset($userPassphrasePoliciesSettingArray['value']);
 

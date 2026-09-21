@@ -127,16 +127,16 @@ class UserDeleteGroupManagerEmailRedactor implements SubscribedEmailRedactorInte
                 return __(
                     '{0} deleted user {1}',
                     $deletedBy->profile->first_name,
-                    $user->profile->first_name
+                    $user->profile->first_name,
                 );
-            }
+            },
         );
 
         return new Email(
             $recipient,
             $subject,
             ['body' => ['user' => $user, 'groups' => $groups, 'admin' => $deletedBy], 'title' => $subject],
-            'GM/user_delete'
+            'GM/user_delete',
         );
     }
 

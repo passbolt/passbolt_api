@@ -92,7 +92,7 @@ class MigrateAllV4FoldersToV5Service implements V4ToV5MigrationServiceInterface
         }
 
         foreach ($folders as $folder) {
-            $dto = MetadataFolderDto::fromArray($folder->toArray());
+            $dto = MetadataFolderDto::createFromArray($folder->toArray());
 
             try {
                 if ($dto->isV5()) {
