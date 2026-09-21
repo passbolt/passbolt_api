@@ -25,7 +25,7 @@ class EeHealthcheckServiceCollector extends HealthcheckServiceCollector
      * List of all EE specific available health check domains.
      */
     public const DOMAIN_SSO = 'sso';
-    public const DOMAIN_DIRECTORY_SYNC = 'directorySync';
+    public const DOMAIN_DIRECTORY_SYNC = 'directory-sync';
     public const DOMAIN_SCIM = 'scim';
 
     /**

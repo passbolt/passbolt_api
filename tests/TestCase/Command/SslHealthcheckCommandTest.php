@@ -58,7 +58,7 @@ class SslHealthcheckCommandTest extends AppTestCase
             $this->newClientResponse(200, [], json_encode(['body' => 'OK'])),
         );
 
-        $this->exec('passbolt healthcheck --ssl');
+        $this->exec('passbolt healthcheck --filter ssl');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('<success>[PASS]</success> SSL peer certificate validates.');
@@ -77,7 +77,7 @@ class SslHealthcheckCommandTest extends AppTestCase
             return $stub;
         });
 
-        $this->exec('passbolt healthcheck --ssl');
+        $this->exec('passbolt healthcheck --filter ssl');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('<warning>[WARN] SSL peer certificate does not validate.</warning>');

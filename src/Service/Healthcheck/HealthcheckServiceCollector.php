@@ -30,11 +30,11 @@ class HealthcheckServiceCollector
      * List of all available health check domains.
      */
     public const DOMAIN_ENVIRONMENT = 'environment';
-    public const DOMAIN_CONFIG_FILES = 'configFiles';
+    public const DOMAIN_CONFIG_FILES = 'config-files';
     public const DOMAIN_CORE = 'core';
     public const DOMAIN_APPLICATION = 'application';
     public const DOMAIN_SSL = 'ssl';
-    public const DOMAIN_SMTP_SETTINGS = 'smtpSettings';
+    public const DOMAIN_SMTP_SETTINGS = 'smtp-settings';
     public const DOMAIN_DATABASE = 'database';
     public const DOMAIN_GPG = 'gpg';
     public const DOMAIN_JWT = 'jwt';
@@ -123,7 +123,7 @@ class HealthcheckServiceCollector
         }
 
         // If mapping not found, change it to humanize form programmatically
-        return Inflector::humanize($domain);
+        return Inflector::humanize($domain, '-');
     }
 
     /**

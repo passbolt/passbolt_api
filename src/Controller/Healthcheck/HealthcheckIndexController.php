@@ -44,6 +44,16 @@ class HealthcheckIndexController extends AppController
         'passbolt.plugins.healthcheck.security.indexEndpointEnabled';
 
     /**
+     * @deprecated As of v5.17.0, goes away with the legacy format.
+     * @var array<string, string>
+     */
+    private const LEGACY_DOMAIN_KEYS = [
+        HealthcheckServiceCollector::DOMAIN_CONFIG_FILES => 'configFile',
+        HealthcheckServiceCollector::DOMAIN_SMTP_SETTINGS => 'smtpSettings',
+        'directory-sync' => 'directorySync',
+    ];
+
+    /**
      * @inheritDoc
      */
     public function beforeFilter(EventInterface $event)
@@ -181,9 +191,7 @@ class HealthcheckIndexController extends AppController
 
         /** @var array<\App\Service\Healthcheck\HealthcheckServiceInterface> $checkResults */
         foreach ($resultsGroupByDomain as $domainKey => $checkResults) {
-            if ($domainKey === HealthcheckServiceCollector::DOMAIN_CONFIG_FILES) {
-                $domainKey = 'configFile';
-            }
+            $domainKey = self::LEGACY_DOMAIN_KEYS[$domainKey] ?? $domainKey;
             $result[$domainKey] = [];
             foreach ($checkResults as $checkResult) {
                 $value = $checkResult->isPassed();

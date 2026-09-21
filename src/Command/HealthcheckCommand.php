@@ -128,14 +128,14 @@ class HealthcheckCommand extends PassboltCommand
             ]);
 
         // Checks
-        $domains = $this->healthcheckServiceCollector->getDomainsInCollectedServices();
-        foreach ($domains as $domain) {
-            $domainReadable = $this->healthcheckServiceCollector->getTitleFromDomain($domain);
-            $parser->addOption($domain, [
-                'help' => __d('cake_console', 'Run {0} tests only.', $domainReadable),
-                'boolean' => true,
-            ]);
-        }
+        $parser->addOption('filter', [
+            'help' => __d(
+                'cake_console',
+                'Run the checks of the given domain only. Repeat the option to run several domains.',
+            ),
+            'multiple' => true,
+            'choices' => $this->healthcheckServiceCollector->getDomainsInCollectedServices(),
+        ]);
 
         $this->addDatasourceOption($parser);
 
@@ -163,13 +163,14 @@ class HealthcheckCommand extends PassboltCommand
 
         $this->posixModeIsEnabled = $args->getOption('posix');
 
-        // If user only want to run one check
+        // If user only want to run the checks of one or several domains
+        $filteredDomains = $args->getArrayOption('filter') ?? [];
         $paramChecks = [];
         $healthcheckServices = $this->healthcheckServiceCollector->getServices();
         foreach ($healthcheckServices as $healthcheckService) {
             if (
                 $healthcheckService instanceof HealthcheckCliInterface
-                && $args->getOption($healthcheckService->cliOption())
+                && in_array($healthcheckService->cliOption(), $filteredDomains, true)
             ) {
                 $paramChecks[] = $healthcheckService;
             }
