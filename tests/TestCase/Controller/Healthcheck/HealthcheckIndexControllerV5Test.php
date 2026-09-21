@@ -17,8 +17,6 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Healthcheck;
 
 use App\Controller\Healthcheck\HealthcheckIndexController;
-use App\Middleware\CsrfProtectionMiddleware;
-use App\Middleware\SslForceMiddleware;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\Utility\ErrorIntegrationTestTrait;
@@ -36,8 +34,6 @@ use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\DirectorySync\DirectorySyncPlugin;
 use Passbolt\Ee\Service\Healthcheck\EeHealthcheckServiceCollector;
 use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
-use Passbolt\MultiFactorAuthentication\MultiFactorAuthenticationPlugin;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\Scim\ScimPlugin;
 use Passbolt\SmtpSettings\SmtpSettingsPlugin;
 use Passbolt\Sso\SsoPlugin;
@@ -65,22 +61,6 @@ class HealthcheckIndexControllerV5Test extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->enableCsrfToken();
-        $this->loadRoutes();
-
-        // Disable feature plugins listed in default.php
-        $plugins = array_keys(Configure::read('passbolt.plugins'));
-        foreach ($plugins as $plugin) {
-            $this->disableFeaturePlugin(ucfirst($plugin));
-        }
-        $this->disableFeaturePlugin('Log');
-        $this->disableFeaturePlugin('Tags');
-        $this->disableFeaturePlugin('Folders');
-        $this->disableFeaturePlugin(MultiFactorAuthenticationPlugin::class);
-
-        Configure::write(CsrfProtectionMiddleware::PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG, true);
-        // Disable SSL Force since all requests in tests are made on http
-        Configure::write(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME, false);
 
         $this->mockService(Client::class, function () {
             return $this->getMockedHealthcheckStatusRequest();
@@ -94,13 +74,6 @@ class HealthcheckIndexControllerV5Test extends TestCase
         $this->mockService('sslHealthcheckClient', function () {
             return $this->getMockedHealthcheckStatusRequest();
         });
-    }
-
-    public function tearDown(): void
-    {
-        $this->clearPlugins();
-        MfaSettings::clear();
-        parent::tearDown();
     }
 
     public function testHealthcheckIndexControllerV5_No_Admin_Should_Throw_Exception(): void
@@ -180,11 +153,7 @@ class HealthcheckIndexControllerV5Test extends TestCase
 
     public function testHealthcheckIndexControllerV5_Success_Json(): void
     {
-        $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
-        $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
         $this->enableFeaturePlugin(DirectorySyncPlugin::class);
-        $this->enableFeaturePlugin(SsoPlugin::class);
-        $this->enableFeaturePlugin(ScimPlugin::class);
         RoleFactory::make(3)->persist();
         $this->logInAsAdmin();
 
@@ -206,9 +175,9 @@ class HealthcheckIndexControllerV5Test extends TestCase
             HealthcheckServiceCollector::DOMAIN_APPLICATION,
             HealthcheckServiceCollector::DOMAIN_DATABASE,
             HealthcheckServiceCollector::DOMAIN_METADATA,
-            EeHealthcheckServiceCollector::DOMAIN_DIRECTORY_SYNC,
             EeHealthcheckServiceCollector::DOMAIN_SSO,
             EeHealthcheckServiceCollector::DOMAIN_SCIM,
+            EeHealthcheckServiceCollector::DOMAIN_DIRECTORY_SYNC,
         ];
         foreach ($expectedDomains as $domain) {
             $this->assertContains($domain, $domains, "Domain {$domain} is missing from the response.");
