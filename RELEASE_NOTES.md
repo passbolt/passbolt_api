@@ -1,6 +1,6 @@
-Release song: TBD
+Release song: https://www.youtube.com/watch?v=gI6fQ2IXMjE
 
-## [5.16.0-test.1] - 2026-09-11
+## [5.16.0] - 2026-09-16
 ### Added
 - PB-52633 Add support for Offline Mode
 
