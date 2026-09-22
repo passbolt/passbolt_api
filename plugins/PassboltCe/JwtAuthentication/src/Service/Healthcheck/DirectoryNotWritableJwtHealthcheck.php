@@ -120,6 +120,6 @@ class DirectoryNotWritableJwtHealthcheck implements HealthcheckServiceInterface,
      */
     public function getKey(): string
     {
-        return 'directory-not-writable';
+        return 'directory-not-writable-jwt';
     }
 }

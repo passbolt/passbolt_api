@@ -12,18 +12,20 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.7.0
+ * @since         4.10.0
  */
 
-namespace App\Service\Healthcheck\Core;
+namespace App\Service\Healthcheck\Environment;
 
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use Cake\Core\Configure;
+use App\Utility\CommandRunner;
 
-class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class DistributionEnvironmentHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
+    private const COMMAND = ['uname', '-a'];
+
     /**
      * Status of this health check if it is passed or failed.
      *
@@ -31,12 +33,15 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     private bool $status = false;
 
+    private ?string $result = null;
+
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = (Configure::read('Security.salt') !== '__SALT__');
+        $this->result = $this->detectDistribution();
+        $this->status = $this->result !== null;
 
         return $this;
     }
@@ -46,7 +51,7 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function domain(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_CORE;
+        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
     }
 
     /**
@@ -62,7 +67,7 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function level(): string
     {
-        return HealthcheckServiceCollector::LEVEL_ERROR;
+        return $this->status ? HealthcheckServiceCollector::LEVEL_NOTICE : HealthcheckServiceCollector::LEVEL_WARNING;
     }
 
     /**
@@ -70,7 +75,7 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getSuccessMessage(): string
     {
-        return __('Unique value set for security.salt');
+        return (string)$this->result;
     }
 
     /**
@@ -78,7 +83,7 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getFailureMessage(): string
     {
-        return __('Default value found for security.salt');
+        return __('Cannot detect your system distribution details.');
     }
 
     /**
@@ -86,7 +91,7 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getHelpMessage(): array|string|null
     {
-        return __('Edit the security.salt in {0}', CONFIG . 'app.php');
+        return [__('See `{0}`.', implode(' ', self::COMMAND))];
     }
 
     /**
@@ -96,7 +101,7 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function cliOption(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_CORE;
+        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
     }
 
     /**
@@ -104,7 +109,20 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getLegacyArrayKey(): string
     {
-        return 'salt';
+        return 'distribution';
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function detectDistribution(): ?string
+    {
+        $process = CommandRunner::run(self::COMMAND);
+        if (!$process || !$process->isSuccessful()) {
+            return null;
+        }
+
+        return trim($process->getOutput()) ?: null;
     }
 
     /**
@@ -112,6 +130,6 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getKey(): string
     {
-        return 'salt';
+        return 'distribution-environment';
     }
 }

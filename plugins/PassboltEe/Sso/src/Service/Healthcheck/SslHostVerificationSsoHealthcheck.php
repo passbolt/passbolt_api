@@ -118,6 +118,6 @@ class SslHostVerificationSsoHealthcheck implements HealthcheckServiceInterface, 
      */
     public function getKey(): string
     {
-        return 'ssl-host-verification';
+        return 'ssl-host-verification-sso';
     }
 }

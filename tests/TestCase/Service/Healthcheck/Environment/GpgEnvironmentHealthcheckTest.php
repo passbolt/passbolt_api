@@ -16,27 +16,25 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Service\Healthcheck\Environment;
 
-use App\Service\Healthcheck\Environment\DistributionHealthcheck;
+use App\Service\Healthcheck\Environment\GpgEnvironmentHealthcheck;
 use Cake\TestSuite\TestCase;
 
 /**
- * @covers \App\Service\Healthcheck\Environment\DistributionHealthcheck
+ * @covers \App\Service\Healthcheck\Environment\GpgEnvironmentHealthcheck
  */
-class DistributionHealthcheckTest extends TestCase
+class GpgEnvironmentHealthcheckTest extends TestCase
 {
-    public function testHealthcheckDistributionIsPassed_Success(): void
+    public function testHealthcheckGpgCheck_Success(): void
     {
-        $service = new DistributionHealthcheck();
+        $service = new GpgEnvironmentHealthcheck();
         $service->check();
         $this->assertTrue($service->isPassed());
     }
 
-    public function testHealthcheckDistributionIsPassed_Fail(): void
+    public function testHealthcheckGpgCheck_Fail(): void
     {
-        $service = $this->getMockBuilder(DistributionHealthcheck::class)
-            ->onlyMethods(['detectDistribution'])
-            ->getMock();
-        $service->expects($this->once())->method('detectDistribution')->willReturn(null);
+        $service = $this->getMockBuilder(GpgEnvironmentHealthcheck::class)->onlyMethods(['runCommand'])->getMock();
+        $service->expects($this->exactly(2))->method('runCommand')->willReturnOnConsecutiveCalls(null, null);
         $service->check();
         $this->assertFalse($service->isPassed());
     }

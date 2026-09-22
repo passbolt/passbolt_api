@@ -138,6 +138,6 @@ class ConnectDatabaseHealthcheck extends AbstractDatabaseHealthcheck
      */
     public function getKey(): string
     {
-        return 'connect';
+        return 'connect-database';
     }
 }

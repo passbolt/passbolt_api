@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.10.0
+ * @since         4.7.0
  */
 
 namespace App\Service\Healthcheck\Environment;
@@ -20,13 +20,9 @@ namespace App\Service\Healthcheck\Environment;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use App\Utility\CommandRunner;
 
-class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class IntlEnvironmentHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
-    private const COMMAND_GPG = 'gpg --version | grep gpg';
-    private const COMMAND_LIBGCRYPT = 'gpg --version | grep libgcrypt';
-
     /**
      * Status of this health check if it is passed or failed.
      *
@@ -34,18 +30,12 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     private bool $status = false;
 
-    private ?string $gpgVersion = null;
-
-    private ?string $libgcryptVersion = null;
-
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->gpgVersion = $this->runCommand(self::COMMAND_GPG);
-        $this->libgcryptVersion = $this->runCommand(self::COMMAND_LIBGCRYPT);
-        $this->status = $this->gpgVersion !== null && $this->libgcryptVersion !== null;
+        $this->status = extension_loaded('intl');
 
         return $this;
     }
@@ -71,7 +61,7 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     public function level(): string
     {
-        return $this->status ? HealthcheckServiceCollector::LEVEL_NOTICE : HealthcheckServiceCollector::LEVEL_WARNING;
+        return HealthcheckServiceCollector::LEVEL_ERROR;
     }
 
     /**
@@ -79,7 +69,7 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     public function getSuccessMessage(): string
     {
-        return $this->gpgVersion . ' / ' . $this->libgcryptVersion;
+        return __('Intl extension is installed.');
     }
 
     /**
@@ -87,7 +77,7 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     public function getFailureMessage(): string
     {
-        return __('Cannot detect your `gpg` or `libgcrypt` version.');
+        return __('You must enable the intl extension to use Passbolt.');
     }
 
     /**
@@ -95,7 +85,7 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     public function getHelpMessage(): array|string|null
     {
-        return [__('See `{0}` and `{1}`.', self::COMMAND_GPG, self::COMMAND_LIBGCRYPT)];
+        return [__('See: https://secure.php.net/manual/en/book.intl.php')];
     }
 
     /**
@@ -113,21 +103,7 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     public function getLegacyArrayKey(): string
     {
-        return 'gpg';
-    }
-
-    /**
-     * @param string $command Command to run.
-     * @return string|null
-     */
-    protected function runCommand(string $command): ?string
-    {
-        $process = CommandRunner::run($command);
-        if (!$process || !$process->isSuccessful()) {
-            return null;
-        }
-
-        return trim($process->getOutput()) ?: null;
+        return 'intl';
     }
 
     /**
@@ -135,6 +111,6 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     public function getKey(): string
     {
-        return 'gpg-version';
+        return 'intl-environment';
     }
 }

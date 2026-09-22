@@ -21,7 +21,7 @@ use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 
-class IntlHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class ImageEnvironmentHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -35,7 +35,7 @@ class IntlHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = extension_loaded('intl');
+        $this->status = (extension_loaded('gd') || extension_loaded('imagick'));
 
         return $this;
     }
@@ -69,7 +69,7 @@ class IntlHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function getSuccessMessage(): string
     {
-        return __('Intl extension is installed.');
+        return __('GD or Imagick extension is installed.');
     }
 
     /**
@@ -77,7 +77,7 @@ class IntlHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function getFailureMessage(): string
     {
-        return __('You must enable the intl extension to use Passbolt.');
+        return __('You must enable the gd or imagick extensions to use Passbolt.');
     }
 
     /**
@@ -85,7 +85,10 @@ class IntlHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function getHelpMessage(): array|string|null
     {
-        return [__('See: https://secure.php.net/manual/en/book.intl.php')];
+        return [
+            __('See: https://secure.php.net/manual/en/book.image.php'),
+            __('See: https://secure.php.net/manual/en/book.imagick.php'),
+        ];
     }
 
     /**
@@ -103,7 +106,7 @@ class IntlHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function getLegacyArrayKey(): string
     {
-        return 'intl';
+        return 'image';
     }
 
     /**
@@ -111,6 +114,6 @@ class IntlHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function getKey(): string
     {
-        return 'intl';
+        return 'image-environment';
     }
 }

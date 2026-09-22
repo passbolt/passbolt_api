@@ -145,6 +145,6 @@ class SettingsValidationSmtpSettingsHealthcheck implements HealthcheckServiceInt
      */
     public function getKey(): string
     {
-        return 'settings-validation';
+        return 'settings-validation-smtp';
     }
 }

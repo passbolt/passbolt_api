@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.7.0
+ * @since         4.10.0
  */
 
 namespace App\Service\Healthcheck\Environment;
@@ -20,9 +20,13 @@ namespace App\Service\Healthcheck\Environment;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use App\Utility\CommandRunner;
 
-class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class GpgEnvironmentHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
+    private const COMMAND_GPG = 'gpg --version | grep gpg';
+    private const COMMAND_LIBGCRYPT = 'gpg --version | grep libgcrypt';
+
     /**
      * Status of this health check if it is passed or failed.
      *
@@ -30,12 +34,18 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
      */
     private bool $status = false;
 
+    private ?string $gpgVersion = null;
+
+    private ?string $libgcryptVersion = null;
+
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = (extension_loaded('gd') || extension_loaded('imagick'));
+        $this->gpgVersion = $this->runCommand(self::COMMAND_GPG);
+        $this->libgcryptVersion = $this->runCommand(self::COMMAND_LIBGCRYPT);
+        $this->status = $this->gpgVersion !== null && $this->libgcryptVersion !== null;
 
         return $this;
     }
@@ -61,7 +71,7 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
      */
     public function level(): string
     {
-        return HealthcheckServiceCollector::LEVEL_ERROR;
+        return $this->status ? HealthcheckServiceCollector::LEVEL_NOTICE : HealthcheckServiceCollector::LEVEL_WARNING;
     }
 
     /**
@@ -69,7 +79,7 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
      */
     public function getSuccessMessage(): string
     {
-        return __('GD or Imagick extension is installed.');
+        return $this->gpgVersion . ' / ' . $this->libgcryptVersion;
     }
 
     /**
@@ -77,7 +87,7 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
      */
     public function getFailureMessage(): string
     {
-        return __('You must enable the gd or imagick extensions to use Passbolt.');
+        return __('Cannot detect your `gpg` or `libgcrypt` version.');
     }
 
     /**
@@ -85,10 +95,7 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
      */
     public function getHelpMessage(): array|string|null
     {
-        return [
-            __('See: https://secure.php.net/manual/en/book.image.php'),
-            __('See: https://secure.php.net/manual/en/book.imagick.php'),
-        ];
+        return [__('See `{0}` and `{1}`.', self::COMMAND_GPG, self::COMMAND_LIBGCRYPT)];
     }
 
     /**
@@ -106,7 +113,21 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
      */
     public function getLegacyArrayKey(): string
     {
-        return 'image';
+        return 'gpg';
+    }
+
+    /**
+     * @param string $command Command to run.
+     * @return string|null
+     */
+    protected function runCommand(string $command): ?string
+    {
+        $process = CommandRunner::run($command);
+        if (!$process || !$process->isSuccessful()) {
+            return null;
+        }
+
+        return trim($process->getOutput()) ?: null;
     }
 
     /**
@@ -114,6 +135,6 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
      */
     public function getKey(): string
     {
-        return 'image';
+        return 'gpg-environment';
     }
 }

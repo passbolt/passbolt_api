@@ -31,12 +31,12 @@ use App\Service\Healthcheck\Application\SslForceApplicationHealthcheck;
 use App\Service\Healthcheck\Application\SslFullBaseUrlApplicationHealthcheck;
 use App\Service\Healthcheck\ConfigFiles\AppConfigFileHealthcheck;
 use App\Service\Healthcheck\ConfigFiles\PassboltConfigFileHealthcheck;
-use App\Service\Healthcheck\Core\CacheCoreHealthcheck;
+use App\Service\Healthcheck\Core\CacheConfigCoreHealthcheck;
 use App\Service\Healthcheck\Core\DebugDisabledCoreHealthcheck;
 use App\Service\Healthcheck\Core\ExcludedHealthchecksCoreHealthcheck;
 use App\Service\Healthcheck\Core\FullBaseUrlCoreHealthcheck;
 use App\Service\Healthcheck\Core\FullBaseUrlReachableCoreHealthcheck;
-use App\Service\Healthcheck\Core\SaltCoreHealthcheck;
+use App\Service\Healthcheck\Core\SaltDefinedCoreHealthcheck;
 use App\Service\Healthcheck\Core\ValidFullBaseUrlCoreHealthcheck;
 use App\Service\Healthcheck\Database\ConnectDatabaseHealthcheck;
 use App\Service\Healthcheck\Database\DefaultContentDatabaseHealthcheck;
@@ -44,15 +44,15 @@ use App\Service\Healthcheck\Database\MariadbMysqlVersionDeprecateHealthcheck;
 use App\Service\Healthcheck\Database\ModelCacheDatabaseHealthcheck;
 use App\Service\Healthcheck\Database\SchemaUpToDateApplicationHealthcheck;
 use App\Service\Healthcheck\Database\TablesCountDatabaseHealthcheck;
-use App\Service\Healthcheck\Environment\DistributionHealthcheck;
-use App\Service\Healthcheck\Environment\GpgHealthcheck;
-use App\Service\Healthcheck\Environment\ImageHealthcheck;
-use App\Service\Healthcheck\Environment\IntlHealthcheck;
+use App\Service\Healthcheck\Environment\DistributionEnvironmentHealthcheck;
+use App\Service\Healthcheck\Environment\GpgEnvironmentHealthcheck;
+use App\Service\Healthcheck\Environment\ImageEnvironmentHealthcheck;
+use App\Service\Healthcheck\Environment\IntlEnvironmentHealthcheck;
 use App\Service\Healthcheck\Environment\LogFolderWritableHealthcheck;
-use App\Service\Healthcheck\Environment\MbstringHealthcheck;
+use App\Service\Healthcheck\Environment\MbstringEnvironmentHealthcheck;
 use App\Service\Healthcheck\Environment\NextMinPhpVersionHealthcheck;
 use App\Service\Healthcheck\Environment\OperatingSystemHealthcheck;
-use App\Service\Healthcheck\Environment\PcreHealthcheck;
+use App\Service\Healthcheck\Environment\PcreEnvironmentHealthcheck;
 use App\Service\Healthcheck\Environment\PhpVersionHealthcheck;
 use App\Service\Healthcheck\Environment\TimeSyncHealthcheck;
 use App\Service\Healthcheck\Environment\TmpFolderWritableHealthcheck;
@@ -90,23 +90,23 @@ use Passbolt\SelfRegistration\Service\Healthcheck\SelfRegistrationHealthcheckSer
 class HealthcheckServiceProvider extends ServiceProvider
 {
     protected array $provides = [
-        DistributionHealthcheck::class,
+        DistributionEnvironmentHealthcheck::class,
         HealthcheckServiceCollector::class,
         PhpVersionHealthcheck::class,
         NextMinPhpVersionHealthcheck::class,
         OperatingSystemHealthcheck::class,
-        GpgHealthcheck::class,
-        PcreHealthcheck::class,
-        MbstringHealthcheck::class,
-        IntlHealthcheck::class,
-        ImageHealthcheck::class,
+        GpgEnvironmentHealthcheck::class,
+        PcreEnvironmentHealthcheck::class,
+        MbstringEnvironmentHealthcheck::class,
+        IntlEnvironmentHealthcheck::class,
+        ImageEnvironmentHealthcheck::class,
         TmpFolderWritableHealthcheck::class,
         LogFolderWritableHealthcheck::class,
         AppConfigFileHealthcheck::class,
         PassboltConfigFileHealthcheck::class,
-        CacheCoreHealthcheck::class,
+        CacheConfigCoreHealthcheck::class,
         DebugDisabledCoreHealthcheck::class,
-        SaltCoreHealthcheck::class,
+        SaltDefinedCoreHealthcheck::class,
         FullBaseUrlCoreHealthcheck::class,
         ValidFullBaseUrlCoreHealthcheck::class,
         FullBaseUrlReachableCoreHealthcheck::class,
@@ -134,15 +134,15 @@ class HealthcheckServiceProvider extends ServiceProvider
     {
         // Register service itself to container
         // Environment health checks
-        $container->add(DistributionHealthcheck::class);
+        $container->add(DistributionEnvironmentHealthcheck::class);
         $container->add(PhpVersionHealthcheck::class);
         $container->add(NextMinPhpVersionHealthcheck::class);
         $container->add(OperatingSystemHealthcheck::class);
-        $container->add(GpgHealthcheck::class);
-        $container->add(PcreHealthcheck::class);
-        $container->add(MbstringHealthcheck::class);
-        $container->add(IntlHealthcheck::class);
-        $container->add(ImageHealthcheck::class);
+        $container->add(GpgEnvironmentHealthcheck::class);
+        $container->add(PcreEnvironmentHealthcheck::class);
+        $container->add(MbstringEnvironmentHealthcheck::class);
+        $container->add(IntlEnvironmentHealthcheck::class);
+        $container->add(ImageEnvironmentHealthcheck::class);
         $container->add(TmpFolderWritableHealthcheck::class);
         $container->add(LogFolderWritableHealthcheck::class);
         $container->add(TimeSyncHealthcheck::class);
@@ -150,11 +150,11 @@ class HealthcheckServiceProvider extends ServiceProvider
         $container->add(AppConfigFileHealthcheck::class);
         $container->add(PassboltConfigFileHealthcheck::class);
         // Core health checks
-        $container->add(CacheCoreHealthcheck::class);
+        $container->add(CacheConfigCoreHealthcheck::class);
         $container->add(DebugDisabledCoreHealthcheck::class);
         $container->add(ExcludedHealthchecksCoreHealthcheck::class)
             ->addArgument(fn() => $container->get(HealthcheckServiceCollector::class));
-        $container->add(SaltCoreHealthcheck::class);
+        $container->add(SaltDefinedCoreHealthcheck::class);
         $container->add(FullBaseUrlCoreHealthcheck::class);
         $container->add(ValidFullBaseUrlCoreHealthcheck::class);
         $container->add('fullBaseUrlReachableClient', Client::class);
@@ -230,24 +230,24 @@ class HealthcheckServiceProvider extends ServiceProvider
 
         // Append core health checks to service collector
         $container->add(HealthcheckServiceCollector::class)
-            ->addMethodCall('addService', [DistributionHealthcheck::class])
+            ->addMethodCall('addService', [DistributionEnvironmentHealthcheck::class])
             ->addMethodCall('addService', [PhpVersionHealthcheck::class])
             ->addMethodCall('addService', [NextMinPhpVersionHealthcheck::class])
             ->addMethodCall('addService', [OperatingSystemHealthcheck::class])
-            ->addMethodCall('addService', [GpgHealthcheck::class])
-            ->addMethodCall('addService', [PcreHealthcheck::class])
-            ->addMethodCall('addService', [MbstringHealthcheck::class])
-            ->addMethodCall('addService', [IntlHealthcheck::class])
-            ->addMethodCall('addService', [ImageHealthcheck::class])
+            ->addMethodCall('addService', [GpgEnvironmentHealthcheck::class])
+            ->addMethodCall('addService', [PcreEnvironmentHealthcheck::class])
+            ->addMethodCall('addService', [MbstringEnvironmentHealthcheck::class])
+            ->addMethodCall('addService', [IntlEnvironmentHealthcheck::class])
+            ->addMethodCall('addService', [ImageEnvironmentHealthcheck::class])
             ->addMethodCall('addService', [TmpFolderWritableHealthcheck::class])
             ->addMethodCall('addService', [LogFolderWritableHealthcheck::class])
             ->addMethodCall('addService', [TimeSyncHealthcheck::class])
             ->addMethodCall('addService', [AppConfigFileHealthcheck::class])
             ->addMethodCall('addService', [PassboltConfigFileHealthcheck::class])
-            ->addMethodCall('addService', [CacheCoreHealthcheck::class])
+            ->addMethodCall('addService', [CacheConfigCoreHealthcheck::class])
             ->addMethodCall('addService', [DebugDisabledCoreHealthcheck::class])
             ->addMethodCall('addService', [ExcludedHealthchecksCoreHealthcheck::class])
-            ->addMethodCall('addService', [SaltCoreHealthcheck::class])
+            ->addMethodCall('addService', [SaltDefinedCoreHealthcheck::class])
             ->addMethodCall('addService', [FullBaseUrlCoreHealthcheck::class])
             ->addMethodCall('addService', [ValidFullBaseUrlCoreHealthcheck::class])
             ->addMethodCall('addService', [FullBaseUrlReachableCoreHealthcheck::class])

@@ -22,7 +22,7 @@ use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Cache\Cache;
 
-class CacheCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class CacheConfigCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -130,6 +130,6 @@ class CacheCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCl
      */
     public function getKey(): string
     {
-        return 'cache';
+        return 'cache-config';
     }
 }

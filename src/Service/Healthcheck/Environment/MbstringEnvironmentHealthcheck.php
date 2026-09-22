@@ -20,9 +20,8 @@ namespace App\Service\Healthcheck\Environment;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use Cake\Validation\Validation;
 
-class PcreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class MbstringEnvironmentHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -36,7 +35,7 @@ class PcreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = Validation::alphaNumeric('passbolt');
+        $this->status = extension_loaded('mbstring');
 
         return $this;
     }
@@ -70,7 +69,7 @@ class PcreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function getSuccessMessage(): string
     {
-        return __('PCRE compiled with unicode support.');
+        return __('Mbstring extension is installed.');
     }
 
     /**
@@ -78,15 +77,15 @@ class PcreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function getFailureMessage(): string
     {
-        return __('PCRE has not been compiled with Unicode support.');
+        return __('You must enable the mbstring extension to use Passbolt.');
     }
 
     /**
      * @inheritDoc
      */
-    public function getHelpMessage(): ?string
+    public function getHelpMessage(): array|string|null
     {
-        return __('Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring.');
+        return [__('See: https://secure.php.net/manual/en/book.mbstring.php')];
     }
 
     /**
@@ -104,7 +103,7 @@ class PcreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function getLegacyArrayKey(): string
     {
-        return 'pcre';
+        return 'mbstring';
     }
 
     /**
@@ -112,6 +111,6 @@ class PcreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function getKey(): string
     {
-        return 'pcre';
+        return 'mbstring-environment';
     }
 }
