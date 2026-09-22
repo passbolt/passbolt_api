@@ -41,15 +41,17 @@ readonly class MfaWebauthnVerifyAttestationService
      * @param \App\Utility\UserAccessControl $uac User access control.
      * @param string $handle Ceremony handle.
      * @param array $credential Browser's PublicKeyCredential as a decoded array.
-     * @param string|null $name Friendly credential name.
+     * @param string $name Friendly credential name.
      * @return \App\Model\Entity\WebauthnCredential
      */
     public function verify(
         UserAccessControl $uac,
         string $handle,
         array $credential,
-        ?string $name = null,
+        string $name,
     ): WebauthnCredential {
+        $this->enrollService->assertNameAvailable($uac, $name);
+
         $optionsJson = (new MfaWebauthnChallengeTokenService())->consume(
             $uac,
             AuthenticationToken::TYPE_MFA_SETUP,

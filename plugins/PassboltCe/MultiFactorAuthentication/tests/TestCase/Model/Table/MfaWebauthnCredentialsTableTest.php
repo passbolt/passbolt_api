@@ -153,14 +153,51 @@ class MfaWebauthnCredentialsTableTest extends TestCase
         $this->assertSame(1, $this->Table->countForUser($userB->id));
     }
 
-    public function testMfaWebauthnCredentialsTable_Rule_AllowsNullNameCollision(): void
+    public function testMfaWebauthnCredentialsTable_Validation_RequiresName_OnCreate(): void
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->persist();
-        MfaWebauthnCredentialFactory::make()->withUser($user)->name('')->patchData(['name' => null])->persist();
-        MfaWebauthnCredentialFactory::make()->withUser($user)->name('')->patchData(['name' => null])->persist();
 
-        $this->assertSame(2, $this->Table->countForUser($user->id));
+        $entity = $this->Table->newEntity(
+            [
+                'id' => UuidFactory::uuid(),
+                'user_id' => $user->id,
+                'type' => 'mfa',
+                'credential_id' => 'no-name',
+                'data' => MfaWebauthnCredentialFactory::makeCredentialRecord('no-name'),
+                'sign_count' => 0,
+            ],
+            ['accessibleFields' => [
+                'id' => true, 'user_id' => true, 'type' => true, 'credential_id' => true,
+                'data' => true, 'sign_count' => true, 'name' => true,
+            ]],
+        );
+        $this->assertFalse($this->Table->save($entity));
+        $this->assertArrayHasKey('_required', $entity->getError('name'));
+    }
+
+    public function testMfaWebauthnCredentialsTable_Validation_RejectsEmptyName(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+
+        $entity = $this->Table->newEntity(
+            [
+                'id' => UuidFactory::uuid(),
+                'user_id' => $user->id,
+                'type' => 'mfa',
+                'credential_id' => 'empty-name',
+                'data' => MfaWebauthnCredentialFactory::makeCredentialRecord('empty-name'),
+                'sign_count' => 0,
+                'name' => '',
+            ],
+            ['accessibleFields' => [
+                'id' => true, 'user_id' => true, 'type' => true, 'credential_id' => true,
+                'data' => true, 'sign_count' => true, 'name' => true,
+            ]],
+        );
+        $this->assertFalse($this->Table->save($entity));
+        $this->assertArrayHasKey('_empty', $entity->getError('name'));
     }
 
     public function testMfaWebauthnCredentialsTable_UpdateAfterAssertion_ReplayWithSameCounter_IsRejected(): void
@@ -274,6 +311,7 @@ class MfaWebauthnCredentialsTableTest extends TestCase
                 'credential_id' => 'legit',
                 'data' => MfaWebauthnCredentialFactory::makeCredentialRecord('legit'),
                 'sign_count' => 0,
+                'name' => 'Legit key',
             ],
             ['accessibleFields' => [
                 'user_id' => true,

@@ -126,7 +126,8 @@ abstract class WebauthnCredentialsTable extends Table
         $validator
             ->utf8('name', __('The name should be a valid UTF-8 string.'))
             ->maxLength('name', 255, __('The name length should be maximum {0} characters.', 255))
-            ->allowEmptyString('name');
+            ->requirePresence('name', 'create', __('A credential name is required.'))
+            ->notEmptyString('name', __('The credential name should not be empty.'));
 
         $validator->dateTime('last_used')->allowEmptyDateTime('last_used');
 
@@ -149,10 +150,7 @@ abstract class WebauthnCredentialsTable extends Table
         $rules->add(
             $rules->isUnique(
                 ['user_id', 'name'],
-                [
-                    'allowMultipleNulls' => true,
-                    'message' => __('A credential with this name already exists for this user.'),
-                ],
+                __('A credential with this name already exists for this user.'),
             ),
             'unique_user_name',
         );

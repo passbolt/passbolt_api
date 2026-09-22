@@ -94,6 +94,7 @@ class WebauthnSetupFinishPostControllerTest extends MfaIntegrationTestCase
         $this->postJson('/mfa/setup/webauthn/finish.json?api-version=v2', [
             'handle' => $handle,
             'credential' => ['id' => 'anything'],
+            'name' => 'Test key',
         ]);
         $this->assertNotFoundError('The authentication token could not be found.');
         $this->assertNotSame($intruder->id, $owner->id);
@@ -132,14 +133,14 @@ class WebauthnSetupFinishPostControllerTest extends MfaIntegrationTestCase
         $handle = $this->createSetupHandle($user);
 
         $this->postJson('/mfa/setup/webauthn/finish.json?api-version=v2', [
-            'handle' => $handle, 'credential' => ['id' => 'anything'],
+            'handle' => $handle, 'credential' => ['id' => 'anything'], 'name' => 'Test key',
         ]);
         $this->assertBadRequestError('The credential payload is not a valid WebAuthn response.');
         $this->clearPlugins();
         $this->getTableLocator()->clear();
 
         $this->postJson('/mfa/setup/webauthn/finish.json?api-version=v2', [
-            'handle' => $handle, 'credential' => ['id' => 'anything'],
+            'handle' => $handle, 'credential' => ['id' => 'anything'], 'name' => 'Test key',
         ]);
         $this->assertBadRequestError('The authentication token is not valid.');
     }

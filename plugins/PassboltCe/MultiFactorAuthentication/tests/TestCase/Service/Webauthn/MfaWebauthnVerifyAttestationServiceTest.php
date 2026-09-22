@@ -29,6 +29,7 @@ use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnChallengeToke
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnEnrollCredentialService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnRelyingPartyService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAttestationService;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaWebauthnCredentialFactory;
 
 /**
  * @covers \Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAttestationService
@@ -61,7 +62,7 @@ class MfaWebauthnVerifyAttestationServiceTest extends TestCase
         $uac = UserFactory::make()->user()->persistedUAC();
 
         $this->expectException(NotFoundException::class);
-        $this->service->verify($uac, UuidFactory::uuid(), ['not' => 'a real credential']);
+        $this->service->verify($uac, UuidFactory::uuid(), ['not' => 'a real credential'], 'Yubikey');
     }
 
     public function testMfaWebauthnVerifyAttestationService_Verify_MalformedCredentialPayload_Throws(): void
@@ -74,6 +75,29 @@ class MfaWebauthnVerifyAttestationServiceTest extends TestCase
         );
 
         $this->expectException(BadRequestException::class);
-        $this->service->verify($uac, $token->token, ['missing' => 'required fields']);
+        $this->service->verify($uac, $token->token, ['missing' => 'required fields'], 'Yubikey');
+    }
+
+    public function testMfaWebauthnVerifyAttestationService_Verify_DuplicateName_RejectsBeforeConsumingHandle(): void
+    {
+        $uac = UserFactory::make()->user()->persistedUAC();
+        MfaWebauthnCredentialFactory::make()
+            ->patchData(['user_id' => $uac->getId()])
+            ->name('Yubikey 5C')
+            ->persist();
+        $tokens = new MfaWebauthnChallengeTokenService();
+        $token = $tokens->create($uac, AuthenticationToken::TYPE_MFA_SETUP, '{"challenge":"abc"}');
+
+        try {
+            $this->service->verify($uac, $token->token, ['id' => 'anything'], 'Yubikey 5C');
+            $this->fail('Expected BadRequestException on duplicate name.');
+        } catch (BadRequestException $e) {
+            $this->assertSame('A credential with this name already exists for this user.', $e->getMessage());
+        }
+
+        $this->assertSame(
+            '{"challenge":"abc"}',
+            $tokens->consume($uac, AuthenticationToken::TYPE_MFA_SETUP, $token->token),
+        );
     }
 }

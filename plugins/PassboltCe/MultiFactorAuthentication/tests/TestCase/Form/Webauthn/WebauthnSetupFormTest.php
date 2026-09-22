@@ -60,12 +60,23 @@ class WebauthnSetupFormTest extends TestCase
         ]));
     }
 
-    public function testWebauthnSetupForm_Validates_WithoutOptionalName(): void
+    public function testWebauthnSetupForm_RejectsMissingName(): void
     {
-        $this->assertTrue($this->form->validate([
+        $this->assertFalse($this->form->validate([
             'handle' => UuidFactory::uuid(),
             'credential' => ['id' => 'abc'],
         ]));
+        $this->assertArrayHasKey('name', $this->form->getErrors());
+    }
+
+    public function testWebauthnSetupForm_RejectsEmptyName(): void
+    {
+        $this->assertFalse($this->form->validate([
+            'handle' => UuidFactory::uuid(),
+            'credential' => ['id' => 'abc'],
+            'name' => '',
+        ]));
+        $this->assertArrayHasKey('name', $this->form->getErrors());
     }
 
     public function testWebauthnSetupForm_RejectsMissingHandle(): void
@@ -162,37 +173,6 @@ class WebauthnSetupFormTest extends TestCase
             'handle' => $handle,
             'credential' => $credential,
             'name' => 'My Key',
-        ]));
-    }
-
-    public function testWebauthnSetupForm_Execute_PassesNullNameWhenAbsent(): void
-    {
-        $handle = UuidFactory::uuid();
-        $credential = ['id' => 'abc'];
-
-        $this->service->expects($this->once())
-            ->method('verify')
-            ->with($this->uac, $handle, $credential, null);
-
-        $this->assertTrue($this->form->execute([
-            'handle' => $handle,
-            'credential' => $credential,
-        ]));
-    }
-
-    public function testWebauthnSetupForm_Execute_PassesNullNameWhenEmptyString(): void
-    {
-        $handle = UuidFactory::uuid();
-        $credential = ['id' => 'abc'];
-
-        $this->service->expects($this->once())
-            ->method('verify')
-            ->with($this->uac, $handle, $credential, null);
-
-        $this->assertTrue($this->form->execute([
-            'handle' => $handle,
-            'credential' => $credential,
-            'name' => '',
         ]));
     }
 }
