@@ -66,7 +66,8 @@ class WebauthnSetupForm extends MfaForm
             ->scalar('name')
             ->utf8('name', __('The name should be a valid UTF-8 string.'))
             ->maxLength('name', 255, __('The name length should be maximum {0} characters.', 255))
-            ->allowEmptyString('name');
+            ->requirePresence('name', true, __('A credential name is required.'))
+            ->notEmptyString('name', __('The credential name should not be empty.'));
 
         return $validator;
     }
@@ -91,13 +92,11 @@ class WebauthnSetupForm extends MfaForm
      */
     protected function process(array $data): bool
     {
-        $name = !empty($data['name']) ? $data['name'] : null;
-
         $this->service->verify(
             $this->uac,
             $data['handle'],
             $data['credential'],
-            $name,
+            $data['name'],
         );
 
         return true;

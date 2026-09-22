@@ -103,7 +103,7 @@ class WebauthnVerifyFinishPostControllerTest extends MfaIntegrationTestCase
             'handle' => $handle,
             'credential' => [],
         ]);
-        $this->assertBadRequestError('The credential payload is not a valid WebAuthn response.');
+        $this->assertBadRequestError('The WebAuthn verify payload is not valid.');
     }
 
     public function testWebauthnVerifyFinishPostController_HandleReuse_ReturnsBadRequest(): void
@@ -113,14 +113,14 @@ class WebauthnVerifyFinishPostControllerTest extends MfaIntegrationTestCase
         $handle = $this->createVerifyHandle($user);
 
         $this->postJson('/mfa/verify/webauthn/finish.json?api-version=v2', [
-            'handle' => $handle, 'credential' => [],
+            'handle' => $handle, 'credential' => ['id' => 'anything'],
         ]);
         $this->assertBadRequestError('The credential payload is not a valid WebAuthn response.');
         $this->clearPlugins();
         $this->getTableLocator()->clear();
 
         $this->postJson('/mfa/verify/webauthn/finish.json?api-version=v2', [
-            'handle' => $handle, 'credential' => [],
+            'handle' => $handle, 'credential' => ['id' => 'anything'],
         ]);
         $this->assertBadRequestError('The authentication token is not valid.');
     }

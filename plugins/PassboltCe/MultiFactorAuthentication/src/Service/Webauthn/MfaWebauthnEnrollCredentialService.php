@@ -46,17 +46,34 @@ class MfaWebauthnEnrollCredentialService
     }
 
     /**
-     * Persist a freshly-attested credential and, on the first credential only, flip the account setting.
-     *
+     * @param \App\Utility\UserAccessControl $uac User access control.
+     * @param string $name Friendly name to reserve.
+     * @return void
+     */
+    public function assertNameAvailable(UserAccessControl $uac, string $name): void
+    {
+        /** @var \Passbolt\MultiFactorAuthentication\Model\Table\MfaWebauthnCredentialsTable $credentials */
+        $credentials = $this->fetchTable('Passbolt/MultiFactorAuthentication.MfaWebauthnCredentials');
+        $taken = $credentials->find()
+            ->where(['user_id' => $uac->getId(), 'name' => $name])
+            ->count() > 0;
+        if ($taken) {
+            throw new BadRequestException(
+                __('A credential with this name already exists for this user.'),
+            );
+        }
+    }
+
+    /**
      * @param \App\Utility\UserAccessControl $uac User access control.
      * @param \Webauthn\CredentialRecord $source Freshly-attested credential record.
-     * @param string|null $name Friendly name.
+     * @param string $name Friendly name.
      * @return \App\Model\Entity\WebauthnCredential
      */
     public function enroll(
         UserAccessControl $uac,
         CredentialRecord $source,
-        ?string $name = null,
+        string $name,
     ): WebauthnCredential {
         if ($this->policy->rejectBackupEligible() && $source->backupEligible === true) {
             throw new BadRequestException(

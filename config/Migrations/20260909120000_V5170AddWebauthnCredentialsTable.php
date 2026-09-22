@@ -64,7 +64,7 @@ class V5170AddWebauthnCredentialsTable extends AbstractMigration
                 'default' => 0,
             ])
             ->addColumn('name', 'string', [
-                'null' => true,
+                'null' => false,
                 'limit' => 255,
             ])
             ->addColumn('last_used', 'datetime', [

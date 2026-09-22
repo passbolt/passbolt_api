@@ -86,7 +86,7 @@ class MfaWebauthnEnableServiceTest extends TestCase
         $record = MfaWebauthnCredentialFactory::makeCredentialRecord('cred-synced-ok');
         (new ReflectionProperty($record, 'backupEligible'))->setValue($record, true);
 
-        $saved = $this->service->enable($uac, $record, null);
+        $saved = $this->service->enable($uac, $record, 'Synced passkey');
         $this->assertSame($uac->getId(), $saved->user_id);
     }
 

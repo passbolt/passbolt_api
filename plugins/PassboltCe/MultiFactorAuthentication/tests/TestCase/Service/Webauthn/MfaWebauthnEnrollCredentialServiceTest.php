@@ -73,7 +73,7 @@ class MfaWebauthnEnrollCredentialServiceTest extends TestCase
         $record = MfaWebauthnCredentialFactory::makeCredentialRecord('cred-synced-ok');
         (new ReflectionProperty($record, 'backupEligible'))->setValue($record, true);
 
-        $saved = $this->service->enroll($uac, $record, null);
+        $saved = $this->service->enroll($uac, $record, 'Synced passkey');
         $this->assertSame($uac->getId(), $saved->user_id);
     }
 
@@ -113,7 +113,41 @@ class MfaWebauthnEnrollCredentialServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('maximum');
-        $this->service->enroll(new UserAccessControl(Role::USER, $user->id, $user->username), $record, null);
+        $this->service->enroll(new UserAccessControl(Role::USER, $user->id, $user->username), $record, 'Eleventh');
+    }
+
+    public function testMfaWebauthnEnrollCredentialService_AssertNameAvailable_ThrowsOnDuplicate(): void
+    {
+        $uac = UserFactory::make()->user()->persistedUAC();
+        MfaWebauthnCredentialFactory::make()
+            ->patchData(['user_id' => $uac->getId()])
+            ->name('Yubikey 5C')
+            ->persist();
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('A credential with this name already exists for this user.');
+        $this->service->assertNameAvailable($uac, 'Yubikey 5C');
+    }
+
+    public function testMfaWebauthnEnrollCredentialService_AssertNameAvailable_SilentWhenNameFree(): void
+    {
+        $uac = UserFactory::make()->user()->persistedUAC();
+
+        $this->expectNotToPerformAssertions();
+        $this->service->assertNameAvailable($uac, 'Fresh name');
+    }
+
+    public function testMfaWebauthnEnrollCredentialService_AssertNameAvailable_ScopedByUser(): void
+    {
+        $uacA = UserFactory::make()->user()->persistedUAC();
+        $uacB = UserFactory::make()->user()->persistedUAC();
+        MfaWebauthnCredentialFactory::make()
+            ->patchData(['user_id' => $uacA->getId()])
+            ->name('Shared name')
+            ->persist();
+
+        $this->expectNotToPerformAssertions();
+        $this->service->assertNameAvailable($uacB, 'Shared name');
     }
 
     public function testMfaWebauthnEnrollCredentialService_Enroll_MapsPersistenceFailureToCustomValidation(): void
