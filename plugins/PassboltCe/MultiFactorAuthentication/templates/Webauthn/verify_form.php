@@ -1,53 +1,35 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var array $providers
- * @var bool $isRememberMeForAMonthEnabled
  * @var string $redirect
+ * @var string|null $theme
  */
 
-use App\Utility\Purifier;
-use Cake\Routing\Router;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Cake\Core\Configure;
+use Cake\I18n\I18n;
 
-$title = __('Multi factor authentication verification');
-$this->assign('title', $title);
-$this->assign('pageClass', 'login');
-$safeRedirect = Purifier::clean($redirect);
-$formUrl = Router::url('/mfa/verify/webauthn?redirect=' . $redirect, true);
+$this->assign('title', __('Multi factor authentication verification'));
+$version = Configure::read('passbolt.version');
+
+// See. fetch('scriptBottom')
+$this->start('scriptBottom');
+// Load the javascript application.
+echo $this->Html->script('/js/app/api-vendors.js?v=' . $version, ['fullBase' => true, 'cache-version' => $version]);
+echo $this->Html->script('/js/app/api-mfa-verify.js?v=' . $version, ['fullBase' => true, 'cache-version' => $version]);
+$this->end();
+
+$this->start('scriptTop');
+
+echo $this->Html->script('/js/app/stylesheet.js?v=' . $version, [
+    'id' => 'stylesheet-manager',
+    'fullBase' => true,
+    'data-file' => 'api_authentication.min.css',
+    'data-theme' => $theme ?? null,
+    'cache-version' => $version]);
+
+$this->end();
 ?>
-<div class="content">
-    <div class="header">
-        <div class="logo"><span class="visually-hidden">Passbolt</span></div>
-    </div>
-    <div class="login-form">
-        <?= $this->Html->image('/img/mfa/passkey-mark.png', [
-            'alt' => __('Passkey'),
-            'class' => 'passkey-mark',
-            'width' => 120,
-            'height' => 120,
-        ]) ?>
-        <h1><?= __('Additional Authentication with Passkey'); ?></h1>
-
-        <form action="<?= Purifier::clean($formUrl) ?>"
-              method="post"
-              id="webauthn-verify-form"
-              class="webauthn-verify"
-              data-redirect="<?= h($safeRedirect) ?>">
-
-            <?php if ($isRememberMeForAMonthEnabled) : ?>
-            <div class="input checkbox">
-                <input type="checkbox" name="remember" value="remember" id="webauthn-remember">
-                <label for="webauthn-remember"><?= __('Remember this device for a month.'); ?></label>
-            </div>
-            <?php endif; ?>
-
-            <?= $this->element('formActions', [
-                'providers' => $providers,
-                'redirect' => $redirect,
-                'currentProvider' => MfaSettings::PROVIDER_WEBAUTHN,
-            ]); ?>
-        </form>
-    </div>
-</div>
-<?= $this->Html->script('/js/mfa/webauthn-verify-fallback.js') ?>
+<?php // $redirect is already escaped by SanitizeUrlComponent::sanitizeRedirect ?>
+<div id="api-mfa-verify"
+     data-redirect="<?= $redirect ?>"
+     data-locale="<?= h(str_replace('_', '-', I18n::getLocale())) ?>"></div>

@@ -44,10 +44,9 @@ class WebauthnVerifyGetController extends MfaVerifyController
             return;
         }
 
-        $this->set('providers', $this->mfaSettings->getEnabledProviders());
-        $this->set('isRememberMeForAMonthEnabled', $rememberMeForAMonthSetting->isEnabled());
+        $this->set('theme', $this->User->theme());
         $this->viewBuilder()
-            ->setLayout('mfa_verify')
+            ->setLayout('default')
             ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_WEBAUTHN))
             ->setTemplate('verifyForm');
     }

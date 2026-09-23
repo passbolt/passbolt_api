@@ -12,8 +12,6 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 <div class="form-actions">
 <?php if ($currentProvider === MfaSettings::PROVIDER_DUO) :?>
     <button type="submit" class="button primary big full-width" role="button"><?= __('Sign-in with Duo'); ?></button>
-<?php elseif ($currentProvider === MfaSettings::PROVIDER_WEBAUTHN) :?>
-    <button type="submit" class="button primary big full-width" role="button"><?= __('Verify with Passkey'); ?></button>
 <?php else :?>
     <button type="submit" class="button primary big full-width" role="button"><?= __('verify'); ?></button>
 <?php endif; ?>
