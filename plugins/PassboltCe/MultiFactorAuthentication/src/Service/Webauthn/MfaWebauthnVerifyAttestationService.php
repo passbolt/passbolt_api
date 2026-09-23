@@ -68,7 +68,6 @@ readonly class MfaWebauthnVerifyAttestationService
             throw new BadRequestException(__('The credential payload is not a valid WebAuthn response.'));
         }
 
-        // PublicKeyCredentialDenormalizer silently returns the raw array on missing `id`.
         if (!$credential instanceof PublicKeyCredential) {
             throw new BadRequestException(__('The credential payload is not a valid WebAuthn response.'));
         }

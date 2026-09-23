@@ -28,6 +28,7 @@ use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnChallengeToke
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnEnableService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAttestationService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Lib\Utility\WebauthnCredentialTestUtility;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Webauthn\MfaWebauthnOrganizationOnlyScenario;
 
 class WebauthnSetupFinishPostControllerTest extends MfaIntegrationTestCase
@@ -65,7 +66,7 @@ class WebauthnSetupFinishPostControllerTest extends MfaIntegrationTestCase
 
         $this->postJson('/mfa/setup/webauthn/finish.json?api-version=v2', [
             'handle' => 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-            'credential' => ['id' => 'anything'],
+            'credential' => WebauthnCredentialTestUtility::getDummyPayload(),
         ]);
         $this->assertAuthenticationError();
     }
@@ -78,7 +79,7 @@ class WebauthnSetupFinishPostControllerTest extends MfaIntegrationTestCase
 
         $this->postJson('/mfa/setup/webauthn/finish.json?api-version=v2', [
             'handle' => 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-            'credential' => ['id' => 'anything'],
+            'credential' => WebauthnCredentialTestUtility::getDummyPayload(),
         ]);
         $this->assertForbiddenError('Missing or incorrect CSRF cookie type.');
     }
@@ -93,7 +94,7 @@ class WebauthnSetupFinishPostControllerTest extends MfaIntegrationTestCase
 
         $this->postJson('/mfa/setup/webauthn/finish.json?api-version=v2', [
             'handle' => $handle,
-            'credential' => ['id' => 'anything'],
+            'credential' => WebauthnCredentialTestUtility::getDummyPayload(),
             'name' => 'Test key',
         ]);
         $this->assertNotFoundError('The authentication token could not be found.');
@@ -133,14 +134,14 @@ class WebauthnSetupFinishPostControllerTest extends MfaIntegrationTestCase
         $handle = $this->createSetupHandle($user);
 
         $this->postJson('/mfa/setup/webauthn/finish.json?api-version=v2', [
-            'handle' => $handle, 'credential' => ['id' => 'anything'], 'name' => 'Test key',
+            'handle' => $handle, 'credential' => WebauthnCredentialTestUtility::getDummyPayload(), 'name' => 'Test key',
         ]);
         $this->assertBadRequestError('The credential payload is not a valid WebAuthn response.');
         $this->clearPlugins();
         $this->getTableLocator()->clear();
 
         $this->postJson('/mfa/setup/webauthn/finish.json?api-version=v2', [
-            'handle' => $handle, 'credential' => ['id' => 'anything'], 'name' => 'Test key',
+            'handle' => $handle, 'credential' => WebauthnCredentialTestUtility::getDummyPayload(), 'name' => 'Test key',
         ]);
         $this->assertBadRequestError('The authentication token is not valid.');
     }
@@ -160,7 +161,7 @@ class WebauthnSetupFinishPostControllerTest extends MfaIntegrationTestCase
 
         $this->postJson('/mfa/setup/webauthn/finish.json?api-version=v2', [
             'handle' => $handle,
-            'credential' => ['id' => 'anything'],
+            'credential' => WebauthnCredentialTestUtility::getDummyPayload(),
             'name' => 'Test key',
         ]);
         $this->assertResponseOk();

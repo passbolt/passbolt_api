@@ -24,6 +24,7 @@ use App\Utility\UserAccessControl;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnChallengeTokenService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAssertionService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Lib\Utility\WebauthnCredentialTestUtility;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Webauthn\MfaWebauthnOrganizationOnlyScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Webauthn\MfaWebauthnScenario;
@@ -113,14 +114,14 @@ class WebauthnVerifyFinishPostControllerTest extends MfaIntegrationTestCase
         $handle = $this->createVerifyHandle($user);
 
         $this->postJson('/mfa/verify/webauthn/finish.json?api-version=v2', [
-            'handle' => $handle, 'credential' => ['id' => 'anything'],
+            'handle' => $handle, 'credential' => WebauthnCredentialTestUtility::getDummyPayload(),
         ]);
         $this->assertBadRequestError('The credential payload is not a valid WebAuthn response.');
         $this->clearPlugins();
         $this->getTableLocator()->clear();
 
         $this->postJson('/mfa/verify/webauthn/finish.json?api-version=v2', [
-            'handle' => $handle, 'credential' => ['id' => 'anything'],
+            'handle' => $handle, 'credential' => WebauthnCredentialTestUtility::getDummyPayload(),
         ]);
         $this->assertBadRequestError('The authentication token is not valid.');
     }
@@ -137,7 +138,7 @@ class WebauthnVerifyFinishPostControllerTest extends MfaIntegrationTestCase
 
         $this->postJson('/mfa/verify/webauthn/finish.json?api-version=v2', [
             'handle' => $handle,
-            'credential' => ['id' => 'anything'],
+            'credential' => WebauthnCredentialTestUtility::getDummyPayload(),
         ]);
         $this->assertResponseOk();
         $this->assertCookieIsSet('passbolt_mfa');

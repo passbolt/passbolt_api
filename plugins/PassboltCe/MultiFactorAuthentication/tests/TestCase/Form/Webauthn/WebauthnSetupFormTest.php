@@ -24,6 +24,7 @@ use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\MultiFactorAuthentication\Form\Webauthn\WebauthnSetupForm;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAttestationService;
+use Passbolt\MultiFactorAuthentication\Test\Lib\Utility\WebauthnCredentialTestUtility;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -55,7 +56,7 @@ class WebauthnSetupFormTest extends TestCase
     {
         $this->assertTrue($this->form->validate([
             'handle' => UuidFactory::uuid(),
-            'credential' => ['id' => 'abc'],
+            'credential' => WebauthnCredentialTestUtility::getDummyPayload(),
             'name' => 'My Key',
         ]));
     }
@@ -163,7 +164,7 @@ class WebauthnSetupFormTest extends TestCase
     public function testWebauthnSetupForm_Execute_PassesDataToServiceWithoutCasts(): void
     {
         $handle = UuidFactory::uuid();
-        $credential = ['id' => 'abc', 'rawId' => 'zzz'];
+        $credential = WebauthnCredentialTestUtility::getDummyPayload(['rawId' => 'zzz']);
 
         $this->service->expects($this->once())
             ->method('verify')

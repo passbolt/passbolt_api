@@ -60,7 +60,8 @@ class WebauthnSetupForm extends MfaForm
         $validator
             ->array('credential', __('The credential payload should be a valid WebAuthn response.'))
             ->requirePresence('credential', true, __('A credential payload is required.'))
-            ->notEmptyArray('credential', __('The credential payload should not be empty.'));
+            ->notEmptyArray('credential', __('The credential payload should not be empty.'))
+            ->addNested('credential', (new WebauthnCredentialPayloadForm())->getValidator());
 
         $validator
             ->scalar('name')

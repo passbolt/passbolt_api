@@ -32,6 +32,7 @@ use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnChallengeToke
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnRelyingPartyService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAssertionService;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaWebauthnCredentialFactory;
+use Passbolt\MultiFactorAuthentication\Test\Lib\Utility\WebauthnCredentialTestUtility;
 use PHPUnit\Framework\MockObject\MockObject;
 use RuntimeException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -84,7 +85,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
 
         $this->expectException(UnauthorizedException::class);
         $this->expectExceptionMessage('WebAuthn credential is not recognised');
-        $this->service->verify($attackerUac, $handle, ['any' => 'json']);
+        $this->service->verify($attackerUac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }
 
     public function testMfaWebauthnVerifyAssertionService_Verify_RefusesUnknownCredentialId(): void
@@ -98,7 +99,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
 
         $this->expectException(UnauthorizedException::class);
         $this->expectExceptionMessage('WebAuthn credential is not recognised');
-        $this->service->verify($uac, $handle, ['any' => 'json']);
+        $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }
 
     public function testMfaWebauthnVerifyAssertionService_Verify_RefusesReplayedHandle(): void
@@ -109,7 +110,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
         $tokens->consume($uac, AuthenticationToken::TYPE_MFA_VERIFY, $handle);
 
         $this->expectException(CustomValidationException::class);
-        $this->service->verify($uac, $handle, ['any' => 'json']);
+        $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }
 
     public function testMfaWebauthnVerifyAssertionService_Verify_RefusesHandleBelongingToOtherUser(): void
@@ -121,7 +122,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
             ->token;
 
         $this->expectException(NotFoundException::class);
-        $this->service->verify($attackerUac, $handle, ['any' => 'json']);
+        $this->service->verify($attackerUac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }
 
     public function testMfaWebauthnVerifyAssertionService_Verify_RefusesSetupHandleUsedAsVerify(): void
@@ -132,7 +133,17 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
             ->token;
 
         $this->expectException(NotFoundException::class);
-        $this->service->verify($uac, $setupHandle, ['any' => 'json']);
+        $this->service->verify($uac, $setupHandle, WebauthnCredentialTestUtility::getDummyPayload());
+    }
+
+    public function testMfaWebauthnVerifyAssertionService_Verify_IncompleteCredentialShape_ThrowsWithoutTriggeringDenormalizerWarning(): void
+    {
+        $uac = UserFactory::make()->user()->persistedUAC();
+        $handle = $this->issueVerifyHandle($uac);
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The credential payload is not a valid WebAuthn response.');
+        $this->service->verify($uac, $handle, ['id' => 'anything']);
     }
 
     public function testMfaWebauthnVerifyAssertionService_Verify_ThrowsBadRequestOnMalformedCredentialPayload(): void
@@ -147,7 +158,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('credential payload is not a valid WebAuthn response');
-        $this->service->verify($uac, $handle, ['garbage' => 'data']);
+        $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }
 
     public function testMfaWebauthnVerifyAssertionService_Verify_ThrowsBadRequestOnNonAssertionResponse(): void
@@ -162,7 +173,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('credential response is not an assertion');
-        $this->service->verify($uac, $handle, ['any' => 'json']);
+        $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }
 
     public function testMfaWebauthnVerifyAssertionService_Verify_ThrowsUnauthorizedOnValidatorFailure(): void
@@ -178,7 +189,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
 
         $this->expectException(UnauthorizedException::class);
         $this->expectExceptionMessage('WebAuthn assertion failed to validate');
-        $this->service->verify($uac, $handle, ['any' => 'json']);
+        $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }
 
     public function testMfaWebauthnVerifyAssertionService_Verify_ThrowsUnauthorizedOnCloneDetection(): void
@@ -202,7 +213,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
 
         $this->expectException(UnauthorizedException::class);
         $this->expectExceptionMessage('failed clone detection');
-        $this->service->verify($uac, $handle, ['any' => 'json']);
+        $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }
 
     public function testMfaWebauthnVerifyAssertionService_Verify_ThrowsBadRequestWhenDenormalizerReturnsNonCredential(): void
@@ -215,7 +226,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('credential payload is not a valid WebAuthn response');
-        $this->service->verify($uac, $handle, ['garbage' => 'data']);
+        $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }
 
     public function testMfaWebauthnVerifyAssertionService_Verify_Success_TouchesLastUsed(): void
@@ -231,7 +242,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
         $validator->method('check')->willReturn(MfaWebauthnCredentialFactory::makeCredentialRecord($credentialId));
         $this->rp->method('getAssertionValidator')->willReturn($validator);
 
-        $this->service->verify($uac, $handle, ['any' => 'json']);
+        $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
 
         /** @var \App\Model\Entity\WebauthnCredential $reloaded */
         $reloaded = MfaWebauthnCredentialFactory::find()
