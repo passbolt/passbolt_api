@@ -22,10 +22,11 @@ use App\Model\Entity\User;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Factory\WebauthnCredentialFactory;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UserAccessControl;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultMfaWebauthnPolicyService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnChallengeTokenService;
-use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnEnableService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnEnrollCredentialService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAttestationService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Lib\Utility\WebauthnCredentialTestUtility;
@@ -33,6 +34,8 @@ use Passbolt\MultiFactorAuthentication\Test\Scenario\Webauthn\MfaWebauthnOrganiz
 
 class WebauthnSetupFinishPostControllerTest extends MfaIntegrationTestCase
 {
+    use EmailQueueTrait;
+
     private function createSetupHandle(User $user): string
     {
         return (new MfaWebauthnChallengeTokenService())->create(
@@ -154,8 +157,8 @@ class WebauthnSetupFinishPostControllerTest extends MfaIntegrationTestCase
 
         $verifiedMock = $this->createMock(MfaWebauthnVerifyAttestationService::class);
         $verifiedMock->method('verify')->willReturnCallback(
-            fn(UserAccessControl $uac, string $h, array $c, ?string $name) => (new MfaWebauthnEnableService(new DefaultMfaWebauthnPolicyService()))
-                ->enable($uac, WebauthnCredentialFactory::makeCredentialRecord('happy-cred'), $name),
+            fn(UserAccessControl $uac, string $h, array $c, string $name) => (new MfaWebauthnEnrollCredentialService(new DefaultMfaWebauthnPolicyService()))
+                ->enroll($uac, WebauthnCredentialFactory::makeCredentialRecord('happy-cred'), $name),
         );
         $this->mockService(MfaWebauthnVerifyAttestationService::class, fn() => $verifiedMock);
 
@@ -176,5 +179,9 @@ class WebauthnSetupFinishPostControllerTest extends MfaIntegrationTestCase
             ->where(['token' => $cookieValue, 'user_id' => $user->id, 'type' => AuthenticationToken::TYPE_MFA])
             ->firstOrFail();
         $this->assertTrue($mfaToken->get('active'));
+
+        $this->assertEmailQueueCount(1);
+        $this->assertEmailInBatchContains('A new MFA passkey was added to your account.', $user->username);
+        $this->assertEmailInBatchContains('A new MFA passkey named "Test key" was enrolled on your account.', $user->username, htmlSpecialChar: false);
     }
 }

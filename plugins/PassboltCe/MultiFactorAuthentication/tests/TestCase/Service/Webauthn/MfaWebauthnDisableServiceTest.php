@@ -172,12 +172,16 @@ class MfaWebauthnDisableServiceTest extends TestCase
             $uac,
             EventManager::instance(),
         );
-        $this->assertEventFiredWith(
-            MfaWebauthnDisableService::MFA_WEBAUTHN_CREDENTIAL_REMOVED_EVENT,
-            'credentialId',
-            $credential->id,
-            EventManager::instance(),
-        );
+        $fired = EventManager::instance()->getEventList();
+        $this->assertNotNull($fired);
+        $carried = null;
+        foreach ($fired as $event) {
+            if ($event->getName() === MfaWebauthnDisableService::MFA_WEBAUTHN_CREDENTIAL_REMOVED_EVENT) {
+                $carried = $event->getData('credential');
+            }
+        }
+        $this->assertNotNull($carried);
+        $this->assertSame($credential->id, $carried->id);
     }
 
     public function testMfaWebauthnDisableService_Disable_DoesNotDispatchEvent_OnFailure(): void
