@@ -131,6 +131,7 @@ class WebauthnVerifyGetControllerTest extends MfaIntegrationTestCase
 
     public function testWebauthnVerifyGetController_Html_PassesUserLocale(): void
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->user()->withLocale('fr-FR')->persist();
         // The locale middleware reads the username of the session, which logInAs() does not set.
         $this->session(['Auth' => ['user' => ['id' => $user->id, 'username' => $user->username]]]);
