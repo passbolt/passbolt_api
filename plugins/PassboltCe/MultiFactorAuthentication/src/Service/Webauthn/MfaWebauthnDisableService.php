@@ -42,26 +42,28 @@ class MfaWebauthnDisableService
         /** @var \Passbolt\MultiFactorAuthentication\Model\Table\MfaWebauthnCredentialsTable $credentials */
         $credentials = $this->fetchTable('Passbolt/MultiFactorAuthentication.MfaWebauthnCredentials');
 
-        $affected = $credentials->deleteAll([
-            $credentials->aliasField('id') => $credentialId,
-            $credentials->aliasField('user_id') => $uac->getId(),
-            $credentials->aliasField('type') => $credentials->getType(),
-        ]);
-        if ($affected === 0) {
+        /** @var \App\Model\Entity\WebauthnCredential|null $credential */
+        $credential = $credentials->find()
+            ->where([
+                $credentials->aliasField('id') => $credentialId,
+                $credentials->aliasField('user_id') => $uac->getId(),
+            ])
+            ->first();
+        if ($credential === null) {
             throw new BadRequestException(__('The credential does not exist.'));
         }
+        $credentials->deleteOrFail($credential);
 
         if ($credentials->countForUser($uac->getId()) === 0) {
             try {
                 MfaAccountSettings::get($uac)->disableProvider(MfaSettings::PROVIDER_WEBAUTHN);
             } catch (RecordNotFoundException) {
-                // No account settings row — nothing to disable, expected when webauthn was the sole provider.
             }
         }
 
         $this->dispatchEvent(self::MFA_WEBAUTHN_CREDENTIAL_REMOVED_EVENT, [
             'uac' => $uac,
-            'credentialId' => $credentialId,
+            'credential' => $credential,
         ]);
     }
 }

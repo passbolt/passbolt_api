@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Webauthn;
 
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaWebauthnCredentialFactory;
@@ -28,6 +29,8 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class WebauthnSetupDeleteControllerTest extends MfaIntegrationTestCase
 {
+    use EmailQueueTrait;
+
     public function testWebauthnSetupDeleteController_NotAuthenticated(): void
     {
         $this->delete('/mfa/setup/webauthn/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa.json?api-version=v2');
@@ -57,24 +60,22 @@ class WebauthnSetupDeleteControllerTest extends MfaIntegrationTestCase
     public function testWebauthnSetupDeleteController_DeleteOne_LastCredential_DisablesProvider(): void
     {
         $user = $this->logInAsUser();
-        $this->loadFixtureScenario(MfaWebauthnScenario::class, $user);
+        [$user, $credential] = $this->loadFixtureScenario(MfaWebauthnScenario::class, $user);
         $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_WEBAUTHN);
         MfaSettings::clear();
 
-        /** @var \Passbolt\MultiFactorAuthentication\Model\Table\MfaWebauthnCredentialsTable $Credentials */
-        $Credentials = TableRegistry::getTableLocator()
-            ->get('Passbolt/MultiFactorAuthentication.MfaWebauthnCredentials');
-        /** @var \App\Model\Entity\WebauthnCredential $only */
-        $only = $Credentials->findByUserId($user->id)->firstOrFail();
-
-        $this->delete('/mfa/setup/webauthn/' . $only->id . '.json?api-version=v2');
+        $this->delete('/mfa/setup/webauthn/' . $credential->id . '.json?api-version=v2');
         $this->assertResponseOk();
-        $this->assertSame(0, $Credentials->countForUser($user->id));
+        $this->assertSame(0, MfaWebauthnCredentialFactory::count());
 
         $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
         $this->assertSame(0, $AccountSettings->find()
             ->where(['user_id' => $user->id, 'property' => MfaSettings::MFA])
             ->count());
+
+        $this->assertEmailQueueCount(1);
+        $this->assertEmailInBatchContains('An MFA passkey was removed from your account.', $user->username);
+        $this->assertEmailInBatchContains('The MFA passkey named "' . $credential->name . '" was removed from your account.', $user->username, htmlSpecialChar: false);
     }
 
     public function testWebauthnSetupDeleteController_DeleteOne_KeepsProviderEnabledWhenOthersRemain(): void
