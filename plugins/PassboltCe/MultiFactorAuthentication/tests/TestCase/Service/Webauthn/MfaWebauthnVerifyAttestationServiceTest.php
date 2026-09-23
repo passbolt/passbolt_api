@@ -78,6 +78,20 @@ class MfaWebauthnVerifyAttestationServiceTest extends TestCase
         $this->service->verify($uac, $token->token, ['missing' => 'required fields'], 'Yubikey');
     }
 
+    public function testMfaWebauthnVerifyAttestationService_Verify_IncompleteCredentialShape_ThrowsWithoutTriggeringDenormalizerWarning(): void
+    {
+        $uac = UserFactory::make()->user()->persistedUAC();
+        $token = (new MfaWebauthnChallengeTokenService())->create(
+            $uac,
+            AuthenticationToken::TYPE_MFA_SETUP,
+            '{"challenge":"abc"}',
+        );
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The credential payload is not a valid WebAuthn response.');
+        $this->service->verify($uac, $token->token, ['id' => 'anything'], 'Fresh name');
+    }
+
     public function testMfaWebauthnVerifyAttestationService_Verify_DuplicateName_RejectsBeforeConsumingHandle(): void
     {
         $uac = UserFactory::make()->user()->persistedUAC();
