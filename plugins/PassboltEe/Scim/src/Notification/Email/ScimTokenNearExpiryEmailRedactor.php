@@ -53,6 +53,6 @@ class ScimTokenNearExpiryEmailRedactor extends AbstractScimTokenExpiryEmailRedac
      */
     protected function getSubject(): string
     {
-        return __('The SCIM secret token expires soon');
+        return __('The SCIM secret token is about to expire');
     }
 }

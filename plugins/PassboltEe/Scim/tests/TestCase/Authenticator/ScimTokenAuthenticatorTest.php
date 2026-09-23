@@ -123,12 +123,12 @@ class ScimTokenAuthenticatorTest extends ScimApiIntegrationTestCase
         // assert email is in queue
         $this->assertEmailIsInQueue([
             'email' => $admin->username,
-            'subject' => 'The SCIM secret token is expired',
+            'subject' => 'The SCIM secret token has expired',
             'template' => ScimTokenExpiredEmailRedactor::TEMPLATE,
         ]);
         $this->assertEmailInBatchContains([
-            'The SCIM secret token of your organization expired on ' . $expiredDate,
-            'Rotate the token in passbolt',
+            sprintf('The SCIM secret token expired on %s and user provisioning has stopped.', $expiredDate),
+            'Open SCIM settings',
         ], $admin->username);
         $this->assertTrue((new ScimTokenExpiredNotificationCacheService())->isNotificationPerformed());
     }
@@ -164,12 +164,12 @@ class ScimTokenAuthenticatorTest extends ScimApiIntegrationTestCase
         $this->assertEventFiredWith(ScimTokenAuthenticator::EVENT_TOKEN_NEAR_EXPIRY, 'expired', $nearExpiryDate);
         $this->assertEmailIsInQueue([
             'email' => $admin->username,
-            'subject' => 'The SCIM secret token expires soon',
+            'subject' => 'The SCIM secret token is about to expire',
             'template' => ScimTokenNearExpiryEmailRedactor::TEMPLATE,
         ]);
         $this->assertEmailInBatchContains([
-            'The SCIM secret token of your organization expires on ' . $nearExpiryDate,
-            'Rotate the token in passbolt',
+            sprintf('The SCIM secret token expires on %s. Once it expires, user provisioning will stop', $nearExpiryDate),
+            'Open SCIM settings',
         ], $admin->username);
         $this->assertTrue((new ScimTokenNearExpiryNotificationCacheService())->isNotificationPerformed());
     }

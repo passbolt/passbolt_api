@@ -40,15 +40,13 @@ echo $this->element('Email/module/avatar', [
     ]),
 ]);
 
-$text = __('The SCIM secret token of your organization expired on {0}.', $tokenExpiryDate);
+$text = __('The SCIM secret token expired on {0} and user provisioning has stopped.', $tokenExpiryDate);
 $text .= ' ';
-$text .= __('Your identity provider cannot provision users any more.');
-$text .= ' ';
-$text .= __('Create a new SCIM secret token, then set the new token in your identity provider.');
+$text .= __('To resume service, generate a new token in the SCIM settings and save it in your identity provider settings.');
 
 echo $this->element('Email/module/text', ['text' => $text]);
 
 echo $this->element('Email/module/button', [
     'url' => Router::url('/app/administration/user-provisionning/scim', true),
-    'text' => __('Rotate the token in passbolt'),
+    'text' => __('Open SCIM settings'),
 ]);

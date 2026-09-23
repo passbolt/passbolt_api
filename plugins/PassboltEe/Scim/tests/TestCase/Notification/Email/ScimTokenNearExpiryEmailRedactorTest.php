@@ -69,8 +69,8 @@ class ScimTokenNearExpiryEmailRedactorTest extends AppTestCase
         $recipientIds = array_map(fn($email) => $email->getData()['body']['recipient']->id, $emails);
         $this->assertEqualsCanonicalizing([$admin->id, $otherAdmin->id], $recipientIds);
         foreach ($emails as $email) {
-            $this->assertSame('The SCIM secret token expires soon', $email->getSubject());
-            $this->assertSame('The SCIM secret token expires soon', $email->getData()['title']);
+            $this->assertSame('The SCIM secret token is about to expire', $email->getSubject());
+            $this->assertSame('The SCIM secret token is about to expire', $email->getData()['title']);
             $this->assertSame('2026-01-15', $email->getData()['body']['token_expiry_date']);
             $this->assertSame('Passbolt/Scim.AD/scim_token_near_expiry', $email->getTemplate());
         }
