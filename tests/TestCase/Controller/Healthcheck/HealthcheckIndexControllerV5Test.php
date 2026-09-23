@@ -147,6 +147,7 @@ class HealthcheckIndexControllerV5Test extends TestCase
         'sso-egress-guard-disabled',
         'scim-plugin-enabled',
         'scim-secret-token-expiry',
+        'scim-secret-token-expiry-warning',
         'passbolt-config-writable-web-installer',
         'public-key-writable-web-installer',
         'private-key-writable-web-installer',
