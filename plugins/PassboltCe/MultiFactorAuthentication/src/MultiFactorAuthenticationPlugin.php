@@ -18,6 +18,7 @@ namespace Passbolt\MultiFactorAuthentication;
 
 use App\Service\Command\ProcessUserService;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
@@ -33,6 +34,7 @@ use Passbolt\MultiFactorAuthentication\Event\ClearMfaCookieOnSetupAndRecover;
 use Passbolt\MultiFactorAuthentication\Event\UsersModelInitializeEventListener;
 use Passbolt\MultiFactorAuthentication\Middleware\InjectMfaFormMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
+use Passbolt\MultiFactorAuthentication\Middleware\MfaWebauthnDelegatedAuthDetectionMiddleware;
 use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultMfaWebauthnPolicyService;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultRememberAMonthSettingService;
@@ -73,7 +75,8 @@ class MultiFactorAuthenticationPlugin extends BasePlugin
         // BaseSolutionBootstrapper, so the anchor is always present.
         return $middlewareQueue
             ->insertAfter(LogoutUsersOnEditionChangeMiddleware::class, MfaRequiredCheckMiddleware::class)
-            ->insertAfter(MfaRequiredCheckMiddleware::class, InjectMfaFormMiddleware::class);
+            ->insertAfter(MfaRequiredCheckMiddleware::class, InjectMfaFormMiddleware::class)
+            ->insertBefore(AuthenticationMiddleware::class, MfaWebauthnDelegatedAuthDetectionMiddleware::class);
     }
 
     /**
