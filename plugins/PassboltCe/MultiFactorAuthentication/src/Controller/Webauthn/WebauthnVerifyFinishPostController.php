@@ -18,6 +18,8 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Webauthn;
 
 use App\Authenticator\SessionIdentificationServiceInterface;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnAssertionInvalidException;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnCloneDetectedException;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -39,7 +41,12 @@ class WebauthnVerifyFinishPostController extends MfaVerifyController
         $this->_handleVerifiedNotRequired($sessionIdentificationService, $rememberMeForAMonthSetting);
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_WEBAUTHN);
 
-        $webauthnVerifyForm->execute($this->request->getData());
+        try {
+            $webauthnVerifyForm->execute($this->request->getData());
+        } catch (WebauthnAssertionInvalidException | WebauthnCloneDetectedException $e) {
+            $this->_logoutOnMfaFailure();
+            throw $e;
+        }
 
         $this->_generateMfaToken(
             MfaSettings::PROVIDER_WEBAUTHN,

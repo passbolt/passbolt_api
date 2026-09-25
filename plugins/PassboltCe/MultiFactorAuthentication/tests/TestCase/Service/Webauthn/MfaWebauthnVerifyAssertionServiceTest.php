@@ -22,11 +22,13 @@ use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\Http\Exception\UnauthorizedException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use LogicException;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnAssertionInvalidException;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnCloneDetectedException;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnCredentialNotRecognisedException;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultMfaWebauthnPolicyService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnChallengeTokenService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnRelyingPartyService;
@@ -83,7 +85,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
         $this->stubDenormalizer($this->makePublicKeyCredential($rawId));
         $this->stubValidatorNeverRuns();
 
-        $this->expectException(UnauthorizedException::class);
+        $this->expectException(WebauthnCredentialNotRecognisedException::class);
         $this->expectExceptionMessage('WebAuthn credential is not recognised');
         $this->service->verify($attackerUac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }
@@ -97,7 +99,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
         $this->stubDenormalizer($this->makePublicKeyCredential(random_bytes(16)));
         $this->stubValidatorNeverRuns();
 
-        $this->expectException(UnauthorizedException::class);
+        $this->expectException(WebauthnCredentialNotRecognisedException::class);
         $this->expectExceptionMessage('WebAuthn credential is not recognised');
         $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }
@@ -176,7 +178,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
         $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }
 
-    public function testMfaWebauthnVerifyAssertionService_Verify_ThrowsUnauthorizedOnValidatorFailure(): void
+    public function testMfaWebauthnVerifyAssertionService_Verify_ThrowsAssertionInvalidOnValidatorFailure(): void
     {
         $uac = UserFactory::make()->user()->persistedUAC();
         $rawId = random_bytes(16);
@@ -187,12 +189,12 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
         $this->stubDenormalizer($this->makePublicKeyCredential($rawId));
         $this->rp->method('getAssertionValidator')->willThrowException(new RuntimeException('signature invalid'));
 
-        $this->expectException(UnauthorizedException::class);
+        $this->expectException(WebauthnAssertionInvalidException::class);
         $this->expectExceptionMessage('WebAuthn assertion failed to validate');
         $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }
 
-    public function testMfaWebauthnVerifyAssertionService_Verify_ThrowsUnauthorizedOnCloneDetection(): void
+    public function testMfaWebauthnVerifyAssertionService_Verify_ThrowsCloneDetectedOnCounterViolation(): void
     {
         $uac = UserFactory::make()->user()->persistedUAC();
         $rawId = random_bytes(16);
@@ -211,7 +213,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
         $validator->method('check')->willReturn($stallCounterRecord);
         $this->rp->method('getAssertionValidator')->willReturn($validator);
 
-        $this->expectException(UnauthorizedException::class);
+        $this->expectException(WebauthnCloneDetectedException::class);
         $this->expectExceptionMessage('failed clone detection');
         $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }

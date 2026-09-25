@@ -20,8 +20,6 @@ use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\CustomValidationException;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
-use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
-use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenLogoutService;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
@@ -107,15 +105,7 @@ class TotpVerifyPostController extends MfaVerifyController
             return $this->redirect($this->Authentication->logout());
         }
 
-        if ($isJwtAuth) {
-            (new RefreshTokenLogoutService())->logout($this->User->id(), $this->getRequest());
-            $cookiesCollection = $this->getResponse()->getCookieCollection()->remove(
-                RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE,
-            );
-            $this->setResponse($this->getResponse()->withCookieCollection($cookiesCollection));
-        }
-
-        $this->Authentication->logout();
+        $this->_logoutOnMfaFailure();
 
         throw new BadRequestException(__('You have been logged out due to too many failed attempts.'));
     }

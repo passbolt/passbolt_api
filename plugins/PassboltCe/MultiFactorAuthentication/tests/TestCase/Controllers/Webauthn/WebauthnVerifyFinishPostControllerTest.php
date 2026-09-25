@@ -21,6 +21,9 @@ use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Utility\UserAccessControl;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnAssertionInvalidException;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnCloneDetectedException;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnCredentialNotRecognisedException;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnChallengeTokenService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAssertionService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
@@ -150,5 +153,57 @@ class WebauthnVerifyFinishPostControllerTest extends MfaIntegrationTestCase
             ->where(['token' => $cookieValue, 'user_id' => $user->id, 'type' => AuthenticationToken::TYPE_MFA])
             ->firstOrFail();
         $this->assertTrue($mfaToken->get('active'));
+    }
+
+    public function testWebauthnVerifyFinishPostController_AssertionInvalid_LogsOutAndSetsSessionEmpty(): void
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaWebauthnScenario::class, $user);
+        $handle = $this->createVerifyHandle($user);
+        $failing = $this->createMock(MfaWebauthnVerifyAssertionService::class);
+        $failing->method('verify')->willThrowException(new WebauthnAssertionInvalidException('signature invalid'));
+        $this->mockService(MfaWebauthnVerifyAssertionService::class, fn() => $failing);
+
+        $this->postJson('/mfa/verify/webauthn/finish.json?api-version=v2', [
+            'handle' => $handle,
+            'credential' => WebauthnCredentialTestUtility::getDummyPayload(),
+        ]);
+        $this->assertResponseCode(401);
+        $this->assertSessionNotHasKey('Auth');
+    }
+
+    public function testWebauthnVerifyFinishPostController_CloneDetected_LogsOutAndSetsSessionEmpty(): void
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaWebauthnScenario::class, $user);
+        $handle = $this->createVerifyHandle($user);
+        $failing = $this->createMock(MfaWebauthnVerifyAssertionService::class);
+        $failing->method('verify')->willThrowException(new WebauthnCloneDetectedException('clone detected'));
+        $this->mockService(MfaWebauthnVerifyAssertionService::class, fn() => $failing);
+
+        $this->postJson('/mfa/verify/webauthn/finish.json?api-version=v2', [
+            'handle' => $handle,
+            'credential' => WebauthnCredentialTestUtility::getDummyPayload(),
+        ]);
+        $this->assertResponseCode(401);
+        $this->assertSessionNotHasKey('Auth');
+    }
+
+    public function testWebauthnVerifyFinishPostController_CredentialNotRecognised_DoesNotLogOut(): void
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaWebauthnScenario::class, $user);
+        $handle = $this->createVerifyHandle($user);
+        $failing = $this->createMock(MfaWebauthnVerifyAssertionService::class);
+        $failing->method('verify')
+            ->willThrowException(new WebauthnCredentialNotRecognisedException('credential not recognised'));
+        $this->mockService(MfaWebauthnVerifyAssertionService::class, fn() => $failing);
+
+        $this->postJson('/mfa/verify/webauthn/finish.json?api-version=v2', [
+            'handle' => $handle,
+            'credential' => WebauthnCredentialTestUtility::getDummyPayload(),
+        ]);
+        $this->assertResponseCode(401);
+        $this->assertSessionHasKey('Auth');
     }
 }

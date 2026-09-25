@@ -15,10 +15,10 @@ declare(strict_types=1);
  * @since         5.17.0
  */
 
-use Migrations\AbstractMigration;
+use Migrations\BaseMigration;
 use Phinx\Db\Adapter\MysqlAdapter;
 
-class V5170AddWebauthnCredentialsTable extends AbstractMigration
+class V5170AddWebauthnCredentialsTable extends BaseMigration
 {
     /**
      * @return void

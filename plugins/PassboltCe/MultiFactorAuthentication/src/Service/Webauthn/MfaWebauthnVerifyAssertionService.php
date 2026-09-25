@@ -19,9 +19,11 @@ namespace Passbolt\MultiFactorAuthentication\Service\Webauthn;
 use App\Model\Entity\AuthenticationToken;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\UnauthorizedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnAssertionInvalidException;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnCloneDetectedException;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnCredentialNotRecognisedException;
 use Throwable;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\PublicKeyCredential;
@@ -80,7 +82,7 @@ class MfaWebauthnVerifyAssertionService
         /** @var \App\Model\Entity\WebauthnCredential|null $stored */
         $stored = $credentials->findOneByCredentialId($credentialId);
         if ($stored === null || $stored->user_id !== $uac->getId()) {
-            throw new UnauthorizedException(__('The WebAuthn credential is not recognised.'));
+            throw new WebauthnCredentialNotRecognisedException(__('The WebAuthn credential is not recognised.'));
         }
 
         try {
@@ -92,11 +94,11 @@ class MfaWebauthnVerifyAssertionService
                 $uac->getId(),
             );
         } catch (Throwable) {
-            throw new UnauthorizedException(__('The WebAuthn assertion failed to validate.'));
+            throw new WebauthnAssertionInvalidException(__('The WebAuthn assertion failed to validate.'));
         }
 
         if (!$credentials->updateAfterAssertion($stored, $updated)) {
-            throw new UnauthorizedException(__('The WebAuthn assertion failed clone detection.'));
+            throw new WebauthnCloneDetectedException(__('The WebAuthn assertion failed clone detection.'));
         }
     }
 }
