@@ -21,7 +21,6 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 use Cake\Validation\Validation;
-use Firebase\JWT\JWT;
 use InvalidArgumentException;
 use Throwable;
 
@@ -47,14 +46,13 @@ class JwtTokenCreateService extends JwtAbstractService
             throw new InvalidArgumentException(__('The resource identifier should be a valid UUID.'));
         }
 
-        $privateKey = $this->readKeyFileContent();
-        $payload = [
-            'iss' => Router::url('/', true),
-            'sub' => $userId,
-            'exp' => $this->createExpiryDate($expiration),
-        ];
-
-        return JWT::encode($payload, $privateKey, self::JWT_ALG);
+        return (new JwtEncodeService())
+            ->setKeyPath($this->getKeyPath())
+            ->encode([
+                'iss' => Router::url('/', true),
+                'sub' => $userId,
+                'exp' => $this->createExpiryDate($expiration),
+            ]);
     }
 
     /**
