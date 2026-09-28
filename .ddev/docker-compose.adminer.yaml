@@ -2,7 +2,7 @@
 services:
   adminer:
     container_name: ddev-${DDEV_SITENAME}-adminer
-    image: ${ADMINER_DOCKER_IMAGE:-adminer:standalone@sha256:51262b555d9e8ac3e1fa197eec41a3f47d05aea5520ac2ccc78a03ffc7d39b3a}
+    image: ${ADMINER_DOCKER_IMAGE:-adminer:standalone@sha256:b87a22863ed8c18437c7241a5d39ae2e05669d4d2eb9d78591d5087a09258bc8}
     environment:
       - ADMINER_DEFAULT_DRIVER=${ADMINER_DEFAULT_DRIVER:-${DDEV_DATABASE_FAMILY:-server}}
       - ADMINER_DEFAULT_SERVER=${ADMINER_DEFAULT_SERVER:-db}
