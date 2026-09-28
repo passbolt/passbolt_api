@@ -18,7 +18,9 @@ namespace Passbolt\MultiFactorAuthentication\Service\Webauthn;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnAssertionInvalidException;
@@ -85,6 +87,12 @@ class MfaWebauthnVerifyAssertionService
             throw new WebauthnCredentialNotRecognisedException(__('The WebAuthn credential is not recognised.'));
         }
 
+        if (!$this->isCredentialsAllowed($credential->rawId, $options)) {
+            throw new WebauthnCredentialNotRecognisedException(
+                __('The WebAuthn credential is not allowed for this ceremony.'),
+            );
+        }
+
         try {
             $updated = $this->rp->getAssertionValidator()->check(
                 $stored->data,
@@ -93,12 +101,38 @@ class MfaWebauthnVerifyAssertionService
                 $this->rp->getRpId(),
                 $uac->getId(),
             );
-        } catch (Throwable) {
-            throw new WebauthnAssertionInvalidException(__('The WebAuthn assertion failed to validate.'));
+        } catch (Throwable $e) {
+            $message = 'WebAuthn assertion validation failed.';
+            if (Configure::read('debug')) {
+                $message .= ' ' . $e->getMessage();
+            }
+            Log::error($message);
+
+            throw new WebauthnAssertionInvalidException(__('The WebAuthn assertion failed to validate.'), null, $e);
         }
 
         if (!$credentials->updateAfterAssertion($stored, $updated)) {
             throw new WebauthnCloneDetectedException(__('The WebAuthn assertion failed clone detection.'));
         }
+    }
+
+    /**
+     * @param string $rawId Raw credential id presented by the authenticator.
+     * @param \Webauthn\PublicKeyCredentialRequestOptions $options Options issued for this ceremony.
+     * @return bool
+     */
+    private function isCredentialsAllowed(string $rawId, PublicKeyCredentialRequestOptions $options): bool
+    {
+        if (empty($options->allowCredentials)) {
+            return true;
+        }
+
+        foreach ($options->allowCredentials as $allowed) {
+            if (hash_equals($allowed->id, $rawId)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

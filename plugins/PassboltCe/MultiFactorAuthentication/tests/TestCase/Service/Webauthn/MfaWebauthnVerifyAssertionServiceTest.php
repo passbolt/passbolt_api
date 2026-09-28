@@ -45,6 +45,7 @@ use Webauthn\AuthenticatorData;
 use Webauthn\AuthenticatorResponse;
 use Webauthn\CollectedClientData;
 use Webauthn\PublicKeyCredential;
+use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialRequestOptions;
 
 /**
@@ -101,6 +102,41 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
 
         $this->expectException(WebauthnCredentialNotRecognisedException::class);
         $this->expectExceptionMessage('WebAuthn credential is not recognised');
+        $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
+    }
+
+    public function testMfaWebauthnVerifyAssertionService_Verify_RefusesCredentialNotOfferedByTheCeremony(): void
+    {
+        $uac = UserFactory::make()->user()->persistedUAC();
+        $offeredRawId = random_bytes(16);
+        $enrolledLaterRawId = random_bytes(16);
+        $this->persistCredential($uac, $offeredRawId);
+        $this->persistCredential($uac, $enrolledLaterRawId);
+        $handle = $this->issueVerifyHandle($uac);
+
+        // The ceremony only offered the first key; the user signs with one enrolled after it started.
+        $this->stubDeserializer([PublicKeyCredentialDescriptor::create('public-key', $offeredRawId)]);
+        $this->stubDenormalizer($this->makePublicKeyCredential($enrolledLaterRawId));
+        $this->stubValidatorNeverRuns();
+
+        $this->expectException(WebauthnCredentialNotRecognisedException::class);
+        $this->expectExceptionMessage('not allowed for this ceremony');
+        $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
+    }
+
+    public function testMfaWebauthnVerifyAssertionService_Verify_AcceptsCredentialOfferedByTheCeremony(): void
+    {
+        $uac = UserFactory::make()->user()->persistedUAC();
+        $rawId = random_bytes(16);
+        $this->persistCredential($uac, $rawId);
+        $handle = $this->issueVerifyHandle($uac);
+
+        $this->stubDeserializer([PublicKeyCredentialDescriptor::create('public-key', $rawId)]);
+        $this->stubDenormalizer($this->makePublicKeyCredential($rawId));
+        // The allow-list guard must not short-circuit a credential the ceremony did offer.
+        $this->rp->method('getAssertionValidator')->willThrowException(new RuntimeException('signature invalid'));
+
+        $this->expectException(WebauthnAssertionInvalidException::class);
         $this->service->verify($uac, $handle, WebauthnCredentialTestUtility::getDummyPayload());
     }
 
@@ -271,10 +307,16 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
             ->token;
     }
 
-    private function stubDeserializer(): void
+    /**
+     * @param array $allowCredentials Descriptors the ceremony offered; empty means no restriction.
+     * @return void
+     */
+    private function stubDeserializer(array $allowCredentials = []): void
     {
         $serializer = $this->createMock(SerializerInterface::class);
-        $serializer->method('deserialize')->willReturn(PublicKeyCredentialRequestOptions::create(random_bytes(32)));
+        $serializer->method('deserialize')->willReturn(
+            PublicKeyCredentialRequestOptions::create(random_bytes(32), null, $allowCredentials),
+        );
         $this->rp->method('getSerializer')->willReturn($serializer);
     }
 

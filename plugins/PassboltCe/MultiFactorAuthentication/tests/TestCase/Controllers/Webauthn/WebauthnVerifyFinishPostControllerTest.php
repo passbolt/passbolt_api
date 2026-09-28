@@ -155,7 +155,7 @@ class WebauthnVerifyFinishPostControllerTest extends MfaIntegrationTestCase
         $this->assertTrue($mfaToken->get('active'));
     }
 
-    public function testWebauthnVerifyFinishPostController_AssertionInvalid_LogsOutAndSetsSessionEmpty(): void
+    public function testWebauthnVerifyFinishPostController_Error_AssertionInvalid_LogsOutAndSetsSessionEmpty(): void
     {
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaWebauthnScenario::class, $user);
@@ -197,6 +197,25 @@ class WebauthnVerifyFinishPostControllerTest extends MfaIntegrationTestCase
         $failing = $this->createMock(MfaWebauthnVerifyAssertionService::class);
         $failing->method('verify')
             ->willThrowException(new WebauthnCredentialNotRecognisedException('credential not recognised'));
+        $this->mockService(MfaWebauthnVerifyAssertionService::class, fn() => $failing);
+
+        $this->postJson('/mfa/verify/webauthn/finish.json?api-version=v2', [
+            'handle' => $handle,
+            'credential' => WebauthnCredentialTestUtility::getDummyPayload(),
+        ]);
+        $this->assertResponseCode(401);
+        $this->assertSessionHasKey('Auth');
+    }
+
+    public function testWebauthnVerifyFinishPostController_CredentialNotOfferedByCeremony_DoesNotLogOut(): void
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaWebauthnScenario::class, $user);
+        $handle = $this->createVerifyHandle($user);
+        $failing = $this->createMock(MfaWebauthnVerifyAssertionService::class);
+        $failing->method('verify')->willThrowException(
+            new WebauthnCredentialNotRecognisedException('The WebAuthn credential is not allowed for this ceremony.'),
+        );
         $this->mockService(MfaWebauthnVerifyAssertionService::class, fn() => $failing);
 
         $this->postJson('/mfa/verify/webauthn/finish.json?api-version=v2', [
