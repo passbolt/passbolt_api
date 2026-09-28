@@ -18,10 +18,14 @@ namespace Passbolt\MultiFactorAuthentication\Service\Webauthn;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\UnauthorizedException;
+use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnAssertionInvalidException;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnCloneDetectedException;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Webauthn\WebauthnCredentialNotRecognisedException;
 use Throwable;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\PublicKeyCredential;
@@ -80,7 +84,13 @@ class MfaWebauthnVerifyAssertionService
         /** @var \App\Model\Entity\WebauthnCredential|null $stored */
         $stored = $credentials->findOneByCredentialId($credentialId);
         if ($stored === null || $stored->user_id !== $uac->getId()) {
-            throw new UnauthorizedException(__('The WebAuthn credential is not recognised.'));
+            throw new WebauthnCredentialNotRecognisedException(__('The WebAuthn credential is not recognised.'));
+        }
+
+        if (!$this->isCredentialsAllowed($credential->rawId, $options)) {
+            throw new WebauthnCredentialNotRecognisedException(
+                __('The WebAuthn credential is not allowed for this ceremony.'),
+            );
         }
 
         try {
@@ -91,12 +101,38 @@ class MfaWebauthnVerifyAssertionService
                 $this->rp->getRpId(),
                 $uac->getId(),
             );
-        } catch (Throwable) {
-            throw new UnauthorizedException(__('The WebAuthn assertion failed to validate.'));
+        } catch (Throwable $e) {
+            $message = 'WebAuthn assertion validation failed.';
+            if (Configure::read('debug')) {
+                $message .= ' ' . $e->getMessage();
+            }
+            Log::error($message);
+
+            throw new WebauthnAssertionInvalidException(__('The WebAuthn assertion failed to validate.'), null, $e);
         }
 
         if (!$credentials->updateAfterAssertion($stored, $updated)) {
-            throw new UnauthorizedException(__('The WebAuthn assertion failed clone detection.'));
+            throw new WebauthnCloneDetectedException(__('The WebAuthn assertion failed clone detection.'));
         }
+    }
+
+    /**
+     * @param string $rawId Raw credential id presented by the authenticator.
+     * @param \Webauthn\PublicKeyCredentialRequestOptions $options Options issued for this ceremony.
+     * @return bool
+     */
+    private function isCredentialsAllowed(string $rawId, PublicKeyCredentialRequestOptions $options): bool
+    {
+        if (empty($options->allowCredentials)) {
+            return true;
+        }
+
+        foreach ($options->allowCredentials as $allowed) {
+            if (hash_equals($allowed->id, $rawId)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
