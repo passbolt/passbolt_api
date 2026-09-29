@@ -60,6 +60,7 @@ class AuthenticationTokensTable extends Table
         AuthenticationToken::TYPE_MFA_SETUP,
         AuthenticationToken::TYPE_MFA_VERIFY,
         AuthenticationToken::TYPE_MFA_DELEGATED_STATE,
+        AuthenticationToken::TYPE_MFA_DELEGATED_TOKEN,
         AuthenticationToken::TYPE_MOBILE_TRANSFER,
         AuthenticationToken::TYPE_REFRESH_TOKEN,
         AuthenticationToken::TYPE_VERIFY_TOKEN,
