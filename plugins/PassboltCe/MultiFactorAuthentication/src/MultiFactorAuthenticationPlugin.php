@@ -35,6 +35,7 @@ use Passbolt\MultiFactorAuthentication\Event\UsersModelInitializeEventListener;
 use Passbolt\MultiFactorAuthentication\Middleware\InjectMfaFormMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaWebauthnDelegatedAuthDetectionMiddleware;
+use Passbolt\MultiFactorAuthentication\Middleware\MfaWebauthnDelegatedReferrerPolicyMiddleware;
 use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultMfaWebauthnPolicyService;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultRememberAMonthSettingService;
@@ -76,7 +77,8 @@ class MultiFactorAuthenticationPlugin extends BasePlugin
         return $middlewareQueue
             ->insertAfter(LogoutUsersOnEditionChangeMiddleware::class, MfaRequiredCheckMiddleware::class)
             ->insertAfter(MfaRequiredCheckMiddleware::class, InjectMfaFormMiddleware::class)
-            ->insertBefore(AuthenticationMiddleware::class, MfaWebauthnDelegatedAuthDetectionMiddleware::class);
+            ->insertBefore(AuthenticationMiddleware::class, MfaWebauthnDelegatedAuthDetectionMiddleware::class)
+            ->insertBefore(AuthenticationMiddleware::class, MfaWebauthnDelegatedReferrerPolicyMiddleware::class);
     }
 
     /**

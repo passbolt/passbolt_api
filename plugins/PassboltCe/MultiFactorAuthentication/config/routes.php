@@ -152,6 +152,12 @@ $routes->plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functi
         ])
         ->setMethods(['POST']);
 
+    $routes->connect('/verify/webauthn/delegated', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnDelegatedGet', 'action' => 'get',
+        ])
+        ->setExtensions(['json', 'html'])
+        ->setMethods(['GET']);
+
     $routes->connect('/verify/error', ['controller' => 'MfaVerifyAjaxError', 'action' => 'get'])
         ->setMethods(['GET', 'POST', 'PUT', 'DELETE']);
 
