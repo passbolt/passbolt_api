@@ -111,6 +111,7 @@ const jsApps = [
   'api-triage.js',
   'api-vendors.js',
   'api-feedback.js',
+  'api-mfa-verify.js',
 ];
 
 for (const file of jsApps) {
