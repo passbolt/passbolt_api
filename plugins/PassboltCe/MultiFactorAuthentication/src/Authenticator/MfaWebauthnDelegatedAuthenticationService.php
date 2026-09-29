@@ -20,27 +20,25 @@ use Authentication\AuthenticationService;
 use Authentication\Authenticator\Result;
 use Authentication\Authenticator\ResultInterface;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\NotFoundException;
 use Psr\Http\Message\ServerRequestInterface;
 
 class MfaWebauthnDelegatedAuthenticationService extends AuthenticationService
 {
-    public const DELEGATED_AUTHENTICATOR = 'Passbolt/MultiFactorAuthentication.DelegatedCeremonyToken';
-
     /**
      * @inheritDoc
      */
     public function authenticate(ServerRequestInterface $request): ResultInterface
     {
         $this->setConfig(['unauthenticatedRedirect' => null]);
-        $this->loadAuthenticator(self::DELEGATED_AUTHENTICATOR);
+        $this->loadAuthenticator('Passbolt/MultiFactorAuthentication.DelegatedState');
 
         $result = parent::authenticate($request);
         if (!$result->isValid()) {
             if ($result->getStatus() === Result::FAILURE_CREDENTIALS_MISSING) {
-                throw new BadRequestException(__('A ceremony token is required.'));
+                throw new BadRequestException(__('A delegated state is required.'));
             }
-            throw new NotFoundException(__('The ceremony token is invalid or has expired.'));
+            // A generic error message
+            throw new BadRequestException(__('The delegated state is not valid.'));
         }
 
         return $result;

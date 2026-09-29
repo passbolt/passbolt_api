@@ -20,15 +20,18 @@ use Authentication\Authenticator\AbstractAuthenticator;
 use Authentication\Authenticator\Result;
 use Authentication\Authenticator\ResultInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Http\Exception\NotFoundException;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
-use Passbolt\MultiFactorAuthentication\Service\Webauthn\Delegated\MfaWebauthnDelegatedCeremonyService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\Delegated\MfaWebauthnDelegatedStateService;
 use Psr\Http\Message\ServerRequestInterface;
 
-class DelegatedCeremonyTokenAuthenticator extends AbstractAuthenticator
+/**
+ * Authenticates the anonymous delegated endpoints from the delegated state present in the request.
+ */
+class DelegatedStateAuthenticator extends AbstractAuthenticator
 {
-    public const TOKEN_PARAM = 'ceremony_token';
+    public const STATE_PARAM = 'mfa_delegated_state';
 
     /**
      * @inheritDoc
@@ -36,20 +39,20 @@ class DelegatedCeremonyTokenAuthenticator extends AbstractAuthenticator
     public function authenticate(ServerRequestInterface $request): ResultInterface
     {
         /** @var \Cake\Http\ServerRequest $request */
-        $token = $this->readCeremonyTokenInRequest($request);
-        if ($token === null) {
+        $state = $this->readStateFromRequest($request);
+        if ($state === null) {
             return new Result(null, Result::FAILURE_CREDENTIALS_MISSING);
         }
 
         try {
-            $uac = (new MfaWebauthnDelegatedCeremonyService())->resolve($token);
+            $uac = (new MfaWebauthnDelegatedStateService())->resolve($state);
             /** @var \App\Model\Entity\User $user */
             $user = TableRegistry::getTableLocator()
                 ->get('Users')
                 ->find('activeNotDeletedNotDisabledContainRole')
                 ->where(['Users.id' => $uac->getId()])
                 ->firstOrFail();
-        } catch (NotFoundException | RecordNotFoundException $e) {
+        } catch (BadRequestException | RecordNotFoundException $e) {
             return new Result(null, Result::FAILURE_CREDENTIALS_INVALID);
         }
 
@@ -57,18 +60,20 @@ class DelegatedCeremonyTokenAuthenticator extends AbstractAuthenticator
     }
 
     /**
+     * Reads the state either from the request body or query param.
+     *
      * @param \Cake\Http\ServerRequest $request Server request.
-     * @return string|null
+     * @return string|null Null when the request carries no state at all.
      */
-    private function readCeremonyTokenInRequest(ServerRequest $request): ?string
+    private function readStateFromRequest(ServerRequest $request): ?string
     {
-        $body = $request->getData(self::TOKEN_PARAM);
-        if (is_string($body) && $body !== '') {
+        $body = $request->getData(self::STATE_PARAM);
+        if (is_string($body) && !empty($body)) {
             return $body;
         }
 
-        $query = $request->getQuery(self::TOKEN_PARAM);
-        if (is_string($query) && $query !== '') {
+        $query = $request->getQuery(self::STATE_PARAM);
+        if (is_string($query) && !empty($query)) {
             return $query;
         }
 
