@@ -46,6 +46,7 @@ class AuthenticationToken extends Entity
     public const TYPE_MFA = 'mfa';
     public const TYPE_MFA_SETUP = 'mfa_setup';
     public const TYPE_MFA_VERIFY = 'mfa_verify';
+    public const TYPE_MFA_DELEGATED_STATE = 'mfa_del_state';
     public const TYPE_LOGIN = 'login';
     public const TYPE_MOBILE_TRANSFER = 'mobile_transfer';
     public const TYPE_REFRESH_TOKEN = 'refresh_token';
