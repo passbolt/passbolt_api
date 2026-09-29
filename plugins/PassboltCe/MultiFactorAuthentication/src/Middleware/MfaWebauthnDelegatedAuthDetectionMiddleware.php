@@ -29,7 +29,6 @@ class MfaWebauthnDelegatedAuthDetectionMiddleware implements MiddlewareInterface
     use ContainerAwareMiddlewareTrait;
 
     public const DELEGATED_PATHS = [
-        '/mfa/verify/webauthn/delegated',
         '/mfa/verify/webauthn/delegated/begin',
         '/mfa/verify/webauthn/delegated/finish',
     ];

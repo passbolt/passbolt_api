@@ -64,13 +64,13 @@ class MfaWebauthnDelegatedAuthDetectionMiddlewareTest extends TestCase
         return $handler;
     }
 
-    public function testMfaWebauthnDelegatedAuthDetectionMiddleware_SwapsAuthServiceOnDelegatedGetRoute(): void
+    public function testMfaWebauthnDelegatedAuthDetectionMiddleware_DoesNotSwapOnDelegatedPageRoute(): void
     {
         $request = $this->requestForPath('/mfa/verify/webauthn/delegated');
 
         $this->middleware->process($request, $this->passThroughHandler());
 
-        $this->assertInstanceOf(
+        $this->assertNotInstanceOf(
             MfaWebauthnDelegatedAuthenticationService::class,
             $this->container->get(AuthenticationServiceInterface::class),
         );
