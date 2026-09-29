@@ -38,6 +38,8 @@ use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultMfaWebauthnPol
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultRememberAMonthSettingService;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\MfaWebauthnPolicyInterface;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\Delegated\MfaWebauthnDelegatedStateService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\Delegated\MfaWebauthnDelegatedTokenService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnEnrollCredentialService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnRelyingPartyService;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnStartAssertionService;
@@ -140,6 +142,12 @@ class MultiFactorAuthenticationPlugin extends BasePlugin
         $container
             ->add(MfaWebauthnVerifyAssertionService::class)
             ->addArgument(MfaWebauthnRelyingPartyService::class);
+
+        $container->add(MfaWebauthnDelegatedStateService::class);
+
+        $container
+            ->add(MfaWebauthnDelegatedTokenService::class)
+            ->addArgument(MfaWebauthnDelegatedStateService::class);
 
         if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
             $container

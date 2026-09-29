@@ -19,13 +19,11 @@ namespace Passbolt\MultiFactorAuthentication\Model\Dto;
 readonly class MfaWebauthnDelegatedStateDto
 {
     /**
-     * @param string $state Delegated state, published in the MFA page URL.
-     * @param string $secret Delegated secret, returned to the calling application only.
+     * @param string $state The delegated state.
+     * @param string $secret The delegated secret.
      */
-    final public function __construct(
-        public string $state,
-        public string $secret,
-    ) {
+    final public function __construct(public string $state, public string $secret)
+    {
     }
 
     /**
