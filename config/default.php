@@ -64,8 +64,8 @@ return [
                 AuthenticationToken::TYPE_MOBILE_TRANSFER => [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_MOBILE_TRANSFER_TOKEN_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
-                AuthenticationToken::TYPE_MFA_DELEGATED_CEREMONY => [
-                    'expiry' => filter_var(env('PASSBOLT_AUTH_MFA_DELEGATED_CEREMONY_TOKEN_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                AuthenticationToken::TYPE_MFA_DELEGATED_STATE => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_MFA_DELEGATED_STATE_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
                 AuthenticationToken::TYPE_REFRESH_TOKEN => [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_JWT_REFRESH_TOKEN', '1 month'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])

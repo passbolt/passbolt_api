@@ -45,12 +45,12 @@ class FindByTokenActiveNotExpiredTest extends AppTestCase
         /** @var \App\Model\Entity\AuthenticationToken $row */
         $row = AuthenticationTokenFactory::make()
             ->userId($user->id)
-            ->type(AuthenticationToken::TYPE_MFA_DELEGATED_CEREMONY)
+            ->type(AuthenticationToken::TYPE_MFA_DELEGATED_STATE)
             ->active()
             ->persist();
 
         $found = $this->AuthenticationTokens
-            ->find('byTokenActiveNotExpired', token: $row->token, tokenType: AuthenticationToken::TYPE_MFA_DELEGATED_CEREMONY)
+            ->find('byTokenActiveNotExpired', token: $row->token, tokenType: AuthenticationToken::TYPE_MFA_DELEGATED_STATE)
             ->first();
 
         $this->assertNotNull($found);
@@ -60,7 +60,7 @@ class FindByTokenActiveNotExpiredTest extends AppTestCase
     public function testAuthenticationTokensTable_FindByTokenActiveNotExpired_ReturnsNothingWhenTokenUnknown(): void
     {
         $found = $this->AuthenticationTokens
-            ->find('byTokenActiveNotExpired', token: UuidFactory::uuid(), tokenType: AuthenticationToken::TYPE_MFA_DELEGATED_CEREMONY)
+            ->find('byTokenActiveNotExpired', token: UuidFactory::uuid(), tokenType: AuthenticationToken::TYPE_MFA_DELEGATED_STATE)
             ->first();
 
         $this->assertNull($found);
@@ -73,12 +73,12 @@ class FindByTokenActiveNotExpiredTest extends AppTestCase
         /** @var \App\Model\Entity\AuthenticationToken $row */
         $row = AuthenticationTokenFactory::make()
             ->userId($user->id)
-            ->type(AuthenticationToken::TYPE_MFA_DELEGATED_CEREMONY)
+            ->type(AuthenticationToken::TYPE_MFA_DELEGATED_STATE)
             ->inactive()
             ->persist();
 
         $found = $this->AuthenticationTokens
-            ->find('byTokenActiveNotExpired', token: $row->token, tokenType: AuthenticationToken::TYPE_MFA_DELEGATED_CEREMONY)
+            ->find('byTokenActiveNotExpired', token: $row->token, tokenType: AuthenticationToken::TYPE_MFA_DELEGATED_STATE)
             ->first();
 
         $this->assertNull($found);
@@ -91,13 +91,13 @@ class FindByTokenActiveNotExpiredTest extends AppTestCase
         /** @var \App\Model\Entity\AuthenticationToken $row */
         $row = AuthenticationTokenFactory::make()
             ->userId($user->id)
-            ->type(AuthenticationToken::TYPE_MFA_DELEGATED_CEREMONY)
+            ->type(AuthenticationToken::TYPE_MFA_DELEGATED_STATE)
             ->active()
             ->created(DateTime::now()->modify('-6 minutes'))
             ->persist();
 
         $found = $this->AuthenticationTokens
-            ->find('byTokenActiveNotExpired', token: $row->token, tokenType: AuthenticationToken::TYPE_MFA_DELEGATED_CEREMONY)
+            ->find('byTokenActiveNotExpired', token: $row->token, tokenType: AuthenticationToken::TYPE_MFA_DELEGATED_STATE)
             ->first();
 
         $this->assertNull($found);
@@ -115,7 +115,7 @@ class FindByTokenActiveNotExpiredTest extends AppTestCase
             ->persist();
 
         $found = $this->AuthenticationTokens
-            ->find('byTokenActiveNotExpired', token: $row->token, tokenType: AuthenticationToken::TYPE_MFA_DELEGATED_CEREMONY)
+            ->find('byTokenActiveNotExpired', token: $row->token, tokenType: AuthenticationToken::TYPE_MFA_DELEGATED_STATE)
             ->first();
 
         $this->assertNull($found);
@@ -128,13 +128,13 @@ class FindByTokenActiveNotExpiredTest extends AppTestCase
         /** @var \App\Model\Entity\AuthenticationToken $row */
         $row = AuthenticationTokenFactory::make()
             ->userId($user->id)
-            ->type(AuthenticationToken::TYPE_MFA_DELEGATED_CEREMONY)
+            ->type(AuthenticationToken::TYPE_MFA_DELEGATED_STATE)
             ->active()
             ->created(DateTime::now()->modify('-4 minutes 55 seconds'))
             ->persist();
 
         $found = $this->AuthenticationTokens
-            ->find('byTokenActiveNotExpired', token: $row->token, tokenType: AuthenticationToken::TYPE_MFA_DELEGATED_CEREMONY)
+            ->find('byTokenActiveNotExpired', token: $row->token, tokenType: AuthenticationToken::TYPE_MFA_DELEGATED_STATE)
             ->first();
 
         $this->assertNotNull($found);
@@ -144,7 +144,7 @@ class FindByTokenActiveNotExpiredTest extends AppTestCase
     public function testAuthenticationTokensTable_FindByTokenActiveNotExpired_HonorsConfiguredExpiry(): void
     {
         Configure::write(
-            'passbolt.auth.token.' . AuthenticationToken::TYPE_MFA_DELEGATED_CEREMONY . '.expiry',
+            'passbolt.auth.token.' . AuthenticationToken::TYPE_MFA_DELEGATED_STATE . '.expiry',
             '1 hour',
         );
         /** @var \App\Model\Entity\User $user */
@@ -152,13 +152,13 @@ class FindByTokenActiveNotExpiredTest extends AppTestCase
         /** @var \App\Model\Entity\AuthenticationToken $row */
         $row = AuthenticationTokenFactory::make()
             ->userId($user->id)
-            ->type(AuthenticationToken::TYPE_MFA_DELEGATED_CEREMONY)
+            ->type(AuthenticationToken::TYPE_MFA_DELEGATED_STATE)
             ->active()
             ->created(DateTime::now()->modify('-30 minutes'))
             ->persist();
 
         $found = $this->AuthenticationTokens
-            ->find('byTokenActiveNotExpired', token: $row->token, tokenType: AuthenticationToken::TYPE_MFA_DELEGATED_CEREMONY)
+            ->find('byTokenActiveNotExpired', token: $row->token, tokenType: AuthenticationToken::TYPE_MFA_DELEGATED_STATE)
             ->first();
 
         $this->assertNotNull($found);
