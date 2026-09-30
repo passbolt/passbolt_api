@@ -50,7 +50,10 @@ class WebauthnDelegatedGetController extends AppController
     {
         $state = $this->getRequest()->getQuery(DelegatedStateAuthenticator::STATE_PARAM);
         if (!is_string($state) || !Validation::uuid($state)) {
-            $this->renderTemplate('delegatedExpired', ['redirectUri' => self::REDIRECT_URI]);
+            $this->renderTemplate('delegatedExpired', [
+                'redirectUri' => self::REDIRECT_URI,
+                'errorCode' => 'state_invalid',
+            ]);
 
             return;
         }
@@ -58,7 +61,10 @@ class WebauthnDelegatedGetController extends AppController
         try {
             $delegatedStateService->resolve($state);
         } catch (BadRequestException $e) {
-            $this->renderTemplate('delegatedExpired', ['redirectUri' => self::REDIRECT_URI]);
+            $this->renderTemplate('delegatedExpired', [
+                'redirectUri' => self::REDIRECT_URI,
+                'errorCode' => 'state_invalid',
+            ]);
 
             return;
         }
@@ -80,7 +86,7 @@ class WebauthnDelegatedGetController extends AppController
     {
         $this->set($viewVariables);
         $this->viewBuilder()
-            ->setLayout('default')
+            ->setLayout('mfa_verify')
             ->setTemplatePath('Webauthn')
             ->setTemplate($template);
     }
