@@ -27,7 +27,7 @@ use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 
 class WebauthnDelegatedGetControllerTest extends MfaIntegrationTestCase
 {
-    public function testWebauthnDelegatedGetController_Success_RendersThePageForALiveState(): void
+    public function testWebauthnDelegatedGetController_Success(): void
     {
         $state = $this->persistState();
 
@@ -38,6 +38,8 @@ class WebauthnDelegatedGetControllerTest extends MfaIntegrationTestCase
         $this->assertResponseContains('data-state="' . $state . '"');
         $this->assertResponseContains('data-begin-url="/mfa/verify/webauthn/delegated/begin.json"');
         $this->assertResponseContains('data-finish-url="/mfa/verify/webauthn/delegated/finish.json"');
+        // loads js
+        $this->assertResponseContains('/js/mfa/webauthn-verify-delegated.js');
     }
 
     public function testWebauthnDelegatedGetController_Success_SendsNoReferrerPolicyHeader(): void
@@ -72,6 +74,30 @@ class WebauthnDelegatedGetControllerTest extends MfaIntegrationTestCase
 
         $this->assertResponseOk();
         $this->assertResponseContains('data-redirect-uri="' . WebauthnDelegatedGetController::REDIRECT_URI . '"');
+    }
+
+    public function testWebauthnDelegatedPage_Success_TokenIsNotRenderedInMarkup(): void
+    {
+        $state = $this->persistState();
+
+        $this->get('/mfa/verify/webauthn/delegated?mfa_delegated_state=' . $state);
+
+        $this->assertResponseOk();
+        $this->assertResponseContains('/js/mfa/webauthn-verify-delegated.js');
+        $this->assertResponseNotContains('mfa_delegated_token');
+        $this->assertResponseNotContains('data-token');
+        $this->assertResponseNotContains('<input type="hidden"');
+        $this->assertResponseNotContains('href="' . WebauthnDelegatedGetController::REDIRECT_URI);
+    }
+
+    public function testWebauthnDelegatedPage_Success_ExpiredScreenCarriesOneGenericErrorCode(): void
+    {
+        $this->get('/mfa/verify/webauthn/delegated?mfa_delegated_state=' . UuidFactory::uuid());
+
+        $this->assertResponseOk();
+        $this->assertResponseContains(
+            WebauthnDelegatedGetController::REDIRECT_URI . '?error=state_invalid',
+        );
     }
 
     public function testWebauthnDelegatedGetController_Success_RendersExpiredScreenWhenStateIsUnknown(): void

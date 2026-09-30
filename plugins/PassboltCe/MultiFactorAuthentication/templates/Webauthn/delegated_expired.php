@@ -14,11 +14,22 @@
  *
  * @var \App\View\AppView $this
  * @var string $redirectUri
+ * @var string $errorCode
  */
+
 $this->assign('title', __('Multi factor authentication verification'));
+$this->assign('pageClass', 'login v240918');
 ?>
-<div id="mfa-webauthn-delegated-expired" data-redirect-uri="<?= h($redirectUri) ?>">
-    <h2><?= __('This verification link is no longer valid.') ?></h2>
-    <p><?= __('Start the verification again from the application.') ?></p>
-    <a href="<?= h($redirectUri) ?>?error=state_invalid"><?= __('Return to the application') ?></a>
+<div class="content">
+    <div class="header">
+        <div class="logo"><span class="visually-hidden">Passbolt</span></div>
+    </div>
+    <div class="login-form" id="mfa-webauthn-delegated-expired">
+        <h1><?= __('This verification link is no longer valid.') ?></h1>
+        <p><?= __('It has already been used, or it expired. Start the verification again from the application.') ?></p>
+        <div class="form-actions">
+            <a class="button primary big full-width"
+               href="<?= h($redirectUri) ?>?error=<?= h($errorCode) ?>"><?= __('Return to the application') ?></a>
+        </div>
+    </div>
 </div>
