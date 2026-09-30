@@ -29,7 +29,7 @@ $this->assign('pageClass', 'login v240918');
         <p><?= __('It has already been used, or it expired. Start the verification again from the application.') ?></p>
         <div class="form-actions">
             <a class="button primary big full-width"
-               href="<?= h($redirectUri) ?>?error=<?= h($errorCode) ?>"><?= __('Return to the application') ?></a>
+               href="<?= h($redirectUri) ?>?error=<?= h($errorCode) ?>"><?= __('Return to app') ?></a>
         </div>
     </div>
 </div>
