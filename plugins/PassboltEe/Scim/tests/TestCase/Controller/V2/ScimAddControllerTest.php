@@ -18,7 +18,9 @@ declare(strict_types=1);
 namespace Passbolt\Scim\Test\TestCase\Controller\V2;
 
 use App\Test\Factory\UserFactory;
+use Cake\Datasource\ConnectionManager;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
+use Passbolt\Scim\Test\Utility\FailingConnection;
 use Passbolt\Scim\Test\Utility\ScimApiIntegrationTestCase;
 
 /**
@@ -98,5 +100,51 @@ class ScimAddControllerTest extends ScimApiIntegrationTestCase
         // Assert database entries
         $this->assertSame(0, ScimEntryFactory::count());
         $this->assertSame(0, UserFactory::find()->where(['username' => self::USER_1_EMAIL])->count());
+    }
+
+    public static function providerDeadlockSqlStates(): array
+    {
+        return [
+            'MySQL and MariaDB deadlock' => ['40001'],
+            'Postgres deadlock' => ['40P01'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerDeadlockSqlStates
+     */
+    public function testScimControllerUsersAdd_Error_TriesAgainAfterADeadlock(string $sqlState): void
+    {
+        $connection = $this->failEveryTransactionWith($sqlState);
+
+        $this->configScimAuth();
+        $this->post($this->getScimEndpoint('Users'), $this->getUserPostData(self::USER_1_SCIM_NAME));
+
+        $this->assertResponseCode(500);
+        $this->assertSame(3, $connection->transactions);
+        $this->assertSame(0, UserFactory::find()->where(['username' => self::USER_1_EMAIL])->count());
+    }
+
+    public function testScimControllerUsersAdd_Error_DoesNotTryAgainOnAnotherDatabaseError(): void
+    {
+        $connection = $this->failEveryTransactionWith('42S02');
+
+        $this->configScimAuth();
+        $this->post($this->getScimEndpoint('Users'), $this->getUserPostData(self::USER_1_SCIM_NAME));
+
+        $this->assertResponseCode(500);
+        $this->assertSame(1, $connection->transactions);
+    }
+
+    /**
+     * @param string $sqlState SQLSTATE value.
+     * @return \Passbolt\Scim\Test\Utility\FailingConnection
+     */
+    private function failEveryTransactionWith(string $sqlState): FailingConnection
+    {
+        $connection = new FailingConnection(ConnectionManager::get('test')->config(), $sqlState);
+        $this->fetchTable('Passbolt/Scim.ScimUsers')->setConnection($connection);
+
+        return $connection;
     }
 }
