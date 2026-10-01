@@ -64,6 +64,11 @@ class AuthenticationTokensTable extends Table
         AuthenticationToken::TYPE_VERIFY_TOKEN,
     ];
 
+    public const SINGLE_ACTIVE_TYPES = [
+        AuthenticationToken::TYPE_MFA_SETUP,
+        AuthenticationToken::TYPE_MFA_VERIFY,
+    ];
+
     /**
      * @var \App\Utility\AuthToken\AuthTokenExpiry
      */
@@ -231,9 +236,25 @@ class AuthenticationTokensTable extends Table
         if (!empty($errors)) {
             throw new ValidationException($msg);
         }
-        if (!$this->save($token)) {
-            throw new ValidationException($msg);
-        }
+
+        $this->getConnection()->transactional(function () use ($userId, $type, $msg, $token): void {
+            // Set all current active singleton enforced tokens as inactive before creating a new one
+            if (in_array($type, self::SINGLE_ACTIVE_TYPES, true)) {
+                $AllActiveTokens = $this->find()
+                    ->where(['user_id' => $userId, 'type' => $type, 'active' => true])
+                    ->all();
+
+                /** @var \App\Model\Entity\AuthenticationToken $activeToken */
+                foreach ($AllActiveTokens as $activeToken) {
+                    $activeToken->active = false;
+                }
+                $this->saveManyOrFail($AllActiveTokens);
+            }
+
+            if (!$this->save($token)) {
+                throw new ValidationException($msg);
+            }
+        });
 
         return $token;
     }
