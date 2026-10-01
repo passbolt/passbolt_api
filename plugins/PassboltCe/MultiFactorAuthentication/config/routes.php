@@ -168,6 +168,11 @@ $routes->plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functi
         ])
         ->setMethods(['POST']);
 
+    $routes->connect('/verify/webauthn/delegated/callback', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnDelegatedCallbackPost', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
     $routes->connect('/verify/error', ['controller' => 'MfaVerifyAjaxError', 'action' => 'get'])
         ->setMethods(['GET', 'POST', 'PUT', 'DELETE']);
 
