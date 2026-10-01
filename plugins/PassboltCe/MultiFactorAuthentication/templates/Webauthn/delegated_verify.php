@@ -14,47 +14,34 @@
  *
  * @var \App\View\AppView $this
  * @var string $state
- * @var string $beginUrl
- * @var string $finishUrl
  * @var string $redirectUri
  */
 
 use Cake\Core\Configure;
-
-$version = Configure::read('passbolt.version');
+use Cake\I18n\I18n;
 
 $this->assign('title', __('Multi factor authentication verification'));
-$this->assign('pageClass', 'login v240918');
+$version = Configure::read('passbolt.version');
 
-$this->Html->script('/js/mfa/webauthn-verify-delegated.js?v=' . $version, [
-    'block' => 'js',
+// See. fetch('scriptBottom')
+$this->start('scriptBottom');
+// Load the javascript application.
+echo $this->Html->script('/js/app/api-vendors.js?v=' . $version, ['fullBase' => true, 'cache-version' => $version]);
+echo $this->Html->script('/js/app/api-mfa-verify-delegated.js?v=' . $version, ['fullBase' => true, 'cache-version' => $version]);
+$this->end();
+
+$this->start('scriptTop');
+
+// No session on this page: the default theme applies.
+echo $this->Html->script('/js/app/stylesheet.js?v=' . $version, [
+    'id' => 'stylesheet-manager',
     'fullBase' => true,
-    'defer' => true,
-    'cache-version' => $version,
-]);
+    'data-file' => 'api_authentication.min.css',
+    'cache-version' => $version]);
+
+$this->end();
 ?>
-<div class="content">
-    <div class="header">
-        <div class="logo"><span class="visually-hidden">Passbolt</span></div>
-    </div>
-    <div class="login-form">
-        <h1><?= __('Verify with your passkey.') ?></h1>
-        <p><?= __('Follow the instructions of your browser to use your passkey.') ?></p>
-        <div id="mfa-webauthn-delegated"
-             data-state="<?= h($state) ?>"
-             data-begin-url="<?= h($beginUrl) ?>"
-             data-finish-url="<?= h($finishUrl) ?>"
-             data-redirect-uri="<?= h($redirectUri) ?>">
-            <div id="mfa-webauthn-delegated-error" class="message error" hidden></div>
-            <div class="form-actions">
-                <button type="button" id="mfa-webauthn-delegated-verify" class="button primary big full-width">
-                    <?= __('verify') ?>
-                </button>
-                <!-- Shown when browser does not automatically redirect to application. -->
-                <button type="button" id="mfa-webauthn-delegated-return" class="button primary big full-width" hidden>
-                    <?= __('Return to the application') ?>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<div id="api-mfa-verify-delegated"
+     data-state="<?= h($state) ?>"
+     data-redirect-uri="<?= h($redirectUri) ?>"
+     data-locale="<?= h(str_replace('_', '-', I18n::getLocale())) ?>"></div>

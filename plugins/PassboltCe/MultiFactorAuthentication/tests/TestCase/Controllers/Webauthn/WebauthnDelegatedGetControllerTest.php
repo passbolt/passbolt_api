@@ -21,12 +21,26 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\I18n\DateTime;
+use Passbolt\Locale\Service\GetOrgLocaleService;
+use Passbolt\Locale\Test\Factory\LocaleSettingFactory;
 use Passbolt\MultiFactorAuthentication\Controller\Webauthn\WebauthnDelegatedGetController;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\Delegated\MfaWebauthnDelegatedStateService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 
 class WebauthnDelegatedGetControllerTest extends MfaIntegrationTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        GetOrgLocaleService::clearOrganisationLocale();
+    }
+
+    public function tearDown(): void
+    {
+        GetOrgLocaleService::clearOrganisationLocale();
+        parent::tearDown();
+    }
+
     public function testWebauthnDelegatedGetController_Success(): void
     {
         $state = $this->persistState();
@@ -34,12 +48,42 @@ class WebauthnDelegatedGetControllerTest extends MfaIntegrationTestCase
         $this->get('/mfa/verify/webauthn/delegated?mfa_delegated_state=' . $state);
 
         $this->assertResponseOk();
-        $this->assertResponseContains('id="mfa-webauthn-delegated"');
+        $this->assertResponseContains('js/app/api-vendors.js');
+        $this->assertResponseContains('js/app/api-mfa-verify-delegated.js');
+        $this->assertResponseContains('data-file="api_authentication.min.css"');
+        $this->assertResponseContains('id="api-mfa-verify-delegated"');
         $this->assertResponseContains('data-state="' . $state . '"');
-        $this->assertResponseContains('data-begin-url="/mfa/verify/webauthn/delegated/begin.json"');
-        $this->assertResponseContains('data-finish-url="/mfa/verify/webauthn/delegated/finish.json"');
-        // loads js
-        $this->assertResponseContains('/js/mfa/webauthn-verify-delegated.js');
+    }
+
+    public function testWebauthnDelegatedGetController_Success_PassesTheDefaultLocale(): void
+    {
+        $state = $this->persistState();
+
+        $this->get('/mfa/verify/webauthn/delegated?mfa_delegated_state=' . $state);
+
+        $this->assertResponseOk();
+        $this->assertResponseContains('data-locale="en-UK"');
+    }
+
+    public function testWebauthnDelegatedGetController_Success_PassesTheLocaleOfTheApplication(): void
+    {
+        $state = $this->persistState();
+
+        $this->get('/mfa/verify/webauthn/delegated?mfa_delegated_state=' . $state . '&locale=fr-FR');
+
+        $this->assertResponseOk();
+        $this->assertResponseContains('data-locale="fr-FR"');
+    }
+
+    public function testWebauthnDelegatedGetController_Success_PassesTheOrganizationLocaleIfTheApplicationLocaleIsNotSupported(): void
+    {
+        LocaleSettingFactory::make()->locale('de_DE')->persist();
+        $state = $this->persistState();
+
+        $this->get('/mfa/verify/webauthn/delegated?mfa_delegated_state=' . $state . '&locale=xx-YY');
+
+        $this->assertResponseOk();
+        $this->assertResponseContains('data-locale="de-DE"');
     }
 
     public function testWebauthnDelegatedGetController_Success_SendsNoReferrerPolicyHeader(): void
@@ -83,7 +127,7 @@ class WebauthnDelegatedGetControllerTest extends MfaIntegrationTestCase
         $this->get('/mfa/verify/webauthn/delegated?mfa_delegated_state=' . $state);
 
         $this->assertResponseOk();
-        $this->assertResponseContains('/js/mfa/webauthn-verify-delegated.js');
+        $this->assertResponseContains('js/app/api-mfa-verify-delegated.js');
         $this->assertResponseNotContains('mfa_delegated_token');
         $this->assertResponseNotContains('data-token');
         $this->assertResponseNotContains('<input type="hidden"');
@@ -106,7 +150,7 @@ class WebauthnDelegatedGetControllerTest extends MfaIntegrationTestCase
 
         $this->assertResponseOk();
         $this->assertResponseContains('id="mfa-webauthn-delegated-expired"');
-        $this->assertResponseNotContains('id="mfa-webauthn-delegated"');
+        $this->assertResponseNotContains('id="api-mfa-verify-delegated"');
         $this->assertResponseContains(WebauthnDelegatedGetController::REDIRECT_URI . '?error=state_invalid');
     }
 

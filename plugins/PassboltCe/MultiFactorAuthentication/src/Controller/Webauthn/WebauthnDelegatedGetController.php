@@ -71,22 +71,21 @@ class WebauthnDelegatedGetController extends AppController
 
         $this->renderTemplate('delegatedVerify', [
             'state' => $state,
-            'beginUrl' => '/mfa/verify/webauthn/delegated/begin.json',
-            'finishUrl' => '/mfa/verify/webauthn/delegated/finish.json',
             'redirectUri' => self::REDIRECT_URI,
-        ]);
+        ], 'default');
     }
 
     /**
      * @param string $template Template name.
      * @param array<string, string> $viewVariables Variables the template prints.
+     * @param string $layout Layout name.
      * @return void
      */
-    private function renderTemplate(string $template, array $viewVariables): void
+    private function renderTemplate(string $template, array $viewVariables, string $layout = 'mfa_verify'): void
     {
         $this->set($viewVariables);
         $this->viewBuilder()
-            ->setLayout('mfa_verify')
+            ->setLayout($layout)
             ->setTemplatePath('Webauthn')
             ->setTemplate($template);
     }
