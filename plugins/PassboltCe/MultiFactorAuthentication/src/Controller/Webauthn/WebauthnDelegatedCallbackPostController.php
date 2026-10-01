@@ -63,7 +63,12 @@ class WebauthnDelegatedCallbackPostController extends MfaVerifyController
      */
     private function assertDelegatedToken(mixed $delegatedToken): void
     {
-        if (!is_string($delegatedToken)) {
+        if (
+            !is_string($delegatedToken)
+            || empty($delegatedToken)
+            || strlen($delegatedToken) > 8192
+            || preg_match('/\A[\x21-\x7E]+\z/', $delegatedToken) !== 1
+        ) {
             throw new BadRequestException(__('The delegated token is not valid.'));
         }
     }
