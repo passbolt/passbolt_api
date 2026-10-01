@@ -328,9 +328,9 @@ class MfaOrgSettings
      * @param \App\Utility\UserAccessControl $uac user access control
      * @param \Duo\DuoUniversal\Client|null $client Duo SDK Client
      * @param array $options Options used to save & validate organisation settings
-     * @return void
+     * @return array new data providers array
      */
-    public function save(array $data, UserAccessControl $uac, ?Client $client = null, array $options = []): void
+    public function save(array $data, UserAccessControl $uac, ?Client $client = null, array $options = []): array
     {
         if (isset($data[MfaSettings::PROVIDERS])) {
             $data[MfaSettings::PROVIDERS] = $this->formatProviders($data[MfaSettings::PROVIDERS]);
@@ -339,5 +339,7 @@ class MfaOrgSettings
         $this->settings = $data;
         $json = json_encode($data);
         $this->OrganizationSettings->createOrUpdateSetting(MfaSettings::MFA, $json, $uac);
+
+        return $data[MfaSettings::PROVIDERS];
     }
 }

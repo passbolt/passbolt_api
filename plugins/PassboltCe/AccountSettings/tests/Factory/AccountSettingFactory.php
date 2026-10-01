@@ -74,4 +74,19 @@ class AccountSettingFactory extends CakephpBaseFactory
     {
         return $this->with('Users', $user);
     }
+
+    /**
+     * @param string|null $property
+     * @return string
+     */
+    public static function findValue(?string $property = null): string
+    {
+        $query = self::find();
+
+        if ($property !== null) {
+            $query->where(['property' => $property]);
+        }
+
+        return $query->firstOrFail()->get('value');
+    }
 }

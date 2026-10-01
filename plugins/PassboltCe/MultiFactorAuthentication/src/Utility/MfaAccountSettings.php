@@ -251,6 +251,7 @@ class MfaAccountSettings
                     $this->delete();
                 } else {
                     $this->save();
+                    MfaVerifiedToken::setAllInactiveByProvider($this->uac, $providerToDisable);
                 }
                 break;
             }
