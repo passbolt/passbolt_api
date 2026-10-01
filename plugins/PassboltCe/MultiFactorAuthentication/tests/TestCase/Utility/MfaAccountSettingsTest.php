@@ -24,6 +24,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOtpFactory;
@@ -339,5 +340,74 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_DUO => false,
             MfaSettings::PROVIDER_TOTP => false,
         ]);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaAccountSettings
+     */
+    public function testMfaAccountSettings_DisablingAllProvidersCleansAllAssociatedData()
+    {
+        // Enable two providers
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
+        MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_DUO);
+        MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_YUBIKEY, [
+            MfaAccountSettings::YUBIKEY_ID => 'yubikey_id',
+        ]);
+        // Make two authentication tokens
+        $this->mockMfaCookieValid($uac, MfaSettings::PROVIDER_DUO);
+        $this->mockMfaCookieValid($uac, MfaSettings::PROVIDER_YUBIKEY);
+
+        $settings = MfaAccountSettings::get($uac);
+        $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_DUO));
+        $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_YUBIKEY));
+
+        // Disable one, check there is one provider left
+        $settings->disableProvider(MfaSettings::PROVIDER_DUO);
+        $this->assertFalse($settings->isProviderReady(MfaSettings::PROVIDER_DUO));
+        $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_YUBIKEY));
+        //Check if the authentication token was set as inactive for that user
+        $this->assertSame(2, MfaAuthenticationTokenFactory::count());
+        $this->assertSame(1, MfaAuthenticationTokenFactory::find()->where(['active' => true, 'user_id' => $userA->get('id')])->all()->count());
+
+        // Disable another one, there should be no more
+        $settings->disableProvider(MfaSettings::PROVIDER_YUBIKEY);
+        $this->expectException(RecordNotFoundException::class);
+        MfaAccountSettings::get($uac);
+        //Check if all authentication token are inactive for that user
+        $this->assertSame(2, MfaAuthenticationTokenFactory::count());
+        $this->assertSame(0, MfaAuthenticationTokenFactory::find()->where(['active' => true, 'user_id' => $userA->get('id')])->all()->count());
+    }
+
+    /**
+     * @group mfa
+     * @group mfaAccountSettings
+     */
+    public function testMfaAccountSettings_DisablingOneProviderCleansAllAssociatedData()
+    {
+        // Enable two providers
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
+        MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_DUO);
+        MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_YUBIKEY, [
+            MfaAccountSettings::YUBIKEY_ID => 'yubikey_id',
+        ]);
+        // Make two authentication tokens
+        $this->mockMfaCookieValid($uac, MfaSettings::PROVIDER_DUO);
+        $this->mockMfaCookieValid($uac, MfaSettings::PROVIDER_YUBIKEY);
+
+        $settings = MfaAccountSettings::get($uac);
+        $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_DUO));
+        $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_YUBIKEY));
+
+        // Disable one, check there is one provider left
+        $settings->disableProvider(MfaSettings::PROVIDER_DUO);
+        $this->assertFalse($settings->isProviderReady(MfaSettings::PROVIDER_DUO));
+        $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_YUBIKEY));
+        //Check if the authentication token was set as inactive for that user
+        $this->assertMfaTokenIsInactive($uac, MfaSettings::PROVIDER_DUO);
+        $this->assertSame(2, MfaAuthenticationTokenFactory::count());
+        $this->assertSame(1, MfaAuthenticationTokenFactory::find()->where(['active' => true, 'user_id' => $userA->get('id')])->all()->count());
     }
 }

@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\Lib;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAccountSettingFactory;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 trait MfaAccountSettingsTestTrait
@@ -39,5 +40,15 @@ trait MfaAccountSettingsTestTrait
         /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */
         $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
         $AccountSettings->createOrUpdateSetting($userId, MfaSettings::MFA, $data);
+    }
+
+    /**
+     * @return array
+     */
+    public function getMfaAccountSettingValue(): array
+    {
+        $accountSettingsValue = MfaAccountSettingFactory::findValue('mfa');
+
+        return json_decode($accountSettingsValue, true);
     }
 }
