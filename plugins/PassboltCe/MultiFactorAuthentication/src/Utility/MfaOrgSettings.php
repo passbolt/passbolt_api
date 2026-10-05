@@ -23,6 +23,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
+use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsDuoService;
 
@@ -305,8 +306,18 @@ class MfaOrgSettings
                     }
                     break;
                 case MfaSettings::PROVIDER_TOTP:
+                    break;
                 case MfaSettings::PROVIDER_WEBAUTHN:
-                    // Nothing else to validate — no org-side secrets.
+                    $host = parse_url((string)Configure::read('App.fullBaseUrl'), PHP_URL_HOST);
+                    if (!is_string($host) || $host === '') {
+                        $errors[$provider]['fullBaseUrlInvalid'] = __(
+                            'Passkeys require a valid full base URL to be configured.',
+                        );
+                    } elseif (Validation::ip(trim($host, '[]'))) {
+                        $errors[$provider]['fullBaseUrlIsIpAddress'] = __(
+                            'Passkeys require Passbolt to be reached through a domain name, not an IP address.',
+                        );
+                    }
                     break;
                 default:
                     $errors[$provider]['invalidProvider'] = __('Unknown MFA provider: {0}.', $provider);

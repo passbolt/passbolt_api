@@ -48,8 +48,6 @@ class MfaWebauthnStartRegistrationService
      */
     public function start(UserAccessControl $uac): array
     {
-        $this->rp->assertRpIdIsNotIpAddress();
-
         /** @var \Passbolt\MultiFactorAuthentication\Model\Table\MfaWebauthnCredentialsTable $credentials */
         $credentials = $this->fetchTable('Passbolt/MultiFactorAuthentication.MfaWebauthnCredentials');
 

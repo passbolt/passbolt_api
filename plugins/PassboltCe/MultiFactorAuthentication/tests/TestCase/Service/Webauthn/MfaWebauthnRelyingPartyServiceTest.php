@@ -61,20 +61,19 @@ class MfaWebauthnRelyingPartyServiceTest extends TestCase
     /**
      * @dataProvider ipAddressFullBaseUrlProvider
      */
-    public function testMfaWebauthnRelyingPartyService_AssertRpIdIsNotIp_IpAddress_Throws(string $fullBaseUrl): void
+    public function testMfaWebauthnRelyingPartyService_GetRpId_IpAddress_Throws(string $fullBaseUrl): void
     {
         Configure::write('App.fullBaseUrl', $fullBaseUrl);
         $this->expectException(WebauthnRelyingPartyIdInvalidException::class);
         $this->expectExceptionMessage(
             'Passkeys require Passbolt to be reached through a domain name, not an IP address.',
         );
-        $this->make()->assertRpIdIsNotIpAddress();
+        $this->make()->getRpId();
     }
 
-    public function testMfaWebauthnRelyingPartyService_AssertRpIdIsNotIp_DomainWithDigits_Accepted(): void
+    public function testMfaWebauthnRelyingPartyService_GetRpId_DomainWithDigits_Accepted(): void
     {
         Configure::write('App.fullBaseUrl', 'https://10.example.com');
-        $this->make()->assertRpIdIsNotIpAddress();
         $this->assertSame('10.example.com', $this->make()->getRpId());
     }
 
