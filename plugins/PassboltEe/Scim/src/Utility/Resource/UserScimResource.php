@@ -37,6 +37,7 @@ use Passbolt\Scim\Exception\ConflictException;
 use Passbolt\Scim\Exception\NotSupportedException;
 use Passbolt\Scim\Exception\ResourceNotFoundException;
 use Passbolt\Scim\Exception\ScimException;
+use Passbolt\Scim\Exception\ScimTooManyRequestsException;
 use Passbolt\Scim\Log\ScimLog;
 use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Model\Table\ScimEntriesTable;
@@ -268,7 +269,8 @@ class UserScimResource implements ScimResourceInterface
 
     /**
      * @return \App\Model\Entity\User
-     * @throws \PDOException When the database reports an error on the last attempt.
+     * @throws \PDOException When the database reports an error that is not a deadlock.
+     * @throws \Passbolt\Scim\Exception\ScimTooManyRequestsException When every attempt deadlocked.
      * @throws \Random\RandomException When the system has no source of randomness.
      */
     private function createUser(): User
@@ -283,9 +285,21 @@ class UserScimResource implements ScimResourceInterface
             try {
                 return $this->createUserInTransaction();
             } catch (PDOException $exception) {
-                $isLastAttempt = $attempt >= $maxAttemptsAllowed;
-                if ($isLastAttempt || !$this->isDeadlockException($exception)) {
+                if (!$this->isDeadlockException($exception)) {
                     throw $exception;
+                }
+
+                if ($attempt >= $maxAttemptsAllowed) {
+                    ScimLog::error(sprintf(
+                        'The SCIM user creation stopped after %d database deadlocks.',
+                        $maxAttemptsAllowed,
+                    ));
+
+                    throw new ScimTooManyRequestsException(
+                        __('The server is busy, please try after some time.'),
+                        1,
+                        $exception,
+                    );
                 }
 
                 ScimLog::error(sprintf(
