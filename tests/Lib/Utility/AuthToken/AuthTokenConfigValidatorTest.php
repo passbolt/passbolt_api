@@ -82,6 +82,7 @@ class AuthTokenConfigValidatorTest extends TestCase
             ['1 minute'],
             ['10 seconds'],
             ['1 second'],
+            ['5 minutes'],
         ];
     }
 }
