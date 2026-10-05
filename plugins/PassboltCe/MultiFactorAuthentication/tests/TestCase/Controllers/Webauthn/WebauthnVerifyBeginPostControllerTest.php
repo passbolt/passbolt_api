@@ -26,6 +26,12 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class WebauthnVerifyBeginPostControllerTest extends MfaIntegrationTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        Configure::write('App.fullBaseUrl', 'https://passbolt.example.com');
+    }
+
     public function testWebauthnVerifyBeginPostController_NotAuthenticated(): void
     {
         $this->postJson('/mfa/verify/webauthn/begin.json?api-version=v2', []);

@@ -32,6 +32,12 @@ use Passbolt\MultiFactorAuthentication\Test\Scenario\Webauthn\MfaWebauthnScenari
  */
 class WebauthnDelegatedBeginPostControllerTest extends MfaIntegrationTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        Configure::write('App.fullBaseUrl', 'https://passbolt.example.com');
+    }
+
     public function testWebauthnDelegatedBeginPostController_Success(): void
     {
         $user = $this->persistUserWithCredential();
