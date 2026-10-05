@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Service\Webauthn;
 
+use App\Error\Exception\WebauthnRelyingPartyIdInvalidException;
 use Cake\Core\Configure;
 use Cose\Algorithm\Manager as CoseManager;
 use Cose\Algorithm\Signature\ECDSA\ES256;
@@ -76,6 +77,22 @@ abstract class WebauthnRelyingPartyService
         }
 
         return $host;
+    }
+
+    /**
+     * WebAuthn only accepts a domain as relying party id, a ceremony must not begin on an IP address.
+     *
+     * @return void
+     * @throws \App\Error\Exception\WebauthnRelyingPartyIdInvalidException if the rp id is an IP address
+     */
+    public function assertRpIdIsNotIpAddress(): void
+    {
+        // parse_url keeps the IPv6 brackets.
+        if (filter_var(trim($this->getRpId(), '[]'), FILTER_VALIDATE_IP) !== false) {
+            throw new WebauthnRelyingPartyIdInvalidException(
+                __('Passkeys require Passbolt to be reached through a domain name, not an IP address.'),
+            );
+        }
     }
 
     /**

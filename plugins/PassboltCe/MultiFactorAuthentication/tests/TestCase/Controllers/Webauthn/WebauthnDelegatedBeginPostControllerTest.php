@@ -21,6 +21,7 @@ use App\Model\Entity\User;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\I18n\DateTime;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\Delegated\MfaWebauthnDelegatedStateService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
@@ -69,6 +70,21 @@ class WebauthnDelegatedBeginPostControllerTest extends MfaIntegrationTestCase
             ->where(['token' => $this->getResponseBodyAsArray()['handle']])
             ->firstOrFail();
         $this->assertSame($owner->id, $handle->user_id);
+    }
+
+    public function testWebauthnDelegatedBeginPostController_Error_FullBaseUrlIsIpAddress(): void
+    {
+        Configure::write('App.fullBaseUrl', 'https://192.168.1.10');
+        $user = $this->persistUserWithCredential();
+        $state = $this->persistState($user);
+
+        $this->postJson('/mfa/verify/webauthn/delegated/begin.json', ['mfa_delegated_state' => $state]);
+
+        $this->assertBadRequestError(
+            'Passkeys require Passbolt to be reached through a domain name, not an IP address.',
+        );
+        $tokens = AuthenticationTokenFactory::find()->where(['type' => AuthenticationToken::TYPE_MFA_VERIFY]);
+        $this->assertSame(0, $tokens->count());
     }
 
     public function testWebauthnDelegatedBeginPostController_Error_MissingState(): void

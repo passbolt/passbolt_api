@@ -18,6 +18,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Webauthn;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
+use Cake\Core\Configure;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Webauthn\MfaWebauthnOrganizationOnlyScenario;
 
@@ -47,6 +48,20 @@ class WebauthnSetupBeginPostControllerTest extends MfaIntegrationTestCase
         $this->postJson('/mfa/setup/webauthn/begin.json?api-version=v2', []);
         $this->assertResponseError();
         $this->assertResponseContains('not enabled for your organization');
+    }
+
+    public function testWebauthnSetupBeginPostController_Error_FullBaseUrlIsIpAddress(): void
+    {
+        Configure::write('App.fullBaseUrl', 'https://192.168.1.10');
+        $this->logInAsUser();
+        $this->loadFixtureScenario(MfaWebauthnOrganizationOnlyScenario::class);
+
+        $this->postJson('/mfa/setup/webauthn/begin.json?api-version=v2', []);
+        $this->assertBadRequestError(
+            'Passkeys require Passbolt to be reached through a domain name, not an IP address.',
+        );
+        $tokens = AuthenticationTokenFactory::find()->where(['type' => AuthenticationToken::TYPE_MFA_SETUP]);
+        $this->assertSame(0, $tokens->count());
     }
 
     public function testWebauthnSetupBeginPostController_Success_PersistsHandleAndReturnsOptions(): void

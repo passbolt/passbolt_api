@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Service\Webauthn;
 
+use App\Error\Exception\WebauthnRelyingPartyIdInvalidException;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultMfaWebauthnPolicyService;
@@ -45,6 +46,36 @@ class MfaWebauthnRelyingPartyServiceTest extends TestCase
         Configure::write('App.fullBaseUrl', '');
         $this->expectException(RuntimeException::class);
         $this->make()->getRpId();
+    }
+
+    public static function ipAddressFullBaseUrlProvider(): array
+    {
+        return [
+            ['https://192.168.1.10'],
+            ['https://192.168.1.10:8443/subpath'],
+            ['https://[::1]'],
+            ['https://[2001:db8::1]:8443'],
+        ];
+    }
+
+    /**
+     * @dataProvider ipAddressFullBaseUrlProvider
+     */
+    public function testMfaWebauthnRelyingPartyService_AssertRpIdIsNotIp_IpAddress_Throws(string $fullBaseUrl): void
+    {
+        Configure::write('App.fullBaseUrl', $fullBaseUrl);
+        $this->expectException(WebauthnRelyingPartyIdInvalidException::class);
+        $this->expectExceptionMessage(
+            'Passkeys require Passbolt to be reached through a domain name, not an IP address.',
+        );
+        $this->make()->assertRpIdIsNotIpAddress();
+    }
+
+    public function testMfaWebauthnRelyingPartyService_AssertRpIdIsNotIp_DomainWithDigits_Accepted(): void
+    {
+        Configure::write('App.fullBaseUrl', 'https://10.example.com');
+        $this->make()->assertRpIdIsNotIpAddress();
+        $this->assertSame('10.example.com', $this->make()->getRpId());
     }
 
     public function testMfaWebauthnRelyingPartyService_RpName_FromMetaTitle_FallsBackToPassbolt(): void
