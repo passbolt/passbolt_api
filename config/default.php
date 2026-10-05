@@ -73,6 +73,12 @@ return [
                 AuthenticationToken::TYPE_VERIFY_TOKEN => [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_JWT_VERIFY_TOKEN', '1 hour'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
+                AuthenticationToken::TYPE_MFA_SETUP => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_TOKEN_MFA_SETUP_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
+                AuthenticationToken::TYPE_MFA_VERIFY => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_TOKEN_MFA_VERIFY_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
             ],
         ],
 
