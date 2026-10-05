@@ -120,7 +120,10 @@ class ScimAddControllerTest extends ScimApiIntegrationTestCase
         $this->configScimAuth();
         $this->post($this->getScimEndpoint('Users'), $this->getUserPostData(self::USER_1_SCIM_NAME));
 
-        $this->assertResponseCode(500);
+        $this->assertResponseCode(429);
+        $this->assertHeader('Retry-After', '1');
+        $this->assertResponseContains('"status": 429');
+        $this->assertResponseContains('The server is busy, please try after some time.');
         $this->assertSame(3, $connection->transactions);
         $this->assertSame(0, UserFactory::find()->where(['username' => self::USER_1_EMAIL])->count());
     }
