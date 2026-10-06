@@ -89,6 +89,10 @@ class WebauthnDelegatedBeginPostControllerTest extends MfaIntegrationTestCase
         $this->assertBadRequestError(
             'Passkeys require Passbolt to be reached through a domain name, not an IP address.',
         );
+        $this->assertSame(
+            'Passkeys require Passbolt to be reached through a domain name, not an IP address.',
+            $this->getResponseBodyAsArray()['error']['invalidDomain'] ?? null,
+        );
         $tokens = AuthenticationTokenFactory::find()->where(['type' => AuthenticationToken::TYPE_MFA_VERIFY]);
         $this->assertSame(0, $tokens->count());
     }
@@ -97,12 +101,20 @@ class WebauthnDelegatedBeginPostControllerTest extends MfaIntegrationTestCase
     {
         $this->postJson('/mfa/verify/webauthn/delegated/begin.json');
         $this->assertBadRequestError('A delegated state is required.');
+        $this->assertSame(
+            'A delegated state is required.',
+            $this->getResponseBodyAsArray()['error']['missingDelegatedState'] ?? null,
+        );
     }
 
     public function testWebauthnDelegatedBeginPostController_Error_UnknownState(): void
     {
         $this->postJson('/mfa/verify/webauthn/delegated/begin.json', ['mfa_delegated_state' => UuidFactory::uuid()]);
         $this->assertBadRequestError('The delegated state is not valid.');
+        $this->assertSame(
+            'The delegated state is not valid.',
+            $this->getResponseBodyAsArray()['error']['invalidDelegatedState'] ?? null,
+        );
     }
 
     public function testWebauthnDelegatedBeginPostController_Error_ExpiredState(): void

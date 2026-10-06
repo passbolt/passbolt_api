@@ -16,11 +16,17 @@ declare(strict_types=1);
  */
 namespace App\Error\Exception;
 
-use Cake\Http\Exception\BadRequestException;
-
-/**
- * Exception raised when the relying party id cannot be used for a WebAuthn ceremony.
- */
-class WebauthnRelyingPartyIdInvalidException extends BadRequestException
+class WebauthnRelyingPartyIdInvalidException extends CustomValidationException
 {
+    public const ERROR_KEY = 'invalidDomain';
+
+    /**
+     * @param string $message Human-readable error message.
+     * @param array|null $errors Validation errors. Defaults to `['error' => ['invalidDomain' => $message]]`
+     *                           so the standard Passbolt error envelope carries the specific key.
+     */
+    public function __construct(string $message, ?array $errors = null)
+    {
+        parent::__construct($message, $errors ?? ['error' => [self::ERROR_KEY => $message]]);
+    }
 }

@@ -16,10 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Authenticator;
 
+use App\Error\Exception\WebauthnDelegatedStateInvalidException;
 use Authentication\AuthenticationService;
 use Authentication\Authenticator\Result;
 use Authentication\Authenticator\ResultInterface;
-use Cake\Http\Exception\BadRequestException;
 use Psr\Http\Message\ServerRequestInterface;
 
 class MfaWebauthnDelegatedAuthenticationService extends AuthenticationService
@@ -35,10 +35,15 @@ class MfaWebauthnDelegatedAuthenticationService extends AuthenticationService
         $result = parent::authenticate($request);
         if (!$result->isValid()) {
             if ($result->getStatus() === Result::FAILURE_CREDENTIALS_MISSING) {
-                throw new BadRequestException(__('A delegated state is required.'));
+                throw new WebauthnDelegatedStateInvalidException(
+                    __('A delegated state is required.'),
+                    WebauthnDelegatedStateInvalidException::ERROR_KEY_MISSING,
+                );
             }
-            // A generic error message
-            throw new BadRequestException(__('The delegated state is not valid.'));
+            throw new WebauthnDelegatedStateInvalidException(
+                __('The delegated state is not valid.'),
+                WebauthnDelegatedStateInvalidException::ERROR_KEY_INVALID,
+            );
         }
 
         return $result;

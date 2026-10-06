@@ -66,6 +66,10 @@ class WebauthnSetupBeginPostControllerTest extends MfaIntegrationTestCase
         $this->assertBadRequestError(
             'Passkeys require Passbolt to be reached through a domain name, not an IP address.',
         );
+        $this->assertSame(
+            'Passkeys require Passbolt to be reached through a domain name, not an IP address.',
+            $this->getResponseBodyAsArray()['error']['invalidDomain'] ?? null,
+        );
         $tokens = AuthenticationTokenFactory::find()->where(['type' => AuthenticationToken::TYPE_MFA_SETUP]);
         $this->assertSame(0, $tokens->count());
     }
