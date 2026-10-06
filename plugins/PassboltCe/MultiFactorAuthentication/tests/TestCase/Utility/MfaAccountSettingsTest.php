@@ -24,14 +24,19 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
+use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaWebauthnCredentialFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Webauthn\MfaWebauthnScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOtpFactory;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaAccountSettingsTest extends MfaIntegrationTestCase
 {
+    use ScenarioAwareTrait;
+
     /**
      * @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable
      */
@@ -412,5 +417,25 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
         $this->assertMfaTokenIsInactive($uac, MfaSettings::PROVIDER_DUO);
         $this->assertSame(2, MfaAuthenticationTokenFactory::count());
         $this->assertSame(1, MfaAuthenticationTokenFactory::find()->where(['active' => true, 'user_id' => $userA->get('id')])->all()->count());
+    }
+
+    /**
+     * @group mfa
+     * @group mfaAccountSettings
+     */
+    public function testMfaAccountSettings_DisableProvider_Webauthn_DeletesUsersCredentials(): void
+    {
+        /** @var \App\Model\Entity\User $victim */
+        [$victim] = $this->loadFixtureScenario(MfaWebauthnScenario::class);
+        /** @var \App\Model\Entity\User $other */
+        $other = UserFactory::make()->user()->persist();
+        MfaWebauthnCredentialFactory::make()->withUser($other)->persist();
+
+        MfaAccountSettings::get($this->makeUac($victim))->disableProvider(MfaSettings::PROVIDER_WEBAUTHN);
+
+        /** @var \Passbolt\MultiFactorAuthentication\Model\Table\MfaWebauthnCredentialsTable $credentials */
+        $credentials = $this->fetchTable('Passbolt/MultiFactorAuthentication.MfaWebauthnCredentials');
+        $this->assertSame(0, $credentials->countForUser($victim->id));
+        $this->assertSame(1, $credentials->countForUser($other->id));
     }
 }

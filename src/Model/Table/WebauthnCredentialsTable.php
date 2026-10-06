@@ -309,4 +309,12 @@ abstract class WebauthnCredentialsTable extends Table
             $this->aliasField('type') => $this->getType(),
         ]);
     }
+
+    /**
+     * @return int
+     */
+    public function deleteAllForType(): int
+    {
+        return $this->deleteAll([$this->aliasField('type') => $this->getType()]);
+    }
 }

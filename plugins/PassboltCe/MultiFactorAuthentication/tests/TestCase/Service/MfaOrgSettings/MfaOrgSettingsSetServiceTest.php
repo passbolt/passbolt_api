@@ -20,10 +20,12 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Service\MfaOrgSetting
 use App\Model\Entity\Role;
 use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsSetService;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaWebauthnCredentialFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaOrgSettingsTestTrait;
 use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -148,5 +150,23 @@ class MfaOrgSettingsSetServiceTest extends TestCase
         $expectedReturnedSettings = ['yubikey'];
 
         $this->assertEqualsCanonicalizing($expectedReturnedSettings, $returnedSettings['providers']);
+    }
+
+    public function testMfaOrgSettingsSetService_CleanupAllProviders_DeletesEveryMfaWebauthnCredential(): void
+    {
+        /** @var \App\Model\Entity\User $userA */
+        $userA = UserFactory::make()->user()->persist();
+        /** @var \App\Model\Entity\User $userB */
+        $userB = UserFactory::make()->user()->persist();
+        MfaWebauthnCredentialFactory::make(2)->withUser($userA)->persist();
+        MfaWebauthnCredentialFactory::make(1)->withUser($userB)->persist();
+
+        (new MfaOrgSettingsSetService())->cleanupAllProviders();
+
+        /** @var \Passbolt\MultiFactorAuthentication\Model\Table\MfaWebauthnCredentialsTable $credentials */
+        $credentials = TableRegistry::getTableLocator()
+            ->get('Passbolt/MultiFactorAuthentication.MfaWebauthnCredentials');
+        $this->assertSame(0, $credentials->countForUser($userA->id));
+        $this->assertSame(0, $credentials->countForUser($userB->id));
     }
 }
