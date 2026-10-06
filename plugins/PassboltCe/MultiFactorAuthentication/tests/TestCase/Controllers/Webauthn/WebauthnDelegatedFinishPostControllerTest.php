@@ -86,6 +86,10 @@ class WebauthnDelegatedFinishPostControllerTest extends MfaIntegrationTestCase
         ]);
 
         $this->assertBadRequestError('A delegated state is required.');
+        $this->assertSame(
+            'A delegated state is required.',
+            $this->getResponseBodyAsArray()['error']['missingDelegatedState'] ?? null,
+        );
     }
 
     public function testWebauthnDelegatedFinishPostController_Error_UnknownState(): void
@@ -93,6 +97,10 @@ class WebauthnDelegatedFinishPostControllerTest extends MfaIntegrationTestCase
         $this->postJson('/mfa/verify/webauthn/delegated/finish.json', $this->validPayload(UuidFactory::uuid()));
 
         $this->assertBadRequestError('The delegated state is not valid.');
+        $this->assertSame(
+            'The delegated state is not valid.',
+            $this->getResponseBodyAsArray()['error']['invalidDelegatedState'] ?? null,
+        );
     }
 
     public function testWebauthnDelegatedFinishPostController_Error_MissingCredential(): void
