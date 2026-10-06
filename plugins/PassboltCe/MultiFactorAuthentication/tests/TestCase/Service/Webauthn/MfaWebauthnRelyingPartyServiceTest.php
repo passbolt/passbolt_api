@@ -16,12 +16,12 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Service\Webauthn;
 
+use App\Error\Exception\WebauthnRelyingPartyIdInvalidException;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultMfaWebauthnPolicyService;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\MfaWebauthnPolicyInterface;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnRelyingPartyService;
-use RuntimeException;
 
 /**
  * @covers \App\Service\Webauthn\WebauthnRelyingPartyService
@@ -43,7 +43,7 @@ class MfaWebauthnRelyingPartyServiceTest extends TestCase
     public function testMfaWebauthnRelyingPartyService_RpId_Missing_Throws(): void
     {
         Configure::write('App.fullBaseUrl', '');
-        $this->expectException(RuntimeException::class);
+        $this->expectException(WebauthnRelyingPartyIdInvalidException::class);
         $this->make()->getRpId();
     }
 
