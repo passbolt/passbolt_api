@@ -544,6 +544,9 @@ class UsersTable extends Table implements TableCleanupProviderInterface
         // Mark gpg ke as deleted
         $this->Gpgkeys->updateAll(['deleted' => true], ['user_id' => $user->id]);
 
+        // Set authentication tokens as inactive
+        $this->AuthenticationTokens->updateAll(['active' => false], ['user_id' => $user->id, 'active' => true]);
+
         // Mark scim_entry as deleted
         if ($this->hasAssociation('ScimEntries')) {
             $this->ScimEntries->updateAll(['deleted' => date('Y-m-d H:s:i')], [

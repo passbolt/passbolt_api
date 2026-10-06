@@ -84,4 +84,58 @@ class GenerateTest extends AppTestCase
         $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
         $this->assertAuthTokenAttributes($token);
     }
+
+    public function testAuthenticationTokensGenerate_ConcurrentTwoEnforcedMfaVerifyTypeAndJustOneIsActive()
+    {
+        $user = UserFactory::make()->inactive()->persist();
+        $tokenOne = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_MFA_VERIFY);
+        $tokenTwo = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_MFA_VERIFY);
+
+        $this->assertFalse($this->AuthenticationTokens->get($tokenOne->id)->active);
+        $this->assertTrue($this->AuthenticationTokens->get($tokenTwo->id)->active);
+
+        $loser = $this->AuthenticationTokens->setInactive($tokenOne->token);
+        $winner = $this->AuthenticationTokens->setInactive($tokenTwo->token);
+
+        $this->assertFalse($loser);
+        $this->assertTrue($winner);
+    }
+
+    public function testAuthenticationTokensGenerate_TwoEnforcedMfaSetupTypeAndJustOneIsActive()
+    {
+        $user = UserFactory::make()->inactive()->persist();
+        $tokenOne = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_MFA_SETUP);
+        $tokenTwo = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_MFA_SETUP);
+
+        $this->assertFalse($this->AuthenticationTokens->get($tokenOne->id)->active);
+        $this->assertTrue($this->AuthenticationTokens->get($tokenTwo->id)->active);
+    }
+
+    public function testAuthenticationTokensGenerate_TwoDifferentEnforcedMfaTypesAndBothAreActive()
+    {
+        $user = UserFactory::make()->inactive()->persist();
+        $tokenOne = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_MFA_VERIFY);
+        $tokenTwo = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_MFA_SETUP);
+
+        $this->assertTrue($this->AuthenticationTokens->get($tokenOne->id)->active);
+        $this->assertTrue($this->AuthenticationTokens->get($tokenTwo->id)->active);
+    }
+
+    public function testAuthenticationTokensGenerate_TwoNotEnforcedTypesAndBothAreActive()
+    {
+        $user = UserFactory::make()->inactive()->persist();
+        $tokenOne = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
+        $tokenTwo = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
+
+        $this->assertTrue($this->AuthenticationTokens->get($tokenOne->id)->active);
+        $this->assertTrue($this->AuthenticationTokens->get($tokenTwo->id)->active);
+    }
+
+    public function testAuthenticationTokensGenerate_Error_WrongType()
+    {
+        $user = UserFactory::make()->inactive()->persist();
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('It is not possible to create an authentication token for this user.');
+        $this->AuthenticationTokens->generate($user->id, 'foo');
+    }
 }

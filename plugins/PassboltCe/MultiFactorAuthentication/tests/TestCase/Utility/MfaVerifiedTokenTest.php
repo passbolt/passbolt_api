@@ -27,6 +27,7 @@ use Cake\I18n\Date;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
@@ -36,6 +37,8 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
 class MfaVerifiedTokenTest extends MfaIntegrationTestCase
 {
+    use TruncateDirtyTables;
+
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
@@ -425,6 +428,50 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
             ->all()
             ->count();
         $this->assertEquals($tokensCount, 0);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerifiedToken
+     */
+    public function testMfaVerifiedTokenSetAllInactive_ByProvider()
+    {
+        $uac = UserFactory::make()->user()->persistedUAC();
+        $sessionId = uniqid();
+        MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, $sessionId);
+        MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_YUBIKEY, $sessionId);
+        MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_DUO, $sessionId);
+
+        MfaVerifiedToken::setAllInactiveByProvider($uac, MfaSettings::PROVIDER_TOTP);
+
+        $this->assertEquals(2, AuthenticationTokenFactory::find()
+            ->where([['user_id' => $uac->getId(), 'type' => MfaSettings::MFA, 'active' => true]])->all()->count());
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerifiedToken
+     */
+    public function testMfaVerifiedTokenSetAllInactive_ByProviderAndProviderKeyIsNotPresent()
+    {
+        $uac = UserFactory::make()->user()->persistedUAC();
+        $sessionId = uniqid();
+        AuthenticationTokenFactory::make()
+            ->data(['foo' => 'bar'])
+            ->userId($uac->getId())
+            ->type(MfaSettings::MFA)
+            ->active()
+            ->persist();
+        MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_YUBIKEY, $sessionId);
+        MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_DUO, $sessionId);
+
+        $this->assertEquals(3, AuthenticationTokenFactory::find()
+            ->where([['user_id' => $uac->getId(), 'type' => MfaSettings::MFA, 'active' => true]])->all()->count());
+
+        MfaVerifiedToken::setAllInactiveByProvider($uac, MfaSettings::PROVIDER_TOTP);
+
+        $this->assertEquals(3, AuthenticationTokenFactory::find()
+            ->where([['user_id' => $uac->getId(), 'type' => MfaSettings::MFA, 'active' => true]])->all()->count());
     }
 
     private function persistRememberMeMfaToken(string $userId): AuthenticationToken

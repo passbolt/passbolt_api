@@ -37,6 +37,7 @@ use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaWebauthnDelegatedAuthDetectionMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaWebauthnDelegatedReferrerPolicyMiddleware;
 use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
+use Passbolt\MultiFactorAuthentication\Notification\NotificationSettings\MfaNotificationSettingsDefinition;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultMfaWebauthnPolicyService;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultRememberAMonthSettingService;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\MfaWebauthnPolicyInterface;
@@ -94,7 +95,8 @@ class MultiFactorAuthenticationPlugin extends BasePlugin
             // Decorate the users grid and add the column "is_mfa_enabled"
             ->on(new AddIsMfaEnabledColumnToUsersGrid()) // decorate the query to add the new property on the User entity
             ->on(new MfaRedactorPool()) // Register email redactors
-            ->on(new ClearMfaCookieOnSetupAndRecover()); // Some end points should have a cleared MFA
+            ->on(new ClearMfaCookieOnSetupAndRecover()) // Some end points should have a cleared MFA
+            ->on(new MfaNotificationSettingsDefinition()); // Add email notification settings definition
 
         if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
             // If a JWT login or refresh token is successful, and a valid MFA cookie was sent, pass it to the response

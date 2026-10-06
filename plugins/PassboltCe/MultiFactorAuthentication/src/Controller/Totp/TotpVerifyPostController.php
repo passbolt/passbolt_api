@@ -20,9 +20,12 @@ use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\CustomValidationException;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
+use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
+use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenLogoutService;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
+use Passbolt\MultiFactorAuthentication\Service\MfaRateLimitDisableUserService;
 use Passbolt\MultiFactorAuthentication\Service\MfaRateLimiterService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
@@ -92,7 +95,6 @@ class TotpVerifyPostController extends MfaVerifyController
 
         $isFailedAttemptExceeded = (new MfaRateLimiterService())->isFailedAttemptsExceeded(
             $this->User->id(),
-            $isJwtAuth,
             true, // Consider this as a failed attempt too.
         );
 
@@ -100,12 +102,24 @@ class TotpVerifyPostController extends MfaVerifyController
             return null;
         }
 
-        if (!$this->request->is('json')) {
-            // Logout and redirect
-            return $this->redirect($this->Authentication->logout());
+        $userId = $this->User->id();
+
+        if ($this->request->is('json') && $isJwtAuth) {
+            (new RefreshTokenLogoutService())->logout($userId, $this->getRequest());
+            $cookiesCollection = $this->getResponse()->getCookieCollection()->remove(
+                RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE,
+            );
+            $this->setResponse($this->getResponse()->withCookieCollection($cookiesCollection));
         }
 
-        $this->_logoutOnMfaFailure();
+        $logoutRedirect = $this->Authentication->logout();
+
+        // Disable user after failed attempts exceeds
+        (new MfaRateLimitDisableUserService())->disable($userId);
+
+        if (!$this->request->is('json')) {
+            return $this->redirect($logoutRedirect);
+        }
 
         throw new BadRequestException(__('You have been logged out due to too many failed attempts.'));
     }

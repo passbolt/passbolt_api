@@ -49,10 +49,104 @@ class MfaOrgSettingsSetServiceTest extends TestCase
         $service = new MfaOrgSettingsSetService();
         $returnedSettings = $service->setOrgSettings($data, $uac, $duoSdkClientMock);
 
-        // Reshape providers, as it is saved in a different format
-        $data['providers'] = ['totp', 'duo', 'yubikey'];
+        $expectedReturnedSettings = ['totp', 'duo', 'yubikey'];
 
-        $this->assertEquals($data, $returnedSettings);
-        $this->assertSame($data, $this->getMfaOrganizationSettingValue());
+        $this->assertEqualsCanonicalizing($expectedReturnedSettings, $returnedSettings['providers']);
+    }
+
+    public function testMfaOrgSettingsSetService_Valid_NoProvidersDisabled()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $uac = new UserAccessControl(Role::ADMIN, $user->id);
+        $data = $this->getDefaultMfaOrgSettings();
+
+        $duoSdkClientMock = DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
+        $service = new MfaOrgSettingsSetService();
+        $returnedSettings = $service->setOrgSettings($data, $uac, $duoSdkClientMock);
+
+        $expectedReturnedSettings = ['totp', 'duo', 'yubikey'];
+
+        $this->assertEqualsCanonicalizing($expectedReturnedSettings, $returnedSettings['providers']);
+    }
+
+    public function testMfaOrgSettingsSetService_Valid_OneProviderDisabled()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $uac = new UserAccessControl(Role::ADMIN, $user->id);
+
+        $config['providers'] = [MfaSettings::PROVIDER_TOTP => true, MfaSettings::PROVIDER_DUO => true];
+        $this->mockMfaOrgSettings($config, 'database', $uac);
+        $data = $this->getDefaultMfaOrgSettings();
+
+        // Remove totp
+        $data[MfaSettings::PROVIDERS] = array_merge($data[MfaSettings::PROVIDERS], [MfaSettings::PROVIDER_TOTP => false]);
+
+        $duoSdkClientMock = DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
+        $service = new MfaOrgSettingsSetService();
+        $returnedSettings = $service->setOrgSettings($data, $uac, $duoSdkClientMock);
+
+        $expectedReturnedSettings = ['duo', 'yubikey'];
+
+        $this->assertEqualsCanonicalizing($expectedReturnedSettings, $returnedSettings['providers']);
+    }
+
+    public function testMfaOrgSettingsSetService_Valid_AllProvidersDisabled()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $uac = new UserAccessControl(Role::ADMIN, $user->id);
+
+        $config['providers'] = [MfaSettings::PROVIDER_TOTP => true, MfaSettings::PROVIDER_DUO => true];
+        $this->mockMfaOrgSettings($config, 'database', $uac);
+        $data = $this->getDefaultMfaOrgSettings();
+
+        // Remove totp and duo
+        $data[MfaSettings::PROVIDERS] = array_merge(
+            $data[MfaSettings::PROVIDERS],
+            [
+                MfaSettings::PROVIDER_TOTP => false,
+                MfaSettings::PROVIDER_DUO => false,
+            ],
+        );
+        unset($data[MfaSettings::PROVIDER_DUO]);
+
+        $duoSdkClientMock = DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
+        $service = new MfaOrgSettingsSetService();
+        $returnedSettings = $service->setOrgSettings($data, $uac, $duoSdkClientMock);
+
+        $expectedReturnedSettings = ['yubikey'];
+
+        $this->assertEqualsCanonicalizing($expectedReturnedSettings, $returnedSettings['providers']);
+    }
+
+    public function testMfaOrgSettingsSetService_Valid_MultipleProvidersDisabled()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->persist();
+        $uac = new UserAccessControl(Role::ADMIN, $user->id);
+
+        $config['providers'] = [MfaSettings::PROVIDER_TOTP => true, MfaSettings::PROVIDER_DUO => true, MfaSettings::PROVIDER_YUBIKEY => true];
+        $this->mockMfaOrgSettings($config, 'database', $uac);
+        $data = $this->getDefaultMfaOrgSettings();
+
+        // Remove totp and duo
+        $data[MfaSettings::PROVIDERS] = array_merge(
+            $data[MfaSettings::PROVIDERS],
+            [
+                MfaSettings::PROVIDER_TOTP => false,
+                MfaSettings::PROVIDER_DUO => false,
+            ],
+        );
+        unset($data[MfaSettings::PROVIDER_DUO]);
+
+        $duoSdkClientMock = DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
+        $service = new MfaOrgSettingsSetService();
+        $returnedSettings = $service->setOrgSettings($data, $uac, $duoSdkClientMock);
+
+        $expectedReturnedSettings = ['yubikey'];
+
+        $this->assertEqualsCanonicalizing($expectedReturnedSettings, $returnedSettings['providers']);
     }
 }

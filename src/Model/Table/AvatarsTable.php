@@ -90,6 +90,11 @@ class AvatarsTable extends Table implements TableCleanupProviderInterface
         $validator
             ->requirePresence('file', __('A file is required.'))
             ->allowEmptyString('file', __('The file should not be empty'), false)
+            ->add('file', 'isUploadedFile', [
+                'rule' => fn($value) => $value instanceof UploadedFileInterface,
+                'message' => __('The file should be a valid uploaded file.'),
+                'last' => true,
+            ])
             ->add('file', 'validMimeType', [
                 'rule' => ['mimeType', self::ALLOWED_MIME_TYPES],
                 'message' => __(
@@ -105,7 +110,7 @@ class AvatarsTable extends Table implements TableCleanupProviderInterface
                 ),
             ])
             ->add('file', 'validUploadedFile', [
-                'rule' => ['uploadedFile', ['maxSize' => self::MAX_SIZE]], // Max size in bytes
+                'rule' => ['uploadedFile', ['maxSize' => self::MAX_SIZE]],
                 'message' => __(
                     'The file is not valid, or exceeds max size of {0} bytes.',
                     self::MAX_SIZE,
@@ -278,8 +283,6 @@ class AvatarsTable extends Table implements TableCleanupProviderInterface
             // If the avatar provided is empty, the avatar will not be saved, but we should not
             // block the saving. See UsersTable::editEntity() where an empty Avatar is set per default.
             return true;
-        } elseif (is_array($file)) {
-            $content = file_get_contents($file['tmp_name']);
         } elseif ($file instanceof UploadedFileInterface) {
             try {
                 $content = $file->getStream()->getContents();
