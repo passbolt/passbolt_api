@@ -184,16 +184,10 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
      * @group mfaOrgSettings
      * @group mfaOrgSettingsPost
      */
-
-    /**
-     * @group mfa
-     * @group mfaOrgSettings
-     * @group mfaOrgSettingsPost
-     */
-    public function testMfaOrgSettingsPostController_EnableWebauthn_FailsWhenFullBaseUrlIsIp(): void
+    public function testMfaOrgSettingsPostController_Error_WebauthnFullBaseUrlIsIpAddress(): void
     {
         Configure::write('App.fullBaseUrl', 'https://192.168.1.10');
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
 
         $this->postJson('/mfa/settings.json?api-version=v2', [
             'providers' => [MfaSettings::PROVIDER_WEBAUTHN],
@@ -203,7 +197,7 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
         $result = json_decode($this->_getBodyAsString(), true);
         $this->assertSame(
             'Passkeys require Passbolt to be reached through a domain name, not an IP address.',
-            $result['body'][MfaSettings::PROVIDER_WEBAUTHN]['fullBaseUrlIsIpAddress'],
+            $result['body'][MfaSettings::PROVIDER_WEBAUTHN]['relyingPartyIdInvalid'],
         );
     }
 
@@ -212,10 +206,10 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
      * @group mfaOrgSettings
      * @group mfaOrgSettingsPost
      */
-    public function testMfaOrgSettingsPostController_EnableWebauthn_FailsWhenFullBaseUrlIsNotConfigured(): void
+    public function testMfaOrgSettingsPostController_Error_WebauthnFullBaseUrlIsNotConfigured(): void
     {
         Configure::write('App.fullBaseUrl', '');
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
 
         $this->postJson('/mfa/settings.json?api-version=v2', [
             'providers' => [MfaSettings::PROVIDER_WEBAUTHN],
@@ -225,7 +219,7 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
         $result = json_decode($this->_getBodyAsString(), true);
         $this->assertSame(
             'Passkeys require a valid full base URL to be configured.',
-            $result['body'][MfaSettings::PROVIDER_WEBAUTHN]['fullBaseUrlInvalid'],
+            $result['body'][MfaSettings::PROVIDER_WEBAUTHN]['relyingPartyIdInvalid'],
         );
     }
 

@@ -17,13 +17,14 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
 use App\Error\Exception\CustomValidationException;
+use App\Error\Exception\WebauthnRelyingPartyIdInvalidException;
 use App\Model\Table\OrganizationSettingsTable;
 use App\Utility\UserAccessControl;
+use App\Utility\Webauthn\WebauthnRelyingPartyId;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
-use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsDuoService;
 
@@ -308,15 +309,10 @@ class MfaOrgSettings
                 case MfaSettings::PROVIDER_TOTP:
                     break;
                 case MfaSettings::PROVIDER_WEBAUTHN:
-                    $host = parse_url((string)Configure::read('App.fullBaseUrl'), PHP_URL_HOST);
-                    if (!is_string($host) || $host === '') {
-                        $errors[$provider]['fullBaseUrlInvalid'] = __(
-                            'Passkeys require a valid full base URL to be configured.',
-                        );
-                    } elseif (Validation::ip(trim($host, '[]'))) {
-                        $errors[$provider]['fullBaseUrlIsIpAddress'] = __(
-                            'Passkeys require Passbolt to be reached through a domain name, not an IP address.',
-                        );
+                    try {
+                        WebauthnRelyingPartyId::getOrFail();
+                    } catch (WebauthnRelyingPartyIdInvalidException $exception) {
+                        $errors[$provider]['relyingPartyIdInvalid'] = $exception->getMessage();
                     }
                     break;
                 default:

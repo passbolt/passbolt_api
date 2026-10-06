@@ -16,13 +16,11 @@ declare(strict_types=1);
  */
 namespace App\Service\Webauthn;
 
-use App\Error\Exception\WebauthnRelyingPartyIdInvalidException;
+use App\Utility\Webauthn\WebauthnRelyingPartyId;
 use Cake\Core\Configure;
-use Cake\Validation\Validation;
 use Cose\Algorithm\Manager as CoseManager;
 use Cose\Algorithm\Signature\ECDSA\ES256;
 use Cose\Algorithm\Signature\RSA\RS256;
-use RuntimeException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -69,21 +67,11 @@ abstract class WebauthnRelyingPartyService
 
     /**
      * @return string
-     * @throws \App\Error\Exception\WebauthnRelyingPartyIdInvalidException if the rp id is an IP address
+     * @throws \App\Error\Exception\WebauthnRelyingPartyIdInvalidException if relying party id (host) is invalid
      */
     public function getRpId(): string
     {
-        $host = parse_url((string)Configure::read('App.fullBaseUrl'), PHP_URL_HOST);
-        if (!is_string($host) || $host === '') {
-            throw new RuntimeException('App.fullBaseUrl is not configured or invalid.');
-        }
-        if (Validation::ip(trim($host, '[]'))) {
-            throw new WebauthnRelyingPartyIdInvalidException(
-                __('Passkeys require Passbolt to be reached through a domain name, not an IP address.'),
-            );
-        }
-
-        return $host;
+        return WebauthnRelyingPartyId::getOrFail();
     }
 
     /**

@@ -20,6 +20,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\TestSuite\TestCase;
@@ -61,6 +62,7 @@ class MfaWebauthnVerifyAssertionServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        Configure::write('App.fullBaseUrl', 'https://passbolt.test');
         $this->rp = $this->getMockBuilder(MfaWebauthnRelyingPartyService::class)
             ->setConstructorArgs([new DefaultMfaWebauthnPolicyService()])
             ->onlyMethods(['getSerializer', 'getDenormalizer', 'getAssertionValidator'])
