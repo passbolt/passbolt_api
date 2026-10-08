@@ -17,8 +17,10 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Users;
 
+use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Permission;
 use App\Model\Table\UsersTable;
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
@@ -26,6 +28,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaWebauthnCredentialFactory;
 use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 use RuntimeException;
 
@@ -46,8 +49,41 @@ class SoftDeleteTest extends AppTestCase
     public function testUsersSoftDeleteSuccess_NoOwnerNoResourcesSharedNoGroupsMember_DelUserCase0()
     {
         $userA = UserFactory::make()->user()->persist();
-        $this->assertNotFalse($this->Users->softDelete($userA));
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userA->id);
+    }
+
+    public function testUsersSoftDeleteSuccess_SoftDeleteAuthenticationTokensForASpecificUser()
+    {
+        [$userA, $userB] = UserFactory::make(2)->user()->persist();
+
+        // Tokens for userA
+        AuthenticationTokenFactory::make()->userId($userA->id)->type('mfa')->active()->persist();
+        AuthenticationTokenFactory::make()->userId($userA->id)->type('recover')->active()->persist();
+        AuthenticationTokenFactory::make()->userId($userA->id)->type('login')->active()->persist();
+
+        // Tokens for userB
+        AuthenticationTokenFactory::make()->userId($userB->id)->type('mfa')->active()->persist();
+        AuthenticationTokenFactory::make()->userId($userB->id)->type('recover')->active()->persist();
+        AuthenticationTokenFactory::make()->userId($userB->id)->type('login')->active()->persist();
+
+        // SoftDelete just userA
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
+        $this->assertUserIsSoftDeleted($userA->id);
+
+        // Tokens for userA should be inactive
+        $tokensUserA = AuthenticationTokenFactory::find()->where(['user_id' => $userA->id])->all();
+        foreach ($tokensUserA as $token) {
+            $this->assertFalse($token->active);
+        }
+
+        // Tokens for userB should be still active
+        $tokensUserB = AuthenticationTokenFactory::find()->where(['user_id' => $userB->id])->all();
+        foreach ($tokensUserB as $token) {
+            $this->assertTrue($token->active);
+        }
     }
 
     public function testUsersSoftDeleteSuccess_SoleOwnerNotSharedResource_DelUserCase1()
@@ -56,7 +92,8 @@ class SoftDeleteTest extends AppTestCase
         $resource = ResourceFactory::make()
             ->withPermissionsFor([$userA])
             ->persist();
-        $this->assertNotFalse($this->Users->softDelete($userA));
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userA->id);
         $this->assertResourceIsSoftDeleted($resource->id);
     }
@@ -90,7 +127,8 @@ class SoftDeleteTest extends AppTestCase
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
-        $this->assertNotFalse($this->Users->softDelete($userA));
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userA->id);
         $this->assertResourceIsNotSoftDeleted($resource->id);
         $this->assertPermission($resource->id, $userB->id, Permission::OWNER);
@@ -103,7 +141,8 @@ class SoftDeleteTest extends AppTestCase
             ->withPermissionsFor([$userA])
             ->withPermissionsFor([$userB], Permission::READ)
             ->persist();
-        $this->assertNotFalse($this->Users->softDelete($userB));
+        $result = $this->Users->softDelete($userB);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userB->id);
         $this->assertResourceIsNotSoftDeleted($resource->id);
     }
@@ -139,7 +178,8 @@ class SoftDeleteTest extends AppTestCase
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
-        $this->assertNotFalse($this->Users->softDelete($userA));
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userA->id);
         $this->assertResourceIsNotSoftDeleted($resource->id);
     }
@@ -152,7 +192,8 @@ class SoftDeleteTest extends AppTestCase
             ->withPermissionsFor([$userA])
             ->withPermissionsFor([$group], Permission::READ)
             ->persist();
-        $this->assertNotFalse($this->Users->softDelete($userA));
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userA->id);
         $this->assertResourceIsSoftDeleted($resource->id);
         $this->assertGroupIsSoftDeleted($group->id);
@@ -175,7 +216,8 @@ class SoftDeleteTest extends AppTestCase
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
 
-        $this->assertNotFalse($this->Users->softDelete($userA));
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userA->id);
         $this->assertResourceIsSoftDeleted($resource->id);
         $this->assertGroupIsSoftDeleted($group->id);
@@ -199,7 +241,8 @@ class SoftDeleteTest extends AppTestCase
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
 
-        $this->assertNotFalse($this->Users->softDelete($userA));
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userA->id);
         $this->assertResourceIsSoftDeleted($resource->id);
         $this->assertGroupIsSoftDeleted($group->id);
@@ -233,7 +276,8 @@ class SoftDeleteTest extends AppTestCase
         ])->first();
         $groupUser->is_admin = true;
         $this->GroupsUsers->save($groupUser);
-        $this->assertNotFalse($this->Users->softDelete($userA));
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userA->id);
         $this->assertGroupIsNotSoftDeleted($group->id);
         $this->assertUserIsAdmin($group->id, $userB->id);
@@ -269,7 +313,8 @@ class SoftDeleteTest extends AppTestCase
         ])->first();
         $groupUser->is_admin = true;
         $this->GroupsUsers->save($groupUser);
-        $this->assertNotFalse($this->Users->softDelete($userA));
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userA->id);
         $this->assertGroupIsNotSoftDeleted($group->id);
         $this->assertUserIsAdmin($group->id, $userB->id);
@@ -321,7 +366,8 @@ class SoftDeleteTest extends AppTestCase
         $groupUser->is_admin = true;
         $this->GroupsUsers->save($groupUser);
 
-        $this->assertNotFalse($this->Users->softDelete($userA));
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userA->id);
         $this->assertGroupIsNotSoftDeleted($group->id);
         $this->assertResourceIsNotSoftDeleted($resource->id);
@@ -357,7 +403,8 @@ class SoftDeleteTest extends AppTestCase
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
-        $this->assertNotFalse($this->Users->softDelete($userA));
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userA->id);
         $this->assertGroupIsSoftDeleted($group->id);
     }
@@ -367,7 +414,8 @@ class SoftDeleteTest extends AppTestCase
         $userA = UserFactory::make()->user()->persist();
         [$groupA, $groupB] = GroupFactory::make(2)->withGroupsManagersFor([$userA])->persist();
         $resource = ResourceFactory::make()->withPermissionsFor([$groupA, $groupB])->persist();
-        $this->assertNotFalse($this->Users->softDelete($userA));
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userA->id);
         $this->assertGroupIsSoftDeleted($groupA->id);
         $this->assertGroupIsSoftDeleted($groupB->id);
@@ -411,7 +459,8 @@ class SoftDeleteTest extends AppTestCase
         $groupUser->is_admin = true;
         $this->GroupsUsers->save($groupUser);
 
-        $this->assertNotFalse($this->Users->softDelete($userA));
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userA->id);
         $this->assertGroupIsNotSoftDeleted($group->id);
         $this->assertResourceIsNotSoftDeleted($resource->id);
@@ -471,7 +520,8 @@ class SoftDeleteTest extends AppTestCase
         $groupUser->is_admin = true;
         $this->GroupsUsers->save($groupUser);
 
-        $this->assertNotFalse($this->Users->softDelete($userA));
+        $result = $this->Users->softDelete($userA);
+        $this->assertInstanceOf(EntitiesChangesDto::class, $result);
         $this->assertUserIsSoftDeleted($userA->id);
         $this->assertGroupIsNotSoftDeleted($group->id);
         $this->assertResourceIsNotSoftDeleted($resource->id);
@@ -535,5 +585,22 @@ class SoftDeleteTest extends AppTestCase
         }
 
         $this->assertUserIsSoftDeleted($user->id);
+    }
+
+    public function testUsersSoftDeleteSuccess_HardDeletesWebauthnCredentialsOfDeletedUser()
+    {
+        [$deletedUser, $survivingUser] = UserFactory::make(2)->user()->persist();
+        MfaWebauthnCredentialFactory::make(2)->withUser($deletedUser)->persist();
+        MfaWebauthnCredentialFactory::make()->withUser($survivingUser)->persist();
+        MfaWebauthnCredentialFactory::make()->withUser($deletedUser)
+            ->patchData(['type' => 'sso'])->persist();
+        MfaWebauthnCredentialFactory::make()->withUser($survivingUser)
+            ->patchData(['type' => 'sso'])->persist();
+
+        $this->assertNotFalse($this->Users->softDelete($deletedUser));
+        $this->assertUserIsSoftDeleted($deletedUser->id);
+
+        $this->assertSame(0, MfaWebauthnCredentialFactory::find()->where(['user_id' => $deletedUser->id])->count());
+        $this->assertSame(2, MfaWebauthnCredentialFactory::find()->where(['user_id' => $survivingUser->id])->count());
     }
 }

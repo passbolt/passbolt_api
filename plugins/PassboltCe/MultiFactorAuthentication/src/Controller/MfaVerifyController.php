@@ -22,6 +22,9 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Response;
 use Cake\I18n\DateTime;
 use Cake\Routing\Router;
+use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
+use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
+use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenLogoutService;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
@@ -158,5 +161,23 @@ abstract class MfaVerifyController extends MfaController
             $redirect = $this->SanitizeUrl->sanitizeRedirect('/mfa/verify');
             $this->redirect(Router::url($redirect, true));
         }
+    }
+
+    /**
+     * @return void
+     */
+    protected function _logoutOnMfaFailure(): void
+    {
+        $isJwtAuth = ($this->getRequest()->getAttribute('authentication') instanceof JwtAuthenticationService);
+
+        if ($isJwtAuth) {
+            (new RefreshTokenLogoutService())->logout($this->User->id(), $this->getRequest());
+            $cookies = $this->getResponse()->getCookieCollection()->remove(
+                RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE,
+            );
+            $this->setResponse($this->getResponse()->withCookieCollection($cookies));
+        }
+
+        $this->Authentication->logout();
     }
 }

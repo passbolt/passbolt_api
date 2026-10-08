@@ -21,7 +21,6 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 use Cake\Validation\Validation;
-use Firebase\JWT\JWT;
 use InvalidArgumentException;
 use Throwable;
 
@@ -31,6 +30,7 @@ class JwtTokenCreateService extends JwtAbstractService
     public const JWT_ALG = 'RS256';
     public const JWT_KEY_LENGTH = 4096;
     public const JWT_EXPIRY_CONFIG_KEY = 'passbolt.auth.token.access_token.expiry';
+    public const ACCESS_TOKEN_AUDIENCE = 'passbolt-access-token';
 
     protected string $keyPath = self::JWT_SECRET_KEY_PATH;
 
@@ -47,14 +47,14 @@ class JwtTokenCreateService extends JwtAbstractService
             throw new InvalidArgumentException(__('The resource identifier should be a valid UUID.'));
         }
 
-        $privateKey = $this->readKeyFileContent();
-        $payload = [
-            'iss' => Router::url('/', true),
-            'sub' => $userId,
+        return (new JwtEncodeService())
+            ->setKeyPath($this->getKeyPath())
+            ->encode([
+                'iss' => Router::url('/', true),
+                'sub' => $userId,
+                'aud' => self::ACCESS_TOKEN_AUDIENCE,
             'exp' => $this->createExpiryDate($expiration),
-        ];
-
-        return JWT::encode($payload, $privateKey, self::JWT_ALG);
+            ]);
     }
 
     /**

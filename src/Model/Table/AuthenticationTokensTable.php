@@ -59,9 +59,16 @@ class AuthenticationTokensTable extends Table
         AuthenticationToken::TYPE_MFA,
         AuthenticationToken::TYPE_MFA_SETUP,
         AuthenticationToken::TYPE_MFA_VERIFY,
+        AuthenticationToken::TYPE_MFA_DELEGATED_STATE,
+        AuthenticationToken::TYPE_MFA_DELEGATED_TOKEN,
         AuthenticationToken::TYPE_MOBILE_TRANSFER,
         AuthenticationToken::TYPE_REFRESH_TOKEN,
         AuthenticationToken::TYPE_VERIFY_TOKEN,
+    ];
+
+    public const SINGLE_ACTIVE_TYPES = [
+        AuthenticationToken::TYPE_MFA_SETUP,
+        AuthenticationToken::TYPE_MFA_VERIFY,
     ];
 
     /**
@@ -231,9 +238,25 @@ class AuthenticationTokensTable extends Table
         if (!empty($errors)) {
             throw new ValidationException($msg);
         }
-        if (!$this->save($token)) {
-            throw new ValidationException($msg);
-        }
+
+        $this->getConnection()->transactional(function () use ($userId, $type, $msg, $token): void {
+            // Set all current active singleton enforced tokens as inactive before creating a new one
+            if (in_array($type, self::SINGLE_ACTIVE_TYPES, true)) {
+                $AllActiveTokens = $this->find()
+                    ->where(['user_id' => $userId, 'type' => $type, 'active' => true])
+                    ->all();
+
+                /** @var \App\Model\Entity\AuthenticationToken $activeToken */
+                foreach ($AllActiveTokens as $activeToken) {
+                    $activeToken->active = false;
+                }
+                $this->saveManyOrFail($AllActiveTokens);
+            }
+
+            if (!$this->save($token)) {
+                throw new ValidationException($msg);
+            }
+        });
 
         return $token;
     }
@@ -362,6 +385,24 @@ class AuthenticationTokensTable extends Table
         $expiryPeriod = $this->authTokenExpiry->getExpiryForTokenType($type);
 
         return new DateTime($expiryPeriod . ' ago');
+    }
+
+    /**
+     * @param \Cake\ORM\Query\SelectQuery $query Query.
+     * @param string $token Token value.
+     * @param string $tokenType Token type.
+     * @return \Cake\ORM\Query\SelectQuery
+     */
+    public function findByTokenActiveNotExpired(SelectQuery $query, string $token, string $tokenType): SelectQuery
+    {
+        $expiryPeriod = $this->authTokenExpiry->getExpiryForTokenType($tokenType);
+
+        return $query->where([
+            $this->aliasField('token') => $token,
+            $this->aliasField('type') => $tokenType,
+            $this->aliasField('active') => true,
+            $this->aliasField('created >=') => DateTime::now()->modify('-' . $expiryPeriod),
+        ]);
     }
 
     /**

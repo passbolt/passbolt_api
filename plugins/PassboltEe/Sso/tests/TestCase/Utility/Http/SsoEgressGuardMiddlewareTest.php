@@ -70,6 +70,41 @@ class SsoEgressGuardMiddlewareTest extends TestCase
         }
     }
 
+    /**
+     * @return array
+     */
+    public static function unsupportedHostProvider(): array
+    {
+        return [
+            'decimal loopback' => ['2130706433'],
+            'decimal metadata' => ['2852039166'],
+            'octal loopback' => ['0177.0.0.1'],
+            'hexadecimal loopback' => ['0x7f000001'],
+            'short form loopback' => ['127.1'],
+            'bracketed ipv6 loopback' => ['[::1]'],
+            'bracketed aws ipv6 metadata' => ['[fd00:ec2::254]'],
+            'unresolvable name' => ['no-such-host.invalid'],
+        ];
+    }
+
+    /**
+     * @dataProvider unsupportedHostProvider
+     * @param string $host Host to request.
+     * @return void
+     */
+    public function testSsoEgressGuardMiddleware_Error_BlockedHostIsNotDispatched(string $host): void
+    {
+        $client = $this->buildClient(true);
+
+        $this->expectException(SsoEgressBlockedException::class);
+        try {
+            $client->get("https://{$host}/.well-known/openid-configuration");
+        } finally {
+            // The request must never reach the underlying handler.
+            $this->assertCount(1, $this->mockHandler);
+        }
+    }
+
     public function testSsoEgressGuardMiddleware_Success_AllowedHostIsDispatched(): void
     {
         $client = $this->buildClient(true);

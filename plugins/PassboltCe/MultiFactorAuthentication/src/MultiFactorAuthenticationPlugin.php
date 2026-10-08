@@ -18,6 +18,7 @@ namespace Passbolt\MultiFactorAuthentication;
 
 use App\Service\Command\ProcessUserService;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
@@ -33,9 +34,22 @@ use Passbolt\MultiFactorAuthentication\Event\ClearMfaCookieOnSetupAndRecover;
 use Passbolt\MultiFactorAuthentication\Event\UsersModelInitializeEventListener;
 use Passbolt\MultiFactorAuthentication\Middleware\InjectMfaFormMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
+use Passbolt\MultiFactorAuthentication\Middleware\MfaWebauthnDelegatedAuthDetectionMiddleware;
+use Passbolt\MultiFactorAuthentication\Middleware\MfaWebauthnDelegatedReferrerPolicyMiddleware;
 use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
+use Passbolt\MultiFactorAuthentication\Notification\NotificationSettings\MfaNotificationSettingsDefinition;
+use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultMfaWebauthnPolicyService;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultRememberAMonthSettingService;
+use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\MfaWebauthnPolicyInterface;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\Delegated\MfaWebauthnDelegatedStateService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\Delegated\MfaWebauthnDelegatedTokenService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnEnrollCredentialService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnRelyingPartyService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnStartAssertionService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnStartRegistrationService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAssertionService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAttestationService;
 
 class MultiFactorAuthenticationPlugin extends BasePlugin
 {
@@ -63,7 +77,9 @@ class MultiFactorAuthenticationPlugin extends BasePlugin
         // BaseSolutionBootstrapper, so the anchor is always present.
         return $middlewareQueue
             ->insertAfter(LogoutUsersOnEditionChangeMiddleware::class, MfaRequiredCheckMiddleware::class)
-            ->insertAfter(MfaRequiredCheckMiddleware::class, InjectMfaFormMiddleware::class);
+            ->insertAfter(MfaRequiredCheckMiddleware::class, InjectMfaFormMiddleware::class)
+            ->insertBefore(AuthenticationMiddleware::class, MfaWebauthnDelegatedAuthDetectionMiddleware::class)
+            ->insertBefore(AuthenticationMiddleware::class, MfaWebauthnDelegatedReferrerPolicyMiddleware::class);
     }
 
     /**
@@ -79,7 +95,8 @@ class MultiFactorAuthenticationPlugin extends BasePlugin
             // Decorate the users grid and add the column "is_mfa_enabled"
             ->on(new AddIsMfaEnabledColumnToUsersGrid()) // decorate the query to add the new property on the User entity
             ->on(new MfaRedactorPool()) // Register email redactors
-            ->on(new ClearMfaCookieOnSetupAndRecover()); // Some end points should have a cleared MFA
+            ->on(new ClearMfaCookieOnSetupAndRecover()) // Some end points should have a cleared MFA
+            ->on(new MfaNotificationSettingsDefinition()); // Add email notification settings definition
 
         if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
             // If a JWT login or refresh token is successful, and a valid MFA cookie was sent, pass it to the response
@@ -95,6 +112,49 @@ class MultiFactorAuthenticationPlugin extends BasePlugin
         $container
             ->add(RememberAMonthSettingInterface::class)
             ->setConcrete(DefaultRememberAMonthSettingService::class);
+
+        $container
+            ->add(MfaWebauthnPolicyInterface::class)
+            ->setConcrete(DefaultMfaWebauthnPolicyService::class);
+
+        $container
+            ->add(MfaWebauthnRelyingPartyService::class)
+            ->addArgument(MfaWebauthnPolicyInterface::class);
+
+        $container
+            ->add(MfaWebauthnStartRegistrationService::class)
+            ->addArguments([
+                MfaWebauthnRelyingPartyService::class,
+                MfaWebauthnPolicyInterface::class,
+            ]);
+
+        $container
+            ->add(MfaWebauthnEnrollCredentialService::class)
+            ->addArgument(MfaWebauthnPolicyInterface::class);
+
+        $container
+            ->add(MfaWebauthnVerifyAttestationService::class)
+            ->addArguments([
+                MfaWebauthnRelyingPartyService::class,
+                MfaWebauthnEnrollCredentialService::class,
+            ]);
+
+        $container
+            ->add(MfaWebauthnStartAssertionService::class)
+            ->addArguments([
+                MfaWebauthnRelyingPartyService::class,
+                MfaWebauthnPolicyInterface::class,
+            ]);
+
+        $container
+            ->add(MfaWebauthnVerifyAssertionService::class)
+            ->addArgument(MfaWebauthnRelyingPartyService::class);
+
+        $container->add(MfaWebauthnDelegatedStateService::class);
+
+        $container
+            ->add(MfaWebauthnDelegatedTokenService::class)
+            ->addArgument(MfaWebauthnDelegatedStateService::class);
 
         if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
             $container

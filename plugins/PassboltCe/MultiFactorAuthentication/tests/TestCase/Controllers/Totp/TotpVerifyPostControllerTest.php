@@ -19,12 +19,17 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\Model\EmailQueueTrait;
+use App\Utility\UserAction;
+use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\I18n\DateTime;
 use OTPHP\Factory;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 use Passbolt\MultiFactorAuthentication\Form\Totp\TotpVerifyForm;
+use Passbolt\MultiFactorAuthentication\Service\MfaRateLimitDisableUserService;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAccountSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
@@ -37,6 +42,8 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
  */
 class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
 {
+    use EmailQueueTrait;
+
     /**
      * @group mfa
      * @group mfaVerify
@@ -291,5 +298,127 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
 
         $this->assertBadRequestError('No valid multi-factor authentication settings found for this provider.');
         $this->assertCookieNotSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerify
+     * @group mfaVerifyPost
+     * @group mfaVerifyPostTotp
+     */
+    public function testTotpVerifyPostController_Error_SessionAuthJsonFailedAttemptsAreRateLimited(): void
+    {
+        Configure::write('passbolt.plugins.log.enabled', true);
+        Configure::write(MfaRateLimitDisableUserService::CONFIG_KEY, false);
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        ActionLogFactory::make(['created' => DateTime::now()->subMinutes(2)])
+            ->userId($user->id)
+            ->loginAction()
+            ->persist();
+
+        // Default maxAttempts is 4, so the 5th failure must lock the user out
+        for ($i = 0; $i < 5; $i++) {
+            UserAction::destroy();
+            $this->postJson('/mfa/verify/totp.json?api-version=v2', ['totp' => '123456']);
+        }
+
+        $this->assertSame(5, ActionLogFactory::find()->where([
+            'user_id' => $user->id,
+            'action_id' => UuidFactory::uuid('TotpVerifyPost.post'),
+            'status' => 0,
+        ])->all()->count());
+        $this->assertBadRequestError('You have been logged out due to too many failed attempts');
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerify
+     * @group mfaVerifyPost
+     * @group mfaVerifyPostTotp
+     */
+    public function testTotpVerifyPostController_Error_DisablesUserWhenMaxFailedAttemptsExceeded(): void
+    {
+        Configure::write(MfaRateLimitDisableUserService::CONFIG_KEY, true);
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        ActionLogFactory::make(['created' => $user->created])
+            ->userId($user->id)
+            ->loginAction()
+            ->persist();
+        ActionLogFactory::make(['created' => DateTime::now()], 4)
+            ->setActionId('TotpVerifyPost.post')
+            ->userId($user->id)
+            ->persist();
+
+        $this->postJson('/mfa/verify/totp.json?api-version=v2', ['totp' => 'blah']);
+
+        $this->assertBadRequestError('You have been logged out due to too many failed attempts');
+        $this->assertNotNull(UserFactory::get($user->id)->get('disabled'));
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerify
+     * @group mfaVerifyPost
+     * @group mfaVerifyPostTotp
+     */
+    public function testTotpVerifyPostController_Error_DoesNotDisableUserWhenOptionIsOff(): void
+    {
+        Configure::write(MfaRateLimitDisableUserService::CONFIG_KEY, false);
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        ActionLogFactory::make(['created' => $user->created])
+            ->userId($user->id)
+            ->loginAction()
+            ->persist();
+        ActionLogFactory::make(['created' => DateTime::now()], 4)
+            ->setActionId('TotpVerifyPost.post')
+            ->userId($user->id)
+            ->persist();
+
+        $this->postJson('/mfa/verify/totp.json?api-version=v2', ['totp' => 'blah']);
+
+        $this->assertBadRequestError('You have been logged out due to too many failed attempts');
+        $this->assertNull(UserFactory::get($user->id)->get('disabled'));
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerify
+     * @group mfaVerifyPost
+     * @group mfaVerifyPostTotp
+     */
+    public function testTotpVerifyPostController_Error_SendsEmailsWhenUserIsDisabled(): void
+    {
+        Configure::write(MfaRateLimitDisableUserService::CONFIG_KEY, true);
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->persist();
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        ActionLogFactory::make(['created' => DateTime::now()->subMinutes(2)])
+            ->userId($user->id)
+            ->loginAction()
+            ->persist();
+        ActionLogFactory::make(['created' => DateTime::now()], 4)
+            ->setActionId('TotpVerifyPost.post')
+            ->userId($user->id)
+            ->persist();
+
+        $this->postJson('/mfa/verify/totp.json?api-version=v2', ['totp' => 'blah']);
+
+        $this->assertBadRequestError('You have been logged out due to too many failed attempts');
+        $this->assertEmailQueueCount(2);
+        $this->assertEmailWithRecipientIsInQueue($user->username);
+        $this->assertEmailWithRecipientIsInQueue($admin->username);
+        // Assert email content
+        $this->assertStringContainsString(
+            'Your account has been suspended after too many failed multi-factor authentication attempts.',
+            $this->renderEmail($user->username),
+        );
+        $this->assertStringContainsString(
+            'has been suspended after too many failed multi-factor authentication attempts.',
+            $this->renderEmail($admin->username),
+        );
     }
 }
