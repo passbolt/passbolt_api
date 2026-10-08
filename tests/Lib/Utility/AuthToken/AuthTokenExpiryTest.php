@@ -72,4 +72,61 @@ class AuthTokenExpiryTest extends TestCase
 
         $this->assertEquals($expectedExpiry, $this->sut->getExpiryForTokenType($tokenType));
     }
+
+    public function testAuthTokenExpiry_GetDefaultExpirationForMfaSetupTokenType()
+    {
+        $tokenType = AuthenticationToken::TYPE_MFA_SETUP;
+        $expectedExpiry = '5 minutes';
+
+        $this->assertEquals($expectedExpiry, $this->sut->getExpiryForTokenType($tokenType));
+    }
+
+    public function testAuthTokenExpiry_GetDefaultExpirationForMfaVerifyTokenType()
+    {
+        $tokenType = AuthenticationToken::TYPE_MFA_VERIFY;
+        $expectedExpiry = '5 minutes';
+
+        $this->assertEquals($expectedExpiry, $this->sut->getExpiryForTokenType($tokenType));
+    }
+
+    public function testAuthTokenExpiry_GetFallbackToDefaultExpiryConfigurationIfExpiryInvalidForMfaSetupTokenType()
+    {
+        $tokenType = AuthenticationToken::TYPE_MFA_SETUP;
+        $expectedExpiry = '30 days';
+        Configure::clear();
+        Configure::write('passbolt.auth.token.' . $tokenType . '.expiry', null);
+        Configure::write('passbolt.auth.tokenExpiry', $expectedExpiry);
+
+        $this->assertEquals($expectedExpiry, $this->sut->getExpiryForTokenType($tokenType));
+    }
+
+    public function testAuthTokenExpiry_GetFallbackToDefaultExpiryConfigurationIfExpiryInvalidForMfaVerifyTokenType()
+    {
+        $tokenType = AuthenticationToken::TYPE_MFA_VERIFY;
+        $expectedExpiry = '30 days';
+        Configure::clear();
+        Configure::write('passbolt.auth.token.' . $tokenType . '.expiry', null);
+        Configure::write('passbolt.auth.tokenExpiry', $expectedExpiry);
+
+        $this->assertEquals($expectedExpiry, $this->sut->getExpiryForTokenType($tokenType));
+    }
+
+    public function testAuthTokenExpiry_GetDefaultExpirationForRefreshTokenType()
+    {
+        $tokenType = AuthenticationToken::TYPE_REFRESH_TOKEN;
+        $expectedExpiry = '1 hour';
+
+        $this->assertEquals($expectedExpiry, $this->sut->getExpiryForTokenType($tokenType));
+    }
+
+    public function testAuthTokenExpiry_GetFallbackToDefaultExpiryConfigurationIfExpiryInvalidForRefreshTokenType()
+    {
+        $tokenType = AuthenticationToken::TYPE_REFRESH_TOKEN;
+        $expectedExpiry = '30 days';
+        Configure::clear();
+        Configure::write('passbolt.auth.token.' . $tokenType . '.expiry', null);
+        Configure::write('passbolt.auth.tokenExpiry', $expectedExpiry);
+
+        $this->assertEquals($expectedExpiry, $this->sut->getExpiryForTokenType($tokenType));
+    }
 }

@@ -52,6 +52,6 @@ echo $this->element('Email/module/text', [
 echo $this->element('Email/module/user_info', compact('userAgent', 'clientIp'));
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url('/app/administration/offline-mode', true),
+    'url' => Router::url('/app/administration/offline', true),
     'text' => __('View it in passbolt'),
 ]);

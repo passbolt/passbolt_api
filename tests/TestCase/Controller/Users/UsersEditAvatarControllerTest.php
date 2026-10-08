@@ -93,9 +93,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertError(400, 'Could not validate user data.');
-        $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->validExtension);
-        $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->validMimeType);
-        $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->validUploadedFile);
+        $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->_required);
 
         $this->assertEquals(0, AvatarFactory::count(), 'The number of avatars in db should be same before and after the test');
     }
@@ -161,6 +159,28 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $this->assertNotEquals($data['adapter'], $ireneAvatar->adapter);
         $this->assertSame(1, AvatarFactory::count());
         $this->assertAvatarCachedFilesExist($ireneAvatar);
+    }
+
+    public function testUsersEditAvatarController_Error_SsrfPayloadIsRejected(): void
+    {
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
+
+        $data = [
+            'id' => $user->id,
+            'profile' => [
+                'avatar' => [
+                    'file' => 'file:///etc/hostname',
+                ],
+            ],
+        ];
+
+        $this->postJson('/users/' . $user->id . '.json', $data);
+        $this->assertResponseCode(400);
+        $fileErrors = $this->_responseJsonBody->profile->avatar->file ?? null;
+        $this->assertNotNull($fileErrors);
+        $this->assertObjectNotHasProperty('validMimeType', $fileErrors);
+        $this->assertSame(0, AvatarFactory::count());
     }
 
     public function testUsersEditAvatarController_Bug_Change_Other_User_Avatar(): void
