@@ -103,6 +103,76 @@ $routes->plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functi
         ])
         ->setMethods(['GET']);
 
+    /**
+     * WebAuthn
+     */
+    $routes->connect('/settings/webauthn', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnSettingsGet', 'action' => 'get',
+        ])
+        ->setMethods(['GET']);
+
+    $routes->connect('/setup/webauthn', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnSetupGet', 'action' => 'get',
+        ])
+        ->setMethods(['GET']);
+
+    $routes->connect('/setup/webauthn/begin', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnSetupBeginPost', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
+    $routes->connect('/setup/webauthn/finish', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnSetupFinishPost', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
+    $routes->connect('/setup/webauthn/{credentialId}', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnSetupDelete', 'action' => 'delete',
+        ])
+        ->setPass(['credentialId'])
+        ->setMethods(['DELETE']);
+
+    $routes->connect('/verify/webauthn', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnVerifyGet', 'action' => 'get',
+        ])
+        ->setMethods(['GET']);
+
+    $routes->connect('/verify/webauthn/begin', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnVerifyBeginPost', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
+    $routes->connect('/verify/webauthn/finish', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnVerifyFinishPost', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
+    $routes->connect('/verify/webauthn/delegated/prompt', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnDelegatedPromptPost', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
+    $routes->connect('/verify/webauthn/delegated', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnDelegatedGet', 'action' => 'get',
+        ])
+        ->setExtensions(['json', 'html'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/verify/webauthn/delegated/begin', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnDelegatedBeginPost', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
+    $routes->connect('/verify/webauthn/delegated/finish', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnDelegatedFinishPost', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
+    $routes->connect('/verify/webauthn/delegated/callback', [
+            'prefix' => 'Webauthn', 'controller' => 'WebauthnDelegatedCallbackPost', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
     $routes->connect('/verify/error', ['controller' => 'MfaVerifyAjaxError', 'action' => 'get'])
         ->setMethods(['GET', 'POST', 'PUT', 'DELETE']);
 

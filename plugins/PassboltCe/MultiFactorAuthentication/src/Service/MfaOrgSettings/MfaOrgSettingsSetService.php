@@ -86,6 +86,12 @@ class MfaOrgSettingsSetService
         // Disable all authentication tokens type MFA
         $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $AuthenticationTokens->updateAll(['active' => false], ['type' => 'mfa']);
+
+        // Drop all MFA WebAuthn credentials
+        /** @var \Passbolt\MultiFactorAuthentication\Model\Table\MfaWebauthnCredentialsTable $WebauthnCredentials */
+        $WebauthnCredentials = TableRegistry::getTableLocator()
+            ->get('Passbolt/MultiFactorAuthentication.MfaWebauthnCredentials');
+        $WebauthnCredentials->deleteAllForType();
     }
 
     /**

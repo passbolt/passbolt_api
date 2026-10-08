@@ -18,6 +18,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\OrgSettin
 
 use App\Model\Entity\Role;
 use App\Test\Factory\UserFactory;
+use Cake\Core\Configure;
 use Duo\DuoUniversal\Client;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
@@ -31,6 +32,12 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        Configure::write('App.fullBaseUrl', 'https://passbolt.example.com');
+    }
+
     /**
      * @group mfa
      * @group mfaOrgSettings
@@ -142,6 +149,105 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
 
         $this->putJson('/mfa/settings.json?api-version=v2', $this->getDefaultMfaOrgSettings());
         $this->assertResponseSuccess();
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     * @group mfaOrgSettingsPost
+     */
+    public function testMfaOrgSettingsPostController_EnablesWebauthn_WithArrayShape(): void
+    {
+        $this->authenticateAs('admin');
+        $this->postJson('/mfa/settings.json?api-version=v2', [
+            'providers' => [MfaSettings::PROVIDER_WEBAUTHN],
+        ]);
+        $this->assertResponseSuccess();
+        $this->assertContains(MfaSettings::PROVIDER_WEBAUTHN, $this->_responseJsonBody->providers);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     * @group mfaOrgSettingsPost
+     */
+    public function testMfaOrgSettingsPostController_EnablesWebauthn_WithObjectShape(): void
+    {
+        $this->authenticateAs('admin');
+        $this->postJson('/mfa/settings.json?api-version=v2', [
+            'providers' => [
+                MfaSettings::PROVIDER_TOTP => true,
+                MfaSettings::PROVIDER_WEBAUTHN => true,
+            ],
+        ]);
+        $this->assertResponseSuccess();
+        $this->assertContains(MfaSettings::PROVIDER_WEBAUTHN, $this->_responseJsonBody->providers);
+        $this->assertContains(MfaSettings::PROVIDER_TOTP, $this->_responseJsonBody->providers);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     * @group mfaOrgSettingsPost
+     */
+    public function testMfaOrgSettingsPostController_Error_WebauthnFullBaseUrlIsIpAddress(): void
+    {
+        Configure::write('App.fullBaseUrl', 'https://192.168.1.10');
+        $this->logInAsAdmin();
+
+        $this->postJson('/mfa/settings.json?api-version=v2', [
+            'providers' => [MfaSettings::PROVIDER_WEBAUTHN],
+        ]);
+
+        $this->assertResponseError();
+        $result = json_decode($this->_getBodyAsString(), true);
+        $this->assertSame(
+            'Passkeys require Passbolt to be reached through a domain name, not an IP address.',
+            $result['body'][MfaSettings::PROVIDER_WEBAUTHN]['relyingPartyIdInvalid'],
+        );
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     * @group mfaOrgSettingsPost
+     */
+    public function testMfaOrgSettingsPostController_Error_WebauthnFullBaseUrlIsNotConfigured(): void
+    {
+        Configure::write('App.fullBaseUrl', '');
+        $this->logInAsAdmin();
+
+        $this->postJson('/mfa/settings.json?api-version=v2', [
+            'providers' => [MfaSettings::PROVIDER_WEBAUTHN],
+        ]);
+
+        $this->assertResponseError();
+        $result = json_decode($this->_getBodyAsString(), true);
+        $this->assertSame(
+            'Passkeys require a valid full base URL to be configured.',
+            $result['body'][MfaSettings::PROVIDER_WEBAUTHN]['relyingPartyIdInvalid'],
+        );
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     * @group mfaOrgSettingsPost
+     */
+    public function testMfaOrgSettingsPostController_DisablesWebauthn_DropsFromProviderList(): void
+    {
+        $config['providers'] = [
+            MfaSettings::PROVIDER_TOTP => true,
+            MfaSettings::PROVIDER_WEBAUTHN => true,
+        ];
+        $this->mockMfaOrgSettings($config);
+        $this->authenticateAs('admin');
+
+        $this->postJson('/mfa/settings.json?api-version=v2', [
+            'providers' => [MfaSettings::PROVIDER_TOTP],
+        ]);
+        $this->assertResponseSuccess();
+        $this->assertNotContains(MfaSettings::PROVIDER_WEBAUTHN, $this->_responseJsonBody->providers);
     }
 
     /**

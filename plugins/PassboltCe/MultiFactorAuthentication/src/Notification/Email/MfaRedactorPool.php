@@ -29,6 +29,8 @@ class MfaRedactorPool extends AbstractSubscribedEmailRedactorPool
             new MfaUserSettingsResetEmailRedactor(),
             new MfaRateLimitUserDisabledEmailRedactor(),
             new MfaRateLimitAdminDisabledEmailRedactor(),
+            new MfaWebauthnCredentialEnrolledEmailRedactor(),
+            new MfaWebauthnCredentialRemovedEmailRedactor(),
         ];
     }
 }
