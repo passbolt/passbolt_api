@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2026-07-10 05:55+0000\n"
-"PO-Revision-Date: 2026-09-10 14:47\n"
+"POT-Creation-Date: 2026-09-11 06:26+0000\n"
+"PO-Revision-Date: 2026-09-11 07:39\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Czech\n"
 "MIME-Version: 1.0\n"
@@ -16,2324 +16,20 @@ msgstr ""
 "X-Crowdin-File-ID: 212\n"
 "Language: cs_CZ\n"
 
-msgid "You need to login to access this location."
-msgstr "Pro přístup k této lokaci se musíte přihlásit."
-
-msgid "The server verify token is missing or invalid."
-msgstr "Ověřovací token serveru chybí nebo je neplatný."
-
-msgid "Decryption failed."
-msgstr "Dešifrování selhalo."
-
-msgid "Failed to create token."
-msgstr "Nepodařilo se vytvořit token."
-
-msgid "The user token result should be a valid UUID."
-msgstr "Token uživatele by měl být platný UUID řetězec."
-
-msgid "The user token result could not be found "
-msgstr "Token uživatele nebyl nalezen "
-
-msgid "The OpenPGP server key defined in the config cannot be used to decrypt."
-msgstr "OpenPGP klíč serveru definovaný v konfiguraci nelze použít k dešifrování."
-
-msgid "Could not import the user OpenPGP key."
-msgstr "Nepodařilo se importovat OpenPGP klíč uživatele."
-
-msgid "Invalid verify token type."
-msgstr "Neplatný typ ověřovacího tokenu."
-
-msgid "Invalid verify token format, "
-msgstr "Neplatný formát ověřovacího tokenu, "
-
-msgid "sections are missing or using wrong delimiters."
-msgstr "chybějící sekce nebo použité neplatné oddělovače."
-
-msgid "the version numbers do not match."
-msgstr "čísla verzí se neshodují."
-
-msgid "wrong version number."
-msgstr "chybné číslo verze."
-
-msgid "it is not a UUID."
-msgstr "není to UUID."
-
-msgid "wrong token data length."
-msgstr "chybná délka tokenu."
-
-msgid "There is no user associated with this key."
-msgstr "K tomuto klíči není přiřazen žádný uživatel."
-
-msgid "Page not found."
-msgstr "Stránka nenalezena."
-
-msgid "Please use .json extension in URL or accept application/json."
-msgstr "Prosím, použijte příponu .json v URL nebo přijměte application/json."
-
-msgid "The request data can not be empty."
-msgstr "Data požadavku nemohou být prázdná."
-
-msgid "You are already logged in."
-msgstr "Již jste přihlášeni."
-
-msgid "You are successfully logged in."
-msgstr "Jste úspěšně přihlášeni."
-
-msgid "You are successfully logged out."
-msgstr "Jste úspěšně odhlášeni."
-
-msgid "The logout route should only be accessed with POST method."
-msgstr "K odhlašovací cestě by mělo být přistoupeno pouze pomocí metody POST."
-
-msgid "The OpenPGP public key information was not found in config."
-msgstr "Veřejný OpenPGP klíč nebyl nalezen v konfiguraci."
-
 msgid "The operation was successful."
 msgstr "Operace byla úspěšná."
-
-msgid "The comment was successfully added."
-msgstr "Komentář byl úspěšně přidán."
-
-msgid "The comment was deleted."
-msgstr "Komentář byl odstraněn."
-
-msgid "The comment id is not valid."
-msgstr "Identifikátor komentáře je neplatný."
-
-msgid "The comment was successfully updated."
-msgstr "Komentář byl úspěšně upraven."
-
-msgid "Invalid order. \"{0}\" is not in the list of allowed order."
-msgstr "Neplatný příkaz. \"{0}\" není v seznamu přípustných příkazů."
-
-msgid "Invalid order. \"{0}\" is not a valid order."
-msgstr "Neplatný požadavek. \"{0}\" není platný požadavek."
-
-msgid "Invalid order. \"{0}\" is not a valid field."
-msgstr "Neplatný požadavek. \"{0}\" není platné pole."
-
-msgid "Invalid pagination."
-msgstr "Neplatné stránkování."
-
-msgid "Invalid query string. The filter parameter should be an array."
-msgstr "Neplatný dotaz. Parametr \"filter\" by měl být pole."
-
-msgid "Invalid query string. The contain parameter should be an array."
-msgstr "Neplatný dotaz. Parametr \"contain\" by měl být pole."
-
-msgid "Invalid filter."
-msgstr "Neplatný obsah parametru \"filter\"."
-
-msgid "Invalid order."
-msgstr "Neplatný požadavek."
-
-msgid "Invalid contain."
-msgstr "Neplatný obsah parametru \"contain\"."
-
-msgid "No validation rule for filter {0}. Please create one."
-msgstr "Žádné validační pravidlo pro hodnotu parametru \"filter\": {0}. Vytvořte jej prosím."
-
-msgid "Filter {0} is not valid."
-msgstr "Hodnota parametru \"filter\" není platná: {0}."
-
-msgid "\"{0}\" is not a valid value for filter {1}."
-msgstr "\"{0}\" není platná hodnota pro parametr \"filter\" {1}."
-
-msgid "\"{0}\" is not a valid search filter."
-msgstr "\"{0}\" není platná hodnota pro vyhledávací parametr \"filter\"."
-
-msgid "\"{0}\" is not a valid search filter. It is not a UTF8 string."
-msgstr "\"{0}\" není platná hodnota pro vyhledávací parametr \"filter\". Nejedná se o platný UTF-8 řetězec."
-
-msgid "It should be between 1 and 64 char in length."
-msgstr "Délka by měla být mezi 1 až 64 znaky."
-
-msgid "\"{0}\" is not a valid user filter."
-msgstr "\"{0}\" je neplatný filtr uživatele."
-
-msgid "\"{0}\" is not a valid user id for filter {1}."
-msgstr "\"{0}\" není platné uživatelské ID pro filtr {1}."
-
-msgid "\"{0}\" is not a valid group filter."
-msgstr "\"{0}\" je neplatný filtr skupiny."
-
-msgid "\"{0}\" is not a valid parent filter."
-msgstr "\"{0}\" není platný filtr nadřazeného."
-
-msgid "\"{0}\" is not a valid resource id for filter {1}."
-msgstr "\"{0}\" není platné ID zdroje pro filtr {1}."
-
-msgid "\"{0}\" is not a valid group id for filter {1}."
-msgstr "\"{0}\" není platné ID skupiny pro filtr {1}."
-
-msgid "\"{0}\" is not a valid parent id for filter {1}."
-msgstr "\"{0}\" není platné ID nadřazeného pro filtr {1}."
-
-msgid "\"{0}\" is not a valid timestamp for filter {1}."
-msgstr "\"{0}\" není platnou časovou značkou pro filtr {1}."
-
-msgid "\"{0}\" is not a valid datetime for filter {1}."
-msgstr "\"{0}\" není platné datum a čas pro filtr {1}."
-
-msgid "\"{0}\" is not a valid order."
-msgstr "\"{0}\" není platný požadavek."
-
-msgid "\"{0}\" is not in the list of allowed order."
-msgstr "„{0}“ není v seznamu povolených požadavků."
-
-msgid "\"{0}\" is not a valid contain value."
-msgstr "\"{0}\" není platná hodnota obsahu."
-
-msgid "undefined user agent"
-msgstr "nedefinovaný User-Agent"
-
-msgid "Access restricted to administrators."
-msgstr "Přístup je omezen pouze na administrátory."
-
-msgid "Access restricted to unauthenticated users."
-msgstr "Přístup omezen na nepřihlášené uživatele."
-
-msgid "The user should not be logged in."
-msgstr "Uživatel by neměl být přihlášen."
-
-msgid "This feature is not supported by your version of passbolt."
-msgstr "Tato funkce není ve vaší verzi passbolt podporována."
-
-msgid "The resource identifier should be a valid UUID."
-msgstr "Identifikátor záznamu by měl být platný UUID řetězec."
-
-msgid "The resource was marked as favorite."
-msgstr "Tato položka byla označena jako oblíbená."
-
-msgid "The favorite id is not valid."
-msgstr "ID oblíbené položky není platné."
-
-msgid "The favorite was deleted."
-msgstr "Oblíbená položka byla odstraněna."
-
-msgid "The OpenPGP key identifier should be a valid UUID."
-msgstr "Identifikátor OpenPGP klíče by měl být platný UUID řetězec."
-
-msgid "The OpenPGP key does not exist."
-msgstr "Tento OpenPGP klíč neexistuje."
-
-msgid "The group has been added successfully."
-msgstr "Skupina byla úspěšně přidána."
-
-msgid "The group can be deleted."
-msgstr "Skupinu lze odstranit."
-
-msgid "The group was deleted successfully."
-msgstr "Skupina byla úspěšně odstraněna."
-
-msgid "You are not authorized to access that location."
-msgstr "Nemáte oprávnění k přístupu k tomuto umístění."
-
-msgid "The group identifier should be a valid UUID."
-msgstr "Identifikátor skupiny by měl být platný UUID řetězec."
-
-msgid "The group does not exist or has been already deleted."
-msgstr "Skupina neexistuje nebo již byla odstraněna."
-
-msgid "The group cannot be deleted."
-msgstr "Skupinu nelze odstranit."
-
-msgid "The permissions identifiers must be valid UUID."
-msgstr "Identifikátory oprávnění musí být platné UUID."
-
-msgid "The group id is not valid."
-msgstr "ID skupiny není platné."
-
-msgid "The group does not exist."
-msgstr "Skupina neexistuje."
-
-msgid "All checks ran successfully!"
-msgstr "Všechny kontroly byly úspěšné!"
-
-msgid "Healthcheck security index endpoint disabled."
-msgstr "Koncový index zabezpečení Healthcheck zakázán."
-
-msgid "OK"
-msgstr "OK"
-
-msgid "The identifier should be a valid UUID."
-msgstr "Identifikátor by měl být platný UUID."
-
-msgid "The resource does not exist."
-msgstr "Tento záznam neexistuje."
-
-msgid "The resource has been added successfully."
-msgstr "Zdroj byl úspěšně přidán."
-
-msgid "The resource has been deleted successfully."
-msgstr "Zdroj byl úspěšně odstraněn."
-
-msgid "You do not have the permission to delete this resource."
-msgstr "Nemáte oprávnění k odstranění tohoto zdroje."
-
-msgid "Could not delete the resource."
-msgstr "Nepodařilo se odstranit zdroj."
-
-msgid "The resource has been updated successfully."
-msgstr "Zdroj byl úspěšně aktualizován."
-
-msgid "The role was deleted."
-msgstr "Role byla odstraněna."
-
-msgid "The role identifier is not valid."
-msgstr "Identifikátor role není platný."
-
-msgid "The role was successfully updated."
-msgstr "Role byla úspěšně aktualizována."
-
-msgid "The secret does not exist."
-msgstr "Tajný klíč neexistuje."
-
-msgid "Only guests are allowed to abort recovery process."
-msgstr "Pouze hosté mohou přerušit proces obnovy."
-
-msgid "An authentication token must be provided."
-msgstr "Musí být poskytnut ověřovací token."
-
-msgid "The recovery process was aborted."
-msgstr "Proces obnovy byl přerušen."
-
-msgid "Only guests are allowed to complete setup."
-msgstr "Pouze hosté mohou dokončit nastavení."
-
-msgid "The recovery was completed successfully."
-msgstr "Obnova byla úspěšně dokončena."
-
-msgid "Only guests are allowed to proceed with account recovery."
-msgstr "Pouze hosté mohou pokračovat v obnově účtu."
-
-msgid "The setup was completed successfully."
-msgstr "Nastavení bylo úspěšně dokončeno."
-
-msgid "Only guests are allowed to start setup."
-msgstr "Pouze hosté mohou zahájit nastavování."
-
-msgid "You are not authorized to share this resource."
-msgstr "Nemáte oprávnění sdílet tento dokument."
-
-msgid "Resource metadata key type is invalid."
-msgstr "Typ klíče metadat zdroje je neplatný."
-
-msgid "Only administrators can add new users."
-msgstr "Pouze administrátoři mohou přidat nové uživatele."
-
-msgid "The user was successfully added. This user now need to complete the setup."
-msgstr "Uživatel byl úspěšně přidán. Tento uživatel nyní musí dokončit nastavení."
-
-msgid "The user can be deleted."
-msgstr "Uživatele lze odstranit."
-
-msgid "The user has been deleted successfully."
-msgstr "Uživatel byl úspěšně odstraněn."
-
-msgid "The user identifier should be a valid UUID."
-msgstr "Identifikátor uživatele by měl být platný UUID."
-
-msgid "You are not allowed to delete yourself."
-msgstr "Nemáte oprávnění smazat sami sebe."
-
-msgid "The user does not exist or has been already deleted."
-msgstr "Uživatel neexistuje nebo již byl odstraněn."
-
-msgid "The user cannot be deleted."
-msgstr "Uživatele nelze odstranit."
-
-msgid "The groups users identifiers must be valid UUID."
-msgstr "Identifikátory uživatelů skupin musí být platné UUID."
-
-msgid "Could not validate user data."
-msgstr "Nepodařilo se ověřit uživatelská data."
-
-msgid "The user does not exist or has been deleted."
-msgstr "Uživatel neexistuje nebo byl odstraněn."
-
-msgid "Could not find the user data after save. Maybe it has been deleted in the meantime."
-msgstr "Nelze najít uživatelská data po uložení. Možná byla mezitím odstraněna."
-
-msgid "The user has been updated successfully."
-msgstr "Uživatel byl úspěšně aktualizován."
-
-msgid "You are not authorized to edit the role."
-msgstr "Nemáte oprávnění k úpravě role."
-
-msgid "Some user data should be provided."
-msgstr "Měly by být uvedeny některé uživatelské údaje."
-
-msgid "Updating the OpenPGP key is not allowed."
-msgstr "Aktualizace OpenPGP klíče není povolena."
-
-msgid "Updating the groups is not allowed."
-msgstr "Aktualizace skupin není povolena."
-
-msgid "Multiple has-access filters are not supported."
-msgstr "Vícenásobné filtry pro přístup nejsou podporovány."
-
-msgid "This operation is not allowed for this user."
-msgstr "Tato operace není pro tohoto uživatele povolena."
-
-msgid "Only guests are allowed to recover an account. Please logout first."
-msgstr "Pouze hosté mohou obnovit účet. Nejprve se prosím odhlaste."
-
-msgid "Recovery process started, check your email."
-msgstr "Proces obnovy byl zahájen, zkontrolujte svůj e-mail."
-
-msgid "Only guests are allowed to register."
-msgstr "Registrovat se mohou pouze hosté."
-
-msgid "Registration is not opened to public."
-msgstr "Registrace není otevřena veřejnosti."
-
-msgid "Please contact your administrator."
-msgstr "Kontaktujte svého administrátora."
-
-msgid "This is due to a security setting."
-msgstr "To je způsobeno nastavením zabezpečení."
-
-msgid "The user identifier should be a valid UUID or \"me\"."
-msgstr "Identifikátor uživatele by mělo být platné UUID nebo \"me\"."
-
-msgid "The user does not exist."
-msgstr "Uživatel neexistuje."
-
-msgid "No admin were found in the database."
-msgstr "V databázi nebyl nalezen žádný administrátor."
-
-msgid "The `{0}` configuration must be a valid non-empty string."
-msgstr "Konfigurace `{0}` musí být platný neprázdný řetězec."
-
-msgid "Invalid expiry time {0}."
-msgstr "Neplatný čas expirace {0}."
-
-msgid "The user role ID must not be of the guest role."
-msgstr "ID uživatelské role nesmí patřit roli hosta."
-
-msgid "The identifier should not be empty."
-msgstr "Identifikátor by neměl být prázdný."
-
-msgid "The token should be a valid UUID."
-msgstr "Token by měl být platný UUID."
-
-msgid "A token is required."
-msgstr "Token je povinný."
-
-msgid "The token should not be empty."
-msgstr "Token by neměl být prázdný."
-
-msgid "The type should be one of the following: {0}."
-msgstr "Typ by měl být jedním z následujících: {0}."
-
-msgid "A type is required."
-msgstr "Typ je povinný."
-
-msgid "The type should not be empty."
-msgstr "Typ by neměl být prázdný."
-
-msgid "A user identifier is required."
-msgstr "Identifikátor uživatele je povinný."
-
-msgid "The user identifier should not be empty."
-msgstr "Identifikátor uživatele by neměl být prázdný."
-
-msgid "The active status should be a valid boolean."
-msgstr "Aktivní stav by měl být platný boolean."
-
-msgid "An active status is required"
-msgstr "Je vyžadován aktivní stav"
-
-msgid "It is not possible to create an authentication token for this user."
-msgstr "Pro tohoto uživatele není možné vytvořit ověřovací token."
-
-msgid "A file is required."
-msgstr "Soubor je vyžadován."
-
-msgid "The file should not be empty"
-msgstr "Soubor by neměl být prázdný"
-
-msgid "The file mime type should be one of the following: {0}."
-msgstr "Mime typ souboru by měl být jedním z následujících: {0}."
-
-msgid "The file extension should be one of the following: {0}."
-msgstr "Přípona souboru by měla být jedna z následujících možností: {0}."
-
-msgid "The file is not valid, or exceeds max size of {0} bytes."
-msgstr "Soubor není platný, nebo přesahuje maximální velikost {0} bytů."
-
-msgid "Could not save the data in {0} format."
-msgstr "Nepodařilo se uložit data ve formátu {0}."
-
-msgid "The parent comment identifier should be a valid UUID."
-msgstr "Identifikátor mateřského komentáře musí být platný UUID."
-
-msgid "The commented object type should be one of the following: {0}."
-msgstr "Typ komentovaného objektu by měl být jeden z následujících: {0}."
-
-msgid "The commented object type is required."
-msgstr "Typ komentovaného objektu je povinný."
-
-msgid "The commented object type should not be empty."
-msgstr "Typ komentovaného objektu by neměl být prázdný."
-
-msgid "The commented object identifier should be a valid UUID."
-msgstr "Identifikátor komentovaného objektu by měl být platný UUID."
-
-msgid "The commented object identifier is required."
-msgstr "Identifikátor komentovaného objektu je povinný."
-
-msgid "The commented object identifier should not be empty."
-msgstr "Identifikátor komentovaného objektu by neměl být prázdný."
-
-msgid "The content should be a valid UTF8 string."
-msgstr "Obsah by měl být platným UTF-8 řetězcem."
-
-msgid "A content is required"
-msgstr "Obsah je povinný"
-
-msgid "The content should not be empty"
-msgstr "Obsah by neměl být prázdný"
-
-msgid "The content length should be between {0} and {1} characters."
-msgstr "Délka obsahu by měla být v rozmezí {0} až {1} znaků."
-
-msgid "The identifier of the user who created the comment should be a valid UUID."
-msgstr "Identifikátor uživatele, který vytvořil komentář, by měl být platný UUID."
-
-msgid "The identifier of the user who created the comment is required."
-msgstr "Identifikátor uživatele, který vytvořil komentář, je povinný."
-
-msgid "The identifier of the user who created the comment should not be empty."
-msgstr "Identifikátor uživatele, který vytvořil komentář, by neměl být prázdný."
-
-msgid "The identifier of the user who modified the comment should be a valid UUID."
-msgstr "Identifikátor uživatele, který modifikoval komentář, by měl být platný UUID."
-
-msgid "The identifier of the user who modified the comment required."
-msgstr "Identifikátor uživatele, který modifikoval komentář, je povinný."
-
-msgid "The identifier of the user who modified the comment should not be empty."
-msgstr "Identifikátor uživatele, který modifikoval komentář, by neměl být prázdný."
-
-msgid "Access denied."
-msgstr "Přístup odepřen."
-
-msgid "The parent comment does not exist."
-msgstr "Mateřský komentář neexistuje."
-
-msgid "The user cannot update this comment."
-msgstr "Uživatel nemůže aktualizovat tento komentář."
-
-msgid "The user cannot delete this comment."
-msgstr "Uživatel nemůže odstranit tento komentář."
-
-msgid "The commented object type does not exist."
-msgstr "Typ komentovaného objektu neexistuje."
-
-msgid "The favorite object type should be one of the following: {0}."
-msgstr "Typ oblíbeného objektu by měl být jeden z následujících: {0}."
-
-msgid "The favorite object type is required."
-msgstr "Typ oblíbeného objektu je povinný."
-
-msgid "The favorite object type should not be empty"
-msgstr "Typ oblíbeného objektu nemůže být prázdný"
-
-msgid "The favorite object identifier should be a valid UUID."
-msgstr "Identifikátor oblíbeného objektu by měl být platný UUID."
-
-msgid "The favorite object identifier is required."
-msgstr "Identifikátor oblíbeného objektu je povinný."
-
-msgid "The favorite object identifier should not be empty."
-msgstr "Identifikátor oblíbeného objektu by neměl být prázdný."
-
-msgid "The resource is already marked as favorite."
-msgstr "Tento dokument je již označen jako oblíbený."
-
-msgid "The user cannot delete this favorite."
-msgstr "Uživatel nemůže odstranit tuto oblíbenou položku."
-
-msgid "The armored key should be a valid ASCII string."
-msgstr "Klíč ve formátu ASCII-armored by měl být platný ASCII řetězec."
-
-msgid "An armored key is required."
-msgstr "Je vyžadován armored key."
-
-msgid "The armored key should not be empty."
-msgstr "Klíč ve formátu ASCII-armored by neměl být prázdný."
-
-msgid "The fingerprint should be a valid ASCII string."
-msgstr "Otisk by měl být platný ASCII řetězec."
-
-msgid "A fingerprint is required"
-msgstr "Fingerprint je povinný"
-
-msgid "The fingerprint should not be empty"
-msgstr "Otisk by neměl být prázdný"
-
-msgid "A length is required."
-msgstr "Délka je povinná."
-
-msgid "The identifier should be a valid BMP-UTF8 string."
-msgstr "Identifikátor by měl být platný BMP-UTF8 řetězec."
-
-msgid "The key identifier should be a valid ASCII string."
-msgstr "Identifikátor klíče by měl být platný ASCII řetězec."
-
-msgid "A key identifier is required."
-msgstr "Identifikátor klíče je povinný."
-
-msgid "The key identifier should not be empty."
-msgstr "Identifikátor klíče by neměl být prázdný."
-
-msgid "The type should be a valid ASCII string."
-msgstr "Typ by měl být platný ASCII řetězec."
-
-msgid "A type is required"
-msgstr "Typ je povinný"
-
-msgid "The type should not be empty"
-msgstr "Typ by neměl být prázdný"
-
-msgid "The expiry should be a valid date."
-msgstr "Datum expirace by měl být platný datum."
-
-msgid "The creation date should be a valid date."
-msgstr "Datum vytvoření by měl být platným datem."
-
-msgid "A creation date is required."
-msgstr "Datum vytvoření je povinný."
-
-msgid "The creation date should not be empty."
-msgstr "Datum vytvoření by neměl být prázdný."
-
-msgid "The deleted status should be a valid boolean."
-msgstr "Stav odstranění by měl být platný boolean."
-
-msgid "A deleted status is required"
-msgstr "Stav odstranění je povinný"
-
-msgid "A user identifier is required"
-msgstr "Uživatelský identifikátor je povinný"
-
-msgid "The user identifier should not be empty"
-msgstr "Identifikátor uživatele by neměl být prázdný"
-
-msgid "You cannot reuse the server keys."
-msgstr "Nelze znovu použít serverové klíče."
-
-msgid "A valid OpenPGP key must be provided."
-msgstr "Musí být zadán platný OpenPGP klíč."
-
-msgid "The OpenPGP armored key could not be parsed."
-msgstr "ASCII-armored klíč OpenPGP nelze analyzovat."
-
-msgid "The OpenPGP armored key could not be validated."
-msgstr "ASCII-armored klíč OpenPGP nelze ověřit."
-
-msgid "The name should be a valid UTF8 string."
-msgstr "Jméno by mělo být platný řetězec v UTF8."
-
-msgid "The name length should be maximum {0} characters."
-msgstr "Délka názvu by měla být maximálně {0} znaků."
-
-msgid "A name is required."
-msgstr "Jméno je vyžadováno."
-
-msgid "The name should not be empty."
-msgstr "Jméno by nemělo být prázdné."
-
-msgid "The identifier of the user who created the group should be a valid UUID."
-msgstr "Identifikátor uživatele, který vytvořil skupinu, by měl mít platné UUID."
-
-msgid "The identifier of the user who created the group is required."
-msgstr "Identifikátor uživatele, který vytvořil skupinu, je povinný."
-
-msgid "The identifier of the user who created the group should not be empty."
-msgstr "Identifikátor uživatele, který vytvořil skupinu, by neměl být prázdný."
-
-msgid "The identifier of the user who modified the group should be a valid UUID."
-msgstr "Identifikátor uživatele, který upravil skupinu, by měl být platný UUID."
-
-msgid "The identifier of the user who modified the group is required."
-msgstr "Identifikátor uživatele, který upravil skupinu, je povinný."
-
-msgid "The identifier of the user who modified the group should not be empty."
-msgstr "Identifikátor uživatele, který upravil skupinu, by neměl být prázdný."
-
-msgid "The name is already used by another group."
-msgstr "Tento název již používá jiná skupina."
-
-msgid "A group manager should be provided."
-msgstr "Měl by být uveden správce skupiny."
-
-msgid "The group should not be soft deleted."
-msgstr "Skupina by neměla být soft smazána."
-
-msgid "The group should not be sole owner of shared content, transfer the ownership to other users."
-msgstr "Skupina by neměla být jediným vlastníkem sdíleného obsahu, převeďte vlastnictví na ostatní uživatele."
-
-msgid "Could not validate group data."
-msgstr "Data skupiny se nepodařilo ověřit."
-
-msgid "Could not delete the group {0}, please try again later."
-msgstr "Skupinu {0} se nepodařilo odstranit, zkuste to prosím později."
-
-msgid "A group identifier is required."
-msgstr "Identifikátor skupiny je povinný."
-
-msgid "The group identifier should not be empty."
-msgstr "Identifikátor skupiny by neměl být prázdný."
-
-msgid "The group manager status should be a valid boolean."
-msgstr "Status správce skupiny by měl být platný boolean."
-
-msgid "A group manager status is required."
-msgstr "Status správce skupiny je povinný."
-
-msgid "The group manager status should not be empty."
-msgstr "Status správce skupiny by neměl být prázdný."
-
-msgid "The user is already member of this group."
-msgstr "Uživatel je již členem této skupiny."
-
-msgid "The property length should be maximum {0} characters."
-msgstr "Délka vlastnosti by měla být maximálně {0} znaků."
-
-msgid "A property is required."
-msgstr "Vlastnost je povinná."
-
-msgid "The property should not be empty."
-msgstr "Vlastnost by neměla být prázdná."
-
-msgid "The property should be an alphabetical string and only dot is accepted as special characters."
-msgstr "Vlastnost by měla být alfabetický řetězec a jako speciální znak je povolena pouze tečka."
-
-msgid "The property identifier should be a valid UUID."
-msgstr "Identifikátor vlastnosti by měl být platný UUID."
-
-msgid "A property identifier is required."
-msgstr "Identifikátor vlastnosti je povinný."
-
-msgid "The property identifier should not be empty."
-msgstr "Identifikátor vlastnosti by neměl být prázdný."
-
-msgid "The value should be a valid UTF8 string."
-msgstr "Hodnota by měla být platný řetězec UTF8."
-
-msgid "The value length should be maximum {0} characters."
-msgstr "Délka hodnoty by měla být maximálně {0} znaků."
-
-msgid "A value is required."
-msgstr "Hodnota je povinná."
-
-msgid "The value should not be empty."
-msgstr "Hodnota by neměla být prázdná."
-
-msgid "This property id is already in use."
-msgstr "Toto id vlastnosti je již používáno."
-
-msgid "Only admin can create or update organization settings."
-msgstr "Pouze administrátor může vytvořit nebo aktualizovat nastavení organizace."
-
-msgid "This is not a valid setting."
-msgstr "Toto není platné nastavení."
-
-msgid "The type of the access control object should be one of the following: {0}."
-msgstr "Typ objektu řízení přístupu by měl být jeden z následujících: {0}."
-
-msgid "The type of the access control object is required."
-msgstr "Typ objektu řízení přístupu je povinný."
-
-msgid "The type of the access control object should not be empty."
-msgstr "Typ objektu řízení přístupu by neměl být prázdný."
-
-msgid "The identifier of the access control object should be a valid UUID."
-msgstr "Identifikátor objektu řízení přístupu by měl být platný UUID."
-
-msgid "The identifier of the access control object is required."
-msgstr "Identifikátor objektu řízení přístupu je povinný."
-
-msgid "The identifier of the access control object should not be empty."
-msgstr "Identifikátor objektu řízení přístupu by neměl být prázdný."
-
-msgid "The access request object type should be one of the following: {0}."
-msgstr "Typ objektu žádosti o přístup by měl být jeden z následujících: {0}."
-
-msgid "The type of the access request object is required."
-msgstr "Typ objektu žádosti o přístup je povinný."
-
-msgid "The access request object type should not be empty."
-msgstr "Typ objektu žádosti o přístup by neměl být prázdný."
-
-msgid "The identifier of the access request object should be a valid UUID."
-msgstr "Identifikátor objektu žádosti o přístup by měl být platný UUID."
-
-msgid "The identifier of the access request object is required."
-msgstr "Identifikátor objektu žádosti o přístup je povinný."
-
-msgid "The identifier of the access request object should not be empty."
-msgstr "Identifikátor objektu žádosti o přístup by neměl být prázdný."
-
-msgid "A permission already exists for the given access control object and access request object."
-msgstr "Oprávnění pro daný objekt řízení přístupu a objekt žádosti o přístup již existuje."
-
-msgid "The access control object does not exist."
-msgstr "Objekt řízení přístupu neexistuje."
-
-msgid "The access request object does not exist."
-msgstr "Objekt žádosti o přístup neexistuje."
-
-msgid "A first name is required."
-msgstr "Jméno je vyžadováno."
-
-msgid "The first name should not be empty."
-msgstr "Křestní jméno by nemělo být prázdné."
-
-msgid "The first name should be a valid BMP-UTF8 string."
-msgstr "Křestní jméno by mělo být platný BMP-UTF8 řetězec."
-
-msgid "The first name length should be maximum {0} characters."
-msgstr "Délka křestního jména by měla být maximálně {0} znaků."
-
-msgid "A last name is required."
-msgstr "Příjmení je vyžadováno."
-
-msgid "The last name should not be empty."
-msgstr "Příjmení nesmí být prázdné."
-
-msgid "The last name should be a valid BMP-UTF8 string."
-msgstr "Příjmení by mělo být platný BMP-UTF8 řetězec."
-
-msgid "The last name length should be maximum {0} characters."
-msgstr "Délka příjmení by měla být maximálně {0} znaků."
-
-msgid "The username should be a valid UTF8 string."
-msgstr "Uživatelské jméno by mělo být platný řetězec UTF8."
-
-msgid "The username length should be maximum {0} characters."
-msgstr "Délka uživatelského jména by měla být maximálně {0} znaků."
-
-msgid "The uri should be a valid BMP-UTF8 string."
-msgstr "URI by mělo být platný BMP-UTF8 řetězec."
-
-msgid "The uri length should be maximum {0} characters."
-msgstr "Délka URI by měla být maximálně {0} znaků."
-
-msgid "The description should be a valid UTF8 string."
-msgstr "Popis by měl být platný UTF8 řetězec."
-
-msgid "The description length should be maximum {0} characters."
-msgstr "Délka popisu by měla být maximálně {0} znaků."
-
-msgid "The deleted status should not be empty"
-msgstr "Odstraněný stav by neměl být prázdný"
-
-msgid "The identifier of the user who created the resource should be a valid UUID."
-msgstr "Identifikátor uživatele, který vytvořil zdroj, by měl být platný UUID."
-
-msgid "The identifier of the user who created the resource is required."
-msgstr "Identifikátor uživatele, který vytvořil zdroj, je povinný."
-
-msgid "The identifier of the user who created the resource should not be empty."
-msgstr "Identifikátor uživatele, který vytvořil zdroj, by neměl být prázdný."
-
-msgid "The identifier of the user who last modified the resource should be a valid UUID."
-msgstr "Identifikátor uživatele, který naposledy upravil zdroj, by měl být platný UUID."
-
-msgid "The identifier of the user who last modified the resource required."
-msgstr "Identifikátor uživatele, který naposledy upravil zdroj, je povinný."
-
-msgid "The identifier of the user who last modified the resource should not be empty."
-msgstr "Identifikátor uživatele, který naposledy upravil zdroj, by neměl být prázdný."
-
-msgid "The resource type identifier should be a valid UUID."
-msgstr "Identifikátor typu zdroje by měl být platný UUID."
-
-msgid "A resource type identifier is required."
-msgstr "Identifikátor typu zdroje je povinný."
-
-msgid "The resource type should be one of the following: {0}."
-msgstr "Typ zdroje by měl být jeden z následujících: {0}."
-
-msgid "The permissions are required."
-msgstr "Oprávnění jsou povinná."
-
-msgid "The permissions should not be empty."
-msgstr "Oprávnění by neměla být prázdná."
-
-msgid "The permissions should contain only the permission of the owner."
-msgstr "Oprávnění by měla obsahovat pouze oprávnění vlastníka."
-
-msgid "The owner secret is required."
-msgstr "Tajný klíč vlastníka je povinný."
-
-msgid "The secrets should not be empty."
-msgstr "Tajné údaje by neměly být prázdné."
-
-msgid "The secrets should contain only the secret of the owner."
-msgstr "Tajné údaje by měly obsahovat pouze tajný údaj vlastníka."
-
-msgid "The metadata key ID should be a valid UUID."
-msgstr "ID klíče metadat by mělo být platné UUID."
-
-msgid "The metadata should be a valid ASCII string."
-msgstr "Metadata by měla být platný řetězec ASCII."
-
-msgid "The metadata should not be empty."
-msgstr "Metadata by neměla být prázdná."
-
-msgid "The metadata key type should be a valid UTF8 string."
-msgstr "Typ klíče metadat by měl být platný řetězec UTF8."
-
-msgid "The metadata key type should be one of the following: {0}."
-msgstr "Typ klíče metadat by měl být jeden z následujících: {0}."
-
-msgid "The resource type does not exist."
-msgstr "Typ zdroje neexistuje."
-
-msgid "The resource type should not be deleted."
-msgstr "Typ zdroje by neměl být odstraněn."
-
-msgid "The permissions should contain the owner permission."
-msgstr "Oprávnění by měla obsahovat oprávnění vlastníka."
-
-msgid "The secrets should contain the owner secret."
-msgstr "Tajné údaje by měly obsahovat tajný údaj vlastníka."
-
-msgid "The secrets should contain the secrets of all the users having access to the resource."
-msgstr "Tajné údaje by měly obsahovat tajné údaje všech uživatelů, kteří mají k prostředku přístup."
-
-msgid "The permissions should contain at least the owner permission."
-msgstr "Oprávnění by měla obsahovat alespoň oprávnění vlastníka."
-
-msgid "The settings selected by your administrator prevent from downgrading resource type."
-msgstr "Nastavení zvolené vaším administrátorem brání snížení typu zdroje."
-
-msgid "The settings selected by your administrator prevent from using that key type."
-msgstr "Nastavení zvolené vaším administrátorem brání použití tohoto typu klíče."
-
-msgid "The metadata key does not exist or was deleted."
-msgstr "Klíč metadat neexistuje nebo byl odstraněn."
-
-msgid "The metadata key is marked as expired."
-msgstr "Klíč metadat je označen jako expirovaný."
-
-msgid "The shared metadata key should be unique."
-msgstr "Sdílený klíč metadat by měl být jedinečný."
-
-msgid "It is not allowed to create v5-password-string resource types."
-msgstr "Není dovoleno vytvářet typy zdrojů v5-password-string."
-
-msgid "The resource metadata provided can not be decrypted."
-msgstr "Poskytnutá metadata zdroje nelze dešifrovat."
-
-msgid "A resource of type personal cannot be shared with other users or a group."
-msgstr "Zdroje typu 'personal' nelze sdílet s ostatními uživateli ani se skupinou."
-
-msgid "The settings selected by your administrator prevent from upgrading v4 to v5."
-msgstr "Nastavení zvolené vaším administrátorem brání upgradu z v4 na v5."
-
-msgid "The resource should not be already soft deleted."
-msgstr "Zdroj by neměl být již soft smazán."
-
-msgid "The user cannot delete this resource."
-msgstr "Uživatel nemůže odstranit tento zdroj."
-
-msgid "The resource type for this resource does not exist."
-msgstr "Typ zdroje pro tento prostředek neexistuje."
-
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr "Název by měl být platný BMP-UTF8 řetězec."
-
-msgid "The name should not be greater than 50 characters."
-msgstr "Název by neměl být delší než 50 znaků."
-
-msgid "The name should not be reserved role."
-msgstr "Název by neměl být vyhrazenou rolí."
-
-msgid "The description should be a valid BMP-UTF8 string."
-msgstr "Popis by měl být platný BMP-UTF8 řetězec."
-
-msgid "The role cannot be deleted as it is associated with another user."
-msgstr "Roli nelze odstranit, protože je přiřazena jinému uživateli."
-
-msgid "A reserved role cannot be deleted."
-msgstr "Vyhrazenou roli nelze odstranit."
-
-msgid "A role already exists for the given name."
-msgstr "Role s daným názvem již existuje."
-
-msgid "Only maximum of {0} active roles are allowed."
-msgstr "Je povoleno pouze maximálně {0} aktivních rolí."
-
-msgid "A reserved role cannot be renamed."
-msgstr "Vyhrazenou roli nelze přejmenovat."
-
-msgid "The resource identifier is required."
-msgstr "Identifikátor zdroje je povinný."
-
-msgid "The resource identifier should not be empty."
-msgstr "Identifikátor zdroje by neměl být prázdný."
-
-msgid "The secret revision identifier should be a valid UUID."
-msgstr "Identifikátor revize tajemství by měl být platný UUID."
-
-msgid "A secret revision identifier is required."
-msgstr "Identifikátor revize tajemství je povinný."
-
-msgid "The secret revision identifier should not be empty."
-msgstr "Identifikátor revize tajemství by neměl být prázdný."
-
-msgid "The message should be a valid ASCII string."
-msgstr "Zpráva by měla být platný ASCII řetězec."
-
-msgid "A message is required."
-msgstr "Zpráva je povinná."
-
-msgid "The message should not be empty."
-msgstr "Zpráva by neměla být prázdná."
-
-msgid "A secret already exists for the given user and resource."
-msgstr "Tajný údaj již existuje pro daného uživatele a zdroj."
-
-msgid "A secret already exists for the given user, resource and secret revision."
-msgstr "Pro daného uživatele, zdroj a revizi tajemství již tajemství existuje."
-
-msgid "The secret revision does not exist or is deleted."
-msgstr "Revize tajemství neexistuje nebo byla odstraněna."
-
-msgid "The user identifier by should be a valid UUID."
-msgstr "Identifikátor uživatele by měl být platný UUID."
-
-msgid "A username is required."
-msgstr "Uživatelské jméno je vyžadováno."
-
-msgid "The username should be a valid email address."
-msgstr "Uživatelské jméno by mělo být platná emailová adresa."
-
-msgid "The role identifier should be a valid UUID."
-msgstr "Identifikátor role by měl být platný UUID."
-
-msgid "A role identifier is required."
-msgstr "Identifikátor role je povinný."
-
-msgid "The disabled date should be a valid date."
-msgstr "Datum deaktivace by mělo být platné datum."
-
-msgid "The profile should not be empty."
-msgstr "Profil by neměl být prázdný."
-
-msgid "The username should not be empty."
-msgstr "Uživatelské jméno by nemělo být prázdné."
-
-msgid "The username length should be maximum 255 characters."
-msgstr "Délka uživatelského jména by měla být maximálně 255 znaků."
-
-msgid "The username is already in use."
-msgstr "Uživatelské jméno je již používáno."
-
-msgid "The role does not exist."
-msgstr "Role neexistuje."
-
-msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
-msgstr "Uživatel by neměl být jediným vlastníkem sdíleného obsahu, převeďte vlastnictví na ostatní uživatele."
-
-msgid "The user should not be sole group manager of group(s), transfer the management to other users."
-msgstr "Uživatel by neměl být jediným správcem skupiny (skupin), předejte správu ostatním uživatelům."
-
-msgid "Could not delete the user {0}, please try again later."
-msgstr "Uživatele {0} se nepodařilo odstranit, zkuste to prosím později."
-
-msgid "The armored key should be a valid ASCII-armored OpenPGP key."
-msgstr "Klíč ve formátu ASCII-armored by měl být platný OpenPGP klíč."
-
-msgid "The armored key is not valid."
-msgstr "ASCII-armored klíč není platný."
-
-msgid "The message should be a valid ASCII-armored OpenPGP message."
-msgstr "Zpráva by měla být platná ASCII-armored zpráva OpenPGP."
-
-msgid "The creation date should be set in the past."
-msgstr "Datum vytvoření by mělo být nastaveno v minulosti."
-
-msgid "The key should not already be expired."
-msgstr "Klíč nesmí být již expirován."
-
-msgid "The date should not be set in the future."
-msgstr "Datum by nemělo být nastaveno do budoucnosti."
-
-msgid "The date could not be parsed."
-msgstr "Datum se nepodařilo zpracovat."
-
-msgid "The email should be a valid email address."
-msgstr "E-mail by měl být platná e-mailová adresa."
-
-msgid "The regular expression should be a valid string."
-msgstr "Regulární výraz by měl být platný řetězec."
-
-msgid "The fingerprint does not match the one of the armored key."
-msgstr "Otisk se neshoduje s otiskem ASCII-armored klíče."
-
-msgid "The fingerprint should be a string of 40 hexadecimal characters."
-msgstr "Otisk by měl být řetězec o 40 hexadecimálních znacích."
-
-msgid "The type should be one of the following: RSA, ECC, ECDSA, DH."
-msgstr "Typ by měl být jedním z následujících: RSA, ECC, ECDSA, DH."
-
-msgid "The delete status should be a valid boolean."
-msgstr "Stav odstranění by měl být platný boolean."
-
-msgid "The field must be null when creating a new record."
-msgstr "Pole musí být při vytváření nového záznamu prázdné (null)."
-
-msgid "The key identifier should be a string of 8 hexadecimal characters."
-msgstr "Identifikátor klíče by měl být řetězec o 8 hexadecimálních znacích."
-
-msgid "The provided IP is invalid."
-msgstr "Zadaná IP adresa je neplatná."
-
-msgid "The provided user agent is invalid."
-msgstr "Zadaný user agent je neplatný."
-
-msgid "{0} updated your memberships in several groups"
-msgstr "{0} aktualizoval(a) vaše členství v několika skupinách"
-
-msgid "{0} deleted several group memberships"
-msgstr "{0} smazal(a) několik členství ve skupinách"
-
-msgid "You made changes on several resources"
-msgstr "Provedli jste změny u několika prostředků"
-
-msgid "{0} has made changes on several resources"
-msgstr "{0} provedl(a) změny na několika prostředcích"
-
-msgid "{0} shared several items with you"
-msgstr "{0} s vámi sdílel(a) několik položek"
-
-msgid "{0} just activated their account on passbolt"
-msgstr "{0} právě aktivoval(a) svůj účet na passboltu"
-
-msgid "{0} commented on {1}"
-msgstr "{0} okomentoval(a) {1}"
-
-msgid "{0} deleted the group {1}"
-msgstr "{0} odstranil(a) skupinu {1}"
-
-msgid "{0} updated the group {1}"
-msgstr "{0} aktualizoval(a) skupinu {1}"
-
-msgid "{0} added you to the group {1}"
-msgstr "{0} vás přidal(a) do skupiny {1}"
-
-msgid "{0} requested you to add members to {1}"
-msgstr "{0} požádal(a) o přidání členů do {1}"
-
-msgid "You have been requested to add members to {0}"
-msgstr "Byli jste požádáni o přidání členů do {0}"
-
-msgid "{0} removed you from the group {1}"
-msgstr "{0} vás odstranil(a) ze skupiny {1}"
-
-msgid "{0} updated your membership in the group {1}"
-msgstr "{0} aktualizoval(a) vaše členství ve skupině {1}"
-
-msgid "{0} just completed the account recovery process"
-msgstr "{0} právě dokončil(a) proces obnovení účtu"
-
-msgid "You just completed the account recovery process!"
-msgstr "Právě jste dokončili proces obnovení účtu!"
-
-msgid "Your account recovery, {0}!"
-msgstr "Obnovení vašeho účtu, {0}!"
-
-msgid "You added the password {0}"
-msgstr "Přidali jste heslo {0}"
-
-msgid "You added a new password"
-msgstr "Přidali jste nové heslo"
-
-msgid "{0} deleted the password {1}"
-msgstr "{0} odstranil(a) heslo {1}"
-
-msgid "{0} deleted a password"
-msgstr "{0} odstranil(a) heslo"
-
-msgid "You edited a resource"
-msgstr "Upravili jste zdroj"
-
-msgid "{0} edited a resource"
-msgstr "{0} upravil(a) zdroj"
-
-msgid "You edited the resource {0}"
-msgstr "Upravili jste zdroj {0}"
-
-msgid "{0} edited the resource {1}"
-msgstr "{0} upravil(a) zdroj {1}"
-
-msgid "{0} created a new role {1}"
-msgstr "{0} vytvořil novou roli {1}"
-
-msgid "{0} updated the role {1}"
-msgstr "{0} aktualizoval roli {1}"
-
-msgid "{0} cannot complete the account recovery process!"
-msgstr "{0} nemůže dokončit proces obnovení účtu!"
-
-msgid "{0} shared the resource {1}"
-msgstr "{0} sdílel(a) zdroj {1}"
-
-msgid "{0} shared a resource"
-msgstr "{0} sdílel(a) zdroj"
-
-msgid "You deleted administrator {0}"
-msgstr "Odstranili jste administrátora {0}"
-
-msgid "{0} deleted your account"
-msgstr "{0} smazal(a) váš účet"
-
-msgid "{0} deleted administrator {1}"
-msgstr "{0} smazal(a) administrátora {1}"
-
-msgid "Your account has been suspended"
-msgstr "Váš účet byl pozastaven"
-
-msgid "{0}'s admin role has been revoked"
-msgstr "Role administrátora uživatele {0} byla odebrána"
-
-msgid "{0} deleted user {1}"
-msgstr "{0} odstranil(a) uživatele {1}"
-
-msgid "{0} has been suspended"
-msgstr "{0} byl pozastaven"
-
-msgid "Welcome to passbolt, {0}!"
-msgstr "Vítejte v passboltu, {0}!"
-
-msgid "Your role has been updated"
-msgstr "Vaše role byla aktualizována"
-
-msgid "The purify subject setting should be a boolean."
-msgstr "Nastavení purify subject by mělo být platný boolean."
-
-msgid "The show comment setting should be a boolean."
-msgstr "Nastavení show comment by mělo být platný boolean."
-
-msgid "The show description setting should be a boolean."
-msgstr "Nastavení show description by mělo být platný boolean."
-
-msgid "The show secret setting should be a boolean."
-msgstr "Nastavení show secret by mělo být platný boolean."
-
-msgid "The show uri setting should be a boolean."
-msgstr "Nastavení show uri by mělo být platný boolean."
-
-msgid "The show username setting should be a boolean."
-msgstr "Nastavení show username by mělo být platný boolean."
-
-msgid "The send on user setup completed setting should be a boolean."
-msgstr "Nastavení send on user setup completed by mělo být platný boolean."
-
-msgid "The send on user recover abort setting should be a boolean."
-msgstr "Nastavení odeslání při zrušení obnovení uživatele by mělo být boolean."
-
-msgid "The send on user disabled setting should be a boolean."
-msgstr "Nastavení \"send on user disabled\" by mělo být typu boolean."
-
-msgid "The send on admin disabled setting should be a boolean."
-msgstr "Nastavení \"send on admin disabled\" by mělo být typu boolean."
-
-msgid "The send on comment added setting should be a boolean."
-msgstr "Nastavení send on comment added by mělo být platný boolean."
-
-msgid "The send on group deleted setting should be a boolean."
-msgstr "Nastavení send on group deleted by mělo být platný boolean."
-
-msgid "The send on group user added setting should be a boolean."
-msgstr "Nastavení send on group user added by mělo být platný boolean."
-
-msgid "The send on group user deleted setting should be a boolean."
-msgstr "Nastavení send on group user deleted by mělo být platný boolean."
-
-msgid "The send on group user updated setting should be a boolean."
-msgstr "Nastavení send on group user updated by mělo být platný boolean."
-
-msgid "The send on group manager updated setting should be a boolean."
-msgstr "Nastavení send on group manager updated by mělo být platný boolean."
-
-msgid "The send on group manager request add user should be a boolean."
-msgstr "Nastavení odeslání při žádosti správce skupiny o přidání uživatele by mělo být typu boolean."
-
-msgid "The send on password created setting should be a boolean."
-msgstr "Nastavení send on password created by mělo být platný boolean."
-
-msgid "The send on password shared setting should be a boolean."
-msgstr "Nastavení send on password shared by mělo být platný boolean."
-
-msgid "The send on password updated setting should be a boolean."
-msgstr "Nastavení send on password updated by mělo být platný boolean."
-
-msgid "The send on password deleted setting should be a boolean."
-msgstr "Nastavení send on password deleted by mělo být platný boolean."
-
-msgid "The send on user created setting should be a boolean."
-msgstr "Nastavení send on user created by mělo být platný boolean."
-
-msgid "The send on user recovered setting should be a boolean."
-msgstr "Nastavení send on user recovered by mělo být platný boolean."
-
-msgid "The token is expired."
-msgstr "Tento token vypršel."
-
-msgid "The authentication token is not valid."
-msgstr "Ověřovací token není platný."
-
-msgid "The authentication token could not be found."
-msgstr "Ověřovací token nebyl nalezen."
-
-msgid "The token is already consumed."
-msgstr "Token již byl použit."
-
-msgid "Validation failed for authenticationToken {0}. {1}"
-msgstr "Ověření selhalo pro ověřovací token {0}. {1}"
-
-msgid "Validation success for authenticationToken {0}"
-msgstr "Ověření bylo úspěšné pro ověřovací token {0}"
-
-msgid "Could not save the avatar in the {0} file."
-msgstr "Nepodařilo se uložit avatar do souboru {0}."
-
-msgid "The avatar id is not valid."
-msgstr "ID avataru není platné."
-
-msgid "Could not save the comment, please try again later."
-msgstr "Komentář nelze uložit, zkuste to prosím později."
-
-msgid "Could not validate comment data."
-msgstr "Nepodařilo se ověřit komentář."
-
-msgid "The comment userId is not valid."
-msgstr "Identifikátor uživatele komentáře (userId) je neplatný."
-
-msgid "The comment does not exist."
-msgstr "Komentář neexistuje."
-
-msgid "Could not delete comment."
-msgstr "Komentář se nepodařilo odstranit."
-
-msgid "Validation failed for comment {0}. {1}"
-msgstr "Validace komentáře {0} selhala. {1}"
-
-msgid "Validation success for comment {0}"
-msgstr "Validace komentáře {0} byla úspěšná"
-
-msgid "You are not allowed to edit this comment."
-msgstr "Nemáte dostatečná oprávnění pro úpravu tohoto komentáře."
-
-msgid "Could not find comments for the requested model."
-msgstr "K požadovanému modelu se nepodařilo najít komentáře."
-
-msgid "This record is already marked as favorite."
-msgstr "Tato položka je již označená jako oblíbená."
-
-msgid "Could not validate favorite data."
-msgstr "Nepodařilo se ověřit data oblíbené položky."
-
-msgid "The favorite does not exist."
-msgstr "Oblíbená položka neexistuje."
-
-msgid "Could not delete favorite."
-msgstr "Oblíbenou položku se nepodařilo odstranit."
-
-msgid "Validation failed for favorite {0}. {1}"
-msgstr "Ověření oblíbené položky {0} selhalo. {1}"
-
-msgid "Validation success for favorite {0}"
-msgstr "Ověření oblíbené položky {0} bylo úspěšné"
-
-msgid "Validation success for key {0}"
-msgstr "Ověření klíče {0} bylo úspěšné"
-
-msgid "Validation failed for key {0}. {1}"
-msgstr "Validace klíče {0} selhala. {1}"
-
-msgid "Encryption success for key {0}"
-msgstr "Šifrování pro klíč {0} bylo úspěšné"
-
-msgid "Failed to encrypt with key {0}. {1}"
-msgstr "Šifrování pomocí klíče {0} selhalo. {1}"
-
-msgid "Key expired: {0}."
-msgstr "Platnost klíče vypršela: {0}."
-
-msgid "Expiration date valid for key {0}."
-msgstr "Datum expirace je platné pro klíč {0}."
-
-msgid "Validation failed for group {0}. {1}"
-msgstr "Validace skupiny {0} selhala. {1}"
-
-msgid "Validation success for group {0}"
-msgstr "Ověření skupiny {0} bylo úspěšné"
-
-msgid "Could not validate group user data."
-msgstr "Nelze ověřit data uživatele skupiny."
-
-msgid "The resource with ID {0} does not have a secret revision."
-msgstr "Zdroj s ID {0} nemá revizi tajemství."
-
-msgid "All email notifications will be sent."
-msgstr "Všechna e-mailová upozornění budou odeslána."
-
-msgid "Some email notifications are disabled by the administrator."
-msgstr "Některá e-mailová upozornění jsou správcem zakázána."
-
-msgid "Host availability will be checked."
-msgstr "Dostupnost hostitele bude zkontrolována."
-
-msgid "Host availability checking is disabled."
-msgstr "Kontrola dostupnosti hostitele je zakázána."
-
-msgid "Make sure this instance is not publicly available on the internet."
-msgstr "Ujistěte se, že tato instance není veřejně dostupná na internetu."
-
-msgid "Or set the PASSBOLT_EMAIL_VALIDATE_MX environment variable to true."
-msgstr "Nebo nastavte proměnnou prostředí PASSBOLT_EMAIL_VALIDATE_MX na hodnotu true."
-
-msgid "Or set passbolt.email.validate.mx to true in {0}."
-msgstr "Nebo nastavte passbolt.email.validate.mx na hodnotu true v {0}."
-
-msgid "Serving the compiled version of the javascript app."
-msgstr "Poskytuje se zkompilovaná verze javascriptové aplikace."
-
-msgid "Using non-compiled Javascript. Passbolt will be slower."
-msgstr "Používá se nekompilovaný JavaScript. Passbolt bude pomalejší."
-
-msgid "Set passbolt.js.build to production in {0}"
-msgstr "Nastavte passbolt.js.build na production v {0}"
-
-msgid "undefined"
-msgstr "nedefinováno"
-
-msgid "Could not read tag information on github repository"
-msgstr "Nelze číst informace o tagu v repozitáři GitHub"
-
-msgid "Using latest passbolt version ({0})."
-msgstr "Používá se nejnovější verze passboltu ({0})."
-
-msgid "Could connect to passbolt repository to check versions."
-msgstr "Podařilo se připojit k repozitáři passboltu pro kontrolu verzí."
-
-msgid "This installation is not up to date. Currently using {0} and it should be {1}."
-msgstr "Tato instalace není aktuální. Momentálně používá verzi {0}, ale měla by {1}."
-
-msgid "Could not connect to passbolt repository to check versions."
-msgstr "Nelze se připojit k repozitáři Passboltu pro kontrolu verzí."
-
-msgid "It is not possible to check if your version is up-to-date."
-msgstr "Není možné ověřit, zda je vaše verze aktuální."
-
-msgid "See https://www.passbolt.com/help/tech/update"
-msgstr "Navštivte https://www.passbolt.com/help/tech/update"
-
-msgid "Check the network configuration to allow this script to check for updates."
-msgstr "Zkontrolujte síťovou konfiguraci, aby tento skript mohl kontrolovat aktualizace."
-
-msgid "Search engine robots are told not to index content."
-msgstr "Robotům vyhledávačů je sděleno, aby neindexovali obsah."
-
-msgid "Search engine robots are not told not to index content."
-msgstr "Robotům vyhledávačů není sděleno, aby neindexovali obsah."
-
-msgid "Set passbolt.meta.robots to false in {0}."
-msgstr "Nastavte passbolt.meta.robots na false v {0}."
-
-msgid "Selenium API endpoints are disabled."
-msgstr "Koncové body Selenium API jsou deaktivovány."
-
-msgid "Selenium API endpoints are active. This setting should be used for testing only."
-msgstr "Koncové body Selenium API jsou aktivní. Toto nastavení by mělo být použito pouze pro testování."
-
-msgid "Set passbolt.selenium.active to false in {0}."
-msgstr "Nastavte passbolt.selenium.active na false v {0}."
-
-msgid "The Self Registration plugin is enabled."
-msgstr "Plugin Self Registration je povolen."
-
-msgid "The Self Registration plugin is disabled."
-msgstr "Plugin Self Registration je zakázán."
-
-msgid "Enable the plugin in order to define self registration settings."
-msgstr "Povolte plugin, abyste mohli nastavit samoregistraci."
-
-msgid "Registration is closed, only administrators can add users."
-msgstr "Registrace je uzavřena, nové uživatele mohou přidávat pouze administrátoři."
-
-msgid "The self registration provider is: {0}."
-msgstr "Poskytovatelem samoregistrace je: {0}."
-
-msgid "The deprecated self registration public setting was not found in {0}."
-msgstr "Zastaralé veřejné nastavení samoregistrace nebylo nalezeno v {0}."
-
-msgid "The deprecated self registration public setting was found in {0}."
-msgstr "Zastaralé veřejné nastavení samoregistrace bylo nalezeno v {0}."
-
-msgid "You may remove the \"passbolt.registration.public\" setting."
-msgstr "Můžete odstranit nastavení \"passbolt.registration.public\"."
-
-msgid "Passbolt is configured to force SSL use."
-msgstr "Passbolt je nakonfigurován tak, aby vynucoval použití SSL."
-
-msgid "Passbolt is not configured to force SSL use."
-msgstr "Passbolt není nakonfigurován tak, aby vynucoval použití SSL."
-
-msgid "Set passbolt.ssl.force to true in {0}."
-msgstr "Nastavte passbolt.ssl.force na true v {0}."
-
-msgid "App.fullBaseUrl is set to HTTPS."
-msgstr "App.fullBaseUrl je nastaveno na HTTPS."
-
-msgid "App.fullBaseUrl is not set to HTTPS."
-msgstr "App.fullBaseUrl není nastaveno na HTTPS."
-
-msgid "Check App.fullBaseUrl url scheme in {0}."
-msgstr "Zkontrolujte schéma URL App.fullBaseUrl v {0}."
-
-msgid "The application config file is present"
-msgstr "Konfigurační soubor aplikace je přítomen"
-
-msgid "The application config file is missing in {0}"
-msgstr "Konfigurační soubor aplikace chybí v {0}"
-
-msgid "Copy {0} to {1}"
-msgstr "Zkopírujte {0} do {1}"
-
-msgid "The passbolt config file is present"
-msgstr "Konfigurační soubor passboltu je přítomen"
-
-msgid "The passbolt config file is missing in {0}"
-msgstr "Konfigurační soubor passboltu chybí v {0}"
-
-msgid "The passbolt config file is not required if passbolt is configured with environment variables"
-msgstr "Konfigurační soubor passboltu není vyžadován, pokud je passbolt konfigurován pomocí proměnných prostředí"
-
-msgid "Cache is working."
-msgstr "Mezipaměť funguje."
-
-msgid "Cache is NOT working."
-msgstr "Mezipaměť není funkční."
-
-msgid "Deprecated `_cake_core_` cache configuration found."
-msgstr "Bylo nalezeno zastaralé nastavení cache `_cake_core_`."
-
-msgid "Check the settings in {0}"
-msgstr "Zkontrolujte nastavení v {0}"
-
-msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
-msgstr "V konfiguračním souboru {0} nahraďte `_cake_core_` za `_cake_translations_`."
-
-msgid "Debug mode is off."
-msgstr "Režim ladění je vypnutý."
-
-msgid "Debug mode is on."
-msgstr "Režim ladění je zapnutý."
-
-msgid "Set debug to false in {0}"
-msgstr "Nastavte debug na false v {0}"
-
-msgid "Full base url is set to {0}"
-msgstr "Úplná základní URL je nastavena na {0}"
-
-msgid "Full base url is not set. The application is using: {0}."
-msgstr "Úplná základní URL není nastavena. Aplikace používá: {0}."
-
-msgid "Edit App.fullBaseUrl in {0}"
-msgstr "Upravte App.fullBaseUrl v {0}"
-
-msgid "/healthcheck/status is reachable."
-msgstr "/healthcheck/status je dostupné."
-
-msgid "Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl"
-msgstr "Nelze se dostat na /healthcheck/status s URL uvedenou v App.fullBaseUrl"
-
-msgid "Check that the domain name is correct in {0}"
-msgstr "Zkontrolujte, že název domény je správný v {0}"
-
-msgid "Check the network settings"
-msgstr "Zkontrolujte nastavení sítě"
-
-msgid "Unique value set for security.salt"
-msgstr "Pro security.salt je nastavena jedinečná hodnota"
-
-msgid "Default value found for security.salt"
-msgstr "Pro security.salt byla nalezena výchozí hodnota"
-
-msgid "Edit the security.salt in {0}"
-msgstr "Upravte security.salt v {0}"
-
-msgid "App.fullBaseUrl validation OK."
-msgstr "Validace App.fullBaseUrl proběhla v pořádku."
-
-msgid "App.fullBaseUrl does not validate. A valid URL/IP is accepted, but found \"{0}\"."
-msgstr "App.fullBaseUrl není platná. Je akceptována platná URL/IP, ale nalezeno \"{0}\"."
-
-msgid "Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt"
-msgstr "Vyberte platný název domény, jak je definováno v oddíle 2.3.1 dokumentu http://www.ietf.org/rfc/rfc1035.txt"
-
-msgid "IMPORTANT: Using an empty App.fullBaseUrl can lead to host header injection attack: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
-msgstr "DŮLEŽITÉ: Použití prázdného App.fullBaseUrl může vést k útoku typu host header injection: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
-
-msgid "The application is able to connect to the database"
-msgstr "Aplikace se dokáže připojit k databázi"
-
-msgid "The driver defined in the database configuration is not supported."
-msgstr "Ovladač definovaný v konfiguraci databáze není podporován."
-
-msgid "The application is not able to connect to the database."
-msgstr "Aplikace se nedokáže připojit k databázi."
-
-msgid "Ensure that the driver defined in {0} is one of the following: {1}."
-msgstr "Ujistěte se, že ovladač definovaný v {0} je jedním z následujících: {1}."
-
-msgid "Double check the host, database name, username and password in {0}."
-msgstr "Znovu ověřte hostitele, název databáze, uživatelské jméno a heslo v {0}."
-
-msgid "Make sure the database exists and is accessible for the given database user."
-msgstr "Ujistěte se, že databáze existuje a je přístupná pro daného databázového uživatele."
-
-msgid "Some default content is present."
-msgstr "Některý výchozí obsah je přítomen."
-
-msgid "No default content found."
-msgstr "Nenalezen žádný výchozí obsah."
-
-msgid "Run the install script to install the database tables"
-msgstr "Pro instalaci databázových tabulek spusťte instalační skript"
-
-msgid "The database version is supported."
-msgstr "Verze databáze je podporována."
-
-msgid "The database version is deprecated."
-msgstr "Verze databáze je zastaralá."
-
-msgid "The model schema cache shows no discrepancies with the database schema."
-msgstr "Mezipaměť schématu modelu nevykazuje žádné nesrovnalosti se schématem databáze."
-
-msgid "The model schema cache shows discrepancies with the database schema."
-msgstr "Mezipaměť schématu modelu vykazuje nesrovnalosti se schématem databáze."
-
-msgid "{0}: {1}."
-msgstr "{0}: {1}."
-
-msgid "Clear the model schema cache so it is rebuilt from the database."
-msgstr "Vymažte mezipaměť schématu modelu, aby byla znovu sestavena z databáze."
-
-msgid "Consider running `{0}`. More information: {1}"
-msgstr "Zvažte spuštění příkazu `{0}`. Více informací: {1}"
-
-msgid "The database schema is up to date."
-msgstr "Schéma databáze je aktuální."
-
-msgid "The database schema is not up to date."
-msgstr "Schéma databáze není aktuální."
-
-msgid "Run the migration scripts:"
-msgstr "Spusťte migrační skripty:"
-
-msgid "{0} tables found."
-msgstr "Nalezeno {0} tabulek."
-
-msgid "No table found."
-msgstr "Nebyla nalezena žádná tabulka."
-
-msgid "Cannot detect your system distribution details."
-msgstr "Nelze zjistit podrobnosti o distribuci vašeho systému."
-
-msgid "See `{0}`."
-msgstr "Viz `{0}`."
-
-msgid "Cannot detect your `gpg` or `libgcrypt` version."
-msgstr "Nelze zjistit verzi `gpg` nebo `libgcrypt`."
-
-msgid "See `{0}` and `{1}`."
-msgstr "Viz `{0}` a `{1}`."
-
-msgid "GD or Imagick extension is installed."
-msgstr "Rozšíření GD nebo Imagick je nainstalováno."
-
-msgid "You must enable the gd or imagick extensions to use Passbolt."
-msgstr "Abyste mohli používat passbolt, musíte povolit rozšíření gd nebo imagick."
-
-msgid "See: https://secure.php.net/manual/en/book.image.php"
-msgstr "Viz: https://secure.php.net/manual/en/book.image.php"
-
-msgid "See: https://secure.php.net/manual/en/book.imagick.php"
-msgstr "Viz: https://secure.php.net/manual/en/book.imagick.php"
-
-msgid "Intl extension is installed."
-msgstr "Rozšíření intl je nainstalováno."
-
-msgid "You must enable the intl extension to use Passbolt."
-msgstr "Abyste mohli používat passbolt, musíte povolit rozšíření intl."
-
-msgid "See: https://secure.php.net/manual/en/book.intl.php"
-msgstr "Viz: https://secure.php.net/manual/en/book.intl.php"
-
-msgid "The logs directory {0} and its content are writable."
-msgstr "Adresář logů {0} a jeho obsah jsou zapisovatelné."
-
-msgid "The logs directory {0} and its content are not writable."
-msgstr "Adresář logů {0} a jeho obsah nejsou zapisovatelné."
-
-msgid "Ensure the logs directory and its content are writable by the webserver user."
-msgstr "Ujistěte se, že adresář logs a jeho obsah jsou zapisovatelné uživatelem webového serveru."
-
-msgid "You can try:"
-msgstr "Můžete vyzkoušet:"
-
-msgid "Mbstring extension is installed."
-msgstr "Rozšíření mbstring je nainstalováno."
-
-msgid "You must enable the mbstring extension to use Passbolt."
-msgstr "Abyste mohli používat passbolt, musíte povolit rozšíření mbstring."
-
-msgid "See: https://secure.php.net/manual/en/book.mbstring.php"
-msgstr "Viz: https://secure.php.net/manual/en/book.mbstring.php"
-
-msgid "PHP version is {0} or above."
-msgstr "Verze PHP je {0} nebo vyšší."
-
-msgid "PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment."
-msgstr "Verze PHP nižší než {0} nebude brzy passboltem podporována, zvažte proto upgrade operačního systému nebo prostředí PHP."
-
-msgid "64-bit architecture system detected."
-msgstr "Byl zjištěn systém s 64bitovou architekturou."
-
-msgid "32-bit architecture system detected, this environment will not be supported as of Passbolt v5+."
-msgstr "Byl zjištěn systém s 32bitovou architekturou, toto prostředí nebude podporováno od Passbolt v5+."
-
-msgid "See PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
-msgstr "Viz PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
-
-msgid "PCRE compiled with unicode support."
-msgstr "PCRE je zkompilováno s podporou Unicode."
-
-msgid "PCRE has not been compiled with Unicode support."
-msgstr "PCRE nebylo zkompilováno s podporou Unicode."
-
-msgid "Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring."
-msgstr "Překompilujte PCRE s podporou Unicode přidáním parametru --enable-unicode-properties při konfiguraci."
-
-msgid "PHP version {0}."
-msgstr "PHP verze {0}."
-
-msgid "PHP version is too low, passbolt need PHP {0} or higher."
-msgstr "Verze PHP je příliš nízká, passbolt vyžaduje PHP {0} nebo vyšší."
-
-msgid "System clock is synchronized and NTP service is active."
-msgstr "Systémové hodiny jsou synchronizovány a služba NTP je aktivní."
-
-msgid "System clock and NTP service information cannot be found."
-msgstr "Informace o systémových hodinách ani službě NTP nebyly nalezeny."
-
-msgid "NTP service is active but the system clock is not synchronized."
-msgstr "Služba NTP je aktivní, ale systémové hodiny nejsou synchronizovány."
-
-msgid "System clock is synchronized but NTP service is inactive."
-msgstr "Systémové hodiny jsou synchronizovány, ale služba NTP je neaktivní."
-
-msgid "System clock is not synchronized and NTP service is inactive."
-msgstr "Systémové hodiny nejsou synchronizovány a služba NTP je neaktivní."
-
-msgid "That generally means the NTP service is failing to contact any NTP servers."
-msgstr "To obvykle znamená, že se službě NTP nedaří kontaktovat žádné NTP servery."
-
-msgid "See `{0}`. More information: {1}"
-msgstr "Viz `{0}`. Více informací: {1}"
-
-msgid "The temporary directory and its content are writable and not executable."
-msgstr "Dočasný adresář a jeho obsah jsou zapisovatelné a nejsou spustitelné."
-
-msgid "The temporary directory and its content are not writable, or are executable."
-msgstr "Dočasný adresář a jeho obsah nejsou zapisovatelné nebo jsou spustitelné."
-
-msgid "Ensure the temporary directory and its content are writable by the webserver user."
-msgstr "Ujistěte se, že dočasný adresář a jeho obsah jsou zapisovatelné uživatelem webového serveru."
-
-msgid "you can try:"
-msgstr "můžete vyzkoušet:"
-
-msgid "The private key can be used to decrypt a message."
-msgstr "Soukromý klíč lze použít k dešifrování zprávy."
-
-msgid "The private key cannot be used to decrypt a message"
-msgstr "Soukromý klíč nelze použít k dešifrování zprávy"
-
-msgid "The private key can be used to decrypt and verify a message."
-msgstr "Soukromý klíč lze použít k dešifrování a ověření zprávy."
-
-msgid "The private key cannot be used to decrypt and verify a message"
-msgstr "Soukromý klíč nelze použít k dešifrování a ověření zprávy"
-
-msgid "The public key can be used to encrypt a message."
-msgstr "Veřejný klíč lze použít k šifrování zprávy."
-
-msgid "The public key cannot be used to encrypt a message"
-msgstr "Veřejný klíč nelze použít k šifrování zprávy"
-
-msgid "Make sure that the server private key is valid and that there is no passphrase."
-msgstr "Ujistěte se, že soukromý klíč serveru je platný a nemá žádné heslo."
-
-msgid "Make sure you imported the private server key in the keyring of the webserver user."
-msgstr "Ujistěte se, že jste importovali soukromý klíč serveru do klíčenky uživatele webového serveru."
-
-msgid "The public and private keys can be used to encrypt and sign a message."
-msgstr "Veřejný a soukromý klíč lze použít k zašifrování a podepsání zprávy."
-
-msgid "The public and private keys cannot be used to encrypt and sign a message"
-msgstr "Veřejný a soukromý klíč nelze použít k zašifrování a podepsání zprávy"
-
-msgid "The private key can be used to sign a message."
-msgstr "Soukromý klíč lze použít k podepsání zprávy."
-
-msgid "The private key cannot be used to sign a message"
-msgstr "Soukromý klíč nelze použít k podepsání zprávy"
-
-msgid "The public key can be used to verify a signature."
-msgstr "Veřejný klíč lze použít k ověření podpisu."
-
-msgid "The public key cannot be used to verify a signature."
-msgstr "Veřejný klíč nelze použít k ověření podpisu."
-
-msgid "The server key fingerprint matches the one defined in {0}."
-msgstr "Otisk klíče serveru odpovídá tomu definovanému v {0}."
-
-msgid "The server key fingerprint doesn't match the one defined in {0}."
-msgstr "Otisk klíče serveru neodpovídá tomu definovanému v {0}."
-
-msgid "Double check the key fingerprint, example: "
-msgstr "Znovu ověřte otisk klíče, například: "
-
-msgid "SERVER_KEY_EMAIL: The email you used when you generated the server key."
-msgstr "SERVER_KEY_EMAIL: E-mail, který jste použili při generování serverového klíče."
-
-msgid "See. https://www.passbolt.com/help/tech/install#toc_gpg"
-msgstr "Navštivte https://www.passbolt.com/help/tech/install#toc_gpg"
-
-msgid "The server private key format is Gopengpg compatible."
-msgstr "Formát soukromého klíče serveru je kompatibilní s Gopengpg."
-
-msgid "The server private key format is not Gopengpg compatible."
-msgstr "Formát soukromého klíče serveru není kompatibilní s Gopengpg."
-
-msgid "The server public key format is Gopengpg compatible."
-msgstr "Formát veřejného klíče serveru je kompatibilní s Gopengpg."
-
-msgid "The server public key format is not Gopengpg compatible."
-msgstr "Formát veřejného klíče serveru není kompatibilní s Gopengpg."
-
-msgid "The environment variable GNUPGHOME is set to {0}."
-msgstr "Proměnná prostředí GNUPGHOME je nastavena na {0}."
-
-msgid "The environment variable GNUPGHOME is set to {0}, but the directory does not exist."
-msgstr "Proměnná prostředí GNUPGHOME je nastavena na {0}, ale adresář neexistuje."
-
-msgid "Ensure the keyring location exists and is accessible by the webserver user."
-msgstr "Ujistěte se, že umístění klíčenky existuje a je přístupné uživatelem webového serveru."
-
-msgid "You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}."
-msgstr "Místo klíčenky můžete změnit úpravou proměnných GPG.env.setenv a GPG.env.home v {0}."
-
-msgid "The directory {0} containing the keyring is writable by the webserver user."
-msgstr "Adresář {0} obsahující klíčenku je zapisovatelný uživatelem webového serveru."
-
-msgid "The directory {0} containing the keyring is not writable by the webserver user."
-msgstr "Adresář {0} obsahující klíčenku není zapisovatelný uživatelem webového serveru."
-
-msgid "Ensure the keyring location is accessible by the webserver user."
-msgstr "Ujistěte se, že umístění klíčenky je přístupné uživatelem webového serveru."
-
-msgid "The server OpenPGP key is not the default one."
-msgstr "Serverový OpenPGP klíč není výchozí."
-
-msgid "Do not use the default OpenPGP key for the server."
-msgstr "Nepoužívejte pro server výchozí OpenPGP klíč."
-
-msgid "The server OpenPGP key is not set."
-msgstr "Serverový OpenPGP klíč není nastaven."
-
-msgid "Create a key, export it and add the fingerprint to {0}"
-msgstr "Vytvořte klíč, exportujte jej a přidejte otisk do {0}"
-
-msgid "PHP GPG Module is installed and loaded."
-msgstr "Modul PHP GPG je nainstalován a načten."
-
-msgid "PHP GPG Module is not installed or loaded."
-msgstr "Modul PHP GPG není nainstalován nebo načten."
-
-msgid "Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php"
-msgstr "Nainstalujte php-gnupg, viz http://php.net/manual/en/gnupg.installation.php"
-
-msgid "Make sure to add extension=gnupg.so in php ini files for both php-cli and php."
-msgstr "Ujistěte se, že jste přidali extension=gnupg.so do souborů php.ini jak pro php-cli, tak pro php."
-
-msgid "The private key file is defined in {0} and readable."
-msgstr "Soubor soukromého klíče je definován v {0} a je čitelný."
-
-msgid "The private key file is not defined in {0} or not readable."
-msgstr "Soubor soukromého klíče není definován v {0} nebo není čitelný."
-
-msgid "Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in {0}."
-msgstr "Ujistěte se, že soubor soukromého klíče je definován proměnnou passbolt.gpg.serverKey.private v {0}."
-
-msgid "Ensure there is a private key armored block in the key file."
-msgstr "Ujistěte se, že je ve souboru klíče blok ASCII-armored soukromého klíče."
-
-msgid "Ensure the private key defined in {0} exists and is accessible by the webserver user."
-msgstr "Ujistěte se, že soukromý klíč definovaný v {0} existuje a je přístupný uživatelem webového serveru."
-
-msgid "There is a valid email id defined for the server key."
-msgstr "Pro klíč serveru je definováno platné ID e-mailu."
-
-msgid "The server key does not have a valid email id."
-msgstr "Klíč serveru nemá platné ID e-mailu."
-
-msgid "The server public key defined in the {0} (or environment variables) is in the keyring."
-msgstr "Veřejný klíč serveru definovaný v {0} (nebo v proměnných prostředí) je v klíčence."
-
-msgid "The server public key defined in the {0} (or environment variables) is not in the keyring"
-msgstr "Veřejný klíč serveru definovaný v {0} (nebo v proměnných prostředí) není v klíčence"
-
-msgid "Import the private server key in the keyring of the webserver user."
-msgstr "Importujte soukromý klíč serveru do klíčenky uživatele webového serveru."
-
-msgid "The public key file is defined in {0} and readable."
-msgstr "Soubor veřejného klíče je definován v {0} a je čitelný."
-
-msgid "The public key file is not defined in {0} or not readable."
-msgstr "Soubor veřejného klíče není definován v {0} nebo není čitelný."
-
-msgid "Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in {0}."
-msgstr "Ujistěte se, že soubor veřejného klíče je definován proměnnou passbolt.gpg.serverKey.public v {0}."
-
-msgid "Ensure there is a public key armored block in the key file."
-msgstr "Ujistěte se, že je ve souboru klíče blok ASCII-armored veřejného klíče."
-
-msgid "Ensure the public key defined in {0} exists and is accessible by the webserver user."
-msgstr "Ujistěte se, že veřejný klíč definovaný v {0} existuje a je přístupný uživatelem webového serveru."
-
-msgid "Environment"
-msgstr "Prostředí"
-
-msgid "Config files"
-msgstr "Konfigurační soubory"
-
-msgid "Core config"
-msgstr "Základní konfigurace"
-
-msgid "SMTP settings"
-msgstr "Nastavení SMTP"
-
-msgid "Application configuration"
-msgstr "Konfigurace aplikace"
-
-msgid "Database"
-msgstr "Databáze"
-
-msgid "GPG Configuration"
-msgstr "Konfigurace GPG"
-
-msgid "JWT Authentication"
-msgstr "JWT ověřování"
-
-msgid "SSL Certificate"
-msgstr "SSL certifikát"
-
-msgid "The {0} plugin is enabled."
-msgstr "Plugin {0} je povolen."
-
-msgid "The {0} plugin is disabled."
-msgstr "Plugin {0} je zakázán."
-
-msgid "Set the environment variable {0} to true"
-msgstr "Nastavte proměnnou prostředí {0} na true"
-
-msgid "Enable the plugin in order to define SMTP settings in the database."
-msgstr "Povolte plugin, abyste mohli definovat nastavení SMTP v databázi."
-
-msgid "Hostname is matching in SSL certificate."
-msgstr "Název hostitele se shoduje v SSL certifikátu."
-
-msgid "Hostname does not match when validating certificates."
-msgstr "Název hostitele se při validaci certifikátu neshoduje."
-
-msgid "SSL access is enabled."
-msgstr "Přístup přes SSL je povolen."
-
-msgid "SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue."
-msgstr "Přístup přes SSL není povolen. Můžete pokračovat, ale důrazně doporučujeme před pokračováním nakonfigurovat váš webový server pro použití HTTPS."
-
-msgid "Not using a self-signed certificate."
-msgstr "Není používán samopodepsaný certifikát."
-
-msgid "Using a self-signed certificate."
-msgstr "Je používán samopodepsaný certifikát."
-
-msgid "SSL peer certificate validates."
-msgstr "SSL certifikát protistrany je platný."
-
-msgid "SSL peer certificate does not validate."
-msgstr "SSL certifikát protistrany není platný."
-
-msgid "The keyring is not defined."
-msgstr "Klíčenka není definována."
-
-msgid "The keyring directory is not accessible by the current user: {0}"
-msgstr "Adresář klíčenky není pro aktuálního uživatele přístupný: {0}"
-
-msgid "Could not validate message data."
-msgstr "Data zprávy se nepodařilo ověřit."
-
-msgid "Recipient information could not be found."
-msgstr "Informace o příjemci nebyly nalezeny."
-
-msgid "The public key could not be parsed."
-msgstr "Veřejný klíč nelze analyzovat."
-
-msgid "The armored message must not contain an extra line before the end block."
-msgstr "ASCII-armored zpráva nesmí obsahovat další řádek před koncovým blokem."
-
-msgid "The message must contain an asymmetric packet."
-msgstr "Zpráva musí obsahovat asymetrický paket."
-
-msgid "The message must contain a symmetric packet."
-msgstr "Zpráva musí obsahovat symetrický paket."
-
-msgid "The message must contain only one recipient."
-msgstr "Zpráva musí obsahovat pouze jednoho příjemce."
-
-msgid "Unknown key validation rule: {0}"
-msgstr "Neznámé pravidlo validace klíče: {0}"
-
-msgid "The armored message could not be validated."
-msgstr "ASCII-armored zprávu nelze ověřit."
-
-msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
-msgstr "Serverový klíč OpenPGP definovaný v konfiguraci nelze použít k šifrování."
-
-msgid "The OpenPGP server key defined in the config cannot be used to verify signature."
-msgstr "OpenPGP klíč serveru definovaný v konfiguraci nelze použít k ověření podpisu."
-
-msgid "The OpenPGP server key defined in the config cannot be used to sign."
-msgstr "OpenPGP klíč serveru definovaný v konfiguraci nelze použít k podepisování."
-
-msgid "The config for the server private key fingerprint is not available or incomplete."
-msgstr "Konfigurace pro otisk privátního klíče serveru není k dispozici nebo není úplná."
-
-msgid "The config for the server private key passphrase is invalid."
-msgstr "Konfigurace hesla privátního klíče serveru není platná."
-
-msgid "The user public key is not available or incomplete."
-msgstr "Veřejný klíč uživatele není dostupný nebo je neúplný."
-
-msgid "The user public key fingerprint is not available or incomplete."
-msgstr "Otisk veřejného klíče uživatele není dostupný nebo je neúplný."
-
-msgid "The user armored key is not available or incomplete."
-msgstr "ASCII-armored klíč uživatele není dostupný nebo je neúplný."
-
-msgid "The algorithm is invalid."
-msgstr "Algoritmus je neplatný."
-
-msgid "The fingerprint id is invalid."
-msgstr "ID otisku prstu je neplatné."
-
-msgid "The public key id is invalid."
-msgstr "ID veřejného klíče je neplatné."
-
-msgid "The key size is not valid."
-msgstr "Velikost klíče není platná."
-
-msgid "The key size must match security recommendations."
-msgstr "Velikost klíče musí odpovídat bezpečnostním doporučením."
-
-msgid "The key creation date must not be in the future."
-msgstr "Datum vytvoření klíče nesmí být v budoucnosti."
-
-msgid "The key must not be expired."
-msgstr "Klíč nesmí být expirován."
-
-msgid "The key must not include an expiry date."
-msgstr "Klíč nesmí obsahovat datum expirace."
-
-msgid "The key must be revoked."
-msgstr "Klíč musí být odvolán."
-
-msgid "The key must not be revoked."
-msgstr "Klíč nesmí být odvolán."
-
-msgid "The armored key must not contain an extra line before the end block."
-msgstr "ASCII-armored klíč nesmí obsahovat další řádek před koncovým blokem."
-
-msgid "The armored key must not contain multiple keys."
-msgstr "ASCII-armored klíč nesmí obsahovat více klíčů."
-
-msgid "The public key could not be validated."
-msgstr "Veřejný klíč nemohl být ověřen."
-
-msgid "Could not validate permission data."
-msgstr "Nelze ověřit data oprávnění."
-
-msgid "Validation failed for permission {0}. {1}"
-msgstr "Validace oprávnění {0} selhala. {1}"
-
-msgid "Validation success for permission {0}"
-msgstr "Ověření oprávnění {0} bylo úspěšné"
-
-msgid "The permissions data must be an array."
-msgstr "Data oprávnění musí být pole."
-
-msgid "The permissions data array keys must be integers."
-msgstr "Klíče pole dat oprávnění musí být celá čísla."
-
-msgid "Could not validate permissions data."
-msgstr "Nelze ověřit data oprávnění."
-
-msgid "Validation failed for profile {0}. {1}"
-msgstr "Validace profilu {0} selhala. {1}"
-
-msgid "Validation success for profile {0}"
-msgstr "Ověření profilu {0} bylo úspěšné"
-
-msgid "Could not validate resource data."
-msgstr "Nepodařilo se ověřit data zdrojů."
-
-msgid "An unexpected error occurred, please contact an administrator."
-msgstr "Došlo k neočekávané chybě, kontaktujte prosím administrátora."
-
-msgid "The server returned the following error:"
-msgstr "Server vrátil následující chybu:"
-
-msgid "Validation failed for resource {0}. {1}"
-msgstr "Validace zdroje {0} selhala. {1}"
-
-msgid "Validation success for resource {0}"
-msgstr "Ověření zdroje {0} bylo úspěšné"
-
-msgid "Metadata key exist and present for resource {0}."
-msgstr "Metadata klíč existuje a je přítomen pro prostředek {0}."
-
-msgid "Metadata key does not exists or soft-deleted for resource {0}."
-msgstr "Metadata klíč pro prostředek {0} neexistuje nebo byl měkce odstraněn."
-
-msgid "The resource types associated to this resource does not exist."
-msgstr "Typy zdrojů spojené s tímto prostředkem neexistují."
-
-msgid "No secret revision were found for this resource."
-msgstr "Pro tento zdroj nebyly nalezeny žádné revize tajemství."
-
-msgid "You are not allowed to update this resource."
-msgstr "Nemáte oprávnění aktualizovat tento zdroj."
-
-msgid "Additional resource types are not enabled on this server."
-msgstr "Další typy zdrojů nejsou na tomto serveru povoleny."
-
-msgid "The role could not be saved."
-msgstr "Roli se nepodařilo uložit."
-
-msgid "Could not save the role, please try again later."
-msgstr "Roli nelze uložit, zkuste to prosím později."
-
-msgid "The role does not exist or deleted."
-msgstr "Role neexistuje nebo byla odstraněna."
-
-msgid "The role could not be deleted."
-msgstr "Roli se nepodařilo odstranit."
-
-msgid "Could not delete the role, please try again later."
-msgstr "Roli nelze odstranit, zkuste to prosím později."
-
-msgid "There should be at least 4 roles"
-msgstr "Měly by existovat alespoň 4 role"
-
-msgid "Validation failed for role {0}. {1}"
-msgstr "Validace role {0} selhala. {1}"
-
-msgid "Validation success for role {0}"
-msgstr "Ověření role {0} bylo úspěšné"
-
-msgid "The role could not be updated."
-msgstr "Roli se nepodařilo aktualizovat."
-
-msgid "Could not update the role, please try again later."
-msgstr "Roli nelze aktualizovat, zkuste to prosím později."
-
-msgid "Could not validate secrets data."
-msgstr "Nelze ověřit data tajných údajů."
-
-msgid "Could not validate secret data."
-msgstr "Nelze ověřit data tajného údaje."
-
-msgid "The group id should be a valid UUID."
-msgstr "ID skupiny by mělo být platné UUID."
-
-msgid "The users ids array should contain only valid UUIDs."
-msgstr "Pole ID uživatelů by mělo obsahovat pouze platné UUID."
-
-msgid "Validation failed for secret {0}. {1}"
-msgstr "Validace tajného údaje {0} selhala. {1}"
-
-msgid "Validation success for secret {0}"
-msgstr "Ověření tajného údaje {0} bylo úspěšné"
-
-msgid "The secrets of all the users having access to the resource are required."
-msgstr "Jsou vyžadovány tajné údaje všech uživatelů s přístupem k tomuto zdroji."
-
-msgid "An authentication token should be provided."
-msgstr "Je třeba zadat ověřovací token."
-
-msgid "The authentication token should be a valid UUID."
-msgstr "Ověřovací token by měl být platný UUID."
-
-msgid "An OpenPGP key must be provided."
-msgstr "Musíte zadat OpenPGP klíč."
-
-msgid "The authentication token could not be saved."
-msgstr "Ověřovací token nelze uložit."
-
-msgid "The user does not exist, has not completed the setup or was deleted."
-msgstr "Uživatel neexistuje, nedokončil nastavení nebo byl odstraněn."
-
-msgid "Could not update the authentication token data."
-msgstr "Nelze aktualizovat data ověřovacího tokenu."
-
-msgid "The key provided does not belong to given user."
-msgstr "Poskytnutý klíč nepatří danému uživateli."
-
-msgid "The user does not exist or is not active or is disabled."
-msgstr "Uživatel neexistuje, není aktivní nebo je deaktivován."
-
-msgid "The OpenPGP key data is not valid."
-msgstr "Data OpenPGP klíče nejsou platná."
-
-msgid "The OpenPGP key can not be used to encrypt."
-msgstr "Klíč OpenPGP nelze použít k šifrování."
-
-msgid "The user does not exist, is already active or has been deleted."
-msgstr "Uživatel neexistuje, je již aktivní nebo byl odstraněn."
-
-msgid "The user does not exist or is already active or is disabled."
-msgstr "Uživatel neexistuje, je již aktivní nebo je deaktivován."
-
-msgid "The user should not be a guest."
-msgstr "Uživatel by neměl být host."
-
-msgid "Account recovery case must be a string."
-msgstr "Případ obnovení účtu musí být řetězec."
-
-msgid "Account recovery reason not supported."
-msgstr "Důvod obnovení účtu není podporován."
-
-msgid "Please provide a valid email address."
-msgstr "Zadejte prosím platnou e-mailovou adresu."
-
-msgid "This user does not exist or has been deleted."
-msgstr "Tento uživatel neexistuje nebo byl odstraněn."
-
-msgid "Please register and complete the setup first."
-msgstr "Nejprve se prosím zaregistrujte a dokončete nastavení."
-
-msgid "This user has been disabled."
-msgstr "Tento uživatel byl deaktivován."
-
-msgid "The username {0} is a duplicate."
-msgstr "Uživatelské jméno {0} je duplicitní."
-
-msgid "Validation failed for user {0}. {1}"
-msgstr "Validace uživatele {0} selhala. {1}"
-
-msgid "Validation success for user {0}"
-msgstr "Ověření uživatele {0} bylo úspěšné"
-
-msgid "The directory {0} cannot be deleted"
-msgstr "Adresář {0} nelze odstranit"
-
-msgid "The key {0} cannot be used to encrypt."
-msgstr "Klíč {0} nelze použít k šifrování."
-
-msgid "The key {0} cannot be used to decrypt."
-msgstr "Klíč {0} nelze použít k dešifrování."
-
-msgid "Could not use key {0} for signing."
-msgstr "Klíč {0} nelze použít k podepisování."
-
-msgid "Could not parse the OpenPGP public key."
-msgstr "Nelze analyzovat veřejný klíč OpenPGP."
-
-msgid "Could not import the OpenPGP key."
-msgstr "Nepodařilo se importovat klíč OpenPGP."
-
-msgid "Could not use the key to sign and encrypt."
-msgstr "Klíč nelze použít k podepsání a zašifrování."
-
-msgid "Could not use the key to encrypt."
-msgstr "Klíč nelze použít k šifrování."
-
-msgid "Expected {0} and got {1}."
-msgstr "Očekáváno {0}, ale získáno {1}."
-
-msgid "Decryption failed. Invalid signature."
-msgstr "Dešifrování selhalo. Neplatný podpis."
-
-msgid "The message cannot be verified."
-msgstr "Zprávu nelze ověřit."
-
-msgid "Could not sign the text. "
-msgstr "Nelze podepsat text. "
-
-msgid "The OpenPGP server key defined in the config is not found in the file system."
-msgstr "OpenPGP serverový klíč definovaný v konfiguraci nebyl nalezen v souborovém systému."
-
-msgid "The OpenPGP server key defined in the config cannot be opened."
-msgstr "OpenPGP serverový klíč definovaný v konfiguraci nelze otevřít."
-
-msgid "The OpenPGP server key defined on file is not a valid private key."
-msgstr "OpenPGP serverový klíč definovaný v souboru není platný soukromý klíč."
-
-msgid "There is an issue with the OpenPGP server key."
-msgstr "Došlo k problému s OpenPGP serverovým klíčem."
-
-msgid "The fingerprint does not match the one associated with the key on file."
-msgstr "Otisk se neshoduje s tím, který je přiřazen ke klíči v souboru."
-
-msgid "No OpenPGP marker found."
-msgstr "Nebyl nalezen žádný marker OpenPGP."
-
-msgid "Invalid key. No OpenPGP public key package found."
-msgstr "Neplatný klíč. Nebyl nalezen žádný balíček veřejného klíče OpenPGP."
-
-msgid "Invalid key. No user ID found."
-msgstr "Neplatný klíč. Nebyl nalezen žádný identifikátor uživatele."
-
-msgid "Unsupported algorithm."
-msgstr "Nepodporovaný algoritmus."
-
-msgid "Invalid key. No OpenPGP package found."
-msgstr "Neplatný klíč. Nebyl nalezen žádný balík OpenPGP."
-
-msgid "This is not a valid OpenPGP armored marker."
-msgstr "Toto není platný OpenPGP armored marker."
-
-msgid "The key {0} was not found in the keyring"
-msgstr "Klíč {0} nebyl nalezen v klíčence"
 
 msgid "A value for the theme should be provided."
 msgstr "Je třeba zadat hodnotu pro motiv."
 
 msgid "This is not a valid theme."
 msgstr "Toto není platné téma."
+
+msgid "The identifier should be a valid UUID."
+msgstr "Identifikátor by měl být platný UUID."
+
+msgid "The identifier should not be empty."
+msgstr "Identifikátor by neměl být prázdný."
 
 msgid "The setting type should be one of the following: {0}."
 msgstr "Typ nastavení by měl být jedním z následujících: {0}."
@@ -2355,6 +51,12 @@ msgstr "Hodnota nastavení je povinná."
 
 msgid "The setting value should not be empty."
 msgstr "Hodnota nastavení by neměla být prázdná."
+
+msgid "The user identifier should be a valid UUID."
+msgstr "Identifikátor uživatele by měl být platný UUID."
+
+msgid "This is not a valid setting."
+msgstr "Toto není platné nastavení."
 
 msgid "The parameter {0} is not set."
 msgstr "Parametr {0} není nastaven."
@@ -2476,6 +178,18 @@ msgstr "Identifikátor složky by měl být platný UUID."
 msgid "The folder identifier should not be empty."
 msgstr "Identifikátor složky by neměl být prázdný."
 
+msgid "The name should be a valid UTF8 string."
+msgstr "Jméno by mělo být platný řetězec v UTF8."
+
+msgid "The name length should be maximum {0} characters."
+msgstr "Délka názvu by měla být maximálně {0} znaků."
+
+msgid "A name is required."
+msgstr "Jméno je vyžadováno."
+
+msgid "The name should not be empty."
+msgstr "Jméno by nemělo být prázdné."
+
 msgid "Could not validate folder history data."
 msgstr "Nepodařilo se ověřit data historie složky."
 
@@ -2497,6 +211,9 @@ msgstr "Identifikátor podřízeného objektu je povinný."
 msgid "The child object identifier should not be empty."
 msgstr "Identifikátor podřízeného objektu by neměl být prázdný."
 
+msgid "A user identifier is required."
+msgstr "Identifikátor uživatele je povinný."
+
 msgid "The user id should not be empty."
 msgstr "ID uživatele by nemělo být prázdné."
 
@@ -2512,11 +229,17 @@ msgstr "Typ podřízeného objektu by neměl být prázdný."
 msgid "The child object identifier required."
 msgstr "Identifikátor podřízeného objektu je povinný."
 
+msgid "The user identifier should not be empty."
+msgstr "Identifikátor uživatele by neměl být prázdný."
+
 msgid "A folder relation already exists for the given child object and user."
 msgstr "Vztah složky již existuje pro daný podřízený objekt a uživatele."
 
 msgid "The child object does not exist."
 msgstr "Podřízený objekt neexistuje."
+
+msgid "The user does not exist."
+msgstr "Uživatel neexistuje."
 
 msgid "The identifier of the user who created the folder should be a valid UUID."
 msgstr "Identifikátor uživatele, který vytvořil složku, by měl být platný UUID."
@@ -2536,17 +259,53 @@ msgstr "Identifikátor uživatele, který upravil složku, je povinný."
 msgid "The identifier of the user who modified the folder should not be empty."
 msgstr "Identifikátor uživatele, který upravil složku, by neměl být prázdný."
 
+msgid "The metadata key ID should be a valid UUID."
+msgstr "ID klíče metadat by mělo být platné UUID."
+
+msgid "The metadata should be a valid ASCII string."
+msgstr "Metadata by měla být platný řetězec ASCII."
+
+msgid "An armored key is required."
+msgstr "Je vyžadován armored key."
+
+msgid "The metadata should not be empty."
+msgstr "Metadata by neměla být prázdná."
+
+msgid "The metadata key type should be a valid UTF8 string."
+msgstr "Typ klíče metadat by měl být platný řetězec UTF8."
+
+msgid "A metadata key type is required."
+msgstr "Je vyžadován typ klíče metadat."
+
+msgid "The metadata key type should not be empty."
+msgstr "Typ klíče metadat by neměl být prázdný."
+
+msgid "The metadata key type should be one of the following: {0}."
+msgstr "Typ klíče metadat by měl být jeden z následujících: {0}."
+
 msgid "The settings selected by your administrator prevent from downgrading folder."
 msgstr "Nastavení zvolené vaším administrátorem brání downgradování složky."
 
+msgid "The settings selected by your administrator prevent from using that key type."
+msgstr "Nastavení zvolené vaším administrátorem brání použití tohoto typu klíče."
+
 msgid "The metadata key does not exist."
 msgstr "Klíč metadat neexistuje."
+
+msgid "The metadata key is marked as expired."
+msgstr "Klíč metadat je označen jako expirovaný."
+
+msgid "The shared metadata key should be unique."
+msgstr "Sdílený klíč metadat by měl být jedinečný."
 
 msgid "The folder metadata provided cannot be decrypted."
 msgstr "Zadaná metadata složky nelze dešifrovat."
 
 msgid "A folder of type personal cannot be shared with other users or a group."
 msgstr "Složku typu \"osobní\" nelze sdílet s jinými uživateli ani se skupinou."
+
+msgid "The settings selected by your administrator prevent from upgrading v4 to v5."
+msgstr "Nastavení zvolené vaším administrátorem brání upgradu z v4 na v5."
 
 msgid "You made changes on several folders"
 msgstr "Provedli jste změny v několika složkách"
@@ -2620,6 +379,9 @@ msgstr "Nemáte oprávnění přesunout tuto položku."
 msgid "You are not allowed to move an item in read only into the parent folder."
 msgstr "Nemáte oprávnění přesunout položku s oprávněním pouze pro čtení do nadřazené složky."
 
+msgid "The resource does not exist."
+msgstr "Tento záznam neexistuje."
+
 msgid "The folder parent does not exist."
 msgstr "Nadřazená složka neexistuje."
 
@@ -2659,6 +421,18 @@ msgstr "Bylo by příliš dlouhé je zde vypisovat, ale můžete je zkontrolovat
 msgid "View them in passbolt"
 msgstr "Zobrazit je v passboltu"
 
+msgid "You need to login to access this location."
+msgstr "Pro přístup k této lokaci se musíte přihlásit."
+
+msgid "The OpenPGP server key defined in the config cannot be used to decrypt."
+msgstr "OpenPGP klíč serveru definovaný v konfiguraci nelze použít k dešifrování."
+
+msgid "Could not import the user OpenPGP key."
+msgstr "Nepodařilo se importovat OpenPGP klíč uživatele."
+
+msgid "The user does not exist or has been deleted."
+msgstr "Uživatel neexistuje nebo byl odstraněn."
+
 msgid "The user signature could not be verified."
 msgstr "Podpis uživatele nemohl být ověřen."
 
@@ -2670,6 +444,12 @@ msgstr "Výzva není platná. Deserializace selhala."
 
 msgid "The challenge is invalid. Validation Failed."
 msgstr "Výzva není platná. Ověření se nezdařilo."
+
+msgid "The config for the server private key fingerprint is not available or incomplete."
+msgstr "Konfigurace pro otisk privátního klíče serveru není k dispozici nebo není úplná."
+
+msgid "The config for the server private key passphrase is invalid."
+msgstr "Konfigurace hesla privátního klíče serveru není platná."
 
 msgid "The user id is missing or invalid."
 msgstr "ID uživatele chybí nebo není platné."
@@ -2742,6 +522,9 @@ msgstr "Veřejný klíč JWT nelze přečíst nebo není platný."
 
 msgid "The JWT private key should be at least {0} bytes long."
 msgstr "Soukromý klíč JWT by měl být alespoň {0} bajtů dlouhý."
+
+msgid "The resource identifier should be a valid UUID."
+msgstr "Identifikátor záznamu by měl být platný UUID řetězec."
 
 msgid "The configuration {0} is not correctly set."
 msgstr "Konfigurace {0} není správně nastavena."
@@ -2875,8 +658,41 @@ msgstr "Typ operace by neměl být prázdný."
 msgid "Could not validate entity history data."
 msgstr "Nepodařilo se ověřit data historie entity."
 
-msgid "An identifier is required."
-msgstr "Identifikátor je povinný."
+msgid "The type of the access control object should be one of the following: {0}."
+msgstr "Typ objektu řízení přístupu by měl být jeden z následujících: {0}."
+
+msgid "The type of the access control object is required."
+msgstr "Typ objektu řízení přístupu je povinný."
+
+msgid "The type of the access control object should not be empty."
+msgstr "Typ objektu řízení přístupu by neměl být prázdný."
+
+msgid "The identifier of the access control object should be a valid UUID."
+msgstr "Identifikátor objektu řízení přístupu by měl být platný UUID."
+
+msgid "The identifier of the access control object is required."
+msgstr "Identifikátor objektu řízení přístupu je povinný."
+
+msgid "The identifier of the access control object should not be empty."
+msgstr "Identifikátor objektu řízení přístupu by neměl být prázdný."
+
+msgid "The access request object type should be one of the following: {0}."
+msgstr "Typ objektu žádosti o přístup by měl být jeden z následujících: {0}."
+
+msgid "The type of the access request object is required."
+msgstr "Typ objektu žádosti o přístup je povinný."
+
+msgid "The access request object type should not be empty."
+msgstr "Typ objektu žádosti o přístup by neměl být prázdný."
+
+msgid "The identifier of the access request object should be a valid UUID."
+msgstr "Identifikátor objektu žádosti o přístup by měl být platný UUID."
+
+msgid "The identifier of the access request object is required."
+msgstr "Identifikátor objektu žádosti o přístup je povinný."
+
+msgid "The identifier of the access request object should not be empty."
+msgstr "Identifikátor objektu žádosti o přístup by neměl být prázdný."
 
 msgid "The type must be one of the following: {0}."
 msgstr "Typ musí být jedním z následujících: {0}."
@@ -2884,11 +700,17 @@ msgstr "Typ musí být jedním z následujících: {0}."
 msgid "The type is required."
 msgstr "Typ je povinný."
 
+msgid "The type should not be empty."
+msgstr "Typ by neměl být prázdný."
+
 msgid "Could not validate permission history data."
 msgstr "Nepodařilo se ověřit data historie oprávnění."
 
 msgid "A resource identifier is required."
 msgstr "Identifikátor záznamu je povinný."
+
+msgid "The resource identifier should not be empty."
+msgstr "Identifikátor zdroje by neměl být prázdný."
 
 msgid "The secret identifier should be a valid UUID."
 msgstr "Identifikátor tajného záznamu by měl být platný UUID."
@@ -2902,11 +724,17 @@ msgstr "Identifikátor tajného záznamu by neměl být prázdný."
 msgid "Could not validate secret access data."
 msgstr "Nepodařilo se ověřit data přístupu k tajnému záznamu."
 
+msgid "The resource identifier is required."
+msgstr "Identifikátor zdroje je povinný."
+
 msgid "Could not validate secret history data."
 msgstr "Nepodařilo se ověřit data historie tajného záznamu."
 
 msgid "Invalid pagination limit set for metadata endpoint."
 msgstr "Pro koncový bod metadat je nastavena neplatná stránkovací limitní hodnota."
+
+msgid "Please contact your administrator."
+msgstr "Kontaktujte svého administrátora."
 
 msgid "Could not validate the metadata key data."
 msgstr "Nepodařilo se ověřit data klíče metadat."
@@ -2944,6 +772,9 @@ msgstr "Otisk by neměl být prázdný."
 msgid "The fingerprint should be a valid alphanumeric string."
 msgstr "Otisk by měl být platný alfanumerický řetězec."
 
+msgid "The armored key should not be empty."
+msgstr "Klíč ve formátu ASCII-armored by neměl být prázdný."
+
 msgid "The armored key should be a valid BMP-UTF8 string."
 msgstr "ASCII-armored klíč by měl být platným BMP-UTF8 řetězcem."
 
@@ -2961,6 +792,9 @@ msgstr "Doména by neměla být prázdná."
 
 msgid "The domain should match current instance URL."
 msgstr "Doména by měla odpovídat adrese URL aktuální instance."
+
+msgid "The armored key should be a valid ASCII string."
+msgstr "Klíč ve formátu ASCII-armored by měl být platný ASCII řetězec."
 
 msgid "Private keys are required."
 msgstr "Soukromé klíče jsou vyžadovány."
@@ -3040,14 +874,11 @@ msgstr "Typ klíče metadat by měl být \"shared key\"."
 msgid "The metadata key should not be deleted."
 msgstr "Klíč metadat by neměl být odstraněn."
 
+msgid "An identifier is required."
+msgstr "Identifikátor je povinný."
+
 msgid "The metadata key identifier should not be empty."
 msgstr "Identifikátor klíče metadat by neměl být prázdný."
-
-msgid "A metadata key type is required."
-msgstr "Je vyžadován typ klíče metadat."
-
-msgid "The metadata key type should not be empty."
-msgstr "Typ klíče metadat by neměl být prázdný."
 
 msgid "A metadata is required."
 msgstr "Metadata jsou povinná."
@@ -3153,6 +984,9 @@ msgstr "Otisk je již používán."
 
 msgid "Already two metadata keys are active."
 msgstr "Již jsou aktivní dva klíče metadat."
+
+msgid "You cannot reuse the server keys."
+msgstr "Nelze znovu použít serverové klíče."
 
 msgid "You cannot reuse the user key."
 msgstr "Nelze znovu použít uživatelský klíč."
@@ -3297,6 +1131,9 @@ msgstr "Soukromý klíč metadat serveru nebyl nalezen."
 
 msgid "Metadata key could not be shared with user id: {0}."
 msgstr "Klíč metadat se nepodařilo sdílet s uživatelským ID: {0}."
+
+msgid "The OpenPGP key data is not valid."
+msgstr "Data OpenPGP klíče nejsou platná."
 
 msgid "The data could not be validated."
 msgstr "Data se nepodařilo ověřit."
@@ -3661,6 +1498,9 @@ msgstr "Operace již skončila."
 msgid "The current page does not match the total number of pages."
 msgstr "Aktuální stránka neodpovídá celkovému počtu stránek."
 
+msgid "This operation is not allowed for this user."
+msgstr "Tato operace není pro tohoto uživatele povolena."
+
 msgid "The authentication token is missing."
 msgstr "Chybí ověřovací token."
 
@@ -3916,6 +1756,9 @@ msgstr "Tajný klíč Yubikey OTP není platný."
 msgid "Could not validate Yubikey configuration."
 msgstr "Nepodařilo se ověřit konfiguraci Yubikey."
 
+msgid "It is not possible to create an authentication token for this user."
+msgstr "Pro tohoto uživatele není možné vytvořit ověřovací token."
+
 msgid "Multi factor authentication verification"
 msgstr "Ověření vícefaktorové autentizace"
 
@@ -3952,14 +1795,113 @@ msgstr "Nastavení vícefaktorového ověření pro váš účet bylo resetován
 msgid "Please contact your administrator if you didn't request this action."
 msgstr "Pokud jste tuto akci nevyžádali, kontaktujte prosím svého administrátora."
 
+msgid "The setting should be a valid integer."
+msgstr ""
+
+msgid "This setting is not customizable on this edition, it should be {0}."
+msgstr ""
+
+msgid "You have reached the maximum number of offline items ({0})."
+msgstr ""
+
+msgid "The offline item object type should be one of the following: {0}."
+msgstr ""
+
+msgid "The offline item object type is required."
+msgstr ""
+
+msgid "The offline item object type should not be empty."
+msgstr ""
+
+msgid "The offline item object identifier should be a valid UUID."
+msgstr ""
+
+msgid "The offline item object identifier is required."
+msgstr ""
+
+msgid "The offline item object identifier should not be empty."
+msgstr ""
+
+msgid "The created date should be a valid date."
+msgstr ""
+
+msgid "The creator identifier should be a valid UUID."
+msgstr ""
+
+msgid "A creator identifier is required."
+msgstr ""
+
+msgid "The creator identifier should not be empty."
+msgstr ""
+
+msgid "Access denied."
+msgstr "Přístup odepřen."
+
+msgid "Offline mode is only available for v5 items."
+msgstr ""
+
+msgid "You have reached the maximum number of offline items."
+msgstr ""
+
+msgid "This item is already available offline for this user."
+msgstr ""
+
+msgid "A value is required."
+msgstr "Hodnota je povinná."
+
+msgid "The value should be an array."
+msgstr "Hodnota by měla být pole."
+
+msgid "You disabled Offline Mode"
+msgstr ""
+
+msgid "{0} disabled Offline Mode"
+msgstr ""
+
+msgid "You edited the Offline Mode settings"
+msgstr ""
+
+msgid "{0} edited the Offline Mode settings"
+msgstr ""
+
+msgid "Could not validate offline item data."
+msgstr ""
+
+msgid "The offline item identifier should be a valid UUID."
+msgstr ""
+
+msgid "The offline item does not exist."
+msgstr ""
+
+msgid "Could not validate offline settings data."
+msgstr ""
+
+msgid "The stored offline settings are not valid."
+msgstr ""
+
+msgid "Offline Mode is not enabled at the org level."
+msgstr ""
+
+msgid "Offline Mode has been disabled organisation-wide. Existing offline selections have been purged."
+msgstr ""
+
+msgid "The Offline Mode settings have been updated, the new configuration is as follows:"
+msgstr ""
+
+msgid "Maximum session duration: {0} seconds"
+msgstr ""
+
+msgid "Data retention period: {0} days"
+msgstr ""
+
+msgid "Maximum number of offline items (per user): {0}"
+msgstr ""
+
 msgid "The automatic_expiry field must be true."
 msgstr "Pole automatic_expiry musí být true."
 
 msgid "The automatic_update field must be true."
 msgstr "Pole automatic_update musí být true."
-
-msgid "The value should be an array."
-msgstr "Hodnota by měla být pole."
 
 msgid "{0} marked several passwords as expired"
 msgstr "{0} označil(a) několik hesel jako expirovaná"
@@ -4189,6 +2131,12 @@ msgstr "Řídicí funkce není pro tuto akci rozhraní povolena."
 msgid "The control function is not allowed for this Action."
 msgstr "Řídicí funkce není pro tuto akci povolena."
 
+msgid "The role identifier should be a valid UUID."
+msgstr "Identifikátor role by měl být platný UUID."
+
+msgid "A role identifier is required."
+msgstr "Identifikátor role je povinný."
+
 msgid "An action identifier should be a valid UUID."
 msgstr "Identifikátor akce by měl být platný UUID."
 
@@ -4239,6 +2187,12 @@ msgstr "Záznam pro dané role a identifikátory akcí již existuje."
 
 msgid "An action already exists for the given name."
 msgstr "Akce s daným názvem již existuje."
+
+msgid "You are not authorized to access that location."
+msgstr "Nemáte oprávnění k přístupu k tomuto umístění."
+
+msgid "Invalid RBAC control function."
+msgstr ""
 
 msgid "The RBAC settings could not be updated."
 msgstr "Nastavení RBAC se nepodařilo aktualizovat."
@@ -4315,6 +2269,12 @@ msgstr "Pole deleted musí být nastaveno na null."
 msgid "It is not allowed to update these resource type properties."
 msgstr "Není povoleno aktualizovat tyto vlastnosti typu zdroje."
 
+msgid "The resource type does not exist."
+msgstr "Typ zdroje neexistuje."
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "Název by měl být platný BMP-UTF8 řetězec."
+
 msgid "The slug should be a valid BMP-UTF8 string."
 msgstr "Slug by měl být platný BMP-UTF8 řetězec."
 
@@ -4326,6 +2286,12 @@ msgstr "Délka slugu by měla být maximálně {0} znaků."
 
 msgid "The slug should not be empty"
 msgstr "Slug by neměl být prázdný."
+
+msgid "The description should be a valid BMP-UTF8 string."
+msgstr "Popis by měl být platný BMP-UTF8 řetězec."
+
+msgid "The description length should be maximum {0} characters."
+msgstr "Délka popisu by měla být maximálně {0} znaků."
 
 msgid "The definition should be a valid BMP-UTF8 string."
 msgstr "Definice by měla být platný BMP-UTF8 řetězec."
@@ -4390,6 +2356,12 @@ msgstr "Povolení sdílení revizí není administrátorem zapnuto."
 msgid "Secret revisions settings endpoints are disabled."
 msgstr "Koncové body nastavení revizí tajemství jsou zakázány."
 
+msgid "The resource type identifier should be a valid UUID."
+msgstr "Identifikátor typu zdroje by měl být platný UUID."
+
+msgid "A resource type identifier is required."
+msgstr "Identifikátor typu zdroje je povinný."
+
 msgid "The identifier of the user who created the secret revision should be a valid UUID."
 msgstr "Identifikátor uživatele, který vytvořil revizi tajemství, by měl být platný UUID."
 
@@ -4437,6 +2409,9 @@ msgstr "Upravili jste nastavení samo-registrace."
 
 msgid "{0} just created an account on passbolt!"
 msgstr "{0} si právě vytvořil(a) účet v passboltu!"
+
+msgid "Welcome to passbolt, {0}!"
+msgstr "Vítejte v passboltu, {0}!"
 
 msgid "The email is already registered."
 msgstr "Tento e-mail je již registrován."
@@ -4524,6 +2499,9 @@ msgstr "Číslo portu by mělo být numerické."
 
 msgid "The port number should be between {0} and {1}."
 msgstr "Číslo portu by mělo být v rozmezí {0} až {1}."
+
+msgid "A username is required."
+msgstr "Uživatelské jméno je vyžadováno."
 
 msgid "The username should be a valid BMP-UTF8 string."
 msgstr "Uživatelské jméno by mělo být platný BMP-UTF8 řetězec."
@@ -4645,6 +2623,9 @@ msgstr "databáze"
 msgid "env variables"
 msgstr "proměnné prostředí"
 
+msgid "undefined"
+msgstr "nedefinováno"
+
 msgid "Tenant ID should be a valid UUID."
 msgstr "ID tenanta by mělo být platný UUID."
 
@@ -4756,6 +2737,9 @@ msgstr "Relace vypršela. Spusťte prosím konfiguraci znovu."
 msgid "System check"
 msgstr "Kontrola systému"
 
+msgid "Database"
+msgstr "Databáze"
+
 msgid "Server keys"
 msgstr "Klíče serveru"
 
@@ -4776,6 +2760,39 @@ msgstr "Instalace"
 
 msgid "That's it!"
 msgstr "Hotovo!"
+
+msgid "A first name is required."
+msgstr "Jméno je vyžadováno."
+
+msgid "The first name should not be empty."
+msgstr "Křestní jméno by nemělo být prázdné."
+
+msgid "The first name should be a valid BMP-UTF8 string."
+msgstr "Křestní jméno by mělo být platný BMP-UTF8 řetězec."
+
+msgid "The first name length should be maximum {0} characters."
+msgstr "Délka křestního jména by měla být maximálně {0} znaků."
+
+msgid "A last name is required."
+msgstr "Příjmení je vyžadováno."
+
+msgid "The last name should not be empty."
+msgstr "Příjmení nesmí být prázdné."
+
+msgid "The last name should be a valid BMP-UTF8 string."
+msgstr "Příjmení by mělo být platný BMP-UTF8 řetězec."
+
+msgid "The last name length should be maximum {0} characters."
+msgstr "Délka příjmení by měla být maximálně {0} znaků."
+
+msgid "The username should not be empty."
+msgstr "Uživatelské jméno by nemělo být prázdné."
+
+msgid "The username length should be maximum 255 characters."
+msgstr "Délka uživatelského jména by měla být maximálně 255 znaků."
+
+msgid "The username should be a valid email address."
+msgstr "Uživatelské jméno by mělo být platná emailová adresa."
 
 msgid "A driver name is required."
 msgstr "Název ovladače je povinný."
@@ -4881,6 +2898,9 @@ msgstr "Konfigurační soubor passboltu není zapisovatelný."
 
 msgid "Ensure the file "
 msgstr "Ujistěte se, že soubor "
+
+msgid "you can try:"
+msgstr "můžete vyzkoušet:"
 
 msgid "The server OpenPGP private key file is writable."
 msgstr "Soubor soukromého OpenPGP klíče serveru je zapisovatelný."
@@ -5101,8 +3121,8 @@ msgstr "Sem zkopírujte a vložte svůj klíč předplatného Passbolt Pro"
 msgid "Skip"
 msgstr "Přeskočit"
 
-msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
-msgstr "Vítejte v Passbolt Pro! Pojďme začít s konfigurací."
+msgid "Welcome to Passbolt! Let's get started with the configuration."
+msgstr "Vítejte v Passbolt! Začněme s konfigurací."
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "Skvělé! Vaše prostředí je připraveno pro passbolt."
@@ -5119,8 +3139,17 @@ msgstr "Přepisování URL není na vašem serveru správně nakonfigurováno."
 msgid "GPG is configured correctly."
 msgstr "GPG je správně nakonfigurováno."
 
+msgid "GPG Configuration"
+msgstr "Konfigurace GPG"
+
 msgid "SSL"
 msgstr "SSL"
+
+msgid "SSL access is enabled."
+msgstr "Přístup přes SSL je povolen."
+
+msgid "SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue."
+msgstr "Přístup přes SSL není povolen. Můžete pokračovat, ale důrazně doporučujeme před pokračováním nakonfigurovat váš webový server pro použití HTTPS."
 
 msgid "Start configuration"
 msgstr "Spustit konfiguraci"
@@ -5200,6 +3229,9 @@ msgstr "ID uživatele je neplatné."
 msgid "The authentication token id is invalid."
 msgstr "ID ověřovacího tokenu je neplatné."
 
+msgid "Only guests are allowed to proceed with account recovery."
+msgstr "Pouze hosté mohou pokračovat v obnově účtu."
+
 msgid "Only guests are allowed to create an account recovery request."
 msgstr "Pouze hosté mohou vytvořit žádost o obnovení účtu."
 
@@ -5253,6 +3285,15 @@ msgstr "Nepodařilo se ověřit data zásad."
 
 msgid "The armored key is too big."
 msgstr "Klíč ve formátu ASCII-armored je příliš velký."
+
+msgid "The fingerprint should be a valid ASCII string."
+msgstr "Otisk by měl být platný ASCII řetězec."
+
+msgid "A fingerprint is required"
+msgstr "Fingerprint je povinný"
+
+msgid "The fingerprint should not be empty"
+msgstr "Otisk by neměl být prázdný"
 
 msgid "The \"deleted\" field should be a valid date."
 msgstr "Pole \"deleted\" by mělo obsahovat platné datum."
@@ -5503,6 +3544,9 @@ msgstr "Odpověď na obnovení účtu nastavena na {0} uživatelem {1}."
 msgid "Recovery request denied!"
 msgstr "Žádost o obnovení účtu zamítnuta!"
 
+msgid "The OpenPGP key can not be used to encrypt."
+msgstr "Klíč OpenPGP nelze použít k šifrování."
+
 msgid "Could not validate key revocation."
 msgstr "Nepodařilo se ověřit odvolání klíče."
 
@@ -5557,6 +3601,9 @@ msgstr "Žádost o obnovení nelze vytvořit, pokud jsou zásady organizace deak
 msgid "Recovery request cannot be created when user is not enrolled."
 msgstr "Žádost o obnovení nelze vytvořit, pokud uživatel není zapsán."
 
+msgid "An authentication token should be provided."
+msgstr "Je třeba zadat ověřovací token."
+
 msgid "The authentication token is not valid or has expired."
 msgstr "Ověřovací token není platný nebo vypršel."
 
@@ -5577,6 +3624,9 @@ msgstr "Data odpovědi pro obnovení účtu nejsou vyžadována."
 
 msgid "The account recovery response data is required."
 msgstr "Data odpovědi pro obnovení účtu jsou povinná."
+
+msgid "The message must contain an asymmetric packet."
+msgstr "Zpráva musí obsahovat asymetrický paket."
 
 msgid "The user is not enrolled in the account recovery program."
 msgstr "Uživatel není zapsán do programu obnovení účtu."
@@ -5829,6 +3879,9 @@ msgstr "{0} {1} byl spárován s existujícím {0} v Passboltu."
 
 msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after."
 msgstr "{0} {1} nemohl být spárován s existujícím {0} v Passboltu, protože byl vytvořen později."
+
+msgid "Could not validate user data."
+msgstr "Nepodařilo se ověřit uživatelská data."
 
 msgid "The user {0} full name has been successfully updated to {1} {2}."
 msgstr "Celé jméno uživatele {0} bylo úspěšně změněno na {1} {2}."
@@ -6172,6 +4225,9 @@ msgstr "Název skupiny je povinný."
 msgid "A group member does not match the expected DN format."
 msgstr "Člen skupiny neodpovídá očekávanému formátu DN."
 
+msgid "The email should be a valid email address."
+msgstr "E-mail by měl být platná e-mailová adresa."
+
 msgid "The {0} configuration should be a valid string"
 msgstr "Konfigurace {0} by měla být platný řetězec"
 
@@ -6225,6 +4281,9 @@ msgstr "Zásada: {0}"
 
 msgid "Remember me for a month: {0}"
 msgstr "Pamatuj si mě po dobu jednoho měsíce: {0}"
+
+msgid "The setting should be between {0} and {1}."
+msgstr ""
 
 msgid "Some of your passwords are expired."
 msgstr "Některá z vašich hesel jsou expirovaná."
@@ -6367,6 +4426,9 @@ msgstr "Při vytváření uživatele v databázi došlo k neočekávané chybě"
 msgid "An administrator user cannot be suspended via SCIM."
 msgstr "Uživatele správce nelze pozastavit prostřednictvím SCIM."
 
+msgid "An administrator user cannot be deleted via SCIM."
+msgstr ""
+
 msgid "Email"
 msgstr "E-mail"
 
@@ -6502,6 +4564,9 @@ msgstr "Klientské tajemství je příliš dlouhé."
 msgid "A client secret expiry is required."
 msgstr "Je vyžadováno datum expirace klientského tajemství."
 
+msgid "The expiry should be a valid date."
+msgstr "Datum expirace by měl být platný datum."
+
 msgid "The expiry should not be empty."
 msgstr "Datum expirace by nemělo být prázdné."
 
@@ -6559,11 +4624,23 @@ msgstr "Úprava koncových bodů nastavení SSO je zakázána."
 msgid "The user is not active."
 msgstr "Uživatel není aktivní."
 
+msgid "The property length should be maximum {0} characters."
+msgstr "Délka vlastnosti by měla být maximálně {0} znaků."
+
 msgid "The status length is not supported."
 msgstr "Délka stavu není podporována."
 
 msgid "The status is not supported."
 msgstr "Stav není podporován."
+
+msgid "The message should be a valid ASCII string."
+msgstr "Zpráva by měla být platný ASCII řetězec."
+
+msgid "A message is required."
+msgstr "Zpráva je povinná."
+
+msgid "The message should not be empty."
+msgstr "Zpráva by neměla být prázdná."
 
 msgid "The nonce should be a valid ASCII string."
 msgstr "Nonce by měl být platný ASCII řetězec."
@@ -6580,8 +4657,14 @@ msgstr "Nonce je požadován."
 msgid "The nonce should not be empty."
 msgstr "Nonce by neměl být prázdný."
 
+msgid "The type should be a valid ASCII string."
+msgstr "Typ by měl být platný ASCII řetězec."
+
 msgid "The type length should be maximum {0} characters."
 msgstr "Typ může mít maximálně {0} znaků."
+
+msgid "A type is required."
+msgstr "Typ je povinný."
 
 msgid "The state should be a valid ASCII string."
 msgstr "State by měl být platný ASCII řetězec."
@@ -6634,8 +4717,8 @@ msgstr "Identifikátor uživatele neexistuje."
 msgid "The provided nonce is invalid."
 msgstr "Poskytnutý nonce je neplatný."
 
-msgid "The URL should start with https://"
-msgstr "URL by měla začínat na https://"
+msgid "The URL should start with https:// and must not point to an internal address."
+msgstr ""
 
 msgid "The provided state is invalid."
 msgstr "Poskytnutý state je neplatný."
@@ -6685,6 +4768,24 @@ msgstr "Doporučuje se zakázat koncové body pro aktualizaci konfigurací SSO."
 msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment variable to true."
 msgstr "Nastavte proměnnou prostředí PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED na hodnotu true."
 
+msgid "The SSO provider URL egress guard is enabled."
+msgstr ""
+
+msgid "The SSO provider URL egress guard is disabled and will be enabled by default in a future version."
+msgstr ""
+
+msgid "The egress guard prevents the server from connecting to internal addresses through SSO provider URLs."
+msgstr ""
+
+msgid "It is disabled by default in this version but will be enabled by default in a future version."
+msgstr ""
+
+msgid "Enable it now to verify your SSO configuration works with the guard before it becomes the default."
+msgstr ""
+
+msgid "Set the PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED environment variable to true."
+msgstr ""
+
 msgid "The user is missing for the SSO state."
 msgstr "Uživatel pro tento stav SSO chybí."
 
@@ -6709,23 +4810,29 @@ msgstr "Nebyla nalezena žádná platná nastavení SSO."
 msgid "You must authenticate with Azure again."
 msgstr "Musíte se znovu ověřit pomocí Azure."
 
-msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
-msgstr "Poskytnutá hodnota v konfiguraci `passbolt.security.sso.sslCafile` není platná."
-
-msgid "Provided root CA file does not exist"
-msgstr "Zadaný soubor kořenové CA neexistuje."
-
 msgid "Invalid provider. Expected PingOne."
 msgstr "Neplatný poskytovatel. Očekává se PingOne."
 
 msgid "Invalid provider data. Expected PingOne settings."
 msgstr "Neplatná data poskytovatele. Očekává se nastavení PingOne."
 
+msgid "The authentication token should be a valid UUID."
+msgstr "Ověřovací token by měl být platný UUID."
+
 msgid "The user id should be a valid UUID."
 msgstr "ID uživatele by mělo být platný UUID."
 
 msgid "The authentication token does not exist."
 msgstr "Ověřovací token neexistuje."
+
+msgid "The token is expired."
+msgstr "Tento token vypršel."
+
+msgid "The authentication token is not valid."
+msgstr "Ověřovací token není platný."
+
+msgid "The authentication token could not be saved."
+msgstr "Ověřovací token nelze uložit."
 
 msgid "The SSO authentication token is invalid."
 msgstr "Ověřovací token SSO je neplatný."
@@ -6793,6 +4900,9 @@ msgstr "Při ověřování nastavení single sign-on došlo k chybě."
 msgid "It is not possible to save the SSO settings."
 msgstr "Nastavení SSO nelze uložit."
 
+msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
+msgstr "Serverový klíč OpenPGP definovaný v konfiguraci nelze použít k šifrování."
+
 msgid "The SSO state is invalid."
 msgstr "Stav SSO je neplatný."
 
@@ -6828,6 +4938,21 @@ msgstr "Nepodařilo se načíst veřejný klíč z certifikátu: {0}"
 
 msgid "Failed to public key properties from certificate: {0}"
 msgstr "Nepodařilo se získat vlastnosti veřejného klíče z certifikátu: {0}"
+
+msgid "The provider address resolves to a blocked link-local or metadata range ({0})."
+msgstr ""
+
+msgid "The provider address resolves to a blocked private range ({0})."
+msgstr ""
+
+msgid "The provider address is not allowed."
+msgstr ""
+
+msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
+msgstr "Poskytnutá hodnota v konfiguraci `passbolt.security.sso.sslCafile` není platná."
+
+msgid "Provided root CA file does not exist"
+msgstr "Zadaný soubor kořenové CA neexistuje."
 
 msgid "JWT token is missing."
 msgstr "Chybí token JWT."
@@ -6939,6 +5064,9 @@ msgstr "Počet uživatelů by neměl být prázdný."
 
 msgid "The users limit is exceeded."
 msgstr "Byl překročen limit počtu uživatelů."
+
+msgid "A creation date is required."
+msgstr "Datum vytvoření je povinný."
 
 msgid "The key should have been created in the past."
 msgstr "Klíč by měl být vytvořen v minulosti."
@@ -7177,6 +5305,2028 @@ msgstr "Pouze administrátoři mohou vytvářet nebo aktualizovat nastavení zá
 msgid "The user passphrase policy settings has been updated by {0}."
 msgstr "Nastavení zásady uživatelských přístupových frází bylo aktualizováno uživatelem {0}."
 
+msgid "The server verify token is missing or invalid."
+msgstr "Ověřovací token serveru chybí nebo je neplatný."
+
+msgid "Decryption failed."
+msgstr "Dešifrování selhalo."
+
+msgid "Failed to create token."
+msgstr "Nepodařilo se vytvořit token."
+
+msgid "The user token result should be a valid UUID."
+msgstr "Token uživatele by měl být platný UUID řetězec."
+
+msgid "The user token result could not be found "
+msgstr "Token uživatele nebyl nalezen "
+
+msgid "The user token result has already been used."
+msgstr ""
+
+msgid "Invalid verify token type."
+msgstr "Neplatný typ ověřovacího tokenu."
+
+msgid "Invalid verify token format, "
+msgstr "Neplatný formát ověřovacího tokenu, "
+
+msgid "sections are missing or using wrong delimiters."
+msgstr "chybějící sekce nebo použité neplatné oddělovače."
+
+msgid "the version numbers do not match."
+msgstr "čísla verzí se neshodují."
+
+msgid "wrong version number."
+msgstr "chybné číslo verze."
+
+msgid "it is not a UUID."
+msgstr "není to UUID."
+
+msgid "wrong token data length."
+msgstr "chybná délka tokenu."
+
+msgid "There is no user associated with this key."
+msgstr "K tomuto klíči není přiřazen žádný uživatel."
+
+msgid "Page not found."
+msgstr "Stránka nenalezena."
+
+msgid "Please use .json extension in URL or accept application/json."
+msgstr "Prosím, použijte příponu .json v URL nebo přijměte application/json."
+
+msgid "The request data can not be empty."
+msgstr "Data požadavku nemohou být prázdná."
+
+msgid "You are already logged in."
+msgstr "Již jste přihlášeni."
+
+msgid "You are successfully logged in."
+msgstr "Jste úspěšně přihlášeni."
+
+msgid "You are successfully logged out."
+msgstr "Jste úspěšně odhlášeni."
+
+msgid "The logout route should only be accessed with POST method."
+msgstr "K odhlašovací cestě by mělo být přistoupeno pouze pomocí metody POST."
+
+msgid "The OpenPGP public key information was not found in config."
+msgstr "Veřejný OpenPGP klíč nebyl nalezen v konfiguraci."
+
+msgid "The comment was successfully added."
+msgstr "Komentář byl úspěšně přidán."
+
+msgid "The comment was deleted."
+msgstr "Komentář byl odstraněn."
+
+msgid "The comment id is not valid."
+msgstr "Identifikátor komentáře je neplatný."
+
+msgid "The comment was successfully updated."
+msgstr "Komentář byl úspěšně upraven."
+
+msgid "Invalid order. \"{0}\" is not in the list of allowed order."
+msgstr "Neplatný příkaz. \"{0}\" není v seznamu přípustných příkazů."
+
+msgid "Invalid order. \"{0}\" is not a valid order."
+msgstr "Neplatný požadavek. \"{0}\" není platný požadavek."
+
+msgid "Invalid order. \"{0}\" is not a valid field."
+msgstr "Neplatný požadavek. \"{0}\" není platné pole."
+
+msgid "Invalid pagination."
+msgstr "Neplatné stránkování."
+
+msgid "Invalid query string. The filter parameter should be an array."
+msgstr "Neplatný dotaz. Parametr \"filter\" by měl být pole."
+
+msgid "Invalid query string. The contain parameter should be an array."
+msgstr "Neplatný dotaz. Parametr \"contain\" by měl být pole."
+
+msgid "Invalid filter."
+msgstr "Neplatný obsah parametru \"filter\"."
+
+msgid "Invalid order."
+msgstr "Neplatný požadavek."
+
+msgid "Invalid contain."
+msgstr "Neplatný obsah parametru \"contain\"."
+
+msgid "No validation rule for filter {0}. Please create one."
+msgstr "Žádné validační pravidlo pro hodnotu parametru \"filter\": {0}. Vytvořte jej prosím."
+
+msgid "Filter {0} is not valid."
+msgstr "Hodnota parametru \"filter\" není platná: {0}."
+
+msgid "\"{0}\" is not a valid value for filter {1}."
+msgstr "\"{0}\" není platná hodnota pro parametr \"filter\" {1}."
+
+msgid "\"{0}\" is not a valid search filter."
+msgstr "\"{0}\" není platná hodnota pro vyhledávací parametr \"filter\"."
+
+msgid "\"{0}\" is not a valid search filter. It is not a UTF8 string."
+msgstr "\"{0}\" není platná hodnota pro vyhledávací parametr \"filter\". Nejedná se o platný UTF-8 řetězec."
+
+msgid "It should be between 1 and 64 char in length."
+msgstr "Délka by měla být mezi 1 až 64 znaky."
+
+msgid "\"{0}\" is not a valid user filter."
+msgstr "\"{0}\" je neplatný filtr uživatele."
+
+msgid "\"{0}\" is not a valid user id for filter {1}."
+msgstr "\"{0}\" není platné uživatelské ID pro filtr {1}."
+
+msgid "\"{0}\" is not a valid group filter."
+msgstr "\"{0}\" je neplatný filtr skupiny."
+
+msgid "\"{0}\" is not a valid parent filter."
+msgstr "\"{0}\" není platný filtr nadřazeného."
+
+msgid "\"{0}\" is not a valid resource id for filter {1}."
+msgstr "\"{0}\" není platné ID zdroje pro filtr {1}."
+
+msgid "\"{0}\" is not a valid group id for filter {1}."
+msgstr "\"{0}\" není platné ID skupiny pro filtr {1}."
+
+msgid "\"{0}\" is not a valid parent id for filter {1}."
+msgstr "\"{0}\" není platné ID nadřazeného pro filtr {1}."
+
+msgid "\"{0}\" is not a valid timestamp for filter {1}."
+msgstr "\"{0}\" není platnou časovou značkou pro filtr {1}."
+
+msgid "\"{0}\" is not a valid datetime for filter {1}."
+msgstr "\"{0}\" není platné datum a čas pro filtr {1}."
+
+msgid "\"{0}\" is not a valid order."
+msgstr "\"{0}\" není platný požadavek."
+
+msgid "\"{0}\" is not in the list of allowed order."
+msgstr "„{0}“ není v seznamu povolených požadavků."
+
+msgid "\"{0}\" is not a valid contain value."
+msgstr "\"{0}\" není platná hodnota obsahu."
+
+msgid "undefined user agent"
+msgstr "nedefinovaný User-Agent"
+
+msgid "Access restricted to administrators."
+msgstr "Přístup je omezen pouze na administrátory."
+
+msgid "Access restricted to unauthenticated users."
+msgstr "Přístup omezen na nepřihlášené uživatele."
+
+msgid "The user should not be logged in."
+msgstr "Uživatel by neměl být přihlášen."
+
+msgid "This feature is not supported by your version of passbolt."
+msgstr "Tato funkce není ve vaší verzi passbolt podporována."
+
+msgid "The resource was marked as favorite."
+msgstr "Tato položka byla označena jako oblíbená."
+
+msgid "The favorite id is not valid."
+msgstr "ID oblíbené položky není platné."
+
+msgid "The favorite was deleted."
+msgstr "Oblíbená položka byla odstraněna."
+
+msgid "The OpenPGP key identifier should be a valid UUID."
+msgstr "Identifikátor OpenPGP klíče by měl být platný UUID řetězec."
+
+msgid "The OpenPGP key does not exist."
+msgstr "Tento OpenPGP klíč neexistuje."
+
+msgid "The group has been added successfully."
+msgstr "Skupina byla úspěšně přidána."
+
+msgid "The group can be deleted."
+msgstr "Skupinu lze odstranit."
+
+msgid "The group was deleted successfully."
+msgstr "Skupina byla úspěšně odstraněna."
+
+msgid "The group identifier should be a valid UUID."
+msgstr "Identifikátor skupiny by měl být platný UUID řetězec."
+
+msgid "The group does not exist or has been already deleted."
+msgstr "Skupina neexistuje nebo již byla odstraněna."
+
+msgid "The group cannot be deleted."
+msgstr "Skupinu nelze odstranit."
+
+msgid "The permissions identifiers must be valid UUID."
+msgstr "Identifikátory oprávnění musí být platné UUID."
+
+msgid "The group id is not valid."
+msgstr "ID skupiny není platné."
+
+msgid "The group does not exist."
+msgstr "Skupina neexistuje."
+
+msgid "All checks ran successfully!"
+msgstr "Všechny kontroly byly úspěšné!"
+
+msgid "Healthcheck security index endpoint disabled."
+msgstr "Koncový index zabezpečení Healthcheck zakázán."
+
+msgid "OK"
+msgstr "OK"
+
+msgid "The resource has been added successfully."
+msgstr "Zdroj byl úspěšně přidán."
+
+msgid "The resource has been deleted successfully."
+msgstr "Zdroj byl úspěšně odstraněn."
+
+msgid "You do not have the permission to delete this resource."
+msgstr "Nemáte oprávnění k odstranění tohoto zdroje."
+
+msgid "Could not delete the resource."
+msgstr "Nepodařilo se odstranit zdroj."
+
+msgid "The resource has been updated successfully."
+msgstr "Zdroj byl úspěšně aktualizován."
+
+msgid "The role was deleted."
+msgstr "Role byla odstraněna."
+
+msgid "The role identifier is not valid."
+msgstr "Identifikátor role není platný."
+
+msgid "The role was successfully updated."
+msgstr "Role byla úspěšně aktualizována."
+
+msgid "The secret does not exist."
+msgstr "Tajný klíč neexistuje."
+
+msgid "Only guests are allowed to abort recovery process."
+msgstr "Pouze hosté mohou přerušit proces obnovy."
+
+msgid "An authentication token must be provided."
+msgstr "Musí být poskytnut ověřovací token."
+
+msgid "The recovery process was aborted."
+msgstr "Proces obnovy byl přerušen."
+
+msgid "Only guests are allowed to complete setup."
+msgstr "Pouze hosté mohou dokončit nastavení."
+
+msgid "The recovery was completed successfully."
+msgstr "Obnova byla úspěšně dokončena."
+
+msgid "The setup was completed successfully."
+msgstr "Nastavení bylo úspěšně dokončeno."
+
+msgid "Only guests are allowed to start setup."
+msgstr "Pouze hosté mohou zahájit nastavování."
+
+msgid "You are not authorized to share this resource."
+msgstr "Nemáte oprávnění sdílet tento dokument."
+
+msgid "Resource metadata key type is invalid."
+msgstr "Typ klíče metadat zdroje je neplatný."
+
+msgid "Only administrators can add new users."
+msgstr "Pouze administrátoři mohou přidat nové uživatele."
+
+msgid "The user was successfully added. This user now need to complete the setup."
+msgstr "Uživatel byl úspěšně přidán. Tento uživatel nyní musí dokončit nastavení."
+
+msgid "The user can be deleted."
+msgstr "Uživatele lze odstranit."
+
+msgid "The user has been deleted successfully."
+msgstr "Uživatel byl úspěšně odstraněn."
+
+msgid "You are not allowed to delete yourself."
+msgstr "Nemáte oprávnění smazat sami sebe."
+
+msgid "The user does not exist or has been already deleted."
+msgstr "Uživatel neexistuje nebo již byl odstraněn."
+
+msgid "The user cannot be deleted."
+msgstr "Uživatele nelze odstranit."
+
+msgid "The groups users identifiers must be valid UUID."
+msgstr "Identifikátory uživatelů skupin musí být platné UUID."
+
+msgid "Could not find the user data after save. Maybe it has been deleted in the meantime."
+msgstr "Nelze najít uživatelská data po uložení. Možná byla mezitím odstraněna."
+
+msgid "The user has been updated successfully."
+msgstr "Uživatel byl úspěšně aktualizován."
+
+msgid "You are not authorized to edit the role."
+msgstr "Nemáte oprávnění k úpravě role."
+
+msgid "Some user data should be provided."
+msgstr "Měly by být uvedeny některé uživatelské údaje."
+
+msgid "Updating the OpenPGP key is not allowed."
+msgstr "Aktualizace OpenPGP klíče není povolena."
+
+msgid "Updating the groups is not allowed."
+msgstr "Aktualizace skupin není povolena."
+
+msgid "Multiple has-access filters are not supported."
+msgstr "Vícenásobné filtry pro přístup nejsou podporovány."
+
+msgid "Only guests are allowed to recover an account. Please logout first."
+msgstr "Pouze hosté mohou obnovit účet. Nejprve se prosím odhlaste."
+
+msgid "Recovery process started, check your email."
+msgstr "Proces obnovy byl zahájen, zkontrolujte svůj e-mail."
+
+msgid "Only guests are allowed to register."
+msgstr "Registrovat se mohou pouze hosté."
+
+msgid "Registration is not opened to public."
+msgstr "Registrace není otevřena veřejnosti."
+
+msgid "This is due to a security setting."
+msgstr "To je způsobeno nastavením zabezpečení."
+
+msgid "The user identifier should be a valid UUID or \"me\"."
+msgstr "Identifikátor uživatele by mělo být platné UUID nebo \"me\"."
+
+msgid "No admin were found in the database."
+msgstr "V databázi nebyl nalezen žádný administrátor."
+
+msgid "The `{0}` configuration must be a valid non-empty string."
+msgstr "Konfigurace `{0}` musí být platný neprázdný řetězec."
+
+msgid "Invalid expiry time {0}."
+msgstr "Neplatný čas expirace {0}."
+
+msgid "The user role ID must not be of the guest role."
+msgstr "ID uživatelské role nesmí patřit roli hosta."
+
+msgid "The token should be a valid UUID."
+msgstr "Token by měl být platný UUID."
+
+msgid "A token is required."
+msgstr "Token je povinný."
+
+msgid "The token should not be empty."
+msgstr "Token by neměl být prázdný."
+
+msgid "The type should be one of the following: {0}."
+msgstr "Typ by měl být jedním z následujících: {0}."
+
+msgid "The active status should be a valid boolean."
+msgstr "Aktivní stav by měl být platný boolean."
+
+msgid "An active status is required"
+msgstr "Je vyžadován aktivní stav"
+
+msgid "A file is required."
+msgstr "Soubor je vyžadován."
+
+msgid "The file should not be empty"
+msgstr "Soubor by neměl být prázdný"
+
+msgid "The file mime type should be one of the following: {0}."
+msgstr "Mime typ souboru by měl být jedním z následujících: {0}."
+
+msgid "The file extension should be one of the following: {0}."
+msgstr "Přípona souboru by měla být jedna z následujících možností: {0}."
+
+msgid "The file is not valid, or exceeds max size of {0} bytes."
+msgstr "Soubor není platný, nebo přesahuje maximální velikost {0} bytů."
+
+msgid "Could not save the data in {0} format."
+msgstr "Nepodařilo se uložit data ve formátu {0}."
+
+msgid "The parent comment identifier should be a valid UUID."
+msgstr "Identifikátor mateřského komentáře musí být platný UUID."
+
+msgid "The commented object type should be one of the following: {0}."
+msgstr "Typ komentovaného objektu by měl být jeden z následujících: {0}."
+
+msgid "The commented object type is required."
+msgstr "Typ komentovaného objektu je povinný."
+
+msgid "The commented object type should not be empty."
+msgstr "Typ komentovaného objektu by neměl být prázdný."
+
+msgid "The commented object identifier should be a valid UUID."
+msgstr "Identifikátor komentovaného objektu by měl být platný UUID."
+
+msgid "The commented object identifier is required."
+msgstr "Identifikátor komentovaného objektu je povinný."
+
+msgid "The commented object identifier should not be empty."
+msgstr "Identifikátor komentovaného objektu by neměl být prázdný."
+
+msgid "The content should be a valid UTF8 string."
+msgstr "Obsah by měl být platným UTF-8 řetězcem."
+
+msgid "A content is required"
+msgstr "Obsah je povinný"
+
+msgid "The content should not be empty"
+msgstr "Obsah by neměl být prázdný"
+
+msgid "The content length should be between {0} and {1} characters."
+msgstr "Délka obsahu by měla být v rozmezí {0} až {1} znaků."
+
+msgid "The identifier of the user who created the comment should be a valid UUID."
+msgstr "Identifikátor uživatele, který vytvořil komentář, by měl být platný UUID."
+
+msgid "The identifier of the user who created the comment is required."
+msgstr "Identifikátor uživatele, který vytvořil komentář, je povinný."
+
+msgid "The identifier of the user who created the comment should not be empty."
+msgstr "Identifikátor uživatele, který vytvořil komentář, by neměl být prázdný."
+
+msgid "The identifier of the user who modified the comment should be a valid UUID."
+msgstr "Identifikátor uživatele, který modifikoval komentář, by měl být platný UUID."
+
+msgid "The identifier of the user who modified the comment required."
+msgstr "Identifikátor uživatele, který modifikoval komentář, je povinný."
+
+msgid "The identifier of the user who modified the comment should not be empty."
+msgstr "Identifikátor uživatele, který modifikoval komentář, by neměl být prázdný."
+
+msgid "The parent comment does not exist."
+msgstr "Mateřský komentář neexistuje."
+
+msgid "The user cannot update this comment."
+msgstr "Uživatel nemůže aktualizovat tento komentář."
+
+msgid "The user cannot delete this comment."
+msgstr "Uživatel nemůže odstranit tento komentář."
+
+msgid "The commented object type does not exist."
+msgstr "Typ komentovaného objektu neexistuje."
+
+msgid "The favorite object type should be one of the following: {0}."
+msgstr "Typ oblíbeného objektu by měl být jeden z následujících: {0}."
+
+msgid "The favorite object type is required."
+msgstr "Typ oblíbeného objektu je povinný."
+
+msgid "The favorite object type should not be empty"
+msgstr "Typ oblíbeného objektu nemůže být prázdný"
+
+msgid "The favorite object identifier should be a valid UUID."
+msgstr "Identifikátor oblíbeného objektu by měl být platný UUID."
+
+msgid "The favorite object identifier is required."
+msgstr "Identifikátor oblíbeného objektu je povinný."
+
+msgid "The favorite object identifier should not be empty."
+msgstr "Identifikátor oblíbeného objektu by neměl být prázdný."
+
+msgid "The resource is already marked as favorite."
+msgstr "Tento dokument je již označen jako oblíbený."
+
+msgid "The user cannot delete this favorite."
+msgstr "Uživatel nemůže odstranit tuto oblíbenou položku."
+
+msgid "A length is required."
+msgstr "Délka je povinná."
+
+msgid "The identifier should be a valid BMP-UTF8 string."
+msgstr "Identifikátor by měl být platný BMP-UTF8 řetězec."
+
+msgid "The key identifier should be a valid ASCII string."
+msgstr "Identifikátor klíče by měl být platný ASCII řetězec."
+
+msgid "A key identifier is required."
+msgstr "Identifikátor klíče je povinný."
+
+msgid "The key identifier should not be empty."
+msgstr "Identifikátor klíče by neměl být prázdný."
+
+msgid "A type is required"
+msgstr "Typ je povinný"
+
+msgid "The type should not be empty"
+msgstr "Typ by neměl být prázdný"
+
+msgid "The creation date should be a valid date."
+msgstr "Datum vytvoření by měl být platným datem."
+
+msgid "The creation date should not be empty."
+msgstr "Datum vytvoření by neměl být prázdný."
+
+msgid "The deleted status should be a valid boolean."
+msgstr "Stav odstranění by měl být platný boolean."
+
+msgid "A deleted status is required"
+msgstr "Stav odstranění je povinný"
+
+msgid "A user identifier is required"
+msgstr "Uživatelský identifikátor je povinný"
+
+msgid "The user identifier should not be empty"
+msgstr "Identifikátor uživatele by neměl být prázdný"
+
+msgid "A valid OpenPGP key must be provided."
+msgstr "Musí být zadán platný OpenPGP klíč."
+
+msgid "The OpenPGP armored key could not be parsed."
+msgstr "ASCII-armored klíč OpenPGP nelze analyzovat."
+
+msgid "The OpenPGP armored key could not be validated."
+msgstr "ASCII-armored klíč OpenPGP nelze ověřit."
+
+msgid "The identifier of the user who created the group should be a valid UUID."
+msgstr "Identifikátor uživatele, který vytvořil skupinu, by měl mít platné UUID."
+
+msgid "The identifier of the user who created the group is required."
+msgstr "Identifikátor uživatele, který vytvořil skupinu, je povinný."
+
+msgid "The identifier of the user who created the group should not be empty."
+msgstr "Identifikátor uživatele, který vytvořil skupinu, by neměl být prázdný."
+
+msgid "The identifier of the user who modified the group should be a valid UUID."
+msgstr "Identifikátor uživatele, který upravil skupinu, by měl být platný UUID."
+
+msgid "The identifier of the user who modified the group is required."
+msgstr "Identifikátor uživatele, který upravil skupinu, je povinný."
+
+msgid "The identifier of the user who modified the group should not be empty."
+msgstr "Identifikátor uživatele, který upravil skupinu, by neměl být prázdný."
+
+msgid "The name is already used by another group."
+msgstr "Tento název již používá jiná skupina."
+
+msgid "A group manager should be provided."
+msgstr "Měl by být uveden správce skupiny."
+
+msgid "The group should not be soft deleted."
+msgstr "Skupina by neměla být soft smazána."
+
+msgid "The group should not be sole owner of shared content, transfer the ownership to other users."
+msgstr "Skupina by neměla být jediným vlastníkem sdíleného obsahu, převeďte vlastnictví na ostatní uživatele."
+
+msgid "Could not validate group data."
+msgstr "Data skupiny se nepodařilo ověřit."
+
+msgid "Could not delete the group {0}, please try again later."
+msgstr "Skupinu {0} se nepodařilo odstranit, zkuste to prosím později."
+
+msgid "A group identifier is required."
+msgstr "Identifikátor skupiny je povinný."
+
+msgid "The group identifier should not be empty."
+msgstr "Identifikátor skupiny by neměl být prázdný."
+
+msgid "The group manager status should be a valid boolean."
+msgstr "Status správce skupiny by měl být platný boolean."
+
+msgid "A group manager status is required."
+msgstr "Status správce skupiny je povinný."
+
+msgid "The group manager status should not be empty."
+msgstr "Status správce skupiny by neměl být prázdný."
+
+msgid "The user is already member of this group."
+msgstr "Uživatel je již členem této skupiny."
+
+msgid "A property is required."
+msgstr "Vlastnost je povinná."
+
+msgid "The property should not be empty."
+msgstr "Vlastnost by neměla být prázdná."
+
+msgid "The property should be an alphabetical string and only dot is accepted as special characters."
+msgstr "Vlastnost by měla být alfabetický řetězec a jako speciální znak je povolena pouze tečka."
+
+msgid "The property identifier should be a valid UUID."
+msgstr "Identifikátor vlastnosti by měl být platný UUID."
+
+msgid "A property identifier is required."
+msgstr "Identifikátor vlastnosti je povinný."
+
+msgid "The property identifier should not be empty."
+msgstr "Identifikátor vlastnosti by neměl být prázdný."
+
+msgid "The value should be a valid UTF8 string."
+msgstr "Hodnota by měla být platný řetězec UTF8."
+
+msgid "The value length should be maximum {0} characters."
+msgstr "Délka hodnoty by měla být maximálně {0} znaků."
+
+msgid "The value should not be empty."
+msgstr "Hodnota by neměla být prázdná."
+
+msgid "This property id is already in use."
+msgstr "Toto id vlastnosti je již používáno."
+
+msgid "Only admin can create or update organization settings."
+msgstr "Pouze administrátor může vytvořit nebo aktualizovat nastavení organizace."
+
+msgid "A permission already exists for the given access control object and access request object."
+msgstr "Oprávnění pro daný objekt řízení přístupu a objekt žádosti o přístup již existuje."
+
+msgid "The access control object does not exist."
+msgstr "Objekt řízení přístupu neexistuje."
+
+msgid "The access request object does not exist."
+msgstr "Objekt žádosti o přístup neexistuje."
+
+msgid "The username should be a valid UTF8 string."
+msgstr "Uživatelské jméno by mělo být platný řetězec UTF8."
+
+msgid "The username length should be maximum {0} characters."
+msgstr "Délka uživatelského jména by měla být maximálně {0} znaků."
+
+msgid "The uri should be a valid BMP-UTF8 string."
+msgstr "URI by mělo být platný BMP-UTF8 řetězec."
+
+msgid "The uri length should be maximum {0} characters."
+msgstr "Délka URI by měla být maximálně {0} znaků."
+
+msgid "The description should be a valid UTF8 string."
+msgstr "Popis by měl být platný UTF8 řetězec."
+
+msgid "The deleted status should not be empty"
+msgstr "Odstraněný stav by neměl být prázdný"
+
+msgid "The identifier of the user who created the resource should be a valid UUID."
+msgstr "Identifikátor uživatele, který vytvořil zdroj, by měl být platný UUID."
+
+msgid "The identifier of the user who created the resource is required."
+msgstr "Identifikátor uživatele, který vytvořil zdroj, je povinný."
+
+msgid "The identifier of the user who created the resource should not be empty."
+msgstr "Identifikátor uživatele, který vytvořil zdroj, by neměl být prázdný."
+
+msgid "The identifier of the user who last modified the resource should be a valid UUID."
+msgstr "Identifikátor uživatele, který naposledy upravil zdroj, by měl být platný UUID."
+
+msgid "The identifier of the user who last modified the resource required."
+msgstr "Identifikátor uživatele, který naposledy upravil zdroj, je povinný."
+
+msgid "The identifier of the user who last modified the resource should not be empty."
+msgstr "Identifikátor uživatele, který naposledy upravil zdroj, by neměl být prázdný."
+
+msgid "The resource type should be one of the following: {0}."
+msgstr "Typ zdroje by měl být jeden z následujících: {0}."
+
+msgid "The permissions are required."
+msgstr "Oprávnění jsou povinná."
+
+msgid "The permissions should not be empty."
+msgstr "Oprávnění by neměla být prázdná."
+
+msgid "The permissions should contain only the permission of the owner."
+msgstr "Oprávnění by měla obsahovat pouze oprávnění vlastníka."
+
+msgid "The owner secret is required."
+msgstr "Tajný klíč vlastníka je povinný."
+
+msgid "The secrets should not be empty."
+msgstr "Tajné údaje by neměly být prázdné."
+
+msgid "The secrets should contain only the secret of the owner."
+msgstr "Tajné údaje by měly obsahovat pouze tajný údaj vlastníka."
+
+msgid "The resource type should not be deleted."
+msgstr "Typ zdroje by neměl být odstraněn."
+
+msgid "The permissions should contain the owner permission."
+msgstr "Oprávnění by měla obsahovat oprávnění vlastníka."
+
+msgid "The secrets should contain the owner secret."
+msgstr "Tajné údaje by měly obsahovat tajný údaj vlastníka."
+
+msgid "The secrets should contain the secrets of all the users having access to the resource."
+msgstr "Tajné údaje by měly obsahovat tajné údaje všech uživatelů, kteří mají k prostředku přístup."
+
+msgid "The permissions should contain at least the owner permission."
+msgstr "Oprávnění by měla obsahovat alespoň oprávnění vlastníka."
+
+msgid "The settings selected by your administrator prevent from downgrading resource type."
+msgstr "Nastavení zvolené vaším administrátorem brání snížení typu zdroje."
+
+msgid "The metadata key does not exist or was deleted."
+msgstr "Klíč metadat neexistuje nebo byl odstraněn."
+
+msgid "It is not allowed to create v5-password-string resource types."
+msgstr "Není dovoleno vytvářet typy zdrojů v5-password-string."
+
+msgid "The resource metadata provided can not be decrypted."
+msgstr "Poskytnutá metadata zdroje nelze dešifrovat."
+
+msgid "A resource of type personal cannot be shared with other users or a group."
+msgstr "Zdroje typu 'personal' nelze sdílet s ostatními uživateli ani se skupinou."
+
+msgid "The resource should not be already soft deleted."
+msgstr "Zdroj by neměl být již soft smazán."
+
+msgid "The user cannot delete this resource."
+msgstr "Uživatel nemůže odstranit tento zdroj."
+
+msgid "The resource type for this resource does not exist."
+msgstr "Typ zdroje pro tento prostředek neexistuje."
+
+msgid "The name should not be greater than 50 characters."
+msgstr "Název by neměl být delší než 50 znaků."
+
+msgid "The name should not be reserved role."
+msgstr "Název by neměl být vyhrazenou rolí."
+
+msgid "The role cannot be deleted as it is associated with another user."
+msgstr "Roli nelze odstranit, protože je přiřazena jinému uživateli."
+
+msgid "A reserved role cannot be deleted."
+msgstr "Vyhrazenou roli nelze odstranit."
+
+msgid "A role already exists for the given name."
+msgstr "Role s daným názvem již existuje."
+
+msgid "Only maximum of {0} active roles are allowed."
+msgstr "Je povoleno pouze maximálně {0} aktivních rolí."
+
+msgid "A reserved role cannot be renamed."
+msgstr "Vyhrazenou roli nelze přejmenovat."
+
+msgid "The secret revision identifier should be a valid UUID."
+msgstr "Identifikátor revize tajemství by měl být platný UUID."
+
+msgid "A secret revision identifier is required."
+msgstr "Identifikátor revize tajemství je povinný."
+
+msgid "The secret revision identifier should not be empty."
+msgstr "Identifikátor revize tajemství by neměl být prázdný."
+
+msgid "A secret already exists for the given user and resource."
+msgstr "Tajný údaj již existuje pro daného uživatele a zdroj."
+
+msgid "A secret already exists for the given user, resource and secret revision."
+msgstr "Pro daného uživatele, zdroj a revizi tajemství již tajemství existuje."
+
+msgid "The secret revision does not exist or is deleted."
+msgstr "Revize tajemství neexistuje nebo byla odstraněna."
+
+msgid "The user identifier by should be a valid UUID."
+msgstr "Identifikátor uživatele by měl být platný UUID."
+
+msgid "The disabled date should be a valid date."
+msgstr "Datum deaktivace by mělo být platné datum."
+
+msgid "The profile should not be empty."
+msgstr "Profil by neměl být prázdný."
+
+msgid "The username is already in use."
+msgstr "Uživatelské jméno je již používáno."
+
+msgid "The role does not exist."
+msgstr "Role neexistuje."
+
+msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
+msgstr "Uživatel by neměl být jediným vlastníkem sdíleného obsahu, převeďte vlastnictví na ostatní uživatele."
+
+msgid "The user should not be sole group manager of group(s), transfer the management to other users."
+msgstr "Uživatel by neměl být jediným správcem skupiny (skupin), předejte správu ostatním uživatelům."
+
+msgid "Could not delete the user {0}, please try again later."
+msgstr "Uživatele {0} se nepodařilo odstranit, zkuste to prosím později."
+
+msgid "The armored key should be a valid ASCII-armored OpenPGP key."
+msgstr "Klíč ve formátu ASCII-armored by měl být platný OpenPGP klíč."
+
+msgid "The armored key is not valid."
+msgstr "ASCII-armored klíč není platný."
+
+msgid "The message should be a valid ASCII-armored OpenPGP message."
+msgstr "Zpráva by měla být platná ASCII-armored zpráva OpenPGP."
+
+msgid "The creation date should be set in the past."
+msgstr "Datum vytvoření by mělo být nastaveno v minulosti."
+
+msgid "The key should not already be expired."
+msgstr "Klíč nesmí být již expirován."
+
+msgid "The date should not be set in the future."
+msgstr "Datum by nemělo být nastaveno do budoucnosti."
+
+msgid "The date could not be parsed."
+msgstr "Datum se nepodařilo zpracovat."
+
+msgid "The regular expression should be a valid string."
+msgstr "Regulární výraz by měl být platný řetězec."
+
+msgid "The fingerprint does not match the one of the armored key."
+msgstr "Otisk se neshoduje s otiskem ASCII-armored klíče."
+
+msgid "The fingerprint should be a string of 40 hexadecimal characters."
+msgstr "Otisk by měl být řetězec o 40 hexadecimálních znacích."
+
+msgid "The type should be one of the following: RSA, ECC, ECDSA, DH."
+msgstr "Typ by měl být jedním z následujících: RSA, ECC, ECDSA, DH."
+
+msgid "The delete status should be a valid boolean."
+msgstr "Stav odstranění by měl být platný boolean."
+
+msgid "The string should not contain invisible characters."
+msgstr ""
+
+msgid "The field must be null when creating a new record."
+msgstr "Pole musí být při vytváření nového záznamu prázdné (null)."
+
+msgid "The key identifier should be a string of 8 hexadecimal characters."
+msgstr "Identifikátor klíče by měl být řetězec o 8 hexadecimálních znacích."
+
+msgid "The provided IP is invalid."
+msgstr "Zadaná IP adresa je neplatná."
+
+msgid "The provided user agent is invalid."
+msgstr "Zadaný user agent je neplatný."
+
+msgid "{0} updated your memberships in several groups"
+msgstr "{0} aktualizoval(a) vaše členství v několika skupinách"
+
+msgid "{0} deleted several group memberships"
+msgstr "{0} smazal(a) několik členství ve skupinách"
+
+msgid "You made changes on several resources"
+msgstr "Provedli jste změny u několika prostředků"
+
+msgid "{0} has made changes on several resources"
+msgstr "{0} provedl(a) změny na několika prostředcích"
+
+msgid "{0} shared several items with you"
+msgstr "{0} s vámi sdílel(a) několik položek"
+
+msgid "{0} just activated their account on passbolt"
+msgstr "{0} právě aktivoval(a) svůj účet na passboltu"
+
+msgid "{0} commented on {1}"
+msgstr "{0} okomentoval(a) {1}"
+
+msgid "{0} deleted the group {1}"
+msgstr "{0} odstranil(a) skupinu {1}"
+
+msgid "{0} updated the group {1}"
+msgstr "{0} aktualizoval(a) skupinu {1}"
+
+msgid "{0} added you to the group {1}"
+msgstr "{0} vás přidal(a) do skupiny {1}"
+
+msgid "{0} requested you to add members to {1}"
+msgstr "{0} požádal(a) o přidání členů do {1}"
+
+msgid "You have been requested to add members to {0}"
+msgstr "Byli jste požádáni o přidání členů do {0}"
+
+msgid "{0} removed you from the group {1}"
+msgstr "{0} vás odstranil(a) ze skupiny {1}"
+
+msgid "{0} updated your membership in the group {1}"
+msgstr "{0} aktualizoval(a) vaše členství ve skupině {1}"
+
+msgid "{0} just completed the account recovery process"
+msgstr "{0} právě dokončil(a) proces obnovení účtu"
+
+msgid "You just completed the account recovery process!"
+msgstr "Právě jste dokončili proces obnovení účtu!"
+
+msgid "Your account recovery, {0}!"
+msgstr "Obnovení vašeho účtu, {0}!"
+
+msgid "You added the password {0}"
+msgstr "Přidali jste heslo {0}"
+
+msgid "You added a new password"
+msgstr "Přidali jste nové heslo"
+
+msgid "{0} deleted the password {1}"
+msgstr "{0} odstranil(a) heslo {1}"
+
+msgid "{0} deleted a password"
+msgstr "{0} odstranil(a) heslo"
+
+msgid "You edited a resource"
+msgstr "Upravili jste zdroj"
+
+msgid "{0} edited a resource"
+msgstr "{0} upravil(a) zdroj"
+
+msgid "You edited the resource {0}"
+msgstr "Upravili jste zdroj {0}"
+
+msgid "{0} edited the resource {1}"
+msgstr "{0} upravil(a) zdroj {1}"
+
+msgid "{0} created a new role {1}"
+msgstr "{0} vytvořil novou roli {1}"
+
+msgid "{0} updated the role {1}"
+msgstr "{0} aktualizoval roli {1}"
+
+msgid "{0} cannot complete the account recovery process!"
+msgstr "{0} nemůže dokončit proces obnovení účtu!"
+
+msgid "{0} shared the resource {1}"
+msgstr "{0} sdílel(a) zdroj {1}"
+
+msgid "{0} shared a resource"
+msgstr "{0} sdílel(a) zdroj"
+
+msgid "Your account has been suspended"
+msgstr "Váš účet byl pozastaven"
+
+msgid "{0}'s admin role has been revoked"
+msgstr "Role administrátora uživatele {0} byla odebrána"
+
+msgid "You deleted administrator {0}"
+msgstr "Odstranili jste administrátora {0}"
+
+msgid "You deleted user {0}"
+msgstr ""
+
+msgid "{0} deleted your account"
+msgstr "{0} smazal(a) váš účet"
+
+msgid "{0} deleted administrator {1}"
+msgstr "{0} smazal(a) administrátora {1}"
+
+msgid "{0} deleted user {1}"
+msgstr "{0} odstranil(a) uživatele {1}"
+
+msgid "{0} has been suspended"
+msgstr "{0} byl pozastaven"
+
+msgid "Your role has been updated"
+msgstr "Vaše role byla aktualizována"
+
+msgid "The purify subject setting should be a boolean."
+msgstr "Nastavení purify subject by mělo být platný boolean."
+
+msgid "The show comment setting should be a boolean."
+msgstr "Nastavení show comment by mělo být platný boolean."
+
+msgid "The show description setting should be a boolean."
+msgstr "Nastavení show description by mělo být platný boolean."
+
+msgid "The show secret setting should be a boolean."
+msgstr "Nastavení show secret by mělo být platný boolean."
+
+msgid "The show uri setting should be a boolean."
+msgstr "Nastavení show uri by mělo být platný boolean."
+
+msgid "The show username setting should be a boolean."
+msgstr "Nastavení show username by mělo být platný boolean."
+
+msgid "The send on user setup completed setting should be a boolean."
+msgstr "Nastavení send on user setup completed by mělo být platný boolean."
+
+msgid "The send on user recover abort setting should be a boolean."
+msgstr "Nastavení odeslání při zrušení obnovení uživatele by mělo být boolean."
+
+msgid "The send on user disabled setting should be a boolean."
+msgstr "Nastavení \"send on user disabled\" by mělo být typu boolean."
+
+msgid "The send on admin disabled setting should be a boolean."
+msgstr "Nastavení \"send on admin disabled\" by mělo být typu boolean."
+
+msgid "The send on comment added setting should be a boolean."
+msgstr "Nastavení send on comment added by mělo být platný boolean."
+
+msgid "The send on group deleted setting should be a boolean."
+msgstr "Nastavení send on group deleted by mělo být platný boolean."
+
+msgid "The send on group user added setting should be a boolean."
+msgstr "Nastavení send on group user added by mělo být platný boolean."
+
+msgid "The send on group user deleted setting should be a boolean."
+msgstr "Nastavení send on group user deleted by mělo být platný boolean."
+
+msgid "The send on group user updated setting should be a boolean."
+msgstr "Nastavení send on group user updated by mělo být platný boolean."
+
+msgid "The send on group manager updated setting should be a boolean."
+msgstr "Nastavení send on group manager updated by mělo být platný boolean."
+
+msgid "The send on group manager request add user should be a boolean."
+msgstr "Nastavení odeslání při žádosti správce skupiny o přidání uživatele by mělo být typu boolean."
+
+msgid "The send on password created setting should be a boolean."
+msgstr "Nastavení send on password created by mělo být platný boolean."
+
+msgid "The send on password shared setting should be a boolean."
+msgstr "Nastavení send on password shared by mělo být platný boolean."
+
+msgid "The send on password updated setting should be a boolean."
+msgstr "Nastavení send on password updated by mělo být platný boolean."
+
+msgid "The send on password deleted setting should be a boolean."
+msgstr "Nastavení send on password deleted by mělo být platný boolean."
+
+msgid "The send on user created setting should be a boolean."
+msgstr "Nastavení send on user created by mělo být platný boolean."
+
+msgid "The send on user recovered setting should be a boolean."
+msgstr "Nastavení send on user recovered by mělo být platný boolean."
+
+msgid "The token is already consumed."
+msgstr "Token již byl použit."
+
+msgid "The authentication token could not be found."
+msgstr "Ověřovací token nebyl nalezen."
+
+msgid "Validation failed for authenticationToken {0}. {1}"
+msgstr "Ověření selhalo pro ověřovací token {0}. {1}"
+
+msgid "Validation success for authenticationToken {0}"
+msgstr "Ověření bylo úspěšné pro ověřovací token {0}"
+
+msgid "Could not save the avatar in the {0} file."
+msgstr "Nepodařilo se uložit avatar do souboru {0}."
+
+msgid "The avatar id is not valid."
+msgstr "ID avataru není platné."
+
+msgid "Could not save the comment, please try again later."
+msgstr "Komentář nelze uložit, zkuste to prosím později."
+
+msgid "Could not validate comment data."
+msgstr "Nepodařilo se ověřit komentář."
+
+msgid "The comment userId is not valid."
+msgstr "Identifikátor uživatele komentáře (userId) je neplatný."
+
+msgid "The comment does not exist."
+msgstr "Komentář neexistuje."
+
+msgid "Could not delete comment."
+msgstr "Komentář se nepodařilo odstranit."
+
+msgid "Validation failed for comment {0}. {1}"
+msgstr "Validace komentáře {0} selhala. {1}"
+
+msgid "Validation success for comment {0}"
+msgstr "Validace komentáře {0} byla úspěšná"
+
+msgid "You are not allowed to edit this comment."
+msgstr "Nemáte dostatečná oprávnění pro úpravu tohoto komentáře."
+
+msgid "Could not find comments for the requested model."
+msgstr "K požadovanému modelu se nepodařilo najít komentáře."
+
+msgid "This record is already marked as favorite."
+msgstr "Tato položka je již označená jako oblíbená."
+
+msgid "Could not validate favorite data."
+msgstr "Nepodařilo se ověřit data oblíbené položky."
+
+msgid "The favorite does not exist."
+msgstr "Oblíbená položka neexistuje."
+
+msgid "Could not delete favorite."
+msgstr "Oblíbenou položku se nepodařilo odstranit."
+
+msgid "Validation failed for favorite {0}. {1}"
+msgstr "Ověření oblíbené položky {0} selhalo. {1}"
+
+msgid "Validation success for favorite {0}"
+msgstr "Ověření oblíbené položky {0} bylo úspěšné"
+
+msgid "Validation success for key {0}"
+msgstr "Ověření klíče {0} bylo úspěšné"
+
+msgid "Validation failed for key {0}. {1}"
+msgstr "Validace klíče {0} selhala. {1}"
+
+msgid "Encryption success for key {0}"
+msgstr "Šifrování pro klíč {0} bylo úspěšné"
+
+msgid "Failed to encrypt with key {0}. {1}"
+msgstr "Šifrování pomocí klíče {0} selhalo. {1}"
+
+msgid "Key expired: {0}."
+msgstr "Platnost klíče vypršela: {0}."
+
+msgid "Expiration date valid for key {0}."
+msgstr "Datum expirace je platné pro klíč {0}."
+
+msgid "Validation failed for group {0}. {1}"
+msgstr "Validace skupiny {0} selhala. {1}"
+
+msgid "Validation success for group {0}"
+msgstr "Ověření skupiny {0} bylo úspěšné"
+
+msgid "Could not validate group user data."
+msgstr "Nelze ověřit data uživatele skupiny."
+
+msgid "The resource with ID {0} does not have a secret revision."
+msgstr "Zdroj s ID {0} nemá revizi tajemství."
+
+msgid "All email notifications will be sent."
+msgstr "Všechna e-mailová upozornění budou odeslána."
+
+msgid "Some email notifications are disabled by the administrator."
+msgstr "Některá e-mailová upozornění jsou správcem zakázána."
+
+msgid "Host availability will be checked."
+msgstr "Dostupnost hostitele bude zkontrolována."
+
+msgid "Host availability checking is disabled."
+msgstr "Kontrola dostupnosti hostitele je zakázána."
+
+msgid "Make sure this instance is not publicly available on the internet."
+msgstr "Ujistěte se, že tato instance není veřejně dostupná na internetu."
+
+msgid "Or set the PASSBOLT_EMAIL_VALIDATE_MX environment variable to true."
+msgstr "Nebo nastavte proměnnou prostředí PASSBOLT_EMAIL_VALIDATE_MX na hodnotu true."
+
+msgid "Or set passbolt.email.validate.mx to true in {0}."
+msgstr "Nebo nastavte passbolt.email.validate.mx na hodnotu true v {0}."
+
+msgid "Serving the compiled version of the javascript app."
+msgstr "Poskytuje se zkompilovaná verze javascriptové aplikace."
+
+msgid "Using non-compiled Javascript. Passbolt will be slower."
+msgstr "Používá se nekompilovaný JavaScript. Passbolt bude pomalejší."
+
+msgid "Set passbolt.js.build to production in {0}"
+msgstr "Nastavte passbolt.js.build na production v {0}"
+
+msgid "Could not read tag information on github repository"
+msgstr "Nelze číst informace o tagu v repozitáři GitHub"
+
+msgid "Using latest passbolt version ({0})."
+msgstr "Používá se nejnovější verze passboltu ({0})."
+
+msgid "Could connect to passbolt repository to check versions."
+msgstr "Podařilo se připojit k repozitáři passboltu pro kontrolu verzí."
+
+msgid "This installation is not up to date. Currently using {0} and it should be {1}."
+msgstr "Tato instalace není aktuální. Momentálně používá verzi {0}, ale měla by {1}."
+
+msgid "Could not connect to passbolt repository to check versions."
+msgstr "Nelze se připojit k repozitáři Passboltu pro kontrolu verzí."
+
+msgid "It is not possible to check if your version is up-to-date."
+msgstr "Není možné ověřit, zda je vaše verze aktuální."
+
+msgid "See https://www.passbolt.com/help/tech/update"
+msgstr "Navštivte https://www.passbolt.com/help/tech/update"
+
+msgid "Check the network configuration to allow this script to check for updates."
+msgstr "Zkontrolujte síťovou konfiguraci, aby tento skript mohl kontrolovat aktualizace."
+
+msgid "Search engine robots are told not to index content."
+msgstr "Robotům vyhledávačů je sděleno, aby neindexovali obsah."
+
+msgid "Search engine robots are not told not to index content."
+msgstr "Robotům vyhledávačů není sděleno, aby neindexovali obsah."
+
+msgid "Set passbolt.meta.robots to false in {0}."
+msgstr "Nastavte passbolt.meta.robots na false v {0}."
+
+msgid "Selenium API endpoints are disabled."
+msgstr "Koncové body Selenium API jsou deaktivovány."
+
+msgid "Selenium API endpoints are active. This setting should be used for testing only."
+msgstr "Koncové body Selenium API jsou aktivní. Toto nastavení by mělo být použito pouze pro testování."
+
+msgid "Set passbolt.selenium.active to false in {0}."
+msgstr "Nastavte passbolt.selenium.active na false v {0}."
+
+msgid "The Self Registration plugin is enabled."
+msgstr "Plugin Self Registration je povolen."
+
+msgid "The Self Registration plugin is disabled."
+msgstr "Plugin Self Registration je zakázán."
+
+msgid "Enable the plugin in order to define self registration settings."
+msgstr "Povolte plugin, abyste mohli nastavit samoregistraci."
+
+msgid "Registration is closed, only administrators can add users."
+msgstr "Registrace je uzavřena, nové uživatele mohou přidávat pouze administrátoři."
+
+msgid "The self registration provider is: {0}."
+msgstr "Poskytovatelem samoregistrace je: {0}."
+
+msgid "The deprecated self registration public setting was not found in {0}."
+msgstr "Zastaralé veřejné nastavení samoregistrace nebylo nalezeno v {0}."
+
+msgid "The deprecated self registration public setting was found in {0}."
+msgstr "Zastaralé veřejné nastavení samoregistrace bylo nalezeno v {0}."
+
+msgid "You may remove the \"passbolt.registration.public\" setting."
+msgstr "Můžete odstranit nastavení \"passbolt.registration.public\"."
+
+msgid "The session provider is {0}."
+msgstr ""
+
+msgid "The session provider {0} is not supported."
+msgstr ""
+
+msgid "The session providers supported are: {0}."
+msgstr ""
+
+msgid "Define it using the SESSION_DEFAULTS environment variable or under {0} in {1}."
+msgstr ""
+
+msgid "Passbolt is configured to force SSL use."
+msgstr "Passbolt je nakonfigurován tak, aby vynucoval použití SSL."
+
+msgid "Passbolt is not configured to force SSL use."
+msgstr "Passbolt není nakonfigurován tak, aby vynucoval použití SSL."
+
+msgid "Set passbolt.ssl.force to true in {0}."
+msgstr "Nastavte passbolt.ssl.force na true v {0}."
+
+msgid "App.fullBaseUrl is set to HTTPS."
+msgstr "App.fullBaseUrl je nastaveno na HTTPS."
+
+msgid "App.fullBaseUrl is not set to HTTPS."
+msgstr "App.fullBaseUrl není nastaveno na HTTPS."
+
+msgid "Check App.fullBaseUrl url scheme in {0}."
+msgstr "Zkontrolujte schéma URL App.fullBaseUrl v {0}."
+
+msgid "The application config file is present"
+msgstr "Konfigurační soubor aplikace je přítomen"
+
+msgid "The application config file is missing in {0}"
+msgstr "Konfigurační soubor aplikace chybí v {0}"
+
+msgid "Copy {0} to {1}"
+msgstr "Zkopírujte {0} do {1}"
+
+msgid "The passbolt config file is present"
+msgstr "Konfigurační soubor passboltu je přítomen"
+
+msgid "The passbolt config file is missing in {0}"
+msgstr "Konfigurační soubor passboltu chybí v {0}"
+
+msgid "The passbolt config file is not required if passbolt is configured with environment variables"
+msgstr "Konfigurační soubor passboltu není vyžadován, pokud je passbolt konfigurován pomocí proměnných prostředí"
+
+msgid "Cache is working."
+msgstr "Mezipaměť funguje."
+
+msgid "Cache is NOT working."
+msgstr "Mezipaměť není funkční."
+
+msgid "Deprecated `_cake_core_` cache configuration found."
+msgstr "Bylo nalezeno zastaralé nastavení cache `_cake_core_`."
+
+msgid "Check the settings in {0}"
+msgstr "Zkontrolujte nastavení v {0}"
+
+msgid "Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file."
+msgstr "V konfiguračním souboru {0} nahraďte `_cake_core_` za `_cake_translations_`."
+
+msgid "Debug mode is off."
+msgstr "Režim ladění je vypnutý."
+
+msgid "Debug mode is on."
+msgstr "Režim ladění je zapnutý."
+
+msgid "Set debug to false in {0}"
+msgstr "Nastavte debug na false v {0}"
+
+msgid "Full base url is set to {0}"
+msgstr "Úplná základní URL je nastavena na {0}"
+
+msgid "Full base url is not set. The application is using: {0}."
+msgstr "Úplná základní URL není nastavena. Aplikace používá: {0}."
+
+msgid "Edit App.fullBaseUrl in {0}"
+msgstr "Upravte App.fullBaseUrl v {0}"
+
+msgid "/healthcheck/status is reachable."
+msgstr "/healthcheck/status je dostupné."
+
+msgid "Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl"
+msgstr "Nelze se dostat na /healthcheck/status s URL uvedenou v App.fullBaseUrl"
+
+msgid "Check that the domain name is correct in {0}"
+msgstr "Zkontrolujte, že název domény je správný v {0}"
+
+msgid "Check the network settings"
+msgstr "Zkontrolujte nastavení sítě"
+
+msgid "Unique value set for security.salt"
+msgstr "Pro security.salt je nastavena jedinečná hodnota"
+
+msgid "Default value found for security.salt"
+msgstr "Pro security.salt byla nalezena výchozí hodnota"
+
+msgid "Edit the security.salt in {0}"
+msgstr "Upravte security.salt v {0}"
+
+msgid "App.fullBaseUrl validation OK."
+msgstr "Validace App.fullBaseUrl proběhla v pořádku."
+
+msgid "App.fullBaseUrl does not validate. A valid URL/IP is accepted, but found \"{0}\"."
+msgstr "App.fullBaseUrl není platná. Je akceptována platná URL/IP, ale nalezeno \"{0}\"."
+
+msgid "Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt"
+msgstr "Vyberte platný název domény, jak je definováno v oddíle 2.3.1 dokumentu http://www.ietf.org/rfc/rfc1035.txt"
+
+msgid "IMPORTANT: Using an empty App.fullBaseUrl can lead to host header injection attack: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
+msgstr "DŮLEŽITÉ: Použití prázdného App.fullBaseUrl může vést k útoku typu host header injection: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
+
+msgid "The application is able to connect to the database"
+msgstr "Aplikace se dokáže připojit k databázi"
+
+msgid "The driver defined in the database configuration is not supported."
+msgstr "Ovladač definovaný v konfiguraci databáze není podporován."
+
+msgid "The application is not able to connect to the database."
+msgstr "Aplikace se nedokáže připojit k databázi."
+
+msgid "Ensure that the driver defined in {0} is one of the following: {1}."
+msgstr "Ujistěte se, že ovladač definovaný v {0} je jedním z následujících: {1}."
+
+msgid "Double check the host, database name, username and password in {0}."
+msgstr "Znovu ověřte hostitele, název databáze, uživatelské jméno a heslo v {0}."
+
+msgid "Make sure the database exists and is accessible for the given database user."
+msgstr "Ujistěte se, že databáze existuje a je přístupná pro daného databázového uživatele."
+
+msgid "Some default content is present."
+msgstr "Některý výchozí obsah je přítomen."
+
+msgid "No default content found."
+msgstr "Nenalezen žádný výchozí obsah."
+
+msgid "Run the install script to install the database tables"
+msgstr "Pro instalaci databázových tabulek spusťte instalační skript"
+
+msgid "The database version is supported."
+msgstr "Verze databáze je podporována."
+
+msgid "The database version is deprecated."
+msgstr "Verze databáze je zastaralá."
+
+msgid "The model schema cache shows no discrepancies with the database schema."
+msgstr "Mezipaměť schématu modelu nevykazuje žádné nesrovnalosti se schématem databáze."
+
+msgid "The model schema cache shows discrepancies with the database schema."
+msgstr "Mezipaměť schématu modelu vykazuje nesrovnalosti se schématem databáze."
+
+msgid "{0}: {1}."
+msgstr "{0}: {1}."
+
+msgid "Clear the model schema cache so it is rebuilt from the database."
+msgstr "Vymažte mezipaměť schématu modelu, aby byla znovu sestavena z databáze."
+
+msgid "Consider running `{0}`. More information: {1}"
+msgstr "Zvažte spuštění příkazu `{0}`. Více informací: {1}"
+
+msgid "The database schema is up to date."
+msgstr "Schéma databáze je aktuální."
+
+msgid "The database schema is not up to date."
+msgstr "Schéma databáze není aktuální."
+
+msgid "Run the migration scripts:"
+msgstr "Spusťte migrační skripty:"
+
+msgid "{0} tables found."
+msgstr "Nalezeno {0} tabulek."
+
+msgid "No table found."
+msgstr "Nebyla nalezena žádná tabulka."
+
+msgid "Cannot detect your system distribution details."
+msgstr "Nelze zjistit podrobnosti o distribuci vašeho systému."
+
+msgid "See `{0}`."
+msgstr "Viz `{0}`."
+
+msgid "Cannot detect your `gpg` or `libgcrypt` version."
+msgstr "Nelze zjistit verzi `gpg` nebo `libgcrypt`."
+
+msgid "See `{0}` and `{1}`."
+msgstr "Viz `{0}` a `{1}`."
+
+msgid "GD or Imagick extension is installed."
+msgstr "Rozšíření GD nebo Imagick je nainstalováno."
+
+msgid "You must enable the gd or imagick extensions to use Passbolt."
+msgstr "Abyste mohli používat passbolt, musíte povolit rozšíření gd nebo imagick."
+
+msgid "See: https://secure.php.net/manual/en/book.image.php"
+msgstr "Viz: https://secure.php.net/manual/en/book.image.php"
+
+msgid "See: https://secure.php.net/manual/en/book.imagick.php"
+msgstr "Viz: https://secure.php.net/manual/en/book.imagick.php"
+
+msgid "Intl extension is installed."
+msgstr "Rozšíření intl je nainstalováno."
+
+msgid "You must enable the intl extension to use Passbolt."
+msgstr "Abyste mohli používat passbolt, musíte povolit rozšíření intl."
+
+msgid "See: https://secure.php.net/manual/en/book.intl.php"
+msgstr "Viz: https://secure.php.net/manual/en/book.intl.php"
+
+msgid "The logs directory {0} and its content are writable."
+msgstr "Adresář logů {0} a jeho obsah jsou zapisovatelné."
+
+msgid "The logs directory {0} and its content are not writable."
+msgstr "Adresář logů {0} a jeho obsah nejsou zapisovatelné."
+
+msgid "Ensure the logs directory and its content are writable by the webserver user."
+msgstr "Ujistěte se, že adresář logs a jeho obsah jsou zapisovatelné uživatelem webového serveru."
+
+msgid "You can try:"
+msgstr "Můžete vyzkoušet:"
+
+msgid "Mbstring extension is installed."
+msgstr "Rozšíření mbstring je nainstalováno."
+
+msgid "You must enable the mbstring extension to use Passbolt."
+msgstr "Abyste mohli používat passbolt, musíte povolit rozšíření mbstring."
+
+msgid "See: https://secure.php.net/manual/en/book.mbstring.php"
+msgstr "Viz: https://secure.php.net/manual/en/book.mbstring.php"
+
+msgid "PHP version is {0} or above."
+msgstr "Verze PHP je {0} nebo vyšší."
+
+msgid "PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment."
+msgstr "Verze PHP nižší než {0} nebude brzy passboltem podporována, zvažte proto upgrade operačního systému nebo prostředí PHP."
+
+msgid "64-bit architecture system detected."
+msgstr "Byl zjištěn systém s 64bitovou architekturou."
+
+msgid "32-bit architecture system detected, this environment will not be supported as of Passbolt v5+."
+msgstr "Byl zjištěn systém s 32bitovou architekturou, toto prostředí nebude podporováno od Passbolt v5+."
+
+msgid "See PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
+msgstr "Viz PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
+
+msgid "PCRE compiled with unicode support."
+msgstr "PCRE je zkompilováno s podporou Unicode."
+
+msgid "PCRE has not been compiled with Unicode support."
+msgstr "PCRE nebylo zkompilováno s podporou Unicode."
+
+msgid "Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring."
+msgstr "Překompilujte PCRE s podporou Unicode přidáním parametru --enable-unicode-properties při konfiguraci."
+
+msgid "PHP version {0}."
+msgstr "PHP verze {0}."
+
+msgid "PHP version is too low, passbolt need PHP {0} or higher."
+msgstr "Verze PHP je příliš nízká, passbolt vyžaduje PHP {0} nebo vyšší."
+
+msgid "System clock is synchronized and NTP service is active."
+msgstr "Systémové hodiny jsou synchronizovány a služba NTP je aktivní."
+
+msgid "System clock and NTP service information cannot be found."
+msgstr "Informace o systémových hodinách ani službě NTP nebyly nalezeny."
+
+msgid "NTP service is active but the system clock is not synchronized."
+msgstr "Služba NTP je aktivní, ale systémové hodiny nejsou synchronizovány."
+
+msgid "System clock is synchronized but NTP service is inactive."
+msgstr "Systémové hodiny jsou synchronizovány, ale služba NTP je neaktivní."
+
+msgid "System clock is not synchronized and NTP service is inactive."
+msgstr "Systémové hodiny nejsou synchronizovány a služba NTP je neaktivní."
+
+msgid "That generally means the NTP service is failing to contact any NTP servers."
+msgstr "To obvykle znamená, že se službě NTP nedaří kontaktovat žádné NTP servery."
+
+msgid "See `{0}`. More information: {1}"
+msgstr "Viz `{0}`. Více informací: {1}"
+
+msgid "The temporary directory and its content are writable and not executable."
+msgstr "Dočasný adresář a jeho obsah jsou zapisovatelné a nejsou spustitelné."
+
+msgid "The temporary directory and its content are not writable, or are executable."
+msgstr "Dočasný adresář a jeho obsah nejsou zapisovatelné nebo jsou spustitelné."
+
+msgid "Ensure the temporary directory and its content are writable by the webserver user."
+msgstr "Ujistěte se, že dočasný adresář a jeho obsah jsou zapisovatelné uživatelem webového serveru."
+
+msgid "The private key can be used to decrypt a message."
+msgstr "Soukromý klíč lze použít k dešifrování zprávy."
+
+msgid "The private key cannot be used to decrypt a message"
+msgstr "Soukromý klíč nelze použít k dešifrování zprávy"
+
+msgid "The private key can be used to decrypt and verify a message."
+msgstr "Soukromý klíč lze použít k dešifrování a ověření zprávy."
+
+msgid "The private key cannot be used to decrypt and verify a message"
+msgstr "Soukromý klíč nelze použít k dešifrování a ověření zprávy"
+
+msgid "The public key can be used to encrypt a message."
+msgstr "Veřejný klíč lze použít k šifrování zprávy."
+
+msgid "The public key cannot be used to encrypt a message"
+msgstr "Veřejný klíč nelze použít k šifrování zprávy"
+
+msgid "Make sure that the server private key is valid and that there is no passphrase."
+msgstr "Ujistěte se, že soukromý klíč serveru je platný a nemá žádné heslo."
+
+msgid "Make sure you imported the private server key in the keyring of the webserver user."
+msgstr "Ujistěte se, že jste importovali soukromý klíč serveru do klíčenky uživatele webového serveru."
+
+msgid "The public and private keys can be used to encrypt and sign a message."
+msgstr "Veřejný a soukromý klíč lze použít k zašifrování a podepsání zprávy."
+
+msgid "The public and private keys cannot be used to encrypt and sign a message"
+msgstr "Veřejný a soukromý klíč nelze použít k zašifrování a podepsání zprávy"
+
+msgid "The private key can be used to sign a message."
+msgstr "Soukromý klíč lze použít k podepsání zprávy."
+
+msgid "The private key cannot be used to sign a message"
+msgstr "Soukromý klíč nelze použít k podepsání zprávy"
+
+msgid "The public key can be used to verify a signature."
+msgstr "Veřejný klíč lze použít k ověření podpisu."
+
+msgid "The public key cannot be used to verify a signature."
+msgstr "Veřejný klíč nelze použít k ověření podpisu."
+
+msgid "The server key fingerprint matches the one defined in {0}."
+msgstr "Otisk klíče serveru odpovídá tomu definovanému v {0}."
+
+msgid "The server key fingerprint doesn't match the one defined in {0}."
+msgstr "Otisk klíče serveru neodpovídá tomu definovanému v {0}."
+
+msgid "Double check the key fingerprint, example: "
+msgstr "Znovu ověřte otisk klíče, například: "
+
+msgid "SERVER_KEY_EMAIL: The email you used when you generated the server key."
+msgstr "SERVER_KEY_EMAIL: E-mail, který jste použili při generování serverového klíče."
+
+msgid "See. https://www.passbolt.com/help/tech/install#toc_gpg"
+msgstr "Navštivte https://www.passbolt.com/help/tech/install#toc_gpg"
+
+msgid "The server private key format is Gopengpg compatible."
+msgstr "Formát soukromého klíče serveru je kompatibilní s Gopengpg."
+
+msgid "The server private key format is not Gopengpg compatible."
+msgstr "Formát soukromého klíče serveru není kompatibilní s Gopengpg."
+
+msgid "The server public key format is Gopengpg compatible."
+msgstr "Formát veřejného klíče serveru je kompatibilní s Gopengpg."
+
+msgid "The server public key format is not Gopengpg compatible."
+msgstr "Formát veřejného klíče serveru není kompatibilní s Gopengpg."
+
+msgid "The environment variable GNUPGHOME is set to {0}."
+msgstr "Proměnná prostředí GNUPGHOME je nastavena na {0}."
+
+msgid "The environment variable GNUPGHOME is set to {0}, but the directory does not exist."
+msgstr "Proměnná prostředí GNUPGHOME je nastavena na {0}, ale adresář neexistuje."
+
+msgid "Ensure the keyring location exists and is accessible by the webserver user."
+msgstr "Ujistěte se, že umístění klíčenky existuje a je přístupné uživatelem webového serveru."
+
+msgid "You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}."
+msgstr "Místo klíčenky můžete změnit úpravou proměnných GPG.env.setenv a GPG.env.home v {0}."
+
+msgid "The directory {0} containing the keyring is writable by the webserver user."
+msgstr "Adresář {0} obsahující klíčenku je zapisovatelný uživatelem webového serveru."
+
+msgid "The directory {0} containing the keyring is not writable by the webserver user."
+msgstr "Adresář {0} obsahující klíčenku není zapisovatelný uživatelem webového serveru."
+
+msgid "Ensure the keyring location is accessible by the webserver user."
+msgstr "Ujistěte se, že umístění klíčenky je přístupné uživatelem webového serveru."
+
+msgid "The server OpenPGP key is not the default one."
+msgstr "Serverový OpenPGP klíč není výchozí."
+
+msgid "Do not use the default OpenPGP key for the server."
+msgstr "Nepoužívejte pro server výchozí OpenPGP klíč."
+
+msgid "The server OpenPGP key is not set."
+msgstr "Serverový OpenPGP klíč není nastaven."
+
+msgid "Create a key, export it and add the fingerprint to {0}"
+msgstr "Vytvořte klíč, exportujte jej a přidejte otisk do {0}"
+
+msgid "PHP GPG Module is installed and loaded."
+msgstr "Modul PHP GPG je nainstalován a načten."
+
+msgid "PHP GPG Module is not installed or loaded."
+msgstr "Modul PHP GPG není nainstalován nebo načten."
+
+msgid "Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php"
+msgstr "Nainstalujte php-gnupg, viz http://php.net/manual/en/gnupg.installation.php"
+
+msgid "Make sure to add extension=gnupg.so in php ini files for both php-cli and php."
+msgstr "Ujistěte se, že jste přidali extension=gnupg.so do souborů php.ini jak pro php-cli, tak pro php."
+
+msgid "The private key file is defined in {0} and readable."
+msgstr "Soubor soukromého klíče je definován v {0} a je čitelný."
+
+msgid "The private key file is not defined in {0} or not readable."
+msgstr "Soubor soukromého klíče není definován v {0} nebo není čitelný."
+
+msgid "Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in {0}."
+msgstr "Ujistěte se, že soubor soukromého klíče je definován proměnnou passbolt.gpg.serverKey.private v {0}."
+
+msgid "Ensure there is a private key armored block in the key file."
+msgstr "Ujistěte se, že je ve souboru klíče blok ASCII-armored soukromého klíče."
+
+msgid "Ensure the private key defined in {0} exists and is accessible by the webserver user."
+msgstr "Ujistěte se, že soukromý klíč definovaný v {0} existuje a je přístupný uživatelem webového serveru."
+
+msgid "There is a valid email id defined for the server key."
+msgstr "Pro klíč serveru je definováno platné ID e-mailu."
+
+msgid "The server key does not have a valid email id."
+msgstr "Klíč serveru nemá platné ID e-mailu."
+
+msgid "The server public key defined in the {0} (or environment variables) is in the keyring."
+msgstr "Veřejný klíč serveru definovaný v {0} (nebo v proměnných prostředí) je v klíčence."
+
+msgid "The server public key defined in the {0} (or environment variables) is not in the keyring"
+msgstr "Veřejný klíč serveru definovaný v {0} (nebo v proměnných prostředí) není v klíčence"
+
+msgid "Import the private server key in the keyring of the webserver user."
+msgstr "Importujte soukromý klíč serveru do klíčenky uživatele webového serveru."
+
+msgid "The public key file is defined in {0} and readable."
+msgstr "Soubor veřejného klíče je definován v {0} a je čitelný."
+
+msgid "The public key file is not defined in {0} or not readable."
+msgstr "Soubor veřejného klíče není definován v {0} nebo není čitelný."
+
+msgid "Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in {0}."
+msgstr "Ujistěte se, že soubor veřejného klíče je definován proměnnou passbolt.gpg.serverKey.public v {0}."
+
+msgid "Ensure there is a public key armored block in the key file."
+msgstr "Ujistěte se, že je ve souboru klíče blok ASCII-armored veřejného klíče."
+
+msgid "Ensure the public key defined in {0} exists and is accessible by the webserver user."
+msgstr "Ujistěte se, že veřejný klíč definovaný v {0} existuje a je přístupný uživatelem webového serveru."
+
+msgid "Environment"
+msgstr "Prostředí"
+
+msgid "Config files"
+msgstr "Konfigurační soubory"
+
+msgid "Core config"
+msgstr "Základní konfigurace"
+
+msgid "SMTP settings"
+msgstr "Nastavení SMTP"
+
+msgid "Application configuration"
+msgstr "Konfigurace aplikace"
+
+msgid "JWT Authentication"
+msgstr "JWT ověřování"
+
+msgid "SSL Certificate"
+msgstr "SSL certifikát"
+
+msgid "The {0} plugin is enabled."
+msgstr "Plugin {0} je povolen."
+
+msgid "The {0} plugin is disabled."
+msgstr "Plugin {0} je zakázán."
+
+msgid "Set the environment variable {0} to true"
+msgstr "Nastavte proměnnou prostředí {0} na true"
+
+msgid "Enable the plugin in order to define SMTP settings in the database."
+msgstr "Povolte plugin, abyste mohli definovat nastavení SMTP v databázi."
+
+msgid "Hostname is matching in SSL certificate."
+msgstr "Název hostitele se shoduje v SSL certifikátu."
+
+msgid "Hostname does not match when validating certificates."
+msgstr "Název hostitele se při validaci certifikátu neshoduje."
+
+msgid "Not using a self-signed certificate."
+msgstr "Není používán samopodepsaný certifikát."
+
+msgid "Using a self-signed certificate."
+msgstr "Je používán samopodepsaný certifikát."
+
+msgid "SSL peer certificate validates."
+msgstr "SSL certifikát protistrany je platný."
+
+msgid "SSL peer certificate does not validate."
+msgstr "SSL certifikát protistrany není platný."
+
+msgid "The keyring is not defined."
+msgstr "Klíčenka není definována."
+
+msgid "The keyring directory is not accessible by the current user: {0}"
+msgstr "Adresář klíčenky není pro aktuálního uživatele přístupný: {0}"
+
+msgid "Could not validate message data."
+msgstr "Data zprávy se nepodařilo ověřit."
+
+msgid "Recipient information could not be found."
+msgstr "Informace o příjemci nebyly nalezeny."
+
+msgid "The public key could not be parsed."
+msgstr "Veřejný klíč nelze analyzovat."
+
+msgid "The armored message must not contain an extra line before the end block."
+msgstr "ASCII-armored zpráva nesmí obsahovat další řádek před koncovým blokem."
+
+msgid "The message must contain a symmetric packet."
+msgstr "Zpráva musí obsahovat symetrický paket."
+
+msgid "The message must contain only one recipient."
+msgstr "Zpráva musí obsahovat pouze jednoho příjemce."
+
+msgid "Unknown key validation rule: {0}"
+msgstr "Neznámé pravidlo validace klíče: {0}"
+
+msgid "The armored message could not be validated."
+msgstr "ASCII-armored zprávu nelze ověřit."
+
+msgid "The OpenPGP server key defined in the config cannot be used to verify signature."
+msgstr "OpenPGP klíč serveru definovaný v konfiguraci nelze použít k ověření podpisu."
+
+msgid "The OpenPGP server key defined in the config cannot be used to sign."
+msgstr "OpenPGP klíč serveru definovaný v konfiguraci nelze použít k podepisování."
+
+msgid "The user public key is not available or incomplete."
+msgstr "Veřejný klíč uživatele není dostupný nebo je neúplný."
+
+msgid "The user public key fingerprint is not available or incomplete."
+msgstr "Otisk veřejného klíče uživatele není dostupný nebo je neúplný."
+
+msgid "The user armored key is not available or incomplete."
+msgstr "ASCII-armored klíč uživatele není dostupný nebo je neúplný."
+
+msgid "The algorithm is invalid."
+msgstr "Algoritmus je neplatný."
+
+msgid "The fingerprint id is invalid."
+msgstr "ID otisku prstu je neplatné."
+
+msgid "The public key id is invalid."
+msgstr "ID veřejného klíče je neplatné."
+
+msgid "The key size is not valid."
+msgstr "Velikost klíče není platná."
+
+msgid "The key size must match security recommendations."
+msgstr "Velikost klíče musí odpovídat bezpečnostním doporučením."
+
+msgid "The key creation date must not be in the future."
+msgstr "Datum vytvoření klíče nesmí být v budoucnosti."
+
+msgid "The key must not be expired."
+msgstr "Klíč nesmí být expirován."
+
+msgid "The key must not include an expiry date."
+msgstr "Klíč nesmí obsahovat datum expirace."
+
+msgid "The key must be revoked."
+msgstr "Klíč musí být odvolán."
+
+msgid "The key must not be revoked."
+msgstr "Klíč nesmí být odvolán."
+
+msgid "The armored key must not contain an extra line before the end block."
+msgstr "ASCII-armored klíč nesmí obsahovat další řádek před koncovým blokem."
+
+msgid "The armored key must not contain multiple keys."
+msgstr "ASCII-armored klíč nesmí obsahovat více klíčů."
+
+msgid "The public key could not be validated."
+msgstr "Veřejný klíč nemohl být ověřen."
+
+msgid "Could not validate permission data."
+msgstr "Nelze ověřit data oprávnění."
+
+msgid "Validation failed for permission {0}. {1}"
+msgstr "Validace oprávnění {0} selhala. {1}"
+
+msgid "Validation success for permission {0}"
+msgstr "Ověření oprávnění {0} bylo úspěšné"
+
+msgid "The permissions data must be an array."
+msgstr "Data oprávnění musí být pole."
+
+msgid "The permissions data array keys must be integers."
+msgstr "Klíče pole dat oprávnění musí být celá čísla."
+
+msgid "Could not validate permissions data."
+msgstr "Nelze ověřit data oprávnění."
+
+msgid "Validation failed for profile {0}. {1}"
+msgstr "Validace profilu {0} selhala. {1}"
+
+msgid "Validation success for profile {0}"
+msgstr "Ověření profilu {0} bylo úspěšné"
+
+msgid "Could not validate resource data."
+msgstr "Nepodařilo se ověřit data zdrojů."
+
+msgid "An unexpected error occurred, please contact an administrator."
+msgstr "Došlo k neočekávané chybě, kontaktujte prosím administrátora."
+
+msgid "The server returned the following error:"
+msgstr "Server vrátil následující chybu:"
+
+msgid "Validation failed for resource {0}. {1}"
+msgstr "Validace zdroje {0} selhala. {1}"
+
+msgid "Validation success for resource {0}"
+msgstr "Ověření zdroje {0} bylo úspěšné"
+
+msgid "Metadata key exist and present for resource {0}."
+msgstr "Metadata klíč existuje a je přítomen pro prostředek {0}."
+
+msgid "Metadata key does not exists or soft-deleted for resource {0}."
+msgstr "Metadata klíč pro prostředek {0} neexistuje nebo byl měkce odstraněn."
+
+msgid "The resource types associated to this resource does not exist."
+msgstr "Typy zdrojů spojené s tímto prostředkem neexistují."
+
+msgid "No secret revision were found for this resource."
+msgstr "Pro tento zdroj nebyly nalezeny žádné revize tajemství."
+
+msgid "You are not allowed to update this resource."
+msgstr "Nemáte oprávnění aktualizovat tento zdroj."
+
+msgid "Additional resource types are not enabled on this server."
+msgstr "Další typy zdrojů nejsou na tomto serveru povoleny."
+
+msgid "The role could not be saved."
+msgstr "Roli se nepodařilo uložit."
+
+msgid "Could not save the role, please try again later."
+msgstr "Roli nelze uložit, zkuste to prosím později."
+
+msgid "The role does not exist or deleted."
+msgstr "Role neexistuje nebo byla odstraněna."
+
+msgid "The role could not be deleted."
+msgstr "Roli se nepodařilo odstranit."
+
+msgid "Could not delete the role, please try again later."
+msgstr "Roli nelze odstranit, zkuste to prosím později."
+
+msgid "There should be at least 4 roles"
+msgstr "Měly by existovat alespoň 4 role"
+
+msgid "Validation failed for role {0}. {1}"
+msgstr "Validace role {0} selhala. {1}"
+
+msgid "Validation success for role {0}"
+msgstr "Ověření role {0} bylo úspěšné"
+
+msgid "The role could not be updated."
+msgstr "Roli se nepodařilo aktualizovat."
+
+msgid "Could not update the role, please try again later."
+msgstr "Roli nelze aktualizovat, zkuste to prosím později."
+
+msgid "Could not validate secrets data."
+msgstr "Nelze ověřit data tajných údajů."
+
+msgid "Could not validate secret data."
+msgstr "Nelze ověřit data tajného údaje."
+
+msgid "The group id should be a valid UUID."
+msgstr "ID skupiny by mělo být platné UUID."
+
+msgid "The users ids array should contain only valid UUIDs."
+msgstr "Pole ID uživatelů by mělo obsahovat pouze platné UUID."
+
+msgid "Validation failed for secret {0}. {1}"
+msgstr "Validace tajného údaje {0} selhala. {1}"
+
+msgid "Validation success for secret {0}"
+msgstr "Ověření tajného údaje {0} bylo úspěšné"
+
+msgid "The secrets of all the users having access to the resource are required."
+msgstr "Jsou vyžadovány tajné údaje všech uživatelů s přístupem k tomuto zdroji."
+
+msgid "An OpenPGP key must be provided."
+msgstr "Musíte zadat OpenPGP klíč."
+
+msgid "The user does not exist, has not completed the setup or was deleted."
+msgstr "Uživatel neexistuje, nedokončil nastavení nebo byl odstraněn."
+
+msgid "Could not update the authentication token data."
+msgstr "Nelze aktualizovat data ověřovacího tokenu."
+
+msgid "The key provided does not belong to given user."
+msgstr "Poskytnutý klíč nepatří danému uživateli."
+
+msgid "The user does not exist or is not active or is disabled."
+msgstr "Uživatel neexistuje, není aktivní nebo je deaktivován."
+
+msgid "The user does not exist, is already active or has been deleted."
+msgstr "Uživatel neexistuje, je již aktivní nebo byl odstraněn."
+
+msgid "The user does not exist or is already active or is disabled."
+msgstr "Uživatel neexistuje, je již aktivní nebo je deaktivován."
+
+msgid "The user should not be a guest."
+msgstr "Uživatel by neměl být host."
+
+msgid "Account recovery case must be a string."
+msgstr "Případ obnovení účtu musí být řetězec."
+
+msgid "Account recovery reason not supported."
+msgstr "Důvod obnovení účtu není podporován."
+
+msgid "Please provide a valid email address."
+msgstr "Zadejte prosím platnou e-mailovou adresu."
+
+msgid "This user does not exist or has been deleted."
+msgstr "Tento uživatel neexistuje nebo byl odstraněn."
+
+msgid "Please register and complete the setup first."
+msgstr "Nejprve se prosím zaregistrujte a dokončete nastavení."
+
+msgid "This user has been disabled."
+msgstr "Tento uživatel byl deaktivován."
+
+msgid "The username {0} is a duplicate."
+msgstr "Uživatelské jméno {0} je duplicitní."
+
+msgid "Validation failed for user {0}. {1}"
+msgstr "Validace uživatele {0} selhala. {1}"
+
+msgid "Validation success for user {0}"
+msgstr "Ověření uživatele {0} bylo úspěšné"
+
+msgid "The directory {0} cannot be deleted"
+msgstr "Adresář {0} nelze odstranit"
+
+msgid "The key {0} cannot be used to encrypt."
+msgstr "Klíč {0} nelze použít k šifrování."
+
+msgid "The key {0} cannot be used to decrypt."
+msgstr "Klíč {0} nelze použít k dešifrování."
+
+msgid "Could not use key {0} for signing."
+msgstr "Klíč {0} nelze použít k podepisování."
+
+msgid "Could not parse the OpenPGP public key."
+msgstr "Nelze analyzovat veřejný klíč OpenPGP."
+
+msgid "Could not import the OpenPGP key."
+msgstr "Nepodařilo se importovat klíč OpenPGP."
+
+msgid "Could not use the key to sign and encrypt."
+msgstr "Klíč nelze použít k podepsání a zašifrování."
+
+msgid "Could not use the key to encrypt."
+msgstr "Klíč nelze použít k šifrování."
+
+msgid "Expected {0} and got {1}."
+msgstr "Očekáváno {0}, ale získáno {1}."
+
+msgid "Decryption failed. Invalid signature."
+msgstr "Dešifrování selhalo. Neplatný podpis."
+
+msgid "The message cannot be verified."
+msgstr "Zprávu nelze ověřit."
+
+msgid "Could not sign the text. "
+msgstr "Nelze podepsat text. "
+
+msgid "The OpenPGP server key defined in the config is not found in the file system."
+msgstr "OpenPGP serverový klíč definovaný v konfiguraci nebyl nalezen v souborovém systému."
+
+msgid "The OpenPGP server key defined in the config cannot be opened."
+msgstr "OpenPGP serverový klíč definovaný v konfiguraci nelze otevřít."
+
+msgid "The OpenPGP server key defined on file is not a valid private key."
+msgstr "OpenPGP serverový klíč definovaný v souboru není platný soukromý klíč."
+
+msgid "There is an issue with the OpenPGP server key."
+msgstr "Došlo k problému s OpenPGP serverovým klíčem."
+
+msgid "The fingerprint does not match the one associated with the key on file."
+msgstr "Otisk se neshoduje s tím, který je přiřazen ke klíči v souboru."
+
+msgid "No OpenPGP marker found."
+msgstr "Nebyl nalezen žádný marker OpenPGP."
+
+msgid "Invalid key. No OpenPGP public key package found."
+msgstr "Neplatný klíč. Nebyl nalezen žádný balíček veřejného klíče OpenPGP."
+
+msgid "Invalid key. No user ID found."
+msgstr "Neplatný klíč. Nebyl nalezen žádný identifikátor uživatele."
+
+msgid "Unsupported algorithm."
+msgstr "Nepodporovaný algoritmus."
+
+msgid "Invalid key. No OpenPGP package found."
+msgstr "Neplatný klíč. Nebyl nalezen žádný balík OpenPGP."
+
+msgid "This is not a valid OpenPGP armored marker."
+msgstr "Toto není platný OpenPGP armored marker."
+
+msgid "The key {0} was not found in the keyring"
+msgstr "Klíč {0} nebyl nalezen v klíčence"
+
 msgid "Error"
 msgstr "Chyba"
 
@@ -7284,6 +7434,9 @@ msgstr "Bohužel budou potřebovat vaši pomoc k odstranění svého účtu a za
 
 msgid "Please check with them first to confirm."
 msgstr "Nejprve to s nimi prosím ověřte."
+
+msgid "The user {0} ({1}) is now deleted from the passbolt organisation."
+msgstr ""
 
 msgid "User suspended"
 msgstr "Uživatel pozastaven"

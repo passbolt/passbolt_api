@@ -2,6 +2,53 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.17.0-test.1] - 2026-10-08
+### Added
+- PB-53318 Add WebAuthn / Passkey as a new MFA provider for the browser extension
+- PB-54953 Add the mobile-delegated WebAuthn ceremony flow enabling passkey MFA from the Passbolt mobile app
+- PB-39607 Add a cleanup process to soft-delete active resources that no longer have an associated secret
+- PB-54494 Add configuration keys to govern SCIM admin token expiry and the near-expiry window
+- PB-54495 Add a ScimTokenExpiryChecker service to compute SCIM admin token expiry state
+- PB-54496 Reject SCIM requests presenting an expired admin token at authentication time
+- PB-54497 Add a ScimUnauthenticatedResponseMiddleware returning a structured 401 payload on SCIM auth failure
+- PB-54498 Add a healthcheck warning administrators when a SCIM admin token is nearing expiry
+- PB-54499 Send admin notification emails when a SCIM admin token is near expiry or has expired
+- PB-55263 Add an "Is encrypted for its recipient" datacheck in secrets
+
+### Fixed
+- PB-53564 Exclude authentication tokens from the SQL dump command
+- PB-53970 Flush all users' MFA settings when an administrator disables MFA for the organization
+- PB-54696 Shorten the TTL of mfa_setup and mfa_verify authentication tokens
+- PB-54701 Enforce one active MFA ceremony handle per user
+- PB-54828 Fix a null type value in the ResourceTypes slug definition
+- PB-54830 Add an index on the users.username column to speed up user lookups
+- PB-54831 Add a composite index on scim_entries(scim_name, foreign_model) to speed up SCIM lookups
+- PB-54832 Add a retry loop to UserScimResource::create() to withstand concurrent SCIM writes
+- PB-54833 Map 500 responses from the SCIM endpoint to 429 with a Retry-After header on concurrency conflicts
+- PB-54856 Reduce the number of queries inside the loop in FoldersRelationsSortService
+- PB-54857 Add a limit to isItemPersonal() when checking if an item is personal
+- PB-54858 Improve setSecretRevisionInData() to not search the full collection each time
+- PB-54980 Fix the wrong CTA URL in offline mode emails
+- PB-54990 Deactivate all authentication tokens on user soft-delete
+- PB-55138 Reduce PASSBOLT_AUTH_JWT_REFRESH_TOKEN expiry to 1 hour
+
+### Security
+- PB-54638 Fix blind SSRF via avatar upload (AL-02)
+- PB-54640 Fix MFA brute-force limiter not counting failed TOTP codes submitted to the JSON endpoint (AL-01)
+- PB-54703 Fix SSRF egress guard bypass in SSO provider URL validation (AS-01)
+- PB-55268 Fix braces security vulnerability GHSA-vfj7-8cjw-p6xm (CVSS 3.1 HIGH)
+
+### Maintenance
+- PB-32905 Add a test case asserting SecretNotEncryptedForRecipient behaviour on share
+- PB-36615 Fix flaky InstallCommand tests by hardcoding test data values
+- Renovate: Update dependency league/oauth2-client to v2.9.1
+- Renovate: Update dependency firebase/php-jwt to v7.1.1
+- Renovate: Update dependency psalm/phar to v6.17.1
+- Renovate: Update dependency ergebnis/phpunit-slow-test-detector to v2.25.0
+- Renovate: Update dependency cakephp/cakephp-codesniffer to v5.3.2
+- Renovate: Update dependency league/flysystem to v3.36.0
+- Renovate: Update adminer:standalone Docker digest
+
 ## [5.16.0] - 2026-09-16
 ### Added
 - PB-52633 Add support for Offline Mode
@@ -633,11 +680,25 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.12.0-test.1] - 2026-04-30
 ### Added
-- PB-50963 Test package with PRO dependencies
+- PB-51081 Add pin code resource type
 
-## [5.12.0-test.1] - 2026-04-30
-### Added
-- PB-50963 Test package with PRO dependencies
+### Security
+- PB-50625 Fix GHSA-F886-M6HF-6M8V security vulnerability advisory (Medium)
+- PB-50340 Upgrade picomatch package (Medium)
+- PB-50538 Upgrade lodash package (Critical)
+- PB-50895 Fix bn.js security vulnerability advisory GHSA-378v-28hj-76wf (Medium)
+- PB-50969 Fix composer security vulnerability advisory affecting phpseclib/phpseclib package (CVE-2026-40194)
+- PB-51135 Fix security vulnerability advisory affecting composer/composer package (CVE-2026-40261, CVE-2026-40176)
+- PB-51151 Fix i18next-http-backend security vulnerability advisory GHSA-r5fr-rjxr-66jc (Medium)
+- PB-51152 Fix uuid security vulnerability advisory GHSA-w5hq-g745-h8pq (Medium)
+- PB-51448 Fix security vulnerability advisory affecting phpseclib/phpseclib package (CVE-2026-44167)
+- PB-51208 Cleanup UserScimResource.php logged errors
+
+### Maintenance
+- PB-50893 As an administrator I can purge action additional logs by action via the logs purge command
+- PB-50914 Homogenize CE and Pro codebase
+- PB-51243 Fix activity logging breaking after instance reset while executing Selenium tests
+- PB-51428 Fix dev test data inserting empty definitions for v5 resource types
 
 ## [5.11.0] - 2026-04-09
 ### Added
@@ -645,6 +706,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-50158 Add a feature flag to enable/disable Safari availability on a Passbolt instance
 - PB-50199 As an admin I can contain my_group_user in POST /groups.json
 - PB-50646 Add Permissions-Policy header on the API response
+- PB-32992 As a user I can use PingOne as single sign on provider
+- PB-50524 Move SCIM feature out of beta
 
 ### Fixed
 - PB-49323 As a user creating a resource, I should not get a 500 if the secret passed is not an array of secrets
@@ -655,6 +718,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-50121 Replace rand() with a static counter to generate unique bind-parameter placeholder (GITHUB #595)
 - PB-50241 As a logged-in user I should not get a 500 when logging-in again
 - PB-49902 As a user I cannot create a v4 resource with v5 resource type
+- PB-49286 PBL-15-009 WP4: Non-transactional group member operations (Low)
+- PB-49160 PBL-15-012 WP1: Potential admin lockout via malicious IdP request (Low)
+- PB-49159 PBL-15-011 WP4: Lack of transaction wrapper in production sync (Low)
+- PB-49285 PBL-15-008 WP4: ScimEntry uniqueness race condition (Medium)
+- PB-49284 PBL-15-007 WP5: Potential DoS via pre-authentication GPG decryption (Low)
+- PB-49151 PBL-15-003 WP3: Lack of bearer token expiry & revocation schemes (Medium)
+- PB-49159 Fix enableSavePoints() not placed correctly
 
 ### Improved
 - PB-50070 Align X-Frame-Options with CSP and add missing X-XSS-Protection header
@@ -669,6 +739,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-49875 OAuth support for smtp authentication
 - PB-50158 Add a feature flag to enable/disable Safari availability on a Passbolt instance
 - PB-50199 As an admin I can contain my_group_user in POST /groups.json
+- PB-32992 As a user I can use PingOne as single sign on provider
+- PB-50524 Move SCIM feature out of beta
 
 ### Fixed
 - PB-49323 As a user creating a resource, I should not get a 500 if the secret passed is not an array of secrets
@@ -679,6 +751,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-50121 Replace rand() with a static counter to generate unique bind-parameter placeholder (GITHUB #595)
 - PB-50241 As a logged-in user I should not get a 500 when logging-in again
 - PB-49902 As a user I cannot create a v4 resource with v5 resource type
+- PB-49286 PBL-15-009 WP4: Non-transactional group member operations (Low)
+- PB-49160 PBL-15-012 WP1: Potential admin lockout via malicious IdP request (Low)
+- PB-49159 PBL-15-011 WP4: Lack of transaction wrapper in production sync (Low)
+- PB-49285 PBL-15-008 WP4: ScimEntry uniqueness race condition (Medium)
+- PB-49284 PBL-15-007 WP5: Potential DoS via pre-authentication GPG decryption (Low)
+- PB-49151 PBL-15-003 WP3: Lack of bearer token expiry & revocation schemes (Medium)
+- PB-49159 Fix enableSavePoints() not placed correctly
 
 ### Improved
 - PB-50070 Align X-Frame-Options with CSP and add missing X-XSS-Protection header
@@ -693,6 +772,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-49875 OAuth support for smtp authentication
 - PB-50158 Add a feature flag to enable/disable Safari availability on a Passbolt instance
 - PB-50199 As an admin I can contain my_group_user in POST /groups.json
+- PB-32992 As a user I can use PingOne as single sign on provider
+- PB-50524 Move SCIM feature out of beta
 
 ### Fixed
 - PB-49323 As a user creating a resource, I should not get a 500 if the secret passed is not an array of secrets
@@ -703,6 +784,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-50121 Replace rand() with a static counter to generate unique bind-parameter placeholder (GITHUB #595)
 - PB-50241 As a logged-in user I should not get a 500 when logging-in again
 - PB-49902 As a user I cannot create a v4 resource with v5 resource type
+- PB-49286 PBL-15-009 WP4: Non-transactional group member operations (Low)
+- PB-49160 PBL-15-012 WP1: Potential admin lockout via malicious IdP request (Low)
+- PB-49159 PBL-15-011 WP4: Lack of transaction wrapper in production sync (Low)
+- PB-49285 PBL-15-008 WP4: ScimEntry uniqueness race condition (Medium)
+- PB-49284 PBL-15-007 WP5: Potential DoS via pre-authentication GPG decryption (Low)
+- PB-49151 PBL-15-003 WP3: Lack of bearer token expiry & revocation schemes (Medium)
 
 ### Improved
 - PB-50070 Align X-Frame-Options with CSP and add missing X-XSS-Protection header
@@ -717,6 +804,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-49875 OAuth support for smtp authentication
 - PB-50158 Add a feature flag to enable/disable Safari availability on a Passbolt instance
 - PB-50199 As an admin I can contain my_group_user in POST /groups.json
+- PB-32992 As a user I can use PingOne as single sign on provider
+- PB-50524 Move SCIM feature out of beta
 
 ### Fixed
 - PB-49323 As a user creating a resource, I should not get a 500 if the secret passed is not an array of secrets
@@ -727,6 +816,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-50121 Replace rand() with a static counter to generate unique bind-parameter placeholder (GITHUB #595)
 - PB-50241 As a logged-in user I should not get a 500 when logging-in again
 - PB-49902 As a user I cannot create a v4 resource with v5 resource type
+- PB-49286 PBL-15-009 WP4: Non-transactional group member operations (Low)
+- PB-49160 PBL-15-012 WP1: Potential admin lockout via malicious IdP request (Low)
+- PB-49159 PBL-15-011 WP4: Lack of transaction wrapper in production sync (Low)
+- PB-49285 PBL-15-008 WP4: ScimEntry uniqueness race condition (Medium)
+- PB-49284 PBL-15-007 WP5: Potential DoS via pre-authentication GPG decryption (Low)
+- PB-49151 PBL-15-003 WP3: Lack of bearer token expiry & revocation schemes (Medium)
 
 ### Improved
 - PB-50070 Align X-Frame-Options with CSP and add missing X-XSS-Protection header
@@ -748,6 +843,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-48208 POST /mfa/verify/yubikey should not trigger 500
 - PB-43183 Improve folders cascade delete performance by refactoring code using iterative BFS and batch operations
 - PB-49323 As a user creating a resource, I should not get a 500 if the secret passed is not an array of secrets
+- PB-47973 As an administrator I can synchronize with active directory longer entries in order to support 2 or more bytes alphabets
+- PB-49152 PBL-15-004 WP1: Fixes unsalted SHA256 hashing of bearer tokens in SCIM
+- PB-49148 PBL-15-002 WP3: Fixes suboptimal token generation randomness of SCIM bearer token
+- PB-49153 PBL-15-005 WP2: Fixes race condition in SCIM user creation endpoint
+- PB-49158 PBL-15-010 WP4: Fixes directory entry foreign key race condition
+
+### Security
+- PB-49154 PBL-15-006 WP2: Disable user enumeration via error messages on SCIM user creation endpoint
 
 ### Maintenance
 - PB-48556 Fixes CVE-2026-25129 security vulnerability advisory for psy/psysh package
@@ -756,20 +859,42 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-48555 Fix CVE-2026-24765 security vulnerability advisory for phpunit/phpunit package
 - PB-48396 Update composer/composer package to 2.9.5 to fix CVE CVE-2026-24739 in symfony/process package
 
-## [5.10.0-test.5] - 2026-05-05
+## [5.10.0-test.5] - 2026-03-05
 ### Fixed
 - PB-49846 Fixes web installer CSS
 
-## [5.10.0-test.4] - 2026-05-05
+## [5.10.0-test.4] - 2026-03-05
 ### Fixed
 - PB-43183 Improve folders cascade delete performance by refactoring code using iterative BFS and batch operations
+- PB-49148 Fix PBL-15-002 WP3: Suboptimal token generation randomness
 - PB-49323 As a user creating a resource, I should not get a 500 if the secret passed is not an array of secrets
+- PB-49152 PBL-15-004 WP1: Fix unsalted SHA256 hashing of bearer tokens in SCIM
+- PB-49158 PBL-15-010 WP4: Fix Directory entry foreign key race condition
+- PB-49153 PBL-15-005 WP2: Fix race condition in SCIM user creation endpoint
+- PB-49158 PBL-15-010 WP4: Fix Directory entry foreign key race condition
+- PB-47973 Improve Active Directory entries to allow long entries
 
-## [5.10.0-test.3] - 2026-05-05
+### Security
+- PB-49154 PBL-15-006 WP2: User enumeration via error messages
+
+## [5.10.0-test.3] - 2026-03-05
 ### Fixed
 - PB-43183 Improve folders cascade delete performance by refactoring code using iterative BFS and batch operations
+- PB-49148 Fix PBL-15-002 WP3: Suboptimal token generation randomness
 - PB-49323 As a user creating a resource, I should not get a 500 if the secret passed is not an array of secrets
+- PB-49152 PBL-15-004 WP1: Fix unsalted SHA256 hashing of bearer tokens in SCIM
+- PB-49158 PBL-15-010 WP4: Fix Directory entry foreign key race condition
+- PB-49153 PBL-15-005 WP2: Fix race condition in SCIM user creation endpoint
 - PB-40266 Health-check issues on Ubuntu 24 when running while being in a directory without the +x permission bit for www-data user (GITHUB #571)
+- PB-49158 PBL-15-010 WP4: Fix Directory entry foreign key race condition
+- PB-47973 Improve Active Directory entries to allow long entries
+
+### Security
+- PB-49154 PBL-15-006 WP2: User enumeration via error messages
+
+## [5.10.0-test.2] - 2026-02-17
+### Added
+- PB-49193 Updates passbolt styleguide version
 
 ## [5.10.0-test.1] - 2026-02-12
 ### Added
@@ -788,7 +913,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-48555 Fix CVE-2026-24765 security vulnerability advisory for phpunit/phpunit package
 - PB-48396 Update composer/composer package to 2.9.5 to fix CVE CVE-2026-24739 in symfony/process package
 
-## [5.9.0] - 2026-01-26
+## [5.9.0] - 2026-01-22
 ### Added
 - PB-44749 As an administrator I should get notified in the healthcheck about the deprecation of the database type and version
 - PB-47893 As an administrator running the bin/cron command, I can see in the logs the number of emails left to send
@@ -797,6 +922,27 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PB-47991 As an administrator I should not get a data-check error for deleted resources with no active metadata keys
 - PB-47987 As an administrator I should not get a data-check error for deleted secrets
+- PB-47986 As a logged-in user tagging a resource I should not update the modified date of the resource
+- PB-47070 As an administrator I can use the --no-verify option when truncating the account recovery tables
+
+### Security
+- PB-47276 As a non-logged in user I cannot enumerate user emails using the recover endpoint
+
+### Maintenance
+- PB-47701 Specify 1.1.0 version as minimum duo universal SDK package version in composer.json
+- PB-47794 Update composer/composer to fix security-check job due to CVE-2025-67746
+
+## [5.9.0-test.2] - 2026-01-21
+### Added
+- PB-44749 As an administrator I should get notified in the healthcheck about the deprecation of the database type and version
+- PB-47893 As an administrator running the bin/cron command, I can see in the logs the number of emails left to send
+- PB-46111 As a user I should receive a single email digest when more than one folders are created, updated or deleted
+
+### Fixed
+- PB-47991 As an administrator I should not get a data-check error for deleted resources with no active metadata keys
+- PB-47987 As an administrator I should not get a data-check error for deleted secrets
+- PB-47986 As a logged-in user tagging a resource I should not update the modified date of the resource
+- PB-47070 As an administrator I can use the --no-verify option when truncating the account recovery tables
 
 ### Security
 - PB-47276 As a non-logged in user I cannot enumerate user emails using the recover endpoint
@@ -834,6 +980,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-46976 As an administrator I can update RBACs for Actions
 - PB-47006 As a logged-in user my role is fetched on every request to reflect role changes immediately
 - PB-47083 As a user with appropriate RBAC permissions I can create groups
+- PB-47171 As a user with appropriate RBAC permissions I can manage account recovery requests
+- PB-47338 As a user with account recovery view permissions I can see pending requests in users.json
 - PB-47196 As an administrator I can run the healthcheck command in POSIX mode
 - PB-47274 As an administrator I can run a command to populate created_by and modified_by fields in secrets
 - PB-47275 As an administrator I can run a command to populate secret revisions for existing secrets
@@ -855,6 +1003,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-46388 Fix PHPUnit 11 deprecations
 
 ## [5.8.0-test.3] - 2025-12-17
+### Added
+- PB-47665 As a user with account recovery view permissions I can see pending requests in users.json
+
 ### Fixed
 - PB-47625 As an administrator I cannot recreate a role deleted previously
 
@@ -870,6 +1021,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-46976 As an administrator I can update RBACs for Actions
 - PB-47006 As a logged-in user my role is fetched on every request to reflect role changes immediately
 - PB-47083 As a user with appropriate RBAC permissions I can create groups
+- PB-47171 As a user with appropriate RBAC permissions I can manage account recovery requests
+- PB-47338 As a user with account recovery view permissions I can see pending requests in users.json
 - PB-47196 As an administrator I can run the healthcheck command in POSIX mode
 - PB-47274 As an administrator I can run a command to populate created_by and modified_by fields in secrets
 - PB-47275 As an administrator I can run a command to populate secret revisions for existing secrets
@@ -902,6 +1055,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-46976 As an administrator I can update RBACs for Actions
 - PB-47006 As a logged-in user my role is fetched on every request to reflect role changes immediately
 - PB-47083 As a user with appropriate RBAC permissions I can create groups
+- PB-47171 As a user with appropriate RBAC permissions I can manage account recovery requests
+- PB-47338 As a user with account recovery view permissions I can see pending requests in users.json
 - PB-47196 As an administrator I can run the healthcheck command in POSIX mode
 - PB-47274 As an administrator I can run a command to populate created_by and modified_by fields in secrets
 - PB-47275 As an administrator I can run a command to populate secret revisions for existing secrets
@@ -954,6 +1109,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-45158 Adds frame-ancestors:none and form-action:self to the CSP header
 
 ### Fixed
+- PB-45479 Azure SSO providing an invalid_tenant id should not trigger a 500
+- PB-45567 The arguments --username and --fingerprint of the passbolt truncate_account_recovery_tables command are now mandatory but their validation can be skipped with --no-verify
+- PB-44259 Users directory synchronisation should synchronise group memberships of suspended users
 - PB-44623 The API should return a 400 instead of 500 on /auth/jwt/logout.json when refresh_token isn't a UUID
 - PB-45760 Fixes a translation in setup recover abort email reported by community
 - PB-45262 Prevent activity log from showing secret creation during resource share as a secret update
@@ -980,6 +1138,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-45158 Adds frame-ancestors:none and form-action:self to the CSP header
 
 ### Fixed
+- PB-45479 Azure SSO providing an invalid_tenant id should not trigger a 500
+- PB-45567 The arguments --username and --fingerprint of the passbolt truncate_account_recovery_tables command are now mandatory but their validation can be skipped with --no-verify
 - PB-44623 The API should return a 400 instead of 500 on /auth/jwt/logout.json when refresh_token isn't a UUID
 - PB-45760 Fixes a translation in setup recover abort email reported by community
 - PB-45262 Prevent activity log from showing secret creation during resource share as a secret update
@@ -1024,6 +1184,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-45161 Fix regularly failing UsersIndexControllerPaginationTest.php test
 - PB-45270 Add custom exception message with client IP in /healthcheck/error.json
 - PB-45062 Fix user_setup_complete.php template in LU folder instead of AD
+- PB-44842 Update Ldap library to version 3
+- PB-24247 Fix SCIM healthcheck class name to align with others
 
 ## [5.6.0-rc.1] - 2025-10-03
 ### Added
@@ -1051,8 +1213,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-45161 Fix regularly failing UsersIndexControllerPaginationTest.php test
 - PB-45270 Add custom exception message with client IP in /healthcheck/error.json
 - PB-45062 Fix user_setup_complete.php template in LU folder instead of AD
+- PB-44842 Update Ldap library to version 3
+- PB-24247 Fix SCIM healthcheck class name to align with others
 
-## [5.6.0-test.1] - 2025-10-01
+## [5.6.0-test.2] - 2025-10-01
 ### Added
 - PB-45058 Add datacheck to check for existing metadata key with no metadata private keys
 - PB-44187 As an admin I cannot delete a metadata key associated with a deleted resource
@@ -1078,6 +1242,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-45161 Fix regularly failing UsersIndexControllerPaginationTest.php test
 - PB-45270 Add custom exception message with client IP in /healthcheck/error.json
 - PB-45062 Fix user_setup_complete.php template in LU folder instead of AD
+- PB-44842 Update Ldap library to version 3
+- PB-24247 Fix SCIM healthcheck class name to align with others
 
 ## [5.5.2] - 2025-09-29
 ### Fixed
@@ -1089,6 +1255,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.5.0] - 2025-09-15
 ### Added
+- PB-44617 As an administrator I can provision users using the SCIM protocol (beta)
+- PB-43455 As an administrator I can edit the SCIM settings
+- PB-43957 As an administrator I can view scim_entry association on users endpoints
+- PB-44610 As a user authentifying with the SCIM protocol, I should not be allowed to be authentified via session
+- PB-44924 As an administrator I can disable SCIM settings endpoints with an environment variable
 - PB-44639 As an administrator, when updating metadata settings from friendly mode to zero knowledge, I should see the server key dropped in DB
 - PB-44756 Updates metadata keys settings endpoint to accept server metadata private key
 - PB-44752 Adds a new data check for existing resources v5 encrypted with hard or soft deleted shared metadata key
@@ -1105,6 +1276,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.5.0-rc.1] - 2025-09-12
 ### Added
+- PB-44617 As an administrator I can provision users using the SCIM protocol (beta)
+- PB-43455 As an administrator I can edit the SCIM settings
+- PB-43957 As an administrator I can view scim_entry association on users endpoints
+- PB-44610 As a user authentifying with the SCIM protocol, I should not be allowed to be authentified via session
+- PB-44924 As an administrator I can disable SCIM settings endpoints with an environment variable
 - PB-44639 As an administrator, when updating metadata settings from friendly mode to zero knowledge, I should see the server key dropped in DB
 - PB-44756 Updates metadata keys settings endpoint to accept server metadata private key
 - PB-44752 Adds a new data check for existing resources v5 encrypted with hard or soft deleted shared metadata key
@@ -1121,6 +1297,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.5.0-test.2] - 2025-09-08
 ### Added
+- PB-44617 As an administrator I can provision users using the SCIM protocol (beta)
+- PB-43455 As an administrator I can edit the SCIM settings
+- PB-43957 As an administrator I can view scim_entry association on users endpoints
+- PB-44610 As a user authentifying with the SCIM protocol, I should not be allowed to be authentified via session
+- PB-44924 As an administrator I can disable SCIM settings endpoints with an environment variable
 - PB-44639 As an administrator, when updating metadata settings from friendly mode to zero knowledge, I should see the server key dropped in DB
 - PB-44756 Updates metadata keys settings endpoint to accept server metadata private key
 - PB-44752 Adds a new data check for existing resources v5 encrypted with hard or soft deleted shared metadata key
@@ -1137,6 +1318,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.5.0-test.1] - 2025-09-02
 ### Added
+- PB-44617 As an administrator I can provision users using the SCIM protocol (beta)
+- PB-43455 Implements SCIM settings endpoints
+- PB-43957 As an administrator I can view scim_entry association on users endpoints
 - PB-44639 As an administrator when updating metadata settings from friendly mode to zero knowledge I should see the server key dropped in DB
 - PB-44756 Update metadata keys settings endpoint to accept server metadata private key
 - PB-44752 Add new datacheck for existing resources v5 encrypted with hard or soft deleted shared metadata key
@@ -1144,13 +1328,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PB-45060 Fixes custom fields json schema properties type
 - PB-45062 Fix user_setup_complete.php template in LU folder instead of AD
-- PB-44760 Fix healthcheck "record not found in table organization_settings" issue (GITHUB #563)
+- PB-44760 Fix healtcheck "record not found in table organization_settings" issue (GITHUB #563)
 
 ### Maintenance
 - PB-44915 Change DDEV containers names and URLs from passbolt-ce-api to passbolt-api
 - PB-44813 Update ddev config
 
 ## [5.4.1] - 2025-08-13
+### Fixed
+- PB-44220 Enforces the format to datetime string when persisting the last_logged_in field on users login
+
+## [5.4.1-test.1] - 2025-08-13
 ### Fixed
 - PB-44220 Enforces the format to datetime string when persisting the last_logged_in field on users login
 
@@ -1168,6 +1356,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-38155 Add JSON schema definition to resource types migrations
 - PB-44474 Switch encrypted metadata plugin to stable
 - PB-43631 As an admin running a command as root, I should see the name of the command in the suggestion proposed by the CLI
+- PB-44268 As a docker user I want to be able to load the subscription key directly and not use files
 
 ### Fixed
 - PB-43187 Retrieve user last logged data from users table instead of the log to improve application performance
@@ -1208,6 +1397,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-38155 Add JSON schema definition to resource types migrations
 - PB-44474 Switch encrypted metadata plugin to stable
 - PB-43631 As an admin running a command as root, I should see the name of the command in the suggestion proposed by the CLI
+- PB-44268 As a docker user I want to be able to load the subscription key directly and not use files
 
 ### Fixed
 - PB-43187 Retrieve user last logged data from users table instead of the log to improve application performance
@@ -1256,6 +1446,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-38155 Add JSON schema definition to resource types migrations
 - PB-44474 Switch encrypted metadata plugin to stable
 - PB-43631 As an admin running a command as root, I should see the name of the command in the suggestion proposed by the CLI
+- PB-44268 As a docker user I want to be able to load the subscription key directly and not use files
 
 ### Fixed
 - PB-43187 Retrieve user last logged data from users table instead of the log to improve application performance
@@ -1283,6 +1474,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-41818 Bump cakephp version to 5.2.6
 
 ## [5.3.2] - 2025-07-16
+### Added
+- PB-43467 As an administrator, I can lock the SSO configuration to mitigate potential scanning through the endpoints
+
 ### Fixed
 - PB-43910 As an administrator installing passbolt on postgres, the default postgres schema should be public
 - PB-43956 Fix OpenPGP_PHP behavior discrepancy for keys with multiple self-signed key signatures with different expiry times
@@ -1294,6 +1488,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-43480 Writes stack traces in logs on metadata key validation 500 errors
 
 ## [5.3.2-test.1] - 2025-07-15
+### Added
+- PB-43467 Lock configuration of SSO to mitigate potential scanning through the endpoints
+
 ### Fixed
 - PB-43910 As an administrator installing passbolt on postgres, the default postgres schema should be public
 - PB-43956 Fix OpenPGP_PHP behavior discrepancy for keys with multiple self-signed key signatures with different expiry times
@@ -1310,12 +1507,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.3.0] - 2025-07-09
 ### Added
+- PB-41664 Enables OpenID Connect and ADFS SSO by default
 - PB-43066 As a developer I can setup my development environment using ddev
 - PB-43188 Adds Custom Fields Standalone resource type migration
 - PB-43383 Improves the performance of most paginated endpoints
 - PB-43659 Improve error handling when metadata key could not be saved due to unexpected reason
 
 ### Fixed
+- PB-43375 As a user performing an account recovery, Azure SSO should not return a 500 error when secret keys are expired
 - PB-43382 As an administrator I should not get a connection error when running the healthcheck when the database is empty
 - PB-43007 Fixes emails not sent after v5 upgrade if SMTP credentials are stored in environment variables (GITHUB #545)
 - PB-43122 As an administrator retrieving users metadata key, I should not trigger a validation type issue on the missing metadata_keys_id in certain conditions
@@ -1335,6 +1534,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.3.0-rc.1] - 2025-07-04
 ### Added
+- PB-41664 Enables OpenID Connect and ADFS SSO by default
 - PB-43066 As a developer I can setup my development environment using dev
 - PB-43188 Add Custom Fields Standalone resource type migration
 
@@ -1343,6 +1543,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-43659 Improve error handling when metadata key could not be saved due to unexpected reason
 
 ### Fixed
+- PB-43375 As a user performing an account recovery, Azure SSO should not return a 500 error when secret keys are expired
 - PB-43382 As an administrator I should not get a connection error when running the healthcheck when the database is empty
 - PB-43007 Fixes emails not sent after v5 upgrade if SMTP credentials are stored in environment variables (GITHUB #545)
 - PB-43122 As an administrator retrieving users metadata key, I should not trigger a validation type issue on the missing metadata_keys_id in certain conditions
@@ -1361,11 +1562,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [5.3.0-test.1] - 2025-07-02
 ### Added
 - PB-43066 As a developer I can setup my development environment using ddev
+- PB-41664 OpenID Connect and Active Directory Federation Services are now enabled by default
 
 ### Improved
 - PB-43383 Improves the performance of most paginated endpoints
 
 ### Fixed
+- PB-43375 As a user performing an account recovery, Azure SSO should not return a 500 error when secret keys are expired
 - PB-43382 As an administrator I should not get a connection error when running the healthcheck when the database is empty
 - PB-43007 Fixes emails not sent after v5 upgrade if SMTP credentials are stored in environment variables (GITHUB #545)
 - PB-43122 As an administrator retrieving users metadata key, I should not trigger a validation type issue on the missing metadata_keys_id in certain conditions
@@ -1419,6 +1622,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PB-42800 The check metadata key presence in the healthcheck should not fail if no metadata key is required
 - PB-42701 Fixes the contain of missing metadata key on view user endpoint
+- PB-42592 Add missing attribute in ldap default configuration file
+- PB-42574 Fix LDAP Typed property error
 
 ### Security
 - PB-42687 Security alert emails should display user IP and user agent only if configured
@@ -1444,6 +1649,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PB-42800 The check metadata key presence in the healthcheck should not fail if no metadata key is required
 - PB-42701 Fixes the contain of missing metadata key on view user endpoint
+- PB-42592 Add missing attribute in ldap default configuration file
+- PB-42574 Fix LDAP Typed property error
 
 ### Security
 - PB-42687 Security alert emails should display user IP and user agent only if configured
@@ -1457,6 +1664,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.1.1] - 2025-05-22
 ### Fixed
+- PB-42594 Fix directory_sync ignore-create CLI command shared from help message is not working
+- PB-42691 Make created & modified dates from AD/LDAP server optional
+- PB-42592 Fix missing attribute in ldap default configuration file
+- PB-42689 Fix type errors in directory_sync users & groups commands
 - PB-42701 Fix the contain of missing metadata key on view user endpoint
 
 ### Security
@@ -1464,6 +1675,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.1.1-test.1] - 2025-05-21
 ### Fixed
+- PB-42594 Fix directory_sync ignore-create CLI command shared from help message is not working
+- PB-42691 Make created & modified dates from AD/LDAP server optional
+- PB-42592 Fix missing attribute in ldap default configuration file
+- PB-42689 Fix type errors in directory_sync users & groups commands
 - PB-42701 Fix the contain of missing metadata key on view user endpoint
 
 ### Security
@@ -1472,11 +1687,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [5.1.0] - 2025-05-15
 ### Added
 - PB-40712 Enable password expiry by default for new instances
+- PB-37364 As an administrator I can get and rotate tags with an expired metadata key
+- PB-37702 As an administrator I can upgrade tags from v4 format to v5
 - PB-41629 As a client I should know if the metadata plugin is set as in beta
+- PB-40275 Add support for email claim alias for OAUTH2 provider via server config
 - PB-41628 Enable the metadata plugin by default
 
 ### Fixed
+- PB-41820 INC-262 - the new pro subscription keys should not fail and trigger 500s
 - PB-41736 Adjust the datacheck command to support v5 resources
+- PB-40274 Fix azure SSO asking for password everytime even after setting prompt to false
 - PB-41769 Fix action_logs_purge command only purging 100 records
 - PB-42108 Fix the APP_BASE variable ignored when generated URLs with CakePHP
 
@@ -1498,11 +1718,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [5.1.0-rc.1] - 2025-05-12
 ### Added
 - PB-40712 Enable password expiry by default for new instances
+- PB-37364 As an administrator I can get and rotate tags with an expired metadata key
+- PB-37702 As an administrator I can upgrade tags from v4 format to v5
 - PB-41629 As a client I should know if the metadata plugin is set as in beta
+- PB-40275 Add support for email claim alias for OAUTH2 provider via server config
 - PB-41628 Enable the metadata plugin by default
 
 ### Fixed
+- PB-41820 INC-262 - the new pro subscription keys should not fail and trigger 500s
 - PB-41736 Adjust the datacheck command to support v5 resources
+- PB-40274 Fix azure SSO asking for password everytime even after setting prompt to false
 - PB-41769 Fix action_logs_purge command only purging 100 records
 - PB-42108 Fix the APP_BASE variable ignored when generated URLs with CakePHP
 
@@ -1521,11 +1746,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [5.1.0-test.1] - 2025-05-07
 ### Added
 - PB-40712 Enable password expiry by default for new instances
+- PB-37364 As an administrator I can get and rotate tags with an expired metadata key
+- PB-37702 As an administrator I can upgrade tags from v4 format to v5
 - PB-41629 As a client I should know if the metadata plugin is set as in beta
+- PB-40275 Add support for email claim alias for OAUTH2 provider via server config
 - PB-41628 The metadata plugin is enabled by default
 
 ### Fixed
+- PB-41820 INC-262 - New pro subscription keys are failing and triggering 500s
 - PB-41736 Adjust datacheck command to support v5 resources
+- PB-40274 Fix azure SSO asking for password everytime even after setting prompt to false
 - PB-41769 Fix action_logs_purge command only purging 100 records
 - PB-42108 Fix APP_BASE not included in generated URLs
 
@@ -1546,6 +1776,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-39434 As an administrator I can log user actions on file in an SIEM compatible format
 - PB-39627 Enforce PHP 8.2 as minimum passbolt API requirement
 - PB-40155 Add Passbolt API support of PHP 8.4
+- PB-40724 As a user I should not share in DB personal tags of other users with identical slug
 - PB-40247 Add API status documentation link to the health check command
 
 ### Fixed
@@ -1564,17 +1795,39 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PB-41374 Fix unlimited session lifetime introduced in CakePHP 5
 - PB-41379 Updates the minimum next version to 8.2 to remove false warning from installation
+- PB-41382 As a user I should not share personal tags of identical slug with other users
 
 ## [5.0.0-rc.1] - 2025-04-07
 ### Added
 - PB-39434 As an administrator I can log user actions on file in an SIEM compatible format
 - PB-39627 Enforce PHP 8.2 as minimum passbolt API requirement
 - PB-40155 Add Passbolt API support of PHP 8.4
+- PB-40724 As a user I should not share in DB personal tags of other users with identical slug
 - PB-40247 Add API status documentation link to the health check command
 
 ### Fixed
 - PB-39706 When creating a user from CLI the metadata_private_keys should have their fields created_by and modified_by set
 - PB-41356 As an administrator I can delete a resource type associated to deleted resources
+
+### Maintenance
+- PB-28246 Refactor the whole application to upgrade CakePHP to version 5
+- PB-39434 Add code coverage to ActionLogsUsernameQueryStrategy
+- PB-39660 Mock MfaFormInterface to avoid tests failing occasionally
+- PB-39630 Fix ResourcesIndexControllerPaginationTest recurrently failing test
+
+## [5.0.0-test.5] - 2025-04-02
+### Added
+- PB-39434 As an administrator I can log user actions on file in an SIEM compatible format
+- PB-40155 Add Passbolt API support of PHP 8.4
+- PB-39627 Enforce PHP 8.2 as minimum passbolt API requirement
+
+### Fixed
+- PB-39706 When creating a user from CLI the metadata_private_keys should have their fields created_by and modified_by set
+
+### Improved
+- PB-38164 Migrate passbolt API skeleton to v5
+- PB-40724 As a user I should not share in DB personal tags of other users with identical slug
+- PB-40247 Add API status documentation link to the health check command
 
 ### Maintenance
 - PB-28246 Refactor the whole application to upgrade CakePHP to version 5
@@ -1608,7 +1861,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PB-40668 Cannot assign bool to property App\Notification\Email\EmailSender::$appFullBaseUrl of type string error
 
-## [5.0.0-test.1] - 2025-03-28
+## [5.0.0-test.1] - 2025-03-27
 ### Maintenance
 - PB-39712 Update CakePHP to version 5
 
@@ -1698,8 +1951,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-34463 As an administrator I cannot reuse metadata keys as the account recovery key
 - PB-35929 Update edit resource to support allow_v4_v5_upgrade settings
 - PB-35932 Update edit folders to support allow_v4_v5_upgrade settings
+- PB-35933 Update edit tags to support allow_v4_v5_upgrade settings
 
 ### Fixed
+- PB-36947 Fix passbolt.plugins.sso.debugEnabled config not overwritten by passbolt.php
 - PB-37719 Fix resource types index controller should not return deleted resource types per default
 - PB-36925 Cast configure usage to avoid fatal type error on missing fullBaseUrl
 - PB-36576 Fix as a user I cannot create or edit a tag with an expired or deleted metadata key
@@ -1708,6 +1963,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-37096 Fix healthcheck relying on symfony/process should fail gracefully in case of process run exception (GITHUB #531)
 - PB-36989 Fix namespace composer warnings
 - PB-37343 Fixes postgres dump by adding PGPASSWORD env since .pgpass is not generated on the passbolt installation
+- PB-37664 As an administrator running the healthCheck, the inactive users should not be calculated for the license check
 - PB-38026 As an administrator running the cleanup command I should not see issues on soft deleted groups
 - PB-38261 Fix always failing IsNotAccountRecoveryFingerprintRule for metadata keys
 - PB-38262 Fix always failing metadata key creation when zero-knowledge is disabled, and no metadata keys are present
@@ -1737,31 +1993,26 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-35418 As an administrator I should receive an email notification when a metadata key is deleted
 - PB-37361 As an administrator I can rotate metadata keys encrypting resources metadata
 - PB-37697 As an administrator I can upgrade resources to v5 format
+- PB-36576 Fix as a user I cannot create or edit a tag with an expired or deleted metadata key
 - PB-35927 As an administrator I can define an allow_v4_v5_upgrade metadata type settings
 - PB-35923 As an administrator I cannot add a new metadata key if there is only 2 that are active
 - PB-34463 As an administrator I cannot reuse metadata keys as the account recovery key
-- PB-35929 Update edit resource to support allow_v4_v5_upgrade settings
-- PB-35932 Update edit folders to support allow_v4_v5_upgrade settings
 
 ### Fixed
-- PB-37719 Fix resource types index controller should not return deleted resource types per default
 - PB-36925 Cast configure usage to avoid fatal type error on missing fullBaseUrl
-- PB-36576 Fix as a user I cannot create or edit a tag with an expired or deleted metadata key
 - PB-37097 Fix prevent to use v5 resource_type_ids if v5 flag is off
 - PB-36930 Fix some email sentences not translated and markers errors in translation
 - PB-37096 Fix healthcheck relying on symfony/process should fail gracefully in case of process run exception
 - PB-36989 Fix namespace composer warnings
 - PB-37343 Fixes postgres dump by adding PGPASSWORD env since .pgpass is not generated on the passbolt installation
+- PB-37664 As an administrator running the healthCheck, the inactive users should not be calculated for the license check
 - PB-38026 As an administrator running the cleanup command I should not see issues on soft deleted groups
-- PB-38261 Fix always failing IsNotAccountRecoveryFingerprintRule for metadata keys
-- PB-38262 Fix always failing metadata key creation when zero-knowledge is disabled, and no metadata keys are present
 - PB-38166 Passbolt app router should not fall back on Host header if full-base url is not set
 
 ### Security
 - PB-37974 Upgrade CakePHP to v4.5.9
 
 ### Maintenance
-- PB-35785 Upgrade psalm/phpstan to latest version as applicable
 - PB-35119 Fix tests failing when full base url is not-https
 - PB-37000 Fix bug of wrong relation for Rbacs to Log.Actions.
 - PB-37072 Fix LatestVersionApplicationHealthcheck test failing due to github not reachable
@@ -1781,31 +2032,26 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-35418 As an administrator I should receive an email notification when a metadata key is deleted
 - PB-37361 As an administrator I can rotate metadata keys encrypting resources metadata
 - PB-37697 As an administrator I can upgrade resources to v5 format
+- PB-36576 Fix as a user I cannot create or edit a tag with an expired or deleted metadata key
 - PB-35927 As an administrator I can define an allow_v4_v5_upgrade metadata type settings
 - PB-35923 As an administrator I cannot add a new metadata key if there is only 2 that are active
 - PB-34463 As an administrator I cannot reuse metadata keys as the account recovery key
-- PB-35929 Update edit resource to support allow_v4_v5_upgrade settings
-- PB-35932 Update edit folders to support allow_v4_v5_upgrade settings
 
 ### Fixed
-- PB-37719 Fix resource types index controller should not return deleted resource types per default
 - PB-36925 Cast configure usage to avoid fatal type error on missing fullBaseUrl
-- PB-36576 Fix as a user I cannot create or edit a tag with an expired or deleted metadata key
 - PB-37097 Fix prevent to use v5 resource_type_ids if v5 flag is off
 - PB-36930 Fix some email sentences not translated and markers errors in translation
 - PB-37096 Fix healthcheck relying on symfony/process should fail gracefully in case of process run exception
 - PB-36989 Fix namespace composer warnings
 - PB-37343 Fixes postgres dump by adding PGPASSWORD env since .pgpass is not generated on the passbolt installation
+- PB-37664 As an administrator running the healthCheck, the inactive users should not be calculated for the license check
 - PB-38026 As an administrator running the cleanup command I should not see issues on soft deleted groups
-- PB-38261 Fix always failing IsNotAccountRecoveryFingerprintRule for metadata keys
-- PB-38262 Fix always failing metadata key creation when zero-knowledge is disabled, and no metadata keys are present
 - PB-38166 Passbolt app router should not fall back on Host header if full-base url is not set
 
 ### Security
 - PB-37974 Upgrade CakePHP to v4.5.9
 
 ### Maintenance
-- PB-35785 Upgrade psalm/phpstan to latest version as applicable
 - PB-35119 Fix tests failing when full base url is not-https
 - PB-37000 Fix bug of wrong relation for Rbacs to Log.Actions.
 - PB-37072 Fix LatestVersionApplicationHealthcheck test failing due to github not reachable
@@ -1825,31 +2071,26 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-35418 As an administrator I should receive an email notification when a metadata key is deleted
 - PB-37361 As an administrator I can rotate metadata keys encrypting resources metadata
 - PB-37697 As an administrator I can upgrade resources to v5 format
+- PB-36576 Fix as a user I cannot create or edit a tag with an expired or deleted metadata key
 - PB-35927 As an administrator I can define an allow_v4_v5_upgrade metadata type settings
 - PB-35923 As an administrator I cannot add a new metadata key if there is only 2 that are active
 - PB-34463 As an administrator I cannot reuse metadata keys as the account recovery key
-- PB-35929 Update edit resource to support allow_v4_v5_upgrade settings
-- PB-35932 Update edit folders to support allow_v4_v5_upgrade settings
 
 ### Fixed
-- PB-37719 Fix resource types index controller should not return deleted resource types per default
 - PB-36925 Cast configure usage to avoid fatal type error on missing fullBaseUrl
-- PB-36576 Fix as a user I cannot create or edit a tag with an expired or deleted metadata key
 - PB-37097 Fix prevent to use v5 resource_type_ids if v5 flag is off
 - PB-36930 Fix some email sentences not translated and markers errors in translation
 - PB-37096 Fix healthcheck relying on symfony/process should fail gracefully in case of process run exception
 - PB-36989 Fix namespace composer warnings
 - PB-37343 Fixes postgres dump by adding PGPASSWORD env since .pgpass is not generated on the passbolt installation
+- PB-37664 As an administrator running the healthCheck, the inactive users should not be calculated for the license check
 - PB-38026 As an administrator running the cleanup command I should not see issues on soft deleted groups
-- PB-38261 Fix always failing IsNotAccountRecoveryFingerprintRule for metadata keys
-- PB-38262 Fix always failing metadata key creation when zero-knowledge is disabled, and no metadata keys are present
 - PB-38166 Passbolt app router should not fall back on Host header if full-base url is not set
 
 ### Security
 - PB-37974 Upgrade CakePHP to v4.5.9
 
 ### Maintenance
-- PB-35785 Upgrade psalm/phpstan to latest version as applicable
 - PB-35119 Fix tests failing when full base url is not-https
 - PB-37000 Fix bug of wrong relation for Rbacs to Log.Actions.
 - PB-37072 Fix LatestVersionApplicationHealthcheck test failing due to github not reachable
@@ -1869,6 +2110,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.10.0] - 2024-11-20
 ### Added
+- PB-34451 Update tags table with metadata fields
+- PB-35416 Update tags endpoints to support v5 format
+- PB-35697 Add ability to reuse existing shared tag by passing uuid
+- PB-35760 Tags endpoints to throw an error if allow_usage_of_personal_keys is set to false and personal key is used
+- PB-35746 As an administrator I can run a command to migrate the tags to v5 format
+- PB-35934 Update edit tags to support allow_v5_v4_downgrade settings
+- PB-21404 As an admin I'd like to purge directory_reports
 - PB-34458 Add v5 config flag PASSBOLT_V5_ENABLED
 - PB-34459 Add metadata plugin
 - PB-34450 Update resources table with metadata fields
@@ -1949,6 +2197,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-36609 Bump symfony/process composer package to v5.4.46
 
 ### Fixed
+- PB-35742 Fix metadata type settings should be used in tags created/edit endpoints
+- PB-35957 Fix OIDC SSO aud attribute could be an array
 - PB-34189 Fix 500 on GET resources.json when passing 1 as parameter to some filters
 - PB-35173 As a logged-in user I should not get a 500 if the folder does not exist
 - PB-34481 Fix 500 error on /mfa/verify/{provider}.json on account with no 2FA set up
@@ -1960,6 +2210,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-36208 Fix LogFolderWritableHealthcheck help text paths
 
 ### Maintenance
+- PB-35957 Improve BaseIdToken test coverage
 - PB-34399 Bump singpolyma/openpgp-php package to v0.7
 - PB-34305 Upgrade lockfile-lint library on passbolt_api package-lock.json
 - PB-34306 Upgrade openpgp library on passbolt_api package-lock.json
@@ -1983,6 +2234,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.10.0-rc.1] - 2024-11-14
 ### Added
+- PB-34451 Update tags table with metadata fields
+- PB-35416 Update tags endpoints to support v5 format
+- PB-35697 Add ability to reuse existing shared tag by passing uuid
+- PB-35760 Tags endpoints to throw an error if allow_usage_of_personal_keys is set to false and personal key is used
+- PB-35746 As an administrator I can run a command to migrate the tags to v5 format
+- PB-35934 Update edit tags to support allow_v5_v4_downgrade settings
+- PB-21404 As an admin I'd like to purge directory_reports
 - PB-34458 Add v5 config flag PASSBOLT_V5_ENABLED
 - PB-34459 Add metadata plugin
 - PB-34450 Update resources table with metadata fields
@@ -2063,6 +2321,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-36609 Bump symfony/process composer package to v5.4.46
 
 ### Fixed
+- PB-35742 Fix metadata type settings should be used in tags created/edit endpoints
+- PB-35957 Fix OIDC SSO aud attribute could be an array
 - PB-34189 Fix 500 on GET resources.json when passing 1 as parameter to some filters
 - PB-35173 As a logged-in user I should not get a 500 if the folder does not exist
 - PB-34481 Fix 500 error on /mfa/verify/{provider}.json on account with no 2FA set up
@@ -2074,6 +2334,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-36208 Fix LogFolderWritableHealthcheck help text paths
 
 ### Maintenance
+- PB-35957 Improve BaseIdToken test coverage
 - PB-34399 Bump singpolyma/openpgp-php package to v0.7
 - PB-34305 Upgrade lockfile-lint library on passbolt_api package-lock.json
 - PB-34306 Upgrade openpgp library on passbolt_api package-lock.json
@@ -2097,6 +2358,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.10.0-test.1] - 2024-11-12
 ### Added
+- PB-34451 Update tags table with metadata fields
+- PB-35416 Update tags endpoints to support v5 format
+- PB-35697 Add ability to reuse existing shared tag by passing uuid
+- PB-35760 Tags endpoints to throw an error if allow_usage_of_personal_keys is set to false and personal key is used
+- PB-35746 As an administrator I can run a command to migrate the tags to v5 format
+- PB-35945 Add static method to cache and reuse MetadataTypesSettingsGetService results
+- PB-35946 Add static method to cache and reuse MetadataKeysSettingsGetService results
+- PB-35921 Add API endpoint PUT /metadata/session-keys/<uuid>.json
+- PB-35934 Update edit tags to support allow_v5_v4_downgrade settings
+- PB-21404 As an admin I'd like to purge directory_reports
 - PB-34458 Add v5 config flag PASSBOLT_V5_ENABLED
 - PB-34459 Add metadata plugin
 - PB-34450 Update resources table with metadata fields
@@ -2151,6 +2422,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-35756 Update resource create endpoint to throw an error if allow_usage_of_personal_keys is set to false and personal key is used
 - PB-35758 Update folders create/update endpoints to throw an error if allow_usage_of_personal_keys is set to false and personal key is used
 - PB-35928 Add allow_v5_v4_downgrade to metadata types settings
+- PB-35930 Update edit resource to support allow_v5_v4_downgrade settings
+- PB-35931 Update edit folders to support allow_v5_v4_downgrade settings
+- PB-35937 Add allow_v5_v4_downgrade settings to passbolt update_metadata_types_settings command
 - PB-35084 Add the distribution/gpg information in the health-check
 - PB-35866 Add OperatingSystemHealthcheck for 32 vs 64 bit
 - PB-36228 ResourceCreateController should populate empty metadata_key_id if key type is user_key
@@ -2171,6 +2445,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-36609 Bump symfony/process composer package to v5.4.46
 
 ### Fixed
+- PB-35742 Fix metadata type settings should be used in tags created/edit endpoints
+- PB-35957 Fix OIDC SSO aud attribute could be an array
 - PB-34189 Fix 500 on GET resources.json when passing 1 as parameter to some filters
 - PB-35173 As a logged-in user I should not get a 500 if the folder does not exist
 - PB-34481 Fix 500 error on /mfa/verify/{provider}.json on account with no 2FA set up
@@ -2182,6 +2458,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-36208 Fix LogFolderWritableHealthcheck help text paths
 
 ### Maintenance
+- PB-35957 Improve BaseIdToken test coverage
 - PB-34399 Bump singpolyma/openpgp-php package to v0.7
 - PB-34305 Upgrade lockfile-lint library on passbolt_api package-lock.json
 - PB-34306 Upgrade openpgp library on passbolt_api package-lock.json
@@ -2231,16 +2508,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-34219 Adds validation to retention days option in the action_logs_purge command
 - PB-33333 Refactor various tests to use fixture factories
 
-## [4.9.0] - 2024-07-23
+## [4.9.0-test.5] - 2024-07-24
 ### Added
 - PB-33690 Improves response times by adding an index to gpgkeys.user_id column
 - PB-33639 Adds additional contain parameters to share/search-aros.json for enhanced performance
 - PB-33936 Adds a has-users filter to gpgkeys.json index endpoint
 - PB-33813 Adds a fixed limit to the search-aros.json endpoint
+- PB-33828 As an administrator I can define the deletion behaviour of users to suspended instead of deleted on directory synchronisation
+- PB-33014 As an administrator I want to know if TLS/SSL verification is disabled when connecting to LDAP server
+- PB-32284 As an administrator I can set the Default OpenID Connect param alg as optional as specified by the RFC
 
 ### Fixed
 - PB-33616 As a user creating a resource I should get a validation error if the secret is a string and not an array
 - PB-33664 Fix missing "is" in the database schema up to date sentence (GITHUB #517)
+- PB-33427 As a user logging-in with Azure SSO I should not get a 500 if the secret is expired
+- PB-33881 Fixes a typo for the OAuth2 environment variable
 
 ### Improved
 - PB-33429 As a user I should retrieve resources and folders parent folders in a single query
@@ -2250,6 +2532,41 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-33702 Improves has-access filter performance on users.json
 - PB-32591 Validate passbolt.plugins.smtpSettings.security configuration values before passing it to SMTP server
 - PB-33214 Update sql export / improve mysql backup command compatibility with mariadb-dump
+- PB-33688 Improves the performance of tags.json index endpoint
+- PB-33650 Improves the performance of resources.json when retrieving tags
+
+### Maintenance
+- PB-33692 Bump enygma/yubikey to v3.8
+
+### Security
+- PB-33747 Fix command injections vulnerabilities in composer/composer package
+
+## [4.9.0] - 2024-07-23
+### Added
+- PB-33690 Improves response times by adding an index to gpgkeys.user_id column
+- PB-33639 Adds additional contain parameters to share/search-aros.json for enhanced performance
+- PB-33936 Adds a has-users filter to gpgkeys.json index endpoint
+- PB-33813 Adds a fixed limit to the search-aros.json endpoint
+- PB-33828 As an administrator I can define the deletion behaviour of users to suspended instead of deleted on directory synchronisation
+- PB-33014 As an administrator I want to know if TLS/SSL verification is disabled when connecting to LDAP server
+- PB-32284 As an administrator I can set the Default OpenID Connect param alg as optional as specified by the RFC
+
+### Fixed
+- PB-33616 As a user creating a resource I should get a validation error if the secret is a string and not an array
+- PB-33664 Fix missing "is" in the database schema up to date sentence (GITHUB #517)
+- PB-33427 As a user logging-in with Azure SSO I should not get a 500 if the secret is expired
+- PB-33881 Fixes a typo for the OAuth2 environment variable
+
+### Improved
+- PB-33429 As a user I should retrieve resources and folders parent folders in a single query
+- PB-33826 Improves the performance of resources.json by improving the datetime fields processing
+- PB-24995 Improves last_logged_in property query performance to reduce response time of users.json endpoint
+- PB-33653 Improves is_mfa_enabled property query performance to reduce response time of users.json endpoint
+- PB-33702 Improves has-access filter performance on users.json
+- PB-32591 Validate passbolt.plugins.smtpSettings.security configuration values before passing it to SMTP server
+- PB-33214 Update sql export / improve mysql backup command compatibility with mariadb-dump
+- PB-33688 Improves the performance of tags.json index endpoint
+- PB-33650 Improves the performance of resources.json when retrieving tags
 
 ### Maintenance
 - PB-33692 Bump enygma/yubikey to v3.8
@@ -2259,12 +2576,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.9.0-rc.1] - 2024-07-18
 ### Added
+- PB-33828 As an administrator I can define the deletion behaviour of users to suspended instead of deleted
+- PB-33014 As an administrator I want to know if TLS/SSL verification is disabled when connecting to LDAP server
+- PB-32284 As an administrator I can set the Default OpenID Connect param alg as optional as specified by the RFC
 - PB-33690 Improves response times by adding an index to gpgkeys.user_id column
 - PB-33639 Adds additional contain parameters to share/search-aros.json for enhanced performance
 - PB-33936 Adds a has-users filter to gpgkeys.json index endpoint
 - PB-33813 Adds a fixed limit to the search-aros.json endpoint
 
 ### Improved
+- PB-33688 Improves the performance of tags.json index endpoint
+- PB-33650 Improves the performance of resources.json when retrieving tags
 - PB-33429 As a user I should retrieve resources and folders parent folders in a single query
 - PB-33826 Improves the performance of resources.json by improving the datetime fields processing
 - PB-24995 Improves last_logged_in property query performance to reduce response time of users.json endpoint
@@ -2277,6 +2599,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-33747 Fix command injections vulnerabilities in composer/composer package
 
 ### Fixed
+- PB-33427 As a user logging-in with Azure SSO I should not get a 500 if the secret is expired
+- PB-33881 Fixes a typo for the OAuth2 environment variable
 - PB-33616 As a user creating a resource I should get a validation error if the secret is a string and not an array
 
 ### Maintenance
@@ -2284,12 +2608,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.9.0-test.2] - 2024-07-17
 ### Added
+- PB-33828 As an administrator I can define the deletion behaviour of users to suspended instead of deleted
+- PB-33014 As an administrator I want to know if TLS/SSL verification is disabled when connecting to LDAP server
+- PB-32284 As an administrator I can set the Default OpenID Connect param alg as optional as specified by the RFC
 - PB-33690 Improves response times by adding an index to gpgkeys.user_id column
 - PB-33639 Adds additional contain parameters to share/search-aros.json for enhanced performance
 - PB-33936 Adds a has-users filter to gpgkeys.json index endpoint
 - PB-33813 Adds a fixed limit to the search-aros.json endpoint
 
 ### Improved
+- PB-33688 Improves the performance of tags.json index endpoint
+- PB-33650 Improves the performance of resources.json when retrieving tags
 - PB-33429 As a user I should retrieve resources and folders parent folders in a single query
 - PB-33826 Improves the performance of resources.json by improving the datetime fields processing
 - PB-24995 Improves last_logged_in property query performance to reduce response time of users.json endpoint
@@ -2302,6 +2631,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-33747 Fix command injections vulnerabilities in composer/composer package
 
 ### Fixed
+- PB-33427 As a user logging-in with Azure SSO I should not get a 500 if the secret is expired
+- PB-33881 Fixes a typo for the OAuth2 environment variable
 - PB-33616 As a user creating a resource I should get a validation error if the secret is a string and not an array
 
 ### Maintenance
@@ -2309,12 +2640,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.9.0-test.1] - 2024-07-15
 ### Added
+- PB-33828 As an administrator I can define the deletion behaviour of users to suspended instead of deleted
+- PB-33014 As an administrator I want to know if TLS/SSL verification is disabled when connecting to LDAP server
+- PB-32284 As an administrator I can set the Default OpenID Connect param alg as optional as specified by the RFC
 - PB-33690 Improves response times by adding an index to gpgkeys.user_id column
 - PB-33639 Adds additional contain parameters to share/search-aros.json for enhanced performance
 - PB-33936 Adds a has-users filter to gpgkeys.json index endpoint
 - PB-33813 Adds a fixed limit to the search-aros.json endpoint
 
 ### Improved
+- PB-33688 Improves the performance of tags.json index endpoint
+- PB-33650 Improves the performance of resources.json when retrieving tags
 - PB-33429 As a user I should retrieve resources and folders parent folders in a single query
 - PB-33826 Improves the performance of resources.json by improving the datetime fields processing
 - PB-24995 Improves last_logged_in property query performance to reduce response time of users.json endpoint
@@ -2327,6 +2663,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-33747 Fix command injections vulnerabilities in composer/composer package
 
 ### Fixed
+- PB-33427 As a user logging-in with Azure SSO I should not get a 500 if the secret is expired
+- PB-33881 Fixes a typo for the OAuth2 environment variable
 - PB-33616 As a user creating a resource I should get a validation error if the secret is a string and not an array
 
 ### Maintenance
@@ -2339,6 +2677,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-32579 As an administrator I can view email_queue records via passbolt command
 
 ### Improved
+- PB-30381 As administrator I want to be able to start a docker instance or pod instance even when my subscription key is expired
 - PB-32888 As an admin I should not get a time-out on health checks on air-gapped network
 - PB-32983 Access email settings only when emails are sent
 
@@ -2357,6 +2696,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-32579 As an administrator I can view email_queue records via passbolt command
 
 ### Improved
+- PB-30381 As administrator I want to be able to start a docker instance or pod instance even when my subscription key is expired
 - PB-32888 As an admin I should not get a time-out on health checks on air-gapped network
 - PB-32983 Access email settings only when emails are sent
 
@@ -2375,6 +2715,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-32579 As an administrator I can view email_queue records via passbolt command
 
 ### Improved
+- PB-30381 As administrator I want to be able to start a docker instance or pod instance even when my subscription key is expired
 - PB-32888 As an admin I should not get a time-out on health checks on air-gapped network
 - PB-32983 Access email settings only when emails are sent
 
@@ -2388,13 +2729,22 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.7.0] - 2024-04-30
 ### Added
+- PB-33035 As an administrator I can configure directory sync to use Custom SSL certificate
+- PB-29222 As an administrator I want to know if SSL verification of SSO integration is not the default
+- PB-29223 As an administrator I want to know if directory sync endpoints are enabled
+- PB-25710 As an administrator I can add a fallback property to map my organisation AD user username
 - PB-30330 Add HTTP HEAD method support to /healthcheck/status.json to support more uptime monitoring tools (GITHUB #507)
 - PB-26156 As an administrator I can configure SMTP to use TLS with a self-signed cert on my mail server (GITHUB #498)
+
+### Improved
+- PB-29271 As an administrator synchronizing with LDAP I should see resources expired on resource permission loss
+- PB-30148 Fix SSO JWT iss check failing due to trailing slash
 
 ### Security
 - PB-30255 As an authenticated user I cannot access to the healthcheck endpoint when debug is on
 
 ### Fixed
+- PB-33060 As an administrator I can synchronize directories with users with special characters
 - PB-30379 As an authenticating user I should not get a 500 if the gpg_auth is not an array
 - PB-32889 As an administrator I should not get an exception when running core healthcheck and the host cannot be resolved
 - PB-32928 As user I should see the accurate URL in the email footer when passbolt runs on multiple instances
@@ -2411,13 +2761,22 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.7.0-rc.1] - 2024-04-26
 ### Added
+- PB-33035 As an administrator I can configure directory sync to use Custom SSL certificate
+- PB-29222 As an administrator I want to know if SSL verification of SSO integration is not the default
+- PB-29223 As an administrator I want to know if directory sync endpoints are enabled
+- PB-25710 As an administrator I can add a fallback property to map my organisation AD user username
 - PB-30330 Add HTTP HEAD method support to /healthcheck/status.json to support more uptime monitoring tools (GITHUB #507)
 - PB-26156 As an administrator I can configure SMTP to use TLS with a self-signed cert on my mail server (GITHUB #498)
+
+### Improved
+- PB-29271 As an administrator synchronizing with LDAP I should see resources expired on resource permission loss
+- PB-30148 Fix SSO JWT iss check failing due to trailing slash
 
 ### Security
 - PB-30255 As an authenticated user I cannot access to the healthcheck endpoint when debug is on
 
 ### Fixed
+- PB-33060 As an administrator I can synchronize directories with users with special characters
 - PB-30379 As an authenticating user I should not get a 500 if the gpg_auth is not an array
 - PB-32889 As an administrator I should not get an exception when running core healthcheck and the host cannot be resolved
 - PB-32928 As user I should see the accurate URL in the email footer when passbolt runs on multiple instances
@@ -2432,19 +2791,24 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-22605 Refactor ShareSearchControllerTest, SecretViewControllerTest and GroupsDeleteControllerTest with fixture factories
 - PB-32594 Add tests for SecretCreateService
 
-## [4.7.0-test.2] - 2024-04-26
-### Fixed
-- PB-33084 New release with fixed release pipes
-
 ## [4.7.0-test.1] - 2024-04-24
 ### Added
+- PB-33035 As an administrator I can configure directory sync to use Custom SSL certificate
+- PB-29222 As an administrator I want to know if SSL verification of SSO integration is not the default
+- PB-29223 As an administrator I want to know if directory sync endpoints are enabled
+- PB-25710 As an administrator I can add a fallback property to map my organisation AD user username
 - PB-30330 Add HTTP HEAD method support to /healthcheck/status.json to support more uptime monitoring tools (GITHUB #507)
 - PB-26156 As an administrator I can configure SMTP to use TLS with a self-signed cert on my mail server (GITHUB #498)
+
+### Improved
+- PB-29271 As an administrator synchronizing with LDAP I should see resources expired on resource permission loss
+- PB-30148 Fix SSO JWT iss check failing due to trailing slash
 
 ### Security
 - PB-30255 As an authenticated user I cannot access to the healthcheck endpoint when debug is on
 
 ### Fixed
+- PB-33060 As an administrator I can synchronize directories with users with special characters
 - PB-30379 As an authenticating user I should not get a 500 if the gpg_auth is not an array
 - PB-32889 As an administrator I should not get an exception when running core healthcheck and the host cannot be resolved
 - PB-32928 As user I should see the accurate URL in the email footer when passbolt runs on multiple instances
@@ -2481,11 +2845,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-29396 As an administrator I can hide the share folder capability with a RBAC
 - PB-25463 As an administrator I can disable the healthcheck index endpoint with a flag
 - PB-29397 As an administrator I can disable the healthcheck administration panel with a flag
+- PB-29050 As a user I can identify with Microsoft ADFS SSO provider
+- PB-29050 As an administrator I can enable Microsoft ADFS as SSO provider
 
 ### Improved
 - PB-29009 As an administrator completing my setup I should not receive a notification that I completed my setup
 - PB-26152 The API should identify openpgpjs v5.10 revoked key as revoked
 - PB-29437 As an administrator I can log internal errors with the complete trace in Json format
+- PB-29188 As an administrator I can see log statements on token claim errors triggered by SSO authentication
+- PB-29206 As an administrator I can disable ssl peer certification verification on SSO authentication
+- PB-29206 As an administrator I can define a cafile for self-signed certificate ssl on SSO authentication
 
 ### Security
 - PB-30155 Update phpseclib/phpseclib to fix composer security vulnerability
@@ -2497,6 +2866,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-29054 As an administrator I should not get an error when running the cleanup command and the users table does not exist
 - PB-28719 As an administrator sending emails the timezone displayed in the emails should be in the correct time zone
 - PB-30266 As an administrator sending emails with the email digest the message ID should be defined
+- PB-27709 As an administrator I should not get an error updating directory sync settings after a server key rotation
 
 ### Maintenance
 - PB-28247 Update cakephp/cakephp to version 4.5
@@ -2511,11 +2881,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-29396 As an administrator I can hide the share folder capability with a RBAC
 - PB-25463 As an administrator I can disable the healthcheck index endpoint with a flag
 - PB-29397 As an administrator I can disable the healthcheck administration panel with a flag
+- PB-29050 As a user I can identify with Microsoft ADFS SSO provider
+- PB-29050 As an administrator I can enable Microsoft ADFS as SSO provider
 
 ### Improved
 - PB-29009 As an administrator completing my setup I should not receive a notification that I completed my setup
 - PB-26152 The API should identify openpgpjs v5.10 revoked key as revoked
 - PB-29437 As an administrator I can log internal errors with the complete trace in Json format
+- PB-29188 As an administrator I can see log statements on token claim errors triggered by SSO authentication
+- PB-29206 As an administrator I can disable ssl peer certification verification on SSO authentication
+- PB-29206 As an administrator I can define a cafile for self-signed certificate ssl on SSO authentication
 
 ### Security
 - PB-30155 Update phpseclib/phpseclib to fix composer security vulnerability
@@ -2527,6 +2902,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-29054 As an administrator I should not get an error when running the cleanup command and the users table does not exist
 - PB-28719 As an administrator sending emails the timezone displayed in the emails should be in the correct time zone
 - PB-30266 As an administrator sending emails with the email digest the message ID should be defined
+- PB-27709 As an administrator I should not get an error updating directory sync settings after a server key rotation
 
 ### Maintenance
 - PB-28247 Update cakephp/cakephp to version 4.5
@@ -2537,11 +2913,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-29396 As an administrator I can hide the share folder capability with a RBAC
 - PB-25463 As an administrator I can disable the healthcheck index endpoint with a flag
 - PB-29397 As an administrator I can disable the healthcheck administration panel with a flag
+- PB-29050 As a user I can identify with Microsoft ADFS SSO provider
+- PB-29050 As an administrator I can enable Microsoft ADFS as SSO provider
 
 ### Improved
 - PB-29009 As an administrator completing my setup I should not receive a notification that I completed my setup
 - PB-26152 The API should identify openpgpjs v5.10 revoked key as revoked
 - PB-29437 As an administrator I can log internal errors with the complete trace in Json format
+- PB-29188 As an administrator I can see log statements on token claim errors triggered by SSO authentication
+- PB-29206 As an administrator I can disable ssl peer certification verification on SSO authentication
+- PB-29206 As an administrator I can define a cafile for self-signed certificate ssl on SSO authentication
 
 ### Security
 - PB-30155 Update phpseclib/phpseclib to fix composer security vulnerability
@@ -2553,6 +2934,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-29054 As an administrator I should not get an error when running the cleanup command and the users table does not exist
 - PB-28719 As an administrator sending emails the timezone displayed in the emails should be in the correct time zone
 - PB-30266 As an administrator sending emails with the email digest the message ID should be defined
+- PB-27709 As an administrator I should not get an error updating directory sync settings after a server key rotation
 
 ### Maintenance
 - PB-28247 Update cakephp/cakephp to version 4.5
@@ -2560,6 +2942,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [4.5.2] - 2024-02-14
 ### Fixed
 - PB-29621 As a user I should get a 400 if the locale passed in the URL is not a string
+- PB-29526 As an administrator I should be notified of group removal when the operation is performed by a users directory synchronization
 - PB-28867 As a user I should see an improved performance when requesting the folder index endpoint
 
 ### Improved
@@ -2577,6 +2960,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [4.5.2-test.1] - 2024-02-13
 ### Fixed
 - PB-29621 As a user I should get a 400 if the locale passed in the URL is not a string
+- PB-29526 As an administrator I should be notified of group removal when the operation is performed by a users directory synchronization
 - PB-28867 Fix folder serialization performance
 
 ### Improved
@@ -2593,6 +2977,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.5.0] - 2024-02-08
 ### Added
+- PB-23913 As a user I can define the expiry date of a password
+- PB-23913 As an administrator I can define advanced password expiry settings
 - PB-23913 As a user I can see my passwords marked as expired when users lose permissions on these
 - PB-23913 As an administrator I can activate the password expiry feature
 - PB-28923 As a user I want to be able to use passbolt in Russian
@@ -2603,9 +2989,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-26203 Desktop app define the account kit exportation help page
 
 ### Improved
+- PB-28521 Add migration to alter gpgkeys.uid column length to 769
 - PB-27616 Improve resources serialization performance on GET resources.json
 
 ### Security
+- PB-27760 As administrator, I can hide the administrator identity behind LDAP triggered emails
 - PB-29148 Bump selenium API plugin version to v4.5
 - PB-29005 Upgrades phpseclib/phpseclib to fix composer audit security vulnerability
 - PB-22336 As an admin I should be able to enable/disable request group managers to add users to groups emails separately (LDAP/AD)
@@ -2613,6 +3001,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-28658 Mitigate supply chain attack on post npm install script
 
 ### Fixed
+- PB-27788 Correct gendered language on ldap sync ignore messages
 - PB-29200 Fixes the recover_user command (GITHUB #504)
 - PB-29164 Fix recent InstallCommand changes breaking selenium tests
 - PB-29132 Fix composer lock file not up-to-date message when installing dependencies
@@ -2632,6 +3021,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.5.0-rc.1] - 2024-02-01
 ### Added
+- PB-23913 As a user I can define the expiry date of a password
+- PB-23913 As an administrator I can define advanced password expiry settings
 - PB-23913 As a user I can see my passwords marked as expired when users lose permissions on these
 - PB-23913 As an administrator I can activate the password expiry feature
 - PB-28923 As a user I want to be able to use passbolt in Russian
@@ -2642,9 +3033,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-26203 Desktop app define the account kit exportation help page
 
 ### Improved
+- PB-28521 Add migration to alter gpgkeys.uid column length to 769
 - PB-27616 Improve resources serialization performance on GET resources.json
 
 ### Security
+- PB-27760 As administrator, I can hide the administrator identity behind LDAP triggered emails
 - PB-29148 Bump selenium API plugin version to v4.5
 - PB-29005 Upgrades phpseclib/phpseclib to fix composer audit security vulnerability
 - PB-22336 As an admin I should be able to enable/disable request group managers to add users to groups emails separately (LDAP/AD)
@@ -2652,6 +3045,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-28658 Mitigate supply chain attack on post npm install script
 
 ### Fixed
+- PB-27788 Correct gendered language on ldap sync ignore messages
 - PB-29200 Fixes the recover_user command (GITHUB #504)
 - PB-29164 Fix recent InstallCommand changes breaking selenium tests
 - PB-29132 Fix composer lock file not up-to-date message when installing dependencies
@@ -2671,6 +3065,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.5.0-test.1] - 2024-01-29
 ### Added
+- PB-23913 As a user I can define the expiry date of a password
+- PB-23913 As an administrator I can define advanced password expiry settings
 - PB-23913 As a user I can see my passwords marked as expired after a user loses permissions
 - PB-23913 As an administrator I can activate the password expiry feature
 - PB-23913 As a user I can define the expiry date of a passwor
@@ -2683,11 +3079,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-26203 Desktop app define the account kit exportation help page
 
 ### Improved
+- PB-28521 Add migration to alter gpgkeys.uid column length to 769
 - PB-27835 As signed-in user configuring MFA TOTP I can see the TOTP secret so I can use it instead of the QR code
 - PB-27616 Improve resources serialization performance on GET resources.json
 - PB-28521 Add migration to alter gpgkeys.uid column length to 769
 
 ### Security
+- PB-27760 As administrator, I can hide the administrator identity behind LDAP triggered emails
 - PB-29148 Bump selenium API plugin version to v4.5
 - PB-27760 As administrator, I can hide the administrator identity behind LDAP triggered emails
 - PB-29005 Upgrades phpseclib/phpseclib to fix composer audit security vulnerability
@@ -2696,6 +3094,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-28658 Mitigate supply chain attack on post npm install script
 
 ### Fixed
+- PB-27788 Correct gendered language on ldap sync ignore messages
 - PB-29200 Fixes the recover_user command (GITHUB #504)
 - PB-29164 Fix recent InstallCommand changes breaking selenium tests
 - PB-29132 Fix composer lock file not up-to-date message when installing dependencies
@@ -2715,7 +3114,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-28845 Skip unauthenticated exception from logging
 - PB-28653 Speed-up tests by mocking the client in healthcheck relevant tests
 
-## [4.4.2] - 2023-11-29
+## [4.4.2] - 2023-11-28
 ### Improved
 - PB-27616 As a user I should see improved performances when retrieving resources on the GET resources.json entry point
 
@@ -2731,6 +3130,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-28521 Alter the gpgkeys.uid column length to 769 to enable the synchronisation of user with very long names
 
 ### Fixed
+- PB-28728 Fix SSO Azure response_mode should be set to query by default to avoid session cookie SameSite issue
 - PB-27957 As an administrator I should be notified that an administrator was deleted only when an administrator has been deleted, and not a regular user
 
 ### Maintenance
@@ -2741,15 +3141,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PB-27616 Revert performance improvements as further investigation is required
 
-## [4.4.1-test.2] - 2023-11-20
-### Maintenance
-- PB-28521 Alter the gpgkeys.uid column length to 769
-
 ## [4.4.1-test.1] - 2023-11-17
 ### Improved
 - PB-27616 As a user I should see improved performances when retrieving resources on the GET resources.json entry point
+- PB-28521 Alter the gpgkeys.uid column length to 769 to enable the synchronisation of user with very long names
 
 ### Fixed
+- PB-28728 As a user setting up SSO Azure response_mode should be set to query by default
 - PB-27957 As an administrator I should be notified that an administrator was deleted only when an administrator has been deleted, and not a regular user
 
 ### Maintenance
@@ -2758,10 +3156,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.4.0] - 2023-11-07
 ### Added
+- PB-27950 As a user I can use generic OAuth2 as single sign on provider
 - PB-27773 As an administrator I can deny access to the mobile setup screen with RBAC
 - PB-27951 As system operator I should be warned in the healthcheck when using PHP < 8.1, as support for PHP versions 7.4 and 8.0 will soon be removed
 
 ### Improved
+- PB-26123 Update message for LDAP sync adding users to groups
 - PB-27948 Guest identification by their username should be case-insensitive, unless specified in configuration
 - PB-27957 Send notifications to all administrators when an administrator is deleted
 - PB-27941 Send notifications to administrators when an administrator loses its administrator role
@@ -2771,6 +3171,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-28274 Fixes an XSS Security issue with mail content sanitization
 
 ### Fixed
+- PB-26158 As an administrator I should be able to use the memberof LDAP filter following with a ldap-query
+- PB-27895 Fixes a wrong user passphrase policy URL in email the email sent after setting edition
 - PB-25477 As an administrator, I should be able to recreate a user with an email that exists in the db via the command line
 - PB-27799 As an administrator installing passbolt on PostgreSQL, the database encoding should be set to utf-8
 - PB-27857 Fix help site release notes automation by adding flavour on help site release notes merge request
@@ -2785,10 +3187,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.4.0-rc.1] - 2023-11-03
 ### Added
+- PB-27950 As a user I can use generic OAuth2 as single sign on provider
 - PB-27773 As an administrator I can deny access to the mobile setup screen with RBAC
 - PB-27951 As system operator I should be warned in the healthcheck when using PHP < 8.1, as support for PHP versions 7.4 and 8.0 will soon be removed
 
 ### Improved
+- PB-26123 Update message for LDAP sync adding users to groups
 - PB-27948 Guest identification by their username should be case-insensitive, unless specified in configuration
 - PB-27957 Send notifications to all administrators when an administrator is deleted
 - PB-27941 Send notifications to administrators when an administrator loses its administrator role
@@ -2798,6 +3202,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-28274 Fixes an XSS Security issue with mail content sanitization
 
 ### Fixed
+- PB-26158 As an administrator I should be able to use the memberof LDAP filter following with a ldap-query
+- PB-27895 Fixes a wrong user passphrase policy URL in email the email sent after setting edition
 - PB-25477 As an administrator, I should be able to recreate a user with an email that exists in the db via the command line
 - PB-27799 As an administrator installing passbolt on PostgreSQL, the database encoding should be set to utf-8
 - PB-27857 Fix help site release notes automation by adding flavour on help site release notes merge request
@@ -2812,10 +3218,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.4.0-test.1] - 2023-10-27
 ### Added
+- PB-27950 As a user I can use generic OAuth2 as single sign on provider
 - PB-27773 As an administrator I can deny access to the mobile setup screen with RBAC
 - PB-27951 As system operator I should be warned in the healthcheck when using PHP < 8.1, as support for PHP versions 7.4 and 8.0 will soon be removed
 
 ### Improved
+- PB-26123 Update message for LDAP sync adding users to groups
 - PB-27948 Guest identification by their username should be case-insensitive, unless specified in configuration
 - PB-27957 Send notifications to all administrators when an administrator is deleted
 - PB-27941 Send notifications to administrators when an administrator loses its administrator role
@@ -2825,6 +3233,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-28274 Fixes an XSS Security issue with mail content sanitization
 
 ### Fixed
+- PB-26158 As an administrator I should be able to use the memberof LDAP filter following with a ldap-query
+- PB-27895 Fixes a wrong user passphrase policy URL in email the email sent after setting edition
 - PB-25477 As an administrator, I should be able to recreate a user with an email that exists in the db
 - PB-27799 As an administrator installing passbolt on PostgreSQL, the database encoding should be set to utf-8
 - PB-27857 Fix help site release notes automation by adding flavour on help site release notes merge request
@@ -2835,12 +3245,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.3.0] - 2023-09-26
 ### Added
+- PB-26092 As an administrator I can configure policy for user passphrase
 - PB-25405 As an administrator installing passbolt through the web installer, I should be able to configure authentication method for SMTP
+- PB-25977 As an administrator I can truncate all account recovery tables, dropping all user and organisation settings
 - PB-25185 As a signed-in user on the browser extension, I want to export my account to configure the Windows application
+- PB-25685 As an administrator I can lock the set LDAP settings endpoint
 - PB-25944 As an administrator I can define the schema on installation with Postgres
 - PB-25497 As an administrator I can disable users (experimental)
 
 ### Improved
+- PB-25709 Performance optimisation of all the SQL queries retrieving resources tags
+- PB-25973 Performance optimisation of the SQL query retrieving tags
+- PB-24916 Adjust SSO Azure error to return 400 instead of 500 when testing configuration
 - PB-25999 Performance optimisation of update secret process
 - PB-26097 Adds cake.po translation files for all languages supported by CakePHP
 
@@ -2849,10 +3265,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - PB-25802 As a user I want to see localized date in my emails
+- PB-25500 Fix wording in SSO enabled email
 - PB-25863 Fix emails not sent due to message-id header missing
 - PB-27799 As an administrator installing passbolt on PostgreSQL, the database encoding should be set to utf-8
 
 ### Maintenance
+- PB-25709 Remove unused resources tags indexes
 - PB-25894 Run CI on postgres versions 13 and 15 instead of version 12 only
 - PB-25969 As a developer, I can render emails in tests with html special chars
 - PB-26107 Upgrade the cakephp/chronos library
@@ -2865,12 +3283,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.3.0-rc.1] - 2023-09-21
 ### Added
+- PB-26092 As an administrator I can configure policy for user passphrase
 - PB-25405 As an administrator installing passbolt through the web installer, I should be able to configure authentication method for SMTP
+- PB-25977 As an administrator I can truncate all account recovery tables, dropping all user and organisation settings
 - PB-25185 As a signed-in user on the browser extension, I want to export my account to configure the Windows application
+- PB-25685 As an administrator I can lock the set LDAP settings endpoint
 - PB-25944 As an administrator I can define the schema on installation with Postgres
 - PB-25497 As an administrator I can disable users (experimental)
 
 ### Improved
+- PB-25709 Performance optimisation of all the SQL queries retrieving resources tags
+- PB-25973 Performance optimisation of the SQL query retrieving tags
+- PB-24916 Adjust SSO Azure error to return 400 instead of 500 when testing configuration
 - PB-25999 Performance optimisation of update secret process
 - PB-26097 Adds cake.po translation files for all languages supported by CakePHP
 
@@ -2879,9 +3303,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - PB-25802 As a user I want to see localized date in my emails
+- PB-25500 Fix wording in SSO enabled email
 - PB-25863 Fix emails not sent due to message-id header missing
 
 ### Maintenance
+- PB-25709 Remove unused resources tags indexes
 - PB-25894 Run CI on postgres versions 13 and 15 instead of version 12 only
 - PB-25969 As a developer, I can render emails in tests with html special chars
 - PB-26107 Upgrade the cakephp/chronos library
@@ -2891,22 +3317,30 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [4.3.0-test.1] - 2023-09-15
 ### Added
 - PB-25497 As an administrator I can disable users
+- PB-26092 As an administrator I can configure policy for user passphrase
 - PB-25405 As an administrator installing passbolt through the web installer, I should be able to configure authentication method for SMTP
+- PB-25977 As an administrator I can truncate all account recovery tables, dropping all user and organization settings
 - PB-25185 As a signed-in user on the browser extension, I want to export my account to configure the Windows application (disabled by default)
+- PB-25685 As an administrator I can lock the set LDAP settings endpoint
 - PB-25944 As an administrator I can define the schema on installation with Postgres
 
 ### Improved
+- PB-25709 Performance optimisation of all the SQL queries retrieving resources tags
+- PB-25973 Improve performance of tags.json requests
 - PB-25999 Improve performance of update secret process
 - PB-26097 Adds cake.po translation files for all languages supported by CakePHP
+- PB-24916 Adjust SSO Azure error to return 400 instead of 500 when testing configuration
 
 ### Security
 - PB-25827 As a user with encrypted message enabled in the email content visibility, I would like to see the gpg message encrypted with my key when a password is updated
 
 ### Fixed
 - PB-25802 As a user I want to see localized date in my emails
+- PB-25500 Change string in SSO enabled email
 - PB-25863 Set message-id header in emails
 
 ### Maintenance
+- PB-25709 Remove unused resources tags indexes
 - PB-25894 Run CI on postgres versions 13 and 15 instead of version 12 only
 - PB-25969 As a developer, I can render emails in tests with html special chars
 - PB-26107 Upgrade the cakephp/chronos library
@@ -2933,9 +3367,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-25798 Fixes laminas/laminas-diactoros vulnerability by using the longwave/laminas-diactoros package
 
 ### Fixed
+- PB-24931 As a user when I rename a tag with the same name, the tag should not be deleted
+- PB-25019 As an administrator I can define LDAP filters case sensitivity
+- PB-24986 As a user decrypting the SSO organisation settings I should not get a 500 error when the key could not be found in the keyring
+- PB-25859 As an administrator notified of an account recovery I should see the first and last name of the acting user in the email
 - PB-25472 As a user I can use an SMTP server using NTLM authentication
 - PB-25475 As an administrator running the healthcheck, I should be warned for self-signed and wildcard certs instead of having a failure
 - PB-25720 As an administrator I should not see a false error in the healthcheck when reading the App.base config
+- PB-25800 As an administrator I should be able to migrate from v3 my default LDAP settings
 
 ### Maintenance
 - PB-21412 Upgrade phpstan to v1.10.15
@@ -2975,9 +3414,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-25798 Fixes laminas/laminas-diactoros vulnerability by using the longwave/laminas-diactoros package
 
 ### Fixed
+- PB-24931 As a user when I rename a tag with the same name, the tag should not be deleted
+- PB-25019 As an administrator I can define LDAP filters case sensitivity
+- PB-24986 As a user decrypting the SSO organisation settings I should not get a 500 error when the key could not be found in the keyring
+- PB-25859 As an administrator notified of an account recovery I should see the first and last name of the acting user in the email
 - PB-25472 As a user I can use an SMTP server using NTLM authentication
 - PB-25475 As an administrator running the healthcheck, I should be warned for self-signed and wildcard certs instead of having a failure
 - PB-25720 As an administrator I should not see a false error in the healthcheck when reading the App.base config
+- PB-25800 As an administrator I should be able to migrate from v3 my default LDAP settings
 
 ### Maintenance
 - PB-21412 Upgrade phpstan to v1.10.15
@@ -2993,6 +3437,24 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-25471 As a developer Crowdin should export only a selected subset of languages
 - PB-25801 As a developer I can create unpublished test packages
 
+## [4.1.3] - 2023-08-04
+### Fixed
+- PB-25506 Fix LDAP sync not working after migrating to v4 by allowing administrators to select the field to map to username in LDAP connection
+- PB-25536 Fix OpenLDAP group object class & group member attribute mismatch
+
+### Security
+- PB-25563 PBL-09-001 Mitigate usage of sensitive keywords in user and group custom filters
+- PB-25564 PBL-09-002 Mitigate arbitrary LDAP data exfiltration via fields_mapping
+
+## [4.1.3-rc.1] - 2023-08-03
+### Fixed
+- PB-25506 Fix LDAP sync not working after migrating to v4 by allowing administrators to select the field to map to username in LDAP connection
+- PB-25536 Fix OpenLDAP group object class & group member attribute mismatch
+
+### Security
+- PB-25563 PBL-09-001 Mitigate usage of sensitive keywords in user and group custom filters
+- PB-25564 PBL-09-002 Mitigate arbitrary LDAP data exfiltration via fields_mapping
+
 ## [4.1.2] - 2023-07-26
 ### Fixed
 - PB-25472 Fix emails not sent for SMTP server using NTLM authentication
@@ -3003,9 +3465,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [4.1.2-rc.2] - 2023-07-25
 ### Fixed
 - PB-25472 Fix emails not sent for SMTP server using NTLM authentication
+- PB-25373 Revert changes for LDAP sync not working issue
 
 ### Maintenance
 - PB-25471 Crowdin should export only a selected subset of languages
+
+## [4.1.2-rc.1] - 2023-07-13
+### Fixed
+- PB-25373 LDAP sync not working by selecting all group fields
 
 ## [4.1.1] - 2023-07-13
 ### Fixed
@@ -3023,12 +3490,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [4.1.0] - 2023-06-29
 ### Added
 - PB-24259 As an administrator I can define with role based access control users' rights
+- PB-24054 As an administrator I can define LDAP field mapping
+- PB-24051 As an administrator I can define LDAP multi domain
 
 ### Improved
 - PB-24744 As a LU the date time format in the response always display the time zone
 - PB-24929 As a LU with multiple MFA providers setup, the latest provider used is proposed by default
 - PB-24488 Non-JSON request should return a 404 if JSON is required
 - PB-24617 As LU I want improved performance while sharing a folder with a user
+- PB-23843 Update SSO settings endpoint to allow prompt for Azure provider
+- PB-24244 As an administrator I can remap email and username properties
 
 ### Security
 - PB-25030 As an admin I can set a feature flag to prevent user email enumeration
@@ -3038,6 +3509,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-23591 As a user authenticating I can perform a limited amount of TOTP MFA attempts
 
 ### Fixed
+- PB-24782 As an administrator I can perform LDAP synchronization with over 1k records with improved performance
+- PB-24914 As an admin I should be able to rename a tag with uppercase
 - PB-24658 As an admin I should see no false warning in the email notification configuration section
 - PB-25275 As an admin I should see the option page during installation after creating the server GPG keys
 - PB-25276 As an admin on installation SSL force option should be set to true if the installation is launched over https
@@ -3063,12 +3536,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [4.1.0-rc.1] - 2023-06-26
 ### Added
 - PB-24259 As an administrator I can define with role based access control users' rights
+- PB-24054 As an administrator I can define LDAP field mapping
+- PB-24051 As an administrator I can define LDAP multi domain
 
 ### Improved
 - PB-24744 As a LU the date time format in the response always display the time zone
 - PB-24929 As a LU with multiple MFA providers setup, the latest provider used is proposed by default
 - PB-24488 Non-JSON request should return a 404 if JSON is required
 - PB-24617 As LU I want improved performance while sharing a folder with a user
+- PB-23843 Update SSO settings endpoint to allow prompt for Azure provider
+- PB-24244 As an administrator I can remap email and username properties
 
 ### Security
 - PB-25030 As an admin I can set a feature flag to prevent user email enumeration
@@ -3078,6 +3555,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-23591 As a user authenticating I can perform a limited amount of TOTP MFA attempts
 
 ### Fixed
+- PB-24782 As an administrator I can perform LDAP synchronization with over 1k records with improved performance
+- PB-24914 As an admin I should be able to rename a tag with uppercase
 - PB-24658 As an admin I should see no false warning in the email notification configuration section
 
 ### Maintenance
@@ -3087,7 +3566,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-21604 Extract composer audit task from checkstyle job and make it non-blocking
 - PB-21641 Rename check-style job to static-analysis and make it blocking
 
-## [4.0.2] - 2023-05-25
+## [4.0.2] - 2023-05-24
 ### Fixed
 - PB-24644 As an admin I should be able to run migrations on a 32 bit environment
 
@@ -3105,13 +3584,26 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.0.0] - 2023-05-16
 ### Added
+- PB-21580 As a user I can use Google as single sign on provider
 - PB-24245 As LU using the API I can manage standalone TOTP and TOTP associated with passwords resources types
 - PB-24086 As an admin I can create a user recovery link from the command line
+- PB-22926 As a new user I can self-register using SSO with email-self registration
+
+### Improved
+- PB-21570 As an administrator I receive an email when SSO configuration changes
+- PB-24052 As an administrator I can configure the user directory settings to authenticate with Kerberos/SASL
+- PB-23961 Adds SASL support for DirectorySync
+- PB-23927 As a system administration I can disable certain SSO providers from environment variable
+- PB-23598 Add LDAP filter / search to the API endpoint for configuration
+- PB-23289 Add new setting to allow updating user first and last name from LDAP
+- PB-23290 As an administrator synchronizing the users directory it should also synchronize the groups names
 
 ### Maintenance
 - PB-23321 Upgrade CakePHP to 4.4
+- PB-22720 Refactor LDAP feature to use directorytree/ldaprecord
 - PB-24296 As a developer I can retrieve in integration tests the body of json requests in array
 - PB-24083 Removes the usage of the Paginator deprecated in CakePHP 4.4
+- PB-24055 LDAP add support multi server to settings API endpoint
 - PB-23926 Bump PHPUnit to ~9.5.2 to avoid warning messages of 9.6
 - PB-22758 Introduce JWT key injection to enable parallel tests
 - PB-22622 Add CS rule to disallow space after NOT operator
@@ -3129,6 +3621,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Security
 - PB-24056 As an admin I can view log stack traces when debug mode is enabled
+- PB-23599 As an admin I can obfuscate sensitive fields in LDAP get settings API responses
 - PB-24297 Update guzzlehttp/psr7 to fix composer audit security vulnerability
 
 ## [4.0.0-rc.5] - 2023-05-11
@@ -3146,20 +3639,32 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.0.0-rc.2] - 2023-04-26
 ### Added
+- PB-21580 As a user I can use Google as single sign on provider
 - PB-24245 Adds two TOTP resource types feature flag
 - PB-24086 As an admin, I can create a user recovery token from the command line
 - PB-24056 As an admin I can view log stack traces when debug mode is enabled
+- PB-23599 As an admin I can obfuscate sensitive fields in API responses
+- PB-22926 As a new user I can self-register using SSO with email-self registration
 
 ### Improved
+- PB-21570 As an administrator I receive an email when SSO configuration changes
 - PB-24073 As a developer I should ensure that the CHANGELOG.md file is in the right format
 - PB-24071 As a developer I can enable feature plugins with the plugins class name
 - PB-24272 Adds contribution link in CONTRIBUTING.md
+- PB-24052 Updates LDAP admin settings to support Kerberos/SASL
+- PB-23961 Adds SASL support for DirectorySync
+- PB-23927 As a system administration I can disable certain SSO providers from environment variable
 
 ### Maintenance
 - PB-23321 Upgrade CakePHP to 4.4
+- PB-23598 Add LDAP filter / search to the API endpoint for configuration
+- PB-23289 Add new setting to allow updating user first and last name from LDAP
+- PB-23290 Update GroupSyncAction to rename group if changed in LDAP
+- PB-22720 Refactor LDAP feature to use directorytree/ldaprecord
 - PB-24297 Update guzzlehttp/psr7 to fix composer audit security vulnerability
 - PB-24296 As a developer I can retrieve in integration tests the body of json requests in array
 - PB-24083 Removes the usage of the Paginator deprecated in CakePHP 4.4
+- PB-24055 LDAP add support multi server to settings API endpoint
 - PB-23926 Bump PHPUnit to ~9.5.2 to avoid warning messages of 9.6
 - PB-22758 Introduce JWT key injection to enable parallel tests
 - PB-22622 Add CS rule to disallow space after NOT operator
@@ -3181,6 +3686,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-22749 As an administrator I can customise passbolt to output the action logs in syslog
 - PB-22749 As an administrator I can customise passbolt to output the action logs in a file
 - PB-22749 As an administrator I can implement my own action logs handler
+- PB-23813 Microsoft Azure as single sign on should be enabled by default
 
 ### Fixed
 - PB-23717 As a user using the json API I should get a bad request error instead of an internal error if using api-version=v1
@@ -3203,11 +3709,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [3.11.1] - 2023-03-03
 ### Fixed
 - PB-23283 As an administrator I can disable username validation in Duo Callback endpoints
+- PB-23310 As a user I can login and recover my account with SSO Azure when passbolt is in a sub-directory setup
 
 ## [3.11.0] - 2023-03-01
 ### Added
+- PB-22435 As a user using SSO Azure I can recover my account using SSO Azure
 - PB-22741 As an administrator I should see an error in the healthcheck if I use php 7.3 or less
 - PB-22747 As an administrator I can define a regular expression to customise email validation
+- PB-22748 As an administrator I can access to the paginated list of action logs on the browser
 - PB-22866 As a user I want to use passbolt in Italian
 - PB-22866 As a user I want to use passbolt in Portuguese (Brazil)
 - PB-22866 As a user I want to use passbolt in Korean
@@ -3218,30 +3727,43 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Improved
 - PB-22725 As an administrator I want to manage Duo v4 settings
+- PB-21763 As a user I want to see a clean SSO error feedback in the popup after failing to sign-up with SSO
+- PB-21764 As a user I want to see a clean SSO feedback in the popup after signing-in with SSO
 - PB-21906 As a user I don’t want to receive email by default when I create a resource or a folder as well as I don’t want to see any details for this content by default
+- PB-22512 As an SSO administrator I want to see the access_token details when it is missing or has invalid claims
+- PB-22610 As a user I want the SSO Azure authentication to support nonce
 
 ### Maintenance
 - PB-22416 As a developer I can safely deactivate plugins between solutions
 - PB-22756 Fixes a range of failing pagination tests
+- PB-22760 SSO State Type refactoring
 - PB-22495 Refactors the SmtpTransport to enhance the code coverage of emails
+- PB-22430 Refactoring of SSO state to use separate table
 
 ## [3.10.0] - 2023-02-09
 ### Added
 - PB-19784 As a user I can self register if my email domain matches the policy defined by the administrators
+- PB-21827 As an administrator I can manage the MFA policies of my organisation
+
+### Fixed
+- PB-22652 As a user I can authenticate with SSO with an email address having a different case
 
 ### Improved
-- PB-21485 As a server administrator I want to configure the list of active proxies the instance is behind in order to get client IP when necessary
+- PB-21485 As a server administrator I want to configure the list of active proxies the instance
+  is behind in order to get client IP when necessary
 - PB-21682 As an administrator I want to configure the client option of the SMTP settings
 - PB-22019 As a server administrator I want to configure TOTP MFA secret length
+- PB-22574 As a signed-in user I want the sharing of resources to not perform a cycle detection
 
 ### Maintenance
 - PB-22327 env variable PASSBOLT_PLUGINS_SMTP_SETTINGS renamed in PASSBOLT_PLUGINS_SMTP_SETTINGS_ENABLED (backward compatible)
 - PB-22406 curl and openssl extensions requirements added
 - PB-22413 bump CakePHP to ^4.3.11
+- PB-22420 SSO test routes removed
 
 ## [3.9.0] - 2023-01-17
 ### Added
-- PB-20539 As a user I can protect the authentication to passbolt with a second factor method
+- PB-21828 As a user I can use Microsoft Azure as single sign on provider (Alpha)
 
 ### Fixed
 - PB-19601 As an admin running the healthcheck I should not see an unmanaged error if DB connection fails
@@ -3273,6 +3795,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-21361 Remove deprecated usage of authenticateAs in tests
 - PB-21658 Add support to PHP 8.2
 
+## [3.8.4] - 2022-11-12
+### Fixed
+- PB-21618 As an administrator I want to clean up duplicated folders relations located at the root
+- PB-21760 As signed-in user sharing a resource with a user already having access to the resource, it should not create duplicated folders relations
+
 ## [3.8.3] - 2022-11-30
 ### Fixed
 - PB-21631 Ensure the OpenPGP server key is in the keyring prior to sending any emails
@@ -3283,6 +3810,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-21438 As an administrator using docker, I should be able to access the SMTP settings of my organization
 - PB-21486 As an administrator, I can define the SMTP authentication method via the SMTP admin workspace
 - PB-21481 As an administrator, I want emails to be sent with the sender settings defined in database, if defined in the database
+- PB-21439 As an anonymous user having a second factor method enabled, I should be able to authenticate without getting a 404
 
 ## [3.8.0] - 2022-11-09
 ### Added
@@ -3291,19 +3819,25 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-19151: As a user, I want to use passbolt with the Solarized dark theme
 
 ### Improved
+- PB-16948: As group manager, I should be able to add users to groups without getting timeout errors
+- PB-19035: TOTP is now deactivated by default and should be activated by an administrator
 - PB-19200: GpgAuthenticator now asserts the message is a valid OpenPGP message prior to decryption on stage 0
 
 ### Fixed
 - PB-19312: As a logged-in user, I want to see my first name and last name correctly displayed in email headers
 - PB-18718: As a logged-in user, I want my locale not to be overwritten by the server config on pages served by the server
 - PB-19261: As a logged-in user, I should not get an internal error if no filter is passed to the get resource.json entry point
+- PB-19035: As a logged-in user, I should not get a not found error on MFA authentication if an administrator deactivated MFA
+- PB-18515: As a user, I want to see User Agent and IP in account recovery emails
 
 ### Security
+- PB-19204: Sanitize MFA redirection by forbidding redirection to external URI
 - PB-19090: Protect forms from spell-jacking attack
 
 ### Maintenance
 - PB-19235: Migrate comments controllers logic into services
 - PB-19603: Cover additional “add user to group” case: As group manager I can add a user to a group which have no resources shared with
+- PB-6081: Move enterprise plugins into plugins/PassboltEe
 - PB-6081: Move community plugins into plugins/PassboltCe
 - PB-19621: Stop changing folders permissions in installation tests
 - PB-19255 As an administrator I can trigger 500 errors on demand to test my logs
@@ -3315,64 +3849,91 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [3.7.2] - 2022-09-20
 ### Fixed
 - PB-18380 Let passbolt-configure script setup certbot for RHEL9 support
+- PB-18405 Redirect on non-json request if no MFA settings are found
 - PB-16983 Handles the lack of permissions on image directory when deleting
 - PB-16898 Redesign download a supported browser to get started
+- PB-19040 As AD synchronizing with LDAP, users should be removed from passbolt groups
 
 ### Improved
+- PB-18415 Extends folder name length to 256 chars
 - PB-18650 Add a check on mysql status in order to run mysql commands only when it's ready in unit tests
 - PB-18664 Add retry logic to Gitlab CI jobs
+- PB-18645 Bump Ldap tools version for better PHP8.x support
 
 ## [3.7.1] - 2022-08-10
+### Fixed
+- PB-18486 Removes all resources_tags entries for tags that are not shared and for which the user_id is set to null.
+- PB-18398 Fix tag regression: sets associations name to be CakePHP compatible
+- PB-17072 Quotes fields in a join condition fixing Postgres
+- PB-17068 Fix postgresql compatibility issue
+- PB-18427 Fix LDAP/AD SELinux issue on RHEL
 - PB-18381 Fix source language typos
 - PB-18397 Fix as an admin I can generate a server key with the webinstaller within an instance over http
-- PB-17096 Fix resouce_types name and slug postgresql compatibility
+- PB-17096 Fix resource_types name and slug postgresql compatibility
 - PB-18372 Bump styleguide version to 3.7.1
+- PB-17068 PBL-07-003 Remove non necessary user id enumeration possibility
 
 ## [3.7.0] - 2022-07-28
 ### Added
-- PB-17098 Add rockylinux 9 support
-- PB-16751 Add Redhat 9 support
-- PB-16749 Add Ubuntu 22.04 support
-- PB-16950 Add Spanish and Lithuanian support
-- PB-14514 Add PHP8.0 support
-- PB-14514 Fix PHP8.1 compatibility issues
-- PB-16161 Create action log endpoint for user CRUD
-- PB-16844 Common part of the user recovery and setup audit log
+PB-17098 Add rockylinux 9 support
+PB-16751 Add Redhat 9 support
+PB-16749 Add Ubuntu 22.04 support
+PB-16950 Add Spanish and Lithuanian support
+PB-14514 Add PHP8.0 support
+PB-14514 Fix PHP8.1 compatibility issues
+PB-16161 Create action log endpoint for user CRUD
+PB-16844 Common part of the user recovery and setup audit log
 
 ### Security
-- PB-17068 PBL-07-002 Fix key algorithm validation should be set to strict on setup
-- PB-17068 Fix OpenPGP unarmor should use base64_decode in strict mode
-- PB-17068 SEC-1292 Fix unsafe default recipient email address (Credit: Ashley Primo)
+PB-17068 PBL-07-003 Remove non necessary user id enumeration possibility
+PB-17068 Fix PBL-07-005 unusable organization key must be rejected
+PB-17068 PBL-07-002 Fix key algorithm validation should be set to strict in public key validation service
+PB-17068 Add test account recovery organization policy set should reject keys with weak algorithm
+PB-17068 PBL-07-002 Fix key algorithm validation should be set to strict on setup
+PB-17068 Fix OpenPGP unarmor should use base64_decode in strict mode
+PB-17068 SEC-1292 Fix unsafe default recipient email address (Credit: Ashley Primo)
 
 ### Fixed
-- PB-16705 As group manager updating group memberships I should not get a timeout
-- PB-16949 As group manager deleting a group user the operation should not be slowed down by the folders plugin
-- PB-16705 As a group manager updating group memberships I should not get a timeout due to a plugin integration
-- PB-17068 Fix GroupsUsersValidatorTest psr-4 autoloading warning
-- PB-17007 As AD performing a cleanup of the missing folders relations I should not get a timeout
-- PB-16749 Fix jobs to reuse last job artifact instead of rebuilding it everytime
-- PB-16877 Fixes ClearMfaCookieOnSetupAndRecover for controllers without User component
-- PB-16666 GITHUB-432 Fix healthcheck style
+PB-16705 As group manager updating group memberships I should not get a timeout
+PB-16949 As group manager deleting a group user the operation should not be slowed down by the folders plugin
+PB-16705 As a group manager updating group memberships I should not get a timeout due to a plugin integration
+PB-17068 Fix GroupsUsersValidatorTest psr-4 autoloading warning
+PB-17007 As AD performing a cleanup of the missing folders relations I should not get a timeout
+PB-16749 Fix jobs to reuse last job artifact instead of rebuilding it everytime
+PB-16877 Fixes ClearMfaCookieOnSetupAndRecover for controllers without User component
+PB-16666 GITHUB-432 Fix healthcheck style
 
 ### Maintenance
-- PB-17009 Replace createrepo by createrepo_c
-- PB-16956 Misc Fixture Factories refactoring
-- PB-16956 Modernize folders plugin bootstrap, add src/Plugin.php file
-- PB-16806 UacAwareMiddleware trait now return UAC exclusively. More typing in UAC object.
-- PB-16161 Renames ambiguous testing traits
-- PB-16161Add and enhance log related factories
-- PB-16791 Upgrade webinstaller openpgpjs to v5
-- PB-14514 Update to composer v2.2 + Fix CI jobs
-- PB-16657 Remove mariadb dependency
-- PB-16161 Refactor to split folder, resource and user related logic in respective classes
+PB-17009 Replace createrepo by createrepo_c
+PB-16956 Misc Fixture Factories refactoring
+PB-16956 Modernize folders plugin bootstrap, add src/Plugin.php file
+PB-16806 UacAwareMiddleware trait now return UAC exclusively. More typing in UAC object.
+PB-16161 Renames ambiguous testing traits
+PB-16161Add and enhance log related factories
+PB-16791 Upgrade webinstaller openpgpjs to v5
+PB-14514 Update to composer v2.2 + Fix CI jobs
+PB-16657 Remove mariadb dependency
+PB-16161 Refactor to split folder, resource and user related logic in respective classes
 
-## [3.6.0]
+## [3.6.0] - 2021-05-25
+### Added
+- PB-9738 Add account recovery organization policy settings by admins
+- PB-13685 Add account recovery organization settings set with key rotation + misc cleanup
+- PB-12837 Add account recovery setup for users
+- PB-14236 Add account recovery request process for users
+- PB-14236 Add account recovery response process by admins
+- PB-14410 Add the account recovery final step for users after approval by admins
+- PB-14233 List all pending account recovery requests for admins
+- PB-13769 Add account recovery related email notifications to users and admins
+- PB-14452 Add cleanup tasks for account recovery
+
 ### Improved
 - PB-9739 OpenPGP key and message validation refactoring
 - PB-14141 Enhanced public/private key validation rules
 - PB-13685 Enhanced secret validation rules
 - PB-14138 Refactor setup and recover related controllers with dependency injection
 - PB-14510 Three trivial endpoints, such as GET on login are not logged anymore
+- PB-14511 The trivial endpoints are cleaned-up from the relevant audit logs table
 
 ### Security
 - PB-14400 Upgrade firebase/php-jwt to 6.1
@@ -3380,6 +3941,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PB-14369 Fixes email settings issues in the test suite
 - PB-15046 Handle user lost-passphrase scenarios with API <= v3.5
+- PB-15024 Action logs slow query fix for Maria DB
+- PB-14253 Disable MFA cookie on user setup or recover
 
 ### Maintenance
 - PB-14812 Upgrade cakephp/cakephp to 4.3
@@ -3391,6 +3954,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-5967 As AD I can use passbolt with a PostgreSQL database provider [experimental]
 - PB-5967 As AD I can migrate an existing instance to PostgreSQL with the help of the command line [experimental] and MySQL to Postgres migration tools, e.g. as described here: https://pgloader.readthedocs.io and here: https://pgloader.io/.
 - PB-8513 As LU I can request gpg keys using pagination
+- PB-6053 As LU I can request folders using pagination
 - PB-13321 As a user I can use passbolt in Dutch
 - PB-13321 As a user I can use passbolt in Japanese
 - PB-13321 As a user I can use passbolt in Polish
@@ -3402,13 +3966,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-13177 As AD I should be able to see any gpg keys errors from the healthcheck
 - PB-13183 As LU I should be able create resource having a name or a username of 255 characters long
 - PB-13265 As AD I can create a JWT key pair even if the database is not set
-- PB-13164 As AD I can cleanup duplicate entries in the favorites tables, groups_users and permissions
+- PB-13164 As AD I can cleanup duplicate entries in the favorites tables, folder_relations, groups_users and permissions
 
 ### Security
 - PB-13217 PBL-06-011 Fix ACL on mobile transfer view controller
 
 ### Fixed
 - PB-9887 Fix as AD I can send email digest from the /bin/cron script
+- PB-12951 Fix as a user I shouldn’t get an error requesting the JWT refresh end point providing a MFA token with MFA disabled
 - PB-12957 Fix multiple language issues reported by community
 - PB-12914 Fix as a group manager I should not get multiple notifications when a group is updated
 - PB-13158 As AD I should see a tip with proper directory permissions when the JWT assets healthcheck fails
@@ -3434,6 +3999,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-9762 Fix requesting /auth/login.json should not trigger an unexpected error
 - PB-9888 Fix MFA & JWT refresh token issue, remove Bearer from the hashed session identifier
 - PB-12817 Fix as LU I should be able to update jpeg avatar
+- PB-12581 Fix as AD I should be able to configure the users directory integration
 
 ### Security
 - PB-7374 As soft deleted but logged in user I should be forbidden to request the API
@@ -3473,10 +4039,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-7605 As a developer I should be able to enable/disable a plugin easily
 
 ### Fixed
+- PB-5982 as LU sharing a folders with a user which contains resources already shared with this same user I should move the resources in the shared folders
 - PB-5457 Fix as LU importing a batch of passwords I should not get an internal errors because of database deadlock
 - PB-7840 Fix as AD I can install/reconfigure the passbolt package if ssl certificates are already present
 
 ### Security
+- PB-7961 Fix PBL-03-002 Missing CSRF protection on the user directories synchronize and ignore user entry points
 - PB-8047 Fix PBL-02-002 As LU I should logout by posting to the API and the entry point should should be protected by CSRF
 - PB-7751 Updates FlySystem dependency to v2.1.1
 - SEC-181 Fix information disclosure: recover endpoint should not return user role and name.
@@ -3487,6 +4055,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-8448 Hashes the session ID prior to passord_hash
 - PB-8210 Replaces PHPSESSID with session_name()
 
+## [3.2.2] - 2021-06-16
+### Fixed
+- PB-5910 Fix ldap admin screen should load only default admin users which are active and not deleted
+
 ## [3.2.1] - 2021-06-04
 ### Fixed
 - GITHUB-402 Fix API v3 regression, login must accept JSON data
@@ -3495,12 +4067,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - PB-5054 French internationalization
 - PB-5171 As logged-in user I can paginate the result of the users and resources index controllers
+- PB-5526 As admin I can save the subscription key as organization setting
 - PB-5854 As logged-in user I can save the locale of a user as account setting
 - PB-5854 As admin I can save the locale the organization as organization setting
+- PB-5985 As system administration I should be able to import a subscription key from the command line
 
 ### Fixed
 - PB-5523 Fix as system administrator I should see the healthcheck errors colored in red
 - PB-5860 Fix password max length should be set to 4096 in resource type definitions
+- PB-6007 Fix all group managers should receive an email when a new user is added to a group after a Ldap synchronization
 - PB-6031 Fix as LU I shouldn't get a fatal error when using a scalar instead of an array for some filters values
 - PB-6131 Fix healthcheck error messages display
 
@@ -3521,6 +4096,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [3.0.2] - 2021-03-09
 ### Fixed
+- PB-5211 The fields Group object class and User object class in user directory have to be sent server side
 - GITHUB-378 Fix healthcheck ssl fullBaseUrl check
 - Fix email digest email preview should accept empty (null) template
 - Fix send test email command should accept undefined username and password
@@ -3529,7 +4105,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Fix resources population of resource_type_id field migration
 
-## [3.0.0] - 2021-02-18
+## [3.0.0] - 2021-02-22
 ### Deprecated
 - Drop support for API format v1, api-version parameter is deprecated
 - Remove title from API response envelope format
@@ -3562,7 +4138,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Redesign of login and recover screens
 - Add Mysql 8 support
 
-## [2.13.5] 2020-07-30
 ### Fixed
 - Fix allow overriding rememberMe options in passbolt.php configuration file
 - Fix all target blank link should contain rel noopener noreferrer
@@ -3580,26 +4155,77 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - GITHUB-339 Fix web installer urls do not work when passbolt is installed in a directory
 - Fix performance issues on resource / folder activity log
 
-## [2.13.5] 2019-07-29
+## [2.14.0] 2020-08-25
+### Added
+- Add an option to the migrate shell task to avoid clearing the cache after the migration is completed
+
+### Fixed
+- PB-1429 Fix "ldap error messages are incorrect in case of validation issues"
+- PB-1431 Fix "LDAP: a notification should not be sent to a group administrator requesting him to add a non-active user."
+- Fix: user_id should be saved in action_logs table after successful login
+- PB-1370 Folders: Fix Performance improvement while retrieving items associated folder_parent_id and personal status
+- Fix user setup completed admin email notification
+- PB-1391 Fix a resource modified field should be updated when its secret is modified
+- Fix display a validation error when db password contains a quote or db name contain a dash
+- PB-1413: Fix "User last_logged_in virtual field should be based on action logs"
+- PB-1484: Fix "LDAP: The user of a ldap group that cannot be synced should not have their memberships synchronized"
+
+### Improved
+- PB-1464 Add configuration option for Log module in order to blacklist the logging of certain entry points that cause too much volume.
+- PB-1464 Remove 'AuthIsAuthenticated.isAuthenticated' log entries from db and prevent further logging.
+- PB-1464 Add indexes in action_logs related tables in order to improve password history performances.
+- Add an entry to secrets_history when a resource is shared with a new user.
+- Appjs version bump v2.13.9
+
+## [2.13.5] 2020-07-29
 ### Fixed
 - Fix display a validation error when db password contains a quote or db name contain a dash
 - Fix email notification settings bootstrap messes up non persistent database connection in wizard
 - Bump dependencies versions
 
 ## [2.13.1] 2020-07-06
+### Improved
+- PB-1370 Performance improvement while retrieving items associated folder_parent_id and personal status
+
 ### Fixed
 - PB-1372 Fix user setup completed admin email notification
 
 ## [2.13.0] 2020-06-23
 ### Added
+- PB-1347 As a Passbolt server administrator I should be able to use advanced filters for the ldap queries.
+- Folders audit log
+- PB-1284 Add tasks and services to re-validate existing data
+- Add contain options (creator.profile and modifier.profile) to the folders view and index entry points
+
+### Improved
+- Appjs version bump v2.13.7
+- Pro Styleguide version bump v2.13.13
+- Cache the list of users folders relations while performing a bulk SSCs detection
+- PB-1320 Folders performances fix missing folders tables indexes
+
+### Fixed
+- GITHUB-350 No mails are sent when providers offer AUTH PLAIN authentication only
+- PB-1328 Fixed various folders email issue
+- Fix group delete sole owner of non shared folders issue
+
+## [2.13.0-RC1] - 2020-05-27
+### Added
+- PB-1165 As a logged in user I can create a folder
+- PB-1213 As a logged in user I edit folder permissions
+- PB-1165 As a LU I can delete folders (with and without cascade)
+- PB-1165 As LU I can move a resource in a folder I own
+- PB-1253 As a LU I can move folders
+- PB-1214 As a LU I cannot create cycles when moving/sharing folders
+- PB-1046 Cleanup shell tasks for folders
+- PB-1164 As GM while deleting a group I should be able to transfer ownership of folder if necessary
+- PB-1164 As AD while deleting a user I should be able to transfer ownership of folder if necessary
 - PB-1168 Add baseline code and tests for Debian package build
 - PB-1067 As a user I can receive digest emails when creating a lot of resources
 - PB-1067 As a user I can receive digest emails when added/removed from a lot of groups
-- PB-1284 Add tasks and services to re-validate existing data
 
 ### Improved
-- Pro Styleguide version bump v2.13.13
-- Appjs version bump v2.13.7
+- Pro Styleguide version bump v2.13.10
+- Appjs version bump v2.13.0.
 - PB-1046 Adapt Cleanup test runner to take in account cleanup that are adding records
 - PB-1046 Adapt Cleanup shell task to allow external sources to add cleanup tasks
 - PB-1046 Remove empty EmailTraits files
@@ -3610,8 +4236,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Clear plugins in tearDown of application test cases
 
 ### Fixed
-- GITHUB-350 No mails are sent when providers offer AUTH PLAIN authentication only
 - Fix appjs plugin requestUntilSuccess bug
+- Fix load the plugin license manually in the integration tests
 - Fix load webinstaller plugin manually in plugin tests
 - Fix composer php version.
 - Fix misc checkstyle issues
@@ -3623,19 +4249,25 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [2.12.0] - 2019-12-06
 ### Added
+- PB-575: As AD I can see the MFA status of each user in the users grid
+- PB-639: As LU I can delete a personal tag
 - PB-687: As an admin I can resend an invitation for a user that didn't complete the setup
+- PB-698: As an admin I can disable MFA for a user
 
 ### Improved
 - PB-878: Update Openpgp.js to v4.7
 - PB-893: Update CakePHP to v3.8.6
+- PB-894: Improve subscription key checks and output details
 
 ### Fixed
 - PB-771: Added purify subject for the email subscribers
 - PB-856: Added migration fix to remove unused tables
 - GITHUB-84: Fix gc_maxlifetime versus Session.timeout units
+- PB-767: Fix LDAP sync issue "when multiple users are added to a group, failed validation of one should not impact validation of others"
 
 ## [2.11.0] - 2019-08-08
 ### Security fixes
+- PB-661: Fix XSS on tag autocomplete
 - PB-661: Fix tab nabbing when clicking on "open in a new tab" in password grid
 - PB-607: Fix XSS on first name or last name during setup
 
@@ -3649,6 +4281,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-242: Improve the passwords grid (passwords fetch peformance, search reactivity, selectbox area enlarged)
 
 ### Fixes
+- PB-572: Fix MFA verification should happen after every login
+- PB-572: Fix MFA when running in subdirectory
 - PB-349: Fix health check fails if using custom GNUPGHOME env set by application
 - PB-330: Fix migration issue from CE to PRO in v2.10
 - PB-567: Fix appjs auto logout
@@ -3666,16 +4300,27 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-165: As AD I should be able to change my organization email notification settings via an administration screen
 
 ### Improved
-- PB-276: Merge organization settings code into CE. Ground work for administration features.
+- PB-169: Implement email prefix/suffix on the User Directory Settings administration screen
+- PB-188: Implement ignored entries in "test connection" popup
+
+### Fixed
+- PB-231: LDAP - ignored entries should not be validated during test connection
+- PB-226: LDAP - Fix "Openldap doesn't work with UI configuration"
+- PB-37: LDAP - implement user feedback: usersParentGroup and groupsParentGroup filters should be case insensitive
 
 ## [2.9.0] - 2019-04-24
 ### Fixed
 - PB-220: Upgrade to CakePHP 3.7.7
 
+## [2.8.5] - 2019-04-19
+### Fixed
+- PB-218: LDAP: Fix fields mapping for active directory
+
 ## [2.8.4] - 2019-04-17
 ### Improved
 - PB-48: Improve the performance by removing the creator/modifier from the passwords workspace grid query
 - PB-159: Remove the usage of canjs connect-hydrate module
+- PB-38: The Users Directory sync should work with FreeIPA
 
 ### Fixed
 - GITHUB-315: The permalink of password don't work anymore
@@ -3697,7 +4342,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [2.8.2] - 2019-04-01
 ### Fixed
-- Fix - Disable Auditlog when passbolt is not configured
+- Fix - Don't enable feature plugins if passbolt is not yet configured
 
 ## [2.8.1] - 2019-04-01
 ### Fixed
@@ -3705,18 +4350,24 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [2.8.0] - 2019-04-01
 ### Added
-- Import your passwords from other password managers
-- Export your passwords to other password managers
-- PB-3: Quickaccess: Simplified app to access passwords from the browser extension
+- PB-1: Audit Logs - Browse the resources and see the activity logs to see who is doing what on them
+- PB-3: Quickaccess - Simplified app to access passwords from the browser extension
 
 ### Improved
+- PASSBOLT-3327: LDAP: Improve administration UI
+- PASSBOLT-3328: LDAP: Add test connection option
 - PB-2: Upgrade to CakePHP 3.7
+- PB-60: Performance - Add index on tags table
 - PB-95: Implement Import / Export enable switch
 
 ### Fixed
+- PASSBOLT-3409: LDAP: Fix "error should be explicit when ldap module is not installed"
+- PASSBOLT-3443: LDAP: Fix "in settings, username and password should not be compulsory fields"
 - PASSBOLT-2121: Fix passbolt should run in a subdirectory
-- Fix short tag use in the webinstaller server gpg key import screen
-- Username and password should not be compulsory in email settings, in web installer
+
+## [2.7.2] - 2019-02-13
+### Fixed
+- PASSBOLT-3417: LDAP: fix regression "settings cannot be saved through the UI".
 
 ## [2.7.1] - 2019-02-13
 ### Fixed
@@ -3727,6 +4378,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2995: As LU I should be able to copy the permalink of a password
 
 ### Improved
+- PASSBOLT-3401: LDAP: Improve output given by command 'directory_sync test'
 - PASSBOLT-3403: As LU I should export only selected passwords
 - PASSBOLT-3397: Remove the list of secrets from the API request while loading the list of passwords
 - PASSBOLT-3319: As LU I should retrieve a secret when I'm editing it
@@ -3737,14 +4389,40 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2974: As LU I should be able to follow links targeting passwords from my emails
 
 ### Fixed
+- PASSBOLT-3406: LDAP: Fix bug "user_id is null when a user that is associated to a group is deleted"
+- PASSBOLT-3401: LDAP: fix 'filters groupsParentGroup and usersParentGroup are not compatible with openldap'
 - PASSBOLT-3363: The webinstaller should not use the exec php primitive to create/import the gpg server key
 - PASSBOLT-3370: Auth verify error should not leak data
-- PASSBOLT-3368 Fix html injection in email
+- PASSBOLT-3368: Fix html injection in email
+
+## [2.6.1]
+### Improved
+- PASSBOLT-3273: Username and password should not be compulsory in email settings, in web installer
+- PASSBOLT-3247: Add a large dummy data scenario to the passbolt_test_data module
+
+### Fixed
+- PASSBOLT-3281: LDAP: fixed case issue in AllSync tasks calls
+- PASSBOLT-3282: LDAP: defaultUser or defaultGroupAdminUser should not break the form if corresponding to a non existing user
+- PASSBOLT-3267: The exceptions thrown by the DirectorySync controllers should be explicit
+- PASSBOLT-3268: BaseDN should not be mandatory
+- PASSBOLT-3269: Search on administration screen should be disabled
+
+## [2.6.0] - 2018-12-04
+### Added
+- PASSBOLT-3130: As an admin I can configure my user directory integration from the administration panel
+- PASSBOLT-3235: As an admin I can synchronize my user directory from the administration panel
+- PASSBOLT-3218: As an admin I can configure the multi factor authentication providers for my organization from the admin panel.
+- PASSBOLT-3150: As an admin I can filter out inactive accounts from the directory synchronization.
+- PASSBOLT-3141: As an admin I can filter out users that are not part of a group in ldap from the directory synchronization.
+
+### Improved
+- As a developer I can test the fields of my form
 
 ## [2.5.0] - 2018-11-14
 ### Added
-- PASSBOLT-2694: Implement the Web Installer feature
 - PASSBOLT-3093: As LU I can select all passwords to perform a bulk operation
+- PASSBOLT-3001: Add support multiple factor authentication using Yubikey
+- PASSBOLT-3110: Add support multiple factor authentication using Duo
 
 ### Improved
 - PASSBOLT-3166: Add PHP 7.3 job on travis
@@ -3762,9 +4440,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [2.4.0] - 2018-10-12
 ### Added
-- PASSBOLT-2709: Implement the remember me feature
-- PASSBOLT-2951: Merge the remember me on CE
+- PASSBOLT-3009: Add support multiple factor authentication using TOTP (Google Authenticator, Authy, FreeOTP)
 - PASSBOLT-2972: As LU I should be able to delete multiple passwords in bulk
+- PASSBOLT-2951: Merge the remember me on CE
 - PASSBOLT-2329: As an administrator deleting a group which is sole owner of one or several passwords, I should be requested to select a new owner for these passwords
 - PASSBOLT-2983: As LU I should be able to share multiple passwords in bulk
 
@@ -3773,32 +4451,39 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - GITHUB#275: Adding SSL configuration environment variables for cake mysql driver
 - PASSBOLT-2534: As LU I should not be able to copy to clipboard empty login/url
 - PASSBOLT-2017: As LU when I save a password (create/edit) the dialog shouldn't persist until the request is processed by the API
+- PASSBOLT-2981: As Pro LU importing a large set of passwords I should request the API by batch
 - PASSBOLT-3073: As LU I should get a visual feedback directly after filtering the passwords or the users workspace
-- PASSBOLT-2972: As LU I should be able to select multiple passwords with classic keyboard interactions (command and shift keys)
+- PASSBOLT-2972: As LU I should be able to select multiple passwords with standard keyboard interactions (command and shift keys)
 - PASSBOLT-3090: Extend the CSRF protection
 
 ### Fixed
 - PASSBOLT-2966: As LU I can't see passwords shared with me clicking on the "shared with me" shortcut filter
 - GITHUB#246: Fix healthcheck tips relative to tmp folder
-- Fix Email notifications being sent several times when an AppShell is instantiated inside an AppShell
 - PASSBOLT-3063: Fix appjs base url and subfolder
+- PASSBOLT-3022: Fix the "import tag" is not associated to passwords imported from a csv where have no category
+- PASSBOLT-3024: As LU I can access the theme manager screen via /settings/theme url
 - PASSBOLT-3074: As a logged in user selecting a "remember me" duration the  checkbox should be selected automatically
 - PASSBOLT-2976: Fix API requests issues when the user is going to another workspace
 - PASSBOLT-3082: ezyang/htmlpurifier cache should be stored in the application cache directory
 - PASSBOLT-2982: Fix session expired check
 - PASSBOLT-3086: As LU when I have 100+ passwords I cannot see the passwords after the 100th more than once
 
-## [2.3.0] - 2018-08-30
+## [2.3.0] - 2018-09-05
+### Added
+- PASSBOLT-2999: Add Ldap plugin
+
 ### Fixed
 - PASSBOLT-2965: Group filter link stays active after switching to a non group filter
 - Route rewriting of the appjs should take in account passbolt installed in a subdirectory
 - Fix the loading bar stuck in the initialization state in some cases
 - PASSBOLT-2969: Enforce steal to load the latest version of the appjs
+- Fix Email notifications being sent several times when an AppShell is instantiated inside an AppShell
 
 ### Improved
 - PASSBOLT-2950: Display empty feedbacks content
 - PASSBOLT-2971: Reset the workspaces filters when a resource or a user is created
 - PASSBOLT-2267: As an admin deleting a user I can transfer ownership of this user shared passwords to another user or a group that have read access.
+- PASSBOLT-3021: Add optional configuration so that settings entry point knows what options to white list
 
 ## [2.2.0] - 2018-08-13
 ### Added
@@ -3812,6 +4497,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2926: Fix session timeout check
 - PASSBOLT-2927: Fix appjs ajax error handler
 - PASSBOLT-2941: Grid performance fix
+- PASSBOLT-2906: Disable the ResourcesAdd entry point CSRF protection to allow the plugin to use it with the import feature
+- PASSBOLT-2906: Disable the ResourcesTagsAdd entry point CSRF protection to allow the plugin to use it with the import feature
+- PASSBOLT-2963: Persist the license in a file
 
 ### Improved
 - PASSBOLT-2933: Upgrade to canjs 4
@@ -3819,7 +4507,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [2.1.0] - 2018-06-14
 ### Added
 - PASSBOLT-2878: Integrate dark theme
-- PASSBOLT-2861: Make username clickable for copy to clipboard
+- PASSBOLT-2878: Add default theme
+- PASSBOLT-2861: Add copy username to clipboard on click
 
 ### Fixed
 - GITHUB-101: Fix the readme should point to the documentation for how to upgrade passbolt
@@ -3837,6 +4526,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1337: Remove gpg json sign middleware
 - PASSBOLT-1337: Wordsmithing healthcheck GPG feedback
 
+## [2.0.8] - 2018-05-09
+### Fixed
+- Fix css loaded are incorrect in webinstaller
+
 ## [2.0.7] - 2018-05-09
 ### Fixed
 - Fix missing css on error pages and add version numbers to CSS and JS files calls to prevent caching
@@ -3844,13 +4537,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [2.0.5] - 2018-05-08
 ### Fixed
-- PASSBOLT-2764: Fix Groups autocomplete doesn't work with less than 3 characters
+- PASSBOLT-2764: Fix Groups autocomplete does not work with less than 3 characters
 - PASSBOLT-2826: Upgrade styleguide to v2.1.0
 - PASSBOLT-2812: Rebuild fixtures with updated public keys
 
 ## [2.0.4] - 2018-04-25
-### Fixed
+### Improved
 - COMMUNITY-599: Make email MX validation optional and not enabled by default
+
+### Fixed
 - GITHUB-247: Fix secrets are not deleted when deleting a group or a user
 
 ## [2.0.3] - 2018-04-20
@@ -3858,7 +4553,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2849: Fix issue ResourcesTable::_filterByPermissionType and MariaDB 5.5
 - PASSBOLT-2848: Fix unsafe mode and ssl offloading
 
-## [2.0.2] - 2018-04-16
+## [2.0.2] - 2018-04-17
 ### Improved
 - GITHUB-242: Add Auto-Submitted header to the email notifications
 
@@ -3866,9 +4561,23 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2806: Force database columns charset and collation
 - PASSBOLT-2781: Increase length of resource uri field in model validation
 - PASSBOLT-2696: Fix regression: placeholders in registration form are missing
-- PASSBOLT-2791: Fix providing a string instead of an array in Email. From configuration generates a warning in SendTestEmailTask.php
+- PASSBOLT-2791: Fix providing a string instead of an array in Email.From configuration generates a warning in SendTestEmailTask.php
 
-## [2.0.1] - 2018-04-09
+## [2.0.1] - 2018-04-11
+### Added
+- PASSBOLT-2714: Implement the export feature
+- PASSBOLT-2716: Implement the import feature
+- PASSBOLT-2777: License check as console task
+- PASSBOLT-2732: Implement the License system
+- PASSBOLT-2709: Implement the remember me feature
+- PASSBOLT-2656: Implement the tags feature
+- PASSBOLT-2694: Implement the webinstaller feature
+
+### Improved
+- PASSBOLT-2768: Remove call to action from login page
+- PASSBOLT-2511: Improve passbolt Pro bootstrap
+- PASSBOLT-2511: Add pro plugins into bootstrap_plugins
+
 ### Fixed
 - GITHUB-239: Fix unsafe mode logic
 - GITHUB-240: Make sure unconfigured 'passbolt.plugins' doesn't break the extension
@@ -3880,7 +4589,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2740: Update <3 link and add unsafe mode warning
 - PASSBOLT-2697: Add passbolt migrate shell with backup option prior migration
 - PASSBOLT-2803: Make the privacy policy footer link configurable in the settings
-- PASSBOLT-2720 Move dev dependencies out of the passbolt_api repo
+- PASSBOLT-2720: Move dev dependencies out of the passbolt_api repo
 - PASSBOLT-2511: passbolt pro bootstrap is moved in a separate folder
 
 ### Fixed
@@ -4297,7 +5006,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AD: Admin
 
 [Unreleased]: https://github.com/passbolt/passbolt_api/compare/v4.2.0...HEAD
-[4.2.0]: https://github.com/passbolt/passbolt_api/compare/v4.1.1...v4.2.0
+[4.2.0]: https://github.com/passbolt/passbolt_api/compare/v4.1.3...v4.2.0
+[4.1.3]: https://github.com/passbolt/passbolt_api/compare/v4.1.1...v4.1.3
 [4.1.1]: https://github.com/passbolt/passbolt_api/compare/v4.1.0...v4.1.1
 [4.1.0]: https://github.com/passbolt/passbolt_api/compare/v4.0.2...v4.1.0
 [4.0.2]: https://github.com/passbolt/passbolt_api/compare/v4.0.1...v4.0.2
@@ -4308,7 +5018,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [3.11.1]: https://github.com/passbolt/passbolt_api/compare/v3.11.0...v3.11.1
 [3.11.0]: https://github.com/passbolt/passbolt_api/compare/v3.10.0...v3.11.0
 [3.10.0]: https://github.com/passbolt/passbolt_api/compare/v3.9.0...v3.10.0
-[3.9.0]: https://github.com/passbolt/passbolt_api/compare/v3.8.3...v3.9.0
+[3.9.0]: https://github.com/passbolt/passbolt_api/compare/v3.8.4...v3.9.0
+[3.8.4]: https://github.com/passbolt/passbolt_api/compare/v3.8.3...v3.8.4
 [3.8.3]: https://github.com/passbolt/passbolt_api/compare/v3.8.1...v3.8.3
 [3.8.1]: https://github.com/passbolt/passbolt_api/compare/v3.8.0...v3.8.1
 [3.8.0]: https://github.com/passbolt/passbolt_api/compare/v3.7.3...v3.8.0
@@ -4320,13 +5031,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [3.5.0]: https://github.com/passbolt/passbolt_api/compare/v3.4.0...v3.5.0
 [3.4.0]: https://github.com/passbolt/passbolt_api/compare/v3.3.1...v3.4.0
 [3.3.1]: https://github.com/passbolt/passbolt_api/compare/v3.3.0...v3.3.1
-[3.3.0]: https://github.com/passbolt/passbolt_api/compare/v3.2.1...v3.3.0
+[3.3.0]: https://github.com/passbolt/passbolt_api/compare/v3.2.2...v3.3.0
+[3.2.2]: https://github.com/passbolt/passbolt_api/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/passbolt/passbolt_api/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/passbolt/passbolt_api/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/passbolt/passbolt_api/compare/v3.0.2...v3.1.0
 [3.0.2]: https://github.com/passbolt/passbolt_api/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/passbolt/passbolt_api/compare/v3.0.0...v3.0.1
-[3.0.0]: https://github.com/passbolt/passbolt_api/compare/v2.13.5...v3.0.0
+[3.0.0]: https://github.com/passbolt/passbolt_api/compare/v2.14.0...v3.0.0
+[2.14.0]: https://github.com/passbolt/passbolt_api/compare/v2.13.5...v2.14.0
 [2.13.5]: https://github.com/passbolt/passbolt_api/compare/v2.13.1...v2.13.5
 [2.13.1]: https://github.com/passbolt/passbolt_api/compare/v2.13.0...v2.13.1
 [2.13.0]: https://github.com/passbolt/passbolt_api/compare/v2.12.1...v2.13.0
@@ -4334,19 +5047,24 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [2.12.0]: https://github.com/passbolt/passbolt_api/compare/v2.11.0...v2.12.0
 [2.11.0]: https://github.com/passbolt/passbolt_api/compare/v2.10.0...v2.11.0
 [2.10.0]: https://github.com/passbolt/passbolt_api/compare/v2.9.0...v2.10.0
-[2.9.0]: https://github.com/passbolt/passbolt_api/compare/v2.8.4...v2.9.0
+[2.9.0]: https://github.com/passbolt/passbolt_api/compare/v2.8.5...v2.9.0
+[2.8.5]: https://github.com/passbolt/passbolt_api/compare/v2.8.4...v2.8.5
 [2.8.4]: https://github.com/passbolt/passbolt_api/compare/v2.8.3...v2.8.4
 [2.8.3]: https://github.com/passbolt/passbolt_api/compare/v2.8.2...v2.8.3
 [2.8.2]: https://github.com/passbolt/passbolt_api/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/passbolt/passbolt_api/compare/v2.8.0...v2.8.1
-[2.8.0]: https://github.com/passbolt/passbolt_api/compare/v2.7.1...v2.8.0
+[2.8.0]: https://github.com/passbolt/passbolt_api/compare/v2.7.2...v2.8.0
+[2.7.2]: https://github.com/passbolt/passbolt_api/compare/v2.7.1...v2.7.2
 [2.7.1]: https://github.com/passbolt/passbolt_api/compare/v2.7.0...v2.7.1
-[2.7.0]: https://github.com/passbolt/passbolt_api/compare/v2.5.0...v2.7.0
+[2.7.0]: https://github.com/passbolt/passbolt_api/compare/v2.6.1...v2.7.0
+[2.6.1]: https://github.com/passbolt/passbolt_api/compare/v2.6.0...v2.6.1
+[2.6.0]: https://github.com/passbolt/passbolt_api/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/passbolt/passbolt_api/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/passbolt/passbolt_api/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/passbolt/passbolt_api/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/passbolt/passbolt_api/compare/v2.1.0...v2.2.0
-[2.1.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.7...v2.1.0
+[2.1.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.8...v2.1.0
+[2.0.8]: https://github.com/passbolt/passbolt_api/compare/v2.0.7...v2.0.8
 [2.0.7]: https://github.com/passbolt/passbolt_api/compare/v2.0.5...v2.0.7
 [2.0.5]: https://github.com/passbolt/passbolt_api/compare/v2.0.4...v2.0.5
 [2.0.4]: https://github.com/passbolt/passbolt_api/compare/v2.0.3...v2.0.4

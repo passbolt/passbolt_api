@@ -50,6 +50,8 @@ class SsoEgressGuardTest extends TestCase
     {
         $this->configureEgress();
         $this->assertNotNull((new SsoEgressGuard())->getBlockReason('127.0.0.1'));
+        $this->assertNotNull((new SsoEgressGuard())->getBlockReason('::1'));
+        $this->assertNotNull((new SsoEgressGuard())->getBlockReason('0:0:0:0:0:0:0:1'));
     }
 
     public function testSsoEgressGuard_GetBlockReason_Error_MetadataBlocked(): void
@@ -99,10 +101,53 @@ class SsoEgressGuardTest extends TestCase
         $this->assertNotNull((new SsoEgressGuard())->getBlockReason('2002:a00:1::'));
     }
 
+    public static function unsupportedHostsProvider(): array
+    {
+        return [
+            // Decimal
+            ['2130706433'], // 127.0.0.1
+            ['2852039166'], // 169.254.169.254
+            ['167772161'], // 10.0.0.1
+            // Octal
+            ['0177.0.0.1'],
+            ['017700000001'],
+            ['0250.0376.0251.0376'], // 169.254.169.254
+            // Hexadecimal
+            ['0x7f000001'],
+            ['0x7f.0x0.0x0.0x1'],
+            ['0xa9fea9fe'], // 169.254.169.254
+            // Short form
+            ['127.1'],
+            ['127.0.1'],
+            ['0'], // 0.0.0.0
+            ['127.000.000.001'],
+            ['127.0.0.1.'],
+            // Bracketed IPv6
+            ['[::1]'],
+            ['[::ffff:127.0.0.1]'],
+            ['[fd00:ec2::254]'],
+            // Unresolvable hosts
+            ['no-such-host.invalid'],
+        ];
+    }
+
+    /**
+     * @dataProvider unsupportedHostsProvider
+     * @param string $value Value to check
+     * @return void
+     */
+    public function testSsoEgressGuard_GetBlockReason_Error_UnsupportedHosts(string $value): void
+    {
+        $this->configureEgress();
+        $this->assertNotNull((new SsoEgressGuard())->getBlockReason($value));
+    }
+
     public function testSsoEgressGuard_GetBlockReason_Success_GuardDisabledAllowsEverything(): void
     {
         $this->configureEgress(['enabled' => false]);
         $this->assertNull((new SsoEgressGuard())->getBlockReason('127.0.0.1'));
+        $this->assertNull((new SsoEgressGuard())->getBlockReason('2130706433'));
+        $this->assertNull((new SsoEgressGuard())->getBlockReason('[::1]'));
     }
 
     public function testSsoEgressGuard_GetBlockReason_Success_PrivateRangesCategoryDisabled(): void

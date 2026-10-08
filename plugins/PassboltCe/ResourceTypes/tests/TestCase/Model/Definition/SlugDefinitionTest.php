@@ -43,7 +43,7 @@ class SlugDefinitionTest extends TestCase
                                 'maxLength' => 255,
                             ],
                             [
-                                'type' => null,
+                                'type' => 'null',
                             ],
                         ],
                     ],

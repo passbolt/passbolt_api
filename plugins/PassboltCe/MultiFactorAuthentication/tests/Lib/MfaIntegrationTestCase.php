@@ -30,6 +30,7 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 class MfaIntegrationTestCase extends AppIntegrationTestCase
 {
     use JwtAuthTestTrait;
+    use MfaAuthenticationTokensTestTrait;
     use MfaAccountSettingsTestTrait;
     use MfaOrgSettingsTestTrait;
     use UserAccessControlTrait;

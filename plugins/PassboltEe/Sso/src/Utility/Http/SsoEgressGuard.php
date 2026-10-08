@@ -30,8 +30,6 @@ class SsoEgressGuard
     public const CONFIG_PRIVATE_RANGE_ALLOWED_IPS = 'passbolt.security.sso.egress.privateRangeAllowedIps';
 
     /**
-     * Never bypassable: link-local and cloud metadata ranges. No real identity provider lives here.
-     *
      * @var array<string>
      */
     private const LINK_LOCAL = [
@@ -80,12 +78,32 @@ class SsoEgressGuard
             return null;
         }
 
-        $ips = $this->resolve($host);
-        if ($ips === []) {
-            // Could not resolve: let the HTTP layer fail naturally rather than blocking.
-            return null;
+        $host = HostValidator::stripIpv6Brackets($host);
+
+        if (HostValidator::isIpLiteral($host)) {
+            return $this->getBlockReasonForIps([$this->normalizeIp($host)]);
         }
 
+        if (!HostValidator::isHostName($host)) {
+            return __('The provider address is not a valid host name or IP address ({0}).', $host);
+        }
+
+        $ips = $this->resolveHostName($host);
+        if ($ips === []) {
+            return __('The provider address could not be resolved ({0}).', $host);
+        }
+
+        return $this->getBlockReasonForIps($ips);
+    }
+
+    /**
+     * Return the reason the given addresses must be blocked, or null when they are all allowed.
+     *
+     * @param array<string> $ips Normalised IP literals.
+     * @return string|null Human-readable block reason, or null when every address is allowed.
+     */
+    private function getBlockReasonForIps(array $ips): ?string
+    {
         $blockLinkLocal = (bool)Configure::read(self::CONFIG_BLOCK_LINK_LOCAL, true);
         $blockPrivate = (bool)Configure::read(self::CONFIG_BLOCK_PRIVATE_RANGES, true);
         $allowedIps = $this->getAllowedIps();
@@ -120,17 +138,11 @@ class SsoEgressGuard
     }
 
     /**
-     * Resolve a host to the list of IP literals it points to.
-     *
-     * @param string $host Hostname or IP literal.
+     * @param string $host Host name.
      * @return array<string> Normalised IP literals.
      */
-    private function resolve(string $host): array
+    private function resolveHostName(string $host): array
     {
-        if (filter_var($host, FILTER_VALIDATE_IP) !== false) {
-            return [$this->normalizeIp($host)];
-        }
-
         $ips = [];
         foreach ($this->dnsRecords($host, DNS_A) as $record) {
             if (isset($record['ip']) && is_string($record['ip'])) {
