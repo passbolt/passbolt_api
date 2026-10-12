@@ -215,4 +215,64 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 
         $this->assertNotEquals($avatarUserA->profile_id, $avatarUserB->profile_id);
     }
+
+    public function testUsersEditAvatarController_Success_AdminCanEditOtherUserAvatar(): void
+    {
+        $admin = UserFactory::make()->admin()->withAvatar()->persist();
+        $userA = UserFactory::make()->user()->withAvatar()->persist();
+        $adminAvatarId = $admin->profile->avatar->id;
+        $userAFormerAvatarId = $userA->profile->avatar->id;
+
+        $this->logInAs($admin);
+
+        $data = [
+            'profile' => [
+                'avatar' => [
+                    'file' => $this->createUploadFile(),
+                ],
+            ],
+        ];
+
+        $this->postJson('/users/' . $userA->id . '.json', $data);
+        $this->assertSuccess();
+
+        /** @var \App\Model\Entity\Avatar $avatarUserA */
+        $avatarUserA = AvatarFactory::find()
+            ->contain('Profiles.Users')
+            ->where(['Users.id' => $userA->id])
+            ->firstOrFail();
+
+        /** @var \App\Model\Entity\Avatar $avatarAdmin */
+        $avatarAdmin = AvatarFactory::find()
+            ->contain('Profiles.Users')
+            ->where(['Users.id' => $admin->id])
+            ->firstOrFail();
+
+        $this->assertNotSame($userAFormerAvatarId, $avatarUserA->id);
+        $this->assertAvatarCachedFilesExist($avatarUserA);
+        $this->assertSame($adminAvatarId, $avatarAdmin->id);
+    }
+
+    public function testUsersEditAvatarController_Error_NonAdminCannotEditOtherUserAvatar(): void
+    {
+        $userA = UserFactory::make()->user()->persist();
+        $userB = UserFactory::make()->user()->withAvatar()->persist();
+        $userBAvatarId = $userB->profile->avatar->id;
+
+        $this->logInAs($userA);
+
+        $data = [
+            'profile' => [
+                'avatar' => [
+                    'file' => $this->createUploadFile(),
+                ],
+            ],
+        ];
+
+        $this->postJson('/users/' . $userB->id . '.json', $data);
+        $this->assertError(403, 'You are not authorized to access that location.');
+
+        $this->assertSame(1, AvatarFactory::count());
+        $this->assertSame($userBAvatarId, AvatarFactory::find()->firstOrFail()->get('id'));
+    }
 }
