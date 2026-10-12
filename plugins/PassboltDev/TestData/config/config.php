@@ -19,6 +19,7 @@ use Passbolt\TestData\Command\Alt0\PermissionsDataCommand as Alt0PermissionsData
 use Passbolt\TestData\Command\Alt0\SecretsDataCommand as Alt0SecretsDataCommand;
 use Passbolt\TestData\Command\Base\AvatarsDataCommand;
 use Passbolt\TestData\Command\Base\CommentsDataCommand as BaseCommentsDataCommand;
+use Passbolt\TestData\Command\Base\EditionDataCommand;
 use Passbolt\TestData\Command\Base\EmailQueueDataCommand;
 use Passbolt\TestData\Command\Base\FavoritesDataCommand as BaseFavoritesDataCommand;
 use Passbolt\TestData\Command\Base\FoldersDataCommand;
@@ -27,6 +28,7 @@ use Passbolt\TestData\Command\Base\FoldersRelationsDataCommand;
 use Passbolt\TestData\Command\Base\GpgkeysDataCommand;
 use Passbolt\TestData\Command\Base\GroupsDataCommand as BaseGroupsDataCommand;
 use Passbolt\TestData\Command\Base\GroupsUsersDataCommand as BaseGroupsUsersDataCommand;
+use Passbolt\TestData\Command\Base\LdapSettingsDataCommand;
 use Passbolt\TestData\Command\Base\PermissionsDataCommand as BasePermissionsDataCommand;
 use Passbolt\TestData\Command\Base\ProfilesDataCommand as BaseProfilesDataCommand;
 use Passbolt\TestData\Command\Base\ResourcesDataCommand as BaseResourcesDataCommand;
@@ -133,11 +135,13 @@ return [
             'default' => [
                 'install' => [
                     'shellTasks' => [
+                        EditionDataCommand::class,
                         RolesDataCommand::class,
                         ResourceTypesDataCommand::class,
                         BaseUsersDataCommand::class,
                         XssUsersDataCommand::class,
                         BaseProfilesDataCommand::class,
+                        LdapSettingsDataCommand::class,
                         XssProfilesDataCommand::class,
                         AvatarsDataCommand::class,
                         GpgkeysDataCommand::class,

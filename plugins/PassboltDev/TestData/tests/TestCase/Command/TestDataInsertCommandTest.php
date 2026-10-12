@@ -21,6 +21,7 @@ use App\Test\Factory\FavoriteFactory;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\GroupsUserFactory;
+use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\ProfileFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\SecretFactory;
@@ -29,7 +30,11 @@ use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\TestCase;
+use Cake\Utility\Hash;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\DirectorySync\Test\Factory\DirectoryOrgSettingFactory;
+use Passbolt\DirectorySync\Utility\DirectoryInterface;
+use Passbolt\Edition\Test\Factory\EditionOrganizationSettingFactory;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
@@ -121,6 +126,38 @@ class TestDataInsertCommandTest extends TestCase
         // TagsDataCommand::class,
         // ResourcesTagsDataCommand::class,
         // These 3 are skipped as they are Pro features
+
+
+        // 1 edition pro + 1 directorySync
+        $this->assertEquals(2, OrganizationSettingFactory::count());
+    }
+
+    public function testTestDataInsertCommand_Base_Scenario_Replaces_Existing_Edition_And_Directory_Sync_Settings(): void
+    {
+        EditionOrganizationSettingFactory::make()->ce()->persist();
+        DirectoryOrgSettingFactory::make()->default()->persist();
+
+        $this->exec('passbolt insert default -q');
+        $this->assertExitSuccess();
+
+        // 1 edition pro + 1 directorySync
+        $this->assertEquals(2, OrganizationSettingFactory::count());
+
+        /** @var \App\Model\Entity\OrganizationSetting $edition */
+        $edition = OrganizationSettingFactory::find()->where(['property' => 'edition'])->first();
+        $this->assertSame('pro', $edition->value);
+
+        /** @var \App\Model\Entity\OrganizationSetting $directorySync */
+        $directorySync = OrganizationSettingFactory::find()->where(['property' => 'directorySync'])->first();
+        $settings = json_decode($directorySync->value, true);
+
+        $this->assertSame('admin@passbolt.com', Hash::get($settings, 'defaultUser'));
+        $this->assertSame('uniqueMember', Hash::get($settings, 'fieldsMapping.openldap.group.users'));
+        $this->assertSame(DirectoryInterface::TYPE_OPENLDAP, Hash::get($settings, 'ldap.domains.org_domain.ldap_type'));
+        $this->assertStringStartsWith(
+            '-----BEGIN PGP MESSAGE-----',
+            Hash::get($settings, 'ldap.domains.org_domain.password'),
+        );
     }
 
     public function testTestDataInsertCommand_Alt0_Scenario()

@@ -9,6 +9,7 @@ use App\Test\Factory\FavoriteFactory;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\GroupsUserFactory;
+use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\ProfileFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\SecretFactory;
@@ -17,7 +18,11 @@ use App\Utility\UuidFactory;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
+use Cake\Utility\Hash;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\DirectorySync\Test\Factory\DirectoryOrgSettingFactory;
+use Passbolt\DirectorySync\Utility\DirectoryInterface;
+use Passbolt\Edition\Test\Factory\EditionOrganizationSettingFactory;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
@@ -122,6 +127,9 @@ class TestDataInsertWithFactoriesCommandTest extends TestCase
                 $this->assertSame($resourceSecretRevisionsId, $secret['secret_revision_id']);
             }
         }
+
+        // 1 edition pro + 1 directorySync
+        $this->assertEquals(2, OrganizationSettingFactory::count());
     }
 
     public function testTestDataInsertWithFactoriesCommand_Demo_withData_Fail_Scenario()
@@ -193,6 +201,9 @@ class TestDataInsertWithFactoriesCommandTest extends TestCase
 
         // Folders Relations
         $this->assertEquals(0, FoldersRelationFactory::count());
+
+        // Organization Settings
+        $this->assertEquals(0, OrganizationSettingFactory::count());
     }
 
     public function testTestDataInsertWithFactoriesCommand_Security_withData_Fail_Scenario()
@@ -268,6 +279,37 @@ class TestDataInsertWithFactoriesCommandTest extends TestCase
 
         // Folders Permissions
         // 36 part of Permissions
+
+        // 1 edition pro + 1 directorySync
+        $this->assertEquals(2, OrganizationSettingFactory::count());
+    }
+
+    public function testTestDataInsertWithFactoriesCommand_Default_Replaces_Existing_Edition_And_Directory_Sync_Settings(): void
+    {
+        EditionOrganizationSettingFactory::make()->ce()->persist();
+        DirectoryOrgSettingFactory::make()->default()->persist();
+
+        $this->exec('passbolt insert_with_factories default -q');
+        $this->assertExitSuccess();
+
+        // 1 edition pro + 1 directorySync
+        $this->assertEquals(2, OrganizationSettingFactory::count());
+
+        /** @var \App\Model\Entity\OrganizationSetting $edition */
+        $edition = OrganizationSettingFactory::find()->where(['property' => 'edition'])->first();
+        $this->assertSame('pro', $edition->value);
+
+        /** @var \App\Model\Entity\OrganizationSetting $directorySync */
+        $directorySync = OrganizationSettingFactory::find()->where(['property' => 'directorySync'])->first();
+        $settings = json_decode($directorySync->value, true);
+
+        $this->assertSame('admin@passbolt.com', Hash::get($settings, 'defaultUser'));
+        $this->assertSame('uniqueMember', Hash::get($settings, 'fieldsMapping.openldap.group.users'));
+        $this->assertSame(DirectoryInterface::TYPE_OPENLDAP, Hash::get($settings, 'ldap.domains.org_domain.ldap_type'));
+        $this->assertStringStartsWith(
+            '-----BEGIN PGP MESSAGE-----',
+            Hash::get($settings, 'ldap.domains.org_domain.password'),
+        );
     }
 
     public function testTestDataInsertWithFactoriesCommand_Default_withData_Fail_Scenario()
