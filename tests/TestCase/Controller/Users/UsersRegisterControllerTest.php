@@ -64,6 +64,26 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertResponseOk();
     }
 
+    public function testUsersRegisterController_Error_GetJson(): void
+    {
+        $this->getJson('/users/register.json');
+        $this->assertResponseCode(404);
+        $responseHeaders = $this->getHeadersAsArray();
+        $this->assertSame('error', $responseHeaders['status']);
+        $this->assertTextContains('Page not found', $responseHeaders['message']);
+    }
+
+    public function testUsersRegisterController_Error_GetJson_LoggedIn(): void
+    {
+        $this->logInAsUser();
+
+        $this->getJson('/users/register.json');
+        $this->assertResponseCode(404);
+        $responseHeaders = $this->getHeadersAsArray();
+        $this->assertSame('error', $responseHeaders['status']);
+        $this->assertTextContains('Page not found', $responseHeaders['message']);
+    }
+
     public static function dataProviderForTestUsersRegisterController_Success(): array
     {
         return [

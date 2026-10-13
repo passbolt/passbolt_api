@@ -48,6 +48,7 @@ class UsersRegisterController extends AppController
      * Register user action GET
      * Display a registration form
      *
+     * @throws \Cake\Http\Exception\NotFoundException if the request is json, the form is only available as html
      * @throws \Cake\Http\Exception\ForbiddenException if the current user is logged in
      * @param \App\Service\Users\UserRegisterServiceInterface $userRegisterService Registration service
      * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $dryRunService Service to assess to availability of self registration
@@ -58,6 +59,10 @@ class UsersRegisterController extends AppController
         UserRegisterServiceInterface $userRegisterService,
         SelfRegistrationDryRunServiceInterface $dryRunService,
     ): void {
+        if ($this->request->is('json')) {
+            throw new NotFoundException(__('Page not found.'));
+        }
+
         $this->assertIsSelfRegistrationOpen($dryRunService);
         // Do not allow logged in user to register
         if ($this->User->role() !== Role::GUEST) {
