@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-09-11 06:26+0000\n"
-"PO-Revision-Date: 2026-09-11 07:39\n"
+"PO-Revision-Date: 2026-10-14 16:18\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Ukrainian\n"
 "MIME-Version: 1.0\n"
@@ -137,10 +137,10 @@ msgid "The supplied email notification settings are not valid"
 msgstr "Надані налаштування сповіщення електронною поштою недійсні."
 
 msgid "The allow CSV format setting is required."
-msgstr ""
+msgstr "Потрібне налаштування дозволу формату CSV."
 
 msgid "The allow CSV format setting should be a boolean."
-msgstr ""
+msgstr "Налаштування дозволу формату CSV має бути логічним значенням."
 
 msgid "The folder has been added successfully."
 msgstr "Теку успішно додано."
@@ -308,10 +308,10 @@ msgid "The settings selected by your administrator prevent from upgrading v4 to 
 msgstr "Налаштування, встановлені вашим адміністратором, не дозволяють оновити v4 до v5."
 
 msgid "You made changes on several folders"
-msgstr ""
+msgstr "Ви внесли зміни в кількох папках"
 
 msgid "{0} has made changes on several folders"
-msgstr ""
+msgstr "{0} вніс(ла) зміни в кількох папках"
 
 msgid "You added the folder {0}"
 msgstr "Ви додали теку {0}"
@@ -413,7 +413,7 @@ msgid "{0} edited a folder"
 msgstr "{0} відредагував теку"
 
 msgid "{0} folders were affected."
-msgstr ""
+msgstr "Було затронуто {0} папок."
 
 msgid "It would be too much to list them here, but you can go check them on passbolt."
 msgstr "Було б забагато перераховувати їх тут, але ви можете перевірити їх у passbolt."
@@ -1088,13 +1088,13 @@ msgid "The server metadata private key is not valid."
 msgstr "Приватний ключ метаданих сервера недійсний."
 
 msgid "The server does not have access to the server metadata private key in Zero-knowledge mode."
-msgstr ""
+msgstr "Сервер не має доступу до приватного ключа метаданих сервера в режимі нульового розголошення."
 
 msgid "The server has access to the server metadata private key while in Zero-knowledge mode."
-msgstr ""
+msgstr "Сервер має доступ до приватного ключа метаданих сервера в режимі нульового розголошення."
 
 msgid "When Zero-knowledge mode is enabled, the server should not have access to the server metadata private key."
-msgstr ""
+msgstr "Коли ввімкнено режим нульового розголошення, сервер не повинен мати доступу до приватного ключа метаданих сервера."
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr "Ключ метаданих не існує або був видалений."
@@ -1541,7 +1541,7 @@ msgid "This functionality is not available using AJAX/JSON."
 msgstr "Ця функціональність недоступна через AJAX/JSON."
 
 msgid "This functionality is only available using AJAX/JSON."
-msgstr ""
+msgstr "Ця функціональність доступна лише через AJAX/JSON."
 
 msgid "This authentication provider is already setup. Disable it first"
 msgstr "Цей постачальник автентифікації вже налаштований. Спершу вимкніть його"
@@ -1550,7 +1550,7 @@ msgid "Multi Factor Authentication is configured!"
 msgstr "Налаштована двофакторна аутентифікація!"
 
 msgid "Unable to configure Multi Factor Authentication."
-msgstr ""
+msgstr "Не вдалося налаштувати багатофакторну автентифікацію."
 
 msgid "MFA authentication is required."
 msgstr "Необхідна двофакторна аутентифікація."
@@ -1796,55 +1796,55 @@ msgid "Please contact your administrator if you didn't request this action."
 msgstr "Будь ласка, зв'яжіться з вашим адміністратором, якщо ви не надсилали цей запит."
 
 msgid "The setting should be a valid integer."
-msgstr ""
+msgstr "Налаштування має бути дійсним цілим числом."
 
 msgid "This setting is not customizable on this edition, it should be {0}."
-msgstr ""
+msgstr "Це налаштування не можна змінювати в цьому виданні, воно має бути {0}."
 
 msgid "You have reached the maximum number of offline items ({0})."
-msgstr ""
+msgstr "Ви досягли максимальної кількості офлайн-елементів ({0})."
 
 msgid "The offline item object type should be one of the following: {0}."
-msgstr ""
+msgstr "Тип обʼєкта офлайн-елемента має бути одним із наступних: {0}."
 
 msgid "The offline item object type is required."
-msgstr ""
+msgstr "Необхідно вказати тип обʼєкта офлайн-елемента."
 
 msgid "The offline item object type should not be empty."
-msgstr ""
+msgstr "Тип обʼєкта офлайн-елемента не повинен бути порожнім."
 
 msgid "The offline item object identifier should be a valid UUID."
-msgstr ""
+msgstr "Ідентифікатор обʼєкта офлайн-елемента має бути дійсним UUID."
 
 msgid "The offline item object identifier is required."
-msgstr ""
+msgstr "Необхідно вказати ідентифікатор обʼєкта офлайн-елемента."
 
 msgid "The offline item object identifier should not be empty."
-msgstr ""
+msgstr "Ідентифікатор обʼєкта офлайн-елемента не повинен бути порожнім."
 
 msgid "The created date should be a valid date."
-msgstr ""
+msgstr "Дата створення має бути дійсною датою."
 
 msgid "The creator identifier should be a valid UUID."
-msgstr ""
+msgstr "Ідентифікатор автора має бути дійсним UUID."
 
 msgid "A creator identifier is required."
-msgstr ""
+msgstr "Потрібен ідентифікатор автора."
 
 msgid "The creator identifier should not be empty."
-msgstr ""
+msgstr "Ідентифікатор автора не повинен бути порожнім."
 
 msgid "Access denied."
 msgstr "Доступ заборонено."
 
 msgid "Offline mode is only available for v5 items."
-msgstr ""
+msgstr "Офлайн-режим доступний лише для елементів v5."
 
 msgid "You have reached the maximum number of offline items."
-msgstr ""
+msgstr "Ви досягли максимальної кількості офлайн-елементів."
 
 msgid "This item is already available offline for this user."
-msgstr ""
+msgstr "Цей елемент уже доступний офлайн для цього користувача."
 
 msgid "A value is required."
 msgstr "Необхідно вказати значення."
@@ -1853,49 +1853,49 @@ msgid "The value should be an array."
 msgstr "Значення має бути масивом."
 
 msgid "You disabled Offline Mode"
-msgstr ""
+msgstr "Ви вимкнули офлайн-режим"
 
 msgid "{0} disabled Offline Mode"
-msgstr ""
+msgstr "{0} вимкнув(ла) офлайн-режим"
 
 msgid "You edited the Offline Mode settings"
-msgstr ""
+msgstr "Ви відредагували налаштування офлайн-режиму"
 
 msgid "{0} edited the Offline Mode settings"
-msgstr ""
+msgstr "{0} відредагував(ла) налаштування офлайн-режиму"
 
 msgid "Could not validate offline item data."
-msgstr ""
+msgstr "Не вдалося перевірити дані офлайн-елемента."
 
 msgid "The offline item identifier should be a valid UUID."
-msgstr ""
+msgstr "Ідентифікатор офлайн-елемента має бути дійсним UUID."
 
 msgid "The offline item does not exist."
-msgstr ""
+msgstr "Офлайн-елемента не існує."
 
 msgid "Could not validate offline settings data."
-msgstr ""
+msgstr "Не вдалося перевірити дані налаштувань офлайн-режиму."
 
 msgid "The stored offline settings are not valid."
-msgstr ""
+msgstr "Збережені налаштування офлайн-режиму недійсні."
 
 msgid "Offline Mode is not enabled at the org level."
-msgstr ""
+msgstr "Офлайн-режим не ввімкнено на рівні організації."
 
 msgid "Offline Mode has been disabled organisation-wide. Existing offline selections have been purged."
-msgstr ""
+msgstr "Офлайн-режим було вимкнено в усій організації. Наявні офлайн-вибрані елементи було очищено."
 
 msgid "The Offline Mode settings have been updated, the new configuration is as follows:"
-msgstr ""
+msgstr "Налаштування офлайн-режиму оновлено, нова конфігурація така:"
 
 msgid "Maximum session duration: {0} seconds"
-msgstr ""
+msgstr "Максимальна тривалість сеансу: {0} секунд"
 
 msgid "Data retention period: {0} days"
-msgstr ""
+msgstr "Період зберігання даних: {0} днів"
 
 msgid "Maximum number of offline items (per user): {0}"
-msgstr ""
+msgstr "Максимальна кількість офлайн-елементів (на користувача): {0}"
 
 msgid "The automatic_expiry field must be true."
 msgstr "Поле automatic_expiry повинно бути true."
@@ -2093,10 +2093,10 @@ msgid "The password generator exclude look alike chars should be a boolean type.
 msgstr "Поле для виключення схожих символів у генераторі пароля повинно бути логічним типом даних."
 
 msgid "The rbacs could not be saved."
-msgstr ""
+msgstr "RBAC не може бути збережено."
 
 msgid "Could not save the rbacs, please try again later."
-msgstr ""
+msgstr "Не вдалося зберегти RBAC, спробуйте ще раз пізніше."
 
 msgid "Record not found"
 msgstr "Запис не знайдено"
@@ -2129,7 +2129,7 @@ msgid "The control function is not allowed for this UI Action."
 msgstr "Функція керування не дозволена для цієї дії UI."
 
 msgid "The control function is not allowed for this Action."
-msgstr ""
+msgstr "Функція керування не дозволена для цієї дії."
 
 msgid "The role identifier should be a valid UUID."
 msgstr "Ідентифікатор ролі має бути дійсним UUID."
@@ -2192,7 +2192,7 @@ msgid "You are not authorized to access that location."
 msgstr "Ви не маєте дозволу на доступ до цього розташування."
 
 msgid "Invalid RBAC control function."
-msgstr ""
+msgstr "Недійсна функція керування RBAC."
 
 msgid "The RBAC settings could not be updated."
 msgstr "Налаштування RBAC не вдалося оновити."
@@ -2333,28 +2333,28 @@ msgid "The resource type is not deleted."
 msgstr "Тип ресурсу не видалено."
 
 msgid "The max revisions should be a valid integer."
-msgstr ""
+msgstr "Максимальна кількість ревізій має бути дійсним цілим числом."
 
 msgid "The max revisions is required."
-msgstr ""
+msgstr "Потрібна максимальна кількість ревізій."
 
 msgid "The max revisions should be greater than 0."
-msgstr ""
+msgstr "Максимальна кількість ревізій має бути більшою за 0."
 
 msgid "The max revisions should not exceed the max revisions limit set by the administrator."
-msgstr ""
+msgstr "Максимальна кількість ревізій не повинна перевищувати обмеження максимальної кількості ревізій, встановлене адміністратором."
 
 msgid "The allow sharing revisions should be a valid boolean."
-msgstr ""
+msgstr "Дозвіл на спільний доступ до ревізій має бути дійсним логічним значенням."
 
 msgid "The allow sharing revisions is required."
-msgstr ""
+msgstr "Потрібен дозвіл на спільний доступ до ревізій."
 
 msgid "The allow sharing revisions is not enabled by the administrator."
-msgstr ""
+msgstr "Дозвіл на спільний доступ до ревізій не ввімкнено адміністратором."
 
 msgid "Secret revisions settings endpoints are disabled."
-msgstr ""
+msgstr "Кінцеві точки налаштувань ревізій секрету вимкнено."
 
 msgid "The resource type identifier should be a valid UUID."
 msgstr "Ідентифікатор типу ресурсу має бути дійсним UUID."
@@ -2363,13 +2363,13 @@ msgid "A resource type identifier is required."
 msgstr "Потрібен ідентифікатор типу ресурсу."
 
 msgid "The identifier of the user who created the secret revision should be a valid UUID."
-msgstr ""
+msgstr "Ідентифікатор користувача, який створив ревізію секрету, має бути дійсним UUID."
 
 msgid "The identifier of the user who modified the secret revision should be a valid UUID."
-msgstr ""
+msgstr "Ідентифікатор користувача, який змінив ревізію секрету, має бути дійсним UUID."
 
 msgid "Could not save secret revision"
-msgstr ""
+msgstr "Не вдалося зберегти ревізію секрету"
 
 msgid "The self registration setting id should be a valid UUID."
 msgstr "Id налаштування самої реєстрації повинен бути дійсним UUID."
@@ -2516,22 +2516,22 @@ msgid "The test email should be a valid email address."
 msgstr "Тестовий лист повинен бути дійсною адресою електронної пошти."
 
 msgid "The tenant ID should be a valid UUID."
-msgstr ""
+msgstr "ID орендаря має бути дійсним UUID."
 
 msgid "The client ID should be a valid UUID."
-msgstr ""
+msgstr "ID клієнта має бути дійсним UUID."
 
 msgid "The client secret should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Секрет клієнта має бути дійсним рядком BMP-UTF8."
 
 msgid "The client secret should not exceed 256 characters."
-msgstr ""
+msgstr "Секрет клієнта не повинен перевищувати 256 символів."
 
 msgid "The OAuth2 username should be a valid email address."
-msgstr ""
+msgstr "Імʼя користувача OAuth2 має бути дійсною електронною адресою."
 
 msgid "The OAuth2 username should not exceed 256 characters."
-msgstr ""
+msgstr "Імʼя користувача OAuth2 не повинно перевищувати 256 символів."
 
 msgid "The authentication method is required."
 msgstr "Потрібно вказати метод автентифікації."
@@ -2546,28 +2546,28 @@ msgid "A test recipient is required."
 msgstr "Потрібен тестовий одержувач."
 
 msgid "The tenant ID is required."
-msgstr ""
+msgstr "Потрібен ID орендаря."
 
 msgid "The tenant ID should not be empty."
-msgstr ""
+msgstr "ID орендаря не повинен бути порожнім."
 
 msgid "The client ID is required."
-msgstr ""
+msgstr "Потрібен ID клієнта."
 
 msgid "The client ID should not be empty."
-msgstr ""
+msgstr "ID клієнта не повинен бути порожнім."
 
 msgid "The client secret is required."
-msgstr ""
+msgstr "Потрібен секрет клієнта."
 
 msgid "The client secret should not be empty."
 msgstr "Секрет клієнта не повинен бути порожнім."
 
 msgid "The OAuth2 username is required."
-msgstr ""
+msgstr "Потрібне імʼя користувача OAuth2."
 
 msgid "The OAuth2 username should not be empty."
-msgstr ""
+msgstr "Імʼя користувача OAuth2 не повинно бути порожнім."
 
 msgid "SMTP settings endpoints disabled."
 msgstr "Точки доступу налаштувань SMTP вимкнено."
@@ -2627,16 +2627,16 @@ msgid "undefined"
 msgstr "невизначено"
 
 msgid "Tenant ID should be a valid UUID."
-msgstr ""
+msgstr "ID орендаря має бути дійсним UUID."
 
 msgid "Client ID should be a valid UUID."
-msgstr ""
+msgstr "ID клієнта має бути дійсним UUID."
 
 msgid "Failed to obtain SMTP OAuth2 access token."
-msgstr ""
+msgstr "Не вдалося отримати токен доступу SMTP OAuth2."
 
 msgid "SMTP OAuth2 token response from Microsoft did not contain an access token."
-msgstr ""
+msgstr "Відповідь Microsoft із токеном SMTP OAuth2 не містила токен доступу."
 
 msgid "Could not validate the smtp settings."
 msgstr "Не вдалося перевірити налаштування SMTP,."
@@ -3026,10 +3026,10 @@ msgid "Authentication method"
 msgstr "Метод автентифікації"
 
 msgid "Directory (tenant) ID"
-msgstr ""
+msgstr "ID каталогу (орендаря)"
 
 msgid "Application (client) ID"
-msgstr ""
+msgstr "ID застосунку (клієнта)"
 
 msgid "Client secret"
 msgstr "Секрет клієнта"
@@ -4283,7 +4283,7 @@ msgid "Remember me for a month: {0}"
 msgstr "Запам’ятати мене на місяць: {0}"
 
 msgid "The setting should be between {0} and {1}."
-msgstr ""
+msgstr "Налаштування має бути між {0} і {1}."
 
 msgid "Some of your passwords are expired."
 msgstr "Деякі з ваших паролів минув термін дії."
@@ -4427,7 +4427,7 @@ msgid "An administrator user cannot be suspended via SCIM."
 msgstr "Користувача-адміністратора не можна призупинити через SCIM."
 
 msgid "An administrator user cannot be deleted via SCIM."
-msgstr ""
+msgstr "Користувача-адміністратора не можна видалити через SCIM."
 
 msgid "Email"
 msgstr "Електронна пошта"
@@ -4718,7 +4718,7 @@ msgid "The provided nonce is invalid."
 msgstr "Наданий nonce недійсний."
 
 msgid "The URL should start with https:// and must not point to an internal address."
-msgstr ""
+msgstr "URL-адреса має починатися з https:// і не повинна вказувати на внутрішню адресу."
 
 msgid "The provided state is invalid."
 msgstr "Наданий state недійсний."
@@ -4769,22 +4769,22 @@ msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment varia
 msgstr "Встановіть змінну середовища PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED у значення true."
 
 msgid "The SSO provider URL egress guard is enabled."
-msgstr ""
+msgstr "Захист вихідних зʼєднань для URL-адреси постачальника SSO увімкнено."
 
 msgid "The SSO provider URL egress guard is disabled and will be enabled by default in a future version."
-msgstr ""
+msgstr "Захист вихідних зʼєднань для URL-адреси постачальника SSO вимкнено, і його буде увімкнено типово в майбутній версії."
 
 msgid "The egress guard prevents the server from connecting to internal addresses through SSO provider URLs."
-msgstr ""
+msgstr "Захист вихідних зʼєднань запобігає підключенню сервера до внутрішніх адрес через URL-адреси постачальника SSO."
 
 msgid "It is disabled by default in this version but will be enabled by default in a future version."
-msgstr ""
+msgstr "У цій версії його типово вимкнено, але в майбутній версії його буде типово увімкнено."
 
 msgid "Enable it now to verify your SSO configuration works with the guard before it becomes the default."
-msgstr ""
+msgstr "Увімкніть його зараз, щоб перевірити, чи ваша конфігурація SSO працює із захистом, перш ніж він стане типовим."
 
 msgid "Set the PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED environment variable to true."
-msgstr ""
+msgstr "Установіть змінну оточення PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED у true."
 
 msgid "The user is missing for the SSO state."
 msgstr "Для стану SSO відсутній користувач."
@@ -4940,13 +4940,13 @@ msgid "Failed to public key properties from certificate: {0}"
 msgstr "Не вдалося отримати властивості публічного ключа із сертифіката: {0}"
 
 msgid "The provider address resolves to a blocked link-local or metadata range ({0})."
-msgstr ""
+msgstr "Адреса постачальника зіставляється із заблокованим link-local або metadata діапазоном ({0})."
 
 msgid "The provider address resolves to a blocked private range ({0})."
-msgstr ""
+msgstr "Адреса постачальника зіставляється із заблокованим приватним діапазоном ({0})."
 
 msgid "The provider address is not allowed."
-msgstr ""
+msgstr "Адреса постачальника не дозволена."
 
 msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
 msgstr "Невірне значення в конфігурації `passbolt.security.sso.sslCafile`."
@@ -5321,7 +5321,7 @@ msgid "The user token result could not be found "
 msgstr "Не вдалось знайти результат за токеном користувача "
 
 msgid "The user token result has already been used."
-msgstr ""
+msgstr "Результат токена користувача вже було використано."
 
 msgid "Invalid verify token type."
 msgstr "Невірний тип токена перевірки."
@@ -5549,7 +5549,7 @@ msgid "The role was deleted."
 msgstr "Роль видалено."
 
 msgid "The role identifier is not valid."
-msgstr ""
+msgstr "Ідентифікатор ролі недійсний."
 
 msgid "The role was successfully updated."
 msgstr "Роль успішно оновлено."
@@ -5657,7 +5657,7 @@ msgid "Invalid expiry time {0}."
 msgstr "Неприпустимий час завершення дії {0}."
 
 msgid "The user role ID must not be of the guest role."
-msgstr ""
+msgstr "ID ролі користувача не повинен належати ролі гостя."
 
 msgid "The token should be a valid UUID."
 msgstr "Токен має бути дійсним UUID."
@@ -6023,43 +6023,43 @@ msgid "The resource type for this resource does not exist."
 msgstr "Типу цього ресурсу не існує."
 
 msgid "The name should not be greater than 50 characters."
-msgstr ""
+msgstr "Імʼя не повинно перевищувати 50 символів."
 
 msgid "The name should not be reserved role."
-msgstr ""
+msgstr "Імʼя не повинно бути зарезервованою роллю."
 
 msgid "The role cannot be deleted as it is associated with another user."
 msgstr "Роль не може бути видалена, оскільки вона пов'язана з іншим користувачем."
 
 msgid "A reserved role cannot be deleted."
-msgstr ""
+msgstr "Зарезервовану роль неможливо видалити."
 
 msgid "A role already exists for the given name."
 msgstr "Роль із вказаним імʼям уже існує."
 
 msgid "Only maximum of {0} active roles are allowed."
-msgstr ""
+msgstr "Дозволено лише максимум {0} активних ролей."
 
 msgid "A reserved role cannot be renamed."
 msgstr "Зарезервовану роль не можна перейменувати."
 
 msgid "The secret revision identifier should be a valid UUID."
-msgstr ""
+msgstr "Ідентифікатор ревізії секрету має бути дійсним UUID."
 
 msgid "A secret revision identifier is required."
-msgstr ""
+msgstr "Потрібен ідентифікатор ревізії секрету."
 
 msgid "The secret revision identifier should not be empty."
-msgstr ""
+msgstr "Ідентифікатор ревізії секрету не повинен бути порожнім."
 
 msgid "A secret already exists for the given user and resource."
 msgstr "Секрет для вказаного користувача й ресурсу вже існує."
 
 msgid "A secret already exists for the given user, resource and secret revision."
-msgstr ""
+msgstr "Секрет для вказаного користувача, ресурсу та ревізії секрету вже існує."
 
 msgid "The secret revision does not exist or is deleted."
-msgstr ""
+msgstr "Ревізія секрету не існує або видалена."
 
 msgid "The user identifier by should be a valid UUID."
 msgstr "Ідентифікатор користувача by має бути дійсним UUID."
@@ -6122,7 +6122,7 @@ msgid "The delete status should be a valid boolean."
 msgstr "Статус видалення має бути дійсним логічним значенням."
 
 msgid "The string should not contain invisible characters."
-msgstr ""
+msgstr "Рядок не повинен містити невидимих символів."
 
 msgid "The field must be null when creating a new record."
 msgstr "Це поле повинно бути null під час створення нового запису."
@@ -6236,7 +6236,7 @@ msgid "You deleted administrator {0}"
 msgstr "Ви видалили адміністратора {0}"
 
 msgid "You deleted user {0}"
-msgstr ""
+msgstr "Ви видалили користувача {0}"
 
 msgid "{0} deleted your account"
 msgstr "{0} видалив(ла) ваш обліковий запис"
@@ -6413,7 +6413,7 @@ msgid "Could not validate group user data."
 msgstr "Не вдалося перевірити дані користувача групи."
 
 msgid "The resource with ID {0} does not have a secret revision."
-msgstr ""
+msgstr "Ресурс з ID {0} не має ревізії секрету."
 
 msgid "All email notifications will be sent."
 msgstr "Усі повідомлення електронної пошти будуть надіслані."
@@ -6512,16 +6512,16 @@ msgid "You may remove the \"passbolt.registration.public\" setting."
 msgstr "Ви можете видалити налаштування \"passbolt.registration.public\"."
 
 msgid "The session provider is {0}."
-msgstr ""
+msgstr "Постачальник сеансу — {0}."
 
 msgid "The session provider {0} is not supported."
-msgstr ""
+msgstr "Постачальник сеансу {0} не підтримується."
 
 msgid "The session providers supported are: {0}."
-msgstr ""
+msgstr "Підтримувані постачальники сеансу: {0}."
 
 msgid "Define it using the SESSION_DEFAULTS environment variable or under {0} in {1}."
-msgstr ""
+msgstr "Визначте це за допомогою змінної оточення SESSION_DEFAULTS або вкажіть у {0} у {1}."
 
 msgid "Passbolt is configured to force SSL use."
 msgstr "Passbolt налаштовано на примусове використання SSL."
@@ -7145,7 +7145,7 @@ msgid "The resource types associated to this resource does not exist."
 msgstr "Типи ресурсів, повʼязані з цим ресурсом, не існують."
 
 msgid "No secret revision were found for this resource."
-msgstr ""
+msgstr "Для цього ресурсу не знайдено ревізій секрету."
 
 msgid "You are not allowed to update this resource."
 msgstr "Ви не маєте дозволу оновлювати цей ресурс."
@@ -7160,13 +7160,13 @@ msgid "Could not save the role, please try again later."
 msgstr "Не вдалося зберегти цю роль, спробуйте ще раз пізніше."
 
 msgid "The role does not exist or deleted."
-msgstr ""
+msgstr "Роль не існує або видалена."
 
 msgid "The role could not be deleted."
-msgstr ""
+msgstr "Роль не вдалося видалити."
 
 msgid "Could not delete the role, please try again later."
-msgstr ""
+msgstr "Не вдалося видалити роль, будь ласка, спробуйте пізніше."
 
 msgid "There should be at least 4 roles"
 msgstr "Повинно бути принаймні 4 ролі"
@@ -7178,10 +7178,10 @@ msgid "Validation success for role {0}"
 msgstr "Перевірка пройшла успішно для ролі {0}"
 
 msgid "The role could not be updated."
-msgstr ""
+msgstr "Роль не вдалося оновити."
 
 msgid "Could not update the role, please try again later."
-msgstr ""
+msgstr "Не вдалося оновити роль, будь ласка, спробуйте пізніше."
 
 msgid "Could not validate secrets data."
 msgstr "Не вдалося перевірити дані секретів."
@@ -7409,7 +7409,7 @@ msgid "Contact your admin"
 msgstr "Зверніться до вашого адміністратора"
 
 msgid "{0} changed the role of {1} to {2}."
-msgstr ""
+msgstr "{0} змінив(ла) роль {1} на {2}."
 
 msgid "{0} can no longer perform administration tasks."
 msgstr "{0} більше не може виконувати адміністративні завдання."
@@ -7421,10 +7421,10 @@ msgid "View user in passbolt"
 msgstr "Переглянути користувача в Passbolt"
 
 msgid "A new role {0} has been created."
-msgstr ""
+msgstr "Створено нову роль {0}."
 
 msgid "The role {0} has been renamed to {1}."
-msgstr ""
+msgstr "Роль {0} було перейменовано на {1}."
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
 msgstr "Цей користувач втратив свій приватний ключ та/або парольну фразу і не може завершити процес відновлення облікового запису."
@@ -7436,7 +7436,7 @@ msgid "Please check with them first to confirm."
 msgstr "Будь ласка, спочатку уточніть у них, щоб переконатися."
 
 msgid "The user {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "Користувача {0} ({1}) тепер видалено з організації Passbolt."
 
 msgid "User suspended"
 msgstr "Користувача призупинено"
@@ -7628,16 +7628,16 @@ msgid "{0} resources were shared with you."
 msgstr "{0} ресурсів було поширено з вами."
 
 msgid "{0} changed your role to {1}."
-msgstr ""
+msgstr "{0} змінив(ла) вашу роль на {1}."
 
 msgid "You can no longer perform administration tasks."
-msgstr ""
+msgstr "Ви більше не можете виконувати завдання адміністрування."
 
 msgid "This email is an automatic notification sent by"
 msgstr "Цей електронний лист є автоматичним сповіщенням, надісланим"
 
 msgid "To disable these notifications, contact an administrator."
-msgstr ""
+msgstr "Щоб вимкнути ці сповіщення, зверніться до адміністратора."
 
 msgid "The locale {0} is not valid or not supported."
 msgstr "Локаль {0} недійсна або не підтримується."
