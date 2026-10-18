@@ -339,7 +339,8 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
         $this->assertSame(['totp'], $accountSettingsInDB['providers']);
         $this->assertArrayNotHasKey('duo', $accountSettingsInDB);
         $this->assertSame(2, MfaAuthenticationTokenFactory::count());
-        // Here it should be 1 because the mfa token for duo should be set inactive
-        $this->assertSame(1, MfaAuthenticationTokenFactory::find()->where(['active' => true])->all()->count());
+        // Here it should be 2 because the mfa token for duo should be not set inactive
+        // Inactivating this token while user is logged in with it can cause problems
+        $this->assertSame(2, MfaAuthenticationTokenFactory::find()->where(['active' => true])->all()->count());
     }
 }
