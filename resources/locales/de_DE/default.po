@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-09-11 06:26+0000\n"
-"PO-Revision-Date: 2026-09-11 07:39\n"
+"PO-Revision-Date: 2026-10-14 16:18\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -1796,55 +1796,55 @@ msgid "Please contact your administrator if you didn't request this action."
 msgstr "Bitte kontaktieren Sie Ihren Administrator, wenn Sie diese Aktion nicht angefordert haben."
 
 msgid "The setting should be a valid integer."
-msgstr ""
+msgstr "Die Einstellung sollte eine gültige Ganzzahl sein."
 
 msgid "This setting is not customizable on this edition, it should be {0}."
-msgstr ""
+msgstr "Diese Einstellung ist in dieser Edition nicht anpassbar, sie sollte {0} sein."
 
 msgid "You have reached the maximum number of offline items ({0})."
-msgstr ""
+msgstr "Sie haben die maximale Anzahl von Offline-Elementen ({0}) erreicht."
 
 msgid "The offline item object type should be one of the following: {0}."
-msgstr ""
+msgstr "Der Objekttyp des Offline-Elements sollte einer der folgenden sein: {0}."
 
 msgid "The offline item object type is required."
-msgstr ""
+msgstr "Der Objekttyp des Offline-Elements ist erforderlich."
 
 msgid "The offline item object type should not be empty."
-msgstr ""
+msgstr "Der Objekttyp des Offline-Elements darf nicht leer sein."
 
 msgid "The offline item object identifier should be a valid UUID."
-msgstr ""
+msgstr "Der Objekt-Identifikator des Offline-Elements sollte eine gültige UUID sein."
 
 msgid "The offline item object identifier is required."
-msgstr ""
+msgstr "Der Objekt-Identifikator des Offline-Elements ist erforderlich."
 
 msgid "The offline item object identifier should not be empty."
-msgstr ""
+msgstr "Der Objekt-Identifikator des Offline-Elements darf nicht leer sein."
 
 msgid "The created date should be a valid date."
-msgstr ""
+msgstr "Das Erstellungsdatum sollte ein gültiges Datum sein."
 
 msgid "The creator identifier should be a valid UUID."
-msgstr ""
+msgstr "Der Ersteller-Identifikator sollte eine gültige UUID sein."
 
 msgid "A creator identifier is required."
-msgstr ""
+msgstr "Ein Ersteller-Identifikator ist erforderlich."
 
 msgid "The creator identifier should not be empty."
-msgstr ""
+msgstr "Der Ersteller-Identifikator darf nicht leer sein."
 
 msgid "Access denied."
 msgstr "Zugriff verweigert."
 
 msgid "Offline mode is only available for v5 items."
-msgstr ""
+msgstr "Der Offline-Modus ist nur für v5-Elemente verfügbar."
 
 msgid "You have reached the maximum number of offline items."
-msgstr ""
+msgstr "Sie haben die maximale Anzahl von Offline-Elementen erreicht."
 
 msgid "This item is already available offline for this user."
-msgstr ""
+msgstr "Dieses Element ist für diese Benutzer*in bereits offline verfügbar."
 
 msgid "A value is required."
 msgstr "Ein Wert wird benötigt."
@@ -1853,49 +1853,49 @@ msgid "The value should be an array."
 msgstr "Der Wert sollte ein Array sein."
 
 msgid "You disabled Offline Mode"
-msgstr ""
+msgstr "Sie haben den Offline-Modus deaktiviert"
 
 msgid "{0} disabled Offline Mode"
-msgstr ""
+msgstr "{0} hat den Offline-Modus deaktiviert"
 
 msgid "You edited the Offline Mode settings"
-msgstr ""
+msgstr "Sie haben die Einstellungen für den Offline-Modus bearbeitet"
 
 msgid "{0} edited the Offline Mode settings"
-msgstr ""
+msgstr "{0} hat die Einstellungen für den Offline-Modus bearbeitet"
 
 msgid "Could not validate offline item data."
-msgstr ""
+msgstr "Offline-Element-Daten konnten nicht validiert werden."
 
 msgid "The offline item identifier should be a valid UUID."
-msgstr ""
+msgstr "Der Offline-Element-Identifikator sollte eine gültige UUID sein."
 
 msgid "The offline item does not exist."
-msgstr ""
+msgstr "Das Offline-Element existiert nicht."
 
 msgid "Could not validate offline settings data."
-msgstr ""
+msgstr "Offline-Einstellungsdaten konnten nicht validiert werden."
 
 msgid "The stored offline settings are not valid."
-msgstr ""
+msgstr "Die gespeicherten Offline-Einstellungen sind ungültig."
 
 msgid "Offline Mode is not enabled at the org level."
-msgstr ""
+msgstr "Der Offline-Modus ist auf Organisationsebene nicht aktiviert."
 
 msgid "Offline Mode has been disabled organisation-wide. Existing offline selections have been purged."
-msgstr ""
+msgstr "Der Offline-Modus wurde organisationsweit deaktiviert. Bestehende Offline-Auswahlen wurden gelöscht."
 
 msgid "The Offline Mode settings have been updated, the new configuration is as follows:"
-msgstr ""
+msgstr "Die Einstellungen für den Offline-Modus wurden aktualisiert, die neue Konfiguration lautet wie folgt:"
 
 msgid "Maximum session duration: {0} seconds"
-msgstr ""
+msgstr "Maximale Sitzungsdauer: {0} Sekunden"
 
 msgid "Data retention period: {0} days"
-msgstr ""
+msgstr "Datenaufbewahrungszeitraum: {0} Tage"
 
 msgid "Maximum number of offline items (per user): {0}"
-msgstr ""
+msgstr "Maximale Anzahl von Offline-Elementen (pro Benutzer*in): {0}"
 
 msgid "The automatic_expiry field must be true."
 msgstr "Das Feld „automatic_expiry“ muss wahr sein."
@@ -2192,7 +2192,7 @@ msgid "You are not authorized to access that location."
 msgstr "Sie sind nicht berechtigt, auf diese Seite zuzugreifen."
 
 msgid "Invalid RBAC control function."
-msgstr ""
+msgstr "Ungültige RBAC-Kontrollfunktion."
 
 msgid "The RBAC settings could not be updated."
 msgstr "Die RBAC-Einstellungen konnten nicht aktualisiert werden."
@@ -4283,7 +4283,7 @@ msgid "Remember me for a month: {0}"
 msgstr "Für einen Monat merken: {0}"
 
 msgid "The setting should be between {0} and {1}."
-msgstr ""
+msgstr "Die Einstellung sollte zwischen {0} und {1} liegen."
 
 msgid "Some of your passwords are expired."
 msgstr "Einige Ihrer Passwörter sind abgelaufen."
@@ -4427,7 +4427,7 @@ msgid "An administrator user cannot be suspended via SCIM."
 msgstr "Ein Administratorbenutzer kann nicht über SCIM gesperrt werden."
 
 msgid "An administrator user cannot be deleted via SCIM."
-msgstr ""
+msgstr "Eine Administrator-Benutzer*in kann nicht über SCIM gelöscht werden."
 
 msgid "Email"
 msgstr "E-Mail"
@@ -4718,7 +4718,7 @@ msgid "The provided nonce is invalid."
 msgstr "Das angegebene Nonce ist ungültig."
 
 msgid "The URL should start with https:// and must not point to an internal address."
-msgstr ""
+msgstr "Die URL sollte mit https:// beginnen und darf nicht auf eine interne Adresse verweisen."
 
 msgid "The provided state is invalid."
 msgstr "Der angegebene Status ist ungültig."
@@ -4769,22 +4769,22 @@ msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment varia
 msgstr "Setzen Sie die Umgebungsvariable PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED auf true."
 
 msgid "The SSO provider URL egress guard is enabled."
-msgstr ""
+msgstr "Die Egress-Guard für die URL des SSO-Anbieters ist aktiviert."
 
 msgid "The SSO provider URL egress guard is disabled and will be enabled by default in a future version."
-msgstr ""
+msgstr "Die Egress-Guard für die URL des SSO-Anbieters ist deaktiviert und wird in einer zukünftigen Version standardmäßig aktiviert sein."
 
 msgid "The egress guard prevents the server from connecting to internal addresses through SSO provider URLs."
-msgstr ""
+msgstr "Die Egress-Guard verhindert, dass der Server sich über URLs von SSO-Anbietern mit internen Adressen verbindet."
 
 msgid "It is disabled by default in this version but will be enabled by default in a future version."
-msgstr ""
+msgstr "Sie ist in dieser Version standardmäßig deaktiviert, wird aber in einer zukünftigen Version standardmäßig aktiviert sein."
 
 msgid "Enable it now to verify your SSO configuration works with the guard before it becomes the default."
-msgstr ""
+msgstr "Aktivieren Sie sie jetzt, um zu überprüfen, ob Ihre SSO-Konfiguration mit der Guard funktioniert, bevor sie zum Standard wird."
 
 msgid "Set the PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED environment variable to true."
-msgstr ""
+msgstr "Setzen Sie die Umgebungsvariable PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED auf true."
 
 msgid "The user is missing for the SSO state."
 msgstr "Der Benutzer fehlt für den SSO-Status."
@@ -4940,13 +4940,13 @@ msgid "Failed to public key properties from certificate: {0}"
 msgstr "Die Eigenschaften des öffentlichen Schlüssels konnten nicht aus dem Zertifikat abgerufen werden: {0}"
 
 msgid "The provider address resolves to a blocked link-local or metadata range ({0})."
-msgstr ""
+msgstr "Die Anbieteradresse wird in einen blockierten Link-Local- oder Metadatenbereich ({0}) aufgelöst."
 
 msgid "The provider address resolves to a blocked private range ({0})."
-msgstr ""
+msgstr "Die Anbieteradresse wird in einen blockierten privaten Bereich ({0}) aufgelöst."
 
 msgid "The provider address is not allowed."
-msgstr ""
+msgstr "Die Anbieteradresse ist nicht erlaubt."
 
 msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
 msgstr "Ungültiger Wert in der `passbolt.security.sso.sslCafile` Konfiguration angegeben"
@@ -5321,7 +5321,7 @@ msgid "The user token result could not be found "
 msgstr "Der Benutzer-Token konnte nicht gefunden werden "
 
 msgid "The user token result has already been used."
-msgstr ""
+msgstr "Das Ergebnis des Benutzer-Token wurde bereits verwendet."
 
 msgid "Invalid verify token type."
 msgstr "Ungültiges Bestätigungs-Token-Format."
@@ -6122,7 +6122,7 @@ msgid "The delete status should be a valid boolean."
 msgstr "Der \"Gelöscht\"-Status muss ein boolescher Wert sein."
 
 msgid "The string should not contain invisible characters."
-msgstr ""
+msgstr "Die Zeichenkette sollte keine unsichtbaren Zeichen enthalten."
 
 msgid "The field must be null when creating a new record."
 msgstr "Dieses Feld muss null sein, wenn ein neuer Eintrag erstellt wird."
@@ -6236,7 +6236,7 @@ msgid "You deleted administrator {0}"
 msgstr "Sie haben den Administrator {0} gelöscht"
 
 msgid "You deleted user {0}"
-msgstr ""
+msgstr "Sie haben Benutzer*in {0} gelöscht"
 
 msgid "{0} deleted your account"
 msgstr "{0} hat Ihren Account gelöscht"
@@ -6512,16 +6512,16 @@ msgid "You may remove the \"passbolt.registration.public\" setting."
 msgstr "Sie können die Einstellung \"passbolt.registration.public\" entfernen."
 
 msgid "The session provider is {0}."
-msgstr ""
+msgstr "Der Sitzungsanbieter ist {0}."
 
 msgid "The session provider {0} is not supported."
-msgstr ""
+msgstr "Der Sitzungsanbieter {0} wird nicht unterstützt."
 
 msgid "The session providers supported are: {0}."
-msgstr ""
+msgstr "Die unterstützten Sitzungsanbieter sind: {0}."
 
 msgid "Define it using the SESSION_DEFAULTS environment variable or under {0} in {1}."
-msgstr ""
+msgstr "Definieren Sie ihn mit der Umgebungsvariable SESSION_DEFAULTS oder unter {0} in {1}."
 
 msgid "Passbolt is configured to force SSL use."
 msgstr "Passbolt ist so konfiguriert, dass die SSL-Nutzung erzwungen wird."
@@ -7436,7 +7436,7 @@ msgid "Please check with them first to confirm."
 msgstr "Bitte überprüfen Sie zuerst mit ihnen zur Bestätigung."
 
 msgid "The user {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "Benutzer*in {0} ({1}) ist nun aus der Passbolt-Organisation gelöscht."
 
 msgid "User suspended"
 msgstr "Benutzer gesperrt"
