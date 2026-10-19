@@ -375,9 +375,10 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
         $settings->disableProvider(MfaSettings::PROVIDER_DUO);
         $this->assertFalse($settings->isProviderReady(MfaSettings::PROVIDER_DUO));
         $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_YUBIKEY));
-        //Check if the authentication token was set as inactive for that user
+        //Check if the authentication token was not set as inactive for that user
+        // Inactivating this token while user is logged in with it can cause problems
         $this->assertSame(2, MfaAuthenticationTokenFactory::count());
-        $this->assertSame(1, MfaAuthenticationTokenFactory::find()->where(['active' => true, 'user_id' => $userA->get('id')])->all()->count());
+        $this->assertSame(2, MfaAuthenticationTokenFactory::find()->where(['active' => true, 'user_id' => $userA->get('id')])->all()->count());
 
         // Disable another one, there should be no more
         $settings->disableProvider(MfaSettings::PROVIDER_YUBIKEY);
@@ -413,10 +414,9 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
         $settings->disableProvider(MfaSettings::PROVIDER_DUO);
         $this->assertFalse($settings->isProviderReady(MfaSettings::PROVIDER_DUO));
         $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_YUBIKEY));
-        //Check if the authentication token was set as inactive for that user
-        $this->assertMfaTokenIsInactive($uac, MfaSettings::PROVIDER_DUO);
         $this->assertSame(2, MfaAuthenticationTokenFactory::count());
-        $this->assertSame(1, MfaAuthenticationTokenFactory::find()->where(['active' => true, 'user_id' => $userA->get('id')])->all()->count());
+        // Inactivating this token while user is logged in with it can cause problems
+        $this->assertSame(2, MfaAuthenticationTokenFactory::find()->where(['active' => true, 'user_id' => $userA->get('id')])->all()->count());
     }
 
     /**
