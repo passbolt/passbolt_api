@@ -511,16 +511,16 @@
         },
         {
             "name": "cakephp/plugin-installer",
-            "version": "2.0.2",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/plugin-installer.git",
-                "reference": "40bfecb4565ab29cd8c34b0d02d0007d2d5ebd2b"
+                "reference": "b50925d28e3301d9108562a899e3f68cc4cc18bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/plugin-installer/zipball/40bfecb4565ab29cd8c34b0d02d0007d2d5ebd2b",
-                "reference": "40bfecb4565ab29cd8c34b0d02d0007d2d5ebd2b",
+                "url": "https://api.github.com/repos/cakephp/plugin-installer/zipball/b50925d28e3301d9108562a899e3f68cc4cc18bd",
+                "reference": "b50925d28e3301d9108562a899e3f68cc4cc18bd",
                 "shasum": ""
             },
             "require": {
@@ -552,11 +552,17 @@
                 }
             ],
             "description": "A composer installer for CakePHP plugins.",
+            "keywords": [
+                "cakephp",
+                "composer-plugin",
+                "installer",
+                "plugin"
+            ],
             "support": {
                 "issues": "https://github.com/cakephp/plugin-installer/issues",
-                "source": "https://github.com/cakephp/plugin-installer/tree/2.0.2"
+                "source": "https://github.com/cakephp/plugin-installer"
             },
-            "time": "2026-04-10T02:55:04+00:00"
+            "time": "2026-10-10T14:35:32+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
