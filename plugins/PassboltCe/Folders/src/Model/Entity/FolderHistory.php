@@ -22,7 +22,7 @@ use Cake\ORM\Entity;
  * FolderHistory Entity
  *
  * @property string $id
- * @property string $name
+ * @property string|null $name
  */
 class FolderHistory extends Entity
 {
