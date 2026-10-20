@@ -1,6 +1,6 @@
-Release song: TBD
+Release song: https://www.youtube.com/watch?v=Hef-Zf6frk0
 
-## [5.17.0-test.2] - 2026-10-19
+## [5.17.0] - 2026-10-20
 ### Added
 - PB-53318 As a user I can add passkeys as multifactor authentication provider
 - PB-54953 As a user I can use passkeys as multifactor authenticator from the Passbolt mobile app
