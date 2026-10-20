@@ -16,8 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\OfflineMode\Test\TestCase\Controller;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
+use Passbolt\OfflineMode\Notification\Email\OfflineSettingsDeleteEmailRedactor;
 use Passbolt\OfflineMode\OfflineModePlugin;
 use Passbolt\OfflineMode\Test\Factory\OfflineModeSettingFactory;
 
@@ -26,6 +29,8 @@ use Passbolt\OfflineMode\Test\Factory\OfflineModeSettingFactory;
  */
 class OfflineSettingsDeleteControllerTest extends AppIntegrationTestCase
 {
+    use EmailQueueTrait;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -40,13 +45,26 @@ class OfflineSettingsDeleteControllerTest extends AppIntegrationTestCase
         $row = OfflineModeSettingFactory::make()
             ->setField('value', json_encode(['max_session_duration' => 300, 'data_retention_period' => 7]))
             ->persist();
-        $this->logInAsAdmin();
+        $otherAdmin = UserFactory::make()->admin()->active()->persist();
 
+        $operator = $this->logInAsAdmin();
         $id = $row->get('id');
         $this->deleteJson("/offline/settings/$id.json");
 
         $this->assertResponseOk();
         $this->assertSame(0, OfflineModeSettingFactory::find()->count());
+        // Assert email data
+        $this->assertEmailQueueCount(2);
+        $this->assertEmailIsInQueue([
+            'email' => $operator->get('username'),
+            'template' => OfflineSettingsDeleteEmailRedactor::TEMPLATE,
+        ]);
+        $this->assertEmailIsInQueue([
+            'email' => $otherAdmin->get('username'),
+            'template' => OfflineSettingsDeleteEmailRedactor::TEMPLATE,
+        ]);
+        $this->assertEmailInBatchContains('Offline Mode has been disabled organisation-wide', $otherAdmin->get('username'));
+        $this->assertEmailInBatchContains('/app/administration/offline', $otherAdmin->get('username'));
     }
 
     public function testOfflineSettingsDeleteController_Error_BadRequest_InvalidUuid(): void

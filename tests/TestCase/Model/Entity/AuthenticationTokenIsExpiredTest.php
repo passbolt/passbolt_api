@@ -41,7 +41,7 @@ class AuthenticationTokenIsExpiredTest extends TestCase
     public static function expiryData(): array
     {
         return [
-            [AuthenticationToken::TYPE_REFRESH_TOKEN, false], // month
+            [AuthenticationToken::TYPE_REFRESH_TOKEN, true], // hour
             [AuthenticationToken::TYPE_RECOVER, false], // days
             [AuthenticationToken::TYPE_VERIFY_TOKEN, true], // hour
             [AuthenticationToken::TYPE_LOGIN, true], // minutes
@@ -61,5 +61,29 @@ class AuthenticationTokenIsExpiredTest extends TestCase
 
         $result = $this->AuthenticationTokens->isExpired($token);
         $this->assertSame($isExpired, $result);
+    }
+
+    public function testAuthenticationTokens_Created_RefreshTokenTwoHoursAgo()
+    {
+        /** @var \App\Model\Entity\AuthenticationToken $token */
+        $token = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
+            ->created(DateTime::now()->subHours(2))
+            ->getEntity();
+
+        $result = $this->AuthenticationTokens->isExpired($token);
+        $this->assertSame(true, $result);
+    }
+
+    public function testAuthenticationTokens_Created_RefreshTokenFortyMinutesAgo()
+    {
+        /** @var \App\Model\Entity\AuthenticationToken $token */
+        $token = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
+            ->created(DateTime::now()->subMinutes(40))
+            ->getEntity();
+
+        $result = $this->AuthenticationTokens->isExpired($token);
+        $this->assertSame(false, $result);
     }
 }

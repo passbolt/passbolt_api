@@ -24,13 +24,19 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
+use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaWebauthnCredentialFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Webauthn\MfaWebauthnScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOtpFactory;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaAccountSettingsTest extends MfaIntegrationTestCase
 {
+    use ScenarioAwareTrait;
+
     /**
      * @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable
      */
@@ -322,6 +328,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_YUBIKEY => true,
             MfaSettings::PROVIDER_DUO => true,
             MfaSettings::PROVIDER_TOTP => false,
+            MfaSettings::PROVIDER_WEBAUTHN => false,
         ]);
 
         // Disable one, check there is one provider left
@@ -330,6 +337,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_YUBIKEY => true,
             MfaSettings::PROVIDER_DUO => false,
             MfaSettings::PROVIDER_TOTP => false,
+            MfaSettings::PROVIDER_WEBAUTHN => false,
         ]);
 
         // Disable another one
@@ -338,6 +346,96 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_YUBIKEY => false,
             MfaSettings::PROVIDER_DUO => false,
             MfaSettings::PROVIDER_TOTP => false,
+            MfaSettings::PROVIDER_WEBAUTHN => false,
         ]);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaAccountSettings
+     */
+    public function testMfaAccountSettings_DisablingAllProvidersCleansAllAssociatedData()
+    {
+        // Enable two providers
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
+        MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_DUO);
+        MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_YUBIKEY, [
+            MfaAccountSettings::YUBIKEY_ID => 'yubikey_id',
+        ]);
+        // Make two authentication tokens
+        $this->mockMfaCookieValid($uac, MfaSettings::PROVIDER_DUO);
+        $this->mockMfaCookieValid($uac, MfaSettings::PROVIDER_YUBIKEY);
+
+        $settings = MfaAccountSettings::get($uac);
+        $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_DUO));
+        $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_YUBIKEY));
+
+        // Disable one, check there is one provider left
+        $settings->disableProvider(MfaSettings::PROVIDER_DUO);
+        $this->assertFalse($settings->isProviderReady(MfaSettings::PROVIDER_DUO));
+        $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_YUBIKEY));
+        //Check if the authentication token was not set as inactive for that user
+        // Inactivating this token while user is logged in with it can cause problems
+        $this->assertSame(2, MfaAuthenticationTokenFactory::count());
+        $this->assertSame(2, MfaAuthenticationTokenFactory::find()->where(['active' => true, 'user_id' => $userA->get('id')])->all()->count());
+
+        // Disable another one, there should be no more
+        $settings->disableProvider(MfaSettings::PROVIDER_YUBIKEY);
+        $this->expectException(RecordNotFoundException::class);
+        MfaAccountSettings::get($uac);
+        //Check if all authentication token are inactive for that user
+        $this->assertSame(2, MfaAuthenticationTokenFactory::count());
+        $this->assertSame(0, MfaAuthenticationTokenFactory::find()->where(['active' => true, 'user_id' => $userA->get('id')])->all()->count());
+    }
+
+    /**
+     * @group mfa
+     * @group mfaAccountSettings
+     */
+    public function testMfaAccountSettings_DisablingOneProviderCleansAllAssociatedData()
+    {
+        // Enable two providers
+        $userA = UserFactory::make()->user()->persist();
+        $uac = $this->makeUac($userA);
+        MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_DUO);
+        MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_YUBIKEY, [
+            MfaAccountSettings::YUBIKEY_ID => 'yubikey_id',
+        ]);
+        // Make two authentication tokens
+        $this->mockMfaCookieValid($uac, MfaSettings::PROVIDER_DUO);
+        $this->mockMfaCookieValid($uac, MfaSettings::PROVIDER_YUBIKEY);
+
+        $settings = MfaAccountSettings::get($uac);
+        $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_DUO));
+        $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_YUBIKEY));
+
+        // Disable one, check there is one provider left
+        $settings->disableProvider(MfaSettings::PROVIDER_DUO);
+        $this->assertFalse($settings->isProviderReady(MfaSettings::PROVIDER_DUO));
+        $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_YUBIKEY));
+        $this->assertSame(2, MfaAuthenticationTokenFactory::count());
+        // Inactivating this token while user is logged in with it can cause problems
+        $this->assertSame(2, MfaAuthenticationTokenFactory::find()->where(['active' => true, 'user_id' => $userA->get('id')])->all()->count());
+    }
+
+    /**
+     * @group mfa
+     * @group mfaAccountSettings
+     */
+    public function testMfaAccountSettings_DisableProvider_Webauthn_DeletesUsersCredentials(): void
+    {
+        /** @var \App\Model\Entity\User $victim */
+        [$victim] = $this->loadFixtureScenario(MfaWebauthnScenario::class);
+        /** @var \App\Model\Entity\User $other */
+        $other = UserFactory::make()->user()->persist();
+        MfaWebauthnCredentialFactory::make()->withUser($other)->persist();
+
+        MfaAccountSettings::get($this->makeUac($victim))->disableProvider(MfaSettings::PROVIDER_WEBAUTHN);
+
+        /** @var \Passbolt\MultiFactorAuthentication\Model\Table\MfaWebauthnCredentialsTable $credentials */
+        $credentials = $this->fetchTable('Passbolt/MultiFactorAuthentication.MfaWebauthnCredentials');
+        $this->assertSame(0, $credentials->countForUser($victim->id));
+        $this->assertSame(1, $credentials->countForUser($other->id));
     }
 }

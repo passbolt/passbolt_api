@@ -251,6 +251,14 @@ class MfaAccountSettings
                     $this->delete();
                 } else {
                     $this->save();
+                    // Inactivating this token while user is logged in with it can cause problems
+                    // MfaVerifiedToken::setAllInactiveByProvider($this->uac, $providerToDisable);
+                }
+                if ($providerToDisable === MfaSettings::PROVIDER_WEBAUTHN) {
+                    /** @var \Passbolt\MultiFactorAuthentication\Model\Table\MfaWebauthnCredentialsTable $credentials */
+                    $credentials = TableRegistry::getTableLocator()
+                        ->get('Passbolt/MultiFactorAuthentication.MfaWebauthnCredentials');
+                    $credentials->deleteAllForUser($this->uac->getId());
                 }
                 break;
             }

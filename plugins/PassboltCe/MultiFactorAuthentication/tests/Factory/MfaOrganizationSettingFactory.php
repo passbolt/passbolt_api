@@ -64,6 +64,15 @@ class MfaOrganizationSettingFactory extends OrganizationSettingFactory
     }
 
     /**
+     * @param bool $isActive Whether the provider is active.
+     * @return self
+     */
+    public function webauthn(bool $isActive = true): self
+    {
+        return $this->setProviders(MfaSettings::PROVIDER_WEBAUTHN, $isActive);
+    }
+
+    /**
      * @param bool $isActive
      * @param string|null $yubikeyClientId
      * @param string|null $yubikeySecretKey

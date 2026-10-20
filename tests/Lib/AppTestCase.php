@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib;
 
+use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Test\Lib\Model\CommentsModelTrait;
 use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
@@ -56,6 +57,7 @@ abstract class AppTestCase extends TestCase
     use ObjectTrait;
     use PermissionsModelTrait;
     use ProfilesModelTrait;
+    use AuthenticationTokenModelTrait;
     use ResourcesModelTrait;
     use SecretsModelTrait;
     use StubAppTrait;

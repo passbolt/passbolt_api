@@ -38,7 +38,7 @@ class JwtAuthenticationService extends AuthenticationService
         } elseif ($this->isRefreshEndpointPost($request)) {
             $this->loadAuthenticator('Passbolt/JwtAuthentication.JwtRefreshToken');
         } else {
-            $this->loadAuthenticator('Authentication.Jwt', [
+            $this->loadAuthenticator('Passbolt/JwtAuthentication.JwtAccessToken', [
                 'header' => self::JWT_HEADER,
                 'algorithm' => JwtTokenCreateService::JWT_ALG,
                 'secretKey' => file_get_contents(JwksGetService::PUBLIC_KEY_PATH),
