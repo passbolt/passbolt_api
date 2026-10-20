@@ -19,6 +19,8 @@ namespace App\Test\TestCase\Controller\Resources;
 
 use App\Model\Entity\Permission;
 use App\Service\Resources\ResourcesUpdateService;
+use App\Service\Secrets\SecretRecipientValidationService;
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\RoleFactory;
@@ -28,8 +30,10 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\SecretsModelTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
+use Cake\Utility\Hash;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\SecretRevisions\SecretRevisionsPlugin;
 use Passbolt\SecretRevisions\Service\SecretRevisionsSettingsGetService;
@@ -233,6 +237,42 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertSame(2, SecretRevisionFactory::count());
         // Assert that the previous secret revision is soft deleted
         $this->assertNotNull(SecretRevisionFactory::firstOrFail(['id' => $initialSecretRevision->id]));
+    }
+
+    public function testUpdateResourcesController_Error_SecretNotEncryptedForRecipient(): void
+    {
+        Configure::write(SecretRecipientValidationService::CONFIG_KEY_VALIDATE_RECIPIENT, true);
+        SecretRevisionsSettingsFactory::make()->setMaxRevisions(2)->persist();
+        RoleFactory::make()->guest()->persist();
+        $ada = UserFactory::make()->user()->withAdaKey()->persist();
+        $betty = UserFactory::make()->user()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
+        ResourceTypeFactory::make()->default()->persist();
+        $resource = ResourceFactory::make(['created_by' => $ada->id])
+            ->withPermissionsFor([$ada, $betty])
+            ->withSecretsFor([$ada, $betty])
+            ->withSecretRevisions()
+            ->persist();
+
+        $this->logInAs($ada);
+        $data = [
+            'secrets' => [
+                // Betty's secret is encrypted with Ada's key
+                ['user_id' => $betty->id, 'data' => $this->encryptMessageFor($ada->id, 'secret updated')],
+                ['user_id' => $ada->id, 'data' => $this->encryptMessageFor($ada->id, 'secret updated')],
+            ],
+        ];
+        $this->putJson("/resources/$resource->id.json", $data);
+
+        $this->assertError(400);
+        $errors = $this->getResponseBodyAsArray();
+        $this->assertSame(
+            'The secret must be encrypted for the recipient user.',
+            Hash::get($errors, 'secrets.0.data.is_encrypted_for_recipient'),
+        );
+        $this->assertNull(Hash::get($errors, 'secrets.1'));
+        // The secrets were not changed
+        $this->assertSame(2, SecretFactory::count());
+        $this->assertSame(1, SecretRevisionFactory::count());
     }
 
     public function testUpdateResourcesController_Error_NotValidId(): void
