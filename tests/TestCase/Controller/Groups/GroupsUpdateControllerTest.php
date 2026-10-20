@@ -19,7 +19,9 @@ namespace App\Test\TestCase\Controller\Groups;
 
 use App\Model\Entity\Permission;
 use App\Notification\Email\Redactor\Group\GroupUpdateAdminSummaryEmailRedactor;
+use App\Service\Secrets\SecretRecipientValidationService;
 use App\Test\Factory\FavoriteFactory;
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\GroupsUserFactory;
 use App\Test\Factory\PermissionFactory;
@@ -31,6 +33,7 @@ use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -715,6 +718,39 @@ hcciUFw5
 
         $response = $this->_responseJsonBody;
         $this->assertObjectNotHasAttribute('my_group_user', $response);
+    }
+
+    public function testGroupsUpdateController_Error_SecretNotEncryptedForAddedMember(): void
+    {
+        Configure::write(SecretRecipientValidationService::CONFIG_KEY_VALIDATE_RECIPIENT, true);
+        $ada = UserFactory::make()->user()->withAdaKey()->persist();
+        $betty = UserFactory::make()->user()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$ada])->persist();
+        $resource = ResourceFactory::make()
+            ->withSecretRevisions()
+            ->withPermissionsFor([$group])
+            ->withSecretsFor([$ada])
+            ->persist();
+
+        // Betty's secret is encrypted with Ada's key
+        $secretForBetty = $this->encryptMessageFor($ada->id, 'secret');
+
+        $this->logInAs($ada);
+        $this->putJson("/groups/$group->id.json", [
+            'groups_users' => [['user_id' => $betty->id]],
+            'secrets' => [
+                ['resource_id' => $resource->id, 'user_id' => $betty->id, 'data' => $secretForBetty],
+            ],
+        ]);
+
+        $this->assertError(400);
+        $errors = $this->getResponseBodyAsArray();
+        $this->assertSame(
+            'The secret must be encrypted for the recipient user.',
+            Hash::get($errors, 'groups_users.0.secrets.0.data.is_encrypted_for_recipient'),
+        );
+        $this->assertSame(0, GroupsUserFactory::find()->where(['user_id' => $betty->id])->count());
+        $this->assertSame(0, SecretFactory::find()->where(['user_id' => $betty->id])->count());
     }
 
     public function testGroupsUpdateController_Error_NotValidGroupId(): void

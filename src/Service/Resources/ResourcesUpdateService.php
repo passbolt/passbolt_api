@@ -22,6 +22,7 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
+use App\Service\Secrets\SecretRecipientValidationService;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Event\EventDispatcherTrait;
@@ -85,6 +86,10 @@ class ResourcesUpdateService
         }
         if (!empty($secrets)) {
             $meta['secrets'] = $this->decorateSecretsData($uac, $resource, $secrets);
+            if (SecretRecipientValidationService::isEnabled()) {
+                $userIds = Hash::extract($secrets, '{n}.user_id');
+                SecretRecipientValidationService::preloadKeys($userIds);
+            }
         }
 
         $this->Resources->getConnection()->transactional(

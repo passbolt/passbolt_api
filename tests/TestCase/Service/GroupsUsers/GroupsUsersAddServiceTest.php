@@ -20,6 +20,8 @@ namespace App\Test\TestCase\Service\GroupsUsers;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Service\GroupsUsers\GroupsUsersAddService;
+use App\Service\Secrets\SecretRecipientValidationService;
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\GroupsUserFactory;
 use App\Test\Factory\ResourceFactory;
@@ -29,6 +31,7 @@ use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Utility\Hash;
 
 class GroupsUsersAddServiceTest extends AppTestCase
@@ -424,6 +427,86 @@ class GroupsUsersAddServiceTest extends AppTestCase
         $this->assertEquals(1, SecretFactory::count());
         $this->assertUserIsMemberOf($g1->id, $u1->id, true);
         $this->assertUserIsNotMemberOf($g1->id, $u2->id);
+    }
+
+    /**
+     * Add a member with a secret encrypted for the member's key
+     *
+     * @throws \Exception
+     */
+    public function testGroupsUsersAddServiceSuccess_SecretEncryptedForAddedMember(): void
+    {
+        Configure::write(SecretRecipientValidationService::CONFIG_KEY_VALIDATE_RECIPIENT, true);
+        [$u1, $g1, $r1] = $this->insertFixture_GroupWithOneManager_OneResourceSharedWithGroup();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+        $betty = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
+
+        $groupUserData = ['group_id' => $g1->id, 'user_id' => $betty->id];
+        $secretsData = [
+            ['resource_id' => $r1->id, 'user_id' => $betty->id, 'data' => $this->encryptMessageFor($betty->id, 'secret')],
+        ];
+        $this->service->add($uac, $groupUserData, $secretsData);
+
+        $this->assertEquals(2, GroupsUserFactory::count());
+        $this->assertUserIsMemberOf($g1->id, $betty->id, false);
+        $this->assertSecretExists($r1->id, $betty->id);
+    }
+
+    /**
+     * Add a member with a secret encrypted for another user's key
+     *
+     * @throws \Exception
+     */
+    public function testGroupsUsersAddServiceError_SecretNotEncryptedForAddedMember(): void
+    {
+        Configure::write(SecretRecipientValidationService::CONFIG_KEY_VALIDATE_RECIPIENT, true);
+        [$u1, $g1, $r1] = $this->insertFixture_GroupWithOneManager_OneResourceSharedWithGroup();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+        $ada = UserFactory::make()->withAdaKey()->persist();
+        $betty = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
+
+        $groupUserData = ['group_id' => $g1->id, 'user_id' => $betty->id];
+        $secretsData = [
+            ['resource_id' => $r1->id, 'user_id' => $betty->id, 'data' => $this->encryptMessageFor($ada->id, 'secret')],
+        ];
+
+        try {
+            $this->service->add($uac, $groupUserData, $secretsData);
+            $this->fail('The test should catch an exception');
+        } catch (ValidationException $e) {
+            $this->assertValidationException(
+                $e,
+                'Could not validate group user data.',
+                'secrets.0.data.is_encrypted_for_recipient',
+            );
+        }
+
+        $this->assertEquals(1, GroupsUserFactory::count());
+        $this->assertEquals(1, SecretFactory::count());
+        $this->assertUserIsNotMemberOf($g1->id, $betty->id);
+    }
+
+    /**
+     * Add a member with a secret encrypted for another user's key, when the validation is disabled
+     *
+     * @throws \Exception
+     */
+    public function testGroupsUsersAddServiceSuccess_SecretNotEncryptedForAddedMember_ValidationDisabled(): void
+    {
+        Configure::write(SecretRecipientValidationService::CONFIG_KEY_VALIDATE_RECIPIENT, false);
+        [$u1, $g1, $r1] = $this->insertFixture_GroupWithOneManager_OneResourceSharedWithGroup();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+        $ada = UserFactory::make()->withAdaKey()->persist();
+        $betty = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
+
+        $groupUserData = ['group_id' => $g1->id, 'user_id' => $betty->id];
+        $secretsData = [
+            ['resource_id' => $r1->id, 'user_id' => $betty->id, 'data' => $this->encryptMessageFor($ada->id, 'secret')],
+        ];
+        $this->service->add($uac, $groupUserData, $secretsData);
+
+        $this->assertEquals(2, GroupsUserFactory::count());
+        $this->assertSecretExists($r1->id, $betty->id);
     }
 
     /**

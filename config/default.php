@@ -441,6 +441,13 @@ return [
                 ],
             ],
             'displayNonWebUserWarning' => filter_var(env('PASSBOLT_SECURITY_DISPLAY_NON_WEBUSER_WARNING', true), FILTER_VALIDATE_BOOLEAN),
+            /**
+             * Reject secrets that are not encrypted for their recipient's current OpenPGP key.
+             * Set this configuration to `false` to disable the check.
+             */
+            'secrets' => [
+                'validateRecipient' => filter_var(env('PASSBOLT_SECURITY_SECRETS_VALIDATE_RECIPIENT', true), FILTER_VALIDATE_BOOLEAN),
+            ],
         ],
 
         // Should the app be SSL / HTTPS only.

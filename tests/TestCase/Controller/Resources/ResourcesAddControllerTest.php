@@ -20,12 +20,15 @@ namespace App\Test\TestCase\Controller\Resources;
 use App\Model\Entity\Permission;
 use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
 use App\Service\Resources\ResourcesAddService;
+use App\Service\Secrets\SecretRecipientValidationService;
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Event\EventList;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -155,6 +158,43 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $this->assertEmailQueueCount(1);
 
         $this->assertEventFired(ResourcesAddService::ADD_SUCCESS_EVENT_NAME, $this->Resources->getEventManager());
+    }
+
+    public function testResourcesAddController_Success_SecretEncryptedForCreator(): void
+    {
+        Configure::write(SecretRecipientValidationService::CONFIG_KEY_VALIDATE_RECIPIENT, true);
+        $ada = UserFactory::make()->user()->withAdaKey()->persist();
+        $this->logInAs($ada);
+
+        $data = $this->getDummyResourcesPostData([
+            'secrets' => [['data' => $this->encryptMessageFor($ada->id, 'secret')]],
+        ]);
+        $this->postJson('/resources.json', $data);
+
+        $this->assertSuccess();
+        $this->assertSame(1, $this->Secrets->find()->all()->count());
+    }
+
+    public function testResourcesAddController_Error_SecretNotEncryptedForCreator(): void
+    {
+        Configure::write(SecretRecipientValidationService::CONFIG_KEY_VALIDATE_RECIPIENT, true);
+        $ada = UserFactory::make()->user()->withAdaKey()->persist();
+        $betty = UserFactory::make()->user()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
+        $this->logInAs($ada);
+
+        $data = $this->getDummyResourcesPostData([
+            'secrets' => [['data' => $this->encryptMessageFor($betty->id, 'secret')]],
+        ]);
+        $this->postJson('/resources.json', $data);
+
+        $this->assertError(400, 'Could not validate resource data');
+        $errors = $this->getResponseBodyAsArray();
+        $this->assertSame(
+            'The secret must be encrypted for the recipient user.',
+            Hash::get($errors, 'secrets.0.data.is_encrypted_for_recipient'),
+        );
+        $this->assertSame(0, $this->Resources->find()->all()->count());
+        $this->assertSame(0, $this->Secrets->find()->all()->count());
     }
 
     public function testResourcesAddController_SuccessWithJWT(): void

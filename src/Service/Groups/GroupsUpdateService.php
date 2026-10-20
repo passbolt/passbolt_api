@@ -29,6 +29,7 @@ use App\Service\GroupsUsers\GroupsUsersAddService;
 use App\Service\GroupsUsers\GroupsUsersDeleteService;
 use App\Service\GroupsUsers\GroupsUsersUpdateService;
 use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
+use App\Service\Secrets\SecretRecipientValidationService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
@@ -127,6 +128,10 @@ class GroupsUpdateService
     ): EntitiesChangesDto {
         $group = $this->groupGetService->getNotDeletedOrFail($groupId);
         $this->assertChanges($group, $changes);
+        if (SecretRecipientValidationService::isEnabled()) {
+            $userIds = Hash::extract($secrets ?? [], '{n}.user_id');
+            SecretRecipientValidationService::preloadKeys($userIds);
+        }
         $entitiesChangesDto = new EntitiesChangesDto();
         $this->groupsTable->getConnection()->transactional(
             function () use ($uac, $group, $metaData, $changes, $secrets, $entitiesChangesDto): void {
