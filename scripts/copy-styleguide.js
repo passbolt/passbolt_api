@@ -95,7 +95,7 @@ for (const file of imgFiles) {
   copy(`${SRC_IMG}/${file}`, `${DEST_IMG}/${file}`);
 }
 
-const themes = ['default', 'midgar', 'solarized_light', 'solarized_dark'];
+const themes = ['default', 'midgar', 'solarized_light', 'solarized_dark', 'sakura', 'layette'];
 const cssFiles = ['api_main.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'];
 for (const theme of themes) {
   for (const file of cssFiles) {
