@@ -120,7 +120,7 @@ class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
         $this->assertCookieNotSet(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
     }
 
-    public function testDuoSetupCallbackGetController_Error_With_Redirect()
+    public function testDuoVerifyCallbackGetController_Error_With_Redirect()
     {
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaDuoScenario::class, $user);
