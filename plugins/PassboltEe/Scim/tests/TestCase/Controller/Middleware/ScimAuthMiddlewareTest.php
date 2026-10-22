@@ -25,13 +25,14 @@ class ScimAuthMiddlewareTest extends ScimApiIntegrationTestCase
 {
     use JwtAuthTestTrait;
 
-    public function testScimAuthMiddleware_JWT_Authenticated_Should_Redirect(): void
+    public function testScimAuthMiddleware_JWT_Authenticated_Returns401(): void
     {
         $this->enableFeaturePlugin('JwtAuthentication');
         $user = UserFactory::make()->user()->persist();
         $this->createJwtTokenAndSetInHeader($user->get('id'));
         $this->get($this->getScimEndpoint('Users'));
-        $this->assertRedirect();
+        // A JWT identity carries no SCIM token, so the SCIM request is unauthenticated.
+        $this->assertResponseCode(401);
     }
 
     public function testScimAuthMiddleware_Session_Authenticated_Should_Throw_An_Error(): void

@@ -48,6 +48,14 @@ class IsValidOpenIdBaseUrlTest extends TestCase
             // Bracketed IPv6 literals
             ['https://[::1]', false],
             ['https://[::ffff:127.0.0.1]', false],
+            // Non-standard IPv4
+            ['https://2130706433', false],
+            ['https://2852039166', false],
+            ['https://0177.0.0.1', false],
+            ['https://0x7f000001', false],
+            ['https://127.1', false],
+            ['https://0', false],
+            ['https://127.0.0.1.', false],
             // Non-string / malformed values.
             [null, false],
             [42, false],

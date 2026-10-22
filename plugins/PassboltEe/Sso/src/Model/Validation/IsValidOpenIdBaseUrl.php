@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Model\Validation;
 
 use App\Model\Validation\PassboltValidationRule;
+use Passbolt\Sso\Utility\Http\HostValidator;
 use Passbolt\Sso\Utility\Http\SsoEgressGuard;
 
 class IsValidOpenIdBaseUrl extends PassboltValidationRule
@@ -44,11 +45,15 @@ class IsValidOpenIdBaseUrl extends PassboltValidationRule
             return false;
         }
 
-        $host = trim($host, '[]');
+        $host = HostValidator::stripIpv6Brackets($host);
+
+        if (!HostValidator::isSupported($host)) {
+            return false;
+        }
 
         // Reject IP-literal internal addresses at config time; hostname resolution is deferred to
         // connect time (the HTTP-layer egress guard), so no DNS lookup happens during validation.
-        if (filter_var($host, FILTER_VALIDATE_IP) === false) {
+        if (!HostValidator::isIpLiteral($host)) {
             return true;
         }
 

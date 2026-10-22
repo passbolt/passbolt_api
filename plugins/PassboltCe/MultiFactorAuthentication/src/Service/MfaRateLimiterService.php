@@ -19,69 +19,46 @@ namespace Passbolt\MultiFactorAuthentication\Service;
 
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 
 class MfaRateLimiterService
 {
     use LocatorAwareTrait;
 
+    private const SESSION_LOGIN_ACTION = 'AuthLogin.loginPost';
+    private const JWT_LOGIN_ACTION = 'JwtLogin.loginPost';
+    private const TOTP_VERIFY_ACTION = 'TotpVerifyPost.post';
+
     /**
      * Checks if given user has exceeded the failed attempts.
      *
      * @param string $userId User identifier.
-     * @param bool $isJwtAuth Is authentication is JWT or session.
      * @param bool $incrementFailedAttempts If set to `true` increment failed attempts received from DB to +1.
      * @return bool Returns `true` if failed attempts exceeded, `false` otherwise.
      */
-    public function isFailedAttemptsExceeded(
-        string $userId,
-        bool $isJwtAuth,
-        bool $incrementFailedAttempts = false,
-    ): bool {
+    public function isFailedAttemptsExceeded(string $userId, bool $incrementFailedAttempts = false): bool
+    {
+        $maxAttempts = (int)Configure::read('passbolt.security.mfa.maxAttempts');
         // WARNING: Any value less than 1 means infinite number of attempts!
-        if (Configure::read('passbolt.security.mfa.maxAttempts') < 1) {
+        if ($maxAttempts < 1) {
             return false;
         }
 
-        $actionLogsTable = $this->fetchTable('Passbolt/Log.ActionLogs');
+        $latestLoginDate = $this->findLatestLoginDate($userId);
 
-        $actionId = UuidFactory::uuid('AuthLogin.loginPost');
-        if ($isJwtAuth) {
-            $actionId = UuidFactory::uuid('JwtLogin.loginPost');
+        $conditions = [
+            'user_id' => $userId,
+            'action_id' => UuidFactory::uuid(self::TOTP_VERIFY_ACTION),
+        ];
+        if ($latestLoginDate !== null) {
+            // Greater or equal, as the action log entries are stored with a one second precision.
+            $conditions['created >='] = $latestLoginDate;
         }
 
-        // Subquery: Get last login of given user
-        $latestLoginDate = $actionLogsTable
+        $failedAttemptsCount = $this->fetchTable('Passbolt/Log.ActionLogs')
             ->find()
-            ->select(['created'])
-            ->where([
-                'user_id' => $userId,
-                'status' => 1,
-                'action_id' => $actionId,
-            ])
-            ->orderByDesc('created')
-            ->limit(1);
-
-        /**
-         * This condition is required because for SESSION auth, we render HTML page with 200 status code with form errors,
-         * but for JWT we are using JSON API and return 400 with errors.
-         *
-         * Example:
-         * 1. SESSION auth(with Cookie), SUCCESS: No "TotpVerifyPost.post" action entry in action log.
-         * 2. SESSION auth(with Cookie), FAIL ATTEMPT: Entry in action log with "TotpVerifyPost.post" action with successful(1) status.
-         * 3. JWT auth(json request, without cookie), SUCCESS: Entry in action log with "TotpVerifyPost.post" action with success(1) status.
-         * 4. JWT auth(json request, without cookie), FAIL ATTEMPT: Entry in action log with "TotpVerifyPost.post" action with error(0) status.
-         */
-        $status = $isJwtAuth ? 0 : 1;
-
-        $failedAttemptsCount = $actionLogsTable
-            ->find()
-            ->where([
-                'user_id' => $userId,
-                'status' => $status,
-                'action_id' => UuidFactory::uuid('TotpVerifyPost.post'),
-                'created >' => $latestLoginDate,
-            ])
+            ->where($conditions)
             ->all()
             ->count();
 
@@ -89,6 +66,30 @@ class MfaRateLimiterService
             $failedAttemptsCount++;
         }
 
-        return $failedAttemptsCount > Configure::read('passbolt.security.mfa.maxAttempts');
+        return $failedAttemptsCount > $maxAttempts;
+    }
+
+    /**
+     * @param string $userId User identifier.
+     * @return \Cake\I18n\DateTime|null Null when the user has no successful login entry.
+     */
+    private function findLatestLoginDate(string $userId): ?DateTime
+    {
+        /** @var \Passbolt\Log\Model\Entity\ActionLog|null $latestLogin */
+        $latestLogin = $this->fetchTable('Passbolt/Log.ActionLogs')
+            ->find()
+            ->select(['created'])
+            ->where([
+                'user_id' => $userId,
+                'status' => 1,
+                'action_id IN' => [
+                    UuidFactory::uuid(self::SESSION_LOGIN_ACTION),
+                    UuidFactory::uuid(self::JWT_LOGIN_ACTION),
+                ],
+            ])
+            ->orderByDesc('created')
+            ->first();
+
+        return $latestLogin?->created;
     }
 }

@@ -136,4 +136,48 @@ class AvatarsValidationTest extends TestCase
         $this->expectException(PersistenceFailedException::class);
         $this->Avatars->saveOrFail($avatar);
     }
+
+    public static function nonUploadedFileStringPayloadProvider(): array
+    {
+        return [
+            'file scheme, existing readable path' => ['file://' . FIXTURES . 'Avatar' . DS . 'minimal.pdf'],
+            'plain absolute path, existing readable file' => [FIXTURES . 'Avatar' . DS . 'minimal.pdf'],
+        ];
+    }
+
+    /**
+     * @dataProvider nonUploadedFileStringPayloadProvider
+     */
+    public function testValidationDefault_RejectsNonUploadedFileString(string $payload): void
+    {
+        $avatar = $this->Avatars->newEntity(['file' => $payload]);
+        $errors = $avatar->getErrors();
+
+        $this->assertArrayHasKey('file', $errors);
+        $this->assertArrayHasKey('isUploadedFile', $errors['file']);
+        $this->assertArrayNotHasKey('validMimeType', $errors['file']);
+        $this->assertArrayNotHasKey('validExtension', $errors['file']);
+        $this->assertArrayNotHasKey('validUploadedFile', $errors['file']);
+    }
+
+    public function testValidationDefault_RejectsLegacyFilesArrayShape(): void
+    {
+        $data = [
+            'file' => [
+                'tmp_name' => FIXTURES . 'Avatar' . DS . 'ada.png',
+                'name' => 'ada.png',
+                'type' => 'image/png',
+                'error' => UPLOAD_ERR_OK,
+                'size' => 170049,
+            ],
+        ];
+        $avatar = $this->Avatars->newEntity($data);
+        $errors = $avatar->getErrors();
+
+        $this->assertArrayHasKey('file', $errors);
+        $this->assertArrayHasKey('isUploadedFile', $errors['file']);
+        $this->assertArrayNotHasKey('validMimeType', $errors['file']);
+        $this->assertArrayNotHasKey('validExtension', $errors['file']);
+        $this->assertArrayNotHasKey('validUploadedFile', $errors['file']);
+    }
 }

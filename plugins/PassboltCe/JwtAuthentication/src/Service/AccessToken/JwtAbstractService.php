@@ -27,9 +27,9 @@ class JwtAbstractService
 
     /**
      * @param string $path Path to the secret/private key file
-     * @return self
+     * @return static
      */
-    public function setKeyPath(string $path): self
+    public function setKeyPath(string $path): static
     {
         $this->keyPath = $path;
 

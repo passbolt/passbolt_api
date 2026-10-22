@@ -98,6 +98,7 @@ class OfflineSettingsPostControllerTest extends AppIntegrationTestCase
         $this->assertEmailInBatchContains('Maximum session duration: 300 seconds', $admin->username);
         $this->assertEmailInBatchContains('Data retention period: 7 days', $admin->username);
         $this->assertEmailInBatchContains('Maximum number of offline items (per user): 1000', $admin->username);
+        $this->assertEmailInBatchContains('/app/administration/offline', $admin->username);
     }
 
     public function testOfflineSettingsPostController_Error_Unauthenticated(): void

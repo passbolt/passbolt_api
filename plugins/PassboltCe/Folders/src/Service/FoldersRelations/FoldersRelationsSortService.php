@@ -63,12 +63,14 @@ class FoldersRelationsSortService
         }
 
         $changesDetails = $this->getFolderRelationsDetails($foldersRelations, $uac, $userId);
+        $foldersParentsPersonalStatus = $this->getFoldersParentsPersonalStatus($foldersRelations);
 
         usort($foldersRelations, function (
             FoldersRelation $relationA,
             FoldersRelation $relationB,
         ) use (
             $changesDetails,
+            $foldersParentsPersonalStatus,
             $userId,
         ) {
             $inOperatorTreePriority = $this->hasInOperatorTreePriority($relationA, $relationB, $changesDetails);
@@ -85,7 +87,11 @@ class FoldersRelationsSortService
                     return $inUserTreePriority ? -1 : 1;
                 }
             }
-            $sharedParentPriority = $this->hasSharedParentPriority($relationA, $relationB);
+            $sharedParentPriority = $this->hasSharedParentPriority(
+                $relationA,
+                $relationB,
+                $foldersParentsPersonalStatus,
+            );
             if (!is_null($sharedParentPriority)) {
                 return $sharedParentPriority ? -1 : 1;
             }
@@ -254,6 +260,40 @@ class FoldersRelationsSortService
     }
 
     /**
+     * Retrieve the personal status of the folders parents of the given folders relations.
+     *
+     * @param array<\Passbolt\Folders\Model\Entity\FoldersRelation> $foldersRelations The folders relations to sort.
+     * @return array<string, bool>
+     */
+    private function getFoldersParentsPersonalStatus(array $foldersRelations): array
+    {
+        $foldersParentsIds = array_map(function (FoldersRelation $folderRelation): ?string {
+            return $folderRelation->folder_parent_id;
+        }, $foldersRelations); // extract folder parent ids
+        $foldersParentsIds = array_filter($foldersParentsIds); // filter out empty values
+        $foldersParentsIds = array_values(array_unique($foldersParentsIds)); // remove duplicates
+
+        if (empty($foldersParentsIds)) {
+            return [];
+        }
+
+        $foldersParentsUsageQuery = $this->foldersRelationsTable->unhydratedFind();
+
+        return $foldersParentsUsageQuery
+            ->select([
+                'foreign_id' => 'foreign_id',
+                'usage_count' => $foldersParentsUsageQuery->func()->count('*'),
+            ])
+            ->where(['foreign_id IN' => $foldersParentsIds])
+            ->groupBy('foreign_id')
+            ->all()
+            ->combine('foreign_id', function (array $folderParentUsage): bool {
+                return (int)$folderParentUsage['usage_count'] === 1;
+            })
+            ->toArray();
+    }
+
+    /**
      * Build a folders relations IN or NOT IN tuple comparison used in query where clause.
      * Output SQL like:
      * WHERE (foreign_id, folder_parent_id) IN ((FOLDER_RELATION_1_FOREIGN_ID, FOLDER_RELATION_1_FOLDER_PARENT_ID), ...)
@@ -372,15 +412,18 @@ class FoldersRelationsSortService
      *
      * @param \Passbolt\Folders\Model\Entity\FoldersRelation $relationA The first folder relation to check the priority for.
      * @param \Passbolt\Folders\Model\Entity\FoldersRelation $relationB The second folder relation to check the priority for.
+     * @param array<string, bool> $foldersParentsPersonalStatus The personal status of the folders parents, keyed by
+     * folder parent id.
      * @return bool|null return true if the first relation has the priority, return false if the second relation has
      * the priority or return null if none of them has the priority.
      */
-    private function hasSharedParentPriority(FoldersRelation $relationA, FoldersRelation $relationB): ?bool
-    {
-        $aParentIsPersonal = $relationA->folder_parent_id !== null
-            && $this->foldersRelationsTable->isItemPersonal($relationA->folder_parent_id);
-        $bParentIsPersonal = $relationB->folder_parent_id !== null
-            && $this->foldersRelationsTable->isItemPersonal($relationB->folder_parent_id);
+    private function hasSharedParentPriority(
+        FoldersRelation $relationA,
+        FoldersRelation $relationB,
+        array $foldersParentsPersonalStatus,
+    ): ?bool {
+        $aParentIsPersonal = $this->isFolderParentPersonal($relationA, $foldersParentsPersonalStatus);
+        $bParentIsPersonal = $this->isFolderParentPersonal($relationB, $foldersParentsPersonalStatus);
         if (!$aParentIsPersonal && $bParentIsPersonal) {
             return true;
         } elseif ($aParentIsPersonal && !$bParentIsPersonal) {
@@ -388,6 +431,24 @@ class FoldersRelationsSortService
         }
 
         return null;
+    }
+
+    /**
+     * Check if the folder parent of the given folder relation is personal.
+     *
+     * @param \Passbolt\Folders\Model\Entity\FoldersRelation $folderRelation The folder relation to check.
+     * @param array<string, bool> $foldersParentsPersonalStatus The list of folders parents with its personal status.
+     * @return bool Returns true if folder relation's parent status is personal, false otherwise.
+     */
+    private function isFolderParentPersonal(
+        FoldersRelation $folderRelation,
+        array $foldersParentsPersonalStatus,
+    ): bool {
+        if (is_null($folderRelation->folder_parent_id)) {
+            return false;
+        }
+
+        return $foldersParentsPersonalStatus[$folderRelation->folder_parent_id] ?? false;
     }
 
     /**

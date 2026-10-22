@@ -137,7 +137,7 @@ class ScimIndexControllerTest extends ScimApiIntegrationTestCase
         ScimSettingFactory::make()->legacySecretTokenFormat()->persist();
         $this->configScimAuth();
         $this->get($this->getScimEndpoint('Users'));
-        $this->assertRedirect();
+        $this->assertResponseCode(401);
     }
 
     /**

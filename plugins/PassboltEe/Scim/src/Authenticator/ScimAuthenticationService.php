@@ -15,7 +15,7 @@ class ScimAuthenticationService extends AuthenticationService
      */
     public function authenticate(ServerRequestInterface $request): ResultInterface
     {
-        $this->loadAuthenticator('Authentication.Token', [
+        $this->loadAuthenticator('Passbolt/Scim.ScimToken', [
             'header' => 'Authorization',
             'tokenPrefix' => 'Bearer',
             'identifier' => [

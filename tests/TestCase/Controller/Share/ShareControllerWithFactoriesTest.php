@@ -18,8 +18,13 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Share;
 
 use App\Model\Entity\Permission;
+use App\Service\OpenPGP\MessageRecipientValidationService;
+use App\Service\OpenPGP\MessageValidationService;
+use App\Service\OpenPGP\PublicKeyValidationService;
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\PermissionFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
@@ -108,6 +113,46 @@ class ShareControllerWithFactoriesTest extends AppIntegrationTestCase
         }
         // assert permissions entries
         $this->assertCount(4, $expectedResource->permissions);
+    }
+
+    public function testShareControllerWithFactories_Success_SecretNotEncryptedForRecipient(): void
+    {
+        $owner = UserFactory::make()->withAdaKey()->persist();
+        $recipient = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
+        $resource = ResourceFactory::make(['created_by' => $owner->id])
+            ->withPermissionsFor([$owner])
+            ->withSecretRevisions()
+            ->with('Secrets', [
+                'user_id' => $owner->id,
+                'created_by' => $owner->id,
+                'modified_by' => $owner->id,
+            ])
+            ->persist();
+        $resourceId = $resource->id;
+        // Encrypt recipient's secret with other user's key
+        $secretForRecipient = $this->encryptMessageFor($owner->id, 'secret for recipient');
+
+        $this->logInAs($owner);
+        $this->putJson("/share/resource/$resourceId.json", [
+            'permissions' => [
+                ['aro' => 'User', 'aro_foreign_key' => $recipient->id, 'type' => Permission::READ],
+            ],
+            'secrets' => [
+                ['user_id' => $recipient->id, 'data' => $secretForRecipient],
+            ],
+        ]);
+
+        $this->assertSuccess();
+        $storedSecret = SecretFactory::find()
+            ->where(['resource_id' => $resourceId, 'user_id' => $recipient->id, 'deleted IS' => null])
+            ->firstOrFail();
+        $this->assertSame($secretForRecipient, $storedSecret->data);
+        $recipientGpgkey = GpgkeyFactory::find()->where(['user_id' => $recipient->id])->firstOrFail();
+        $isForRecipient = MessageRecipientValidationService::isMessageForRecipient(
+            MessageValidationService::getMessageInfo($storedSecret->data),
+            PublicKeyValidationService::getPublicKeyInfo($recipientGpgkey->armored_key),
+        );
+        $this->assertFalse($isForRecipient);
     }
 
     public function testShareController_Error_NotValidResourceId_WithFactories(): void

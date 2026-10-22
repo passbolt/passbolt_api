@@ -137,6 +137,13 @@ abstract class ScimApiIntegrationTestCase extends AppIntegrationTestCase
     public const FIXTURE_RESPONSE_USERS_VIEW_NOT_UUID = 'Users' . DS . 'users_view_not_uuid.json';
 
     /**
+     * Create a default SCIM settings entry.
+     *
+     * @var bool
+     */
+    protected bool $createSettingsEntry = true;
+
+    /**
      * Setting ID for the SCIM endpoint
      *
      * @var string
@@ -163,9 +170,11 @@ abstract class ScimApiIntegrationTestCase extends AppIntegrationTestCase
         RoleFactory::make()->guest()->persist();
         RoleFactory::make()->user()->persist();
         RoleFactory::make()->admin()->persist();
-        ScimSettingFactory::make()->default()->persist();
-        $this->settingId = ScimSettingFactory::SCIM_TEST_SETTING_ID;
-        $this->scimUserId = UserFactory::firstOrFail()->id;
+        if ($this->createSettingsEntry) {
+            ScimSettingFactory::make()->default()->persist();
+            $this->settingId = ScimSettingFactory::SCIM_TEST_SETTING_ID;
+            $this->scimUserId = UserFactory::firstOrFail()->id;
+        }
     }
 
     /**

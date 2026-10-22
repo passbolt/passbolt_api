@@ -19,6 +19,7 @@ namespace Passbolt\Scim;
 
 use App\Service\Command\GetUserCommandService;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
+use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
@@ -34,8 +35,11 @@ use Passbolt\Scim\Event\ScimContainUserScimEntryListener;
 use Passbolt\Scim\Event\ScimModelInitializeEventListener;
 use Passbolt\Scim\Middleware\ScimAuthMiddleware;
 use Passbolt\Scim\Middleware\ScimLogMiddleware;
+use Passbolt\Scim\Middleware\ScimUnauthenticatedResponseMiddleware;
+use Passbolt\Scim\Notification\Email\ScimRedactorPool;
 use Passbolt\Scim\Service\Healthcheck\ScimHealthcheck;
 use Passbolt\Scim\Service\Healthcheck\ScimSecretTokenExpiryHealthcheck;
+use Passbolt\Scim\Service\Healthcheck\ScimSecretTokenExpiryWarningHealthcheck;
 use Passbolt\Scim\Utility\ScimConstants;
 
 /**
@@ -68,7 +72,8 @@ class ScimPlugin extends BasePlugin
     {
         $eventManager
             ->on(new ScimModelInitializeEventListener())
-            ->on(new ScimContainUserScimEntryListener());
+            ->on(new ScimContainUserScimEntryListener())
+            ->on(new ScimRedactorPool());
     }
 
     /**
@@ -79,11 +84,13 @@ class ScimPlugin extends BasePlugin
         // SCIM Health checks
         $container->add(ScimHealthcheck::class);
         $container->add(ScimSecretTokenExpiryHealthcheck::class);
+        $container->add(ScimSecretTokenExpiryWarningHealthcheck::class);
         // Add SCIM health check services to collector
         $container
             ->extend(HealthcheckServiceCollector::class)
             ->addMethodCall('addService', [ScimHealthcheck::class])
-            ->addMethodCall('addService', [ScimSecretTokenExpiryHealthcheck::class]);
+            ->addMethodCall('addService', [ScimSecretTokenExpiryHealthcheck::class])
+            ->addMethodCall('addService', [ScimSecretTokenExpiryWarningHealthcheck::class]);
         $container
             ->extend(BodyParserMiddleware::class)
             ->addMethodCall('addParser', [
@@ -113,6 +120,7 @@ class ScimPlugin extends BasePlugin
     {
         $middlewareQueue
             ->insertAfter(RoutingMiddleware::class, ScimAuthMiddleware::class)
+            ->insertAfter(AuthenticationMiddleware::class, ScimUnauthenticatedResponseMiddleware::class)
             ->insertAfter(BodyParserMiddleware::class, ScimLogMiddleware::class);
 
         return parent::middleware($middlewareQueue);

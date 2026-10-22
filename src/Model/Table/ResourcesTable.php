@@ -733,6 +733,37 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
     }
 
     /**
+     * Cleanup resources that do not have a secret
+     *
+     * @param bool $dryRun false
+     * @return int number of affected rows.
+     */
+    public function cleanupMissingSecret(bool $dryRun = false): int
+    {
+        $secretResourceIds = TableRegistry::getTableLocator()->get('Secrets')
+            ->selectQuery()
+            ->select('resource_id');
+
+        $conditions = [
+            'deleted' => false,
+            'id NOT IN' => $secretResourceIds,
+        ];
+
+        $query = $this->find()
+            ->select('id')
+            ->where($conditions);
+
+        $count = $query->count();
+
+        if (!$dryRun) {
+            $resourceIds = $query->all()->extract('id')->toArray();
+            $this->softDeleteAll($resourceIds);
+        }
+
+        return $count;
+    }
+
+    /**
      * Retrieves a list of cleanup methods (first-class callables) implemented by this table.
      *
      * @return array<int, callable> List of callables
@@ -741,6 +772,7 @@ class ResourcesTable extends Table implements TableCleanupProviderInterface
     {
         return [
             $this->cleanupMissingResourceTypeId(...),
+            $this->cleanupMissingSecret(...),
         ];
     }
 }

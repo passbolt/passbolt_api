@@ -90,10 +90,9 @@ class RegisterUserCommandTest extends AppTestCase
             UserFactory::make()->admin()->persist();
         }
 
-        $faker = Factory::create();
-        $username = $faker->email();
-        $firstName = $faker->firstNameFemale();
-        $lastName = $faker->lastName();
+        $username = 'ada.lovelace@passbolt.com';
+        $firstName = 'Ada';
+        $lastName = 'Lovelace';
 
         $options = " -r $role->name -u $username -f $firstName -l $lastName";
 

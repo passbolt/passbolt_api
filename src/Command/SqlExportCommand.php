@@ -44,6 +44,7 @@ class SqlExportCommand extends PassboltCommand
      */
     public const EXCLUDED_DATA_TABLES = [
         'sessions',
+        'authentication_tokens',
     ];
 
     /**
@@ -55,6 +56,7 @@ class SqlExportCommand extends PassboltCommand
 
         return __('Utility to export SQL database backups.') .
             ' ' . __('Security-sensitive tables (currently: {0}) are exported schema-only.', $excluded) .
+            ' ' . __('Use {0} to include authentication tokens data.', '--include-authentication-tokens') .
             ' ' . __('Replaces the deprecated mysql_export command.');
     }
 
@@ -84,6 +86,12 @@ class SqlExportCommand extends PassboltCommand
             ->addOption('dir', [
                 'help' => 'The directory to export the schema and data to.',
                 'default' => null,
+            ])
+            ->addOption('include-authentication-tokens', [
+                'help' => __('Include the authentication tokens data in the dump.') .
+                    ' ' . __('The dump will contain credentials that may still be valid.'),
+                'boolean' => true,
+                'default' => false,
             ]);
 
         return $parser;
@@ -118,7 +126,21 @@ class SqlExportCommand extends PassboltCommand
         if (empty($file)) {
             return $this->errorCode();
         }
-        $status = $this->dump($connection, $dir, $file, $io);
+
+        $includeAuthenticationTokens = $args->getOption('include-authentication-tokens');
+        $excludedDataTables = self::EXCLUDED_DATA_TABLES;
+
+        if ($includeAuthenticationTokens) {
+            $io->warning([
+                __('This dump will include authentication tokens.'),
+                __('The dump will contain credentials that may still be valid.'),
+                __('Do not share or store this file outside the trusted environment.'),
+            ]);
+
+            $excludedDataTables = $this->getExcludedDataTables();
+        }
+
+        $status = $this->dump($connection, $dir, $file, $excludedDataTables, $io);
         if (!$status) {
             $this->error('Something went wrong!', $io);
 
@@ -135,21 +157,41 @@ class SqlExportCommand extends PassboltCommand
     }
 
     /**
+     * Get the tables whose data is excluded from the dump when the include flag is set
+     *
+     * @return array
+     */
+    private function getExcludedDataTables(): array
+    {
+        $excludedTables = array_values(
+            array_diff(self::EXCLUDED_DATA_TABLES, ['authentication_tokens']),
+        );
+
+        return $excludedTables;
+    }
+
+    /**
      * Perform a mysqldump command
      *
      * @param \Cake\Database\Connection $connection connection manager config
      * @param string $dir directory path
      * @param string $file file name
+     * @param array $excludedDataTables tables that will be excluded from the dump
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return bool
      */
-    protected function dump(Connection $connection, string $dir, string $file, ConsoleIo $io): bool
-    {
+    protected function dump(
+        Connection $connection,
+        string $dir,
+        string $file,
+        array $excludedDataTables,
+        ConsoleIo $io,
+    ): bool {
         $io->info('Saving backup file: ' . $dir . $file);
-        $io->info(__('Excluding data of table(s): {0}.', implode(', ', self::EXCLUDED_DATA_TABLES)));
+        $io->info(__('Excluding data of table(s): {0}.', implode(', ', $excludedDataTables)));
 
-        $existingExcluded = array_values(array_intersect(
-            self::EXCLUDED_DATA_TABLES,
+        $existingExcludedTables = array_values(array_intersect(
+            $excludedDataTables,
             $connection->getSchemaCollection()->listTables(),
         ));
 
@@ -160,12 +202,12 @@ class SqlExportCommand extends PassboltCommand
             $isMariadbDump = ($driver->isMariaDb() && version_compare($driver->version(), '10.4.6', '>='));
 
             if (!$isMariadbDump) {
-                $status = $this->mysqlDump($connection->config(), $dir, $file, $existingExcluded);
+                $status = $this->mysqlDump($connection->config(), $dir, $file, $existingExcludedTables);
             } else {
-                $status = $this->mariaDbDump($connection->config(), $dir, $file, $existingExcluded);
+                $status = $this->mariaDbDump($connection->config(), $dir, $file, $existingExcludedTables);
             }
         } elseif ($driver instanceof Postgres) {
-            $status = $this->postgresDump($connection->config(), $dir, $file);
+            $status = $this->postgresDump($connection->config(), $dir, $file, $existingExcludedTables);
         } else {
             $this->error('Sorry only MySQL and PostgreSQL are supported at the moment', $io);
 
@@ -190,12 +232,12 @@ class SqlExportCommand extends PassboltCommand
      * @param array $config Database config
      * @param string $dir Target directory
      * @param string $file Target file
-     * @param array<int, string> $existingExcluded Excluded tables that exist on the source (schema-only in dump)
+     * @param array<int, string> $existingExcludedTables Excluded tables that exist on the source (schema-only in dump)
      * @return int
      */
-    protected function mysqlDump(array $config, string $dir, string $file, array $existingExcluded = []): int
+    protected function mysqlDump(array $config, string $dir, string $file, array $existingExcludedTables = []): int
     {
-        return $this->mysqlLikeDump('mysqldump', $config, $dir, $file, $existingExcluded);
+        return $this->mysqlLikeDump('mysqldump', $config, $dir, $file, $existingExcludedTables);
     }
 
     /**
@@ -204,12 +246,12 @@ class SqlExportCommand extends PassboltCommand
      * @param array $config Database configuration.
      * @param string $dir Target directory.
      * @param string $file Target file.
-     * @param array<int, string> $existingExcluded Excluded tables that exist on the source (schema-only in dump)
+     * @param array<int, string> $existingExcludedTables Excluded tables that exist on the source (schema-only in dump)
      * @return int
      */
-    protected function mariaDbDump(array $config, string $dir, string $file, array $existingExcluded = []): int
+    protected function mariaDbDump(array $config, string $dir, string $file, array $existingExcludedTables = []): int
     {
-        return $this->mysqlLikeDump('mariadb-dump', $config, $dir, $file, $existingExcluded);
+        return $this->mysqlLikeDump('mariadb-dump', $config, $dir, $file, $existingExcludedTables);
     }
 
     /**
@@ -221,7 +263,7 @@ class SqlExportCommand extends PassboltCommand
      * @param array $config Database config
      * @param string $dir Target directory
      * @param string $file Target file
-     * @param array<int, string> $existingExcluded Excluded tables present on the source.
+     * @param array<int, string> $existingExcludedTables Excluded tables present on the source.
      * @return int
      */
     private function mysqlLikeDump(
@@ -229,7 +271,7 @@ class SqlExportCommand extends PassboltCommand
         array $config,
         string $dir,
         string $file,
-        array $existingExcluded,
+        array $existingExcludedTables,
     ): int {
         $baseCmd = [$binary, '-h', $config['host'], '-u', $config['username']];
         if (!empty($config['password'])) {
@@ -238,16 +280,16 @@ class SqlExportCommand extends PassboltCommand
         }
 
         $cmd = $baseCmd;
-        foreach (self::EXCLUDED_DATA_TABLES as $table) {
+        foreach ($existingExcludedTables as $table) {
             $cmd[] = '--ignore-table=' . $config['database'] . '.' . $table;
         }
         $cmd[] = $config['database'];
         $status = $this->runDumpCommand($cmd, $dir . $file);
-        if ($status !== $this->successCode() || empty($existingExcluded)) {
+        if ($status !== $this->successCode() || empty($existingExcludedTables)) {
             return $status;
         }
 
-        $cmd = array_merge($baseCmd, ['--no-data', $config['database']], $existingExcluded);
+        $cmd = array_merge($baseCmd, ['--no-data', $config['database']], $existingExcludedTables);
 
         return $this->runDumpCommand($cmd, $dir . $file, null, true);
     }
@@ -258,12 +300,13 @@ class SqlExportCommand extends PassboltCommand
      * @param array $config Database config
      * @param string $dir Target directory
      * @param string $file Target file
+     * @param array<int, string> $existingExcludedTables Excluded tables present on the source.
      * @return int
      */
-    protected function postgresDump(array $config, string $dir, string $file): int
+    protected function postgresDump(array $config, string $dir, string $file, array $existingExcludedTables = []): int
     {
         $cmd = ['pg_dump', '-h', $config['host'], '-U', $config['username']];
-        foreach (self::EXCLUDED_DATA_TABLES as $table) {
+        foreach ($existingExcludedTables as $table) {
             $cmd[] = '--exclude-table-data=' . $table;
         }
         $cmd[] = '-d';

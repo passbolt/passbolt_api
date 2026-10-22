@@ -27,8 +27,12 @@ use Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Form\Totp\TotpSetupForm;
 use Passbolt\MultiFactorAuthentication\Form\Totp\TotpVerifyForm;
+use Passbolt\MultiFactorAuthentication\Form\Webauthn\WebauthnSetupForm;
+use Passbolt\MultiFactorAuthentication\Form\Webauthn\WebauthnVerifyForm;
 use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeySetupForm;
 use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeyVerifyForm;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAssertionService;
+use Passbolt\MultiFactorAuthentication\Service\Webauthn\MfaWebauthnVerifyAttestationService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -84,6 +88,7 @@ class InjectMfaFormMiddleware implements MiddlewareInterface
         UserAccessControl $uac,
         MfaSettings $mfaSettings,
     ): void {
+        $args = [$uac, $mfaSettings];
         switch ($path) {
             case 'setup/totp/start':
             case 'setup/totp':
@@ -111,6 +116,14 @@ class InjectMfaFormMiddleware implements MiddlewareInterface
             case 'verify/duo':
                 $concrete = DuoVerifyForm::class;
                 break;
+            case 'setup/webauthn/finish':
+                $concrete = WebauthnSetupForm::class;
+                $args = [$uac, $container->get(MfaWebauthnVerifyAttestationService::class)];
+                break;
+            case 'verify/webauthn/finish':
+                $concrete = WebauthnVerifyForm::class;
+                $args = [$uac, $container->get(MfaWebauthnVerifyAssertionService::class)];
+                break;
             default:
                 $concrete = null;
                 break;
@@ -118,8 +131,7 @@ class InjectMfaFormMiddleware implements MiddlewareInterface
 
         if ($concrete) {
             $container->add(MfaFormInterface::class, $concrete)
-                ->addArgument($uac)
-                ->addArgument($mfaSettings)
+                ->addArguments($args)
                 ->setShared(true);
         }
     }

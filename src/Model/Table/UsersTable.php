@@ -536,8 +536,16 @@ class UsersTable extends Table implements TableCleanupProviderInterface
         $Favorites = TableRegistry::getTableLocator()->get('Favorites');
         $Favorites->deleteAll(['user_id' => $user->id]);
 
+        $this->deleteQuery()
+            ->delete('webauthn_credentials')
+            ->where(['user_id' => $user->id])
+            ->execute();
+
         // Mark gpg ke as deleted
         $this->Gpgkeys->updateAll(['deleted' => true], ['user_id' => $user->id]);
+
+        // Set authentication tokens as inactive
+        $this->AuthenticationTokens->updateAll(['active' => false], ['user_id' => $user->id, 'active' => true]);
 
         // Mark scim_entry as deleted
         if ($this->hasAssociation('ScimEntries')) {

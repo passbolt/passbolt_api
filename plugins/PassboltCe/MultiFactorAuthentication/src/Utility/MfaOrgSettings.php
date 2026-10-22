@@ -17,8 +17,10 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
 use App\Error\Exception\CustomValidationException;
+use App\Error\Exception\WebauthnRelyingPartyIdInvalidException;
 use App\Model\Table\OrganizationSettingsTable;
 use App\Utility\UserAccessControl;
+use App\Utility\Webauthn\WebauthnRelyingPartyId;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
@@ -227,6 +229,10 @@ class MfaOrgSettings
                 } catch (RecordNotFoundException $exception) {
                 }
                 break;
+            case MfaSettings::PROVIDER_WEBAUTHN:
+                // WebAuthn has no org-side secrets; the provider is enabled as soon as it is toggled on.
+                $result = true;
+                break;
         }
 
         return $result;
@@ -301,7 +307,13 @@ class MfaOrgSettings
                     }
                     break;
                 case MfaSettings::PROVIDER_TOTP:
-                    // Nothing else to validate
+                    break;
+                case MfaSettings::PROVIDER_WEBAUTHN:
+                    try {
+                        WebauthnRelyingPartyId::getOrFail();
+                    } catch (WebauthnRelyingPartyIdInvalidException $exception) {
+                        $errors[$provider]['relyingPartyIdInvalid'] = $exception->getMessage();
+                    }
                     break;
                 default:
                     $errors[$provider]['invalidProvider'] = __('Unknown MFA provider: {0}.', $provider);
@@ -328,9 +340,9 @@ class MfaOrgSettings
      * @param \App\Utility\UserAccessControl $uac user access control
      * @param \Duo\DuoUniversal\Client|null $client Duo SDK Client
      * @param array $options Options used to save & validate organisation settings
-     * @return void
+     * @return array new data providers array
      */
-    public function save(array $data, UserAccessControl $uac, ?Client $client = null, array $options = []): void
+    public function save(array $data, UserAccessControl $uac, ?Client $client = null, array $options = []): array
     {
         if (isset($data[MfaSettings::PROVIDERS])) {
             $data[MfaSettings::PROVIDERS] = $this->formatProviders($data[MfaSettings::PROVIDERS]);
@@ -339,5 +351,7 @@ class MfaOrgSettings
         $this->settings = $data;
         $json = json_encode($data);
         $this->OrganizationSettings->createOrUpdateSetting(MfaSettings::MFA, $json, $uac);
+
+        return $data[MfaSettings::PROVIDERS];
     }
 }

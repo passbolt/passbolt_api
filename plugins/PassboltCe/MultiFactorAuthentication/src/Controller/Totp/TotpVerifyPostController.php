@@ -25,6 +25,7 @@ use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenLogoutService;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
+use Passbolt\MultiFactorAuthentication\Service\MfaRateLimitDisableUserService;
 use Passbolt\MultiFactorAuthentication\Service\MfaRateLimiterService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
@@ -94,7 +95,6 @@ class TotpVerifyPostController extends MfaVerifyController
 
         $isFailedAttemptExceeded = (new MfaRateLimiterService())->isFailedAttemptsExceeded(
             $this->User->id(),
-            $isJwtAuth,
             true, // Consider this as a failed attempt too.
         );
 
@@ -102,20 +102,24 @@ class TotpVerifyPostController extends MfaVerifyController
             return null;
         }
 
-        if (!$this->request->is('json')) {
-            // Logout and redirect
-            return $this->redirect($this->Authentication->logout());
-        }
+        $userId = $this->User->id();
 
-        if ($isJwtAuth) {
-            (new RefreshTokenLogoutService())->logout($this->User->id(), $this->getRequest());
+        if ($this->request->is('json') && $isJwtAuth) {
+            (new RefreshTokenLogoutService())->logout($userId, $this->getRequest());
             $cookiesCollection = $this->getResponse()->getCookieCollection()->remove(
                 RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE,
             );
             $this->setResponse($this->getResponse()->withCookieCollection($cookiesCollection));
         }
 
-        $this->Authentication->logout();
+        $logoutRedirect = $this->Authentication->logout();
+
+        // Disable user after failed attempts exceeds
+        (new MfaRateLimitDisableUserService())->disable($userId);
+
+        if (!$this->request->is('json')) {
+            return $this->redirect($logoutRedirect);
+        }
 
         throw new BadRequestException(__('You have been logged out due to too many failed attempts.'));
     }

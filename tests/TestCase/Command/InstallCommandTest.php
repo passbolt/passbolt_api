@@ -29,7 +29,6 @@ use Cake\Core\Configure;
 use Cake\Http\Client;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
-use Faker\Factory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Log\Model\Table\ActionsTable;
 use Passbolt\Subscription\Test\DummySubscriptionTrait;
@@ -193,10 +192,9 @@ class InstallCommandTest extends AppTestCase
      */
     public function testInstallCommandNormalForceWithAdminData()
     {
-        $faker = Factory::create();
-        $userName = $faker->email();
-        $firstName = $faker->firstNameFemale();
-        $lastName = $faker->lastName();
+        $userName = 'ada.lovelace@passbolt.com';
+        $firstName = 'Ada';
+        $lastName = 'Lovelace';
         $cmd = 'passbolt install --force --backup -q ';
         $cmd .= ' --admin-first-name ' . $firstName;
         $cmd .= ' --admin-last-name ' . $lastName;

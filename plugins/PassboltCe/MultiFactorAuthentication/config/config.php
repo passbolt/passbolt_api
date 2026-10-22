@@ -9,6 +9,7 @@ return [
                     'totp' => filter_var(env('PASSBOLT_PLUGINS_MFA_PROVIDERS_TOTP', false), FILTER_VALIDATE_BOOLEAN),
                     'duo' => filter_var(env('PASSBOLT_PLUGINS_MFA_PROVIDERS_DUO', false), FILTER_VALIDATE_BOOLEAN),
                     'yubikey' => filter_var(env('PASSBOLT_PLUGINS_MFA_PROVIDERS_YUBIKEY', false), FILTER_VALIDATE_BOOLEAN), //phpcs:ignore
+                    'webauthn' => filter_var(env('PASSBOLT_PLUGINS_MFA_PROVIDERS_WEBAUTHN', false), FILTER_VALIDATE_BOOLEAN), //phpcs:ignore
                 ],
                 'totp' => [
                     'secretLength' => env('PASSBOLT_PLUGINS_MFA_TOTP_SECRET_LENGTH', null),

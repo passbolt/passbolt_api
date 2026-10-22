@@ -16,25 +16,30 @@
         'class' => ['totp-setup'],
     ];
     ?>
-<div class="login-form ">
-    <h1>
-        <?= __('Enter the six digit number as presented on your phone or tablet.'); ?>
-    </h1>
-    <?= $this->Form->create($verifyForm, $formContext); ?>
-    <?= $this->Form->control('totp', [
-        'label' => 'One Time Password (OTP)',
-        'placeholder' => '123456',
-        'autofocus' => 'autofocus',
-        'autocomplete' => 'off'
-    ]); ?>
-
-    <?php if ($isRememberMeForAMonthEnabled): ?>
-    <div class="input checkbox">
-        <input type="checkbox" name="remember" value="remember" id="remember">
-        <label for="remember" ><?= __('Remember this device for a month.'); ?></label>
+<div class="content">
+    <div class="header">
+        <div class="logo"><span class="visually-hidden">Passbolt</span></div>
     </div>
-    <?php endif; ?>
+    <div class="login-form ">
+        <h1>
+            <?= __('Enter the six digit number as presented on your phone or tablet.'); ?>
+        </h1>
+        <?= $this->Form->create($verifyForm, $formContext); ?>
+        <?= $this->Form->control('totp', [
+            'label' => 'One Time Password (OTP)',
+            'placeholder' => '123456',
+            'autofocus' => 'autofocus',
+            'autocomplete' => 'off'
+        ]); ?>
 
-    <?= $this->element('formActions', ['providers' => $providers, 'redirect' => $redirect, 'currentProvider' => MfaSettings::PROVIDER_TOTP]); ?>
-    <?= $this->Form->end(); ?>
+        <?php if ($isRememberMeForAMonthEnabled): ?>
+        <div class="input checkbox">
+            <input type="checkbox" name="remember" value="remember" id="remember">
+            <label for="remember" ><?= __('Remember this device for a month.'); ?></label>
+        </div>
+        <?php endif; ?>
+
+        <?= $this->element('formActions', ['providers' => $providers, 'redirect' => $redirect, 'currentProvider' => MfaSettings::PROVIDER_TOTP]); ?>
+        <?= $this->Form->end(); ?>
+    </div>
 </div>

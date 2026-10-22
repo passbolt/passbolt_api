@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Command\SqlExportCommand;
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\SessionFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
@@ -155,6 +156,8 @@ class SqlExportCommandTest extends AppTestCase
         $sentinels = [];
         $sentinels['sessions'] = 'sentinel-sessions-' . uniqid();
         SessionFactory::make(['data' => $sentinels['sessions']])->persist();
+        $sentinels['authentication_tokens'] = 'sentinel-authentication_tokens-' . uniqid();
+        AuthenticationTokenFactory::make(['data' => $sentinels['authentication_tokens']])->persist();
 
         $testDir = SqlExportCommand::CACHE_DATABASE_DIRECTORY;
         $this->emptyDirectory($testDir);
@@ -177,6 +180,74 @@ class SqlExportCommandTest extends AppTestCase
             }
             $this->assertStringNotContainsString($sentinels[$table], $dump);
         }
+    }
+
+    public function testSqlExportCommand_IncludesAuthTokensWhenFlagSet()
+    {
+        $isPostgres = ConnectionManager::get('default')->getDriver() instanceof Postgres;
+
+        // Seed one row per excluded table with a recognisable payload. Add a
+        // factory line here for every new entry in EXCLUDED_DATA_TABLES.
+        $sentinels = [];
+        $sentinels['sessions'] = 'sentinel-sessions-' . uniqid();
+        SessionFactory::make(['data' => $sentinels['sessions']])->persist();
+        $sentinels['authentication_tokens'] = 'sentinel-authentication_tokens-' . uniqid();
+        AuthenticationTokenFactory::make(['data' => $sentinels['authentication_tokens']])->persist();
+
+        $testDir = SqlExportCommand::CACHE_DATABASE_DIRECTORY;
+        $this->emptyDirectory($testDir);
+        $testFile = 'exclude-test.sql';
+        $flag = '--include-authentication-tokens';
+
+        $this->exec("passbolt sql_export {$flag} --dir {$testDir} --file {$testFile} --force");
+
+        $this->assertExitSuccess();
+
+        // As we added the flag, we need to remove authentication tokens from the excluded tables array
+        $expected = array_values(array_diff(
+            SqlExportCommand::EXCLUDED_DATA_TABLES,
+            ['authentication_tokens'],
+        ));
+
+        $this->assertErrorContains('This dump will include authentication tokens');
+        $this->assertOutputContains('Excluding data of table(s): ' . implode(', ', $expected));
+
+        $dump = file_get_contents($testDir . DS . $testFile);
+
+        // Assert other excluded tables are being excluded properly
+        foreach ($expected as $table) {
+            if ($isPostgres) {
+                $this->assertMatchesRegularExpression("/CREATE TABLE .*{$table}/", $dump);
+                $this->assertStringNotContainsString("COPY public.{$table}", $dump);
+            } else {
+                $this->assertStringContainsString("CREATE TABLE `{$table}`", $dump);
+                $this->assertStringNotContainsString("INSERT INTO `{$table}`", $dump);
+            }
+            $this->assertStringNotContainsString($sentinels[$table], $dump);
+        }
+
+        // Assert that auth tokens are being included as flag was added to the command
+        if ($isPostgres) {
+            $this->assertMatchesRegularExpression('/CREATE TABLE .*authentication_tokens/', $dump);
+            $this->assertStringContainsString('COPY public.authentication_tokens', $dump);
+        } else {
+            $this->assertStringContainsString('CREATE TABLE `authentication_tokens`', $dump);
+            $this->assertStringContainsString('INSERT INTO `authentication_tokens`', $dump);
+        }
+        $this->assertStringContainsString($sentinels['authentication_tokens'], $dump);
+    }
+
+    public function testSqlExportCommand_OnNonSupportedFlag()
+    {
+        $testDir = SqlExportCommand::CACHE_DATABASE_DIRECTORY;
+        $this->emptyDirectory($testDir);
+        $testFile = 'exclude-test.sql';
+
+        $this->exec("passbolt sql_export --include-sessions --dir {$testDir} --file {$testFile} --force");
+
+        $this->assertExitError();
+        $this->assertErrorContains('Unknown option `include-sessions`.');
+        $this->assertFileDoesNotExist($testDir . $testFile);
     }
 
     public function testMysqlExportCommandHelp()

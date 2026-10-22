@@ -18,13 +18,26 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\OrgSettin
 
 use App\Model\Entity\Role;
 use App\Test\Factory\UserFactory;
+use Cake\Core\Configure;
 use Duo\DuoUniversal\Client;
+use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Multi\MfaTotpDuoScenario;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Multi\MfaTotpDuoUserOnlyScenario;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpUserOnlyScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        Configure::write('App.fullBaseUrl', 'https://passbolt.example.com');
+    }
+
     /**
      * @group mfa
      * @group mfaOrgSettings
@@ -143,6 +156,105 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
      * @group mfaOrgSettings
      * @group mfaOrgSettingsPost
      */
+    public function testMfaOrgSettingsPostController_EnablesWebauthn_WithArrayShape(): void
+    {
+        $this->authenticateAs('admin');
+        $this->postJson('/mfa/settings.json?api-version=v2', [
+            'providers' => [MfaSettings::PROVIDER_WEBAUTHN],
+        ]);
+        $this->assertResponseSuccess();
+        $this->assertContains(MfaSettings::PROVIDER_WEBAUTHN, $this->_responseJsonBody->providers);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     * @group mfaOrgSettingsPost
+     */
+    public function testMfaOrgSettingsPostController_EnablesWebauthn_WithObjectShape(): void
+    {
+        $this->authenticateAs('admin');
+        $this->postJson('/mfa/settings.json?api-version=v2', [
+            'providers' => [
+                MfaSettings::PROVIDER_TOTP => true,
+                MfaSettings::PROVIDER_WEBAUTHN => true,
+            ],
+        ]);
+        $this->assertResponseSuccess();
+        $this->assertContains(MfaSettings::PROVIDER_WEBAUTHN, $this->_responseJsonBody->providers);
+        $this->assertContains(MfaSettings::PROVIDER_TOTP, $this->_responseJsonBody->providers);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     * @group mfaOrgSettingsPost
+     */
+    public function testMfaOrgSettingsPostController_Error_WebauthnFullBaseUrlIsIpAddress(): void
+    {
+        Configure::write('App.fullBaseUrl', 'https://192.168.1.10');
+        $this->logInAsAdmin();
+
+        $this->postJson('/mfa/settings.json?api-version=v2', [
+            'providers' => [MfaSettings::PROVIDER_WEBAUTHN],
+        ]);
+
+        $this->assertResponseError();
+        $result = json_decode($this->_getBodyAsString(), true);
+        $this->assertSame(
+            'Passkeys require Passbolt to be reached through a domain name, not an IP address.',
+            $result['body'][MfaSettings::PROVIDER_WEBAUTHN]['relyingPartyIdInvalid'],
+        );
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     * @group mfaOrgSettingsPost
+     */
+    public function testMfaOrgSettingsPostController_Error_WebauthnFullBaseUrlIsNotConfigured(): void
+    {
+        Configure::write('App.fullBaseUrl', '');
+        $this->logInAsAdmin();
+
+        $this->postJson('/mfa/settings.json?api-version=v2', [
+            'providers' => [MfaSettings::PROVIDER_WEBAUTHN],
+        ]);
+
+        $this->assertResponseError();
+        $result = json_decode($this->_getBodyAsString(), true);
+        $this->assertSame(
+            'Passkeys require a valid full base URL to be configured.',
+            $result['body'][MfaSettings::PROVIDER_WEBAUTHN]['relyingPartyIdInvalid'],
+        );
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     * @group mfaOrgSettingsPost
+     */
+    public function testMfaOrgSettingsPostController_DisablesWebauthn_DropsFromProviderList(): void
+    {
+        $config['providers'] = [
+            MfaSettings::PROVIDER_TOTP => true,
+            MfaSettings::PROVIDER_WEBAUTHN => true,
+        ];
+        $this->mockMfaOrgSettings($config);
+        $this->authenticateAs('admin');
+
+        $this->postJson('/mfa/settings.json?api-version=v2', [
+            'providers' => [MfaSettings::PROVIDER_TOTP],
+        ]);
+        $this->assertResponseSuccess();
+        $this->assertNotContains(MfaSettings::PROVIDER_WEBAUTHN, $this->_responseJsonBody->providers);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     * @group mfaOrgSettingsPost
+     */
     public function testMfaOrgSettingsPostControllerError_WrongConfig()
     {
         $config['providers'] = [MfaSettings::PROVIDER_TOTP => true];
@@ -163,5 +275,72 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
         $this->assertTrue(isset($result['body']['yubikey']['clientId']['isValidClientId']));
         $this->assertTrue(isset($result['body']['nope']));
         $this->assertResponseError();
+    }
+
+    public function testMfaOrgSettingsPutControllerSuccess_DisablingAllProvidersCleansAllAssociatedData()
+    {
+        $userA = UserFactory::make()->user()->persist();
+        $userB = UserFactory::make()->user()->persist();
+        $userC = UserFactory::make()->admin()->persist();
+
+        // Account settings and tokens for userA
+        $this->loadFixtureScenario(MfaTotpDuoScenario::class, $userA);
+        $this->mockMfaCookieValid($this->makeUac($userA), MfaSettings::PROVIDER_TOTP);
+        $this->mockMfaCookieValid($this->makeUac($userA), MfaSettings::PROVIDER_DUO);
+        // Account settings and tokens for userB
+        $this->loadFixtureScenario(MfaTotpDuoUserOnlyScenario::class, $userB);
+        $this->mockMfaCookieValid($this->makeUac($userB), MfaSettings::PROVIDER_TOTP);
+        $this->mockMfaCookieValid($this->makeUac($userB), MfaSettings::PROVIDER_DUO);
+        // Account settings and tokens for userC
+        $this->loadFixtureScenario(MfaTotpUserOnlyScenario::class, $userC);
+        $this->mockMfaCookieValid($this->makeUac($userC), MfaSettings::PROVIDER_TOTP);
+
+        // Not related MFA account settings for userA
+        AccountSettingFactory::make()->withUser($userA)->locale('en-UK')->persist();
+
+        $this->logInAsAdmin();
+        $this->putJson('/mfa/settings.json?api-version=v2', ['providers' => []]);
+
+        $this->assertResponseSuccess();
+        $this->assertResponseContains('The multi factor authentication settings for the organization were updated.');
+        $this->assertEquals($this->_responseJsonBody->providers, []);
+        $this->assertSame(1, MfaOrganizationSettingFactory::count());
+        // Here it should be 1 (keeping the locale setting and flushing all MFA settings as there is no provider left)
+        $this->assertSame(1, AccountSettingFactory::count());
+        $this->assertSame(5, MfaAuthenticationTokenFactory::count());
+        //Here it should be 0 since we are removing all providers and the tokens should be set inactive
+        $this->assertSame(0, MfaAuthenticationTokenFactory::find()->where(['active' => true])->all()->count());
+    }
+
+    public function testMfaOrgSettingsPostControllerSuccess_DisablingOneProviderCleansAllAssociatedData()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $this->loadFixtureScenario(MfaTotpDuoScenario::class, $user);
+        $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_TOTP);
+        $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_DUO);
+
+        $this->logInAsAdmin();
+        $this->postJson('/mfa/settings.json?api-version=v2', [
+            MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP => true],
+        ]);
+
+        $this->assertResponseSuccess();
+        $this->assertResponseContains('The multi factor authentication settings for the organization were updated.');
+        $this->assertEquals($this->_responseJsonBody->providers, ['totp']);
+        // Org Level
+        $this->assertSame(1, MfaOrganizationSettingFactory::count());
+        $orgSettingsInDB = $this->getMfaOrganizationSettingValue();
+        // Duo provider should be removed from the provider's array
+        $this->assertArrayNotHasKey('duo', $orgSettingsInDB);
+        // User Level
+        $this->assertSame(1, AccountSettingFactory::count());
+        $accountSettingsInDB = $this->getMfaAccountSettingValue();
+        // The provider's array should have just TOTP, as DUO was disabled
+        $this->assertSame(['totp'], $accountSettingsInDB['providers']);
+        $this->assertArrayNotHasKey('duo', $accountSettingsInDB);
+        $this->assertSame(2, MfaAuthenticationTokenFactory::count());
+        // Here it should be 2 because the mfa token for duo should be not set inactive
+        // Inactivating this token while user is logged in with it can cause problems
+        $this->assertSame(2, MfaAuthenticationTokenFactory::find()->where(['active' => true])->all()->count());
     }
 }

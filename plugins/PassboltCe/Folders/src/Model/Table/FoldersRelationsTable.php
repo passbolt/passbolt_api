@@ -509,9 +509,14 @@ class FoldersRelationsTable extends Table implements TableCleanupProviderInterfa
             return false;
         }
 
-        return $this->findByForeignId($foreignId)
+        $foldersRelationsCount = $this->unhydratedFind()
+            ->select(['id'])
+            ->where(['foreign_id' => $foreignId])
+            ->limit(2)
             ->all()
-            ->count() === 1;
+            ->count();
+
+        return $foldersRelationsCount === 1;
     }
 
     /**

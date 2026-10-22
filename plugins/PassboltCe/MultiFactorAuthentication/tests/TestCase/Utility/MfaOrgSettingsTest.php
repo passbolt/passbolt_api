@@ -148,6 +148,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_TOTP => false,
             MfaSettings::PROVIDER_DUO => false,
             MfaSettings::PROVIDER_YUBIKEY => false,
+            MfaSettings::PROVIDER_WEBAUTHN => false,
         ];
         $config = $this->defaultConfig;
         $config[MfaSettings::PROVIDERS] = $providers;
@@ -178,6 +179,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_TOTP => false,
             MfaSettings::PROVIDER_DUO => true,
             MfaSettings::PROVIDER_YUBIKEY => false,
+            MfaSettings::PROVIDER_WEBAUTHN => false,
         ]);
     }
 

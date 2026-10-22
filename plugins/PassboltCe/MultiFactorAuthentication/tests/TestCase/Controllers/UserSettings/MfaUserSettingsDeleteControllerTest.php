@@ -21,6 +21,8 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\I18n\DateTime;
+use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -93,11 +95,18 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_DUO => [MfaAccountSettings::VERIFIED => DateTime::now()],
         ];
         $user = UserFactory::make()->user()->persist();
-        $this->mockMfaAccountSettings($this->makeUac($user), $data);
+        $uac = $this->makeUac($user);
+        $this->mockMfaAccountSettings($uac, $data);
+        $this->mockMfaCookieValid($uac, MfaSettings::PROVIDER_DUO);
 
         $this->logInAsAdmin();
         $this->deleteJson(sprintf(self::TESTED_ROUTE, $user->get('id')));
+
         $this->assertResponseCode(200);
         $this->assertResponseContains('The multi-factor authentication settings for the user were deleted.');
+        $this->assertSame(0, AccountSettingFactory::count());
+        $this->assertMfaTokenIsInactive($uac, MfaSettings::PROVIDER_DUO);
+        $this->assertSame(1, MfaAuthenticationTokenFactory::count());
+        $this->assertSame(0, MfaAuthenticationTokenFactory::find()->where(['active' => true])->all()->count());
     }
 }

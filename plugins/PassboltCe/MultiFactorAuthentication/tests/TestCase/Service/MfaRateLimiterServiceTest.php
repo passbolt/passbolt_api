@@ -68,7 +68,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
             ->userId($user->id)
             ->persist();
 
-        $result = $this->service->isFailedAttemptsExceeded($user->id, false);
+        $result = $this->service->isFailedAttemptsExceeded($user->id);
 
         $this->assertTrue($result);
     }
@@ -87,7 +87,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
             ->userId($user->id)
             ->persist();
 
-        $result = $this->service->isFailedAttemptsExceeded($user->id, false);
+        $result = $this->service->isFailedAttemptsExceeded($user->id);
 
         $this->assertFalse($result);
     }
@@ -96,16 +96,16 @@ class MfaRateLimiterServiceTest extends AppTestCase
     {
         $user = UserFactory::make()->user()->persist();
         // Old actions
-        ActionLogFactory::make(['created' => DateTime::now()->subMinutes(2)])
+        ActionLogFactory::make(['created' => DateTime::now()->subMinutes(5)])
             ->userId($user->id)
             ->loginAction()
             ->persist();
-        ActionLogFactory::make(['created' => DateTime::now()], 3)
+        ActionLogFactory::make(['created' => DateTime::now()->subMinutes(4)], 3)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();
         // login action again
-        ActionLogFactory::make(['created' => DateTime::now()])
+        ActionLogFactory::make(['created' => DateTime::now()->subMinutes(2)])
             ->userId($user->id)
             ->loginAction()
             ->persist();
@@ -114,7 +114,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
             ->userId($user->id)
             ->persist();
 
-        $result = $this->service->isFailedAttemptsExceeded($user->id, false);
+        $result = $this->service->isFailedAttemptsExceeded($user->id);
 
         $this->assertFalse($result);
     }
@@ -135,7 +135,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
             ->userId($user->id)
             ->persist();
 
-        $result = $this->service->isFailedAttemptsExceeded($user->id, false);
+        $result = $this->service->isFailedAttemptsExceeded($user->id);
 
         $this->assertTrue($result);
     }
@@ -156,7 +156,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
             ->userId($user->id)
             ->persist();
 
-        $result = $this->service->isFailedAttemptsExceeded($user->id, false, false);
+        $result = $this->service->isFailedAttemptsExceeded($user->id, false);
 
         $this->assertFalse($result);
     }
@@ -175,7 +175,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
             ->userId($user->id)
             ->persist();
 
-        $result = $this->service->isFailedAttemptsExceeded($user->id, true, true);
+        $result = $this->service->isFailedAttemptsExceeded($user->id, true);
 
         $this->assertTrue($result);
     }
@@ -194,7 +194,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
             ->userId($user->id)
             ->persist();
 
-        $result = $this->service->isFailedAttemptsExceeded($user->id, true, true);
+        $result = $this->service->isFailedAttemptsExceeded($user->id, true);
 
         $this->assertFalse($result);
     }
@@ -235,8 +235,84 @@ class MfaRateLimiterServiceTest extends AppTestCase
             ->userId($user->id)
             ->persist();
 
-        $result = $this->service->isFailedAttemptsExceeded($user->id, $isJwtAuth, $shouldIncrement);
+        $result = $this->service->isFailedAttemptsExceeded($user->id, $shouldIncrement);
 
         $this->assertSame($expected, $result);
+    }
+
+    public function testMfaRateLimiterService_SessionAuth_CountsJsonFailuresWithStatusZero(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->persist();
+        ActionLogFactory::make(['created' => DateTime::now()->subMinutes(2)])
+            ->userId($user->id)
+            ->loginAction()
+            ->persist();
+        // API endpoint with failures stored as error (status 0)
+        ActionLogFactory::make(['created' => DateTime::now(), 'status' => 0], 5)
+            ->setActionId('TotpVerifyPost.post')
+            ->userId($user->id)
+            ->persist();
+
+        $result = $this->service->isFailedAttemptsExceeded($user->id);
+
+        $this->assertTrue($result);
+    }
+
+    public function testMfaRateLimiterService_JwtAuth_CountsHtmlFailuresWithStatusOne(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->persist();
+        ActionLogFactory::make(['created' => DateTime::now()->subMinutes(2)])
+            ->setActionId('JwtLogin.loginPost')
+            ->userId($user->id)
+            ->persist();
+        // HTML page with failures stored as success (status 1).
+        ActionLogFactory::make(['created' => DateTime::now(), 'status' => 1], 5)
+            ->setActionId('TotpVerifyPost.post')
+            ->userId($user->id)
+            ->persist();
+
+        $result = $this->service->isFailedAttemptsExceeded($user->id);
+
+        $this->assertTrue($result);
+    }
+
+    public function testMfaRateLimiterService_MixedStatuses_CountsAllAttempts(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->persist();
+        ActionLogFactory::make(['created' => DateTime::now()->subMinutes(2)])
+            ->userId($user->id)
+            ->loginAction()
+            ->persist();
+        // Mix of HTML success and API error logs
+        ActionLogFactory::make(['created' => DateTime::now(), 'status' => 0], 3)
+            ->setActionId('TotpVerifyPost.post')
+            ->userId($user->id)
+            ->persist();
+        ActionLogFactory::make(['created' => DateTime::now(), 'status' => 1], 2)
+            ->setActionId('TotpVerifyPost.post')
+            ->userId($user->id)
+            ->persist();
+
+        $result = $this->service->isFailedAttemptsExceeded($user->id);
+
+        $this->assertTrue($result);
+    }
+
+    public function testMfaRateLimiterService_NoLoginRow_CountsAllAttempts()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->persist();
+        // No login entry action logs (e.g. logs were purged)
+        ActionLogFactory::make(['created' => DateTime::now()], 5)
+            ->setActionId('TotpVerifyPost.post')
+            ->userId($user->id)
+            ->persist();
+
+        $result = $this->service->isFailedAttemptsExceeded($user->id);
+
+        $this->assertTrue($result);
     }
 }

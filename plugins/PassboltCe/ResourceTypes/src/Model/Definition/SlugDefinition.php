@@ -212,7 +212,7 @@ class SlugDefinition
                                 'maxLength' => 255,
                             ],
                             [
-                                'type' => null,
+                                'type' => 'null',
                             ],
                         ],
                     ],

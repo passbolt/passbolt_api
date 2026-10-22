@@ -178,6 +178,8 @@ class GroupsUsersAddService
     ): array {
         $secrets = [];
         $secretsData = $this->setSecretRevisionInData($secretsData);
+        // Using array_flip + isset(..) instead of in_array to boost array lookup
+        $missingAccessResourcesIdsIndex = array_flip($missingAccessResourcesIds);
 
         foreach ($secretsData as $secretRowRef => $secretData) {
             $secrets[] = $this->buildSecretEntity(
@@ -185,7 +187,7 @@ class GroupsUsersAddService
                 $secretRowRef,
                 $secretData,
                 $groupUser,
-                $missingAccessResourcesIds,
+                $missingAccessResourcesIdsIndex,
             );
         }
 
@@ -227,14 +229,24 @@ class GroupsUsersAddService
             ->where(['resource_id IN' => $resourceIds])
             ->all();
 
+        $secretRevisionIdsByResourceId = [];
+        foreach ($secretRevisions as $secretRevision) {
+            $resourceId = $secretRevision['resource_id'];
+            // Keep only the first revision found
+            if (isset($secretRevisionIdsByResourceId[$resourceId])) {
+                continue;
+            }
+            $secretRevisionIdsByResourceId[$resourceId] = $secretRevision['id'];
+        }
+
         foreach ($secretsData as $secretRowRef => $row) {
-            $revision = $secretRevisions->firstMatch(['resource_id' => $row['resource_id']]);
-            if (is_null($revision)) {
+            $secretRevisionId = $secretRevisionIdsByResourceId[$row['resource_id']] ?? null;
+            if (is_null($secretRevisionId)) {
                 throw new CustomValidationException(
                     __('The resource with ID {0} does not have a secret revision.', $row['resource_id']),
                 );
             }
-            $secretsData[$secretRowRef]['secret_revision_id'] = $revision['id'];
+            $secretsData[$secretRowRef]['secret_revision_id'] = $secretRevisionId;
         }
 
         return $secretsData;
@@ -265,7 +277,7 @@ class GroupsUsersAddService
      * @param int $secretRowRef The secret row reference, to use in error feedback.
      * @param array $secretData The secret data.
      * @param \App\Model\Entity\GroupsUser $groupUser The group user to add.
-     * @param array $missingSecretsResourcesIds The user missing secrets resources ids.
+     * @param array<string, int> $missingSecretsResourcesIdsIndex The user missing secrets resources ids, indexed by resource id.
      * @return \App\Model\Entity\Secret
      * @throws \App\Error\Exception\ValidationException If it could not validate the secret data.
      * @throws \App\Error\Exception\ValidationException If the secret is not for the user added to the group.
@@ -277,7 +289,7 @@ class GroupsUsersAddService
         int $secretRowRef,
         array $secretData,
         GroupsUser $groupUser,
-        array $missingSecretsResourcesIds = [],
+        array $missingSecretsResourcesIdsIndex = [],
     ): Secret {
         $secretData = array_merge($secretData, [
             'created_by' => $uac->getId(),
@@ -307,7 +319,7 @@ class GroupsUsersAddService
         }
 
         // Ensure the secret is for a resource the user has gotten access by being added to the group.
-        if (!in_array($secret->resource_id, $missingSecretsResourcesIds)) {
+        if (!isset($missingSecretsResourcesIdsIndex[$secret->resource_id])) {
             $errors = ['resource_id' => ['only_missing' => 'The user already has a secret for the resource.']];
             $groupUser->setError('secrets', [$secretRowRef => $errors]);
             $this->handleValidationErrors($groupUser);

@@ -126,4 +126,40 @@ class UsersEditFormTest extends TestCase
         $this->assertEquals($data['profile']['avatar']['file'], $this->form->getData()['profile']['avatar']['file']);
         $this->assertInstanceOf(UploadedFile::class, $this->form->getData()['profile']['avatar']['file']);
     }
+
+    public static function nonUploadedFileAvatarValueProvider(): array
+    {
+        return [
+            'file scheme string' => ['file:///etc/hostname'],
+            'ftp scheme string' => ['ftp://127.0.0.1:1/'],
+            'phar scheme string' => ['phar://x.phar'],
+            'plain absolute path' => ['/etc/passwd'],
+            'legacy $_FILES array' => [[
+                'tmp_name' => '/tmp/whatever',
+                'name' => 'x.png',
+                'type' => 'image/png',
+                'error' => 0,
+                'size' => 1,
+            ]],
+        ];
+    }
+
+    /**
+     * @dataProvider nonUploadedFileAvatarValueProvider
+     */
+    public function testUsersEditForm_SanitizeData_StripsNonUploadedFileAvatar(mixed $value): void
+    {
+        $data = [
+            'id' => UuidFactory::uuid(),
+            'profile' => [
+                'avatar' => [
+                    'file' => $value,
+                ],
+            ],
+        ];
+
+        $this->assertTrue($this->form->execute($data));
+        $sanitized = $this->form->getData();
+        $this->assertArrayNotHasKey('file', $sanitized['profile']['avatar'] ?? []);
+    }
 }

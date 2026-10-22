@@ -18,6 +18,7 @@ namespace App\Test\TestCase\Command;
 
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\FavoriteFactory;
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
@@ -109,7 +110,11 @@ class DatacheckCommandTest extends AppTestCase
 
     public function testDatacheckCommand_Secrets_Check()
     {
-        SecretFactory::make()->withSecretRevision()->persist();
+        $ada = UserFactory::make()->withAdaKey()->persist();
+        SecretFactory::make([
+            'user_id' => $ada->id,
+            'data' => $this->encryptMessageFor($ada->id, 'secret'),
+        ])->withSecretRevision()->persist();
         SecretFactory::make()->withSecretRevision()->deleted()->persist();
         $this->exec('passbolt datacheck');
         $this->assertExitSuccess();
@@ -117,5 +122,21 @@ class DatacheckCommandTest extends AppTestCase
         $this->assertOutputNotContains('FAIL');
 
         $this->assertOutputContains('Data integrity for Secrets.');
+    }
+
+    public function testDatacheckCommand_Secrets_NotEncryptedForRecipient()
+    {
+        $ada = UserFactory::make()->withAdaKey()->persist();
+        $betty = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
+        $secret = SecretFactory::make([
+            'user_id' => $betty->id,
+            'data' => $this->encryptMessageFor($ada->id, 'secret'),
+        ])->withSecretRevision()->persist();
+
+        $this->exec('passbolt datacheck');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('Is encrypted for its recipient: 0/1');
+        $this->assertOutputContains("[FAIL] Secret {$secret->id} (resource {$secret->resource_id}, user {$betty->id})");
     }
 }

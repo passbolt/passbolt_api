@@ -37,6 +37,7 @@ use Passbolt\Scim\Exception\ConflictException;
 use Passbolt\Scim\Exception\NotSupportedException;
 use Passbolt\Scim\Exception\ResourceNotFoundException;
 use Passbolt\Scim\Exception\ScimException;
+use Passbolt\Scim\Exception\ScimTooManyRequestsException;
 use Passbolt\Scim\Log\ScimLog;
 use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Model\Table\ScimEntriesTable;
@@ -51,6 +52,7 @@ use Passbolt\Scim\Utility\ScimConstants;
 use Passbolt\Scim\Utility\ScimResourceInterface;
 use Passbolt\Scim\Utility\ScimResources;
 use Passbolt\Scim\Utility\ScimTools;
+use PDOException;
 
 /**
  * UserResource class
@@ -258,6 +260,67 @@ class UserScimResource implements ScimResourceInterface
     {
         $this->validateCreatePreconditions();
 
+        $user = $this->createUser();
+
+        $this->setFromDatabase($user->id);
+
+        return $this;
+    }
+
+    /**
+     * @return \App\Model\Entity\User
+     * @throws \PDOException When the database reports an error that is not a deadlock.
+     * @throws \Passbolt\Scim\Exception\ScimTooManyRequestsException When every attempt deadlocked.
+     * @throws \Random\RandomException When the system has no source of randomness.
+     */
+    private function createUser(): User
+    {
+        $maxAttemptsAllowed = 3;
+        $delayInMicroseconds = 100000; // 0.1s
+        $maxExtraDelayInMicroseconds = 100000;
+
+        $attempt = 1;
+
+        while (true) {
+            try {
+                return $this->createUserInTransaction();
+            } catch (PDOException $exception) {
+                if (!$this->isDeadlockException($exception)) {
+                    throw $exception;
+                }
+
+                if ($attempt >= $maxAttemptsAllowed) {
+                    ScimLog::error(sprintf(
+                        'The SCIM user creation stopped after %d database deadlocks.',
+                        $maxAttemptsAllowed,
+                    ));
+
+                    throw new ScimTooManyRequestsException(
+                        __('The server is busy, please try after some time.'),
+                        1,
+                        $exception,
+                    );
+                }
+
+                ScimLog::error(sprintf(
+                    'A database deadlock stopped the SCIM user creation on attempt %d of %d.',
+                    $attempt,
+                    $maxAttemptsAllowed,
+                ));
+
+                // A fixed delay can re-collide, hence added a jitter via random_int
+                usleep($delayInMicroseconds + random_int(0, $maxExtraDelayInMicroseconds));
+                $attempt++;
+            }
+        }
+    }
+
+    /**
+     * @return \App\Model\Entity\User
+     */
+    private function createUserInTransaction(): User
+    {
+        /** @var \App\Model\Entity\User $user */
         $user = $this->Users->getConnection()->transactional(
             function (): User {
                 $user = $this->findAndLockExistingUser();
@@ -274,9 +337,26 @@ class UserScimResource implements ScimResourceInterface
             },
         );
 
-        $this->setFromDatabase($user->id);
+        return $user;
+    }
 
-        return $this;
+    /**
+     * @param \PDOException $exception Exception object.
+     * @return bool
+     */
+    private function isDeadlockException(PDOException $exception): bool
+    {
+        // MySQL, MariaDB and Postgres use `40001`. Postgres also uses `40P01`.
+        $deadlockSqlStates = ['40001', '40P01'];
+
+        $original = $exception->getPrevious();
+        if (!$original instanceof PDOException) {
+            $original = $exception;
+        }
+
+        $sqlState = $original->errorInfo[0] ?? null;
+
+        return in_array($sqlState, $deadlockSqlStates, true);
     }
 
     /**

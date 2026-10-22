@@ -58,6 +58,19 @@ class EmailCollection
     }
 
     /**
+     * Add an email to the collection, even if its recipient is disabled.
+     *
+     * @param \App\Notification\Email\Email $email Email object to add to the collection
+     * @return $this
+     */
+    public function addEmailToDisabledRecipient(Email $email)
+    {
+        $this->emails[] = $email;
+
+        return $this;
+    }
+
+    /**
      * @return array<\App\Notification\Email\Email>
      */
     public function getEmails(): array
