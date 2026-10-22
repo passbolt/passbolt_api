@@ -103,4 +103,12 @@ class GopengpgPublicKeyFormatGpgHealthcheck extends AbstractGpgHealthcheck imple
     {
         return 'isPublicServerKeyGopengpgCompatible';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'gopengpg-public-key-format';
+    }
 }

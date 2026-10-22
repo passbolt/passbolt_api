@@ -114,4 +114,12 @@ class PassboltConfigWritableWebInstallerHealthcheck implements HealthcheckServic
     {
         return 'passboltConfigWritable';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'passbolt-config-writable-web-installer';
+    }
 }

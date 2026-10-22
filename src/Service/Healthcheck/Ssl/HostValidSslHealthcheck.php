@@ -54,4 +54,12 @@ class HostValidSslHealthcheck extends AbstractBaseSslHealthcheck
     {
         return 'hostValid';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'host-valid';
+    }
 }

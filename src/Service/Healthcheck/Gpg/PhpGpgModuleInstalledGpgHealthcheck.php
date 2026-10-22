@@ -70,4 +70,12 @@ class PhpGpgModuleInstalledGpgHealthcheck extends AbstractGpgHealthcheck
     {
         return 'lib';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'php-gpg-module-installed';
+    }
 }

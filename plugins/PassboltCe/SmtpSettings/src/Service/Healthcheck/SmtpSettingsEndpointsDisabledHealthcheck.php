@@ -113,4 +113,12 @@ class SmtpSettingsEndpointsDisabledHealthcheck implements HealthcheckServiceInte
     {
         return 'areEndpointsDisabled';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'smtp-settings-endpoints-disabled';
+    }
 }

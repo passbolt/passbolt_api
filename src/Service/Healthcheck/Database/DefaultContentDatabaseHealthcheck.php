@@ -76,4 +76,12 @@ class DefaultContentDatabaseHealthcheck extends AbstractDatabaseHealthcheck
     {
         return 'defaultContent';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'default-content';
+    }
 }

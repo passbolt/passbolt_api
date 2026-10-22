@@ -279,7 +279,13 @@ return [
                 'enabled' => true,
                 'security' => [
                     'indexEndpointEnabled' => filter_var(env('PASSBOLT_PLUGINS_HEALTHCHECK_SECURITY_INDEX_ENDPOINT_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
-                ]
+                ],
+                // Healthcheck keys, as returned by getKey(). Either a string of keys separated by spaces
+                // or an array of keys. Applies to the v5 API response only.
+                'excludedKeys' => env('PASSBOLT_PLUGINS_HEALTHCHECK_EXCLUDED_KEYS'),
+                // Healthcheck domains, as returned by domain(). Either a string of domains separated by
+                // spaces or an array of domains. Applies to the v5 API response only.
+                'excludedDomains' => env('PASSBOLT_PLUGINS_HEALTHCHECK_EXCLUDED_DOMAINS'),
             ],
             'previewPassword' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_PREVIEW_PASSWORD_ENABLED', true), FILTER_VALIDATE_BOOLEAN)

@@ -15,14 +15,13 @@ declare(strict_types=1);
  * @since         4.7.0
  */
 
-namespace App\Service\Healthcheck\Core;
+namespace App\Service\Healthcheck\Environment;
 
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use Cake\Core\Configure;
 
-class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class ImageEnvironmentHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -36,7 +35,7 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = (Configure::read('Security.salt') !== '__SALT__');
+        $this->status = (extension_loaded('gd') || extension_loaded('imagick'));
 
         return $this;
     }
@@ -46,7 +45,7 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function domain(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_CORE;
+        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
     }
 
     /**
@@ -70,7 +69,7 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getSuccessMessage(): string
     {
-        return __('Unique value set for security.salt');
+        return __('GD or Imagick extension is installed.');
     }
 
     /**
@@ -78,7 +77,7 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getFailureMessage(): string
     {
-        return __('Default value found for security.salt');
+        return __('You must enable the gd or imagick extensions to use Passbolt.');
     }
 
     /**
@@ -86,7 +85,10 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getHelpMessage(): array|string|null
     {
-        return __('Edit the security.salt in {0}', CONFIG . 'app.php');
+        return [
+            __('See: https://secure.php.net/manual/en/book.image.php'),
+            __('See: https://secure.php.net/manual/en/book.imagick.php'),
+        ];
     }
 
     /**
@@ -96,7 +98,7 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function cliOption(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_CORE;
+        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
     }
 
     /**
@@ -104,6 +106,14 @@ class SaltCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getLegacyArrayKey(): string
     {
-        return 'salt';
+        return 'image';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'image-environment';
     }
 }
