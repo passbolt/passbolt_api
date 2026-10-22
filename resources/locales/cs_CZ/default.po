@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-09-11 06:26+0000\n"
-"PO-Revision-Date: 2026-09-11 07:39\n"
+"PO-Revision-Date: 2026-10-14 16:18\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Czech\n"
 "MIME-Version: 1.0\n"
@@ -1796,55 +1796,55 @@ msgid "Please contact your administrator if you didn't request this action."
 msgstr "Pokud jste tuto akci nevyžádali, kontaktujte prosím svého administrátora."
 
 msgid "The setting should be a valid integer."
-msgstr ""
+msgstr "Nastavení by mělo být platné celé číslo."
 
 msgid "This setting is not customizable on this edition, it should be {0}."
-msgstr ""
+msgstr "Toto nastavení nelze v této edici přizpůsobit, mělo by být {0}."
 
 msgid "You have reached the maximum number of offline items ({0})."
-msgstr ""
+msgstr "Dosáhli jste maximálního počtu offline položek ({0})."
 
 msgid "The offline item object type should be one of the following: {0}."
-msgstr ""
+msgstr "Typ objektu offline položky by měl být jeden z následujících: {0}."
 
 msgid "The offline item object type is required."
-msgstr ""
+msgstr "Typ objektu offline položky je povinný."
 
 msgid "The offline item object type should not be empty."
-msgstr ""
+msgstr "Typ objektu offline položky nemůže být prázdný."
 
 msgid "The offline item object identifier should be a valid UUID."
-msgstr ""
+msgstr "Identifikátor objektu offline položky by měl být platný UUID."
 
 msgid "The offline item object identifier is required."
-msgstr ""
+msgstr "Identifikátor objektu offline položky je povinný."
 
 msgid "The offline item object identifier should not be empty."
-msgstr ""
+msgstr "Identifikátor objektu offline položky by neměl být prázdný."
 
 msgid "The created date should be a valid date."
-msgstr ""
+msgstr "Datum vytvoření by měl být platným datem."
 
 msgid "The creator identifier should be a valid UUID."
-msgstr ""
+msgstr "Identifikátor tvůrce by měl být platný UUID."
 
 msgid "A creator identifier is required."
-msgstr ""
+msgstr "Identifikátor tvůrce je povinný."
 
 msgid "The creator identifier should not be empty."
-msgstr ""
+msgstr "Identifikátor tvůrce by neměl být prázdný."
 
 msgid "Access denied."
 msgstr "Přístup odepřen."
 
 msgid "Offline mode is only available for v5 items."
-msgstr ""
+msgstr "Offline režim je dostupný pouze pro položky v5."
 
 msgid "You have reached the maximum number of offline items."
-msgstr ""
+msgstr "Dosáhli jste maximálního počtu offline položek."
 
 msgid "This item is already available offline for this user."
-msgstr ""
+msgstr "Tato položka je pro tohoto uživatele již dostupná offline."
 
 msgid "A value is required."
 msgstr "Hodnota je povinná."
@@ -1853,49 +1853,49 @@ msgid "The value should be an array."
 msgstr "Hodnota by měla být pole."
 
 msgid "You disabled Offline Mode"
-msgstr ""
+msgstr "Zakázali jste offline režim"
 
 msgid "{0} disabled Offline Mode"
-msgstr ""
+msgstr "{0} deaktivoval(a) offline režim"
 
 msgid "You edited the Offline Mode settings"
-msgstr ""
+msgstr "Upravili jste nastavení offline režimu"
 
 msgid "{0} edited the Offline Mode settings"
-msgstr ""
+msgstr "{0} upravil(a) nastavení offline režimu"
 
 msgid "Could not validate offline item data."
-msgstr ""
+msgstr "Nelze ověřit data offline položky."
 
 msgid "The offline item identifier should be a valid UUID."
-msgstr ""
+msgstr "Identifikátor offline položky by měl být platný UUID."
 
 msgid "The offline item does not exist."
-msgstr ""
+msgstr "Offline položka neexistuje."
 
 msgid "Could not validate offline settings data."
-msgstr ""
+msgstr "Nelze ověřit data nastavení offline režimu."
 
 msgid "The stored offline settings are not valid."
-msgstr ""
+msgstr "Uložená nastavení offline režimu nejsou platná."
 
 msgid "Offline Mode is not enabled at the org level."
-msgstr ""
+msgstr "Offline režim není povolen na úrovni organizace."
 
 msgid "Offline Mode has been disabled organisation-wide. Existing offline selections have been purged."
-msgstr ""
+msgstr "Offline režim byl zakázán v celé organizaci. Stávající offline výběry byly vymazány."
 
 msgid "The Offline Mode settings have been updated, the new configuration is as follows:"
-msgstr ""
+msgstr "Nastavení offline režimu bylo aktualizováno, nová konfigurace je následující:"
 
 msgid "Maximum session duration: {0} seconds"
-msgstr ""
+msgstr "Maximální doba trvání relace: {0} sekund"
 
 msgid "Data retention period: {0} days"
-msgstr ""
+msgstr "Doba uchovávání dat: {0} dní"
 
 msgid "Maximum number of offline items (per user): {0}"
-msgstr ""
+msgstr "Maximální počet offline položek (na uživatele): {0}"
 
 msgid "The automatic_expiry field must be true."
 msgstr "Pole automatic_expiry musí být true."
@@ -2192,7 +2192,7 @@ msgid "You are not authorized to access that location."
 msgstr "Nemáte oprávnění k přístupu k tomuto umístění."
 
 msgid "Invalid RBAC control function."
-msgstr ""
+msgstr "Neplatná řídicí funkce RBAC."
 
 msgid "The RBAC settings could not be updated."
 msgstr "Nastavení RBAC se nepodařilo aktualizovat."
@@ -4283,7 +4283,7 @@ msgid "Remember me for a month: {0}"
 msgstr "Pamatuj si mě po dobu jednoho měsíce: {0}"
 
 msgid "The setting should be between {0} and {1}."
-msgstr ""
+msgstr "Nastavení by mělo být mezi {0} a {1}."
 
 msgid "Some of your passwords are expired."
 msgstr "Některá z vašich hesel jsou expirovaná."
@@ -4427,7 +4427,7 @@ msgid "An administrator user cannot be suspended via SCIM."
 msgstr "Uživatele správce nelze pozastavit prostřednictvím SCIM."
 
 msgid "An administrator user cannot be deleted via SCIM."
-msgstr ""
+msgstr "Uživatele správce nelze odstranit přes SCIM."
 
 msgid "Email"
 msgstr "E-mail"
@@ -4718,7 +4718,7 @@ msgid "The provided nonce is invalid."
 msgstr "Poskytnutý nonce je neplatný."
 
 msgid "The URL should start with https:// and must not point to an internal address."
-msgstr ""
+msgstr "URL by měla začínat na https:// a nesmí odkazovat na interní adresu."
 
 msgid "The provided state is invalid."
 msgstr "Poskytnutý state je neplatný."
@@ -4769,22 +4769,22 @@ msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment varia
 msgstr "Nastavte proměnnou prostředí PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED na hodnotu true."
 
 msgid "The SSO provider URL egress guard is enabled."
-msgstr ""
+msgstr "Ochrana odchozích spojení pro URL poskytovatele SSO je povolena."
 
 msgid "The SSO provider URL egress guard is disabled and will be enabled by default in a future version."
-msgstr ""
+msgstr "Ochrana odchozích spojení pro URL poskytovatele SSO je zakázána a v budoucí verzi bude ve výchozím nastavení povolena."
 
 msgid "The egress guard prevents the server from connecting to internal addresses through SSO provider URLs."
-msgstr ""
+msgstr "Ochrana odchozích spojení brání serveru v připojení k interním adresám prostřednictvím URL poskytovatele SSO."
 
 msgid "It is disabled by default in this version but will be enabled by default in a future version."
-msgstr ""
+msgstr "V této verzi je ve výchozím nastavení zakázána, ale v budoucí verzi bude ve výchozím nastavení povolena."
 
 msgid "Enable it now to verify your SSO configuration works with the guard before it becomes the default."
-msgstr ""
+msgstr "Povolte ji nyní, abyste ověřili, že vaše konfigurace SSO s touto ochranou funguje, než se stane výchozím nastavením."
 
 msgid "Set the PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED environment variable to true."
-msgstr ""
+msgstr "Nastavte proměnnou prostředí PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED na hodnotu true."
 
 msgid "The user is missing for the SSO state."
 msgstr "Uživatel pro tento stav SSO chybí."
@@ -4940,13 +4940,13 @@ msgid "Failed to public key properties from certificate: {0}"
 msgstr "Nepodařilo se získat vlastnosti veřejného klíče z certifikátu: {0}"
 
 msgid "The provider address resolves to a blocked link-local or metadata range ({0})."
-msgstr ""
+msgstr "Adresa poskytovatele se překládá na blokovaný link-local nebo metadata rozsah ({0})."
 
 msgid "The provider address resolves to a blocked private range ({0})."
-msgstr ""
+msgstr "Adresa poskytovatele se překládá na blokovaný soukromý rozsah ({0})."
 
 msgid "The provider address is not allowed."
-msgstr ""
+msgstr "Adresa poskytovatele není povolena."
 
 msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
 msgstr "Poskytnutá hodnota v konfiguraci `passbolt.security.sso.sslCafile` není platná."
@@ -5321,7 +5321,7 @@ msgid "The user token result could not be found "
 msgstr "Token uživatele nebyl nalezen "
 
 msgid "The user token result has already been used."
-msgstr ""
+msgstr "Výsledek tokenu uživatele již byl použit."
 
 msgid "Invalid verify token type."
 msgstr "Neplatný typ ověřovacího tokenu."
@@ -6122,7 +6122,7 @@ msgid "The delete status should be a valid boolean."
 msgstr "Stav odstranění by měl být platný boolean."
 
 msgid "The string should not contain invisible characters."
-msgstr ""
+msgstr "Řetězec by neměl obsahovat neviditelné znaky."
 
 msgid "The field must be null when creating a new record."
 msgstr "Pole musí být při vytváření nového záznamu prázdné (null)."
@@ -6236,7 +6236,7 @@ msgid "You deleted administrator {0}"
 msgstr "Odstranili jste administrátora {0}"
 
 msgid "You deleted user {0}"
-msgstr ""
+msgstr "Odstranili jste uživatele {0}"
 
 msgid "{0} deleted your account"
 msgstr "{0} smazal(a) váš účet"
@@ -6512,16 +6512,16 @@ msgid "You may remove the \"passbolt.registration.public\" setting."
 msgstr "Můžete odstranit nastavení \"passbolt.registration.public\"."
 
 msgid "The session provider is {0}."
-msgstr ""
+msgstr "Poskytovatel relace je {0}."
 
 msgid "The session provider {0} is not supported."
-msgstr ""
+msgstr "Poskytovatel relace {0} není podporován."
 
 msgid "The session providers supported are: {0}."
-msgstr ""
+msgstr "Podporovaní poskytovatelé relace jsou: {0}."
 
 msgid "Define it using the SESSION_DEFAULTS environment variable or under {0} in {1}."
-msgstr ""
+msgstr "Definujte jej pomocí proměnné prostředí SESSION_DEFAULTS nebo pod {0} v {1}."
 
 msgid "Passbolt is configured to force SSL use."
 msgstr "Passbolt je nakonfigurován tak, aby vynucoval použití SSL."
@@ -7436,7 +7436,7 @@ msgid "Please check with them first to confirm."
 msgstr "Nejprve to s nimi prosím ověřte."
 
 msgid "The user {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "Uživatel {0} ({1}) je nyní odstraněn z organizace passbolt."
 
 msgid "User suspended"
 msgstr "Uživatel pozastaven"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-09-11 06:26+0000\n"
-"PO-Revision-Date: 2026-09-11 07:39\n"
+"PO-Revision-Date: 2026-10-14 16:18\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian\n"
 "MIME-Version: 1.0\n"
@@ -1796,55 +1796,55 @@ msgid "Please contact your administrator if you didn't request this action."
 msgstr "Vă rugăm să contactați administratorul dacă nu ați solicitat această acțiune."
 
 msgid "The setting should be a valid integer."
-msgstr ""
+msgstr "Setarea trebuie să fie un număr întreg valid."
 
 msgid "This setting is not customizable on this edition, it should be {0}."
-msgstr ""
+msgstr "Această setare nu este personalizabilă în această ediție, trebuie să fie {0}."
 
 msgid "You have reached the maximum number of offline items ({0})."
-msgstr ""
+msgstr "Ai atins numărul maxim de elemente offline ({0})."
 
 msgid "The offline item object type should be one of the following: {0}."
-msgstr ""
+msgstr "Tipul de obiect al elementului offline ar trebui să fie unul dintre următoarele: {0}."
 
 msgid "The offline item object type is required."
-msgstr ""
+msgstr "Tipul de obiect al elementului offline este necesar."
 
 msgid "The offline item object type should not be empty."
-msgstr ""
+msgstr "Tipul de obiect al elementului offline nu trebuie să fie gol."
 
 msgid "The offline item object identifier should be a valid UUID."
-msgstr ""
+msgstr "Identificatorul de obiect al elementului offline ar trebui să fie un UUID valid."
 
 msgid "The offline item object identifier is required."
-msgstr ""
+msgstr "Identificatorul de obiect al elementului offline este necesar."
 
 msgid "The offline item object identifier should not be empty."
-msgstr ""
+msgstr "Identificatorul de obiect al elementului offline nu trebuie să fie gol."
 
 msgid "The created date should be a valid date."
-msgstr ""
+msgstr "Data creării trebuie să fie o dată validă."
 
 msgid "The creator identifier should be a valid UUID."
-msgstr ""
+msgstr "Identificatorul creatorului ar trebui să fie un UUID valid."
 
 msgid "A creator identifier is required."
-msgstr ""
+msgstr "Un identificator al creatorului este necesar."
 
 msgid "The creator identifier should not be empty."
-msgstr ""
+msgstr "Identificatorul creatorului nu trebuie să fie gol."
 
 msgid "Access denied."
 msgstr "Acces interzis."
 
 msgid "Offline mode is only available for v5 items."
-msgstr ""
+msgstr "Modul offline este disponibil doar pentru elementele v5."
 
 msgid "You have reached the maximum number of offline items."
-msgstr ""
+msgstr "Ai atins numărul maxim de elemente offline."
 
 msgid "This item is already available offline for this user."
-msgstr ""
+msgstr "Acest element este deja disponibil offline pentru acest utilizator."
 
 msgid "A value is required."
 msgstr "Este necesară o valoare."
@@ -1853,49 +1853,49 @@ msgid "The value should be an array."
 msgstr "Valoarea ar trebui să fie un șir."
 
 msgid "You disabled Offline Mode"
-msgstr ""
+msgstr "Ai dezactivat Modul offline"
 
 msgid "{0} disabled Offline Mode"
-msgstr ""
+msgstr "{0} a dezactivat Modul offline"
 
 msgid "You edited the Offline Mode settings"
-msgstr ""
+msgstr "Ai editat setările Modului offline"
 
 msgid "{0} edited the Offline Mode settings"
-msgstr ""
+msgstr "{0} a editat setările Modului offline"
 
 msgid "Could not validate offline item data."
-msgstr ""
+msgstr "Nu s-au putut valida datele elementului offline."
 
 msgid "The offline item identifier should be a valid UUID."
-msgstr ""
+msgstr "Identificatorul elementului offline ar trebui să fie un UUID valid."
 
 msgid "The offline item does not exist."
-msgstr ""
+msgstr "Elementul offline nu există."
 
 msgid "Could not validate offline settings data."
-msgstr ""
+msgstr "Nu s-au putut valida datele setărilor offline."
 
 msgid "The stored offline settings are not valid."
-msgstr ""
+msgstr "Setările offline stocate nu sunt valide."
 
 msgid "Offline Mode is not enabled at the org level."
-msgstr ""
+msgstr "Modul offline nu este activat la nivelul organizației."
 
 msgid "Offline Mode has been disabled organisation-wide. Existing offline selections have been purged."
-msgstr ""
+msgstr "Modul offline a fost dezactivat la nivelul întregii organizații. Selecțiile offline existente au fost eliminate."
 
 msgid "The Offline Mode settings have been updated, the new configuration is as follows:"
-msgstr ""
+msgstr "Setările Modului offline au fost actualizate, noua configurație este următoarea:"
 
 msgid "Maximum session duration: {0} seconds"
-msgstr ""
+msgstr "Durata maximă a sesiunii: {0} secunde"
 
 msgid "Data retention period: {0} days"
-msgstr ""
+msgstr "Perioada de retenție a datelor: {0} zile"
 
 msgid "Maximum number of offline items (per user): {0}"
-msgstr ""
+msgstr "Numărul maxim de elemente offline (per utilizator): {0}"
 
 msgid "The automatic_expiry field must be true."
 msgstr "Câmpul automatic_expiry trebuie să fie true."
@@ -2192,7 +2192,7 @@ msgid "You are not authorized to access that location."
 msgstr "Nu aveți permisiunea să accesați această locație."
 
 msgid "Invalid RBAC control function."
-msgstr ""
+msgstr "Funcție de control RBAC invalidă."
 
 msgid "The RBAC settings could not be updated."
 msgstr "Setările RBAC nu au putut fi actualizate."
@@ -4283,7 +4283,7 @@ msgid "Remember me for a month: {0}"
 msgstr "Ține-mă minte pentru o lună: {0}"
 
 msgid "The setting should be between {0} and {1}."
-msgstr ""
+msgstr "Setarea trebuie să fie între {0} și {1}."
 
 msgid "Some of your passwords are expired."
 msgstr "Unele dintre parolele dvs. au expirat."
@@ -4427,7 +4427,7 @@ msgid "An administrator user cannot be suspended via SCIM."
 msgstr "Un utilizator administrator nu poate fi suspendat prin SCIM."
 
 msgid "An administrator user cannot be deleted via SCIM."
-msgstr ""
+msgstr "Un utilizator administrator nu poate fi șters prin SCIM."
 
 msgid "Email"
 msgstr "E-mail"
@@ -4718,7 +4718,7 @@ msgid "The provided nonce is invalid."
 msgstr "Nonce-ul furnizat este invalid."
 
 msgid "The URL should start with https:// and must not point to an internal address."
-msgstr ""
+msgstr "URL-ul trebuie să înceapă cu https:// și nu trebuie să indice către o adresă internă."
 
 msgid "The provided state is invalid."
 msgstr "Starea furnizată este invalidă."
@@ -4769,22 +4769,22 @@ msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment varia
 msgstr "Setați variabila de mediu PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED la true."
 
 msgid "The SSO provider URL egress guard is enabled."
-msgstr ""
+msgstr "Protecția de ieșire pentru URL-ul furnizorului SSO este activată."
 
 msgid "The SSO provider URL egress guard is disabled and will be enabled by default in a future version."
-msgstr ""
+msgstr "Protecția de ieșire pentru URL-ul furnizorului SSO este dezactivată și va fi activată implicit într-o versiune viitoare."
 
 msgid "The egress guard prevents the server from connecting to internal addresses through SSO provider URLs."
-msgstr ""
+msgstr "Protecția de ieșire împiedică serverul să se conecteze la adrese interne prin URL-urile furnizorului SSO."
 
 msgid "It is disabled by default in this version but will be enabled by default in a future version."
-msgstr ""
+msgstr "Este dezactivată implicit în această versiune, dar va fi activată implicit într-o versiune viitoare."
 
 msgid "Enable it now to verify your SSO configuration works with the guard before it becomes the default."
-msgstr ""
+msgstr "Activeaz-o acum pentru a verifica dacă configurația ta SSO funcționează cu această protecție înainte ca ea să devină implicită."
 
 msgid "Set the PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED environment variable to true."
-msgstr ""
+msgstr "Setează variabila de mediu PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED la true."
 
 msgid "The user is missing for the SSO state."
 msgstr "Utilizatorul lipsește pentru starea SSO."
@@ -4940,13 +4940,13 @@ msgid "Failed to public key properties from certificate: {0}"
 msgstr "Nu s-au putut prelua proprietățile cheii publice din certificat: {0}"
 
 msgid "The provider address resolves to a blocked link-local or metadata range ({0})."
-msgstr ""
+msgstr "Adresa furnizorului se rezolvă la un interval link-local sau de metadate blocat ({0})."
 
 msgid "The provider address resolves to a blocked private range ({0})."
-msgstr ""
+msgstr "Adresa furnizorului se rezolvă la un interval privat blocat ({0})."
 
 msgid "The provider address is not allowed."
-msgstr ""
+msgstr "Adresa furnizorului nu este permisă."
 
 msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
 msgstr "Valoare invalidă furnizată în configurația `passbolt.security.sso.sslCafile`"
@@ -5321,7 +5321,7 @@ msgid "The user token result could not be found "
 msgstr "Rezultatul token-ului utilizatorului nu a putut fi găsit "
 
 msgid "The user token result has already been used."
-msgstr ""
+msgstr "Rezultatul token-ului utilizatorului a fost deja folosit."
 
 msgid "Invalid verify token type."
 msgstr "Tip de jeton de verificare invalid."
@@ -6122,7 +6122,7 @@ msgid "The delete status should be a valid boolean."
 msgstr "Starea de ștergere trebuie să fie un boolean valid."
 
 msgid "The string should not contain invisible characters."
-msgstr ""
+msgstr "Șirul nu trebuie să conțină caractere invizibile."
 
 msgid "The field must be null when creating a new record."
 msgstr "Câmpul trebuie să fie nul la crearea unui nou înregistrări."
@@ -6236,7 +6236,7 @@ msgid "You deleted administrator {0}"
 msgstr "Ați șters administratorul {0}"
 
 msgid "You deleted user {0}"
-msgstr ""
+msgstr "Ai șters utilizatorul {0}"
 
 msgid "{0} deleted your account"
 msgstr "{0} v-a șters contul"
@@ -6512,16 +6512,16 @@ msgid "You may remove the \"passbolt.registration.public\" setting."
 msgstr "Puteți elimina setarea \\\"passbolt.registration.public\\\"."
 
 msgid "The session provider is {0}."
-msgstr ""
+msgstr "Furnizorul sesiunii este {0}."
 
 msgid "The session provider {0} is not supported."
-msgstr ""
+msgstr "Furnizorul sesiunii {0} nu este suportat."
 
 msgid "The session providers supported are: {0}."
-msgstr ""
+msgstr "Furnizorii de sesiune suportați sunt: {0}."
 
 msgid "Define it using the SESSION_DEFAULTS environment variable or under {0} in {1}."
-msgstr ""
+msgstr "Definește-l folosind variabila de mediu SESSION_DEFAULTS sau sub {0} în {1}."
 
 msgid "Passbolt is configured to force SSL use."
 msgstr "Passbolt este configurat să forțeze folosirea SSL."
@@ -7436,7 +7436,7 @@ msgid "Please check with them first to confirm."
 msgstr "Vă rugăm să verificați mai întâi cu ei pentru a confirma."
 
 msgid "The user {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "Utilizatorul {0} ({1}) este acum șters din organizația Passbolt."
 
 msgid "User suspended"
 msgstr "Utilizator suspendat"

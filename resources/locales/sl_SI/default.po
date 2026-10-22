@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-09-11 06:26+0000\n"
-"PO-Revision-Date: 2026-09-11 07:39\n"
+"PO-Revision-Date: 2026-10-14 16:18\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -1796,55 +1796,55 @@ msgid "Please contact your administrator if you didn't request this action."
 msgstr "Prosimo, obrnite se na svojega administratorja, če niste zahtevali tega dejanja."
 
 msgid "The setting should be a valid integer."
-msgstr ""
+msgstr "Nastavitev mora biti veljavno celo število."
 
 msgid "This setting is not customizable on this edition, it should be {0}."
-msgstr ""
+msgstr "Ta nastavitev v tej izdaji ni prilagodljiva, mora biti {0}."
 
 msgid "You have reached the maximum number of offline items ({0})."
-msgstr ""
+msgstr "Dosegli ste največje število elementov brez povezave ({0})."
 
 msgid "The offline item object type should be one of the following: {0}."
-msgstr ""
+msgstr "Vrsta objekta elementa brez povezave mora biti ena od naslednjih: {0}."
 
 msgid "The offline item object type is required."
-msgstr ""
+msgstr "Vrsta objekta elementa brez povezave je obvezna."
 
 msgid "The offline item object type should not be empty."
-msgstr ""
+msgstr "Vrsta objekta elementa brez povezave ne sme biti prazna."
 
 msgid "The offline item object identifier should be a valid UUID."
-msgstr ""
+msgstr "Identifikator objekta elementa brez povezave mora biti veljaven UUID."
 
 msgid "The offline item object identifier is required."
-msgstr ""
+msgstr "Identifikator objekta elementa brez povezave je obvezen."
 
 msgid "The offline item object identifier should not be empty."
-msgstr ""
+msgstr "Identifikator objekta elementa brez povezave ne sme biti prazen."
 
 msgid "The created date should be a valid date."
-msgstr ""
+msgstr "Datum ustvarjanja mora biti veljaven datum."
 
 msgid "The creator identifier should be a valid UUID."
-msgstr ""
+msgstr "Identifikator ustvarjalca mora biti veljaven UUID."
 
 msgid "A creator identifier is required."
-msgstr ""
+msgstr "Zahtevan je identifikator ustvarjalca."
 
 msgid "The creator identifier should not be empty."
-msgstr ""
+msgstr "Identifikator ustvarjalca ne sme biti prazen."
 
 msgid "Access denied."
 msgstr "Dostop zavrnjen."
 
 msgid "Offline mode is only available for v5 items."
-msgstr ""
+msgstr "Način brez povezave je na voljo samo za elemente v5."
 
 msgid "You have reached the maximum number of offline items."
-msgstr ""
+msgstr "Dosegli ste največje število elementov brez povezave."
 
 msgid "This item is already available offline for this user."
-msgstr ""
+msgstr "Ta element je temu uporabniku že na voljo brez povezave."
 
 msgid "A value is required."
 msgstr "Vrednost je obvezna."
@@ -1853,49 +1853,49 @@ msgid "The value should be an array."
 msgstr "Vrednost bi morala biti seznam"
 
 msgid "You disabled Offline Mode"
-msgstr ""
+msgstr "Onemogočili ste način brez povezave"
 
 msgid "{0} disabled Offline Mode"
-msgstr ""
+msgstr "{0} je onemogočil način brez povezave"
 
 msgid "You edited the Offline Mode settings"
-msgstr ""
+msgstr "Uredili ste nastavitve načina brez povezave"
 
 msgid "{0} edited the Offline Mode settings"
-msgstr ""
+msgstr "{0} je uredil nastavitve načina brez povezave"
 
 msgid "Could not validate offline item data."
-msgstr ""
+msgstr "Ni bilo mogoče potrditi podatkov elementa brez povezave."
 
 msgid "The offline item identifier should be a valid UUID."
-msgstr ""
+msgstr "Identifikator elementa brez povezave mora biti veljaven UUID."
 
 msgid "The offline item does not exist."
-msgstr ""
+msgstr "Element brez povezave ne obstaja."
 
 msgid "Could not validate offline settings data."
-msgstr ""
+msgstr "Ni bilo mogoče potrditi podatkov nastavitev brez povezave."
 
 msgid "The stored offline settings are not valid."
-msgstr ""
+msgstr "Shranjene nastavitve brez povezave niso veljavne."
 
 msgid "Offline Mode is not enabled at the org level."
-msgstr ""
+msgstr "Način brez povezave ni omogočen na ravni organizacije."
 
 msgid "Offline Mode has been disabled organisation-wide. Existing offline selections have been purged."
-msgstr ""
+msgstr "Način brez povezave je bil onemogočen za celotno organizacijo. Obstoječe izbire za uporabo brez povezave so bile odstranjene."
 
 msgid "The Offline Mode settings have been updated, the new configuration is as follows:"
-msgstr ""
+msgstr "Nastavitve načina brez povezave so bile posodobljene, nova konfiguracija je naslednja:"
 
 msgid "Maximum session duration: {0} seconds"
-msgstr ""
+msgstr "Najdaljše trajanje seje: {0} sekund"
 
 msgid "Data retention period: {0} days"
-msgstr ""
+msgstr "Obdobje hrambe podatkov: {0} dni"
 
 msgid "Maximum number of offline items (per user): {0}"
-msgstr ""
+msgstr "Največje število elementov brez povezave (na uporabnika): {0}"
 
 msgid "The automatic_expiry field must be true."
 msgstr "Polje \"automatic_expiry\" mora biti \"true\"."
@@ -2192,7 +2192,7 @@ msgid "You are not authorized to access that location."
 msgstr "Nimate dovoljenja za dostop do te lokacije."
 
 msgid "Invalid RBAC control function."
-msgstr ""
+msgstr "Neveljavna nadzorna funkcija RBAC."
 
 msgid "The RBAC settings could not be updated."
 msgstr "Nastavitve RBAC ni bilo mogoče posodobiti."
@@ -4283,7 +4283,7 @@ msgid "Remember me for a month: {0}"
 msgstr "Zapomni me za mesec: {0}"
 
 msgid "The setting should be between {0} and {1}."
-msgstr ""
+msgstr "Nastavitev mora biti med {0} in {1}."
 
 msgid "Some of your passwords are expired."
 msgstr "Nekatera vaša gesla so potekla."
@@ -4427,7 +4427,7 @@ msgid "An administrator user cannot be suspended via SCIM."
 msgstr "Skrbniškega uporabnika ni mogoče začasno onemogočiti prek SCIM."
 
 msgid "An administrator user cannot be deleted via SCIM."
-msgstr ""
+msgstr "Skrbniškega uporabnika ni mogoče izbrisati prek SCIM."
 
 msgid "Email"
 msgstr "E-naslov"
@@ -4718,7 +4718,7 @@ msgid "The provided nonce is invalid."
 msgstr "Navedeni nonce ni veljaven."
 
 msgid "The URL should start with https:// and must not point to an internal address."
-msgstr ""
+msgstr "URL se mora začeti z https:// in ne sme kazati na notranji naslov."
 
 msgid "The provided state is invalid."
 msgstr "Navedeno stanje ni veljavno."
@@ -4769,22 +4769,22 @@ msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment varia
 msgstr "Nastavite okoljsko spremenljivko PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED na true."
 
 msgid "The SSO provider URL egress guard is enabled."
-msgstr ""
+msgstr "Zaščita izhodnega prometa za URL ponudnika SSO je omogočena."
 
 msgid "The SSO provider URL egress guard is disabled and will be enabled by default in a future version."
-msgstr ""
+msgstr "Zaščita izhodnega prometa za URL ponudnika SSO je onemogočena in bo v prihodnji različici privzeto omogočena."
 
 msgid "The egress guard prevents the server from connecting to internal addresses through SSO provider URLs."
-msgstr ""
+msgstr "Zaščita izhodnega prometa strežniku preprečuje povezovanje z notranjimi naslovi prek URL-jev ponudnika SSO."
 
 msgid "It is disabled by default in this version but will be enabled by default in a future version."
-msgstr ""
+msgstr "V tej različici je privzeto onemogočena, vendar bo v prihodnji različici privzeto omogočena."
 
 msgid "Enable it now to verify your SSO configuration works with the guard before it becomes the default."
-msgstr ""
+msgstr "Omogočite jo zdaj, da preverite, ali vaša konfiguracija SSO deluje z zaščito, preden ta postane privzeta."
 
 msgid "Set the PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED environment variable to true."
-msgstr ""
+msgstr "Nastavite okoljsko spremenljivko PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED na true."
 
 msgid "The user is missing for the SSO state."
 msgstr "Uporabnik manjka za stanje SSO."
@@ -4940,13 +4940,13 @@ msgid "Failed to public key properties from certificate: {0}"
 msgstr "Ni bilo mogoče prebrati lastnosti javnega ključa iz certifikata: {0}"
 
 msgid "The provider address resolves to a blocked link-local or metadata range ({0})."
-msgstr ""
+msgstr "Naslov ponudnika se razreši v blokiran obseg povezav link-local ali metapodatkov ({0})."
 
 msgid "The provider address resolves to a blocked private range ({0})."
-msgstr ""
+msgstr "Naslov ponudnika se razreši v blokiran zasebni obseg ({0})."
 
 msgid "The provider address is not allowed."
-msgstr ""
+msgstr "Naslov ponudnika ni dovoljen."
 
 msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
 msgstr "V nastavitvi `passbolt.security.sso.sslCafile` je naveden neveljaven vrednost"
@@ -5321,7 +5321,7 @@ msgid "The user token result could not be found "
 msgstr "Rezultata uporabniškega tokena ni bilo mogoče najti"
 
 msgid "The user token result has already been used."
-msgstr ""
+msgstr "Rezultat uporabniškega tokena je že bil uporabljen."
 
 msgid "Invalid verify token type."
 msgstr "Neveljaven tip žetona za preverjanje."
@@ -6122,7 +6122,7 @@ msgid "The delete status should be a valid boolean."
 msgstr "Stanje brisanja mora biti veljavna logična vrednost."
 
 msgid "The string should not contain invisible characters."
-msgstr ""
+msgstr "Niz ne sme vsebovati nevidnih znakov."
 
 msgid "The field must be null when creating a new record."
 msgstr "Polje mora biti \"null\" pri ustvarjanju novega zapisa."
@@ -6236,7 +6236,7 @@ msgid "You deleted administrator {0}"
 msgstr "Zbrisali ste skrbnika {0}"
 
 msgid "You deleted user {0}"
-msgstr ""
+msgstr "Izbrisali ste uporabnika {0}"
 
 msgid "{0} deleted your account"
 msgstr "{0} je izbrisal vaš račun"
@@ -6512,16 +6512,16 @@ msgid "You may remove the \"passbolt.registration.public\" setting."
 msgstr "Lahko odstranite nastavitev \"passbolt.registration.public\"."
 
 msgid "The session provider is {0}."
-msgstr ""
+msgstr "Ponudnik sej je {0}."
 
 msgid "The session provider {0} is not supported."
-msgstr ""
+msgstr "Ponudnik sej {0} ni podprt."
 
 msgid "The session providers supported are: {0}."
-msgstr ""
+msgstr "Podprti ponudniki sej so: {0}."
 
 msgid "Define it using the SESSION_DEFAULTS environment variable or under {0} in {1}."
-msgstr ""
+msgstr "Določite ga z uporabo okoljske spremenljivke SESSION_DEFAULTS ali pod {0} v {1}."
 
 msgid "Passbolt is configured to force SSL use."
 msgstr "Passbolt je konfiguriran tako, da zahteva uporabo SSL."
@@ -7436,7 +7436,7 @@ msgid "Please check with them first to confirm."
 msgstr "Prosimo, najprej to preverite pri njih."
 
 msgid "The user {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "Uporabnik {0} ({1}) je zdaj izbrisan iz organizacije Passbolt."
 
 msgid "User suspended"
 msgstr "Uporabnik onemogočen"

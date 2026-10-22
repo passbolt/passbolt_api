@@ -20,6 +20,7 @@ use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Multi\MfaTotpDuoScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
@@ -69,5 +70,34 @@ class TotpSetupDeleteControllerTest extends MfaIntegrationTestCase
         $this->assertSame(1, MfaOrganizationSettingFactory::count());
         $this->assertSame(1, MfaAuthenticationTokenFactory::count());
         $this->assertSame(0, MfaAuthenticationTokenFactory::find()->where(['active' => true])->all()->count());
+    }
+
+    /**
+     * Deleting the provider used to pass MFA in the current session, while another provider
+     * remains enabled, must not invalidate the session MFA token.
+     *
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupDelete
+     * @group mfaSetupDeleteTotp
+     */
+    public function testTotpSetupDeleteController_Success_ProviderUsedInSessionWithOtherProviderEnabled()
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpDuoScenario::class, $user);
+        $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_TOTP);
+
+        $this->delete('/mfa/setup/totp.json?api-version=v2');
+        $this->assertResponseSuccess();
+        $this->assertResponseContains('The configuration was deleted.');
+        $this->assertSame(1, MfaAuthenticationTokenFactory::find()->where(['active' => true])->all()->count());
+
+        // The user can still use the application with the same MFA cookie
+        MfaSettings::clear();
+        $this->getJson('/mfa/setup/select.json');
+        $this->assertResponseOk();
+        $accountSettings = $this->getResponseBodyAsArray()[MfaSettings::ACCOUNT_SETTINGS];
+        $this->assertFalse($accountSettings[MfaSettings::PROVIDER_TOTP]);
+        $this->assertTrue($accountSettings[MfaSettings::PROVIDER_DUO]);
     }
 }

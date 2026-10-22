@@ -251,7 +251,8 @@ class MfaAccountSettings
                     $this->delete();
                 } else {
                     $this->save();
-                    MfaVerifiedToken::setAllInactiveByProvider($this->uac, $providerToDisable);
+                    // Inactivating this token while user is logged in with it can cause problems
+                    // MfaVerifiedToken::setAllInactiveByProvider($this->uac, $providerToDisable);
                 }
                 if ($providerToDisable === MfaSettings::PROVIDER_WEBAUTHN) {
                     /** @var \Passbolt\MultiFactorAuthentication\Model\Table\MfaWebauthnCredentialsTable $credentials */

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2026-09-11 06:26+0000\n"
-"PO-Revision-Date: 2026-09-11 07:39\n"
+"PO-Revision-Date: 2026-10-14 16:18\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -1796,55 +1796,55 @@ msgid "Please contact your administrator if you didn't request this action."
 msgstr "この操作をリクエストしていない場合は、管理者に問い合わせてください。"
 
 msgid "The setting should be a valid integer."
-msgstr ""
+msgstr "設定は有効な整数でなければなりません。"
 
 msgid "This setting is not customizable on this edition, it should be {0}."
-msgstr ""
+msgstr "この設定はこのエディションではカスタマイズできません。{0} でなければなりません。"
 
 msgid "You have reached the maximum number of offline items ({0})."
-msgstr ""
+msgstr "オフライン項目の最大数 ({0}) に達しました。"
 
 msgid "The offline item object type should be one of the following: {0}."
-msgstr ""
+msgstr "オフライン項目のオブジェクト型は次のいずれかでなければなりません: {0}。"
 
 msgid "The offline item object type is required."
-msgstr ""
+msgstr "オフライン項目のオブジェクト型が必要です。"
 
 msgid "The offline item object type should not be empty."
-msgstr ""
+msgstr "オフライン項目のオブジェクト型は空にしないでください。"
 
 msgid "The offline item object identifier should be a valid UUID."
-msgstr ""
+msgstr "オフライン項目のオブジェクト識別子は有効なUUIDでなければなりません。"
 
 msgid "The offline item object identifier is required."
-msgstr ""
+msgstr "オフライン項目のオブジェクト識別子が必要です。"
 
 msgid "The offline item object identifier should not be empty."
-msgstr ""
+msgstr "オフライン項目のオブジェクト識別子は空にしないでください。"
 
 msgid "The created date should be a valid date."
-msgstr ""
+msgstr "作成日は有効な日付である必要があります。"
 
 msgid "The creator identifier should be a valid UUID."
-msgstr ""
+msgstr "作成者識別子は有効なUUIDでなければなりません。"
 
 msgid "A creator identifier is required."
-msgstr ""
+msgstr "作成者識別子が必要です。"
 
 msgid "The creator identifier should not be empty."
-msgstr ""
+msgstr "作成者識別子は空にしないでください。"
 
 msgid "Access denied."
 msgstr "アクセスが拒否されました。"
 
 msgid "Offline mode is only available for v5 items."
-msgstr ""
+msgstr "オフラインモードは v5 項目でのみ利用できます。"
 
 msgid "You have reached the maximum number of offline items."
-msgstr ""
+msgstr "オフライン項目の最大数に達しました。"
 
 msgid "This item is already available offline for this user."
-msgstr ""
+msgstr "この項目は、このユーザーに対してすでにオフラインで利用可能です。"
 
 msgid "A value is required."
 msgstr "値が必要です。"
@@ -1853,49 +1853,49 @@ msgid "The value should be an array."
 msgstr "値は配列である必要があります。"
 
 msgid "You disabled Offline Mode"
-msgstr ""
+msgstr "オフラインモードを無効にしました"
 
 msgid "{0} disabled Offline Mode"
-msgstr ""
+msgstr "{0} がオフラインモードを無効にしました"
 
 msgid "You edited the Offline Mode settings"
-msgstr ""
+msgstr "オフラインモードの設定を編集しました"
 
 msgid "{0} edited the Offline Mode settings"
-msgstr ""
+msgstr "{0} がオフラインモードの設定を編集しました"
 
 msgid "Could not validate offline item data."
-msgstr ""
+msgstr "オフライン項目データを検証できませんでした。"
 
 msgid "The offline item identifier should be a valid UUID."
-msgstr ""
+msgstr "オフライン項目識別子は有効なUUIDでなければなりません。"
 
 msgid "The offline item does not exist."
-msgstr ""
+msgstr "オフライン項目が存在しません。"
 
 msgid "Could not validate offline settings data."
-msgstr ""
+msgstr "オフライン設定データを検証できませんでした。"
 
 msgid "The stored offline settings are not valid."
-msgstr ""
+msgstr "保存されているオフライン設定は有効ではありません。"
 
 msgid "Offline Mode is not enabled at the org level."
-msgstr ""
+msgstr "組織レベルでオフラインモードが有効になっていません。"
 
 msgid "Offline Mode has been disabled organisation-wide. Existing offline selections have been purged."
-msgstr ""
+msgstr "組織全体でオフラインモードが無効化されました。既存のオフライン選択は削除されました。"
 
 msgid "The Offline Mode settings have been updated, the new configuration is as follows:"
-msgstr ""
+msgstr "オフラインモードの設定が更新されました。新しい構成は次のとおりです:"
 
 msgid "Maximum session duration: {0} seconds"
-msgstr ""
+msgstr "最大セッション時間: {0} 秒"
 
 msgid "Data retention period: {0} days"
-msgstr ""
+msgstr "データ保持期間: {0} 日"
 
 msgid "Maximum number of offline items (per user): {0}"
-msgstr ""
+msgstr "オフライン項目の最大数（ユーザーごと）: {0}"
 
 msgid "The automatic_expiry field must be true."
 msgstr "automatic_expiry フィールドは true でなければなりません。"
@@ -2192,7 +2192,7 @@ msgid "You are not authorized to access that location."
 msgstr "その場所にアクセスする権限がありません。"
 
 msgid "Invalid RBAC control function."
-msgstr ""
+msgstr "無効な RBAC 制御関数です。"
 
 msgid "The RBAC settings could not be updated."
 msgstr "RBAC設定を更新できませんでした。"
@@ -4283,7 +4283,7 @@ msgid "Remember me for a month: {0}"
 msgstr "1か月間Remember me: {0}"
 
 msgid "The setting should be between {0} and {1}."
-msgstr ""
+msgstr "設定は {0} から {1} の間でなければなりません。"
 
 msgid "Some of your passwords are expired."
 msgstr "あなたのパスワードの一部は期限切れです。"
@@ -4427,7 +4427,7 @@ msgid "An administrator user cannot be suspended via SCIM."
 msgstr "管理者ユーザーをSCIM経由で停止することはできません。"
 
 msgid "An administrator user cannot be deleted via SCIM."
-msgstr ""
+msgstr "管理者ユーザーは SCIM 経由では削除できません。"
 
 msgid "Email"
 msgstr "メール"
@@ -4718,7 +4718,7 @@ msgid "The provided nonce is invalid."
 msgstr "指定されたnonceは無効です。"
 
 msgid "The URL should start with https:// and must not point to an internal address."
-msgstr ""
+msgstr "URL は https:// で始まっている必要があり、内部アドレスを指していてはなりません。"
 
 msgid "The provided state is invalid."
 msgstr "指定されたstateは無効です。"
@@ -4769,22 +4769,22 @@ msgid "Set the PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED environment varia
 msgstr "環境変数 PASSBOLT_SECURITY_SSO_SETTINGS_EDITION_DISABLED を true に設定してください。"
 
 msgid "The SSO provider URL egress guard is enabled."
-msgstr ""
+msgstr "SSO プロバイダー URL の外向き通信ガードは有効です。"
 
 msgid "The SSO provider URL egress guard is disabled and will be enabled by default in a future version."
-msgstr ""
+msgstr "SSO プロバイダー URL の外向き通信ガードは無効ですが、今後のバージョンではデフォルトで有効になります。"
 
 msgid "The egress guard prevents the server from connecting to internal addresses through SSO provider URLs."
-msgstr ""
+msgstr "外向き通信ガードは、SSO プロバイダー URL を介してサーバーが内部アドレスに接続することを防ぎます。"
 
 msgid "It is disabled by default in this version but will be enabled by default in a future version."
-msgstr ""
+msgstr "このバージョンではデフォルトで無効ですが、今後のバージョンではデフォルトで有効になります。"
 
 msgid "Enable it now to verify your SSO configuration works with the guard before it becomes the default."
-msgstr ""
+msgstr "デフォルトになる前に、今すぐ有効にして、ガードを有効にした状態で SSO 設定が機能することを確認してください。"
 
 msgid "Set the PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED environment variable to true."
-msgstr ""
+msgstr "PASSBOLT_SECURITY_SSO_EGRESS_GUARD_ENABLED 環境変数を true に設定してください。"
 
 msgid "The user is missing for the SSO state."
 msgstr "SSOステートに対応するユーザーが見つかりません。"
@@ -4940,13 +4940,13 @@ msgid "Failed to public key properties from certificate: {0}"
 msgstr "証明書から公開鍵のプロパティを取得できませんでした: {0}"
 
 msgid "The provider address resolves to a blocked link-local or metadata range ({0})."
-msgstr ""
+msgstr "プロバイダーのアドレスは、ブロックされたリンクローカルまたはメタデータの範囲 ({0}) に解決されます。"
 
 msgid "The provider address resolves to a blocked private range ({0})."
-msgstr ""
+msgstr "プロバイダーのアドレスは、ブロックされたプライベート範囲 ({0}) に解決されます。"
 
 msgid "The provider address is not allowed."
-msgstr ""
+msgstr "プロバイダーのアドレスは許可されていません。"
 
 msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
 msgstr "`passbolt.security.sso.sslCafile` 設定に無効な値が指定されました"
@@ -5321,7 +5321,7 @@ msgid "The user token result could not be found "
 msgstr "ユーザートークンの結果が見つかりませんでした "
 
 msgid "The user token result has already been used."
-msgstr ""
+msgstr "ユーザートークンの結果はすでに使用されています。"
 
 msgid "Invalid verify token type."
 msgstr "無効な検証トークンタイプです。"
@@ -6122,7 +6122,7 @@ msgid "The delete status should be a valid boolean."
 msgstr "削除ステータスは有効なブール値である必要があります。"
 
 msgid "The string should not contain invisible characters."
-msgstr ""
+msgstr "文字列に不可視文字を含めてはいけません。"
 
 msgid "The field must be null when creating a new record."
 msgstr "新しいレコードを作成するとき、そのフィールドは null でなければなりません。"
@@ -6236,7 +6236,7 @@ msgid "You deleted administrator {0}"
 msgstr "管理者 {0} を削除しました"
 
 msgid "You deleted user {0}"
-msgstr ""
+msgstr "ユーザー {0} を削除しました"
 
 msgid "{0} deleted your account"
 msgstr "{0} さんがあなたのアカウントを削除しました"
@@ -6512,16 +6512,16 @@ msgid "You may remove the \"passbolt.registration.public\" setting."
 msgstr "\"passbolt.registration.public\" 設定を削除してもかまいません。"
 
 msgid "The session provider is {0}."
-msgstr ""
+msgstr "セッションプロバイダーは {0} です。"
 
 msgid "The session provider {0} is not supported."
-msgstr ""
+msgstr "セッションプロバイダー {0} はサポートされていません。"
 
 msgid "The session providers supported are: {0}."
-msgstr ""
+msgstr "サポートされているセッションプロバイダーは次のとおりです: {0}。"
 
 msgid "Define it using the SESSION_DEFAULTS environment variable or under {0} in {1}."
-msgstr ""
+msgstr "SESSION_DEFAULTS 環境変数、または {1} の {0} の下で定義してください。"
 
 msgid "Passbolt is configured to force SSL use."
 msgstr "パスボルトはSSL使用を強制するように設定されています。"
@@ -7436,7 +7436,7 @@ msgid "Please check with them first to confirm."
 msgstr "まず彼らと確認してください。"
 
 msgid "The user {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "ユーザー {0} ({1}) は passbolt 組織から削除されました。"
 
 msgid "User suspended"
 msgstr "ユーザー停止"
