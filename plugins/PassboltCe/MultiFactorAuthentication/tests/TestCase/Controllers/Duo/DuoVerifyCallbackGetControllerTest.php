@@ -23,11 +23,14 @@ use App\Utility\UuidFactory;
 use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Controller\Duo\DuoSetupCallbackGetController;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoStateCookieService;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAccountSettingFactory;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
 {
@@ -262,5 +265,50 @@ class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
 
         $this->assertCookieSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         $this->assertCookieNotSet(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
+    }
+
+    public static function subscriberMismatchProvider(): array
+    {
+        return [
+            'with redirect' => ['/app'],
+            'without redirect' => [''],
+        ];
+    }
+
+    #[DataProvider('subscriberMismatchProvider')]
+    public function testDuoVerifyCallbackGetController_Error_SubscriberMismatch(string $redirect): void
+    {
+        $user = $this->logInAsUser();
+        MfaOrganizationSettingFactory::make()->duo(verifySubscriber: true)->persist();
+        MfaAccountSettingFactory::make()->setField('user_id', $user->id)->duo()->persist();
+        $duoState = UuidFactory::uuid();
+        $this->mockService(Client::class, function () {
+            return DuoSdkClientMock::createWithWrongExchangeAuthorizationCodeFor2FAResultSub(
+                $this->getMockBuilder(Client::class),
+            )->getClient();
+        });
+        /** @var \App\Model\Entity\AuthenticationToken $authToken */
+        $authToken = AuthenticationTokenFactory::make()->active()->data([
+            'provider' => 'duo',
+            'state' => $duoState,
+            'redirect' => $redirect,
+            'user_agent' => 'PassboltUA',
+        ])->userId($user->id)->type(AuthenticationToken::TYPE_MFA_VERIFY)->persist();
+        $this->cookie(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE, $authToken->token);
+
+        $this->get('/mfa/verify/duo/callback?state=' . $duoState . '&duo_code=' . UuidFactory::uuid());
+
+        $expectedMessage = 'the Duo account does not match your passbolt account';
+        if ($redirect === '') {
+            // Mobile: no redirect, the error page shows the message
+            $this->assertResponseCode(400);
+            $this->assertResponseContains($expectedMessage);
+        } else {
+            // Web: redirect to the verify page, the flash message shows the message
+            $this->assertRedirectContains('/mfa/verify/duo?redirect=' . $redirect);
+            $flashElement = $this->getSession()->read('Flash')['flash'][0];
+            $this->assertStringContainsString($expectedMessage, $flashElement['message']);
+        }
+        $this->assertCookieNotSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 }

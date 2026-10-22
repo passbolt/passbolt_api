@@ -80,6 +80,34 @@ class MfaOrgSettingsDuoServiceTest extends TestCase
     }
 
     /**
+     * @return array
+     */
+    public static function nonBooleanStoredValueProvider(): array
+    {
+        return [
+            'int 1' => [1, true],
+            'int 0' => [0, false],
+            'string 1' => ['1', true],
+            'string 0' => ['0', false],
+            'string yes' => ['yes', true],
+        ];
+    }
+
+    #[DataProvider('nonBooleanStoredValueProvider')]
+    public function testMfaOrgSettingsDuoService_IsVerifySubscriberEnabled_NonBooleanStoredValue(
+        int|string $storedValue,
+        bool $expected,
+    ): void {
+        Configure::write(MfaDuoVerifyDuoCodeService::PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER, false);
+        $settings = $this->getDefaultMfaOrgSettings();
+        $settings[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_VERIFY_SUBSCRIBER] = $storedValue;
+
+        $service = new MfaOrgSettingsDuoService($settings);
+
+        $this->assertSame($expected, $service->isVerifySubscriberEnabled());
+    }
+
+    /**
      * Received value, expected stored value.
      */
     public static function validVerifySubscriberProvider(): array

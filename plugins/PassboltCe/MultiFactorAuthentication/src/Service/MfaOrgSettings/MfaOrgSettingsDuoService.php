@@ -90,7 +90,7 @@ class MfaOrgSettingsDuoService
         // check DB setting first
         $duoSettings = $this->settings[MfaSettings::PROVIDER_DUO] ?? [];
         if (is_array($duoSettings) && array_key_exists(MfaOrgSettings::DUO_VERIFY_SUBSCRIBER, $duoSettings)) {
-            return $duoSettings[MfaOrgSettings::DUO_VERIFY_SUBSCRIBER];
+            return (bool)$duoSettings[MfaOrgSettings::DUO_VERIFY_SUBSCRIBER];
         }
 
         // If not present in the DB, fallback to configuration value
