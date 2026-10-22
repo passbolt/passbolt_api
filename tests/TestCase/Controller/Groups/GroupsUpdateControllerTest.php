@@ -19,6 +19,8 @@ namespace App\Test\TestCase\Controller\Groups;
 
 use App\Model\Entity\Permission;
 use App\Notification\Email\Redactor\Group\GroupUpdateAdminSummaryEmailRedactor;
+use App\Service\Database\TransactionRetryService;
+use App\Service\GroupsUsers\GroupsUsersAddService;
 use App\Service\Secrets\SecretRecipientValidationService;
 use App\Test\Factory\FavoriteFactory;
 use App\Test\Factory\GpgkeyFactory;
@@ -32,10 +34,13 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
+use App\Test\Lib\Utility\DatabaseLockErrorTestTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @property \App\Model\Table\ResourcesTable $Resources
@@ -45,6 +50,7 @@ class GroupsUpdateControllerTest extends AppIntegrationTestCase
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
     use EmailQueueTrait;
+    use DatabaseLockErrorTestTrait;
 
     /**
      * @var \App\Model\Table\ResourcesTable|null
@@ -809,5 +815,75 @@ hcciUFw5
         $this->logInAsAdmin();
         $this->put("/groups/$groupId", []);
         $this->assertResponseCode(404);
+    }
+
+    #[DataProvider('lockErrorInfoProvider')]
+    public function testGroupsUpdateController_Error_LockErrorOnEveryAttempt_Returns409(array $errorInfo): void
+    {
+        $group = GroupFactory::make()
+            ->with('GroupsUsers', GroupsUserFactory::make(2)->admin()->with('Users'))
+            ->persist();
+        /** @var \App\Model\Entity\User $groupManager */
+        $groupManager = $group->groups_users[0]->user;
+        /** @var \App\Model\Entity\User $newMember */
+        $newMember = UserFactory::make()->user()->persist();
+        $listenerCalls = 0;
+        $listener = function () use (&$listenerCalls, $errorInfo): void {
+            $listenerCalls++;
+            throw $this->makeQueryException($errorInfo);
+        };
+
+        EventManager::instance()->on(GroupsUsersAddService::AFTER_GROUP_USER_ADDED_EVENT_NAME, $listener);
+
+        $this->logInAs($groupManager);
+        $this->putJson("/groups/{$group->id}.json", [
+            'groups_users' => [['user_id' => $newMember->id, 'is_admin' => true]],
+        ]);
+
+        $this->assertError(409, 'The group is being modified by another operation, please try again later.');
+        $this->assertSame(TransactionRetryService::DEFAULT_MAX_ATTEMPTS, $listenerCalls);
+        $this->assertStringNotContainsString($errorInfo[2], $this->_getBodyAsString());
+        $this->assertUserIsNotMemberOf($group->id, $newMember->id);
+        $this->assertEmailQueueCount(0);
+    }
+
+    public function testGroupsUpdateController_Error_OtherDatabaseError_Returns500(): void
+    {
+        /** @var \App\Model\Entity\Group $group */
+        $group = GroupFactory::make()
+            ->with('GroupsUsers', GroupsUserFactory::make(2)->admin()->with('Users'))
+            ->persist();
+        /** @var \App\Model\Entity\User $groupManager */
+        $groupManager = $group->groups_users[0]->user;
+        /** @var \App\Model\Entity\User $newMember */
+        $newMember = UserFactory::make()->user()->persist();
+        $listenerCalls = 0;
+        $listener = function () use (&$listenerCalls): void {
+            $listenerCalls++;
+            throw $this->makeQueryException(['23000', 1062, 'Duplicate entry']);
+        };
+
+        EventManager::instance()->on(GroupsUsersAddService::AFTER_GROUP_USER_ADDED_EVENT_NAME, $listener);
+
+        $this->logInAs($groupManager);
+        $this->putJson("/groups/{$group->id}.json", [
+            'groups_users' => [['user_id' => $newMember->id, 'is_admin' => true]],
+        ]);
+
+        $this->assertResponseCode(500);
+        $this->assertSame(1, $listenerCalls);
+        $this->assertUserIsNotMemberOf($group->id, $newMember->id);
+    }
+
+    /**
+     * @return array
+     */
+    public static function lockErrorInfoProvider(): array
+    {
+        return [
+            'mysql deadlock' => [['40001', 1213, 'Deadlock found when trying to get lock']],
+            'mysql lock wait timeout' => [['HY000', 1205, 'Lock wait timeout exceeded']],
+            'postgres deadlock' => [['40P01', 7, 'deadlock detected']],
+        ];
     }
 }

@@ -25,6 +25,7 @@ use App\Model\Entity\Secret;
 use App\Model\Table\GroupsTable;
 use App\Model\Table\GroupsUsersTable;
 use App\Model\Validation\GroupsUsersChange\GroupsUsersChangeValidator;
+use App\Service\Database\TransactionRetryService;
 use App\Service\GroupsUsers\GroupsUsersAddService;
 use App\Service\GroupsUsers\GroupsUsersDeleteService;
 use App\Service\GroupsUsers\GroupsUsersUpdateService;
@@ -76,12 +77,17 @@ class GroupsUpdateService
     private ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService;
 
     /**
+     * @var \App\Service\Database\TransactionRetryService
+     */
+    private TransactionRetryService $transactionRetryService;
+
+    /**
      * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService expire resource service
      */
-    public function __construct(
-        ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService,
-    ) {
+    public function __construct(ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService)
+    {
         $this->resourcesExpireResourcesService = $resourcesExpireResourcesService;
+        $this->transactionRetryService = new TransactionRetryService();
         $this->groupsTable = TableRegistry::getTableLocator()->get('Groups');
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->groupGetService = new GroupGetService();
@@ -128,13 +134,17 @@ class GroupsUpdateService
     ): EntitiesChangesDto {
         $group = $this->groupGetService->getNotDeletedOrFail($groupId);
         $this->assertChanges($group, $changes);
+
         if (SecretRecipientValidationService::isEnabled()) {
             $userIds = Hash::extract($secrets ?? [], '{n}.user_id');
             SecretRecipientValidationService::preloadKeys($userIds);
         }
-        $entitiesChangesDto = new EntitiesChangesDto();
-        $this->groupsTable->getConnection()->transactional(
-            function () use ($uac, $group, $metaData, $changes, $secrets, $entitiesChangesDto): void {
+
+        return $this->transactionRetryService->run(
+            $this->groupsTable->getConnection(),
+            function () use ($uac, $groupId, $metaData, $changes, $secrets): EntitiesChangesDto {
+                $group = $this->groupGetService->getNotDeletedOrFail($groupId);
+                $entitiesChangesDto = new EntitiesChangesDto();
                 $this->updateMetaData($uac, $group, $metaData);
                 $entitiesChangesDto->pushUpdatedEntity($group);
                 $entitiesChangesDto->merge($this->addGroupsUsers($uac, $group, $changes, $secrets));
@@ -144,10 +154,10 @@ class GroupsUpdateService
                     $entitiesChangesDto->getDeletedEntities(Secret::class),
                 );
                 $this->notifyUsers($uac, $group, $entitiesChangesDto);
+
+                return $entitiesChangesDto;
             },
         );
-
-        return $entitiesChangesDto;
     }
 
     /**
