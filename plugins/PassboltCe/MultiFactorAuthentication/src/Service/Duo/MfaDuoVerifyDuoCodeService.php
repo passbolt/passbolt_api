@@ -33,6 +33,10 @@ use Throwable;
  */
 class MfaDuoVerifyDuoCodeService
 {
+    /**
+     * @deprecated since 5.18.0, use the setting from the MFA organization setting.
+     * Will be removed in the next major.
+     */
     public const PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER = 'passbolt.security.mfa.duoVerifySubscriber';
 
     /**

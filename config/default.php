@@ -420,6 +420,8 @@ return [
                 'trustedProxies' => env('PASSBOLT_SECURITY_PROXIES_TRUSTED_PROXIES', ''),
             ],
             'mfa' => [
+                // @deprecated since v5.18.0. The new Duo subscriber verification settings in the MFA settings is recommended way.
+                // Will be removed in the next major.
                 'duoVerifySubscriber' => filter_var(env('PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER', false), FILTER_VALIDATE_BOOLEAN),
                 'maxAttempts' => filter_var(env('PASSBOLT_SECURITY_MFA_MAX_ATTEMPTS', '4'), FILTER_VALIDATE_INT),
                 'disableUserOnRateLimit' => filter_var(env('PASSBOLT_SECURITY_MFA_DISABLE_USER_ON_RATE_LIMIT', true), FILTER_VALIDATE_BOOLEAN),

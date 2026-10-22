@@ -18,12 +18,14 @@ namespace Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings;
 
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
+use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
 use Duo\DuoUniversal\DuoException;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoGetSdkClientService;
+use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoVerifyDuoCodeService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
@@ -81,6 +83,43 @@ class MfaOrgSettingsDuoService
     }
 
     /**
+     * @return bool
+     */
+    public function isVerifySubscriberEnabled(): bool
+    {
+        // check DB setting first
+        $duoSettings = $this->settings[MfaSettings::PROVIDER_DUO] ?? [];
+        if (is_array($duoSettings) && array_key_exists(MfaOrgSettings::DUO_VERIFY_SUBSCRIBER, $duoSettings)) {
+            return $duoSettings[MfaOrgSettings::DUO_VERIFY_SUBSCRIBER];
+        }
+
+        // If not present in the DB, fallback to configuration value
+        return Configure::read(MfaDuoVerifyDuoCodeService::PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER) === true;
+    }
+
+    /**
+     * Set the Duo subscriber verification to true when missing and cast valid values to boolean.
+     *
+     * @param array $data MFA organization settings
+     * @return array
+     */
+    public static function applyVerifySubscriberDefault(array $data): array
+    {
+        $duoSettings = $data[MfaSettings::PROVIDER_DUO] ?? null;
+        if (!is_array($duoSettings)) {
+            return $data;
+        }
+
+        // Set `true` by default for all settings saved even the field is not present
+        $verifySubscriber = $duoSettings[MfaOrgSettings::DUO_VERIFY_SUBSCRIBER] ?? true;
+        if (Validation::boolean($verifySubscriber)) {
+            $data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_VERIFY_SUBSCRIBER] = (bool)$verifySubscriber;
+        }
+
+        return $data;
+    }
+
+    /**
      * @param \Duo\DuoUniversal\Client|null $client Duo SDK Client
      * @param bool $performHealthcheck Whether to perform the Duo Healthcheck or not
      * @return void
@@ -121,6 +160,16 @@ class MfaOrgSettingsDuoService
         } catch (RecordNotFoundException $e) {
             $msg = __('No configuration set for Duo client ID.');
             $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_CLIENT_ID]['notEmpty'] = $msg;
+        }
+
+        $duoSettings = $this->settings[MfaSettings::PROVIDER_DUO] ?? [];
+        if (
+            is_array($duoSettings)
+            && array_key_exists(MfaOrgSettings::DUO_VERIFY_SUBSCRIBER, $duoSettings)
+            && !Validation::boolean($duoSettings[MfaOrgSettings::DUO_VERIFY_SUBSCRIBER])
+        ) {
+            $msg = __('The Duo subscriber verification should be a boolean.');
+            $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_VERIFY_SUBSCRIBER]['boolean'] = $msg;
         }
 
         if ($performHealthcheck && empty($errors[MfaSettings::PROVIDER_DUO])) {

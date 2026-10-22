@@ -97,6 +97,7 @@ class MfaOrganizationSettingFactory extends OrganizationSettingFactory
      * @param string|null $apiHostName
      * @param string|null $clientId
      * @param string|null $clientSecret
+     * @param bool|null $verifySubscriber Stored Duo subscriber verification, not stored if null
      * @return MfaOrganizationSettingFactory
      */
     public function duo(
@@ -104,9 +105,13 @@ class MfaOrganizationSettingFactory extends OrganizationSettingFactory
         ?string $apiHostName = null,
         ?string $clientId = null,
         ?string $clientSecret = null,
+        ?bool $verifySubscriber = null,
     ) {
         $value = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO => $isActive]];
         $value[MfaSettings::PROVIDER_DUO] = $this->getDuoDefaultSettings($apiHostName, $clientId, $clientSecret);
+        if ($verifySubscriber !== null) {
+            $value[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_VERIFY_SUBSCRIBER] = $verifySubscriber;
+        }
 
         return $this->value($value);
     }
