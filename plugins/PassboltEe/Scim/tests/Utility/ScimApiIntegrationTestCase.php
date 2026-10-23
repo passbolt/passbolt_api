@@ -245,4 +245,12 @@ abstract class ScimApiIntegrationTestCase extends AppIntegrationTestCase
             ],
         ]);
     }
+
+    /**
+     * @return array
+     */
+    protected function getScimResponseBodyAsArray(): array
+    {
+        return json_decode($this->_getBodyAsString(), true);
+    }
 }

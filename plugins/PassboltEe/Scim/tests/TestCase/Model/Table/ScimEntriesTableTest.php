@@ -27,6 +27,7 @@ use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\Scim\Model\Entity\ScimEntry;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * ScimEntriesTableTest - Tests for the unique scim_name DB constraint.
@@ -201,5 +202,77 @@ class ScimEntriesTableTest extends AppTestCase
         // Verify only one entry exists and it's the one from the original save, not the concurrent attempt.
         $this->assertSame(1, ScimEntryFactory::count());
         $this->assertNotSame($concurrentUuid, ScimEntryFactory::firstOrFail()->get('id'));
+    }
+
+    public static function nonAsciiValuesProvider(): array
+    {
+        return [
+            'latin accent' => ['José', 'josé@passbolt.com'],
+            'cjk' => ['山田太郎', '山田@passbolt.com'],
+            'four bytes cjk' => ['𠮷田太郎', '𠮷田@passbolt.com'],
+        ];
+    }
+
+    #[DataProvider('nonAsciiValuesProvider')]
+    public function testScimEntriesTable_Save_Success_NonAsciiValues(string $externalIdentifier, string $scimName): void
+    {
+        $scimEntry = $this->ScimEntries->buildEntity([
+            'foreign_key' => UuidFactory::uuid(),
+            'foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
+            'external_identifier' => $externalIdentifier,
+            'scim_name' => $scimName,
+        ]);
+
+        $this->ScimEntries->saveOrFail($scimEntry);
+
+        $savedEntry = $this->ScimEntries->get($scimEntry->id);
+        $this->assertSame($externalIdentifier, $savedEntry->external_identifier);
+        $this->assertSame($scimName, $savedEntry->scim_name);
+    }
+
+    public function testScimEntriesTable_Find_Success_ByNonAsciiScimName(): void
+    {
+        /** @var \Passbolt\Scim\Model\Entity\ScimEntry $scimEntry */
+        $scimEntry = ScimEntryFactory::make([
+            'scim_name' => 'josé@passbolt.com',
+            'foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
+        ])->persist();
+
+        $foundIds = $this->ScimEntries->find()
+            ->where(['scim_name' => 'josé@passbolt.com'])
+            ->all()
+            ->extract('id')
+            ->toList();
+
+        $this->assertSame([$scimEntry->id], $foundIds);
+    }
+
+    public function testScimEntriesTable_ScimNameHasSameCollationAsUsersUsername(): void
+    {
+        $schemaCollection = $this->ScimEntries->getConnection()->getSchemaCollection();
+
+        $scimNameColumn = $schemaCollection->describe('scim_entries')->getColumn('scim_name');
+        $usernameColumn = $schemaCollection->describe('users')->getColumn('username');
+
+        $this->assertSame($usernameColumn['collate'] ?? null, $scimNameColumn['collate'] ?? null);
+    }
+
+    public function testScimEntriesTable_DuplicateActiveNonAsciiScimName_FailsWithValidationError(): void
+    {
+        ScimEntryFactory::make([
+            'scim_name' => 'josé@passbolt.com',
+            'foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
+        ])->persist();
+
+        $duplicate = $this->ScimEntries->buildEntity([
+            'foreign_key' => UuidFactory::uuid(),
+            'foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
+            'scim_name' => 'josé@passbolt.com',
+        ]);
+
+        $result = $this->ScimEntries->save($duplicate);
+
+        $this->assertFalse($result);
+        $this->assertArrayHasKey('uniqueScimName', $duplicate->getError('scim_name'));
     }
 }
