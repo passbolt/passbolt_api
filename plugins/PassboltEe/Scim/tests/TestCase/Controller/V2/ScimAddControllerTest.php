@@ -22,6 +22,7 @@ use Cake\Datasource\ConnectionManager;
 use Passbolt\Scim\Test\Factory\ScimEntryFactory;
 use Passbolt\Scim\Test\Utility\FailingConnection;
 use Passbolt\Scim\Test\Utility\ScimApiIntegrationTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * ScimAddControllerTest class
@@ -100,6 +101,58 @@ class ScimAddControllerTest extends ScimApiIntegrationTestCase
         // Assert database entries
         $this->assertSame(0, ScimEntryFactory::count());
         $this->assertSame(0, UserFactory::find()->where(['username' => self::USER_1_EMAIL])->count());
+    }
+
+    public static function nonAsciiValuesProvider(): array
+    {
+        return [
+            'latin accent' => ['José', 'josé@passbolt.com'],
+            'cjk' => ['山田太郎', '山田@passbolt.com'],
+            'four bytes cjk' => ['𠮷田太郎', '𠮷田@passbolt.com'],
+        ];
+    }
+
+    #[DataProvider('nonAsciiValuesProvider')]
+    public function testScimControllerUsersAdd_Success_NonAsciiExternalIdAndUserName(string $externalId, string $userName): void
+    {
+        $this->configScimAuth();
+        $this->post($this->getScimEndpoint('Users'), $this->getUserPostData($userName, $externalId));
+
+        $this->assertResponseCode(201);
+        $response = $this->getScimResponseBodyAsArray();
+        $this->assertSame($externalId, $response['externalId']);
+        $this->assertSame($userName, $response['userName']);
+        $this->assertSame(1, ScimEntryFactory::find()->where([
+            'external_identifier' => $externalId,
+            'scim_name' => $userName,
+        ])->count());
+    }
+
+    public function testScimControllerUsersAdd_Success_EmojiInExternalIdAndUserName(): void
+    {
+        $this->configScimAuth();
+        $this->post($this->getScimEndpoint('Users'), $this->getUserPostData('josé😀@passbolt.com', 'José 😀'));
+
+        $this->assertResponseCode(201);
+        $response = $this->getScimResponseBodyAsArray();
+        $this->assertSame('José 😀', $response['externalId']);
+        $this->assertSame('josé😀@passbolt.com', $response['userName']);
+        $this->assertSame(1, ScimEntryFactory::find()->where([
+            'external_identifier' => 'José 😀',
+            'scim_name' => 'josé😀@passbolt.com',
+        ])->count());
+    }
+
+    public function testScimControllerUsersAdd_Error_EmojiInWorkEmail(): void
+    {
+        $this->configScimAuth();
+        $this->post($this->getScimEndpoint('Users'), $this->getUserPostData(email: 'josé😀@passbolt.com'));
+
+        $this->assertResponseCode(409);
+        $this->assertResponseContains('"scimType": "invalidValue"');
+        $this->assertResponseContains('The username should be a valid email address.');
+        $this->assertSame(0, ScimEntryFactory::count());
+        $this->assertSame(0, UserFactory::find()->where(['username' => 'josé😀@passbolt.com'])->count());
     }
 
     public static function providerDeadlockSqlStates(): array

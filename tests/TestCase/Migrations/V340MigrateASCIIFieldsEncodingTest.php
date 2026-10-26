@@ -181,6 +181,8 @@ class V340MigrateASCIIFieldsEncodingTest extends TestCase
         return [
             'gpgkeys.key_id',
             'gpgkeys.type',
+            // SCIM externalId is a Unicode string chosen by the identity provider, not an internal identifier.
+            'scim_entries.external_identifier',
             // PHP session ids are case-sensitive opaque tokens; sessions.id is intentionally ascii_bin.
             'sessions.id',
             // Base64url credential ids are case-sensitive per the alphabet; intentionally ascii_bin
