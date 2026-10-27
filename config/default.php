@@ -408,6 +408,9 @@ return [
             'edition' => [
                 'downgradeDisabled' => filter_var(env('PASSBOLT_SECURITY_EDITION_DOWNGRADE_DISABLED', false), FILTER_VALIDATE_BOOLEAN),
             ],
+            // Rejects requests overriding the HTTP method with the `_method` field or the X-Http-Method-Override header.
+            // Setting it to false could lead to bypass of method-based proxy rules.
+            'preventHttpMethodOverride' => filter_var(env('PASSBOLT_SECURITY_PREVENT_HTTP_METHOD_OVERRIDE', true), FILTER_VALIDATE_BOOLEAN),
             // Enables trusting of HTTP_X headers set by most load balancers.
             // Only set to true if your instance runs behind load balancers/proxies that you control.
             'proxies' => [
