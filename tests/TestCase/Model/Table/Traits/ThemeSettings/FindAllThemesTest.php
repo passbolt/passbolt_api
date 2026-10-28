@@ -38,9 +38,19 @@ class FindAllThemesTest extends TestCase
             'preview' => Configure::read('App.fullBaseUrl') . '/img/themes/default.png',
         ],
         [
+            'id' => 'aeccf9fb-cafc-5afb-94ba-ba6811bd84ba',
+            'name' => 'layette',
+            'preview' => Configure::read('App.fullBaseUrl') . '/img/themes/layette.png',
+        ],
+        [
             'id' => '2e6d06eb-e417-5573-80ed-27b2182dc55b',
             'name' => 'midgar',
             'preview' => Configure::read('App.fullBaseUrl') . '/img/themes/midgar.png',
+        ],
+        [
+            'id' => 'e422bb96-4b78-5887-88a7-fe2b3751a2f4',
+            'name' => 'sakura',
+            'preview' => Configure::read('App.fullBaseUrl') . '/img/themes/sakura.png',
         ],
         [
             'id' => '39fe32d0-aeaf-5f9a-aba5-dbf1df71dafc',
