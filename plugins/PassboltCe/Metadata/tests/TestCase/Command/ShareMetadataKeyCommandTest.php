@@ -21,6 +21,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\I18n\Date;
+use Cake\I18n\DateTime;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
@@ -70,10 +71,13 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
     public function testShareMetadataKeyCommand_Success_UserFriendlyMode(): void
     {
         MetadataKeysSettingsFactory::make()->persist();
+        $createdBeforeToday = ['created' => DateTime::now()->subDays(1)];
+        $serverPrivateKey = fn() => MetadataPrivateKeyFactory::make($createdBeforeToday)->withServerPrivateKey();
         // metadata keys
-        $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
-        $expiredMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->expired()->persist();
-        $deletedMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->deleted()->persist();
+        $activeMetadataKey = MetadataKeyFactory::make()->with('MetadataPrivateKeys', $serverPrivateKey())->persist();
+        $expiredMetadataKey = MetadataKeyFactory::make()->with('MetadataPrivateKeys', $serverPrivateKey())->expired()->persist();
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $deletedMetadataKey */
+        $deletedMetadataKey = MetadataKeyFactory::make()->with('MetadataPrivateKeys', $serverPrivateKey())->deleted()->persist();
         // users
         $activeUser = UserFactory::make()->user()->active()->withValidGpgKey()->persist();
         /** @var \App\Model\Entity\User $activeAdmin */
@@ -82,10 +86,10 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
         $disabledUser = UserFactory::make()->user()->disabled()->withValidGpgKey()->persist();
         $deletedUser = UserFactory::make(['deleted' => true])->user()->withValidGpgKey()->persist();
         // create active metadata key only for active admin
-        MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($activeAdmin->get('gpgkey'))->persist();
+        MetadataPrivateKeyFactory::make($createdBeforeToday)->withMetadataKey($activeMetadataKey)->withUserPrivateKey($activeAdmin->get('gpgkey'))->persist();
         // create expired metadata key for all users except suspended user
-        MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($activeUser->get('gpgkey'))->persist();
-        MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($activeAdmin->get('gpgkey'))->persist();
+        MetadataPrivateKeyFactory::make($createdBeforeToday)->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($activeUser->get('gpgkey'))->persist();
+        MetadataPrivateKeyFactory::make($createdBeforeToday)->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($activeAdmin->get('gpgkey'))->persist();
         // $deletedMetadataKey is not shared with any user
 
         $this->exec('passbolt metadata share_metadata_key');
