@@ -16,8 +16,65 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib\Model;
 
+use OpenPGP;
+use OpenPGP_Message;
+use OpenPGP_PublicKeyPacket;
+use RuntimeException;
+
 trait GpgkeysModelTrait
 {
+    /**
+     * Read an armored key from the tests/Fixture/Gpgkeys folder.
+     *
+     * @param string $fileName file name, e.g. ada_public.key
+     * @return string
+     */
+    public static function readGpgkeyFixture(string $fileName): string
+    {
+        $content = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . $fileName);
+        if ($content === false) {
+            throw new RuntimeException('Could not read the key fixture ' . $fileName);
+        }
+
+        return $content;
+    }
+
+    /**
+     * Returns the private key with its armor header renamed to PUBLIC KEY BLOCK.
+     *
+     * @return string
+     */
+    public static function getPrivateKeyModifiedAsPublicKey(): string
+    {
+        $privateKey = self::readGpgkeyFixture('ada_private.key');
+
+        return str_replace('PGP PRIVATE KEY BLOCK', 'PGP PUBLIC KEY BLOCK', $privateKey);
+    }
+
+    /**
+     * Returns the public key with a public primary key but a secret subkey.
+     *
+     * @return string
+     */
+    public static function getPublicKeyWithSecretSubkey(): string
+    {
+        $privateKey = self::readGpgkeyFixture('ada_private.key');
+        $message = OpenPGP_Message::parse(OpenPGP::unarmor($privateKey, 'PGP PRIVATE KEY BLOCK'));
+        $message->packets[0] = new OpenPGP_PublicKeyPacket($message->packets[0]);
+
+        return OpenPGP::enarmor($message->to_bytes(), 'PGP PUBLIC KEY BLOCK');
+    }
+
+    /**
+     * Two public key blocks in a single string.
+     *
+     * @return string
+     */
+    public static function getTwoPublicKeyBlocks(): string
+    {
+        return self::readGpgkeyFixture('ada_public.key') . "\n" . self::readGpgkeyFixture('betty_public.key');
+    }
+
     /**
      * Get a dummy gpgkey with test data.
      *
