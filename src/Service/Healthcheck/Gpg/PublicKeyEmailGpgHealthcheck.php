@@ -20,6 +20,7 @@ namespace App\Service\Healthcheck\Gpg;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use Cake\Core\Exception\CakeException;
 
 class PublicKeyEmailGpgHealthcheck extends AbstractGpgHealthcheck
 {
@@ -32,7 +33,11 @@ class PublicKeyEmailGpgHealthcheck extends AbstractGpgHealthcheck
         if ($this->isPublicServerKeyReadable() && $this->isPrivateServerKeyReadable() && is_string($fingerprint)) {
             $gpg = OpenPGPBackendFactory::get();
             $publicKeyData = file_get_contents($this->getPublicServerKey());
-            $publicKeyInfo = $gpg->getPublicKeyInfo($publicKeyData);
+            try {
+                $publicKeyInfo = $gpg->getPublicKeyInfo($publicKeyData);
+            } catch (CakeException $e) {
+                return $this;
+            }
             $this->status = is_string($publicKeyInfo['uid']) &&
                 PublicKeyValidationService::uidContainValidEmail($publicKeyInfo['uid']);
         }

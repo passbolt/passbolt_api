@@ -16,9 +16,6 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib\Model;
 
-use OpenPGP;
-use OpenPGP_Message;
-use OpenPGP_PublicKeyPacket;
 use RuntimeException;
 
 trait GpgkeysModelTrait
@@ -31,12 +28,7 @@ trait GpgkeysModelTrait
      */
     public static function readGpgkeyFixture(string $fileName): string
     {
-        $content = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . $fileName);
-        if ($content === false) {
-            throw new RuntimeException('Could not read the key fixture ' . $fileName);
-        }
-
-        return $content;
+        return self::readFixtureFile('Gpgkeys' . DS . $fileName);
     }
 
     /**
@@ -46,9 +38,7 @@ trait GpgkeysModelTrait
      */
     public static function getPrivateKeyModifiedAsPublicKey(): string
     {
-        $privateKey = self::readGpgkeyFixture('ada_private.key');
-
-        return str_replace('PGP PRIVATE KEY BLOCK', 'PGP PUBLIC KEY BLOCK', $privateKey);
+        return self::readFixtureFile('OpenPGP' . DS . 'PublicKeys' . DS . 'invalid_private_key_as_public.key');
     }
 
     /**
@@ -58,11 +48,7 @@ trait GpgkeysModelTrait
      */
     public static function getPublicKeyWithSecretSubkey(): string
     {
-        $privateKey = self::readGpgkeyFixture('ada_private.key');
-        $message = OpenPGP_Message::parse(OpenPGP::unarmor($privateKey, 'PGP PRIVATE KEY BLOCK'));
-        $message->packets[0] = new OpenPGP_PublicKeyPacket($message->packets[0]);
-
-        return OpenPGP::enarmor($message->to_bytes(), 'PGP PUBLIC KEY BLOCK');
+        return self::readFixtureFile('OpenPGP' . DS . 'PublicKeys' . DS . 'invalid_public_key_with_secret_subkey.key');
     }
 
     /**
@@ -72,7 +58,23 @@ trait GpgkeysModelTrait
      */
     public static function getTwoPublicKeyBlocks(): string
     {
-        return self::readGpgkeyFixture('ada_public.key') . "\n" . self::readGpgkeyFixture('betty_public.key');
+        return self::readFixtureFile('OpenPGP' . DS . 'PublicKeys' . DS . 'invalid_two_public_key_blocks.key');
+    }
+
+    /**
+     * Read a file from the tests/Fixture folder.
+     *
+     * @param string $path path relative to the tests/Fixture folder
+     * @return string
+     */
+    private static function readFixtureFile(string $path): string
+    {
+        $content = file_get_contents(FIXTURES . DS . $path);
+        if ($content === false) {
+            throw new RuntimeException('Could not read the fixture ' . $path);
+        }
+
+        return $content;
     }
 
     /**
