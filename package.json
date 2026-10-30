@@ -32,9 +32,5 @@
   },
   "dependencies": {
     "react-router-dom": "^5.3.4"
-  },
-  "overrides": {
-    "uuid": "^14.0.0",
-    "js-yaml": "^4.3.2"
   }
 }
