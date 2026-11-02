@@ -1,5 +1,9 @@
+---
+# Managed by Pulumi (gitlab-permissions-as-code). Do not edit by hand.
+# Hooks are declared in IaC; hand edits are reverted on the next apply.
+default_install_hook_types: [pre-commit]
 repos:
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.30.0  # v8.30.0
+    rev: v8.30.0
     hooks:
       - id: gitleaks
