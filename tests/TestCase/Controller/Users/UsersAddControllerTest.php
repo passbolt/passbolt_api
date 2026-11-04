@@ -17,11 +17,13 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Users;
 
 use App\Model\Entity\Role;
+use App\Service\RecordsStrategy\NonDeletedUsersMaxRecordsStrategy;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
+use App\Test\Lib\Utility\RecordsStrategyTestTrait;
 use App\Utility\UuidFactory;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
@@ -29,6 +31,7 @@ use Cake\Routing\Router;
 
 class UsersAddControllerTest extends AppIntegrationTestCase
 {
+    use RecordsStrategyTestTrait;
     use EmailQueueTrait;
 
     public function testUsersAddController_Success(): void
@@ -284,5 +287,26 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->postJson('/users.json', $data);
         $this->assertBadRequestError('Could not validate user data.');
         $this->assertResponseContains('The role does not exist.');
+    }
+
+    public function testUsersAddController_Error_MaxRecordsReached(): void
+    {
+        $this->setMaxRecordsReached(NonDeletedUsersMaxRecordsStrategy::class);
+
+        $this->logInAsAdmin();
+        $this->postJson('/users.json', $this->getUserData());
+        $this->assertError(409, 'The maximum number of users for this organization has been reached.');
+        $this->assertSame(0, UserFactory::find()->where(['username' => 'ada@passbolt.com'])->count());
+    }
+
+    private function getUserData(): array
+    {
+        return [
+            'username' => 'ada@passbolt.com',
+            'profile' => [
+                'first_name' => 'Ada',
+                'last_name' => 'Lovelace',
+            ],
+        ];
     }
 }

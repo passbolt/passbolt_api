@@ -18,14 +18,18 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Groups;
 
 use App\Model\Table\GroupsTable;
+use App\Service\RecordsStrategy\NonDeletedGroupsMaxRecordsStrategy;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Utility\RecordsStrategyTestTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class GroupsAddControllerTest extends AppIntegrationTestCase
 {
+    use RecordsStrategyTestTrait;
+
     public $Groups;
 
     public function setUp(): void
@@ -286,5 +290,19 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         $this->logInAsAdmin();
         $this->post('/groups', $data);
         $this->assertResponseCode(404);
+    }
+
+    public function testGroupsAddController_Error_MaxRecordsReached(): void
+    {
+        $user = UserFactory::make()->persist();
+        $this->setMaxRecordsReached(NonDeletedGroupsMaxRecordsStrategy::class);
+
+        $this->logInAsAdmin();
+        $this->postJson('/groups.json', [
+            'name' => 'Max records',
+            'groups_users' => [['user_id' => $user->id, 'is_admin' => 1]],
+        ]);
+        $this->assertError(409, 'The maximum number of groups for this organization has been reached.');
+        $this->assertSame(0, GroupFactory::count());
     }
 }
