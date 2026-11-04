@@ -140,6 +140,7 @@ class HealthcheckIndexControllerV5Test extends TestCase
         'smtp-settings-settings-source',
         'smtp-settings-endpoints-disabled',
         'custom-ssl-options-smtp',
+        'duo-verify-subscriber-enabled',
         'directory-sync-endpoints-disabled',
         'ssl-verify-peer-directory-sync',
         'ssl-host-verification-sso',

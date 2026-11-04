@@ -135,14 +135,28 @@ class DuoVerifySubscriberMfaHealthcheckTest extends AppTestCase
         $this->assertSame($expectedPassed, $this->sut->check()->isPassed());
     }
 
-    public function testDuoVerifySubscriberMfaHealthcheck_CliOptionIsListed(): void
+    public function testDuoVerifySubscriberMfaHealthcheck_CliFilterIsListed(): void
     {
         $this->enableFeaturePlugin(MultiFactorAuthenticationPlugin::class);
 
         $this->exec('passbolt healthcheck -h');
 
         $this->assertExitSuccess();
-        $this->assertOutputContains('--' . HealthcheckServiceCollector::DOMAIN_MFA);
-        $this->assertOutputContains('Run Multi-factor authentication tests only.');
+        $this->assertOutputContains('--filter');
+        $this->assertOutputContains(HealthcheckServiceCollector::DOMAIN_MFA);
+    }
+
+    public function testDuoVerifySubscriberMfaHealthcheck_CliFilterRunsTheCheck(): void
+    {
+        $this->enableFeaturePlugin(MultiFactorAuthenticationPlugin::class);
+        $this->mockProcessUserService('www-data');
+        Configure::write(MfaDuoVerifyDuoCodeService::PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER, false);
+        MfaOrganizationSettingFactory::make()->duo(verifySubscriber: false)->persist();
+
+        $this->exec('passbolt healthcheck -d test --filter ' . HealthcheckServiceCollector::DOMAIN_MFA);
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('Multi-factor authentication');
+        $this->assertOutputContains('[WARN] Duo is enabled but the Duo subscriber verification is disabled.');
     }
 }

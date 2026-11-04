@@ -141,4 +141,12 @@ class DuoVerifySubscriberMfaHealthcheck implements HealthcheckServiceInterface, 
     {
         return 'duoVerifySubscriberEnabled';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'duo-verify-subscriber-enabled';
+    }
 }
