@@ -26,6 +26,6 @@
     "copy:styleguide": "node ./scripts/copy-styleguide.js",
     "copy:locales": "node ./scripts/copy-locales.js",
     "lint": "npm run lint:lockfile",
-    "lint:lockfile": "lockfile-lint --path package-lock.json --allowed-hosts npm github.com --allowed-schemes \"https:\" \"git+ssh:\" --empty-hostname false --validate-integrity-strict"
+    "lint:lockfile": "lockfile-lint --path package-lock.json --allowed-hosts npm github.com --allowed-schemes \"https:\" \"git+ssh:\" --empty-hostname false --validate-integrity-strict --validate-package-names"
   }
 }
