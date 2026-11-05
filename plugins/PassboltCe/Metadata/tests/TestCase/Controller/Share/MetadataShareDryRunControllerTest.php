@@ -55,6 +55,28 @@ class MetadataShareDryRunControllerTest extends AppIntegrationTestCaseV5
         $this->assertBadRequestError('Resource metadata key type is invalid');
     }
 
+    public function testMetadataShareDryRunController_Error_BlankMetadataKeyType(): void
+    {
+        $user = UserFactory::make()->user()->persist();
+        $user2 = UserFactory::make()->user()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->v5Fields(false, ['metadata_key_type' => ''])
+            ->withPermissionsFor([$user])
+            ->persist();
+        $this->logInAs($user);
+
+        $resourceId = $resource->id;
+        $data = [
+            'permissions' => [
+                ['aro' => 'User', 'aro_foreign_key' => $user2->get('id'), 'type' => Permission::READ],
+            ],
+        ];
+        $this->postJson("/share/simulate/resource/{$resourceId}.json", $data);
+
+        $this->assertBadRequestError('Resource metadata key type is invalid');
+    }
+
     public function testMetadataShareDryRunController_Success(): void
     {
         $user = UserFactory::make()->user()->persist();
