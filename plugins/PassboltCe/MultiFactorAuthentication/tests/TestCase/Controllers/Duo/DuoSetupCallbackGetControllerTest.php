@@ -22,8 +22,10 @@ use App\Test\Factory\OrganizationSettingFactory;
 use App\Utility\UuidFactory;
 use Cake\Routing\Router;
 use Duo\DuoUniversal\Client;
+use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
 use Passbolt\MultiFactorAuthentication\Controller\Duo\DuoSetupCallbackGetController;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoStateCookieService;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoOrganizationOnlyScenario;
@@ -31,6 +33,7 @@ use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DuoSetupCallbackGetControllerTest extends MfaIntegrationTestCase
 {
@@ -123,36 +126,83 @@ class DuoSetupCallbackGetControllerTest extends MfaIntegrationTestCase
         $this->assertCookieNotSet(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
     }
 
-    public function testDuoSetupCallbackGetController_Error_With_Redirect()
+    public static function setupFailureWithRedirectProvider(): array
     {
-        $user = $this->logInAsUser();
-        $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class);
-        $duoState = UuidFactory::uuid();
-        $redirect = DuoSetupCallbackGetController::DUO_SETUP_REDIRECT_PATH;
-        $userId = $user->get('id');
-        $error = 'DuoCallbackError';
-        $errorDesc = 'DuoCallbackErrorDescription';
-        $this->mockService(Client::class, function () use ($user) {
-            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
-        });
+        return [
+            'Duo returned an error' => ['default', 'duoError', DuoSetupCallbackGetController::ERROR_CODE_SETUP_FAILED],
+            'callback data is missing' => ['default', 'empty', DuoSetupCallbackGetController::ERROR_CODE_SETUP_FAILED],
+            'Duo code cannot be verified' => ['exchangeError', 'valid', DuoSetupCallbackGetController::ERROR_CODE_SETUP_FAILED],
+            'Duo subscriber mismatch' => ['wrongSub', 'valid', DuoSetupCallbackGetController::ERROR_CODE_SUBSCRIBER_MISMATCH],
+        ];
+    }
 
+    #[DataProvider('setupFailureWithRedirectProvider')]
+    public function testDuoSetupCallbackGetController_Error_With_Redirect(
+        string $duoClientMock,
+        string $callbackQuery,
+        string $expectedErrorCode,
+    ): void {
+        $user = $this->logInAsUser();
+        MfaOrganizationSettingFactory::make()->duo(verifySubscriber: true)->persist();
+        $duoState = UuidFactory::uuid();
+        $this->mockService(Client::class, function () use ($duoClientMock, $user) {
+            $mockBuilder = $this->getMockBuilder(Client::class);
+
+            return match ($duoClientMock) {
+                'default' => DuoSdkClientMock::createDefault($mockBuilder, $user)->getClient(),
+                'exchangeError' => DuoSdkClientMock::createWithExchangeAuthorizationCodeFor2FAResultThrowingException($mockBuilder)->getClient(),
+                'wrongSub' => DuoSdkClientMock::createWithWrongExchangeAuthorizationCodeFor2FAResultSub($mockBuilder)->getClient(),
+            };
+        });
+        /** @var \App\Model\Entity\AuthenticationToken $authToken */
         $authToken = AuthenticationTokenFactory::make()->active()->data([
             'provider' => 'duo',
             'state' => $duoState,
-            'redirect' => $redirect,
+            'redirect' => DuoSetupCallbackGetController::DUO_SETUP_REDIRECT_PATH,
             'user_agent' => 'PassboltUA',
-        ])->userId($userId)->type(AuthenticationToken::TYPE_MFA_SETUP)->persist();
-        $token = $authToken->token;
+        ])->userId($user->id)->type(AuthenticationToken::TYPE_MFA_SETUP)->persist();
+        $this->cookie(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE, $authToken->token);
 
-        $this->cookie(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE, $token);
+        $query = match ($callbackQuery) {
+            'duoError' => '?error=DuoCallbackError&error_description=DuoCallbackErrorDescription',
+            'empty' => '',
+            'valid' => '?state=' . $duoState . '&duo_code=' . UuidFactory::uuid(),
+        };
+        $this->get('/mfa/setup/duo/callback' . $query);
 
-        $this->get("/mfa/setup/duo/callback?error={$error}&error_description={$errorDesc}");
-        $this->assertRedirect($redirect);
-        $flashElement = $this->getSession()->read('Flash')['flash'][0];
-        $this->assertEquals($flashElement['message'], "Unable to authenticate to Duo. {$error}: {$errorDesc}");
-
+        $expectedRedirect = DuoSetupCallbackGetController::DUO_SETUP_REDIRECT_PATH . '?error=' . $expectedErrorCode;
+        $this->assertRedirectEquals(Router::url($expectedRedirect, true));
+        $this->assertSessionNotHasKey('Flash');
+        $this->assertSame(0, AccountSettingFactory::count());
         $this->assertCookieNotSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         $this->assertCookieNotSet(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
+    }
+
+    public function testDuoSetupCallbackGetController_Error_SubscriberMismatch_Without_Redirect(): void
+    {
+        $user = $this->logInAsUser();
+        MfaOrganizationSettingFactory::make()->duo(verifySubscriber: true)->persist();
+        $duoState = UuidFactory::uuid();
+        $this->mockService(Client::class, function () {
+            return DuoSdkClientMock::createWithWrongExchangeAuthorizationCodeFor2FAResultSub(
+                $this->getMockBuilder(Client::class),
+            )->getClient();
+        });
+        /** @var \App\Model\Entity\AuthenticationToken $authToken */
+        $authToken = AuthenticationTokenFactory::make()->active()->data([
+            'provider' => 'duo',
+            'state' => $duoState,
+            'redirect' => '',
+            'user_agent' => 'PassboltUA',
+        ])->userId($user->id)->type(AuthenticationToken::TYPE_MFA_SETUP)->persist();
+        $this->cookie(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE, $authToken->token);
+
+        $this->get('/mfa/setup/duo/callback?state=' . $duoState . '&duo_code=' . UuidFactory::uuid());
+
+        $this->assertResponseCode(400);
+        $this->assertResponseContains('the Duo account does not match your passbolt account');
+        $this->assertSame(0, AccountSettingFactory::count());
+        $this->assertCookieNotSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 
     public function testDuoSetupCallbackGetController_Error_With_Wrong_Redirect()

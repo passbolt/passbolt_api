@@ -39,6 +39,7 @@ class HealthcheckServiceCollector
     public const DOMAIN_GPG = 'gpg';
     public const DOMAIN_JWT = 'jwt';
     public const DOMAIN_METADATA = 'metadata';
+    public const DOMAIN_MFA = 'mfa';
 
     /**
      * List of all available levels for health check results.
@@ -141,6 +142,7 @@ class HealthcheckServiceCollector
             self::DOMAIN_GPG => __('GPG Configuration'),
             self::DOMAIN_JWT => __('JWT Authentication'),
             self::DOMAIN_SSL => __('SSL Certificate'),
+            self::DOMAIN_MFA => __('Multi-factor authentication'),
         ];
     }
 

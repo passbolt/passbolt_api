@@ -39,6 +39,7 @@ class MfaOrgSettings
     public const DUO_CLIENT_ID = 'clientId';
     public const DUO_CLIENT_SECRET = 'clientSecret';
     public const DUO_API_HOSTNAME = 'apiHostName';
+    public const DUO_VERIFY_SUBSCRIBER = 'verifySubscriber';
 
     /**
      * Yubikey constants
@@ -255,6 +256,7 @@ class MfaOrgSettings
                         self::DUO_CLIENT_SECRET => $duoOrgSettings->getDuoClientSecret(),
                         self::DUO_API_HOSTNAME => $duoOrgSettings->getDuoApiHostname(),
                         self::DUO_CLIENT_ID => $duoOrgSettings->getDuoClientId(),
+                        self::DUO_VERIFY_SUBSCRIBER => $duoOrgSettings->isVerifySubscriberEnabled(),
                     ];
                     break;
                 case MfaSettings::PROVIDER_YUBIKEY:
