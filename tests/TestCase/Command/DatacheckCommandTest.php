@@ -23,7 +23,9 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Model\GpgkeysModelTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Core\Configure;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 /**
@@ -35,6 +37,7 @@ use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 class DatacheckCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use GpgkeysModelTrait;
     use TruncateDirtyTables;
 
     /**
@@ -138,5 +141,22 @@ class DatacheckCommandTest extends AppTestCase
         $this->assertExitSuccess();
         $this->assertOutputContains('Is encrypted for its recipient: 0/1');
         $this->assertOutputContains("[FAIL] Secret {$secret->id} (resource {$secret->resource_id}, user {$betty->id})");
+    }
+
+    public function testDatacheckCommand_Gpgkeys_StrictParsingAlwaysOn(): void
+    {
+        Configure::write('passbolt.gpg.security.strictPublicKeyParsing', false);
+        $user = UserFactory::make()
+            ->user()
+            ->active()
+            ->with('Gpgkeys', GpgkeyFactory::make(['armored_key' => self::getPrivateKeyModifiedAsPublicKey()]))
+            ->persist();
+
+        $this->exec('passbolt datacheck');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('Pass validation service checks: 0/1');
+        $this->assertOutputContains("[FAIL] Validation failed for key {$user->gpgkey->fingerprint}");
+        $this->assertOutputNotContains('BEGIN PGP');
     }
 }

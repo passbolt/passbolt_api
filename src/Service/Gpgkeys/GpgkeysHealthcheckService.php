@@ -25,6 +25,7 @@ use App\Utility\Healthchecks\AbstractHealthcheckService;
 use App\Utility\Healthchecks\Healthcheck;
 use App\Utility\OpenPGP\OpenPGPBackend;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Query;
@@ -82,20 +83,33 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
      */
     public function check(): array
     {
-        /** @var array<\App\Model\Entity\Gpgkey> $gpgkeys */
-        $gpgkeys = $this->table->find()
-            ->innerJoinWith('Users', function (Query $q) {
-                return $q->find('activeNotDeleted');
-            })
-            ->contain('Users')
-            ->where([$this->table->aliasField('deleted') => false]);
+        // The datacheck always runs the strict public key checks, even when they are disabled in the config,
+        // so admins can find the keys to fix before enabling them again.
+        $originalConfigValue = Configure::read('passbolt.gpg.security.strictPublicKeyParsing');
+        Configure::write('passbolt.gpg.security.strictPublicKeyParsing', true);
 
-        foreach ($gpgkeys as $gpgkey) {
-            $this->canEncrypt($gpgkey);
-            $this->isKeyMatchingEntity($gpgkey);
-            $this->isKeyExpired($gpgkey);
-            $this->isArmoredKeyFormatValid($gpgkey);
-            $this->canValidate($gpgkey);
+        try {
+            /** @var array<\App\Model\Entity\Gpgkey> $gpgkeys */
+            $gpgkeys = $this->table->find()
+                ->innerJoinWith('Users', function (Query $q) {
+                    return $q->find('activeNotDeleted');
+                })
+                ->contain('Users')
+                ->where([$this->table->aliasField('deleted') => false]);
+
+            foreach ($gpgkeys as $gpgkey) {
+                $canValidate = $this->canValidate($gpgkey);
+                // Only encrypt if validation pass to prevent a malicious key to be imported in the keyring
+                // canEncrypt() imports the key in the server keyring
+                if ($canValidate) {
+                    $this->canEncrypt($gpgkey);
+                }
+                $this->isKeyMatchingEntity($gpgkey);
+                $this->isKeyExpired($gpgkey);
+                $this->isArmoredKeyFormatValid($gpgkey);
+            }
+        } finally {
+            Configure::write('passbolt.gpg.security.strictPublicKeyParsing', $originalConfigValue);
         }
 
         return $this->getHealthchecks();
@@ -128,21 +142,27 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
      * Validates
      *
      * @param \App\Model\Entity\Gpgkey $gpgkey gpg key
-     * @return void
+     * @return bool true if the key passes the validation service checks
      */
-    private function canValidate(Gpgkey $gpgkey): void
+    private function canValidate(Gpgkey $gpgkey): bool
     {
         try {
             PublicKeyValidationService::parseAndValidatePublicKey($gpgkey->armored_key);
             $this->checks[self::CHECK_VALIDATES]
                 ->addDetail(__('Validation success for key {0}', $gpgkey->fingerprint), Healthcheck::STATUS_SUCCESS);
+
+            return true;
         } catch (CustomValidationException $exception) {
             $json = json_encode($exception->getErrors());
             $msg = __('Validation failed for key {0}. {1}', $gpgkey->fingerprint, $json);
             $this->checks[self::CHECK_VALIDATES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
+
+            return false;
         } catch (Exception $exception) {
             $msg = __('Validation failed for key {0}. {1}', $gpgkey->fingerprint, $exception->getMessage());
             $this->checks[self::CHECK_VALIDATES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
+
+            return false;
         }
     }
 

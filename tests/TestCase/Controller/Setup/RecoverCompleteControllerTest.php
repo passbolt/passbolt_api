@@ -28,6 +28,7 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
+use PHPUnit\Framework\Attributes\Group;
 
 class RecoverCompleteControllerTest extends AppIntegrationTestCase
 {
@@ -319,6 +320,33 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         }
         $this->postJson($url, $data);
         $this->assertError(400, $case['message'], 'Issue with case: ' . $caseName);
+    }
+
+    #[Group('AN')]
+    #[Group('recover')]
+    #[Group('recoverComplete')]
+    public function testRecoverCompleteController_Error_SecretKeyMaterial(): void
+    {
+        $user = UserFactory::make()
+            ->user()
+            ->active()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey())
+            ->persist();
+        $t = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
+
+        $url = '/setup/recover/complete/' . $user->id . '.json';
+        $data = [
+            'authentication_token' => [
+                'token' => $t->token,
+            ],
+            'gpgkey' => [
+                'armored_key' => self::getPrivateKeyModifiedAsPublicKey(),
+            ],
+        ];
+        $this->postJson($url, $data);
+
+        $this->assertError(400, 'A valid OpenPGP key must be provided.');
+        $this->assertTrue(AuthenticationTokenFactory::get($t->id)->active);
     }
 
     /**
