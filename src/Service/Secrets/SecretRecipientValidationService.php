@@ -16,52 +16,101 @@ declare(strict_types=1);
  */
 namespace App\Service\Secrets;
 
-use App\Model\Table\GpgkeysTable;
 use App\Service\OpenPGP\MessageValidationService;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use Cake\Core\Configure;
 use Cake\Log\Log;
-use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\ORM\TableRegistry;
+use Cake\Validation\Validation;
 use Exception;
 
 class SecretRecipientValidationService
 {
-    use LocatorAwareTrait;
-
-    private GpgkeysTable $gpgkeysTable;
+    public const CONFIG_KEY_VALIDATE_RECIPIENT = 'passbolt.security.secrets.validateRecipient';
 
     /**
-     * @var array<string, string> armored public keys indexed by user id
+     * @var array Key ids of the users' current key, indexed by user id
      */
-    private array $armoredKeys = [];
+    private static array $keyIdsByUserId = [];
 
     /**
-     * Constructor
+     * @return bool
      */
-    public function __construct()
+    public static function isEnabled(): bool
     {
-        $this->gpgkeysTable = $this->fetchTable('Gpgkeys');
+        return Configure::read(self::CONFIG_KEY_VALIDATE_RECIPIENT) === true;
     }
 
     /**
-     * Returns true if the message is encrypted for the user's current OpenPGP key (primary key or a subkey).
+     * @return void
+     */
+    public static function reset(): void
+    {
+        self::$keyIdsByUserId = [];
+    }
+
+    /**
+     * Load the current key of the given users with one query.
+     *
+     * @param array $userIds User identifiers.
+     * @return void
+     */
+    public static function preloadKeys(array $userIds): void
+    {
+        $userIdsToLoad = [];
+        foreach ($userIds as $userId) {
+            if (Validation::uuid($userId) && !isset(self::$keyIdsByUserId[$userId])) {
+                $userIdsToLoad[] = $userId;
+            }
+        }
+
+        if (empty($userIdsToLoad)) {
+            return;
+        }
+
+        $gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys')
+            ->find()
+            ->select(['user_id', 'armored_key'])
+            ->where(['user_id IN' => $userIdsToLoad, 'deleted' => false])
+            ->orderBy(['created' => 'DESC'])
+            ->all();
+
+        /** @var \App\Model\Entity\Gpgkey $gpgkey */
+        foreach ($gpgkeys as $gpgkey) {
+            if (isset(self::$keyIdsByUserId[$gpgkey->user_id])) {
+                continue;
+            }
+
+            self::$keyIdsByUserId[$gpgkey->user_id] = self::extractKeyIds($gpgkey->armored_key);
+        }
+    }
+
+    /**
+     * Checks that all recipient key IDs declared in the message belong to the user's current key (primary key or subkeys).
+     *
+     * Only the declared key IDs are compared. This does not prove the message can be decrypted by the user.
+     * It catches client mistakes only, not malicious clients.
      *
      * @param string $armoredMessage Secret data.
      * @param string $userId Recipient user id.
      * @return bool
      */
-    public function isEncryptedForUser(string $armoredMessage, string $userId): bool
+    public static function recipientKeyIdsMatchOnlyUserKey(string $armoredMessage, string $userId): bool
     {
-        $armoredKey = $this->getArmoredKey($userId);
-        if ($armoredKey === null) {
+        self::preloadKeys([$userId]);
+
+        $userKeyIds = self::$keyIdsByUserId[$userId] ?? [];
+        if (empty($userKeyIds)) {
+            Log::warning(sprintf('No user keys found for %s', $userId));
+
             return false;
         }
 
         try {
+            /** @var array{recipients: array<string>} $messageInfo */
             $messageInfo = MessageValidationService::getMessageInfo($armoredMessage);
-            $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
         } catch (Exception $e) {
-            $logMessage = 'Could not parse the secret message or the recipient key.';
+            $logMessage = 'Could not parse the secret message.';
             if (Configure::read('debug')) {
                 $logMessage .= ' ' . $e->getMessage();
             }
@@ -70,53 +119,45 @@ class SecretRecipientValidationService
             return false;
         }
 
-        $recipientKeyIds = $this->toUpperCase($messageInfo['recipients']);
-        $userKeyIds = $this->toUpperCase($this->getKeyIds($keyInfo));
-        $matchingKeyIds = array_intersect($recipientKeyIds, $userKeyIds);
+        $recipients = $messageInfo['recipients'] ?? [];
+        if (empty($recipients)) {
+            return false;
+        }
 
-        return count($matchingKeyIds) > 0;
+        foreach ($recipients as $recipientKeyId) {
+            if (!isset($userKeyIds[strtoupper($recipientKeyId)])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
-     * Returns array of key ids with the primary key and of all its subkeys.
+     * Returns the key ids, the primary key and of all its subkeys.
      *
-     * @param array $keyInfo see PublicKeyValidationService::getPublicKeyInfo
-     * @return array<string>
+     * @param string $armoredKey Armored public key.
+     * @return array
      */
-    private function getKeyIds(array $keyInfo): array
+    private static function extractKeyIds(string $armoredKey): array
     {
-        $keyIds = [$keyInfo['key_id']];
+        try {
+            $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
+        } catch (Exception $e) {
+            $logMessage = 'Could not parse the recipient key.';
+            if (Configure::read('debug')) {
+                $logMessage .= ' ' . $e->getMessage();
+            }
+            Log::debug($logMessage);
+
+            return [];
+        }
+
+        $keyIds = [strtoupper($keyInfo['key_id']) => true];
         foreach ($keyInfo['sub_keys'] as $subKey) {
-            $keyIds[] = $subKey['key_id'];
+            $keyIds[strtoupper($subKey['key_id'])] = true;
         }
 
         return $keyIds;
-    }
-
-    /**
-     * @param array<string> $keyIds Key ids.
-     * @return array<string>
-     */
-    private function toUpperCase(array $keyIds): array
-    {
-        return array_map('strtoupper', $keyIds);
-    }
-
-    /**
-     * @param string $userId User identifer.
-     * @return string|null
-     */
-    private function getArmoredKey(string $userId): ?string
-    {
-        if (!isset($this->armoredKeys[$userId])) {
-            /** @var \App\Model\Entity\Gpgkey|null $gpgkey */
-            $gpgkey = $this->gpgkeysTable->find('current', userId: $userId)->first();
-            if ($gpgkey === null) {
-                return null;
-            }
-            $this->armoredKeys[$userId] = $gpgkey->armored_key;
-        }
-
-        return $this->armoredKeys[$userId];
     }
 }

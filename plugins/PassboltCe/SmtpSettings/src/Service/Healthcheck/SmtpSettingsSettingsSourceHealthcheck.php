@@ -163,4 +163,12 @@ class SmtpSettingsSettingsSourceHealthcheck implements HealthcheckServiceInterfa
     {
         return 'isInDb';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'smtp-settings-settings-source';
+    }
 }

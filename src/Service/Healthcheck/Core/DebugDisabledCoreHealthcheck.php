@@ -106,4 +106,12 @@ class DebugDisabledCoreHealthcheck implements HealthcheckServiceInterface, Healt
     {
         return 'debugDisabled';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'debug-disabled';
+    }
 }

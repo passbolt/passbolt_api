@@ -116,4 +116,12 @@ class DirectorySyncEndpointsDisabledHealthcheck implements HealthcheckServiceInt
     {
         return 'endpointsDisabled';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'directory-sync-endpoints-disabled';
+    }
 }

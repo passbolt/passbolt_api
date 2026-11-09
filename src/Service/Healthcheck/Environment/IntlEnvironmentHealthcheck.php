@@ -21,7 +21,7 @@ use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 
-class IntlHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class IntlEnvironmentHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -104,5 +104,13 @@ class IntlHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
     public function getLegacyArrayKey(): string
     {
         return 'intl';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'intl-environment';
     }
 }

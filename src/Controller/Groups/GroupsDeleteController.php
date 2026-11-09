@@ -26,6 +26,7 @@ use App\Model\Table\GroupsTable;
 use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
+use App\Service\RecordsStrategy\GroupsDeleteRecordsStrategyInterface;
 use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -103,15 +104,19 @@ class GroupsDeleteController extends AppController
      *
      * @param string $id group uuid
      * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService Service to expire resources that were consumed by users who lost access to them.
+     * @param \App\Service\RecordsStrategy\GroupsDeleteRecordsStrategyInterface $recordsStrategy Decides if the user is allowed to perform the operation
+     * @throws \Cake\Http\Exception\HttpException if the user is not allowed to delete groups
      * @return void
      * @throws \Exception
      */
     public function delete(
         string $id,
         ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService,
+        GroupsDeleteRecordsStrategyInterface $recordsStrategy,
     ) {
         $this->assertJson();
         $group = null;
+        $recordsStrategy->assertAllowed($this->User->getAccessControl());
 
         $this->GroupsUsers->getConnection()->transactional(function () use ($id, &$group, $resourcesExpireResourcesService) { //phpcs:ignore
             $group = $this->_validateRequestData($id);

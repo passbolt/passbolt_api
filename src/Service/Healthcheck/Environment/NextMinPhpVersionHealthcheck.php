@@ -121,4 +121,12 @@ class NextMinPhpVersionHealthcheck implements HealthcheckServiceInterface, Healt
     {
         return 'nextMinPhpVersion';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'next-min-php-version';
+    }
 }

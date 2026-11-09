@@ -21,6 +21,7 @@ use App\Model\Entity\Permission;
 use App\Service\OpenPGP\MessageRecipientValidationService;
 use App\Service\OpenPGP\MessageValidationService;
 use App\Service\OpenPGP\PublicKeyValidationService;
+use App\Service\Secrets\SecretRecipientValidationService;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\PermissionFactory;
 use App\Test\Factory\ResourceFactory;
@@ -29,7 +30,9 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 class ShareControllerWithFactoriesTest extends AppIntegrationTestCase
 {
@@ -115,7 +118,7 @@ class ShareControllerWithFactoriesTest extends AppIntegrationTestCase
         $this->assertCount(4, $expectedResource->permissions);
     }
 
-    public function testShareControllerWithFactories_Success_SecretNotEncryptedForRecipient(): void
+    public function testShareControllerWithFactories_Success_SecretNotEncryptedForRecipient_ValidationDisabled(): void
     {
         $owner = UserFactory::make()->withAdaKey()->persist();
         $recipient = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
@@ -153,6 +156,77 @@ class ShareControllerWithFactoriesTest extends AppIntegrationTestCase
             PublicKeyValidationService::getPublicKeyInfo($recipientGpgkey->armored_key),
         );
         $this->assertFalse($isForRecipient);
+    }
+
+    public function testShareControllerWithFactories_Error_SecretNotEncryptedForRecipient(): void
+    {
+        // enable validation configuration
+        Configure::write(SecretRecipientValidationService::CONFIG_KEY_VALIDATE_RECIPIENT, true);
+        $owner = UserFactory::make()->withAdaKey()->persist();
+        $recipient = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
+        $resource = ResourceFactory::make(['created_by' => $owner->id])
+            ->withPermissionsFor([$owner])
+            ->withSecretRevisions()
+            ->with('Secrets', [
+                'user_id' => $owner->id,
+                'created_by' => $owner->id,
+                'modified_by' => $owner->id,
+            ])
+            ->persist();
+        $resourceId = $resource->id;
+        // Encrypt recipient's secret with other user's key
+        $secretForRecipient = $this->encryptMessageFor($owner->id, 'secret for recipient');
+
+        $this->logInAs($owner);
+        $this->putJson("/share/resource/$resourceId.json", [
+            'permissions' => [
+                ['aro' => 'User', 'aro_foreign_key' => $recipient->id, 'type' => Permission::READ],
+            ],
+            'secrets' => [
+                ['user_id' => $recipient->id, 'data' => $secretForRecipient],
+            ],
+        ]);
+
+        $this->assertError(400);
+        $errors = $this->getResponseBodyAsArray();
+        $this->assertSame(
+            'The secret must be encrypted for the recipient user.',
+            Hash::get($errors, 'secrets.0.data.is_encrypted_for_recipient'),
+        );
+        $this->assertSame(0, SecretFactory::find()->where(['user_id' => $recipient->id])->count());
+        $this->assertSame(0, PermissionFactory::find()->where(['aro_foreign_key' => $recipient->id])->count());
+    }
+
+    public function testShareControllerWithFactories_Error_RewrittenSecretNotEncryptedForRecipient(): void
+    {
+        Configure::write(SecretRecipientValidationService::CONFIG_KEY_VALIDATE_RECIPIENT, true);
+        $owner = UserFactory::make()->withAdaKey()->persist();
+        $recipient = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
+        $resource = ResourceFactory::make(['created_by' => $owner->id])
+            ->withPermissionsFor([$owner, $recipient])
+            ->withSecretRevisions()
+            ->withSecretsFor([$owner, $recipient])
+            ->persist();
+        $resourceId = $resource->id;
+        $recipientSecret = SecretFactory::find()->where(['user_id' => $recipient->id])->firstOrFail();
+        // Rewrite the recipient's existing secret with a message encrypted with other user's key
+        $secretForRecipient = $this->encryptMessageFor($owner->id, 'new secret for recipient');
+
+        $this->logInAs($owner);
+        $this->putJson("/share/resource/$resourceId.json", [
+            'secrets' => [
+                ['user_id' => $recipient->id, 'data' => $secretForRecipient],
+            ],
+        ]);
+
+        $this->assertError(400);
+        $errors = $this->getResponseBodyAsArray();
+        $this->assertSame(
+            'The secret must be encrypted for the recipient user.',
+            Hash::get($errors, 'secrets.0.data.is_encrypted_for_recipient'),
+        );
+        $storedSecret = SecretFactory::get($recipientSecret->id);
+        $this->assertSame($recipientSecret->data, $storedSecret->data);
     }
 
     public function testShareController_Error_NotValidResourceId_WithFactories(): void

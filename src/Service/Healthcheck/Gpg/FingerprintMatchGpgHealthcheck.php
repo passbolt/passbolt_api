@@ -19,6 +19,7 @@ namespace App\Service\Healthcheck\Gpg;
 
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use Cake\Core\Exception\CakeException;
 
 class FingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
 {
@@ -36,7 +37,11 @@ class FingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
             $privateKeyInfo = $gpg->getKeyInfo($privateKeyData);
             $this->isPrivateKeyInfoOK = ($privateKeyInfo['fingerprint'] === $fingerprint);
             $publicKeyData = file_get_contents($this->getPublicServerKey());
-            $publicKeyInfo = $gpg->getPublicKeyInfo($publicKeyData);
+            try {
+                $publicKeyInfo = $gpg->getPublicKeyInfo($publicKeyData);
+            } catch (CakeException $e) {
+                return $this;
+            }
             $isPublicKeyInfoOK = ($publicKeyInfo['fingerprint'] === $fingerprint);
 
             $this->status = $isPublicKeyInfoOK && $this->isPrivateKeyInfoOK;
@@ -116,5 +121,13 @@ class FingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
     public function gpgHome(): ?string
     {
         return $this->getGpgHome();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'fingerprint-match';
     }
 }

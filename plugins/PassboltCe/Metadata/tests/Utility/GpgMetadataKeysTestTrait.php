@@ -440,6 +440,7 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
         $gpg = OpenPGPBackendFactory::get();
         $gpg->importServerKeyInKeyring();
         $gpg->importKeyIntoKeyring($keyInfo['private_key']);
+        $gpg->importKeyIntoKeyring($keyInfo['public_key']); // required for non-gpg backends (e.g. HTTP)
         $gpg->setEncryptKeyFromFingerprint($fingerprint);
         $gpg->setSignKeyFromFingerprint($fingerprint, $keyInfo['passphrase']);
         $encryptedData = $gpg->encryptSign($data);

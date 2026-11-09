@@ -111,4 +111,12 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
     {
         return 'logWritable';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'log-folder-writable';
+    }
 }

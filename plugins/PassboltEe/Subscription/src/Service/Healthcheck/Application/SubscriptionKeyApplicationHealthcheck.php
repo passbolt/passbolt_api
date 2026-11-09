@@ -266,4 +266,12 @@ class SubscriptionKeyApplicationHealthcheck implements HealthcheckServiceInterfa
             ->all()
             ->count();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'subscription-key';
+    }
 }

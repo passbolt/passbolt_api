@@ -132,4 +132,12 @@ class ConnectDatabaseHealthcheck extends AbstractDatabaseHealthcheck
 
         return $result;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'connect-database';
+    }
 }

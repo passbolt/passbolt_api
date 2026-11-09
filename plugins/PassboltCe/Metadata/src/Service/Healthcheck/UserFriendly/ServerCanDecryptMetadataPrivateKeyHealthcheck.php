@@ -207,4 +207,12 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
     {
         return $this->isSkipped;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'server-can-decrypt-metadata-private-key';
+    }
 }

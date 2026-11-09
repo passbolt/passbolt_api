@@ -114,4 +114,12 @@ class CanSignGpgHealthcheck extends AbstractGpgHealthcheck implements SkipHealth
     {
         return 'canSign';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'can-sign';
+    }
 }
