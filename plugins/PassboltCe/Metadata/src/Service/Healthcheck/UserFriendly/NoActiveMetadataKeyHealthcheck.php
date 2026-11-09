@@ -183,4 +183,12 @@ class NoActiveMetadataKeyHealthcheck implements HealthcheckServiceInterface, Hea
     {
         return $this->isSkipped;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'no-active-metadata-key';
+    }
 }

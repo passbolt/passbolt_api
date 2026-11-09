@@ -111,4 +111,12 @@ class CanVerifyGpgHealthcheck extends AbstractGpgHealthcheck implements SkipHeal
     {
         return 'canVerify';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'can-verify';
+    }
 }

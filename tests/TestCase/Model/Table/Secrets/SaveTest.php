@@ -17,12 +17,15 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Secrets;
 
+use App\Service\Secrets\SecretRecipientValidationService;
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
@@ -298,5 +301,45 @@ class SaveTest extends AppTestCase
         $entity = $this->Secrets->newEntity($data, $options);
         $this->Secrets->save($entity);
         $this->assertEmpty($entity->getErrors());
+    }
+
+    public function testSecretsSaveSuccess_EncryptedForRecipient(): void
+    {
+        Configure::write(SecretRecipientValidationService::CONFIG_KEY_VALIDATE_RECIPIENT, true);
+        $betty = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$betty])->persist();
+        $data = $this->generateDummySecretData([
+            'resource_id' => $resource->id,
+            'user_id' => $betty->id,
+            'data' => $this->encryptMessageFor($betty->id, 'secret'),
+        ]);
+
+        $entity = $this->Secrets->newEntity($data, self::getEntityDefaultOptions());
+        $save = $this->Secrets->save($entity);
+
+        $this->assertNotFalse($save, 'Errors occurred while saving the entity: ' . json_encode($entity->getErrors()));
+    }
+
+    public function testErrorRuleIsEncryptedForRecipient(): void
+    {
+        Configure::write(SecretRecipientValidationService::CONFIG_KEY_VALIDATE_RECIPIENT, true);
+        $ada = UserFactory::make()->withAdaKey()->persist();
+        $betty = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$betty])->persist();
+        $data = $this->generateDummySecretData([
+            'resource_id' => $resource->id,
+            'user_id' => $betty->id,
+            'data' => $this->encryptMessageFor($ada->id, 'secret'),
+        ]);
+
+        $entity = $this->Secrets->newEntity($data, self::getEntityDefaultOptions());
+        $save = $this->Secrets->save($entity);
+
+        $this->assertFalse($save);
+        $errors = $entity->getErrors();
+        $this->assertSame(
+            'The secret must be encrypted for the recipient user.',
+            $errors['data']['is_encrypted_for_recipient'],
+        );
     }
 }

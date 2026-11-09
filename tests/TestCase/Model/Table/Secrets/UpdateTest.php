@@ -17,9 +17,13 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Secrets;
 
+use App\Service\Secrets\SecretRecipientValidationService;
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\SecretFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
 class UpdateTest extends AppTestCase
@@ -103,5 +107,46 @@ hcciUFw5
         // Check the resource attributes.
         $this->assertSecretAttributes($secret);
         $this->assertEquals($data['data'], $secret->data);
+    }
+
+    public function testError_DataNotEncryptedForRecipient(): void
+    {
+        $ada = UserFactory::make()->withAdaKey()->persist();
+        $betty = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
+        $secret = SecretFactory::make([
+            'user_id' => $betty->id,
+            'data' => $this->encryptMessageFor($betty->id, 'secret'),
+        ])->persist();
+        Configure::write(SecretRecipientValidationService::CONFIG_KEY_VALIDATE_RECIPIENT, true);
+
+        $data = ['data' => $this->encryptMessageFor($ada->id, 'new secret')];
+        $entity = $this->Secrets->patchEntity($secret, $data, self::getEntityDefaultOptions());
+        $save = $this->Secrets->save($entity);
+
+        $this->assertFalse($save);
+        $errors = $entity->getErrors();
+        $this->assertSame(
+            'The secret must be encrypted for the recipient user.',
+            $errors['data']['is_encrypted_for_recipient'],
+        );
+    }
+
+    public function testSuccess_DataNotChanged(): void
+    {
+        $ada = UserFactory::make()->withAdaKey()->persist();
+        $betty = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
+        // A secret already stored with the wrong key: it is not checked again when its data does not change.
+        $secret = SecretFactory::make([
+            'user_id' => $betty->id,
+            'data' => $this->encryptMessageFor($ada->id, 'secret'),
+        ])->persist();
+        Configure::write(SecretRecipientValidationService::CONFIG_KEY_VALIDATE_RECIPIENT, true);
+
+        $data = ['modified_by' => $ada->id];
+        $options = ['accessibleFields' => ['modified_by' => true]];
+        $entity = $this->Secrets->patchEntity($secret, $data, $options);
+        $save = $this->Secrets->save($entity);
+
+        $this->assertNotFalse($save, 'Errors occurred while saving the entity: ' . json_encode($entity->getErrors()));
     }
 }

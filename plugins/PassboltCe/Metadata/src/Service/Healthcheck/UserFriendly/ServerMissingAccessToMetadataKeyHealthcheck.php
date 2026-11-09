@@ -171,4 +171,12 @@ class ServerMissingAccessToMetadataKeyHealthcheck implements HealthcheckServiceI
     {
         return $this->isSkipped;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'server-missing-access-to-metadata-key';
+    }
 }

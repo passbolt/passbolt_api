@@ -219,4 +219,12 @@ class LatestVersionApplicationHealthcheck implements HealthcheckServiceInterface
     {
         return 'latestVersion';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'latest-version';
+    }
 }

@@ -25,6 +25,7 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\I18n\DateTime;
 use OTPHP\Factory;
+use OTPHP\TOTPInterface;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
@@ -71,6 +72,30 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
         $this->mockTotpMfaFormInterface(TotpVerifyForm::class, $this->makeUac($user));
 
         $this->post('/mfa/verify/totp?redirect=' . $redirect, [
+            'totp' => $otp->now(),
+        ]);
+
+        $this->assertRedirect($redirect);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerify
+     * @group mfaVerifyPost
+     * @group mfaVerifyPostTotp
+     */
+    public function testMfaVerifyPostTotpUriSuccess_WithFormHelperMethodField(): void
+    {
+        $redirect = '/foo';
+        $user = $this->logInAsUser();
+        [$uri] = $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        $otp = Factory::loadFromProvisioningUri($uri);
+        $this->assertInstanceOf(TOTPInterface::class, $otp);
+        $this->mockTotpMfaFormInterface(TotpVerifyForm::class, $this->makeUac($user));
+
+        // The verify form rendered by FormHelper always submits _method=POST
+        $this->post('/mfa/verify/totp?redirect=' . $redirect, [
+            '_method' => 'POST',
             'totp' => $otp->now(),
         ]);
 

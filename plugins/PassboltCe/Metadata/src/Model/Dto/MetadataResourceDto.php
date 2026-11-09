@@ -23,6 +23,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
 use Passbolt\Metadata\MetadataPlugin;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
 class MetadataResourceDto extends MetadataDto implements RequestDtoInterface
@@ -115,6 +116,26 @@ class MetadataResourceDto extends MetadataDto implements RequestDtoInterface
     public function isV5(): bool
     {
         return array_key_exists(self::METADATA, $this->data) && !is_null($this->data[self::METADATA]);
+    }
+
+    /**
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException If resource's metadata key type is not shared_key
+     */
+    public function assertShareable(): void
+    {
+        if (!$this->isFeaturePluginEnabled(MetadataPlugin::class)) {
+            return;
+        }
+
+        if (!$this->isV5()) {
+            return;
+        }
+
+        $metadataKeyType = $this->data[self::METADATA_KEY_TYPE] ?? null;
+        if ($metadataKeyType !== MetadataKey::TYPE_SHARED_KEY) {
+            throw new BadRequestException(__('Resource metadata key type is invalid.'));
+        }
     }
 
     /**

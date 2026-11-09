@@ -27,6 +27,7 @@ use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
 use App\Model\Table\UsersTable;
+use App\Service\RecordsStrategy\UsersDeleteRecordsStrategyInterface;
 use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -106,16 +107,20 @@ class UsersDeleteController extends AppController
      *
      * @param string $id user uuid
      * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService Service to expire resources that were consumed by users who lost access to them.
+     * @param \App\Service\RecordsStrategy\UsersDeleteRecordsStrategyInterface $recordsStrategy Decides if the user is allowed to perform the operation
+     * @throws \Cake\Http\Exception\HttpException if the user is not allowed to delete users
      * @return void
      * @throws \Exception if user cannot be deleted
      */
     public function delete(
         string $id,
         ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService,
+        UsersDeleteRecordsStrategyInterface $recordsStrategy,
     ) {
         $this->assertJson();
 
         $user = $this->_validateRequestData($id);
+        $recordsStrategy->assertAllowed($this->User->getAccessControl());
         // keep a list of group the user was a member of. Useful to notify the group managers after the delete
         $groupIdsNotOnlyMember = $this->GroupsUsers
             ->findGroupsWhereUserNotOnlyMember($id)

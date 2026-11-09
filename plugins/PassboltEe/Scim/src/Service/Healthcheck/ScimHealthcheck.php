@@ -123,4 +123,12 @@ class ScimHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
     {
         return 'isScimPluginEnabled';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'scim-plugin-enabled';
+    }
 }

@@ -12,21 +12,18 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.10.0
+ * @since         4.7.0
  */
 
-namespace App\Service\Healthcheck\Environment;
+namespace App\Service\Healthcheck\Core;
 
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use App\Utility\CommandRunner;
+use Cake\Cache\Cache;
 
-class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class CacheConfigCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
-    private const COMMAND_GPG = 'gpg --version | grep gpg';
-    private const COMMAND_LIBGCRYPT = 'gpg --version | grep libgcrypt';
-
     /**
      * Status of this health check if it is passed or failed.
      *
@@ -34,18 +31,20 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     private bool $status = false;
 
-    private ?string $gpgVersion = null;
-
-    private ?string $libgcryptVersion = null;
+    /**
+     * @var bool
+     */
+    private bool $isCacheCoreConfigPresent = false;
 
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->gpgVersion = $this->runCommand(self::COMMAND_GPG);
-        $this->libgcryptVersion = $this->runCommand(self::COMMAND_LIBGCRYPT);
-        $this->status = $this->gpgVersion !== null && $this->libgcryptVersion !== null;
+        $this->isCacheCoreConfigPresent = Cache::getConfig('_cake_core_') !== null;
+        $cacheTranslationsConfig = !empty(Cache::getConfig('_cake_translations_'));
+
+        $this->status = !$this->isCacheCoreConfigPresent && $cacheTranslationsConfig;
 
         return $this;
     }
@@ -55,7 +54,7 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     public function domain(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
+        return HealthcheckServiceCollector::DOMAIN_CORE;
     }
 
     /**
@@ -71,7 +70,7 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     public function level(): string
     {
-        return $this->status ? HealthcheckServiceCollector::LEVEL_NOTICE : HealthcheckServiceCollector::LEVEL_WARNING;
+        return $this->isCacheCoreConfigPresent ? HealthcheckServiceCollector::LEVEL_WARNING : HealthcheckServiceCollector::LEVEL_ERROR; // phpcs:ignore
     }
 
     /**
@@ -79,7 +78,7 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     public function getSuccessMessage(): string
     {
-        return $this->gpgVersion . ' / ' . $this->libgcryptVersion;
+        return __('Cache is working.');
     }
 
     /**
@@ -87,7 +86,12 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     public function getFailureMessage(): string
     {
-        return __('Cannot detect your `gpg` or `libgcrypt` version.');
+        $failureMessage = __('Cache is NOT working.');
+        if ($this->isCacheCoreConfigPresent) {
+            $failureMessage = __('Deprecated `_cake_core_` cache configuration found.');
+        }
+
+        return $failureMessage;
     }
 
     /**
@@ -95,7 +99,12 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     public function getHelpMessage(): array|string|null
     {
-        return [__('See `{0}` and `{1}`.', self::COMMAND_GPG, self::COMMAND_LIBGCRYPT)];
+        $helpMessage = __('Check the settings in {0}', CONFIG . 'app.php');
+        if ($this->isCacheCoreConfigPresent) {
+            $helpMessage = __('Replace `_cake_core_` with `_cake_translations_` in your {0} configuration file.', CONFIG . 'app.php'); // phpcs:ignore
+        }
+
+        return $helpMessage;
     }
 
     /**
@@ -105,7 +114,7 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     public function cliOption(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
+        return HealthcheckServiceCollector::DOMAIN_CORE;
     }
 
     /**
@@ -113,20 +122,14 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      */
     public function getLegacyArrayKey(): string
     {
-        return 'gpg';
+        return 'cache';
     }
 
     /**
-     * @param string $command Command to run.
-     * @return string|null
+     * @inheritDoc
      */
-    protected function runCommand(string $command): ?string
+    public function getKey(): string
     {
-        $process = CommandRunner::run($command);
-        if (!$process || !$process->isSuccessful()) {
-            return null;
-        }
-
-        return trim($process->getOutput()) ?: null;
+        return 'cache-config';
     }
 }

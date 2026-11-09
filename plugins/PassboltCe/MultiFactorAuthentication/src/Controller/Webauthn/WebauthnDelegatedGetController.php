@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Webauthn;
 use App\Controller\AppController;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 use Passbolt\MultiFactorAuthentication\Authenticator\DelegatedStateAuthenticator;
 use Passbolt\MultiFactorAuthentication\Service\Webauthn\Delegated\MfaWebauthnDelegatedStateService;
@@ -45,9 +46,14 @@ class WebauthnDelegatedGetController extends AppController
      *
      * @param \Passbolt\MultiFactorAuthentication\Service\Webauthn\Delegated\MfaWebauthnDelegatedStateService $delegatedStateService Delegated state service.
      * @return void
+     * @throws \Cake\Http\Exception\NotFoundException if the request is json, the page is only available as html
      */
     public function get(MfaWebauthnDelegatedStateService $delegatedStateService): void
     {
+        if ($this->getRequest()->is('json')) {
+            throw new NotFoundException(__('Page not found.'));
+        }
+
         $state = $this->getRequest()->getQuery(DelegatedStateAuthenticator::STATE_PARAM);
         if (!is_string($state) || !Validation::uuid($state)) {
             $this->renderTemplate('delegatedExpired', [

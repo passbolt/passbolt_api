@@ -125,4 +125,12 @@ class ScimSecretTokenExpiryHealthcheck implements HealthcheckServiceInterface, H
     {
         return 'isScimTokenNotExpired';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'scim-secret-token-expiry';
+    }
 }

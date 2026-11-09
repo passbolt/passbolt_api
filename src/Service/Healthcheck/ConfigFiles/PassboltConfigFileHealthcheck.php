@@ -108,4 +108,12 @@ class PassboltConfigFileHealthcheck implements HealthcheckServiceInterface, Heal
     {
         return 'passbolt';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'passbolt-config-file';
+    }
 }

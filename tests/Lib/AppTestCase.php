@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib;
 
+use App\Service\Secrets\SecretRecipientValidationService;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Test\Lib\Model\CommentsModelTrait;
 use App\Test\Lib\Model\FavoritesModelTrait;
@@ -94,6 +95,7 @@ abstract class AppTestCase extends TestCase
         $this->clearPlugins();
         FactoryTableRegistry::getTableLocator()->clear();
         UserAction::destroy();
+        SecretRecipientValidationService::reset();
 
         parent::tearDown();
     }

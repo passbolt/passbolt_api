@@ -17,17 +17,20 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Groups;
 
 use App\Model\Entity\Permission;
+use App\Service\RecordsStrategy\DeletedGroupsMaxRecordsStrategy;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\PermissionFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
+use App\Test\Lib\Utility\RecordsStrategyTestTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class GroupsDeleteControllerTest extends AppIntegrationTestCase
 {
+    use RecordsStrategyTestTrait;
     use GroupsModelTrait;
 
     public $Groups;
@@ -370,5 +373,18 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         $groupId = UuidFactory::uuid('group.id.procurement');
         $this->delete("/groups/$groupId");
         $this->assertResponseCode(404);
+    }
+
+    public function testGroupsDeleteController_Error_DeletedMaxRecordsReached(): void
+    {
+        $admin = UserFactory::make()->admin()->persist();
+        $this->loginAs($admin);
+        $user = UserFactory::make()->user()->persist();
+        $groupId = GroupFactory::make()->withGroupsManagersFor([$user])->persist()->get('id');
+        $this->setMaxRecordsReached(DeletedGroupsMaxRecordsStrategy::class);
+
+        $this->deleteJson('/groups/' . $groupId . '.json');
+        $this->assertError(409, 'The maximum number of deleted groups for this organization has been reached.');
+        $this->assertFalse($this->Groups->get($groupId)->deleted);
     }
 }

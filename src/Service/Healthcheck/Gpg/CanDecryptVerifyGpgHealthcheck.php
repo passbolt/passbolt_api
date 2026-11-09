@@ -112,4 +112,12 @@ class CanDecryptVerifyGpgHealthcheck extends AbstractGpgHealthcheck implements S
     {
         return 'canDecryptVerify';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'can-decrypt-verify';
+    }
 }

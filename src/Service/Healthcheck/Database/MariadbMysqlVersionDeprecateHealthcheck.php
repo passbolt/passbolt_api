@@ -161,4 +161,12 @@ class MariadbMysqlVersionDeprecateHealthcheck implements HealthcheckServiceInter
     {
         return $this->isSkipped;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'mariadb-mysql-version-deprecate';
+    }
 }

@@ -24,6 +24,7 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\HttpProxyMiddleware;
+use App\Middleware\PreventHttpMethodOverrideMiddleware;
 use App\Middleware\SessionAuthPreventDeletedOrDisabledUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SetUserIdentityInRequestMiddleware;
@@ -62,6 +63,7 @@ class ApplicationTest extends TestCase
             AssertFullBaseUrlMiddleware::class,
             SslForceMiddleware::class,
             AssetMiddleware::class,
+            PreventHttpMethodOverrideMiddleware::class,
             RoutingMiddleware::class,
             UuidParserMiddleware::class,
             ApiVersionMiddleware::class,

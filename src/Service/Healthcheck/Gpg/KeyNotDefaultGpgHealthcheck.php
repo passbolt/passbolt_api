@@ -78,4 +78,12 @@ class KeyNotDefaultGpgHealthcheck extends AbstractGpgHealthcheck
     {
         return 'gpgKeyNotDefault';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'key-not-default';
+    }
 }
