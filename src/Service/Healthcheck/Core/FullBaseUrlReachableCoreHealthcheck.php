@@ -162,4 +162,12 @@ class FullBaseUrlReachableCoreHealthcheck implements HealthcheckServiceInterface
     {
         return 'fullBaseUrlReachable';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'full-base-url-reachable';
+    }
 }

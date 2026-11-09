@@ -91,4 +91,12 @@ class PrivateKeyWritableWebInstallerHealthcheck extends AbstractGpgHealthcheck
     {
         return 'privateKeyWritable';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'private-key-writable-web-installer';
+    }
 }

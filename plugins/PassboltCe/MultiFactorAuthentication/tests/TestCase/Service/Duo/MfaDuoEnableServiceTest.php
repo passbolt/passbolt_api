@@ -29,11 +29,13 @@ use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Duo\DuoUniversal\Client;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Duo\DuoSubscriberMismatchException;
 use Passbolt\MultiFactorAuthentication\Model\Dto\MfaDuoCallbackDto;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoEnableService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaOrgSettingsTestTrait;
 use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
+use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Throwable;
 
@@ -140,6 +142,40 @@ class MfaDuoEnableServiceTest extends TestCase
         $this->assertEquals(1, AuthenticationTokenFactory::count());
         $this->assertCount(0, AuthenticationTokenFactory::find()->where(['active' => true]));
         // Assert Duo was not enabled for the user.
+        $this->assertEquals(0, AccountSettingFactory::count());
+    }
+
+    public function testMfaDuoEnableService_Error_SubscriberMismatch(): void
+    {
+        $settings = $this->getDefaultMfaOrgSettings();
+        $settings[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_VERIFY_SUBSCRIBER] = true;
+        $this->mockMfaOrgSettings($settings);
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+        $uac = new UserAccessControl(Role::USER, $user->id, $user->username);
+        $mfaDuoCallbackDto = new MfaDuoCallbackDto([
+            'state' => UuidFactory::uuid(),
+            'duo_code' => 'not-so-random-duo-code',
+        ]);
+        /** @var \App\Model\Entity\AuthenticationToken $authToken */
+        $authToken = AuthenticationTokenFactory::make()->active()->data([
+            'provider' => 'duo',
+            'state' => $mfaDuoCallbackDto->state,
+            'redirect' => '',
+            'user_agent' => 'PassboltUA',
+        ])->userId($user->id)->type(AuthenticationToken::TYPE_MFA_SETUP)->persist();
+        $duoSdkClientMock = DuoSdkClientMock::createWithWrongExchangeAuthorizationCodeFor2FAResultSub($this->getMockBuilder(Client::class));
+
+        $service = new MfaDuoEnableService($duoSdkClientMock->getClient());
+
+        try {
+            $service->enable($uac, $mfaDuoCallbackDto, $authToken->token);
+            $this->fail('A DuoSubscriberMismatchException was expected.');
+        } catch (DuoSubscriberMismatchException $e) {
+            $this->assertTextContains('the Duo account does not match your passbolt account', $e->getMessage());
+        }
+
+        $this->assertCount(0, AuthenticationTokenFactory::find()->where(['active' => true]));
         $this->assertEquals(0, AccountSettingFactory::count());
     }
 }

@@ -18,9 +18,11 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Resources;
 
 use App\Model\Entity\Permission;
+use App\Service\RecordsStrategy\DeletedResourcesMaxRecordsStrategy;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Utility\RecordsStrategyTestTrait;
 use App\Utility\UuidFactory;
 use Passbolt\Folders\FoldersPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -30,6 +32,8 @@ use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
  */
 class ResourcesDeleteControllerTest extends AppIntegrationTestCase
 {
+    use RecordsStrategyTestTrait;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -107,5 +111,16 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
         $resourceId = UuidFactory::uuid();
         $this->delete("/resources/$resourceId");
         $this->assertResponseCode(404);
+    }
+
+    public function testResourcesDeleteController_Error_DeletedMaxRecordsReached(): void
+    {
+        $user = $this->logInAsUser();
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$user])->persist()->id;
+        $this->setMaxRecordsReached(DeletedResourcesMaxRecordsStrategy::class);
+
+        $this->deleteJson("/resources/$resourceId.json");
+        $this->assertError(409, 'The maximum number of deleted resources for this organization has been reached.');
+        $this->assertFalse(ResourceFactory::get($resourceId)->deleted);
     }
 }

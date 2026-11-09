@@ -30,6 +30,14 @@ use InvalidArgumentException;
 trait PermissionsFindersTrait
 {
     /**
+     * Global counter generating unique bind placeholder names. The user and group ids query is combined with other
+     * queries whose bindings are merged: identical placeholder names would silently overwrite each other.
+     *
+     * @var int
+     */
+    private static int $userAndGroupIdsPlaceholderCounter = 0;
+
+    /**
      * Find the highest permission an aro or the groups the aro is member of could have for a given aco.
      *
      * @param string $acoType The aco type. By instance Resource or Folder.
@@ -87,6 +95,46 @@ trait PermissionsFindersTrait
     }
 
     /**
+     * Returns a query retrieving the distinct aco ids a user can access directly or through their groups.
+     *
+     * @param string $acoType The aco type. By instance Resource or Folder.
+     * @param string $userId The user id.
+     * @return \Cake\ORM\Query\SelectQuery
+     * @throws \Cake\Http\Exception\BadRequestException if the user id is not a valid UUID
+     */
+    public function findAcoIdsAccessibleByUser(string $acoType, string $userId): SelectQuery
+    {
+        if (!Validation::uuid($userId)) {
+            throw new BadRequestException(__('The identifier should be a valid UUID.'));
+        }
+
+        return $this->find()
+            ->select(['aco_foreign_key' => 'Permissions.aco_foreign_key'])
+            ->distinct()
+            ->innerJoin(['UserAndGroupIds' => $this->findUserAndGroupIds($userId)], [
+                'UserAndGroupIds.aro_id' => new IdentifierExpression('Permissions.aro_foreign_key'),
+            ])
+            ->where(['Permissions.aco' => $acoType]);
+    }
+
+    /**
+     * Returns a query retrieving, as aro_id, the id of the user and the ids of the groups the user is member of.
+     *
+     * @param string $userId The user id.
+     * @return \Cake\ORM\Query\SelectQuery
+     */
+    public function findUserAndGroupIds(string $userId): SelectQuery
+    {
+        $placeholder = ':userAndGroupIdsUserId' . self::$userAndGroupIdsPlaceholderCounter++;
+
+        return $this->Groups->GroupsUsers->find()
+            ->select(['aro_id' => 'GroupsUsers.group_id'])
+            ->where(['GroupsUsers.user_id' => $userId])
+            ->epilog("UNION SELECT {$placeholder}")
+            ->bind($placeholder, $userId);
+    }
+
+    /**
      * Returns a query retrieving the permissions an aro have.
      *
      * The $checkGroupsUsers will also return the permissions inherited from the groups the aro is member of.
@@ -109,11 +157,7 @@ trait PermissionsFindersTrait
 
         // Retrieve also the permissions for the groups a user is member of.
         if ($checkGroupsUsers) {
-            $aroForeignKeys = $this->Groups->GroupsUsers->find()
-                ->select('group_id')
-                ->where(['user_id' => $aroForeignKey])
-                ->epilog('UNION SELECT :aroForeignKey')
-                ->bind(':aroForeignKey', $aroForeignKey);
+            $aroForeignKeys = $this->findUserAndGroupIds($aroForeignKey);
         } else {
             $aroForeignKeys = [$aroForeignKey];
         }

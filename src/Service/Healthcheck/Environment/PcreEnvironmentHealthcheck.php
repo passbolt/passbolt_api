@@ -20,8 +20,9 @@ namespace App\Service\Healthcheck\Environment;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use Cake\Validation\Validation;
 
-class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class PcreEnvironmentHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -35,7 +36,7 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = (extension_loaded('gd') || extension_loaded('imagick'));
+        $this->status = Validation::alphaNumeric('passbolt');
 
         return $this;
     }
@@ -69,7 +70,7 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
      */
     public function getSuccessMessage(): string
     {
-        return __('GD or Imagick extension is installed.');
+        return __('PCRE compiled with unicode support.');
     }
 
     /**
@@ -77,18 +78,15 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
      */
     public function getFailureMessage(): string
     {
-        return __('You must enable the gd or imagick extensions to use Passbolt.');
+        return __('PCRE has not been compiled with Unicode support.');
     }
 
     /**
      * @inheritDoc
      */
-    public function getHelpMessage(): array|string|null
+    public function getHelpMessage(): ?string
     {
-        return [
-            __('See: https://secure.php.net/manual/en/book.image.php'),
-            __('See: https://secure.php.net/manual/en/book.imagick.php'),
-        ];
+        return __('Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring.');
     }
 
     /**
@@ -106,6 +104,14 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
      */
     public function getLegacyArrayKey(): string
     {
-        return 'image';
+        return 'pcre';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'pcre-environment';
     }
 }

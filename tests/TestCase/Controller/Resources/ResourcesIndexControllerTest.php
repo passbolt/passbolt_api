@@ -42,9 +42,10 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
     public function testResourcesIndexController_Success_WithFactories(): void
     {
         $user = $this->logInAsUser();
+        $group = GroupFactory::make()->withGroupsUsersFor([$user])->persist();
         ResourceFactory::make(3)->withPermissionsFor([$user], Permission::READ)->persist();
         ResourceFactory::make(3)->withPermissionsFor([$user], Permission::UPDATE)->persist();
-        ResourceFactory::make(3)->withPermissionsFor([$user])->persist();
+        ResourceFactory::make(3)->withPermissionsFor([$user])->withPermissionsFor([$group], Permission::READ)->persist();
         $this->getJson('/resources.json?filter=[]');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
@@ -66,6 +67,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
     public function testResourcesIndexController_Success_WithContain_WithFactories(): void
     {
         $user = $this->logInAsUser();
+        $group = GroupFactory::make()->withGroupsUsersFor([$user])->persist();
         ResourceFactory::make()->withPermissionsFor([$user], Permission::READ)
             ->withSecretsFor([$user])
             ->withCreator(UserFactory::make())
@@ -77,6 +79,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
             ->with('Modifier')
             ->persist();
         $favoriteResource = ResourceFactory::make()->withPermissionsFor([$user])
+            ->withPermissionsFor([$group], Permission::READ)
             ->withSecretsFor([$user])
             ->withCreator(UserFactory::make())
             ->with('Modifier')
@@ -87,6 +90,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $urlParameter .= '&contain[permissions.user.profile]=1&contain[permissions.group]=1&contain[secret]=1';
         $this->getJson("/resources.json?$urlParameter");
         $this->assertSuccess();
+        $this->assertCount(5, $this->_responseJsonBody);
         // Expected fields.
         $this->assertResourceAttributes($this->_responseJsonBody[0]);
         // Contain creator.
@@ -123,6 +127,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         }));
         $this->assertObjectHasAttribute('favorite', $favoriteResource);
         $this->assertFavoriteAttributes($favoriteResource->favorite);
+        $this->assertSame(Permission::OWNER, $favoriteResource->permission->type);
     }
 
     public function testResourcesIndexController_Success_FilterIsFavorite_WithFactories(): void

@@ -18,6 +18,8 @@ namespace Passbolt\TestData\Scenario;
 
 use CakephpFixtureFactories\Scenario\FixtureScenarioInterface;
 use Exception;
+use Passbolt\TestData\Scenario\Default\TestDataDefaultEditionScenario;
+use Passbolt\TestData\Scenario\Default\TestDataDefaultOpenLdapSettingsScenario;
 use Passbolt\TestData\Scenario\Default\TestDataDefaultResourceTypesScenario;
 use Passbolt\TestData\Scenario\Default\TestDataDefaultRolesScenario;
 use Passbolt\TestData\Scenario\Demo\TestDataDemoCommentsScenario;
@@ -45,6 +47,7 @@ class TestDataDemoScenario implements FixtureScenarioInterface
     {
         $results = [];
         $scenarios = [
+            TestDataDefaultEditionScenario::class,
             TestDataDefaultRolesScenario::class,
             TestDataDefaultResourceTypesScenario::class,
             TestDataDemoUsersScenario::class,
@@ -59,6 +62,7 @@ class TestDataDemoScenario implements FixtureScenarioInterface
             TestDataDemoFoldersPermissionsScenario::class,
             TestDataDemoFoldersScenario::class,
             TestDataDemoFoldersRelationsScenario::class,
+            TestDataDefaultOpenLdapSettingsScenario::class,
         ];
 
         foreach ($scenarios as $scenarioClass) {

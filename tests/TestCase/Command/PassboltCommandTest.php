@@ -70,7 +70,7 @@ class PassboltCommandTest extends AppTestCase
     public function testPassboltCommand_As_Unknown_Webserver_User(): void
     {
         $this->mockProcessUserService('foo');
-        $this->exec('passbolt healthcheck --database');
+        $this->exec('passbolt healthcheck --filter database');
         $this->assertExitSuccess();
         $this->assertOutputContains('The command should be executed with the same user as your web server. By instance:');
         $this->assertOutputContains('su -s /bin/bash -c "' . ROOT . '/bin/cake passbolt healthcheck" HTTP_USER');
@@ -80,7 +80,7 @@ class PassboltCommandTest extends AppTestCase
     {
         Configure::write('passbolt.security.displayNonWebUserWarning', false);
         $this->mockProcessUserService('foo');
-        $this->exec('passbolt healthcheck --database');
+        $this->exec('passbolt healthcheck --filter database');
         $this->assertExitSuccess();
         $this->assertOutputNotContains('Passbolt commands should only be executed as the web server user.');
     }

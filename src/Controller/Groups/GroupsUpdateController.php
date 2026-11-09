@@ -22,14 +22,17 @@ use App\Model\Table\GroupsTable;
 use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\ResourcesTable;
 use App\Model\Table\SecretsTable;
+use App\Service\Database\DatabaseLockErrorDetector;
 use App\Service\Groups\GroupsUpdateDryRunService;
 use App\Service\Groups\GroupsUpdateService;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ConflictException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use PDOException;
 
 /**
  * GroupsUpdateController Class
@@ -76,6 +79,7 @@ class GroupsUpdateController extends AppController
      * @return void
      * @throws \Cake\Http\Exception\ForbiddenException If the user is not an admin
      * @throws \App\Error\Exception\ValidationException If an error occurred when patching or saving the group
+     * @throws \Cake\Http\Exception\ConflictException If the group is locked by another operation
      * @throws \Exception If an unexpected error occurred
      */
     public function update(string $id, GroupsUpdateService $groupsUpdateService)
@@ -94,7 +98,16 @@ class GroupsUpdateController extends AppController
         $changes = Hash::get($data, 'groups_users', []);
         $secrets = Hash::get($data, 'secrets', []);
 
-        $groupsUpdateService->update($uac, $id, $metaData, $changes, $secrets);
+        try {
+            $groupsUpdateService->update($uac, $id, $metaData, $changes, $secrets);
+        } catch (PDOException $e) {
+            $dbLockErrorDetector = new DatabaseLockErrorDetector();
+            if (!$dbLockErrorDetector->isLockError($e)) {
+                throw $e;
+            }
+            $msg = __('The group is being modified by another operation, please try again later.');
+            throw new ConflictException($msg, null, $e);
+        }
 
         // Retrieve the updated group with requested contains.
         $whitelist = [

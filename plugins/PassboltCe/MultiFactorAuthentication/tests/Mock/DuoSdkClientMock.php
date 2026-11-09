@@ -141,6 +141,19 @@ class DuoSdkClientMock
 
     /**
      * @param MockBuilder $stub
+     * @return static
+     */
+    public static function createWithoutExchangeAuthorizationCodeFor2FAResultSub(MockBuilder $stub): self
+    {
+        $mock = new self($stub);
+        $mock->stub->method('exchangeAuthorizationCodeFor2FAResult')
+            ->willReturn(['iss' => $mock->iss]);
+
+        return $mock;
+    }
+
+    /**
+     * @param MockBuilder $stub
      * @param string $sub the sub to use
      * @return static
      */

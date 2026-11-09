@@ -107,4 +107,12 @@ class JsProdApplicationHealthcheck implements HealthcheckServiceInterface, Healt
     {
         return 'jsProd';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'js-prod';
+    }
 }

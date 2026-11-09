@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
+use App\Service\RecordsStrategy\ResourcesAddRecordsStrategyInterface;
 use App\Service\Resources\ResourcesAddService;
 use Cake\Core\Configure;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
@@ -54,16 +55,21 @@ class ResourcesAddController extends AppController
      *
      * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto The resource to add.
      * @param \App\Service\Resources\ResourcesAddService $resourcesAddService Service adding the resource
+     * @param \App\Service\RecordsStrategy\ResourcesAddRecordsStrategyInterface $recordsStrategy Decides if the user is allowed to perform the operation
      * @return void
      * @throws \Exception
      * @throws \App\Error\Exception\ValidationException if the resource is not valid.
      * @throws \Cake\Http\Exception\ServiceUnavailableException if parallel requests lead to a table lock albeit multiple attempts.
+     * @throws \Cake\Http\Exception\HttpException if the user is not allowed to add resources
      */
     public function add(
         #[MetadataRequestToDto]
         MetadataResourceDto $resourceDto,
         ResourcesAddService $resourcesAddService,
+        ResourcesAddRecordsStrategyInterface $recordsStrategy,
     ) {
+        $recordsStrategy->assertAllowed($this->User->getAccessControl());
+
         // Add the new resource
         $resource = $resourcesAddService->add(
             $this->User->getAccessControl(),

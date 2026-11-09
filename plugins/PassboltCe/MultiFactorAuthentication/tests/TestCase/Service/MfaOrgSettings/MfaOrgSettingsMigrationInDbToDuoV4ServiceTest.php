@@ -21,11 +21,14 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Role;
 use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoVerifyDuoCodeService;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsMigrationInDbToDuoV4Service;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaOrgSettingsTestTrait;
+use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaOrgSettingsMigrationInDbToDuoV4ServiceTest extends TestCase
@@ -148,5 +151,21 @@ class MfaOrgSettingsMigrationInDbToDuoV4ServiceTest extends TestCase
     {
         $this->service->migrate();
         $this->assertSame(0, MfaOrganizationSettingFactory::count());
+    }
+
+    public function testMfaOrgSettingsMigrationInDbToDuoV4Service_Success_VerifySubscriberFieldIsNotStored(): void
+    {
+        Configure::write(MfaDuoVerifyDuoCodeService::PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER, true);
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->persist();
+        $uac = new UserAccessControl(Role::ADMIN, $admin->id);
+        $settings = $this->getDefaultMfaOrgSettings();
+        $settings[MfaSettings::PROVIDER_DUO] = $this->getDefaultDuoV2OrgSettings();
+        $this->mockMfaOrgSettings($settings, 'db', $uac);
+
+        $this->service->migrate();
+
+        $settingsInDB = $this->getMfaOrganizationSettingValue();
+        $this->assertArrayNotHasKey(MfaOrgSettings::DUO_VERIFY_SUBSCRIBER, $settingsInDB[MfaSettings::PROVIDER_DUO]);
     }
 }

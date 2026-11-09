@@ -28,6 +28,7 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
 use Passbolt\Log\LogPlugin;
+use PHPUnit\Framework\Attributes\Group;
 
 class SetupCompleteControllerTest extends AppIntegrationTestCase
 {
@@ -220,6 +221,34 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->assertError();
         $this->assertNotEmpty($this->_responseJsonBody);
         $this->assertStringContainsString('expired', $this->_getBodyAsString());
+    }
+
+    #[Group('AN')]
+    #[Group('setup')]
+    #[Group('setupComplete')]
+    public function testSetupCompleteController_Error_SecretKeyMaterial(): void
+    {
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->with('Users', UserFactory::make()->inactive())
+            ->persist();
+        $userId = $t->user->id;
+
+        $url = '/setup/complete/' . $userId . '.json';
+        $data = [
+            'authentication_token' => [
+                'token' => $t->token,
+            ],
+            'gpgkey' => [
+                'armored_key' => self::getPrivateKeyModifiedAsPublicKey(),
+            ],
+        ];
+        $this->postJson($url, $data);
+
+        $this->assertError(400, 'A valid OpenPGP key must be provided.');
+        $this->assertFalse(UserFactory::get($userId)->active);
+        $this->assertSame(0, GpgkeyFactory::count());
     }
 
     /**

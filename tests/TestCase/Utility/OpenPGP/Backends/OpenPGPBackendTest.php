@@ -24,6 +24,7 @@ use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
 use Cake\TestSuite\TestCase;
 use Exception;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Throwable;
 
 /**
@@ -355,6 +356,60 @@ p7hokpGnpTQXl9C5Oi/+uQ==
         $result = $gnupg->isParsableArmoredPublicKey($armoredKey);
 
         $this->assertFalse($result);
+    }
+
+    public static function secretKeysProvider(): array
+    {
+        return [
+            'modified secret key' => [self::getPrivateKeyModifiedAsPublicKey()],
+            'public key with secret subkey' => [self::getPublicKeyWithSecretSubkey()],
+        ];
+    }
+
+    #[DataProvider('secretKeysProvider')]
+    public function testOpenPGPBackend_IsParsableArmoredPublicKey_Error_SecretKeyMaterial(string $armoredKey): void
+    {
+        $gnupg = new Gnupg();
+
+        $isParsablePublicKey = $gnupg->isParsableArmoredPublicKey($armoredKey);
+        $isSecretKeyMaterial = $gnupg->containsSecretKeyMaterial($armoredKey);
+
+        $this->assertTrue($isSecretKeyMaterial);
+        $this->assertFalse($isParsablePublicKey);
+    }
+
+    public function testOpenPGPBackend_IsParsableArmoredPublicKeyError_MultipleArmorBlocks(): void
+    {
+        $gnupg = new Gnupg();
+        $result = $gnupg->isParsableArmoredPublicKey(self::getTwoPublicKeyBlocks());
+        $this->assertFalse($result);
+    }
+
+    public function testOpenPGPBackend_ContainsSecretKeyMaterial(): void
+    {
+        $gnupg = new Gnupg();
+
+        $this->assertFalse($gnupg->containsSecretKeyMaterial(self::readGpgkeyFixture('ada_public.key')));
+        $this->assertTrue($gnupg->containsSecretKeyMaterial(self::readGpgkeyFixture('ada_private.key')));
+        $this->assertFalse($gnupg->containsSecretKeyMaterial('nope'));
+    }
+
+    public static function invalidPublicKeysProvider(): array
+    {
+        return [
+            'private key modified as public key' => [self::getPrivateKeyModifiedAsPublicKey()],
+            'public key with secret subkey' => [self::getPublicKeyWithSecretSubkey()],
+            'two armor blocks' => [self::getTwoPublicKeyBlocks()],
+        ];
+    }
+
+    #[DataProvider('invalidPublicKeysProvider')]
+    public function testOpenPGPBackend_IsParsableArmoredPublicKey_Success_StrictParsingDisabled(string $armoredKey): void
+    {
+        Configure::write('passbolt.gpg.security.strictPublicKeyParsing', false);
+        $gnupg = new Gnupg();
+
+        $this->assertTrue($gnupg->isParsableArmoredPublicKey($armoredKey));
     }
 
     protected function getDummySignedMessage($userAlias = '')

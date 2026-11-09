@@ -28,6 +28,7 @@ use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Multi\MfaTotpDuoScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Multi\MfaTotpDuoUserOnlyScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpUserOnlyScenario;
+use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
@@ -342,5 +343,87 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
         // Here it should be 2 because the mfa token for duo should be not set inactive
         // Inactivating this token while user is logged in with it can cause problems
         $this->assertSame(2, MfaAuthenticationTokenFactory::find()->where(['active' => true])->all()->count());
+    }
+
+    public function testMfaOrgSettingsPostController_Success_NoVerifySubscriberFieldStoresTrue(): void
+    {
+        $user = $this->logInAsAdmin();
+        $this->mockService(Client::class, function () use ($user) {
+            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
+        });
+
+        $this->postJson('/mfa/settings.json', [
+            MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO => true],
+            MfaSettings::PROVIDER_DUO => $this->getDefaultDuoV4OrgSettings(),
+        ]);
+
+        $this->assertResponseSuccess();
+        $response = $this->getResponseBodyAsArray();
+        // DUO subscriber verification is enforced when not set
+        $this->assertTrue($response['duo']['verifySubscriber']);
+        $settingsInDb = $this->getMfaOrganizationSettingValue();
+        $this->assertTrue($settingsInDb[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_VERIFY_SUBSCRIBER]);
+    }
+
+    public function testMfaOrgSettingsPostController_Success_StringDigitValueIsCastedToBoolean(): void
+    {
+        $user = $this->logInAsAdmin();
+        $this->mockService(Client::class, function () use ($user) {
+            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
+        });
+        $duoSettings = array_merge($this->getDefaultDuoV4OrgSettings(), [
+            MfaOrgSettings::DUO_VERIFY_SUBSCRIBER => '0',
+        ]);
+
+        $this->postJson('/mfa/settings.json', [
+            MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO => true],
+            MfaSettings::PROVIDER_DUO => $duoSettings,
+        ]);
+
+        $this->assertResponseSuccess();
+        $this->assertFalse($this->getResponseBodyAsArray()['duo']['verifySubscriber']);
+        $settingsInDb = $this->getMfaOrganizationSettingValue();
+        $this->assertFalse($settingsInDb[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_VERIFY_SUBSCRIBER]);
+    }
+
+    public function testMfaOrgSettingsPostController_Success_LegacyDuoKeyNamesKeepVerifySubscriber(): void
+    {
+        $user = $this->logInAsAdmin();
+        $this->mockService(Client::class, function () use ($user) {
+            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
+        });
+        $duoSettings = array_merge($this->getDefaultDuoV2OrgSettings(), [
+            MfaOrgSettings::DUO_VERIFY_SUBSCRIBER => false,
+        ]);
+
+        $this->postJson('/mfa/settings.json', [
+            MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO => true],
+            MfaSettings::PROVIDER_DUO => $duoSettings,
+        ]);
+
+        $this->assertResponseSuccess();
+        $settingsInDb = $this->getMfaOrganizationSettingValue();
+        $this->assertFalse($settingsInDb[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_VERIFY_SUBSCRIBER]);
+    }
+
+    public function testMfaOrgSettingsPostController_Error_InvalidVerifySubscriberValues(): void
+    {
+        $user = $this->logInAsAdmin();
+        $this->mockService(Client::class, function () use ($user) {
+            return DuoSdkClientMock::createDefault($this->getMockBuilder(Client::class), $user)->getClient();
+        });
+        $duoSettings = array_merge($this->getDefaultDuoV4OrgSettings(), [
+            MfaOrgSettings::DUO_VERIFY_SUBSCRIBER => 'yes', // string is invalid
+        ]);
+
+        $this->postJson('/mfa/settings.json', [
+            MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO => true],
+            MfaSettings::PROVIDER_DUO => $duoSettings,
+        ]);
+
+        $this->assertBadRequestError('Could not validate multi-factor authentication provider configuration.');
+        $response = $this->getResponseBodyAsArray();
+        $this->assertArrayHasKey('boolean', $response['duo']['verifySubscriber']);
+        $this->assertSame(0, MfaOrganizationSettingFactory::count());
     }
 }

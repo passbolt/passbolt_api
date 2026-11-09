@@ -121,6 +121,7 @@ class ShareController extends AppController
      * @throws \Cake\Http\Exception\NotFoundException if the resource does not exist
      * @throws \Cake\Http\Exception\NotFoundException if the resource is soft deleted
      * @throws \Cake\Http\Exception\NotFoundException if the user does not have access to the resource
+     * @throws \Cake\Http\Exception\BadRequestException if the v5 resource metadata key type is not shared_key
      * @return void
      */
     protected function _assertRequestParameters(string $resourceId): void
@@ -146,9 +147,7 @@ class ShareController extends AppController
         }
         // V5 validations
         $resourceDto = MetadataResourceDto::createFromArray($resource->toArray());
-        if ($resourceDto->isV5() && $resource->get('metadata_key_type') === 'user_key') {
-            throw new BadRequestException(__('Resource metadata key type is invalid.'));
-        }
+        $resourceDto->assertShareable();
     }
 
     /**

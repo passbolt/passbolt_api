@@ -55,6 +55,15 @@ class WebauthnDelegatedGetControllerTest extends MfaIntegrationTestCase
         $this->assertResponseContains('data-state="' . $state . '"');
     }
 
+    public function testWebauthnDelegatedGetController_Error_GetJson(): void
+    {
+        $state = $this->persistState();
+
+        $this->getJson('/mfa/verify/webauthn/delegated.json?mfa_delegated_state=' . $state);
+        $this->assertResponseCode(404);
+        $this->assertResponseContains('Page not found.');
+    }
+
     public function testWebauthnDelegatedGetController_Success_PassesTheDefaultLocale(): void
     {
         $state = $this->persistState();

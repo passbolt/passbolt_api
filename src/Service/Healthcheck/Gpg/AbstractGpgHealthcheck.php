@@ -100,8 +100,8 @@ abstract class AbstractGpgHealthcheck implements HealthcheckServiceInterface, He
                 }
                 break;
             case OpenPGPBackendFactory::HTTP:
-                // using cache for local keyring
-                $gpgHome = 'Cache engine';
+                // keys are only kept in memory
+                $gpgHome = 'In memory';
                 break;
             default:
                 // unknown backend

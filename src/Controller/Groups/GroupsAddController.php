@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
+use App\Service\RecordsStrategy\GroupsAddRecordsStrategyInterface;
 use App\Utility\UserAction;
 use Cake\Utility\Hash;
 use Passbolt\Rbacs\Service\ActionAccessControl\RoleActionAccessControlServiceInterface;
@@ -30,19 +31,25 @@ class GroupsAddController extends AppController
     /**
      * Group Add action
      *
+     * @param \Passbolt\Rbacs\Service\ActionAccessControl\RoleActionAccessControlServiceInterface $accessControlService Access control
+     * @param \App\Service\RecordsStrategy\GroupsAddRecordsStrategyInterface $recordsStrategy Decides if the user is allowed to perform the operation
      * @throws \Cake\Http\Exception\InternalErrorException If an unexpected error occurred when saving the group
      * @throws \Cake\Http\Exception\ForbiddenException If the user is not an admin
      * @throws \App\Error\Exception\ValidationException if the group validation failed
      * @throws \Cake\Http\Exception\InternalErrorException if the group can't be saved for some reason
+     * @throws \Cake\Http\Exception\HttpException if the user is not allowed to add groups
      * @return void
      */
-    public function addPost(RoleActionAccessControlServiceInterface $accessControlService)
-    {
+    public function addPost(
+        RoleActionAccessControlServiceInterface $accessControlService,
+        GroupsAddRecordsStrategyInterface $recordsStrategy,
+    ) {
         $this->assertJson();
         $accessControlService->controlUserRoleActionAccess(
             $this->User->getRoleEntity(),
             UserAction::getInstance()->getActionId(),
         );
+        $recordsStrategy->assertAllowed($this->User->getAccessControl());
 
         $data = $this->_formatRequestData();
         /** @var \App\Model\Table\GroupsTable $GroupsTable */

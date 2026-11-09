@@ -62,6 +62,34 @@ class MetadataShareControllerTest extends AppIntegrationTestCaseV5
         $this->assertBadRequestError('Resource metadata key type is invalid');
     }
 
+    public function testMetadataShareController_Error_BlankMetadataKeyType(): void
+    {
+        $user = UserFactory::make()->user()->persist();
+        $user2 = UserFactory::make()->user()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->v5Fields(false, ['metadata_key_type' => '']) // blank metadata_key_type, consider personal
+            ->withPermissionsFor([$user])
+            ->withSecretRevisions()
+            ->persist();
+        $this->logInAs($user);
+
+        $resourceId = $resource->id;
+        $data = [
+            'permissions' => [
+                ['aro' => 'User', 'aro_foreign_key' => $user2->get('id'), 'type' => Permission::READ],
+            ],
+            'secrets' => [
+                ['user_id' => $user->get('id'), 'data' => $this->getDummyPrivateKeyOpenPGPMessage()],
+                ['user_id' => $user2->get('id'), 'data' => $this->getDummyPrivateKeyOpenPGPMessage()],
+            ],
+        ];
+        $this->putJson("/share/resource/{$resourceId}.json", $data);
+
+        $this->assertBadRequestError('Resource metadata key type is invalid');
+        $this->assertSame(1, PermissionFactory::count());
+    }
+
     public function testMetadataShareController_Success(): void
     {
         RoleFactory::make()->guest()->persist();
