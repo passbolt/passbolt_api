@@ -72,6 +72,7 @@ class BaseSolutionBootstrapper
         $this->addFeaturePluginIfEnabled($app, 'EmailDigest');
         $app->addPlugin('Passbolt/Reports', ['bootstrap' => true, 'routes' => true]);
         $this->addFeaturePluginIfEnabled($app, 'Mobile');
+        $this->addFeaturePluginIfEnabled($app, 'BrowserAuth');
         $this->addFeaturePluginIfEnabled($app, 'SelfRegistration');
         $app->addPlugin('Passbolt/PasswordGenerator', ['routes' => true]);
         $this->addFeaturePluginIfEnabled($app, 'SmtpSettings');

@@ -147,7 +147,8 @@
             "Passbolt\\ExportPolicies\\": "./plugins/PassboltCe/ExportPolicies/src",
             "Passbolt\\Scim\\": "./plugins/PassboltEe/Scim/src",
             "Passbolt\\Edition\\": "./plugins/PassboltCe/Edition/src",
-            "Passbolt\\OfflineModePolicies\\": "./plugins/PassboltEe/OfflineModePolicies/src"
+            "Passbolt\\OfflineModePolicies\\": "./plugins/PassboltEe/OfflineModePolicies/src",
+            "Passbolt\\BrowserAuth\\": "./plugins/PassboltCe/BrowserAuth/src"
         }
     },
     "autoload-dev": {
@@ -195,7 +196,8 @@
             "Passbolt\\ExportPolicies\\Test\\": "./plugins/PassboltCe/ExportPolicies/tests",
             "Passbolt\\Scim\\Test\\": "./plugins/PassboltEe/Scim/tests",
             "Passbolt\\Edition\\Test\\": "./plugins/PassboltCe/Edition/tests",
-            "Passbolt\\OfflineModePolicies\\Test\\": "./plugins/PassboltEe/OfflineModePolicies/tests"
+            "Passbolt\\OfflineModePolicies\\Test\\": "./plugins/PassboltEe/OfflineModePolicies/tests",
+            "Passbolt\\BrowserAuth\\Test\\": "./plugins/PassboltCe/BrowserAuth/tests"
         }
     },
     "scripts": {
@@ -216,7 +218,7 @@
         "stan": "phpstan analyse --memory-limit=-1",
         "psalm": "psalm.phar",
         "test": "phpunit --colors=always",
-        "create-split-testsuite" : "php tests/create_paratest_suites.php tmp/tests/testsuitesplit.xml",
+        "create-split-testsuite": "php tests/create_paratest_suites.php tmp/tests/testsuitesplit.xml",
         "i18n:externalize": [
             "./bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_UK --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes",
             "find resources/locales/en_UK -name '*.pot' -exec sh -c 'mv \"$1\" \"${1%.pot}.po\"' _ {} \\;"

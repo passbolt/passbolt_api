@@ -56,6 +56,7 @@ class AuthenticationTokensTable extends Table
         AuthenticationToken::TYPE_REGISTER,
         AuthenticationToken::TYPE_RECOVER,
         AuthenticationToken::TYPE_LOGIN,
+        AuthenticationToken::TYPE_BROWSER_AUTH,
         AuthenticationToken::TYPE_MFA,
         AuthenticationToken::TYPE_MFA_SETUP,
         AuthenticationToken::TYPE_MFA_VERIFY,

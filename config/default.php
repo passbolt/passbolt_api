@@ -61,6 +61,7 @@ return [
                 AuthenticationToken::TYPE_LOGIN => [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_LOGIN_TOKEN_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
+                AuthenticationToken::TYPE_BROWSER_AUTH => ['expiry' => '60 seconds'],
                 AuthenticationToken::TYPE_MOBILE_TRANSFER => [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_MOBILE_TRANSFER_TOKEN_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
@@ -263,6 +264,7 @@ return [
 
         // Which plugins are enabled
         'plugins' => [
+            'browserAuth' => ['enabled' => false],
             'rbacs' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_RBACS_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
