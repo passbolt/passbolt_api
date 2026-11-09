@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Users;
 
 use App\Model\Entity\Permission;
+use App\Service\RecordsStrategy\DeletedUsersMaxRecordsStrategy;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\RoleFactory;
@@ -25,6 +26,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
+use App\Test\Lib\Utility\RecordsStrategyTestTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
@@ -34,6 +36,7 @@ use Cake\ORM\TableRegistry;
  */
 class UsersDeleteControllerTest extends AppIntegrationTestCase
 {
+    use RecordsStrategyTestTrait;
     use EmailQueueTrait;
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
@@ -906,5 +909,16 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             'Feel free to get in touch with the administrator at the origin of the operation',
             $otherAdmin->username,
         );
+    }
+
+    public function testUsersDeleteController_Error_DeletedMaxRecordsReached(): void
+    {
+        $this->logInAsAdmin();
+        $user = UserFactory::make()->user()->persist();
+        $this->setMaxRecordsReached(DeletedUsersMaxRecordsStrategy::class);
+
+        $this->deleteJson('/users/' . $user->id . '.json');
+        $this->assertError(409, 'The maximum number of deleted users for this organization has been reached.');
+        $this->assertUserIsNotSoftDeleted($user->id);
     }
 }

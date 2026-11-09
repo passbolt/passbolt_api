@@ -18,10 +18,12 @@ namespace App\Test\TestCase\Controller\Users;
 
 use App\Controller\Users\UsersRecoverController;
 use App\Model\Entity\Role;
+use App\Service\RecordsStrategy\NonDeletedUsersMaxRecordsStrategy;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
+use App\Test\Lib\Utility\RecordsStrategyTestTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\I18n\DateTime;
@@ -36,6 +38,7 @@ use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
  */
 class UsersRegisterControllerTest extends AppIntegrationTestCase
 {
+    use RecordsStrategyTestTrait;
     use EmailQueueTrait;
     use SelfRegistrationTestTrait;
 
@@ -305,5 +308,19 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertResponseContains('Registration is not opened to public. ');
         $this->assertResponseContains('This is due to a security setting. ');
         $this->assertResponseContains('Please contact your administrator.');
+    }
+
+    public function testUsersRegisterController_Error_MaxRecordsReached(): void
+    {
+        RoleFactory::make()->user()->persist();
+        $this->setMaxRecordsReached(NonDeletedUsersMaxRecordsStrategy::class);
+
+        $this->postJson('/users/register.json', [
+            'username' => 'ada@passbolt.com',
+            'profile' => ['first_name' => 'Ada', 'last_name' => 'Lovelace'],
+        ]);
+        $this->assertError(409, 'The maximum number of users for this organization has been reached.');
+        $this->assertSame(0, UserFactory::find()->where(['username' => 'ada@passbolt.com'])->count());
+        $this->assertEmailQueueIsEmpty();
     }
 }

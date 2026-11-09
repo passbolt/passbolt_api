@@ -402,6 +402,15 @@ return [
                 'lowerCase' => filter_var(env('PASSBOLT_SECURITY_USERNAME_LOWER_CASE', false), FILTER_VALIDATE_BOOLEAN),
                 'caseSensitive' => filter_var(env('PASSBOLT_SECURITY_USERNAME_CASE_SENSITIVE', false), FILTER_VALIDATE_BOOLEAN),
             ],
+            // Maximum number of records the organization can have, no maximum if not set
+            'maxRecords' => [
+                'usersAdd' => filter_var(env('PASSBOLT_SECURITY_MAX_RECORDS_USERS_ADD'), FILTER_VALIDATE_INT),
+                'usersDelete' => filter_var(env('PASSBOLT_SECURITY_MAX_RECORDS_USERS_DELETE'), FILTER_VALIDATE_INT),
+                'groupsAdd' => filter_var(env('PASSBOLT_SECURITY_MAX_RECORDS_GROUPS_ADD'), FILTER_VALIDATE_INT),
+                'groupsDelete' => filter_var(env('PASSBOLT_SECURITY_MAX_RECORDS_GROUPS_DELETE'), FILTER_VALIDATE_INT),
+                'resourcesAdd' => filter_var(env('PASSBOLT_SECURITY_MAX_RECORDS_RESOURCES_ADD'), FILTER_VALIDATE_INT),
+                'resourcesDelete' => filter_var(env('PASSBOLT_SECURITY_MAX_RECORDS_RESOURCES_DELETE'), FILTER_VALIDATE_INT),
+            ],
 
             // Disable SMTP setting endpoint to prevent/lock down SMTP configuration via the administration workspace
             'smtpSettings' => [

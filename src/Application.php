@@ -49,6 +49,7 @@ use App\Service\Subscriptions\DefaultSubscriptionCheckInCommandService;
 use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use App\ServiceProvider\CommandServiceProvider;
 use App\ServiceProvider\HealthcheckServiceProvider;
+use App\ServiceProvider\RecordsStrategyServiceProvider;
 use App\ServiceProvider\ResourceServiceProvider;
 use App\ServiceProvider\SetupServiceProvider;
 use App\ServiceProvider\TestEmailServiceProvider;
@@ -295,6 +296,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $container->addServiceProvider(new SetupServiceProvider());
         $container->addServiceProvider(new ResourceServiceProvider());
         $container->addServiceProvider(new UserServiceProvider());
+        $container->addServiceProvider(new RecordsStrategyServiceProvider());
         if (PHP_SAPI === 'cli') {
             $container->addServiceProvider(new CommandServiceProvider());
         }

@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Controller\Resources;
 
 use App\Model\Entity\Permission;
 use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
+use App\Service\RecordsStrategy\NonDeletedResourcesMaxRecordsStrategy;
 use App\Service\Resources\ResourcesAddService;
 use App\Service\Secrets\SecretRecipientValidationService;
 use App\Test\Factory\GpgkeyFactory;
@@ -27,6 +28,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
+use App\Test\Lib\Utility\RecordsStrategyTestTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\EventList;
@@ -41,6 +43,7 @@ use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
 
 class ResourcesAddControllerTest extends AppIntegrationTestCase
 {
+    use RecordsStrategyTestTrait;
     use EmailQueueTrait;
     use JwtAuthTestTrait;
     use ResourcesModelTrait;
@@ -388,5 +391,16 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
 
         $this->post('/resources', $data);
         $this->assertResponseCode(404);
+    }
+
+    public function testResourcesAddController_Error_MaxRecordsReached(): void
+    {
+        $user = UserFactory::make()->user()->persist();
+        $this->setMaxRecordsReached(NonDeletedResourcesMaxRecordsStrategy::class);
+
+        $this->logInAs($user);
+        $this->postJson('/resources.json', $this->getDummyResourcesPostData());
+        $this->assertError(409, 'The maximum number of resources for this organization has been reached.');
+        $this->assertSame(0, ResourceFactory::count());
     }
 }
