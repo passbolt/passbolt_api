@@ -21,6 +21,10 @@ require dirname(__DIR__) . '/config/bootstrap.php';
 EditionManager::setInstance(new TestingEditionManager());
 Configure::write('passbolt.edition', EditionDto::EDITION_PRO);
 
+// Disabling secrets.validateRecipient configuration here so it doesn't fail all existing tests
+// Once all tests starts using valid secret for their recipient (SecretFactory default data, withValidGpgKey()) then this can be removed
+Configure::write('passbolt.security.secrets.validateRecipient', false);
+
 $_SERVER['PHP_SELF'] = '/';
 
 // Fixate sessionid early on, as php7.2+

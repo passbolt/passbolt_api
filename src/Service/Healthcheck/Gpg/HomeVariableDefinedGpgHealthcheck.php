@@ -90,4 +90,12 @@ class HomeVariableDefinedGpgHealthcheck extends AbstractGpgHealthcheck
     {
         return 'gpgHome';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'home-variable-defined';
+    }
 }

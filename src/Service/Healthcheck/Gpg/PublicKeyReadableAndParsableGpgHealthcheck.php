@@ -73,4 +73,12 @@ class PublicKeyReadableAndParsableGpgHealthcheck extends AbstractGpgHealthcheck
     {
         return 'gpgKeyPublicBlock';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'public-key-readable-and-parsable';
+    }
 }

@@ -175,8 +175,8 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     public function testAuthLoginController_Error_GetJson(): void
     {
         $this->getJson('/auth/login.json');
-        $this->assertResponseError('Page not found.');
         $this->assertResponseCode(404);
+        $this->assertResponseContains('Page not found.');
     }
 
     public function testAuthLoginController_Validate_Gpg_Auth(): void

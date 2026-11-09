@@ -121,4 +121,12 @@ class ScimSecretTokenExpiryWarningHealthcheck implements HealthcheckServiceInter
     {
         return 'isScimTokenNotNearExpiry';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'scim-secret-token-expiry-warning';
+    }
 }

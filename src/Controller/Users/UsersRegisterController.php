@@ -19,6 +19,7 @@ namespace App\Controller\Users;
 use AllowDynamicProperties;
 use App\Controller\AppController;
 use App\Model\Entity\Role;
+use App\Service\RecordsStrategy\UsersAddRecordsStrategyInterface;
 use App\Service\Users\UserRegisterServiceInterface;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
@@ -48,6 +49,7 @@ class UsersRegisterController extends AppController
      * Register user action GET
      * Display a registration form
      *
+     * @throws \Cake\Http\Exception\NotFoundException if the request is json, the form is only available as html
      * @throws \Cake\Http\Exception\ForbiddenException if the current user is logged in
      * @param \App\Service\Users\UserRegisterServiceInterface $userRegisterService Registration service
      * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $dryRunService Service to assess to availability of self registration
@@ -58,6 +60,10 @@ class UsersRegisterController extends AppController
         UserRegisterServiceInterface $userRegisterService,
         SelfRegistrationDryRunServiceInterface $dryRunService,
     ): void {
+        if ($this->request->is('json')) {
+            throw new NotFoundException(__('Page not found.'));
+        }
+
         $this->assertIsSelfRegistrationOpen($dryRunService);
         // Do not allow logged in user to register
         if ($this->User->role() !== Role::GUEST) {
@@ -74,11 +80,14 @@ class UsersRegisterController extends AppController
      * @throws \Cake\Http\Exception\ForbiddenException if the current user is logged in
      * @param \App\Service\Users\UserRegisterServiceInterface $userRegisterService Service
      * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $dryRunService Service to assess to availability of self registration
+     * @param \App\Service\RecordsStrategy\UsersAddRecordsStrategyInterface $recordsStrategy Decides if the user is allowed to perform the operation
+     * @throws \Cake\Http\Exception\HttpException if the user is not allowed to add users
      * @return void
      */
     public function registerPost(
         UserRegisterServiceInterface $userRegisterService,
         SelfRegistrationDryRunServiceInterface $dryRunService,
+        UsersAddRecordsStrategyInterface $recordsStrategy,
     ): void {
         $this->assertJson();
 
@@ -91,6 +100,8 @@ class UsersRegisterController extends AppController
 
         // Assert that the user can self register, based on the payload and the self registration settings
         $dryRunService->canGuestSelfRegister(['email' => $this->getRequest()->getData('username')]);
+
+        $recordsStrategy->assertAllowed($this->User->getAccessControl());
 
         $user = $userRegisterService->register();
 

@@ -81,6 +81,9 @@ class SecretsUpdateSecretsService
     {
         $entitiesChanges = new EntitiesChangesDto();
         $userIds = Hash::extract($data, '{n}.user_id');
+        if (SecretRecipientValidationService::isEnabled()) {
+            SecretRecipientValidationService::preloadKeys($userIds);
+        }
 
         $secrets = [];
         if (!empty($userIds)) {

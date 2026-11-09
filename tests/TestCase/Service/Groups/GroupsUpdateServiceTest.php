@@ -21,17 +21,24 @@ use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Model\Entity\Secret;
+use App\Service\Database\DatabaseLockErrorDetector;
+use App\Service\Database\TransactionRetryService;
 use App\Service\Groups\GroupsUpdateService;
 use App\Service\GroupsUsers\GroupsUsersAddService;
 use App\Service\GroupsUsers\GroupsUsersDeleteService;
 use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Test\Factory\GroupFactory;
+use App\Test\Factory\GroupsUserFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Utility\DatabaseLockErrorTestTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Database\Exception\QueryException;
 use Cake\Event\EventList;
+use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Exception;
@@ -44,6 +51,8 @@ use Passbolt\SecretRevisions\Test\Factory\SecretRevisionFactory;
  */
 class GroupsUpdateServiceTest extends AppTestCase
 {
+    use DatabaseLockErrorTestTrait;
+
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
@@ -92,6 +101,94 @@ class GroupsUpdateServiceTest extends AppTestCase
             $secretRevision = SecretRevisionFactory::firstOrFail(['resource_id' => $secret->resource_id]);
             $this->assertSame($secretRevision->id, $secret->secret_revision_id);
         }
+    }
+
+    public function testGroupsUpdateService_Success_RetryOnLockErrorGroupRenamedAndUserAddedOnce(): void
+    {
+        [$r1, $r2, $g1, $u1, $u2, $u3, $u4] = $this->insertFixture_AddGroupUser_HavingMultipleResourceSharedWith(); // phpcs:ignore
+        $uac = new UserAccessControl(Role::ADMIN, $u1->id);
+        $changes = [['user_id' => $u4->id, 'is_admin' => false]];
+        $secrets = $this->getSecretsDataFor($u4->id, [$r1->id, $r2->id]);
+        $listenerCalls = 0;
+        $listener = function () use (&$listenerCalls): void {
+            $listenerCalls++;
+            if ($listenerCalls === 1) {
+                throw $this->makeMysqlDeadlockException();
+            }
+        };
+
+        EventManager::instance()->on(GroupsUsersAddService::AFTER_GROUP_USER_ADDED_EVENT_NAME, $listener);
+        try {
+            $this->service->update($uac, $g1->id, ['name' => 'Renamed group'], $changes, $secrets);
+        } finally {
+            EventManager::instance()->off(GroupsUsersAddService::AFTER_GROUP_USER_ADDED_EVENT_NAME, $listener);
+        }
+
+        $this->assertSame(2, $listenerCalls);
+        // The group entity is reloaded on each attempt, otherwise the second attempt would not save the new name.
+        $this->assertSame('Renamed group', GroupFactory::get($g1->id)->get('name'));
+        $this->assertUserIsMemberOf($g1->id, $u4->id);
+        $this->assertSame(1, GroupsUserFactory::find()->where(['group_id' => $g1->id, 'user_id' => $u4->id])->count());
+        $this->assertSame(1, SecretFactory::find()->where(['resource_id' => $r1->id, 'user_id' => $u4->id])->count());
+        $this->assertSame(1, SecretFactory::find()->where(['resource_id' => $r2->id, 'user_id' => $u4->id])->count());
+    }
+
+    public function testGroupsUpdateService_Error_LockErrorOnEveryAttemptSavesNothing(): void
+    {
+        [$r1, $r2, $g1, $u1, $u2, $u3, $u4] = $this->insertFixture_AddGroupUser_HavingMultipleResourceSharedWith(); // phpcs:ignore
+        $groupName = $g1->get('name');
+        $uac = new UserAccessControl(Role::ADMIN, $u1->id);
+        $changes = [['user_id' => $u4->id, 'is_admin' => false]];
+        $secrets = $this->getSecretsDataFor($u4->id, [$r1->id, $r2->id]);
+        $listenerCalls = 0;
+        $listener = function () use (&$listenerCalls): void {
+            $listenerCalls++;
+            throw $this->makeMysqlDeadlockException();
+        };
+
+        EventManager::instance()->on(GroupsUsersAddService::AFTER_GROUP_USER_ADDED_EVENT_NAME, $listener);
+        try {
+            $this->service->update($uac, $g1->id, ['name' => 'Renamed group'], $changes, $secrets);
+            $this->fail('A QueryException was expected.');
+        } catch (QueryException $e) {
+            $this->assertTrue((new DatabaseLockErrorDetector())->isLockError($e));
+        } finally {
+            EventManager::instance()->off(GroupsUsersAddService::AFTER_GROUP_USER_ADDED_EVENT_NAME, $listener);
+        }
+
+        $this->assertSame(TransactionRetryService::DEFAULT_MAX_ATTEMPTS, $listenerCalls);
+        $this->assertSame($groupName, GroupFactory::get($g1->id)->get('name'));
+        $this->assertUserIsNotMemberOf($g1->id, $u4->id);
+        $this->assertSecretNotExist($r1->id, $u4->id);
+        $this->assertSecretNotExist($r2->id, $u4->id);
+    }
+
+    public function testGroupsUpdateService_Error_LockErrorWhenCallerTransactionIsOpen(): void
+    {
+        [$r1, $r2, $g1, $u1, $u2, $u3, $u4] = $this->insertFixture_AddGroupUser_HavingMultipleResourceSharedWith(); // phpcs:ignore
+        $uac = new UserAccessControl(Role::ADMIN, $u1->id);
+        $changes = [['user_id' => $u4->id, 'is_admin' => false]];
+        $secrets = $this->getSecretsDataFor($u4->id, [$r1->id, $r2->id]);
+        $listenerCalls = 0;
+        $listener = function () use (&$listenerCalls): void {
+            $listenerCalls++;
+            throw $this->makeMysqlDeadlockException();
+        };
+        $connection = GroupFactory::make()->getTable()->getConnection();
+
+        EventManager::instance()->on(GroupsUsersAddService::AFTER_GROUP_USER_ADDED_EVENT_NAME, $listener);
+        $connection->begin();
+        try {
+            $this->service->update($uac, $g1->id, [], $changes, $secrets);
+            $this->fail('A QueryException was expected.');
+        } catch (QueryException $e) {
+            $this->assertSame(1, $listenerCalls);
+        } finally {
+            $connection->rollback();
+            EventManager::instance()->off(GroupsUsersAddService::AFTER_GROUP_USER_ADDED_EVENT_NAME, $listener);
+        }
+
+        $this->assertUserIsNotMemberOf($g1->id, $u4->id);
     }
 
     /* ******************************************
@@ -496,6 +593,25 @@ class GroupsUpdateServiceTest extends AppTestCase
     /* ******************************************
      * Fixtures
      ****************************************** */
+
+    /**
+     * @param string $userId The user receiving the secrets.
+     * @param array $resourcesIds The resources the secrets are for.
+     * @return array
+     */
+    private function getSecretsDataFor(string $userId, array $resourcesIds): array
+    {
+        $secrets = [];
+        foreach ($resourcesIds as $resourceId) {
+            $secrets[] = [
+                'resource_id' => $resourceId,
+                'user_id' => $userId,
+                'data' => Hash::get($this->getDummySecretData(), 'data'),
+            ];
+        }
+
+        return $secrets;
+    }
 
     private function insertFixture_AddGroupUser_HavingMultipleResourceSharedWith(): array
     {

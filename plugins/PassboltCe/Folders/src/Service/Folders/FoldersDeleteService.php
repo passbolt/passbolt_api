@@ -295,12 +295,7 @@ class FoldersDeleteService
             return [];
         }
 
-        // Subquery: user's group IDs + user ID (mirrors findAllByAro pattern).
-        $aroForeignKeys = $this->permissionsTable->Groups->GroupsUsers->find()
-            ->select('group_id')
-            ->where(['user_id' => $userId])
-            ->epilog('UNION SELECT :aroForeignKey')
-            ->bind(':aroForeignKey', $userId);
+        $aroForeignKeys = $this->permissionsTable->findUserAndGroupIds($userId);
 
         return $this->permissionsTable
             ->unhydratedFind()

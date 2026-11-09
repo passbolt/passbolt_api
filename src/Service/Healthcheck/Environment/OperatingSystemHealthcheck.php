@@ -113,4 +113,12 @@ class OperatingSystemHealthcheck implements HealthcheckServiceInterface, Healthc
     {
         return PHP_INT_MAX !== 2147483647;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'operating-system';
+    }
 }

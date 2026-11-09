@@ -220,6 +220,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'validFullBaseUrl' => true,
                 'info' => ['fullBaseUrl' => Configure::read('App.fullBaseUrl')],
                 'fullBaseUrlReachable' => true,
+                'excludedHealthchecks' => false,
             ],
             'smtpSettings' => [
                 'isEnabled' => $this->isFeaturePluginEnabled('SmtpSettings'),

@@ -120,4 +120,12 @@ class SelfRegistrationPluginEnabledApplicationHealthcheck implements Healthcheck
     {
         return 'registrationClosed.isSelfRegistrationPluginEnabled';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'self-registration-plugin-enabled';
+    }
 }

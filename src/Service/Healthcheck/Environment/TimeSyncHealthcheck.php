@@ -191,4 +191,12 @@ class TimeSyncHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
 
         return HealthcheckServiceCollector::LEVEL_ERROR;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'time-sync';
+    }
 }

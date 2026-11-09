@@ -120,9 +120,9 @@ trait ResourcesFindersTrait
             }
         }
 
+        $this->filterResourcesByPermissions($query, $userId);
+
         // If contains the user permission, retrieve the highest permission the user has for each resource.
-        // In the meantime filter only the resources the user has access, the permissions table will be joined
-        // to the resources table with an INNER join, see the hasOne definition.
         if (isset($options['contain']['permission'])) {
             $query->contain('Permission', function (Query $q) use ($userId) {
                 $acoForeignKey = new IdentifierExpression('Resources.id');
@@ -132,9 +132,6 @@ trait ResourcesFindersTrait
 
                 return $q->where(['Permission.id' => $permissionIdSubQuery]);
             });
-        } else {
-            // If not already filtered by the contains on Permission, then filter only the resources the user has access.
-            $this->filterResourcesByPermissions($query, $userId);
         }
 
         // If contains Secrets.
@@ -286,35 +283,19 @@ trait ResourcesFindersTrait
     }
 
     /**
-     * Augment any Resources queries joined with Permissions to ensure the query returns only the
-     * resources a user has access.
-     *
-     * A user has access to a resource if one the following conditions is respected :
-     * - A permission is defined directly for the user and for a given resource.
-     * - A permission is defined for a group the user is member of and for a given resource.
-     *
-     * This function can be used on any queries joined with Permissions as following
-     * > $query->innerJoinWith('Permissions') or $query->matching('Permissions')
-     * > _filterQueryByPermissions($query, $userId);
+     * Filter a resources query to return only resources the user has access to.
      *
      * @param \Cake\ORM\Query\SelectQuery $query The query to filter.
      * @param string $userId The user to check the permissions for.
      * @return void
-     * @throws \InvalidArgumentException if the user id is not a uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the user id is not a valid UUID
      */
     public function filterResourcesByPermissions(SelectQuery $query, string $userId): void
     {
-        $subQueryOptions = [
-            'checkGroupsUsers' => true,
-        ];
-        $resourcePermissions = $this->Permissions
-            ->findAllByAro(PermissionsTable::RESOURCE_ACO, $userId, $subQueryOptions)
-            ->select(['Permissions.id'])
-            ->where(['Permissions.aco_foreign_key' => new IdentifierExpression('Resources.id')])
-            ->limit(1);
-
-        $query->innerJoin(['ResourcePermissions' => 'permissions'], [
-            'ResourcePermissions.id' => $resourcePermissions,
+        $accessibleResources = $this->Permissions
+            ->findAcoIdsAccessibleByUser(PermissionsTable::RESOURCE_ACO, $userId);
+        $query->innerJoin(['AccessibleResources' => $accessibleResources], [
+            'AccessibleResources.aco_foreign_key' => new IdentifierExpression('Resources.id'),
         ]);
     }
 

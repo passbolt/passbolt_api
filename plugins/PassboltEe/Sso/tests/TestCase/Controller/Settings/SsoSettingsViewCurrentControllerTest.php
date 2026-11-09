@@ -90,6 +90,13 @@ class SsoSettingsViewCurrentControllerTest extends SsoIntegrationTestCase
         $this->assertSame(SsoSettingsAzureDataForm::AZURE_LOGIN_HINT_ENABLED, $body->data->login_hint);
     }
 
+    public function testSsoSettingsViewCurrentController_Error_NotJson(): void
+    {
+        SsoSettingsFactory::make()->azure()->active()->persist();
+        $this->get('/sso/settings/current');
+        $this->assertResponseCode(404);
+    }
+
     public function testSsoSettingsViewCurrentController_SuccessNotLoggedIn(): void
     {
         SsoSettingsFactory::make()->azure()->active()->persist();

@@ -19,9 +19,13 @@ namespace App\Test\TestCase\Service\OpenPGP;
 use App\Error\Exception\CustomValidationException;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Model\GpgkeysModelTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PublicKeyValidationServiceTest extends AppTestCase
 {
+    use GpgkeysModelTrait;
+
     public function testPublicKeyValidationService_GetDefaultRules_Success()
     {
         $this->assertNotEmpty(PublicKeyValidationService::getDefaultRules());
@@ -298,5 +302,34 @@ mQINBFYuIFQBEACpYmcjzX1XC0LPJCMOY/LwxIB3lGfL5+X5kJSfLpWDYKa0XFXv
 
         $this->assertEquals($resultFresh, $resultTry1);
         $this->assertEquals($resultFresh, $resultTry2);
+    }
+
+    public static function invalidPublicKeysProvider(): array
+    {
+        return [
+            'modified secret key' => [self::getPrivateKeyModifiedAsPublicKey()],
+            'public key with secret subkey' => [self::getPublicKeyWithSecretSubkey()],
+            'two armor blocks' => [self::getTwoPublicKeyBlocks()],
+        ];
+    }
+
+    #[DataProvider('invalidPublicKeysProvider')]
+    public function testPublicKeyValidationService_ParseAndValidatePublicKey_Error_NotSinglePublicKey(string $armoredKey): void
+    {
+        $ruleSets = [
+            'default' => PublicKeyValidationService::getDefaultRules(),
+            'strict' => PublicKeyValidationService::getStrictRules(),
+        ];
+        foreach ($ruleSets as $ruleSetName => $rules) {
+            try {
+                PublicKeyValidationService::parseAndValidatePublicKey($armoredKey, $rules);
+                $this->fail('A CustomValidationException was expected with the ' . $ruleSetName . ' rules.');
+            } catch (CustomValidationException $e) {
+                $this->assertArrayHasKey(
+                    PublicKeyValidationService::IS_PARSABLE_ARMORED_KEY_RULE,
+                    $e->getErrors()['armored_key'],
+                );
+            }
+        }
     }
 }

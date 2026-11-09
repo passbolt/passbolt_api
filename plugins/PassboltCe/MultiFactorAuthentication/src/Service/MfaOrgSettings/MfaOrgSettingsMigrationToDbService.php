@@ -20,6 +20,7 @@ namespace Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
+use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 final class MfaOrgSettingsMigrationToDbService
@@ -56,6 +57,9 @@ final class MfaOrgSettingsMigrationToDbService
     protected function getMfaOrgSettings(UserAccessControl $uac): array
     {
         $mfaOrgSettings = MfaSettings::get($uac)->getOrganizationSettings()->getConfig();
+        // Keep legacy behavior (settings without the `duo.verifySubscriber` field in DB uses configuration)
+        unset($mfaOrgSettings[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_VERIFY_SUBSCRIBER]);
+
         $providers = $mfaOrgSettings['providers'] ?? [];
         unset($mfaOrgSettings['providers']);
 

@@ -42,7 +42,7 @@ class JwtHealthcheckCommandTest extends AppTestCase
     public function testHealthcheckCommand_Jwt_Plugin_Disabled()
     {
         $this->disableFeaturePlugin(JwtAuthenticationPlugin::class);
-        $this->exec('passbolt healthcheck --jwt');
+        $this->exec('passbolt healthcheck --filter jwt');
         $this->assertExitSuccess();
         $this->assertOutputContains('<warning>[WARN] The JWT Authentication plugin is disabled.</warning>');
         $this->assertOutputContains('<info>[HELP]</info> Set the environment variable PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED to true');
@@ -51,7 +51,7 @@ class JwtHealthcheckCommandTest extends AppTestCase
 
     public function testHealthcheckCommand_Jwt_Valid()
     {
-        $this->exec('passbolt healthcheck --jwt');
+        $this->exec('passbolt healthcheck --filter jwt');
         $this->assertExitSuccess();
         $this->assertOutputContains('<success>[PASS]</success> The JWT Authentication plugin is enabled.');
         if (is_writable(JwtAbstractService::JWT_CONFIG_DIR)) {

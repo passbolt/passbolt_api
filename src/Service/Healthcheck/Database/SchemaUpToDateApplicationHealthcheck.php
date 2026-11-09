@@ -145,4 +145,12 @@ class SchemaUpToDateApplicationHealthcheck implements HealthcheckServiceInterfac
     {
         return 'schema';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'schema-up-to-date';
+    }
 }

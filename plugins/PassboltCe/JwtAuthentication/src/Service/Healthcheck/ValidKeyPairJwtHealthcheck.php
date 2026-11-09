@@ -118,4 +118,12 @@ class ValidKeyPairJwtHealthcheck implements HealthcheckServiceInterface, Healthc
     {
         return 'keyPairValid';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'valid-key-pair-jwt';
+    }
 }

@@ -30,6 +30,7 @@ use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\HttpProxyMiddleware;
 use App\Middleware\PermissionsPolicyHeaderUnloadMiddleware;
+use App\Middleware\PreventHttpMethodOverrideMiddleware;
 use App\Middleware\SessionAuthPreventDeletedOrDisabledUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SetUserIdentityInRequestMiddleware;
@@ -48,6 +49,7 @@ use App\Service\Subscriptions\DefaultSubscriptionCheckInCommandService;
 use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use App\ServiceProvider\CommandServiceProvider;
 use App\ServiceProvider\HealthcheckServiceProvider;
+use App\ServiceProvider\RecordsStrategyServiceProvider;
 use App\ServiceProvider\ResourceServiceProvider;
 use App\ServiceProvider\SetupServiceProvider;
 use App\ServiceProvider\TestEmailServiceProvider;
@@ -113,6 +115,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
          * - Does not extend the session when requesting /auth/is-authenticated
          * - Catch any exceptions in the lower layers, and make an error page/response
          * - Handle plugin/theme assets like CakePHP normally does
+         * - Reject HTTP method override (_method / X-Http-Method-Override)
          * - Apply routing middleware
          * - Apply the authentication middleware
          * - Apply GPG Authenticator headers
@@ -127,6 +130,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(new AssertFullBaseUrlMiddleware())
             ->add(SslForceMiddleware::class)
             ->add(new AssetMiddleware(['cacheTime' => Configure::read('Asset.cacheTime')]))
+            ->add(new PreventHttpMethodOverrideMiddleware())
             ->add(new RoutingMiddleware($this))
             ->insertAfter(RoutingMiddleware::class, ApiVersionMiddleware::class)
             ->insertAfter(RoutingMiddleware::class, UuidParserMiddleware::class)
@@ -292,6 +296,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $container->addServiceProvider(new SetupServiceProvider());
         $container->addServiceProvider(new ResourceServiceProvider());
         $container->addServiceProvider(new UserServiceProvider());
+        $container->addServiceProvider(new RecordsStrategyServiceProvider());
         if (PHP_SAPI === 'cli') {
             $container->addServiceProvider(new CommandServiceProvider());
         }

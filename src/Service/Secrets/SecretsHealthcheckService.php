@@ -35,8 +35,6 @@ class SecretsHealthcheckService extends AbstractHealthcheckService
      */
     private SecretsTable $table;
 
-    private SecretRecipientValidationService $recipientValidationService;
-
     /**
      * Secret Healthcheck constructor.
      *
@@ -46,7 +44,6 @@ class SecretsHealthcheckService extends AbstractHealthcheckService
     {
         parent::__construct(self::NAME, self::CATEGORY);
         $this->table = $table ?? TableRegistry::getTableLocator()->get('Secrets');
-        $this->recipientValidationService = new SecretRecipientValidationService();
         $this->checks[self::CHECK_VALIDATES] = $this->healthcheckFactory(self::CHECK_VALIDATES, true);
         $this->checks[self::CHECK_ENCRYPTED_FOR_RECIPIENT] = $this->healthcheckFactory(
             self::CHECK_ENCRYPTED_FOR_RECIPIENT,
@@ -73,6 +70,9 @@ class SecretsHealthcheckService extends AbstractHealthcheckService
                 $this->isEncryptedForRecipient($secret);
             }
         }
+
+        // reset state to memory clean up
+        SecretRecipientValidationService::reset();
 
         return $this->getHealthchecks();
     }
@@ -104,7 +104,7 @@ class SecretsHealthcheckService extends AbstractHealthcheckService
     private function isEncryptedForRecipient(Secret $secret): void
     {
         $check = $this->checks[self::CHECK_ENCRYPTED_FOR_RECIPIENT];
-        $isEncryptedForUser = $this->recipientValidationService->isEncryptedForUser($secret->data, $secret->user_id);
+        $isEncryptedForUser = SecretRecipientValidationService::recipientKeyIdsMatchOnlyUserKey($secret->data, $secret->user_id); // phpcs:ignore
 
         if ($isEncryptedForUser) {
             $msg = __('Secret {0} is encrypted for its recipient.', $secret->id);

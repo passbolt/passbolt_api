@@ -22,9 +22,11 @@ use App\Error\Exception\ValidationException;
 use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\GroupsUser;
 use App\Model\Entity\Secret;
+use App\Model\Rule\IsSecretEncryptedForRecipientRule;
 use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\SecretsTable;
+use App\Service\Secrets\SecretRecipientValidationService;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
@@ -325,6 +327,15 @@ class GroupsUsersAddService
             $this->handleValidationErrors($groupUser);
         }
 
+        if (
+            SecretRecipientValidationService::isEnabled()
+            && !SecretRecipientValidationService::recipientKeyIdsMatchOnlyUserKey($secret->data, $secret->user_id)
+        ) {
+            $errors = ['data' => ['is_encrypted_for_recipient' => IsSecretEncryptedForRecipientRule::getMessage()]];
+            $groupUser->setError('secrets', [$secretRowRef => $errors]);
+            $this->handleValidationErrors($groupUser);
+        }
+
         return $secret;
     }
 
@@ -363,6 +374,7 @@ class GroupsUsersAddService
              * - resource_id.resource_exists: checked by logic when using the permissions table to retrieve the missing secrets (getMissingSecretsResourcesIds)
              * - resource_id.resource_is_not_soft_deleted: "
              * - resource_id.has_resource_access: "
+             * - data.is_encrypted_for_recipient: checked when building the secret entities (buildSecretEntity)
              */
             $this->secretsTable->save($secret, ['checkRules' => false]);
             $errors = $secret->getErrors();

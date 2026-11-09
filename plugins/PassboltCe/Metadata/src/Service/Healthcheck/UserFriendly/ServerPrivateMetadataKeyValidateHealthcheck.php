@@ -234,4 +234,12 @@ class ServerPrivateMetadataKeyValidateHealthcheck implements HealthcheckServiceI
     {
         return $this->isSkipped;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'server-private-metadata-key-validate';
+    }
 }

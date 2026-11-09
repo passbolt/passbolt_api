@@ -19,6 +19,7 @@ namespace App\Model\Table;
 
 use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
+use App\Model\Rule\IsSecretEncryptedForRecipientRule;
 use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
@@ -229,6 +230,10 @@ class SecretsTable extends Table implements TableCleanupProviderInterface
             'message' => __('Access denied.'),
             'userField' => 'user_id',
             'resourceField' => 'resource_id',
+        ]);
+        $rules->add(new IsSecretEncryptedForRecipientRule(), 'is_encrypted_for_recipient', [
+            'errorField' => 'data',
+            'message' => IsSecretEncryptedForRecipientRule::getMessage(),
         ]);
 
         return $rules;

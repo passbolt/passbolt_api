@@ -657,7 +657,6 @@
       <code><![CDATA[$authToken->token]]></code>
       <code><![CDATA[$authToken->token]]></code>
       <code><![CDATA[$authToken->token]]></code>
-      <code><![CDATA[$authToken->token]]></code>
     </InvalidPropertyFetch>
   </file>
   <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Controllers/Duo/DuoVerifyCallbackGetControllerTest.php">

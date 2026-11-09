@@ -157,4 +157,12 @@ class ServerMetadataKeyAccessInZeroKnowledgeModeHealthcheck implements Healthche
     {
         return $this->isSkipped;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'server-metadata-key-access-in-zero-knowledge-mode';
+    }
 }
