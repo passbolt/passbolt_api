@@ -264,7 +264,9 @@ return [
 
         // Which plugins are enabled
         'plugins' => [
-            'browserAuth' => ['enabled' => false],
+            'browserAuth' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_BROWSERAUTH_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            ],
             'rbacs' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_RBACS_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
