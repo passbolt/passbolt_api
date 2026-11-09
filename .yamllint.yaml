@@ -1,0 +1,21 @@
+---
+# Managed by Pulumi (gitlab-permissions-as-code). Do not edit by hand.
+# Rules are declared in IaC; hand edits are reverted on the next apply.
+
+extends: default
+
+rules:
+  line-length: disable
+
+# templates/ holds Helm's Go templates, which never parse as YAML. charts/,
+# helm_vars/ and .vib/ hold vendored upstream files. .github/ is GitHub's own
+# syntax, whose mandatory "on:" key the truthy rule would otherwise reject.
+ignore: |
+  .git/
+  .github/
+  templates/
+  charts/
+  helm_vars/
+  .vib/
+  vendor/
+  node_modules/
