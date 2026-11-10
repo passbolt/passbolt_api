@@ -54,6 +54,7 @@ class BrowserGrantService
         if (!BrowserGrantBinding::matches($data['challenge'] ?? '', $verifier)) {
             throw new ForbiddenException('Invalid browser authorization.');
         }
+        /** @var \App\Model\Entity\User|null $user */
         $user = $this->fetchTable('Users')->find()->contain(['Roles', 'Gpgkeys'])
             ->where(['Users.id' => $userId, 'Users.active' => true, 'Users.deleted' => false])->first();
         if (!$user || !hash_equals($data['fingerprint'] ?? '', strtoupper($user->gpgkey->fingerprint))) {
