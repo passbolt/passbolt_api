@@ -19,7 +19,7 @@
   "devDependencies": {
     "lockfile-lint": "^5.1.0",
     "openpgp": "^5.11.3",
-    "passbolt-styleguide": "^5.18.0"
+    "passbolt-styleguide": "^5.18.1"
   },
   "scripts": {
     "copy:dependencies": "node ./scripts/copy-dependencies.js",
