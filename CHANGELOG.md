@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.18.0-test.2] - 2026-11-11
+### Maintenance
+- PB-56100 Bumps the styleguide
+
 ## [5.18.0-test.1] - 2026-11-09
 ### Added
 - PB-54386 As an administrator I can see every healthcheck in the administration panel through the generic healthcheck API
