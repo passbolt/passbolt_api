@@ -81,8 +81,11 @@ final class MfaOrgSettingsMigrationInDbToDuoV4Service
         $settings = MfaOrgSettingsDuoBackwardCompatible::remapSetDuoSettings($settings);
         // Then the MfaOrgSettings can be created which will validate the Duo v4 configs.
         $mfaOrgSettings = new MfaOrgSettings($settings);
+        $config = $mfaOrgSettings->getConfig();
+        // Keep legacy behavior (settings without the `duo.verifySubscriber` field in DB uses configuration)
+        unset($config[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_VERIFY_SUBSCRIBER]);
 
-        return $mfaOrgSettings->getConfig();
+        return $config;
     }
 
     /**

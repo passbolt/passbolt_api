@@ -34,6 +34,13 @@ interface HealthcheckServiceInterface
     public function domain(): string;
 
     /**
+     * Unique key identifying this health check.
+     *
+     * @return string
+     */
+    public function getKey(): string;
+
+    /**
      * If health check is passed or not.
      *
      * @return bool

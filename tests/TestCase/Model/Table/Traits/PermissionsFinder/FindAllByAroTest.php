@@ -109,4 +109,28 @@ class FindAllByAroTest extends TestCase
         $this->assertContains($resourcesSharedWithDirectPermissions->permissions[0]->id, $result);
         $this->assertContains($resourcesSharedWithInheritedPermissions->permissions[0]->id, $result);
     }
+
+    public function testFindAllByAro_WithInherited_SeveralUsersCombinedInOneQuery()
+    {
+        /** @var PermissionsTable $table */
+        $table = TableRegistry::getTableLocator()->get('Permissions');
+        [$userA, $userB] = UserFactory::make(2)->persist();
+        $groupA = GroupFactory::make()->withGroupsUsersFor([$userA])->persist();
+        ResourceFactory::make()->withPermissionsFor([$groupA])->persist();
+        ResourceFactory::make()->withPermissionsFor([$userB])->persist();
+        $sharedResource = ResourceFactory::make()->withPermissionsFor([$groupA, $userB])->persist();
+
+        $resourceIdsOfB = $table
+            ->findAllByAro(PermissionsTable::RESOURCE_ACO, $userB->get('id'), ['checkGroupsUsers' => true])
+            ->select(['Permissions.aco_foreign_key']);
+        $resourceIdsOfBoth = $table
+            ->findAllByAro(PermissionsTable::RESOURCE_ACO, $userA->get('id'), ['checkGroupsUsers' => true])
+            ->select(['Permissions.aco_foreign_key'])
+            ->where(['Permissions.aco_foreign_key IN' => $resourceIdsOfB])
+            ->all()
+            ->extract('aco_foreign_key')
+            ->toList();
+
+        $this->assertSame([$sharedResource->get('id')], $resourceIdsOfBoth);
+    }
 }

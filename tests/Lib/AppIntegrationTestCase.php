@@ -20,6 +20,7 @@ use App\Authenticator\AbstractSessionIdentificationService;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\SslForceMiddleware;
+use App\Service\Secrets\SecretRecipientValidationService;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
@@ -105,6 +106,7 @@ abstract class AppIntegrationTestCase extends TestCase
     {
         OpenPGPBackendFactory::reset();
         UserAction::destroy();
+        SecretRecipientValidationService::reset();
         DigestTemplateRegistry::clearInstance();
         EmailNotificationSettings::flushCache();
         $this->clearPlugins();

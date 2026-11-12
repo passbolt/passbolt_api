@@ -71,9 +71,9 @@ trait FoldersFindersTrait
             $this->filterQueryByParentIds($query, $options['filter']['has-parent']);
         }
 
+        $query = $this->_filterQueryByPermissions($query, $userId);
+
         // If contains the user permission, retrieve the highest permission the user has for each folder.
-        // In the meantime filter only the folder the user has access, the permissions table will be joined
-        // to the folders table with an INNER join, see the hasOne definition.
         if (isset($options['contain']['permission'])) {
             $query->contain('Permission', function (SelectQuery $q) use ($userId) {
                 $acoForeignKey = new IdentifierExpression('Folders.id');
@@ -83,9 +83,6 @@ trait FoldersFindersTrait
 
                 return $q->where(['Permission.id' => $permissionIdSubQuery]);
             });
-        } else {
-            // Filter on folders the user has access
-            $query = $this->_filterQueryByPermissions($query, $userId);
         }
 
         // If contains children_folders.
@@ -200,17 +197,10 @@ trait FoldersFindersTrait
      */
     private function _filterQueryByPermissions(SelectQuery $query, string $userId): SelectQuery
     {
-        $subQueryOptions = [
-            'checkGroupsUsers' => true,
-        ];
-        $folderPermissions = $this->Permissions
-            ->findAllByAro(PermissionsTable::FOLDER_ACO, $userId, $subQueryOptions)
-            ->select(['Permissions.id'])
-            ->where(['Permissions.aco_foreign_key' => new IdentifierExpression('Folders.id')])
-            ->limit(1);
+        $accessibleFolders = $this->Permissions->findAcoIdsAccessibleByUser(PermissionsTable::FOLDER_ACO, $userId);
 
-        return $query->innerJoin(['FolderPermissions' => 'permissions'], [
-            'FolderPermissions.id' => $folderPermissions,
+        return $query->innerJoin(['AccessibleFolders' => $accessibleFolders], [
+            'AccessibleFolders.aco_foreign_key' => new IdentifierExpression('Folders.id'),
         ]);
     }
 

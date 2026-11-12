@@ -212,6 +212,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      */
     public function testTotpSetupPostController_SuccessSelfGeneratedUriSuccess_JWT_Auth()
     {
+        $this->disableErrorHandlerMiddleware();
         $user = UserFactory::make()->user()->persist();
         $accessToken = $this->createJwtTokenAndSetInHeader($user->id);
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);

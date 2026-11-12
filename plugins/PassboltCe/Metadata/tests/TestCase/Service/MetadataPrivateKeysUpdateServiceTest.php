@@ -45,8 +45,9 @@ class MetadataPrivateKeysUpdateServiceTest extends AppTestCaseV5
         $key = MetadataKeyFactory::make()->withUserPrivateKey($user->gpgkey)->withServerPrivateKey()->persist();
 
         $gpg = OpenPGPBackendFactory::get();
+        $adaPublicKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
         $adaPrivateKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key');
-        $gpg->setEncryptKey($adaPrivateKey);
+        $gpg->setEncryptKey($adaPublicKey);
         $gpg->setSignKey($adaPrivateKey, '');
         $msg = $gpg->encryptSign(json_encode($this->getValidPrivateKeyCleartext()));
 
@@ -112,8 +113,9 @@ class MetadataPrivateKeysUpdateServiceTest extends AppTestCaseV5
         $key = MetadataKeyFactory::make()->withUserPrivateKey($user->gpgkey)->withServerPrivateKey()->persist();
 
         $gpg = OpenPGPBackendFactory::get();
+        $adaPublicKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
         $adaPrivateKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key');
-        $gpg->setEncryptKey($adaPrivateKey);
+        $gpg->setEncryptKey($adaPublicKey);
         $gpg->setSignKey($adaPrivateKey, '');
         $msg = $gpg->encryptSign(json_encode($this->getValidPrivateKeyCleartext()));
 

@@ -21,7 +21,7 @@ use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 
-class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class MbstringEnvironmentHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -104,5 +104,13 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
     public function getLegacyArrayKey(): string
     {
         return 'mbstring';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'mbstring-environment';
     }
 }

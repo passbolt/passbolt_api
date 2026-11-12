@@ -114,4 +114,12 @@ class DirectoryNotWritableJwtHealthcheck implements HealthcheckServiceInterface,
     {
         return 'jwtWritable';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'directory-not-writable-jwt';
+    }
 }

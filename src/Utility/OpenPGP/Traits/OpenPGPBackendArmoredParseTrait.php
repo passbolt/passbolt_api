@@ -16,8 +16,10 @@ declare(strict_types=1);
  */
 namespace App\Utility\OpenPGP\Traits;
 
+use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
 use OpenPGP;
+use OpenPGP_Message;
 use OpenPGP_PublicKeyPacket;
 use OpenPGP_SecretKeyPacket;
 
@@ -105,7 +107,61 @@ trait OpenPGPBackendArmoredParseTrait
             return false;
         }
 
+        $isStrictParsing = Configure::read('passbolt.gpg.security.strictPublicKeyParsing');
+        if (!$isStrictParsing) {
+            return true;
+        }
+
+        // --- Strict checks on public keys --- //
+
+        // Only the first armored block is parsed, but gnupg would import all of them.
+        if (substr_count($armoredKey, '-----BEGIN PGP') > 1) {
+            return false;
+        }
+
+        if ($this->containsSecretKeyMaterial($armoredKey)) {
+            return false;
+        }
+
         return true;
+    }
+
+    /**
+     * Check if an ASCII armored key block contains a secret key or a secret subkey packet.
+     *
+     * @param string $armoredKey ASCII armored key data
+     * @return bool true if a secret packet is found, false otherwise
+     */
+    public function containsSecretKeyMaterial(string $armoredKey): bool
+    {
+        try {
+            $marker = $this->getGpgMarker($armoredKey);
+        } catch (CakeException) {
+            return false;
+        }
+
+        if (!is_string($marker)) {
+            return false;
+        }
+
+        $keyUnarmored = $this->unarmor($armoredKey, $marker);
+        if ($keyUnarmored === false) {
+            return false;
+        }
+
+        $message = @OpenPGP_Message::parse($keyUnarmored); // phpcs:ignore
+        if (!$message instanceof OpenPGP_Message) {
+            return false;
+        }
+
+        // OpenPGP_SecretSubkeyPacket extends OpenPGP_SecretKeyPacket, so subkeys are caught too.
+        foreach ($message->packets as $packet) {
+            if ($packet instanceof OpenPGP_SecretKeyPacket) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

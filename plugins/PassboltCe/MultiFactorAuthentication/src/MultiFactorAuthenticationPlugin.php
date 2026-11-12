@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication;
 
 use App\Service\Command\ProcessUserService;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\BasePlugin;
@@ -38,6 +39,7 @@ use Passbolt\MultiFactorAuthentication\Middleware\MfaWebauthnDelegatedAuthDetect
 use Passbolt\MultiFactorAuthentication\Middleware\MfaWebauthnDelegatedReferrerPolicyMiddleware;
 use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
 use Passbolt\MultiFactorAuthentication\Notification\NotificationSettings\MfaNotificationSettingsDefinition;
+use Passbolt\MultiFactorAuthentication\Service\Healthcheck\DuoVerifySubscriberMfaHealthcheck;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultMfaWebauthnPolicyService;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultRememberAMonthSettingService;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\MfaWebauthnPolicyInterface;
@@ -170,5 +172,10 @@ class MultiFactorAuthenticationPlugin extends BasePlugin
             ->addArguments([
                 ProcessUserService::class,
             ]);
+
+        $container->add(DuoVerifySubscriberMfaHealthcheck::class);
+        $container
+            ->extend(HealthcheckServiceCollector::class)
+            ->addMethodCall('addService', [DuoVerifySubscriberMfaHealthcheck::class]);
     }
 }

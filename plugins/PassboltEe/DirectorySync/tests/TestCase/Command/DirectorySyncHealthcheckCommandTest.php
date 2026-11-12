@@ -22,6 +22,7 @@ use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
 use Passbolt\DirectorySync\DirectorySyncPlugin;
 use Passbolt\DirectorySync\Middleware\DirectorySyncEndpointsSecurityMiddleware;
+use Passbolt\Ee\Service\Healthcheck\EeHealthcheckServiceCollector;
 
 class DirectorySyncHealthcheckCommandTest extends AppTestCase
 {
@@ -46,13 +47,13 @@ class DirectorySyncHealthcheckCommandTest extends AppTestCase
         $this->exec('passbolt healthcheck -h');
 
         $this->assertExitSuccess();
-        $this->assertOutputContains('--directorySync');
-        $this->assertOutputContains('Run Directory Sync tests only');
+        $this->assertOutputContains('--filter');
+        $this->assertOutputContains(EeHealthcheckServiceCollector::DOMAIN_DIRECTORY_SYNC);
     }
 
     public function testDirectorySyncHealthcheckCommand_DefaultEndpointsEnabled(): void
     {
-        $this->exec('passbolt healthcheck --directorySync');
+        $this->exec('passbolt healthcheck --filter directory-sync');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('The endpoints for updating the users directory configurations are enabled');
@@ -65,7 +66,7 @@ class DirectorySyncHealthcheckCommandTest extends AppTestCase
     {
         Configure::write(DirectorySyncEndpointsSecurityMiddleware::SECURITY_CONFIG_KEY, true);
 
-        $this->exec('passbolt healthcheck --directorySync');
+        $this->exec('passbolt healthcheck --filter directory-sync');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('The endpoints for updating the users directory configurations are disabled');

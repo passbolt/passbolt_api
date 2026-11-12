@@ -40,6 +40,8 @@ class SsoSettingsViewCurrentController extends AppController
      */
     public function viewCurrent(): void
     {
+        $this->assertJson();
+
         switch ($this->User->role()) {
             case Role::ADMIN:
                 $findIndexOptions = (new FindIndexOptions())->allowContains(['data']);

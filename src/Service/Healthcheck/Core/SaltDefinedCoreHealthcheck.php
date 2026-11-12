@@ -12,20 +12,18 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.10.0
+ * @since         4.7.0
  */
 
-namespace App\Service\Healthcheck\Environment;
+namespace App\Service\Healthcheck\Core;
 
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use App\Utility\CommandRunner;
+use Cake\Core\Configure;
 
-class DistributionHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class SaltDefinedCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
-    private const COMMAND = ['uname', '-a'];
-
     /**
      * Status of this health check if it is passed or failed.
      *
@@ -33,15 +31,12 @@ class DistributionHealthcheck implements HealthcheckServiceInterface, Healthchec
      */
     private bool $status = false;
 
-    private ?string $result = null;
-
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->result = $this->detectDistribution();
-        $this->status = $this->result !== null;
+        $this->status = (Configure::read('Security.salt') !== '__SALT__');
 
         return $this;
     }
@@ -51,7 +46,7 @@ class DistributionHealthcheck implements HealthcheckServiceInterface, Healthchec
      */
     public function domain(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
+        return HealthcheckServiceCollector::DOMAIN_CORE;
     }
 
     /**
@@ -67,7 +62,7 @@ class DistributionHealthcheck implements HealthcheckServiceInterface, Healthchec
      */
     public function level(): string
     {
-        return $this->status ? HealthcheckServiceCollector::LEVEL_NOTICE : HealthcheckServiceCollector::LEVEL_WARNING;
+        return HealthcheckServiceCollector::LEVEL_ERROR;
     }
 
     /**
@@ -75,7 +70,7 @@ class DistributionHealthcheck implements HealthcheckServiceInterface, Healthchec
      */
     public function getSuccessMessage(): string
     {
-        return (string)$this->result;
+        return __('Unique value set for security.salt');
     }
 
     /**
@@ -83,7 +78,7 @@ class DistributionHealthcheck implements HealthcheckServiceInterface, Healthchec
      */
     public function getFailureMessage(): string
     {
-        return __('Cannot detect your system distribution details.');
+        return __('Default value found for security.salt');
     }
 
     /**
@@ -91,7 +86,7 @@ class DistributionHealthcheck implements HealthcheckServiceInterface, Healthchec
      */
     public function getHelpMessage(): array|string|null
     {
-        return [__('See `{0}`.', implode(' ', self::COMMAND))];
+        return __('Edit the security.salt in {0}', CONFIG . 'app.php');
     }
 
     /**
@@ -101,7 +96,7 @@ class DistributionHealthcheck implements HealthcheckServiceInterface, Healthchec
      */
     public function cliOption(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
+        return HealthcheckServiceCollector::DOMAIN_CORE;
     }
 
     /**
@@ -109,19 +104,14 @@ class DistributionHealthcheck implements HealthcheckServiceInterface, Healthchec
      */
     public function getLegacyArrayKey(): string
     {
-        return 'distribution';
+        return 'salt';
     }
 
     /**
-     * @return string|null
+     * @inheritDoc
      */
-    protected function detectDistribution(): ?string
+    public function getKey(): string
     {
-        $process = CommandRunner::run(self::COMMAND);
-        if (!$process || !$process->isSuccessful()) {
-            return null;
-        }
-
-        return trim($process->getOutput()) ?: null;
+        return 'salt-defined';
     }
 }

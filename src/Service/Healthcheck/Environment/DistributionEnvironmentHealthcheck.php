@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.7.0
+ * @since         4.10.0
  */
 
 namespace App\Service\Healthcheck\Environment;
@@ -20,10 +20,12 @@ namespace App\Service\Healthcheck\Environment;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use Cake\Validation\Validation;
+use App\Utility\CommandRunner;
 
-class PcreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class DistributionEnvironmentHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
+    private const COMMAND = ['uname', '-a'];
+
     /**
      * Status of this health check if it is passed or failed.
      *
@@ -31,12 +33,15 @@ class PcreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     private bool $status = false;
 
+    private ?string $result = null;
+
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = Validation::alphaNumeric('passbolt');
+        $this->result = $this->detectDistribution();
+        $this->status = $this->result !== null;
 
         return $this;
     }
@@ -62,7 +67,7 @@ class PcreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function level(): string
     {
-        return HealthcheckServiceCollector::LEVEL_ERROR;
+        return $this->status ? HealthcheckServiceCollector::LEVEL_NOTICE : HealthcheckServiceCollector::LEVEL_WARNING;
     }
 
     /**
@@ -70,7 +75,7 @@ class PcreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function getSuccessMessage(): string
     {
-        return __('PCRE compiled with unicode support.');
+        return (string)$this->result;
     }
 
     /**
@@ -78,15 +83,15 @@ class PcreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function getFailureMessage(): string
     {
-        return __('PCRE has not been compiled with Unicode support.');
+        return __('Cannot detect your system distribution details.');
     }
 
     /**
      * @inheritDoc
      */
-    public function getHelpMessage(): ?string
+    public function getHelpMessage(): array|string|null
     {
-        return __('Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring.');
+        return [__('See `{0}`.', implode(' ', self::COMMAND))];
     }
 
     /**
@@ -104,6 +109,27 @@ class PcreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function getLegacyArrayKey(): string
     {
-        return 'pcre';
+        return 'distribution';
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function detectDistribution(): ?string
+    {
+        $process = CommandRunner::run(self::COMMAND);
+        if (!$process || !$process->isSuccessful()) {
+            return null;
+        }
+
+        return trim($process->getOutput()) ?: null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'distribution-environment';
     }
 }

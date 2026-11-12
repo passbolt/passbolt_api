@@ -31,6 +31,7 @@ use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Duo\DuoSubscriberMismatchException;
 use Passbolt\MultiFactorAuthentication\Form\Duo\DuoCallbackForm;
 use Passbolt\MultiFactorAuthentication\Model\Dto\MfaDuoCallbackDto;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoEnableService;
@@ -42,6 +43,8 @@ use Throwable;
 class DuoSetupCallbackGetController extends MfaSetupController
 {
     public const DUO_SETUP_REDIRECT_PATH = '/app/settings/mfa/duo';
+    public const ERROR_CODE_SUBSCRIBER_MISMATCH = 'duoSubscriberMismatch';
+    public const ERROR_CODE_SETUP_FAILED = 'duoSetupFailed';
 
     /**
      * Get the full Duo setup redirect URL.
@@ -51,15 +54,6 @@ class DuoSetupCallbackGetController extends MfaSetupController
     public static function getFormUrl(): string
     {
         return Router::url('/mfa/setup/duo/prompt?redirect=' . self::DUO_SETUP_REDIRECT_PATH, true);
-    }
-
-    /**
-     * @return void
-     */
-    public function initialize(): void
-    {
-        parent::initialize();
-        $this->loadComponent('Flash');
     }
 
     /**
@@ -105,8 +99,8 @@ class DuoSetupCallbackGetController extends MfaSetupController
     }
 
     /**
-     * Handles the case when an exception is thrown by logging the error, setting a flash message with the
-     * error descrition and redirecting to the internal redirect path if given.
+     * Handles the case when an exception is thrown by logging the error and redirecting to the internal
+     * redirect path if given, with an error code in the query string.
      *
      * @param \Throwable $e The throwable/exception thrown
      * @param string $token The authentication token's token (id)
@@ -140,9 +134,12 @@ class DuoSetupCallbackGetController extends MfaSetupController
             return null;
         }
 
-        $this->Flash->error($e->getMessage());
+        $errorCode = self::ERROR_CODE_SETUP_FAILED;
+        if ($e instanceof DuoSubscriberMismatchException) {
+            $errorCode = self::ERROR_CODE_SUBSCRIBER_MISMATCH;
+        }
 
-        return $this->redirect($redirect);
+        return $this->redirect(self::DUO_SETUP_REDIRECT_PATH . '?error=' . $errorCode);
     }
 
     /**

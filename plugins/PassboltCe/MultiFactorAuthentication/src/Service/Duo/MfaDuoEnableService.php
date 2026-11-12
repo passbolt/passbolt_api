@@ -24,6 +24,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
 use InvalidArgumentException;
+use Passbolt\MultiFactorAuthentication\Error\Exception\Duo\DuoSubscriberMismatchException;
 use Passbolt\MultiFactorAuthentication\Model\Dto\MfaDuoCallbackDto;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsDuoService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
@@ -72,6 +73,7 @@ class MfaDuoEnableService
      * @throws \Cake\Http\Exception\UnauthorizedException If no active Duo callback authentication can be found.
      * @throws \Cake\Http\Exception\UnauthorizedException If the duo state cannot be verified.
      * @throws \Cake\Http\Exception\UnauthorizedException If the Duo code cannot be verified.
+     * @throws \Passbolt\MultiFactorAuthentication\Error\Exception\Duo\DuoSubscriberMismatchException If the Duo subscriber does not match the user.
      * @throws \Cake\Http\Exception\InternalErrorException if the Duo provider cannot be enabled for the user.
      */
     public function enable(
@@ -93,6 +95,8 @@ class MfaDuoEnableService
         try {
             (new MfaDuoVerifyDuoCodeService($authenticationTokenType, $this->duoClient))
                 ->verify($uac, $duoCallbackDto->duoCode);
+        } catch (DuoSubscriberMismatchException $e) {
+            throw $e;
         } catch (Throwable $th) {
             throw new BadRequestException(__('Unable to verify Duo authentication.'), null, $th);
         }

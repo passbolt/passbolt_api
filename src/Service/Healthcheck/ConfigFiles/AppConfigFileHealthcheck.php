@@ -105,4 +105,12 @@ class AppConfigFileHealthcheck implements HealthcheckServiceInterface, Healthche
     {
         return 'app';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'app-config-file';
+    }
 }

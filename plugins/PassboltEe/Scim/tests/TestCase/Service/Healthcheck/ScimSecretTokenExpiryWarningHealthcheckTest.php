@@ -62,6 +62,7 @@ class ScimSecretTokenExpiryWarningHealthcheckTest extends AppTestCase
         $this->assertSame(EeHealthcheckServiceCollector::DOMAIN_SCIM, $result->cliOption());
         $this->assertSame(HealthcheckServiceCollector::LEVEL_WARNING, $result->level());
         $this->assertSame('isScimTokenNotNearExpiry', $result->getLegacyArrayKey());
+        $this->assertSame('scim-secret-token-expiry-warning', $result->getKey());
         $this->assertSame(
             __('The SCIM secret token is not about to expire.'),
             $result->getSuccessMessage(),

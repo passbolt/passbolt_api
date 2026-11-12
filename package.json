@@ -17,24 +17,15 @@
   "license": "AGPL-3.0",
   "homepage": "https://www.passbolt.com",
   "devDependencies": {
-    "@babel/runtime": "^7.27.0",
-    "@babel/runtime-corejs3": "^7.26.10",
-    "lockfile-lint": "^5.0.1",
+    "lockfile-lint": "^5.1.0",
     "openpgp": "^5.11.3",
-    "passbolt-styleguide": "^5.17.2"
+    "passbolt-styleguide": "^5.18.1"
   },
   "scripts": {
     "copy:dependencies": "node ./scripts/copy-dependencies.js",
     "copy:styleguide": "node ./scripts/copy-styleguide.js",
     "copy:locales": "node ./scripts/copy-locales.js",
     "lint": "npm run lint:lockfile",
-    "lint:lockfile": "lockfile-lint --path package-lock.json --allowed-hosts npm github.com --allowed-schemes \"https:\" \"git+ssh:\" --empty-hostname false"
-  },
-  "dependencies": {
-    "react-router-dom": "^5.3.4"
-  },
-  "overrides": {
-    "uuid": "^14.0.0",
-    "js-yaml": "^4.3.2"
+    "lint:lockfile": "lockfile-lint --path package-lock.json --allowed-hosts npm github.com --allowed-schemes \"https:\" \"git+ssh:\" --empty-hostname false --validate-integrity-strict --validate-package-names"
   }
 }

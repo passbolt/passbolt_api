@@ -20,6 +20,7 @@ use App\Model\Table\RolesTable;
 use App\Model\Validation\EmailValidationRule;
 use App\Service\Healthcheck\Environment\NextMinPhpVersionHealthcheck;
 use App\Service\Healthcheck\Environment\PhpVersionHealthcheck;
+use App\Service\Healthcheck\HealthcheckApiSerializerService;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppTestCase;
@@ -90,8 +91,9 @@ class HealthcheckCommandTest extends AppTestCase
             HealthcheckServiceCollector::DOMAIN_SMTP_SETTINGS,
             HealthcheckServiceCollector::DOMAIN_SSL,
         ];
+        $this->assertOutputContains('--filter');
         foreach ($cliDomains as $cliDomain) {
-            $this->assertOutputContains("--$cliDomain");
+            $this->assertOutputContains($cliDomain);
         }
         // Additional option for database domain
         $this->assertOutputContains('--datasource');
@@ -129,9 +131,32 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('error(s) found. Hang in there!');
     }
 
+    public function testHealthcheckCommand_Filter_SeveralDomains()
+    {
+        $this->exec(sprintf(
+            'passbolt healthcheck -d test --filter %s --filter %s',
+            HealthcheckServiceCollector::DOMAIN_CONFIG_FILES,
+            HealthcheckServiceCollector::DOMAIN_SMTP_SETTINGS,
+        ));
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('The application config file is present');
+        $this->assertOutputContains('SMTP settings');
+        // A domain that was not asked for does not run.
+        $this->assertOutputNotContains('PHP version');
+    }
+
+    public function testHealthcheckCommand_Filter_UnknownDomain()
+    {
+        $this->exec('passbolt healthcheck -d test --filter config_files');
+
+        $this->assertExitError();
+        $this->assertErrorContains('is not a valid value for `--filter`');
+    }
+
     public function testHealthcheckCommand_Environment_Happy_Path()
     {
-        $this->exec('passbolt healthcheck -d test --environment');
+        $this->exec('passbolt healthcheck -d test --filter environment');
         $this->assertExitSuccess();
         $this->assertOutputContains('<success>[PASS]</success> The logs directory ' . LOGS . ' and its content are writable.');
     }
@@ -140,7 +165,7 @@ class HealthcheckCommandTest extends AppTestCase
     {
         Configure::write(PhpVersionHealthcheck::PHP_MIN_VERSION_CONFIG, '40');
         Configure::write(NextMinPhpVersionHealthcheck::PHP_NEXT_MIN_VERSION_CONFIG, '50');
-        $this->exec('passbolt healthcheck -d test --environment');
+        $this->exec('passbolt healthcheck -d test --filter environment');
 
         $this->assertExitSuccess();
 
@@ -166,7 +191,7 @@ class HealthcheckCommandTest extends AppTestCase
         // passes — its check fails when no row exists (defaulting to CE).
         EditionOrganizationSettingFactory::make()->pro()->persist();
 
-        $this->exec('passbolt healthcheck -d test --application');
+        $this->exec('passbolt healthcheck -d test --filter application');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('Using latest passbolt version');
@@ -197,7 +222,7 @@ class HealthcheckCommandTest extends AppTestCase
         Configure::write('passbolt.js.build', 'test');
         Configure::write('passbolt.email.send.comment.add', false);
 
-        $this->exec('passbolt healthcheck -d test --application');
+        $this->exec('passbolt healthcheck -d test --filter application');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('This installation is not up to date. Currently using 1.0.0 and it should be 9.9.9.');
@@ -224,7 +249,7 @@ class HealthcheckCommandTest extends AppTestCase
         ConnectionManager::setConfig('invalid', ['url' => 'mysql://foo:bar@localhost/invalid_database']);
         ConnectionManager::alias('invalid', 'default');
 
-        $this->exec('passbolt healthcheck -d default --database');
+        $this->exec('passbolt healthcheck -d default --filter database');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('<error>[FAIL] The application is not able to connect to the database.');
@@ -244,7 +269,7 @@ class HealthcheckCommandTest extends AppTestCase
     {
         RoleFactory::make(RolesTable::DEFAULT_ROLE_NAMES)->persist();
 
-        $this->exec('passbolt healthcheck --database');
+        $this->exec('passbolt healthcheck --filter database');
         $this->assertExitSuccess();
 
         $this->assertOutputContains('<success>[PASS]</success> The application is able to connect to the database');
@@ -261,7 +286,7 @@ class HealthcheckCommandTest extends AppTestCase
             $this->newClientResponse(200, [], json_encode(['body' => 'OK'])),
         );
 
-        $this->exec('passbolt healthcheck --core');
+        $this->exec('passbolt healthcheck --filter core');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('<success>[PASS]</success> Cache is working.');
@@ -281,7 +306,7 @@ class HealthcheckCommandTest extends AppTestCase
             $this->newClientResponse(404),
         );
 
-        $this->exec('passbolt healthcheck --core');
+        $this->exec('passbolt healthcheck --filter core');
         $this->assertExitSuccess();
         $this->assertOutputContains('<error>[FAIL] Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl</error>');
         $this->assertOutputContains('<info>[HELP]</info> Check that the domain name is correct in ' . CONFIG . 'passbolt.php');
@@ -294,7 +319,7 @@ class HealthcheckCommandTest extends AppTestCase
         $uid = posix_getuid();
         $user = posix_getpwuid($uid);
         $gnupgHome = getenv('GNUPGHOME') ?: $user['dir'] . '/.gnupg';
-        $this->exec('passbolt healthcheck --gpg');
+        $this->exec('passbolt healthcheck --filter gpg');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('<success>[PASS]</success> PHP GPG Module is installed and loaded.');
@@ -320,15 +345,55 @@ class HealthcheckCommandTest extends AppTestCase
     public function testHealthcheckCommand_Gpg_Failing_Path()
     {
         Configure::write('passbolt.gpg.serverKey.fingerprint', 'foo');
-        $this->exec('passbolt healthcheck --gpg');
+        $this->exec('passbolt healthcheck --filter gpg');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('<error>[FAIL] The server key fingerprint doesn\'t match the one defined in ');
     }
 
+    public function testHealthcheckCommand_Core_ExcludedHealthchecks_Happy_Path()
+    {
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, 'php-version');
+        Configure::write(
+            HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS,
+            HealthcheckServiceCollector::DOMAIN_JWT,
+        );
+
+        $this->exec('passbolt healthcheck -d test --filter core');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('<success>[PASS]</success> The healthcheck exclusion configuration is valid.');
+    }
+
+    public function testHealthcheckCommand_Core_ExcludedHealthchecks_Unhappy_Path()
+    {
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, 'php-versions');
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, ['environments']);
+
+        $this->exec('passbolt healthcheck -d test --filter core');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains(
+            '[WARN] The healthcheck exclusion configuration contains values matching no healthcheck on this instance.',
+        );
+        $this->assertOutputContains('<info>[HELP]</info> The value must be a valid key. php-versions not valid.');
+        $this->assertOutputContains('<info>[HELP]</info> The value must be a valid domain. environments not valid.');
+    }
+
+    public function testHealthcheckCommand_Core_ExcludedHealthchecks_NoExclusionConfigured()
+    {
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_KEYS, null);
+        Configure::write(HealthcheckApiSerializerService::CONFIG_EXCLUDED_DOMAINS, null);
+
+        $this->exec('passbolt healthcheck -d test --filter core');
+
+        $this->assertExitSuccess();
+        $this->assertOutputNotContains('The healthcheck exclusion configuration');
+    }
+
     public function testHealthcheckCommand_PosixMode_HappyPath()
     {
-        $this->exec('passbolt healthcheck -d test --environment --posix');
+        $this->exec('passbolt healthcheck -d test --filter environment --posix');
 
         $this->assertExitSuccess();
 
@@ -342,7 +407,7 @@ class HealthcheckCommandTest extends AppTestCase
          */
         Configure::write(PhpVersionHealthcheck::PHP_MIN_VERSION_CONFIG, '40');
         Configure::write(NextMinPhpVersionHealthcheck::PHP_NEXT_MIN_VERSION_CONFIG, '50');
-        $this->exec('passbolt healthcheck -d test --environment --posix');
+        $this->exec('passbolt healthcheck -d test --filter environment --posix');
 
         $this->assertExitError();
 

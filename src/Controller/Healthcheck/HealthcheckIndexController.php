@@ -24,6 +24,7 @@ use App\Service\Healthcheck\Database\ConnectDatabaseHealthcheck;
 use App\Service\Healthcheck\Database\TablesCountDatabaseHealthcheck;
 use App\Service\Healthcheck\Environment\PhpVersionHealthcheck;
 use App\Service\Healthcheck\Gpg\FingerprintMatchGpgHealthcheck;
+use App\Service\Healthcheck\HealthcheckApiSerializerService;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\Ssl\HostValidSslHealthcheck;
 use App\Service\Healthcheck\Ssl\IsRequestHttpsSslHealthcheck;
@@ -43,13 +44,21 @@ class HealthcheckIndexController extends AppController
         'passbolt.plugins.healthcheck.security.indexEndpointEnabled';
 
     /**
+     * @deprecated As of v5.17.0, goes away with the legacy format.
+     * @var array<string, string>
+     */
+    private const LEGACY_DOMAIN_KEYS = [
+        HealthcheckServiceCollector::DOMAIN_CONFIG_FILES => 'configFile',
+        HealthcheckServiceCollector::DOMAIN_SMTP_SETTINGS => 'smtpSettings',
+        'directory-sync' => 'directorySync',
+    ];
+
+    /**
      * @inheritDoc
      */
     public function beforeFilter(EventInterface $event)
     {
         $this->throwErrorIsEndpointIsDisabled();
-
-        $this->Authentication->allowUnauthenticated(['index']);
 
         parent::beforeFilter($event);
     }
@@ -70,6 +79,46 @@ class HealthcheckIndexController extends AppController
     ) {
         $this->User->assertIsAdmin();
 
+        if ($this->getRequest()->getQuery('api-version') === 'v5') {
+            $this->renderGeneric($healthcheckServiceCollector, $isRequestHttpsSslHealthcheck);
+        } else {
+            $this->renderLegacy($healthcheckServiceCollector, $isRequestHttpsSslHealthcheck);
+        }
+    }
+
+    /**
+     * Returns the full self-description of every registered healthcheck, grouped by
+     * domain, so that the administration panel can render any check generically.
+     * Served only when requesting healthcheck.json?api-version=v5
+     *
+     * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector Health check service collector.
+     * @param \App\Service\Healthcheck\Ssl\IsRequestHttpsSslHealthcheck $isRequestHttpsSslHealthcheck SSL enabled health check.
+     * @return void
+     */
+    private function renderGeneric(
+        HealthcheckServiceCollector $healthcheckServiceCollector,
+        IsRequestHttpsSslHealthcheck $isRequestHttpsSslHealthcheck,
+    ): void {
+        $healthcheckServiceCollector->addService($isRequestHttpsSslHealthcheck);
+
+        $serializer = new HealthcheckApiSerializerService($healthcheckServiceCollector);
+
+        $this->success(__('The operation was successful.'), $serializer->serialize());
+    }
+
+    /**
+     * Renders the legacy response format.
+     * Extracted from index() unchanged.
+     *
+     * @deprecated As of v5.17.0, kept for backward compatibility.
+     * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector Health check service collector.
+     * @param \App\Service\Healthcheck\Ssl\IsRequestHttpsSslHealthcheck $isRequestHttpsSslHealthcheck SSL enabled health check.
+     * @return void
+     */
+    private function renderLegacy(
+        HealthcheckServiceCollector $healthcheckServiceCollector,
+        IsRequestHttpsSslHealthcheck $isRequestHttpsSslHealthcheck,
+    ): void {
         $ignoreDomains = $this->getDomainsIgnore();
         $healthcheckServices = [];
         foreach ($healthcheckServiceCollector->getServices() as $healthcheckService) {
@@ -142,9 +191,7 @@ class HealthcheckIndexController extends AppController
 
         /** @var array<\App\Service\Healthcheck\HealthcheckServiceInterface> $checkResults */
         foreach ($resultsGroupByDomain as $domainKey => $checkResults) {
-            if ($domainKey === HealthcheckServiceCollector::DOMAIN_CONFIG_FILES) {
-                $domainKey = 'configFile';
-            }
+            $domainKey = self::LEGACY_DOMAIN_KEYS[$domainKey] ?? $domainKey;
             $result[$domainKey] = [];
             foreach ($checkResults as $checkResult) {
                 $value = $checkResult->isPassed();

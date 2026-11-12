@@ -16,8 +16,67 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib\Model;
 
+use RuntimeException;
+
 trait GpgkeysModelTrait
 {
+    /**
+     * Read an armored key from the tests/Fixture/Gpgkeys folder.
+     *
+     * @param string $fileName file name, e.g. ada_public.key
+     * @return string
+     */
+    public static function readGpgkeyFixture(string $fileName): string
+    {
+        return self::readFixtureFile('Gpgkeys' . DS . $fileName);
+    }
+
+    /**
+     * Returns the private key with its armor header renamed to PUBLIC KEY BLOCK.
+     *
+     * @return string
+     */
+    public static function getPrivateKeyModifiedAsPublicKey(): string
+    {
+        return self::readFixtureFile('OpenPGP' . DS . 'PublicKeys' . DS . 'invalid_private_key_as_public.key');
+    }
+
+    /**
+     * Returns the public key with a public primary key but a secret subkey.
+     *
+     * @return string
+     */
+    public static function getPublicKeyWithSecretSubkey(): string
+    {
+        return self::readFixtureFile('OpenPGP' . DS . 'PublicKeys' . DS . 'invalid_public_key_with_secret_subkey.key');
+    }
+
+    /**
+     * Two public key blocks in a single string.
+     *
+     * @return string
+     */
+    public static function getTwoPublicKeyBlocks(): string
+    {
+        return self::readFixtureFile('OpenPGP' . DS . 'PublicKeys' . DS . 'invalid_two_public_key_blocks.key');
+    }
+
+    /**
+     * Read a file from the tests/Fixture folder.
+     *
+     * @param string $path path relative to the tests/Fixture folder
+     * @return string
+     */
+    private static function readFixtureFile(string $path): string
+    {
+        $content = file_get_contents(FIXTURES . DS . $path);
+        if ($content === false) {
+            throw new RuntimeException('Could not read the fixture ' . $path);
+        }
+
+        return $content;
+    }
+
     /**
      * Get a dummy gpgkey with test data.
      *

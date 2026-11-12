@@ -212,6 +212,9 @@ disable_upload_dirs_warning: true
 # host_db_port: "59002"
 # The host port binding for the ddev-dbserver can be explicitly specified. It is dynamic
 # unless explicitly specified.
+# Pinned so tools outside ddev (e.g. the shared agent container) can reach the db
+# at a known port. Override in config.local.yaml when running several stacks at once.
+host_db_port: "33061"
 
 # mailpit_http_port: "8025"
 # mailpit_https_port: "8026"

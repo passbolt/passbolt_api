@@ -134,4 +134,12 @@ class TmpFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
     {
         return 'tmpWritable';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'tmp-folder-writable';
+    }
 }

@@ -19,11 +19,14 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Service\MfaOrgSetting
 
 use App\Error\Exception\CustomValidationException;
 use App\Test\Factory\UserFactory;
+use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoVerifyDuoCodeService;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsMigrationToDbService;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaOrgSettingsTestTrait;
+use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaOrgSettingsMigrationToDbServiceTest extends TestCase
@@ -165,5 +168,17 @@ class MfaOrgSettingsMigrationToDbServiceTest extends TestCase
         $this->expectException(CustomValidationException::class);
         $this->expectExceptionMessage('Could not validate multi-factor authentication provider configuration.');
         $this->service->migrate();
+    }
+
+    public function testMfaOrgSettingsMigrationToDbService_Success_VerifySubscriberIsNotStored(): void
+    {
+        Configure::write(MfaDuoVerifyDuoCodeService::PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER, true);
+        UserFactory::make()->admin()->persist();
+        $this->mockMfaOrgSettings($this->getDefaultMfaOrgSettings());
+
+        $this->service->migrate();
+
+        $settingsInDB = $this->getMfaOrganizationSettingValue();
+        $this->assertArrayNotHasKey(MfaOrgSettings::DUO_VERIFY_SUBSCRIBER, $settingsInDB[MfaSettings::PROVIDER_DUO]);
     }
 }

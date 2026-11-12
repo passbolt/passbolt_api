@@ -152,4 +152,12 @@ class CustomSslOptionsSmtpSettingsHealthcheck implements HealthcheckServiceInter
         return (isset($sslOptions['verify_peer']) && !$sslOptions['verify_peer'])
             || (isset($sslOptions['verify_peer_name']) && !$sslOptions['verify_peer_name']);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'custom-ssl-options-smtp';
+    }
 }

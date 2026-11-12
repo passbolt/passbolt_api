@@ -35,6 +35,15 @@ use Passbolt\Edition\Service\EditionManager;
  */
 class TestingEditionManager extends EditionManager
 {
+    /**
+     * @return void
+     */
+    public function boot(): void
+    {
+        $this->booted = false;
+        parent::boot();
+    }
+
     protected function resolveEditionDto(): EditionDto
     {
         $value = Configure::read('passbolt.edition');

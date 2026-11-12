@@ -19,6 +19,7 @@ namespace Passbolt\Sso\Test\TestCase\Command;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Passbolt\Ee\Service\Healthcheck\EeHealthcheckServiceCollector;
 use Passbolt\Sso\SsoPlugin;
 
 class SsoHealthcheckCommandTest extends AppTestCase
@@ -44,7 +45,7 @@ class SsoHealthcheckCommandTest extends AppTestCase
         $this->exec('passbolt healthcheck -h');
 
         $this->assertExitSuccess();
-        $this->assertOutputContains('--sso');
-        $this->assertOutputContains('Run SSO tests only');
+        $this->assertOutputContains('--filter');
+        $this->assertOutputContains(EeHealthcheckServiceCollector::DOMAIN_SSO);
     }
 }

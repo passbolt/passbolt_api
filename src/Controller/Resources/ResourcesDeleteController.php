@@ -24,6 +24,7 @@ use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
 use App\Model\Table\UsersTable;
+use App\Service\RecordsStrategy\ResourcesDeleteRecordsStrategyInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
@@ -64,6 +65,8 @@ class ResourcesDeleteController extends AppController
      * Resource Delete action
      *
      * @param string $id The identifier of the resource to delete.
+     * @param \App\Service\RecordsStrategy\ResourcesDeleteRecordsStrategyInterface $recordsStrategy Decides if the user is allowed to perform the operation
+     * @throws \Cake\Http\Exception\HttpException if the user is not allowed to delete resources
      * @throws \Cake\Http\Exception\NotFoundException If the resource does not exist.
      * @throws \Cake\Http\Exception\NotFoundException If the resource is soft deleted.
      * @throws \Cake\Http\Exception\NotFoundException If the user does not have access to the resource.
@@ -72,14 +75,17 @@ class ResourcesDeleteController extends AppController
      * @throws \Cake\Http\Exception\InternalErrorException if the resource could not be saved for other reasons
      * @return void
      */
-    public function delete(string $id): void
-    {
+    public function delete(
+        string $id,
+        ResourcesDeleteRecordsStrategyInterface $recordsStrategy,
+    ): void {
         $this->assertJson();
 
         // Check request sanity
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
+        $recordsStrategy->assertAllowed($this->User->getAccessControl());
 
         // Retrieve the resource to delete.
         try {

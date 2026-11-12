@@ -116,4 +116,12 @@ class PhpVersionHealthcheck implements HealthcheckServiceInterface, HealthcheckC
     {
         return 'phpVersion';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'php-version';
+    }
 }
