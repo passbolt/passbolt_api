@@ -131,6 +131,19 @@ class FoldersHistoryTable extends Table
     }
 
     /**
+     * V5 validation rules.
+     *
+     * V5 folders do not expose their encrypted name as a plaintext field.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationV5(Validator $validator): Validator
+    {
+        return $this->validationDefault($validator)->remove('name');
+    }
+
+    /**
      * Return a FoldersHistory entity.
      *
      * @param array $data entity data
@@ -138,7 +151,10 @@ class FoldersHistoryTable extends Table
      */
     public function buildEntity(array $data): FolderHistory
     {
+        $isV5 = !is_null($data['metadata'] ?? null);
+
         return $this->newEntity($data, [
+            'validate' => $isV5 ? 'v5' : 'default',
             'accessibleFields' => [
                 'id' => true,
                 'folder_id' => true,
