@@ -237,6 +237,28 @@ class SqlExportCommandTest extends AppTestCase
         $this->assertStringContainsString($sentinels['authentication_tokens'], $dump);
     }
 
+    /**
+     * Regression test: the dump must not require the LOCK TABLES nor the PROCESS privileges,
+     * which database users often do not have (GITHUB #566).
+     */
+    public function testSqlExportCommand_MysqlLikeDumpUsesSingleTransaction()
+    {
+        $command = new class extends SqlExportCommand {
+            public function getBaseCommand(string $binary, array $config): array
+            {
+                return $this->getMysqlLikeDumpBaseCommand($binary, $config);
+            }
+        };
+        $config = ['host' => 'db', 'username' => 'passbolt', 'password' => 'secret'];
+
+        foreach (['mysqldump', 'mariadb-dump'] as $binary) {
+            $this->assertSame(
+                [$binary, '--single-transaction', '--no-tablespaces', '-h', 'db', '-u', 'passbolt', '-psecret'],
+                $command->getBaseCommand($binary, $config),
+            );
+        }
+    }
+
     public function testSqlExportCommand_OnNonSupportedFlag()
     {
         $testDir = SqlExportCommand::CACHE_DATABASE_DIRECTORY;
