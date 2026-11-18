@@ -216,7 +216,7 @@ class SqlExportCommand extends PassboltCommand
 
         if ($status !== $this->successCode()) {
             $io->quiet(__('There was an error running the dump.'));
-            $io->error(__('Please ensure on MySQL that the user has PROCESS privileges.'));
+            $io->error(__('Please ensure the dump client can connect and the user can read all the tables.'));
             $io->error(__('Database ') . $connection->config()['database']);
             $io->error(__('User ') . $connection->config()['username']);
 
@@ -273,11 +273,7 @@ class SqlExportCommand extends PassboltCommand
         string $file,
         array $existingExcludedTables,
     ): int {
-        $baseCmd = [$binary, '-h', $config['host'], '-u', $config['username']];
-        if (!empty($config['password'])) {
-            // mysqldump / mariadb-dump expect password immediately after -p with no space: -p<password>
-            $baseCmd[] = '-p' . $config['password'];
-        }
+        $baseCmd = $this->getMysqlLikeDumpBaseCommand($binary, $config);
 
         $cmd = $baseCmd;
         foreach ($existingExcludedTables as $table) {
@@ -292,6 +288,39 @@ class SqlExportCommand extends PassboltCommand
         $cmd = array_merge($baseCmd, ['--no-data', $config['database']], $existingExcludedTables);
 
         return $this->runDumpCommand($cmd, $dir . $file, null, true);
+    }
+
+    /**
+     * Base arguments shared by both passes of a mysqldump / mariadb-dump.
+     *
+     * `--single-transaction` dumps a consistent snapshot of the tables (all InnoDB) instead of using
+     * `LOCK TABLES`, so the database user does not need the LOCK TABLES privilege and writes are not
+     * blocked while the dump runs. Schema changes (e.g. migrations) must not run concurrently.
+     *
+     * `--no-tablespaces` skips the tablespace metadata, which passbolt tables do not use, so the
+     * database user does not need the global PROCESS privilege (required since MySQL 8.0.21).
+     *
+     * @param string $binary Either "mysqldump" or "mariadb-dump".
+     * @param array $config Database config
+     * @return array<int, string>
+     */
+    protected function getMysqlLikeDumpBaseCommand(string $binary, array $config): array
+    {
+        $baseCmd = [
+            $binary,
+            '--single-transaction',
+            '--no-tablespaces',
+            '-h',
+            $config['host'],
+            '-u',
+            $config['username'],
+        ];
+        if (!empty($config['password'])) {
+            // mysqldump / mariadb-dump expect password immediately after -p with no space: -p<password>
+            $baseCmd[] = '-p' . $config['password'];
+        }
+
+        return $baseCmd;
     }
 
     /**
